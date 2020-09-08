@@ -1,0 +1,88 @@
+{
+  "project": "pycr",
+  "network": "pycr_net",
+  "minigame": "pwcrack",
+  "version": "0.0.1",
+  "subnet": "172.18.1.0",
+  "subnet_mask_1": "172.18.1.0/24",
+  "subnet_mask_2": "255.255.255.0",
+  "root_users_file": "root_users.txt",
+  "non_root_users_file": "non_root_users.txt",
+  "flag_info_file": "flag_info.txt",
+  "containers": [
+    {
+      "name": "router",
+      "ip": "172.18.1.10",
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "jessica",
+          "password": "water"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag0",
+          "path": "/home/admin"
+        }
+      ]
+    },
+    {
+      "name": "ssh",
+      "ip": "172.18.1.2",
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "kim",
+          "password": "ham"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "kennedy",
+          "password": "linear"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag2",
+          "path": "/home/kim"
+        }
+      ]
+    },
+    {
+      "name": "telnet",
+      "ip": "172.18.1.3",
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "john",
+          "password": "doe"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "eric",
+          "password": "football"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag1",
+          "path": "/home/admin"
+        }
+      ]
+    }
+  ]
+}
