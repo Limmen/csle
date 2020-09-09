@@ -53,15 +53,17 @@ def prepare_args(config:dict) -> dict:
 
 def run(config: dict, args: dict):
     for container in config["containers"]:
-        cmd = "./containers/" + container["name"] + "/run.sh"
+        cwd = "./containers/" + container["name"] + "/"
+        cmd = "./run.sh"
         cmd = cmd + args[container["name"]]
-        subprocess.Popen(cmd, shell=True)
+        subprocess.Popen(cmd, shell=True, cwd=cwd)
 
 def build(config: dict, args: dict):
     for container in config["containers"]:
-        cmd = "./containers/" + container["name"] + "/build.sh"
+        cwd = "./containers/" + container["name"] + "/"
+        cmd = "./build.sh"
         cmd = cmd + args[container["name"]]
-        subprocess.Popen(cmd, shell=True)
+        subprocess.Popen(cmd, shell=True, cwd=cwd)
 
 if __name__ == '__main__':
     args = parse_args()

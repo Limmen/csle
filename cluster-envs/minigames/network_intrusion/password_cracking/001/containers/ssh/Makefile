@@ -36,6 +36,7 @@ net:
 
 # --publish-all exposes all ports of the container
 run: build net
+	echo "run build net ssh ${CONTAINER}"
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
 
 shell:

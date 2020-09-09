@@ -27,5 +27,10 @@ rm-image:
 	cd containers/ssh/ && $(MAKE) rm-image
 	cd containers/telnet/ && $(MAKE) rm-image
 
+build:
+	cd containers/router/&& $(MAKE) build
+	cd containers/ssh/ && $(MAKE) build
+	cd containers/telnet/ && $(MAKE) build
+
 rm-net:
 	cd containers/router/ && $(MAKE) rm-net
