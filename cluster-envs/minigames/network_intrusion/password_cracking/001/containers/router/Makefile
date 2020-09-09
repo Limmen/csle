@@ -37,7 +37,7 @@ net:
 # route -n to list routes
 run: build net
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
-	./setup_firewall.sh
+	./setup_firewall.sh $(SUBNET) $(SUBNET_MASK_2) $(IP)
 
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash

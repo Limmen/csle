@@ -1,1 +1,1 @@
-/home/kim:flag2
+/home/admin:flag0
