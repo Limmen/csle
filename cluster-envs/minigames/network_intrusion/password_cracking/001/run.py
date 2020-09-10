@@ -57,6 +57,8 @@ def run(config: dict, args: dict):
         cmd = "./run.sh"
         cmd = cmd + args[container["name"]]
         subprocess.Popen(cmd, shell=True, cwd=cwd)
+        update_ssh_cmd = "ssh-keygen -f '~/.ssh/known_hosts' -R '" + container["ip"] + "'"
+        subprocess.Popen(update_ssh_cmd, shell=True)
 
 def build(config: dict, args: dict):
     for container in config["containers"]:

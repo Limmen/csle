@@ -21,6 +21,11 @@ RUN apt-get -y install xinetd telnetd
 RUN apt-get -y install ssh
 RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
+RUN apt-get -y install bind9
+RUN apt-get -y install bind9utils
+RUN apt-get -y install bind9-doc
+RUN apt-get -y install bind9-host
+RUN apt-get -y install dnsutils
 
 # Setup users
 
@@ -44,7 +49,11 @@ ADD docker/flag_info.txt /flag_info.txt
 RUN chmod 777 /create_flag.sh
 RUN /create_flag.sh
 
+# SSH
 RUN service ssh start
+
+# DNS
+RUN service named start
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
