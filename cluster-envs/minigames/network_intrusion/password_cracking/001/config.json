@@ -83,6 +83,26 @@
           "path": "/home/admin"
         }
       ]
+    },
+    {
+      "name": "honeypot",
+      "ip": "172.18.1.21",
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "stefan",
+          "password": "eriksson"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "emil",
+          "password": "karlsson"
+        }
+      ]
     }
   ]
 }
