@@ -49,6 +49,30 @@ ADD docker/xinetd.conf /etc/xinetd.conf
 RUN chmod 644 /etc/xinetd.d/telnet
 RUN chmod 644 /etc/xinetd.conf
 
+# Conda
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
+RUN wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh
+
+# make non-activate conda commands available
+ENV PATH=$CONDA_DIR/bin:$PATH
+# make conda activate command available from /bin/bash --login shells
+RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
+# make conda activate command available from /bin/bash --interative shells
+RUN conda init bash
+
+# Web server HTTP
+RUN mkdir -p /web/
+RUN mkdir -p /web/static
+ADD docker/web_server.py /web/web_server.py
+ADD docker/index.html /web/static/index.html
+RUN pip install flask
+RUN pip install waitress
+
 # Add start script
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh
