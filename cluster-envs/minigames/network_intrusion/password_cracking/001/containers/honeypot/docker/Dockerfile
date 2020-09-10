@@ -23,6 +23,9 @@ RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
 RUN apt-get -y install snmpd
 RUN apt-get -y install snmp
+RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-selections &&\
+        echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
+        apt-get install -y mailutils
 
 # Setup users
 

@@ -10,6 +10,7 @@ make run # Run all containers
 make router # Run router container
 make ssh # Run ssh container
 make telnet # Run telnet container
+make honeypot # Run honeypot container
 make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
 python run.py --build # build all containers with custom config
