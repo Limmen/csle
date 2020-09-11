@@ -24,6 +24,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y kali-tools-top10
 RUN apt-get -y install man-db
 RUN apt-get -y install exploitdb
 RUN apt-get -y install nikto
+RUN apt-get -y install traceroute
 
 # Setup users
 
@@ -34,6 +35,10 @@ RUN chmod 777 /make_root_users.sh
 
 # setup root users
 RUN /make_root_users.sh
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
