@@ -6,6 +6,9 @@ USER root
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh
 
+# Add mongo repo
+RUN echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+
 # Install dependencies
 RUN apt-get update
 RUN apt-get -y install apt-utils
@@ -23,6 +26,7 @@ RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
 RUN apt-get -y install vsftpd
 RUN apt-get -y install inetutils-inetd fingerd
+RUN apt-get -y --force-yes install mongodb-org
 
 # Setup users
 
@@ -53,6 +57,9 @@ ADD docker/vsftpd.conf /etc/vsftpd.conf
 
 # Setup Finger
 RUN /etc/init.d/inetutils-inetd restart
+
+# Setup Mongo
+RUN mkdir -p /data/db
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
