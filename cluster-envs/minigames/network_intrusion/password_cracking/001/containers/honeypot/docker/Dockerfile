@@ -27,6 +27,7 @@ RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-s
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         apt-get install -y mailutils
 RUN apt-get -y install inspircd
+RUN apt-get -y install postgresql
 
 # Setup users
 
@@ -52,7 +53,11 @@ RUN service snmpd restart
 # setup IRC
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker/inspircd.conf /etc/inspircd/inspircd.conf
-#RUN service inspircd restart
+
+# setup Postggres
+RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
+ADD docker/postgresql.conf /etc/postgresql/12/main/postgresql.conf
+RUN service postgresql restart
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
