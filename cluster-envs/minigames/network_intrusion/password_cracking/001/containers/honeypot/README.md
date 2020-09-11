@@ -14,6 +14,7 @@ docker image ls --all # list all images
 docker system prune # remove unused images and containers
 docker container prune # remove stopped containers
 sudo nmap -sU -p 161 <ip> # UDP scan to test that SNMP port is open
-nmap -p- <ip> # Scan TCP ports   
+nmap -p- <ip> # Scan TCP ports
+netstat -tulpn # Run inside container to see network services   
 ```
 

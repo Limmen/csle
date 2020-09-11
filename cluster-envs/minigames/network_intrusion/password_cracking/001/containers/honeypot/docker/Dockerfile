@@ -26,6 +26,7 @@ RUN apt-get -y install snmp
 RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         apt-get install -y mailutils
+RUN apt-get -y install inspircd
 
 # Setup users
 
@@ -48,6 +49,10 @@ RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
 ADD docker/snmpd.conf /etc/snmp/snmpd.conf
 RUN service snmpd restart
 
+# setup IRC
+RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
+ADD docker/inspircd.conf /etc/inspircd/inspircd.conf
+#RUN service inspircd restart
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
