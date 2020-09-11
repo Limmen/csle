@@ -28,6 +28,10 @@ RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-s
         apt-get install -y mailutils
 RUN apt-get -y install inspircd
 RUN apt-get -y install postgresql
+RUN apt-get -y install ntp
+RUN apt-get -y install finger-server
+RUN apt-get -y install default-jdk
+RUN apt-get -y install wget
 
 # Setup users
 
@@ -54,10 +58,18 @@ RUN service snmpd restart
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker/inspircd.conf /etc/inspircd/inspircd.conf
 
-# setup Postggres
+# setup NTP
+RUN service ntp restart
+
+# setup Postgres
 RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
 ADD docker/postgresql.conf /etc/postgresql/12/main/postgresql.conf
 RUN service postgresql restart
+
+# setup Kafka
+RUN wget http://www-us.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz
+RUN tar xzf kafka_2.13-2.4.0.tgz
+RUN mv kafka_2.13-2.4.0 /usr/local/kafka
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
