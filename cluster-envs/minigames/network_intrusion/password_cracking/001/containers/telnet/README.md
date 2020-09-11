@@ -12,6 +12,7 @@ make rm-net # Remove Docker sub-network
 docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
+docker container prune # remove stopped containers
 nmap -p- <ip> # Scan TCP ports   
 ```
 

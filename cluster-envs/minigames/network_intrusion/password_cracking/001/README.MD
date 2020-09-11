@@ -17,6 +17,7 @@ python run.py --build # build all containers with custom config
 python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers
 docker image ls --all # list all images
-docker system prune # remove unused images and containers   
+docker system prune # remove unused images and containers
+docker container prune # remove stopped containers   
 ```
 

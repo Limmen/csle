@@ -4,11 +4,11 @@ USER root
 
 # Install dependencies
 RUN apt-get update
+RUN apt-get -y install apt-utils
 RUN apt-get -y install openssl
-RUN apt-get install -y net-tools
+RUN apt-get -y install net-tools
 RUN apt-get -y install iputils-ping
 RUN apt-get -y install sudo
-RUN apt-get install -y apt-utils
 RUN apt-get -y install emacs
 RUN apt-get -y install curl
 RUN apt-get -y install htop
