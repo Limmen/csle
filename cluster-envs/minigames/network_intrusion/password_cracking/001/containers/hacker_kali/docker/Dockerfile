@@ -25,6 +25,7 @@ RUN apt-get -y install man-db
 RUN apt-get -y install exploitdb
 RUN apt-get -y install nikto
 RUN apt-get -y install traceroute
+RUN apt-get -y install finger
 
 # Setup users
 

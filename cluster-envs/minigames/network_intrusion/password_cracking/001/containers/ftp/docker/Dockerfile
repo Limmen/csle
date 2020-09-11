@@ -22,6 +22,7 @@ RUN apt-get -y install ssh
 RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
 RUN apt-get -y install vsftpd
+RUN apt-get -y install inetutils-inetd fingerd
 
 # Setup users
 
@@ -49,6 +50,9 @@ RUN /create_flag.sh
 RUN mkdir -p /var/ftp
 RUN mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
 ADD docker/vsftpd.conf /etc/vsftpd.conf
+
+# Setup Finger
+RUN /etc/init.d/inetutils-inetd restart
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
