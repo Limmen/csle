@@ -7,4 +7,6 @@ app = Flask(__name__, static_url_path='', static_folder='/web/static')
 def root():
     return app.send_static_file('index.html')
 
-serve(app, host='0.0.0.0', port=80)
+if __name__ == "__main__":
+    app.run(port=80,host='0.0.0.0')
+#serve(app, host='0.0.0.0', port=80)
