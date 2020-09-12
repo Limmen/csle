@@ -26,6 +26,8 @@ RUN apt-get -y install bind9utils
 RUN apt-get -y install bind9-doc
 RUN apt-get -y install bind9-host
 RUN apt-get -y install dnsutils
+RUN apt-get -y install git
+RUN apt-get -y install swi-prolog
 
 # Setup users
 
@@ -54,6 +56,9 @@ RUN service ssh start
 
 # DNS
 RUN service named start
+
+# Pengine Server
+RUN git clone https://github.com/Limmen/erl_pengine
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
