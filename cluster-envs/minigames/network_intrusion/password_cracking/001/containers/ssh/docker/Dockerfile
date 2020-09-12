@@ -28,6 +28,7 @@ RUN apt-get -y install bind9-host
 RUN apt-get -y install dnsutils
 RUN apt-get -y install git
 RUN apt-get -y install swi-prolog
+RUN apt-get -y install openjdk-8-jdk
 
 # Setup users
 
@@ -59,6 +60,12 @@ RUN service named start
 
 # Pengine Server
 RUN git clone https://github.com/Limmen/erl_pengine
+
+# Cassandra
+RUN wget http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz
+RUN tar xzvf apache-cassandra-2.1.22-bin.tar.gz
+RUN mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
+ADD docker/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
