@@ -27,6 +27,7 @@ RUN apt-get -y install ftp
 RUN apt-get -y install vsftpd
 RUN apt-get -y install inetutils-inetd fingerd
 RUN apt-get -y --force-yes install mongodb-org
+RUN apt-get -y install default-jdk
 
 # Setup users
 
@@ -60,6 +61,18 @@ RUN /etc/init.d/inetutils-inetd restart
 
 # Setup Mongo
 RUN mkdir -p /data/db
+
+# Setup Tomcat
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz
+RUN tar xvzf apache-tomcat-8.0.1.tar.gz
+RUN mv apache-tomcat-8.0.1 /usr/local/tomcat
+RUN mv /usr/local/tomcat/conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml.bak
+ADD docker/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+
+# Setup TeamSpeak 3 Server
+RUN wget https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2
+RUN tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2
+RUN touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
