@@ -41,6 +41,9 @@ RUN /make_root_users.sh
 ADD docker/setup_firewall.sh /setup_firewall.sh
 RUN chmod 777 /setup_firewall.sh
 
+# SSH
+RUN service ssh start
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

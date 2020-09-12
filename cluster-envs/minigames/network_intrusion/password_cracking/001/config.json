@@ -104,6 +104,44 @@
         }
       ],
       "flags": []
+    },
+    {
+      "name": "ftp",
+      "ip": "172.18.1.79",
+      "root_users" : [
+        {
+          "username": "l_hopital",
+          "password": "l_hopital"
+        },
+        {
+          "username": "euler",
+          "password": "euler"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "newton",
+          "password": "newton"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag3",
+          "path": "/home/euler"
+        }
+      ]
+    },
+    {
+      "name": "hacker_kali",
+      "ip": "172.18.1.191",
+      "root_users" : [
+        {
+          "username": "agent",
+          "password": "agent"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
     }
   ]
 }

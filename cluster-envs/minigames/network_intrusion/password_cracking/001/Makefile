@@ -1,6 +1,6 @@
 all: run
 
-run: router ssh telnet honeypot
+run: router ssh telnet honeypot ftp hacker_kali
 
 router:
 	cd containers/router/ && $(MAKE) build
@@ -18,6 +18,14 @@ honeypot:
 	cd containers/honeypot/ && $(MAKE) build
 	cd containers/honeypot/ && $(MAKE) run
 
+ftp:
+	cd containers/ftp/ && $(MAKE) build
+	cd containers/ftp/ && $(MAKE) run
+
+hacker_kali:
+	cd containers/hacker_kali/ && $(MAKE) build
+	cd containers/hacker_kali/ && $(MAKE) run
+
 net:
 	cd containers/router/ && $(MAKE) net
 
@@ -26,18 +34,24 @@ clean:
 	cd containers/ssh/ && $(MAKE) clean
 	cd containers/telnet/ && $(MAKE) clean
 	cd containers/honeypot/ && $(MAKE) clean
+	cd containers/ftp/ && $(MAKE) clean
+	cd containers/hacker_kali/ && $(MAKE) clean
 
 rm-image:
 	cd containers/router/ && $(MAKE) rm-image
 	cd containers/ssh/ && $(MAKE) rm-image
 	cd containers/telnet/ && $(MAKE) rm-image
 	cd containers/honeypot/ && $(MAKE) rm-image
+	cd containers/ftp/ && $(MAKE) rm-image
+	cd containers/hacker_kali/ && $(MAKE) rm-image
 
 build:
 	cd containers/router/&& $(MAKE) build
 	cd containers/ssh/ && $(MAKE) build
 	cd containers/telnet/ && $(MAKE) build
 	cd containers/honeypot/ && $(MAKE) build
+	cd containers/ftp/ && $(MAKE) build
+	cd containers/hacker_kali/ && $(MAKE) build
 
 rm-net:
 	cd containers/router/ && $(MAKE) rm-net
