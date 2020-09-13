@@ -171,6 +171,7 @@ def batch_rect_border(x, y, width, height, color, batch, group):
     :param group: the batch group (e.g. foreground or background)
     :return: None
     """
+    pyglet.gl.glLineWidth(1)
 
     color_list = list(color) + list(color) + list(color) + list(color)
     # Renders the lines of a rectangle
