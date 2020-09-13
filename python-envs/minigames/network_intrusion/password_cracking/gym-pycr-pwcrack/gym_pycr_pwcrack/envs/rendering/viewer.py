@@ -29,6 +29,8 @@ from gym_pycr_pwcrack.dao.node import Node
 from gym_pycr_pwcrack.dao.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.flag import Flag
 from gym_pycr_pwcrack.dao.node_type import NodeType
+from gym_pycr_pwcrack.dao.env_log import EnvLog
+import gym_pycr_pwcrack.constants.constants as constants
 
 class Viewer():
 
@@ -157,7 +159,38 @@ if __name__ == '__main__':
     # ]
     network_conf = NetworkConfig(subnet_mask=subnet_mask, nodes=nodes, adj_matrix=adj_matrix)
     env_config = EnvConfig(network_conf=network_conf)
-    env_state = EnvState(num_servers = 5, num_ports = 5, num_vuln = 5)
+    env_state = EnvState(num_servers = 5, num_ports = 5, num_vuln = 5, env_log=EnvLog(),
+                         service_lookup=constants.SERVICES.service_lookup,
+                         vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
+                         os_lookup = constants.OS.os_lookup)
+    env_state.env_log.add_entry("test1 test1 test1 test1 test1 test1 test1")
+    env_state.env_log.add_entry("test2 test2 test2 test2 test2 test2 test2")
+    env_state.env_log.add_entry("test3")
+    env_state.env_log.add_entry("test4")
+    env_state.env_log.add_entry("test5")
+    env_state.env_log.add_entry("test6 test6 test6 test6 test6 test6 test6 test6")
+    env_state.env_log.add_entry("test7")
+    env_state.env_log.add_entry("test8")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test8")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test8")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
+    env_state.env_log.add_entry("test9")
     viewer = Viewer(env_config=env_config, init_state=env_state)
     viewer.start()
 

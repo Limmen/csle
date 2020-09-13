@@ -32,7 +32,7 @@ class MainFrame(pyglet.window.Window):
         self.create_batch()
         self.set_state(self.state)
         self.switch_to()
-        self.y_network_end = 0
+        self.state_rect_coords = {}
 
     def create_batch(self) -> None:
         """
@@ -59,28 +59,57 @@ class MainFrame(pyglet.window.Window):
         batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
                     self.height - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
+        # Draw C_Reward label
+        batch_label("C_R:", 25,
+                    self.height - 25, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.c_r_label = batch_label(str(self.state.cumulative_reward), 100,
+                    self.height - 25, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        # Draw N_E label
+        batch_label("N_E:", 25,
+                    self.height - 50, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.c_r_label = batch_label(str(self.state.num_episodes), 100,
+                                     self.height - 50, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                     bold=False)
+        # Draw R label
+        batch_label("R:", 25,
+                    self.height - 75, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.c_r_label = batch_label(str(self.state.episode_reward), 100,
+                                     self.height - 75, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                     bold=False)
+
+        # Draw t label
+        batch_label("t:", 25,
+                    self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.c_r_label = batch_label(str(self.state.time_step), 100,
+                                     self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                     bold=False)
+
         # Draw router
         if self.env_config.network_conf.router is not None:
-            create_circle_fill(self.width / 2 + 20, self.height - 100, 8, self.batch, self.first_foreground,
+            create_circle_fill(self.width / 2 + 20, self.height - 75, 8, self.batch, self.first_foreground,
                                constants.RENDERING.BLUE_PURPLE)
             batch_label("." + str(self.env_config.network_conf.router.ip_id), self.width / 2 + 50,
-                        self.height - 100, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
-            nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 100)
+                        self.height - 75, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+            nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 75)
         else:
             raise ValueError("Router is not defined in network config")
 
         # --- Draw Topology --
 
         # Draw nodes
-        x_start = 100
+        x_start = 25
         x = x_start
-        y = self.height-200
+        y = self.height-150
         x_sep = 100
-        y_sep = 100
+        y_sep = 75
         x_max = self.width-100
         max_nodes_per_level = int(x_max/x_sep+1)
+        middle = self.width / 2
         for level in range(len(self.env_config.network_conf.levels_d)):
             if level > 1:
+                num_nodes_in_level = len(self.env_config.network_conf.levels_d[level+1])
+                x_start = middle-(((num_nodes_in_level-1)/2)*x_sep)
+                x = x_start
                 if len(self.env_config.network_conf.levels_d[level+1]) > max_nodes_per_level:
                     raise ValueError("Invalid network config. Too many nodes in a single level. "
                                      "Max level for this width of the GUI is: {}".format(max_nodes_per_level))
@@ -119,17 +148,161 @@ class MainFrame(pyglet.window.Window):
                                nodes_to_coords[j + 1][0], nodes_to_coords[j+1][1],
                                 color, self.batch, self.background, constants.RENDERING.LINE_WIDTH)
 
-        #y = y - 20
-
+        w = 30
+        h = 25
+        y = y + 40
+        x_start = 10
+        end_state_x = x_start + (self.state.machines_state.shape[1]+2)*w
         # Draw State title
-        batch_label("State", ((self.width / 4)*3)/2,
-                    y, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
-        # Draw Log title
-        batch_label("Log", ((self.width / 4) * 3) +  (self.width / 4)/ 2,
+        batch_label("State", end_state_x/2,
                     y, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
-        y = y-50
-        batch_rect_border(50, y, 25, 25, constants.RENDERING.BLACK, self.batch, self.background)
+        y = y-25
+        labels = ["m", "ip", "os"]
+        for i in range(self.state.num_ports):
+            labels.append("p" + str(i))
+        for i in range(self.state.num_vuln):
+            labels.append("v" + str(i))
+        # Draw labels
+        for c in range(self.state.machines_state.shape[1]):
+            batch_label(labels[c], x_start+w/2+c*(w), y, 10, (0, 0, 0, 255), self.batch,
+                        self.second_foreground)
+        y = y - 40
+        # Draw state
+        state_rect_coords = {}
+        for m in range(self.state.machines_state.shape[0]):
+            for c in range(self.state.machines_state.shape[1]):
+                batch_rect_border(x_start+c*w, y-(m*h), w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                y_s = y-(m*h)+w/2
+                state_rect_coords[(m,c)] = (x_start+c*w,y-(m*h))
+                batch_label(str(self.state.machines_state[m][c]), x_start+w/2 + c * (w), y_s, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+
+        self.state_rect_coords = state_rect_coords
+
+        y_log = y
+
+        # Draw Ports Table
+
+        y = y_s - 100
+        w = 30
+        h = 25
+
+        batch_label("Ports", 1.5 * (end_state_x / 6),
+                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+
+        labels = ["m", "p", "s_id", "service"]
+        for c in range(len(labels)):
+            if c != 3:
+                batch_label(labels[c], int(x_start+15 + c * w), y_s-65, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
+            else:
+                batch_label(labels[c], int(x_start+30 + c * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+
+        for p in range(self.state.ports_state.shape[0]):
+            y_p = int(y - (p * h))
+            if y_p > 5:
+                batch_rect_border(int(x_start + 0 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 1 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 2 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 3 * w), y_p, w*3, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_label(str(self.state.ports_state[p][0]), int(x_start+15 + 0 * w), y_p+w/3, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                batch_label(str(self.state.ports_state[p][1]), int(x_start+15 + 1 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                batch_label(str(self.state.ports_state[p][2]), int(x_start+15 + 2 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                service = "-" if self.state.ports_state[p][2] not in self.state.service_lookup else str(self.state.service_lookup[self.state.ports_state[p][2]])
+                batch_label(service, int(x_start+45 + 3 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+
+
+        # Draw Vulnerabilities Table
+
+        batch_label("Vulnerabilities", 4*(end_state_x/6),
+                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+
+        labels = ["v", "vulnerability"]
+        for c in range(len(labels)):
+            if c != 1:
+                batch_label(labels[c], int(20 + 2.8*(end_state_x/6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+            else:
+                batch_label(labels[c], int(80 + 2.8*(end_state_x/6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+        v_n = 0
+        for v_name, v_id in self.state.vuln_lookup.items():
+            y_v = int(y - (v_n * h))
+            if y_v > 5:
+                batch_rect_border(int(2.8*(end_state_x/6) + 0 * w), y_v, w, h, constants.RENDERING.BLACK, self.batch,
+                                  self.background)
+                batch_rect_border(int(2.8*(end_state_x/6) + 1 * w), y_v, w * 5, h, constants.RENDERING.BLACK, self.batch,
+                                  self.background)
+                batch_label(str(v_id), int(15 + 2.8*(end_state_x/6) + 0 * w), y_v + w / 2.5,
+                            10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                batch_label(str(v_name), int(60 + 2.8 * (end_state_x / 6) + 1 * w), y_v + w / 2.5,
+                            10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+            v_n += 1
+
+        # Draw OS Table
+
+        batch_label("OS", 6.5 * (end_state_x / 6),
+                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+
+        labels = ["os_id", "os"]
+        for c in range(len(labels)):
+            if c != 1:
+                batch_label(labels[c], int(20 + 5.5 * (end_state_x / 6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+            else:
+                batch_label(labels[c], int(80 + 5.5 * (end_state_x / 6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+
+        o_n = 0
+        for os_name, os_id in self.state.os_lookup.items():
+            y_o = int(y - (o_n * h))
+            if y_o > 5:
+                batch_rect_border(int(5.5 * (end_state_x / 6) + 0 * w), y_o, w, h, constants.RENDERING.BLACK,
+                                  self.batch,
+                                  self.background)
+                batch_rect_border(int(5.5 * (end_state_x / 6) + 1 * w), y_o, w * 5, h, constants.RENDERING.BLACK,
+                                  self.batch,
+                                  self.background)
+                batch_label(str(os_id), int(15 + 5.5 * (end_state_x / 6) + 0 * w), y_o + w / 2.5,
+                            10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                batch_label(str(os_name), int(60 + 5.5 * (end_state_x / 6) + 1 * w), y_o + w / 2.5,
+                            10, (0, 0, 0, 255),
+                            self.batch,
+                            self.second_foreground)
+                end_state_x_log=int(5.5 * (end_state_x / 6) + 1 * w) + w*5
+            o_n += 1
+
+        # Draw log
+
+        # Draw Log title
+        log_x = end_state_x_log + (self.width - end_state_x_log) / 2
+        batch_label("Log", log_x,
+                    y_log+60, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+        x = log_x
+        h = 20
+        num_logs = len(self.state.env_log.log)
+        for i in range(num_logs):
+            y_t = 10 + y_log - ((i - 1) * h)
+            if y_t > 25:
+                batch_label(self.state.env_log.log[num_logs - 1 - i], x, y_t, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
 
     def setup_resources_path(self) -> None:
         """
@@ -152,5 +325,5 @@ class MainFrame(pyglet.window.Window):
         # Make this window the current OpenGL rendering context
         self.switch_to()
 
-    def set_state(self, state : List):
+    def set_state(self, state : EnvState):
         self.state = state
