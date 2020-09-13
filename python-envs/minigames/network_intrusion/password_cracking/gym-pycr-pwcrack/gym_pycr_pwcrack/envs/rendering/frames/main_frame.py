@@ -27,6 +27,7 @@ class MainFrame(pyglet.window.Window):
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)
         self.second_foreground = pyglet.graphics.OrderedGroup(2)
+        self.flags_sprites = []
         self.setup_resources_path()
         self.state = init_state
         self.create_batch()
@@ -51,6 +52,7 @@ class MainFrame(pyglet.window.Window):
         self.hacker_sprite = pyglet.sprite.Sprite(self.hacker_avatar, x=self.width/2, y=self.height-50, batch=self.batch,
                                                     group=self.background)
         self.hacker_sprite.scale = 0.25
+
         batch_label("." + str(self.env_config.network_conf.hacker.ip_id), self.width / 2 + 60,
                     self.height - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
         nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-50)
@@ -105,6 +107,7 @@ class MainFrame(pyglet.window.Window):
         x_max = self.width-100
         max_nodes_per_level = int(x_max/x_sep+1)
         middle = self.width / 2
+        self.flag_avatar = pyglet.resource.image(constants.RENDERING.FLAG_SPRITE_NAME)
         for level in range(len(self.env_config.network_conf.levels_d)):
             if level > 1:
                 num_nodes_in_level = len(self.env_config.network_conf.levels_d[level+1])
@@ -121,6 +124,15 @@ class MainFrame(pyglet.window.Window):
                             create_circle_fill(x, y, 8, self.batch, self.first_foreground, constants.RENDERING.BLACK)
                             batch_label("." + str(node.ip_id), x - 30, y, 12, (0, 0, 0, 255), self.batch,
                                         self.second_foreground)
+                            for i, flag in enumerate(node.flags):
+                                # Draw flag
+                                flag_sprite = pyglet.sprite.Sprite(self.flag_avatar, x=x-(20*(i+1)),
+                                                                        y=y+10,
+                                                                        batch=self.batch,
+                                                                        group=self.background)
+                                flag_sprite.scale = 0.05
+                                self.flags_sprites.append(flag_sprite)
+
                             nodes_to_coords[node.id] = (x, y)
                             x = x + x_sep
                 y = y - y_sep

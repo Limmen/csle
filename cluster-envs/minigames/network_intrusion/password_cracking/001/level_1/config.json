@@ -26,12 +26,7 @@
           "password": "water"
         }
       ],
-      "flags": [
-        {
-          "name": "flag0",
-          "path": "/home/admin"
-        }
-      ]
+      "flags": []
     },
     {
       "name": "ssh",
@@ -85,7 +80,7 @@
         {
           "name": "flag1",
           "path": "/home/admin",
-          "id": "2"
+          "id": "1"
         }
       ]
     },

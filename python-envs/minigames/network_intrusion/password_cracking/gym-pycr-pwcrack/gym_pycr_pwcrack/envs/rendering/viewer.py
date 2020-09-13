@@ -116,10 +116,10 @@ class Viewer():
 
 if __name__ == '__main__':
     nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2),
-             Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER, flags=[], level=3),
-             Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, flags=[], level=3),
+             Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER, flags=[Flag(name="flag2", path="/home/kim", id=2)], level=3),
+             Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, flags=[Flag(name="flag1", path="/home/admin", id=1)], level=3),
              Node(ip="172.18.1.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3),
-             Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER, flags=[], level=3),
+             Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER, flags=[Flag(name="flag3", path="/home/euler", id=3), Flag(name="flag4", path="/home/euler", id=4)], level=3),
              Node(ip="172.18.1.191", ip_id=191, id=6, type=NodeType.HACKER, flags=[], level=1),
 
              # Node(ip="172.18.1.192", ip_id=192, id=7, type=NodeType.SERVER, flags=[], level=4),

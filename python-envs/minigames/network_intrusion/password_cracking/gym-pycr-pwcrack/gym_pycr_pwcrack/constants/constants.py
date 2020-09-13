@@ -29,6 +29,7 @@ class RENDERING:
     TITLE = "PyCr-PwCrack"
     FIREWALL_SPRITE_NAME = "firewall.png"
     HACKER_SPRITE_NAME = "hacker.png"
+    FLAG_SPRITE_NAME = "flag_1.png"
     LINK_COLORS = [(132,87,87), (153,0,153), (153,0,0), (204,204,255), (0,102,0), (102, 0, 102), (153,153,0),
                    (128,128,128), (51,153,255), (0, 153, 153), (204,255,153), (255, 204, 153), (255, 153, 153),
                    (51,51,255), (255, 229, 204)]
