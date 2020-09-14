@@ -47,7 +47,7 @@ class Viewer():
         self.mainframe = MainFrame(env_config=self.env_config, init_state=self.init_state)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
-        pyglet.app.run()
+        #pyglet.app.run()
 
     def window_closed_by_user(self) -> None:
         """

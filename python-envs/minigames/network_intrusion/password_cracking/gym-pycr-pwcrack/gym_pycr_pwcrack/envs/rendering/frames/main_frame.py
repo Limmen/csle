@@ -69,20 +69,20 @@ class MainFrame(pyglet.window.Window):
         # Draw N_E label
         batch_label("N_E:", 25,
                     self.height - 50, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
-        self.c_r_label = batch_label(str(self.state.num_episodes), 100,
+        self.n_e_label = batch_label(str(self.state.num_episodes), 100,
                                      self.height - 50, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
                                      bold=False)
         # Draw R label
         batch_label("R:", 25,
                     self.height - 75, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
-        self.c_r_label = batch_label(str(self.state.episode_reward), 100,
+        self.r_label = batch_label(str(self.state.episode_reward), 100,
                                      self.height - 75, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
                                      bold=False)
 
         # Draw t label
         batch_label("t:", 25,
                     self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
-        self.c_r_label = batch_label(str(self.state.time_step), 100,
+        self.t_label = batch_label(str(self.state.time_step), 100,
                                      self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
                                      bold=False)
 
@@ -329,11 +329,19 @@ class MainFrame(pyglet.window.Window):
             raise ValueError("error")
         pyglet.resource.reindex()
 
+    def update_labels(self):
+        self.c_r_label.text = str(self.state.cumulative_reward)
+        self.n_e_label.text = str(self.state.num_episodes)
+        self.r_label.text = str(self.state.episode_reward)
+        self.t_label.text = str(self.state.time_step)
+
     def on_draw(self):
         # Clear the window
         self.clear()
         # Draw batch with the frame contents
         self.batch.draw()
+        # Update labels
+        self.update_labels()
         # Make this window the current OpenGL rendering context
         self.switch_to()
 

@@ -48,11 +48,17 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action_id, env_config=self.env_config)
         self.env_state = s_prime
         obs = self.env_state.get_observation()
+        self.agent_state.time_step += 1
+        self.agent_state.episode_reward += reward
         return obs, reward, done, info
 
     def reset(self) -> np.ndarray:
         self.env_state.reset_state()
         obs = self.env_state.get_observation()
+        self.agent_state.num_episodes += 1
+        self.agent_state.cumulative_reward += self.agent_state.episode_reward
+        self.agent_state.time_step = 0
+        self.agent_state.episode_reward = 0
         return obs
 
     def render(self, mode: str = 'human'):
