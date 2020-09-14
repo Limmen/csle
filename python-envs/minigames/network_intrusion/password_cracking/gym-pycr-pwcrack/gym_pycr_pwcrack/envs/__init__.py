@@ -1,1 +1,1 @@
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCRPwCrackSimple1Env
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCRPwCrackSimpleSim1Env

@@ -1,5 +1,5 @@
 
-class EnvLog:
+class AgentLog:
     def __init__(self):
         self.log = []
 

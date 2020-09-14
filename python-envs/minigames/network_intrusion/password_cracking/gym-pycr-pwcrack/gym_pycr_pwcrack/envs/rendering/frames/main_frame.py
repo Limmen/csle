@@ -8,7 +8,7 @@ from gym_pycr_pwcrack.envs.rendering.util.render_util import batch_rect_fill, ba
     draw_and_fill_rect, create_circle_fill, create_circle, batch_rect_border
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.env_state import EnvState
+from gym_pycr_pwcrack.dao.agent_state import AgentState
 from gym_pycr_pwcrack.dao.node_type import NodeType
 
 class MainFrame(pyglet.window.Window):
@@ -18,7 +18,7 @@ class MainFrame(pyglet.window.Window):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EnvConfig, init_state : EnvState):
+    def __init__(self, env_config: EnvConfig, init_state : AgentState):
         # call constructor of parent class
         super(MainFrame, self).__init__(height=700, width=900, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
@@ -322,7 +322,7 @@ class MainFrame(pyglet.window.Window):
         :return: None
         """
         script_dir = os.path.dirname(__file__)
-        resource_path = os.path.join(script_dir, './resources/')
+        resource_path = os.path.join(script_dir, self.env_config.render_config.resources_dir)
         if os.path.exists(resource_path):
             pyglet.resource.path = [resource_path]
         else:
@@ -337,5 +337,11 @@ class MainFrame(pyglet.window.Window):
         # Make this window the current OpenGL rendering context
         self.switch_to()
 
-    def set_state(self, state : EnvState):
+    def set_state(self, state : AgentState):
         self.state = state
+
+    def new_window(self):
+        self.batch = pyglet.graphics.Batch()
+        self.background = pyglet.graphics.OrderedGroup(0)
+        self.first_foreground = pyglet.graphics.OrderedGroup(1)
+        self.second_foreground = pyglet.graphics.OrderedGroup(2)

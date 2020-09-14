@@ -3,9 +3,9 @@ Register OpenAI Envs
 """
 from gym.envs.registration import register
 
-# -------- Version 1 ------------
+# -------- Difficulty Level: Simple, Version 1 ------------
 register(
-    id='cgc-bta-v1',
-    entry_point='gym_pycr_pwcrack.envs:TODO',
-    kwargs={'config': None}
+    id='pycr-pwcrack-simple-sim-v1',
+    entry_point='gym_pycr_pwcrack.envs:PyCRPwCrackSimpleSim1Env',
+    kwargs={'env_config': None}
 )

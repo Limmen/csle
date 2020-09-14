@@ -24,17 +24,21 @@ import numpy as np
 import sys
 from gym_pycr_pwcrack.envs.rendering.frames.main_frame import MainFrame
 from gym_pycr_pwcrack.dao.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.env_state import EnvState
+from gym_pycr_pwcrack.dao.agent_state import AgentState
 from gym_pycr_pwcrack.dao.node import Node
 from gym_pycr_pwcrack.dao.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.flag import Flag
 from gym_pycr_pwcrack.dao.node_type import NodeType
-from gym_pycr_pwcrack.dao.env_log import EnvLog
+from gym_pycr_pwcrack.dao.agent_log import AgentLog
 import gym_pycr_pwcrack.constants.constants as constants
+from gym_pycr_pwcrack.dao.action_config import ActionConfig
+from gym_pycr_pwcrack.dao.render_config import RenderConfig
+from gym_pycr_pwcrack.dao.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.dao.env_mode import EnvMode
 
 class Viewer():
 
-    def __init__(self, env_config: EnvConfig, init_state : EnvState):
+    def __init__(self, env_config: EnvConfig, init_state : AgentState):
         self.isopen = True
         self.env_config = env_config
         self.init_state = init_state
@@ -158,11 +162,12 @@ if __name__ == '__main__':
     #     [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     # ]
     network_conf = NetworkConfig(subnet_mask=subnet_mask, nodes=nodes, adj_matrix=adj_matrix)
-    env_config = EnvConfig(network_conf=network_conf)
-    env_state = EnvState(num_servers = 5, num_ports = 5, num_vuln = 5, env_log=EnvLog(),
-                         service_lookup=constants.SERVICES.service_lookup,
-                         vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
-                         os_lookup = constants.OS.os_lookup)
+    env_config = EnvConfig(network_conf=network_conf, action_conf=ActionConfig(actions = []), num_ports=5, num_vuln=5,
+                           render_config = RenderConfig(), env_mode = EnvMode, cluster_config=ClusterConfig())
+    env_state = AgentState(num_servers = 5, num_ports = 5, num_vuln = 5, env_log=AgentLog(),
+                           service_lookup=constants.SERVICES.service_lookup,
+                           vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
+                           os_lookup = constants.OS.os_lookup)
     env_state.env_log.add_entry("test1 test1 test1 test1 test1 test1 test1")
     env_state.env_log.add_entry("test2 test2 test2 test2 test2 test2 test2")
     env_state.env_log.add_entry("test3")
