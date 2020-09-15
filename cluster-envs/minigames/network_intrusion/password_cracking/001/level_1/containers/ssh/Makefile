@@ -16,7 +16,7 @@ ROOT_PW_2=puppet
 NON_ROOT_USER_1=user
 NON_ROOT_PW_1=123123
 FLAG_INFO_FILE=flag_info.txt
-FLAG_PATH_1=/home/kim
+FLAG_PATH_1=/home/puppet
 FLAG_NAME_1=flag2
 
 all: rm-image rm-network build net

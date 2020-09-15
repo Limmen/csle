@@ -1,1 +1,1 @@
-admin:admin kim:ham
+admin:admin puppet:puppet

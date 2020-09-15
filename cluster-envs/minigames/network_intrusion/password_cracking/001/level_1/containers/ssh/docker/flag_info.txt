@@ -1,1 +1,1 @@
-/home/kim:flag2
+/home/puppet:flag2

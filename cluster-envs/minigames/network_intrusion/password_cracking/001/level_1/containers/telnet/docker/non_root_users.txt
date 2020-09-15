@@ -1,1 +1,1 @@
-eric:football
+vagrant:vagrant

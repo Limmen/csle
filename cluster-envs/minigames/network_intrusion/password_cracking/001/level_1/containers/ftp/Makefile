@@ -16,7 +16,7 @@ ROOT_PW_2=euler
 NON_ROOT_USER_1=pi
 NON_ROOT_PW_1=pi
 FLAG_INFO_FILE=flag_info.txt
-FLAG_PATH_1=/home/euler
+FLAG_PATH_1=/home/pi
 FLAG_NAME_1=flag3
 
 all: rm-image rm-network build net

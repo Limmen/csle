@@ -1,1 +1,1 @@
-admin:admin stefan:eriksson
+admin:admin test:qwerty
