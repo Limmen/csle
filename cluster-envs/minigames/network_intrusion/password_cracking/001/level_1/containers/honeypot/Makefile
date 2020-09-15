@@ -11,10 +11,10 @@ ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
 ROOT_USER_1=admin
 ROOT_PW_1=admin
-ROOT_USER_2=stefan
-ROOT_PW_2=eriksson
-NON_ROOT_USER_1=emil
-NON_ROOT_PW_1=karlsson
+ROOT_USER_2=test
+ROOT_PW_2=qwerty
+NON_ROOT_USER_1=oracle
+NON_ROOT_PW_1=abc123
 
 all: rm-image rm-network build net
 

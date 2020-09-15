@@ -26,6 +26,7 @@ RUN apt-get -y install exploitdb
 RUN apt-get -y install nikto
 RUN apt-get -y install traceroute
 RUN apt-get -y install finger
+RUN apt-get -y install git
 
 # Setup users
 
@@ -43,6 +44,19 @@ RUN chmod 777 /setup_firewall.sh
 
 # SSH
 RUN service ssh start
+
+# NMAP vuln scan
+RUN git clone https://github.com/scipag/vulscan scipag_vulscan
+RUN ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
+
+# NMAP nmap-vulners
+RUN git clone https://github.com/vulnersCom/nmap-vulners
+RUN cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
+RUN nmap --script-updatedb
+
+# SecLists
+RUN git clone https://github.com/danielmiessler/SecLists
+
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh

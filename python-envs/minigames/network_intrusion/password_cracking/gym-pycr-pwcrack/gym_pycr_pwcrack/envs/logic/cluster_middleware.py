@@ -1,6 +1,8 @@
 from typing import Union
 from gym_pycr_pwcrack.dao.env_state import EnvState
 from gym_pycr_pwcrack.dao.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.action import Action
+from gym_pycr_pwcrack.dao.action_type import ActionType
 
 class ClusterMiddleware:
 
@@ -8,5 +10,17 @@ class ClusterMiddleware:
         pass
 
     @staticmethod
-    def transition(s: EnvState, a: int, env_config: EnvConfig) -> Union[EnvState, int, bool]:
-        return s, 0, False
+    def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        if a.type == ActionType.RECON:
+            return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
+        elif a.type == ActionType.EXPLOIT:
+            return ClusterMiddleware.exploit_action(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Action type not recognized")
+
+    @staticmethod
+    def recon_action(s: EnvState, a: Action, env_config: EnvConfig):
+        pass
+
+    def exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
+        pass

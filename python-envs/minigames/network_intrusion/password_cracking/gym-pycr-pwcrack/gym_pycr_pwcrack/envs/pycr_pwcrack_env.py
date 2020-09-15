@@ -15,8 +15,10 @@ from gym_pycr_pwcrack.dao.node_type import NodeType
 from gym_pycr_pwcrack.dao.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.env_mode import EnvMode
-from gym_pycr_pwcrack.dao.action_config import ActionConfig
+from gym_pycr_pwcrack.dao.action_config import ActionConfig, NMAPActions
 from gym_pycr_pwcrack.dao.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.dao.action import Action
+from gym_pycr_pwcrack.dao.action_type import ActionType
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -44,7 +46,16 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
     # -------- API ------------
     def step(self, action_id : int) -> Union[np.ndarray, int, bool, dict]:
+        """
+        Takes a step in the environment by executing the given action
+
+        :param action_id: the action to take
+        :return: (obs, reward, done, info)
+        """
         info = {}
+        if action_id not in self.env_config.action_conf.action_lookup_d[action_id]:
+            raise ValueError("Action ID: {} not recognized".format(action_id))
+        action = self.env_config.action_conf.action_lookup_d[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action_id, env_config=self.env_config)
         self.env_state = s_prime
         obs = self.env_state.get_observation()
@@ -53,6 +64,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         return obs, reward, done, info
 
     def reset(self) -> np.ndarray:
+        """
+        Resets the environment state, this should be called whenever step() returns <done>
+
+        :return: initial observation
+        """
         self.env_state.reset_state()
         obs = self.env_state.get_observation()
         self.agent_state.num_episodes += 1
@@ -135,7 +151,17 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             network_conf = NetworkConfig(subnet_mask=subnet_mask, nodes=nodes, adj_matrix=adj_matrix)
             render_config = RenderConfig()
             cluster_config = ClusterConfig()
-            env_config = EnvConfig(network_conf=network_conf, action_conf=ActionConfig(actions=[]), num_ports=5, num_vuln=5,
+            action_config = ActionConfig(actions=[
+                NMAPActions.TCP_SYN_STEALTH_SCAN(network_conf.subnet_mask),
+                NMAPActions.PING_SCAN(network_conf.subnet_mask),
+                NMAPActions.UDP_PORT_SCAN(network_conf.subnet_mask),
+                NMAPActions.TCP_CON_NON_STEALTH_SCAN(network_conf.subnet_mask),
+                NMAPActions.TCP_FIN_SCAN(network_conf.subnet_mask),
+                NMAPActions.TCP_NULL_SCAN(network_conf.subnet_mask),
+                NMAPActions.TCP_XMAS_TREE_SCAN(network_conf.subnet_mask),
+                NMAPActions.OS_DETECTION_SCAN(network_conf.subnet_mask),
+            ])
+            env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=5, num_vuln=5,
                                    render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config)
         super().__init__(env_config=env_config)
 

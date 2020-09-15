@@ -22,8 +22,8 @@
       ],
       "non_root_users" : [
         {
-          "username": "jessica",
-          "password": "water"
+          "username": "guest",
+          "password": "password"
         }
       ],
       "flags": []
@@ -38,14 +38,14 @@
           "password": "admin"
         },
         {
-          "username": "kim",
-          "password": "ham"
+          "username": "puppet",
+          "password": "puppet"
         }
       ],
       "non_root_users" : [
         {
-          "username": "kennedy",
-          "password": "linear"
+          "username": "user",
+          "password": "123123"
         }
       ],
       "flags": [
@@ -72,8 +72,8 @@
       ],
       "non_root_users" : [
         {
-          "username": "eric",
-          "password": "football"
+          "username": "vagrant",
+          "password": "vagrant"
         }
       ],
       "flags": [
@@ -94,14 +94,14 @@
           "password": "admin"
         },
         {
-          "username": "stefan",
-          "password": "eriksson"
+          "username": "test",
+          "password": "qwerty"
         }
       ],
       "non_root_users" : [
         {
-          "username": "emil",
-          "password": "karlsson"
+          "username": "oracle",
+          "password": "abc123"
         }
       ],
       "flags": []
@@ -122,8 +122,8 @@
       ],
       "non_root_users" : [
         {
-          "username": "newton",
-          "password": "newton"
+          "username": "pi",
+          "password": "pi"
         }
       ],
       "flags": [
