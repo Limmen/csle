@@ -1,10 +1,10 @@
 from typing import Union
-from gym_pycr_pwcrack.dao.env_state import EnvState
-from gym_pycr_pwcrack.dao.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.env_mode import EnvMode
+from gym_pycr_pwcrack.dao.env.env_state import EnvState
+from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.env.env_mode import EnvMode
 from gym_pycr_pwcrack.envs.logic.cluster_middleware import ClusterMiddleware
 from gym_pycr_pwcrack.envs.logic.simulator import Simulator
-from gym_pycr_pwcrack.dao.action import Action
+from gym_pycr_pwcrack.dao.action.action import Action
 
 class TransitionOperator:
 

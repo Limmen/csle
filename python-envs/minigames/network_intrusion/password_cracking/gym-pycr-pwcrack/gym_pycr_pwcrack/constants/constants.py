@@ -36,14 +36,18 @@ class RENDERING:
 
 class SERVICES:
     service_lookup = {}
+    service_lookup["none"] = 0
     service_lookup["finger"] = 1
     service_lookup["mongo"] = 2
+    service_lookup["mongod"] = 2
     service_lookup["tomcat"] = 3
     service_lookup["teamspeak"] = 4
+    service_lookup["ts3"] = 4
     service_lookup["snmp"] = 5
     service_lookup["irc"] = 6
     service_lookup["ntp"] = 7
     service_lookup["postgres"] = 8
+    service_lookup["postgresql"] = 8
     service_lookup["kafka"] = 9
     service_lookup["smtp"] = 10
     service_lookup["ssh"] = 11
@@ -51,6 +55,7 @@ class SERVICES:
     service_lookup["cassandra"] = 13
     service_lookup["telnet"] = 14
     service_lookup["http"] = 15
+    service_lookup["http-proxy"] = 15
     service_lookup["gopher"] = 16
     service_lookup["kerberos"] = 17
     service_lookup["netbios"] = 18
@@ -59,16 +64,24 @@ class SERVICES:
     service_lookup["hdfs"] = 21
     service_lookup["netconf"] = 22
     service_lookup["dns"] = 23
+    service_lookup["domain"] = 23
     service_lookup["mysql"] = 24
     service_lookup["docker"] = 25
     service_lookup["ventrilo"] = 26
     service_lookup["bittorrent"] = 27
     service_lookup["bitcoin"] = 28
     service_lookup["ftp"] = 29
+    service_lookup["unknown"] = 30
+    service_lookup["apani1"] = 31
+    service_lookup["eforward"] = 32
+    service_lookup["XmlIpcRegSvc"] = 33
+    service_lookup["xmlipcregsvc"] = 33
+    service_lookup["ajp13"] = 34
     service_lookup_inv = {v: k for k, v in service_lookup.items()}
 
 class VULNERABILITIES:
     vuln_lookup = {}
+    vuln_lookup["none"] = 0
     vuln_lookup["heartbleed"] = 1
     vuln_lookup["ghostcat"] = 2
     vuln_lookup["sql_injection"] = 3
@@ -78,11 +91,26 @@ class VULNERABILITIES:
     vuln_lookup["shellshock"] = 7
     vuln_lookup["poodle"] = 8
     vuln_lookup["timthumb"] = 9
+    vuln_lookup["CVE-2020-8620"] = 10
+    vuln_lookup["CVE-2020-8617"] = 11
+    vuln_lookup["CVE-2020-8616"] = 12
+    vuln_lookup["CVE-2019-6470"] = 13
+    vuln_lookup["CVE-2020-8623"] = 14
+    vuln_lookup["CVE-2020-8621"] = 15
+    vuln_lookup["CVE-2020-8624"] = 16
+    vuln_lookup["CVE-2020-8622"] = 17
+    vuln_lookup["CVE-2020-8619"] = 18
+    vuln_lookup["CVE-2020-8618"] = 19
+    vuln_lookup["CVE-2014-9278"] = 20
+    vuln_lookup["ssh-weak-password"] = 21
+    vuln_lookup["telnet-weak-password"] = 22
+    vuln_lookup["ftp-weak-password"] = 23
     vuln_lookup_inv = {v: k for k, v in vuln_lookup.items()}
     
     
 class OS:
     os_lookup = {}
+    os_lookup["unknown"] = 0
     os_lookup["windows"] = 1
     os_lookup["ubuntu"] = 2
     os_lookup["kali"] = 3
@@ -91,6 +119,7 @@ class OS:
     os_lookup["fedora"] = 6
     os_lookup["debian"] = 7
     os_lookup["redhat"] = 8
+    os_lookup["linux"] = 9
     os_lookup_inv = {v: k for k, v in os_lookup.items()}
 
 class SECLISTS:
@@ -131,7 +160,7 @@ class NMAP:
                          + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s"
     SMTP_BRUTE_HOST = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
-    POSGRES_BRUTE_SUBNET = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    POSTGRES_BRUTE_SUBNET = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s"
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"

@@ -57,6 +57,8 @@ RUN nmap --script-updatedb
 # SecLists
 RUN git clone https://github.com/danielmiessler/SecLists
 
+# Alias
+RUN echo "alias ll='ls -al'" >> /root.bashrc
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh

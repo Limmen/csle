@@ -1,8 +1,8 @@
 from typing import Union
-from gym_pycr_pwcrack.dao.env_state import EnvState
-from gym_pycr_pwcrack.dao.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.action import Action
-from gym_pycr_pwcrack.dao.action_type import ActionType
+from gym_pycr_pwcrack.dao.env.env_state import EnvState
+from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.action.action import Action
+from gym_pycr_pwcrack.dao.action.action_type import ActionType
 
 class ClusterMiddleware:
 
@@ -22,5 +22,6 @@ class ClusterMiddleware:
     def recon_action(s: EnvState, a: Action, env_config: EnvConfig):
         pass
 
+    @staticmethod
     def exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
         pass

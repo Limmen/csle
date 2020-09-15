@@ -5,11 +5,11 @@ from typing import List
 import os
 import pyglet
 from gym_pycr_pwcrack.envs.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
-    draw_and_fill_rect, create_circle_fill, create_circle, batch_rect_border
+    create_circle_fill, batch_rect_border
 import gym_pycr_pwcrack.constants.constants as constants
-from gym_pycr_pwcrack.dao.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.agent_state import AgentState
-from gym_pycr_pwcrack.dao.node_type import NodeType
+from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
+from gym_pycr_pwcrack.dao.env.node_type import NodeType
 
 class MainFrame(pyglet.window.Window):
     """
@@ -27,6 +27,9 @@ class MainFrame(pyglet.window.Window):
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)
         self.second_foreground = pyglet.graphics.OrderedGroup(2)
+        self.state_labels = []
+        self.ports_labels = []
+        self.log_labels = []
         self.flags_sprites = []
         self.setup_resources_path()
         self.state = init_state
@@ -171,9 +174,9 @@ class MainFrame(pyglet.window.Window):
 
         y = y-25
         labels = ["m", "ip", "os"]
-        for i in range(self.state.num_ports):
+        for i in range(self.state.obs_state.num_ports):
             labels.append("p" + str(i))
-        for i in range(self.state.num_vuln):
+        for i in range(self.state.obs_state.num_vuln):
             labels.append("v" + str(i))
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
@@ -181,14 +184,18 @@ class MainFrame(pyglet.window.Window):
                         self.second_foreground)
         y = y - 40
         # Draw state
+        self.state_labels = []
         state_rect_coords = {}
         for m in range(self.state.machines_state.shape[0]):
+            c_labels = []
             for c in range(self.state.machines_state.shape[1]):
                 batch_rect_border(x_start+c*w, y-(m*h), w, h, constants.RENDERING.BLACK, self.batch, self.background)
                 y_s = y-(m*h)+w/2
                 state_rect_coords[(m,c)] = (x_start+c*w,y-(m*h))
-                batch_label(str(self.state.machines_state[m][c]), x_start+w/2 + c * (w), y_s, 10, (0, 0, 0, 255), self.batch,
+                l = batch_label(str(self.state.machines_state[m][c]), x_start+w/2 + c * (w), y_s, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
+                c_labels.append(l)
+            self.state_labels.append(c_labels)
 
         self.state_rect_coords = state_rect_coords
 
@@ -200,65 +207,81 @@ class MainFrame(pyglet.window.Window):
         w = 30
         h = 25
 
-        batch_label("Ports", 1.5 * (end_state_x / 6),
+        batch_label("Ports", 115,
                     y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
-        labels = ["m", "p", "s_id", "service"]
+        labels = ["m", "p", "s_id", "udp/tcp", "service"]
         for c in range(len(labels)):
-            if c != 3:
+            if c == 0:
                 batch_label(labels[c], int(x_start+15 + c * w), y_s-65, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
-            else:
-                batch_label(labels[c], int(x_start+30 + c * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+            elif c == 2:
+                batch_label(labels[c], int(x_start + 0 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
-
+            elif c == 3:
+                batch_label(labels[c], int(x_start + 15 + (c + 1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+            elif c == 1:
+                batch_label(labels[c], int(x_start +30 + c * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+            else:
+                batch_label(labels[c], int(x_start+45 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                            self.second_foreground)
+        self.ports_labels = []
         for p in range(self.state.ports_state.shape[0]):
             y_p = int(y - (p * h))
             if y_p > 5:
                 batch_rect_border(int(x_start + 0 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_rect_border(int(x_start + 1 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_rect_border(int(x_start + 2 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_rect_border(int(x_start + 3 * w), y_p, w*3, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_label(str(self.state.ports_state[p][0]), int(x_start+15 + 0 * w), y_p+w/3, 10, (0, 0, 0, 255),
+                batch_rect_border(int(x_start + 1 * w), y_p, w*2, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 3 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 4 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 5 * w), y_p, w*3, h, constants.RENDERING.BLACK, self.batch, self.background)
+                p_0_l = batch_label(str(self.state.ports_state[p][0]), int(x_start+15 + 0 * w), y_p+w/3, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                batch_label(str(self.state.ports_state[p][1]), int(x_start+15 + 1 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                p_1_l = batch_label(str(self.state.ports_state[p][1]), int(x_start+15 + 1.5 * w), y_p + w / 3, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                batch_label(str(self.state.ports_state[p][2]), int(x_start+15 + 2 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                p_2_l = batch_label(str(self.state.ports_state[p][2]), int(x_start+15 + 3 * w), y_p + w / 3, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
+                p_3_l = batch_label(str(self.state.ports_state[p][3]), int(x_start + 15 + 4 * w), y_p + w / 3, 10,
+                                    (0, 0, 0, 255),
+                                    self.batch,
+                                    self.second_foreground)
                 service = "-" if self.state.ports_state[p][2] not in self.state.service_lookup else str(self.state.service_lookup[self.state.ports_state[p][2]])
-                batch_label(service, int(x_start+45 + 3 * w), y_p + w / 3, 10, (0, 0, 0, 255),
+                p_4_l = batch_label(service, int(x_start+75 + 4 * w), y_p + w / 3, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
+            p_lbls = [p_0_l, p_1_l, p_2_l, p_3_l, p_4_l]
+            self.ports_labels.append(p_lbls)
 
 
         # Draw Vulnerabilities Table
 
-        batch_label("Vulnerabilities", 4*(end_state_x/6),
+        batch_label("Vulnerabilities", 350,
                     y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         labels = ["v", "vulnerability"]
         for c in range(len(labels)):
             if c != 1:
-                batch_label(labels[c], int(20 + 2.8*(end_state_x/6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 275 + 0 * w, y_s - 65, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             else:
-                batch_label(labels[c], int(80 + 2.8*(end_state_x/6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 330+1*w, y_s - 65, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
         v_n = 0
         for v_name, v_id in self.state.vuln_lookup.items():
             y_v = int(y - (v_n * h))
             if y_v > 5:
-                batch_rect_border(int(2.8*(end_state_x/6) + 0 * w), y_v, w, h, constants.RENDERING.BLACK, self.batch,
+                batch_rect_border(260 + 0 * w, y_v, w, h, constants.RENDERING.BLACK, self.batch,
                                   self.background)
-                batch_rect_border(int(2.8*(end_state_x/6) + 1 * w), y_v, w * 5, h, constants.RENDERING.BLACK, self.batch,
+                batch_rect_border(260 + 1 * w, y_v, w * 5, h, constants.RENDERING.BLACK, self.batch,
                                   self.background)
-                batch_label(str(v_id), int(15 + 2.8*(end_state_x/6) + 0 * w), y_v + w / 2.5,
+                batch_label(str(v_id), 275 + 0*w, y_v + w / 2.5,
                             10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                batch_label(str(v_name), int(60 + 2.8 * (end_state_x / 6) + 1 * w), y_v + w / 2.5,
+                batch_label(str(v_name), 330+ 1 * w, y_v + w / 2.5,
                             10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
@@ -266,17 +289,17 @@ class MainFrame(pyglet.window.Window):
 
         # Draw OS Table
 
-        batch_label("OS", 6.5 * (end_state_x / 6),
+        batch_label("OS", 555,
                     y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         labels = ["os_id", "os"]
         for c in range(len(labels)):
             if c != 1:
-                batch_label(labels[c], int(20 + 5.5 * (end_state_x / 6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255),
+                batch_label(labels[c], 470 + 0 * w, y_s - 65, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
             else:
-                batch_label(labels[c], int(80 + 5.5 * (end_state_x / 6) + 0 * w), y_s - 65, 10, (0, 0, 0, 255),
+                batch_label(labels[c], 530 + 1 * w, y_s - 65, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
 
@@ -284,21 +307,21 @@ class MainFrame(pyglet.window.Window):
         for os_name, os_id in self.state.os_lookup.items():
             y_o = int(y - (o_n * h))
             if y_o > 5:
-                batch_rect_border(int(5.5 * (end_state_x / 6) + 0 * w), y_o, w, h, constants.RENDERING.BLACK,
+                batch_rect_border(455 + 0 * w, y_o, w, h, constants.RENDERING.BLACK,
                                   self.batch,
                                   self.background)
-                batch_rect_border(int(5.5 * (end_state_x / 6) + 1 * w), y_o, w * 5, h, constants.RENDERING.BLACK,
+                batch_rect_border(455 + 1 * w, y_o, w * 5, h, constants.RENDERING.BLACK,
                                   self.batch,
                                   self.background)
-                batch_label(str(os_id), int(15 + 5.5 * (end_state_x / 6) + 0 * w), y_o + w / 2.5,
+                batch_label(str(os_id), 470 + 0 * w, y_o + w / 2.5,
                             10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                batch_label(str(os_name), int(60 + 5.5 * (end_state_x / 6) + 1 * w), y_o + w / 2.5,
+                batch_label(str(os_name), 530 + 1 * w, y_o + w / 2.5,
                             10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                end_state_x_log=int(5.5 * (end_state_x / 6) + 1 * w) + w*5
+                end_state_x_log=610
             o_n += 1
 
         # Draw log
@@ -309,12 +332,16 @@ class MainFrame(pyglet.window.Window):
                     y_log+60, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
         x = log_x
         h = 20
+        max_logs = 100
         num_logs = len(self.state.env_log.log)
-        for i in range(num_logs):
-            y_t = 10 + y_log - ((i - 1) * h)
-            if y_t > 25:
-                batch_label(self.state.env_log.log[num_logs - 1 - i], x, y_t, 10, (0, 0, 0, 255), self.batch,
+        self.log_labels = []
+        for i in range(max_logs):
+            y_t = 5 + y_log - ((i - 1) * h)
+            if y_t > 0:
+                #self.state.env_log.log[num_logs - 1 - i]
+                l = batch_label("", x, y_t, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
+                self.log_labels.append(l)
 
     def setup_resources_path(self) -> None:
         """
@@ -334,6 +361,21 @@ class MainFrame(pyglet.window.Window):
         self.n_e_label.text = str(self.state.num_episodes)
         self.r_label.text = str(self.state.episode_reward)
         self.t_label.text = str(self.state.time_step)
+        for m in range(len(self.state_labels)):
+            for c in range(len(self.state_labels[m])):
+                self.state_labels[m][c].text = str(self.state.machines_state[m][c])
+        for p in range(len(self.ports_labels)):
+            for c in range(len(self.ports_labels[p])):
+                if c < 4:
+                    self.ports_labels[p][c].text = str(self.state.ports_state[p][c])
+                else:
+                    service = "-" if int(self.state.ports_state[p][2]) not in self.state.service_lookup_inv else str(
+                        self.state.service_lookup_inv[int(self.state.ports_state[p][2])])
+                    self.ports_labels[p][c].text = service
+        num_logs = len(self.state.env_log.log)
+        for i in range(num_logs):
+            if i < len(self.log_labels)-1:
+                self.log_labels[i].text = str(num_logs - 1 - i) + ":" + self.state.env_log.log[num_logs - 1 - i]
 
     def on_draw(self):
         # Clear the window
@@ -347,6 +389,7 @@ class MainFrame(pyglet.window.Window):
 
     def set_state(self, state : AgentState):
         self.state = state
+        self.state.initialize_render_state()
 
     def new_window(self):
         self.batch = pyglet.graphics.Batch()
