@@ -5,6 +5,7 @@ from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.simulation.recon_simulator import ReconSimulator
+from gym_pycr_pwcrack.envs.logic.simulation.exploit_simulator import ExploitSimulator
 
 class Simulator:
     """
@@ -58,24 +59,6 @@ class Simulator:
             return ReconSimulator.simulate_vulscan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ReconSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action: {} not recognized".format(a.id))
 
@@ -89,6 +72,25 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        return s, 0, False
+        if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Exploit action: {} not recognized".format(a.id))
 
 

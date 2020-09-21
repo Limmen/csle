@@ -29,7 +29,7 @@ class AgentState:
 
 
     def initialize_render_state(self) -> np.ndarray:
-        self.machines_state = np.zeros((self.obs_state.num_machines, 6 + self.obs_state.num_ports + self.obs_state.num_vuln))
+        self.machines_state = np.zeros((self.obs_state.num_machines, 7 + self.obs_state.num_ports + self.obs_state.num_vuln))
         self.ports_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_ports, 4))
         self.vuln_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_vuln, 2))
         self.os_state = np.zeros((self.obs_state.num_machines, 1))
@@ -86,6 +86,9 @@ class AgentState:
                 # Total CVSS score
                 total_cvss = sum(list(map(lambda x: x.cvss, self.obs_state.machines[i].vuln)))
                 self.machines_state[i][5 + self.obs_state.num_ports + self.obs_state.num_vuln] = total_cvss
+
+                # Shell Access
+                self.machines_state[i][6 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(self.obs_state.machines[i].shell_access)
 
 
 

@@ -7,14 +7,21 @@ def test_env(env_name : str, num_steps : int):
     env = gym.make(env_name, env_config=None)
     env.reset()
 
-    #actions = np.array([0,1,2,3,4,5,6,7,8])
-    actions = np.array([7, 8])
+    num_actions = env.env_config.action_conf.num_actions
+    actions = np.array(list(range(num_actions)))
+    print("num actions:{}".format(num_actions))
+
+    #actions = np.array([71])
+    #actions = np.array([9, 16])
+    #actions = np.array([9])
+    #actions = np.array([10, 17])
+    #actions = np.array([7, 8])
     #actions = np.array([5,2])
     for i in range(num_steps):
         action = np.random.choice(actions)
         res = env.step(action)
         env.render()
-        time.sleep(0.5)
+        time.sleep(0.01)
     env.reset()
     env.close()
 

@@ -184,6 +184,7 @@ class MainFrame(pyglet.window.Window):
         labels.append("#o_p")
         labels.append("#v")
         labels.append("s(cvss)")
+        labels.append("sh")
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
             batch_label(labels[c], x_start+w/2+c*(w), y, 10, (0, 0, 0, 255), self.batch,
@@ -341,7 +342,7 @@ class MainFrame(pyglet.window.Window):
                             self.batch,
                             self.second_foreground)
                 self.os_labels.append([o_lbl_0, o_lbl_1])
-                end_state_x_log=610
+                end_state_x_log= max(610, end_state_x)
             o_n += 1
 
         # Draw log

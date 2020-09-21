@@ -24,3 +24,9 @@ class EnvConfig:
         self.os_scan_miss_p = 0.00
         self.vulscan_miss_p = 0.00
         self.vulners_miss_p = 0.00
+        self.telnet_dict_attack_miss_p = 0.00
+        self.ssh_dict_attack_miss_p = 0.00
+        self.irc_dict_attack_miss_p = 0.00
+        self.mongo_dict_attack_miss_p = 0.00
+        self.cassandra_dict_attack_miss_p = 0.00
+        self.ftp_dict_attack_miss_p = 0.00
