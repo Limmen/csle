@@ -12,3 +12,9 @@ class MachineObservationState:
 
     def __str__(self):
         return "ip:{},os:{},num_ports:{},num_vuln:{}".format(self.ip, self.os, len(self.ports), len(self.vuln))
+
+    def sort_ports(self):
+        self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
+
+    def sort_vuln(self, vuln_lookup):
+        self.vuln = sorted(self.vuln, key=lambda x: vuln_lookup[x.name], reverse=False)

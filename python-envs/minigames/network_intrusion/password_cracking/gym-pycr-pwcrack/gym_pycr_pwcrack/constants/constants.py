@@ -105,8 +105,10 @@ class VULNERABILITIES:
     vuln_lookup["ssh-weak-password"] = 21
     vuln_lookup["telnet-weak-password"] = 22
     vuln_lookup["ftp-weak-password"] = 23
+    vuln_lookup["CVE-2020-15523"] = 24
+    vuln_lookup["CVE-2020-14422"] = 25
     vuln_lookup_inv = {v: k for k, v in vuln_lookup.items()}
-    
+
     
 class OS:
     os_lookup = {}

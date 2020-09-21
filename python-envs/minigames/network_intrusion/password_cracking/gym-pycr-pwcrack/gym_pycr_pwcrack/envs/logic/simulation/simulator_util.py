@@ -158,16 +158,17 @@ class SimulatorUtil:
         return merged_vuln, num_new_vuln_found
 
     @staticmethod
-    def simulate_port_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
-                                  protocol=TransportProtocol.TCP) -> Union[EnvState, int]:
+    def simulate_port_vuln_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
+                                       protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> Union[EnvState, int]:
         """
-        Helper function for simulating a port-scan action
+        Helper function for simulating port-scan and vuln-scan actions
 
         :param s: the current environment state
         :param a: the scan action to take
         :param env_config: the current environment configuration
         :param miss_p: the simulated probability that the scan action will not detect a real service or node
         :param protocol: the tranport protocol for the scan
+        :param vuln_scan: boolean flag whether the scan is a vulnerability scan or not
         :return: s_prime, reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines = 0, 0, 0, 0
@@ -184,6 +185,14 @@ class SimulatorUtil:
                             port_obs = PortObservationState(port=service.port, open=True, service=service.name,
                                                             protocol=protocol)
                             new_m_obs.ports.append(port_obs)
+
+                    if vuln_scan:
+                        for vuln in node.vulnerabilities:
+                            if not np.random.rand() < miss_p:
+                                vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
+                                                                         protocol=vuln.protocol, cvss=vuln.cvss)
+                                new_m_obs.vuln.append(vuln_obs)
+
             new_machines_obs = []
             merged = False
             for o_m in s.obs_state.machines:
@@ -219,6 +228,14 @@ class SimulatorUtil:
                         port_obs = PortObservationState(port=service.port, open=True, service=service.name,
                                                         protocol=protocol)
                         m_obs.ports.append(port_obs)
+
+                if vuln_scan:
+                    for vuln in node.vulnerabilities:
+                        if not np.random.rand() < miss_p:
+                            vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
+                                                                     protocol=vuln.protocol, cvss=vuln.cvss)
+                            m_obs.vuln.append(vuln_obs)
+
                 new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines = \
                 SimulatorUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)

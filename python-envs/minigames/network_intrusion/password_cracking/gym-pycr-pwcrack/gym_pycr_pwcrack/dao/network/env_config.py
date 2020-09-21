@@ -22,8 +22,5 @@ class EnvConfig:
         self.udp_port_scan_miss_p = 0.00
         self.syn_stealth_scan_miss_p = 0.00
         self.os_scan_miss_p = 0.00
-
-        # self.ping_scan_miss_p = 0.02
-        # self.udp_port_scan_miss_p = 0.07
-        # self.syn_stealth_scan_miss_p = 0.04
-        # self.os_scan_miss_p = 0.08
+        self.vulscan_miss_p = 0.00
+        self.vulners_miss_p = 0.00

@@ -255,8 +255,14 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                 NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
                 NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
             ])
-            env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=5,
+            env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,
                                    render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config)
+            env_config.ping_scan_miss_p = 0.02
+            env_config.udp_port_scan_miss_p = 0.07
+            env_config.syn_stealth_scan_miss_p = 0.04
+            env_config.os_scan_miss_p = 0.08
+            env_config.vulners_miss_p = 0.09
+
         super().__init__(env_config=env_config)
 
 # -------- Difficulty 2 (Medium) ------------

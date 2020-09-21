@@ -56,7 +56,7 @@ class Simulator:
             return ReconSimulator.simulate_os_detection_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.VULSCAN_HOST or a.id == ActionId.VULSCAN_SUBNET:
             return ReconSimulator.simulate_vulscan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_HOST:
+        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
             return ReconSimulator.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)

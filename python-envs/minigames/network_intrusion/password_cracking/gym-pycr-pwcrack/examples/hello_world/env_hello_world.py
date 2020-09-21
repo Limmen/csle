@@ -7,7 +7,8 @@ def test_env(env_name : str, num_steps : int):
     env = gym.make(env_name, env_config=None)
     env.reset()
 
-    actions = np.array([0,1,2,3,4,5,6,7])
+    #actions = np.array([0,1,2,3,4,5,6,7,8])
+    actions = np.array([7, 8])
     #actions = np.array([5,2])
     for i in range(num_steps):
         action = np.random.choice(actions)

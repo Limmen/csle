@@ -20,9 +20,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.syn_stealth_scan_miss_p,
-                                                          protocol=TransportProtocol.TCP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.syn_stealth_scan_miss_p,
+                                                                       protocol=TransportProtocol.TCP)
         return s_prime, reward, False
 
     @staticmethod
@@ -50,9 +50,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.udp_port_scan_miss_p,
-                                                          protocol=TransportProtocol.UDP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.udp_port_scan_miss_p,
+                                                                       protocol=TransportProtocol.UDP)
         return s_prime, reward, False
 
     @staticmethod
@@ -65,9 +65,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.syn_stealth_scan_miss_p,
-                                                          protocol=TransportProtocol.TCP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.syn_stealth_scan_miss_p,
+                                                                       protocol=TransportProtocol.TCP)
         return s_prime, reward, False
 
     @staticmethod
@@ -80,9 +80,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.syn_stealth_scan_miss_p,
-                                                          protocol=TransportProtocol.TCP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.syn_stealth_scan_miss_p,
+                                                                       protocol=TransportProtocol.TCP)
         return s_prime, reward, False
 
     @staticmethod
@@ -95,9 +95,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.syn_stealth_scan_miss_p,
-                                                          protocol=TransportProtocol.TCP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.syn_stealth_scan_miss_p,
+                                                                       protocol=TransportProtocol.TCP)
         return s_prime, reward, False
 
     @staticmethod
@@ -110,9 +110,9 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.syn_stealth_scan_miss_p,
-                                                          protocol=TransportProtocol.TCP)
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.syn_stealth_scan_miss_p,
+                                                                       protocol=TransportProtocol.TCP)
         return s_prime, reward, False
 
     @staticmethod
@@ -139,7 +139,11 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        return s, 0, False
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.vulscan_miss_p,
+                                                                       protocol=TransportProtocol.TCP,
+                                                                       vuln_scan=True)
+        return s_prime, reward, False
 
     @staticmethod
     def simulate_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
@@ -151,7 +155,11 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        return s, 0, False
+        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+                                                                       miss_p=env_config.vulners_miss_p,
+                                                                       protocol=TransportProtocol.TCP,
+                                                                       vuln_scan=True)
+        return s_prime, reward, False
 
     @staticmethod
     def simulate_telnet_same_user_dictionary(s: EnvState, a: Action, env_config: EnvConfig) -> Union[
