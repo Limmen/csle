@@ -3,7 +3,7 @@ from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.envs.logic.cluster_middleware import ClusterMiddleware
-from gym_pycr_pwcrack.envs.logic.simulator import Simulator
+from gym_pycr_pwcrack.envs.logic.simulation.simulator import Simulator
 from gym_pycr_pwcrack.dao.action.action import Action
 
 class TransitionOperator:
