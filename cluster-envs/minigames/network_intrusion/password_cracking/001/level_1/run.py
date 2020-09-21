@@ -3,7 +3,7 @@ import argparse
 import subprocess
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Parse flags for running the cluster network')
+    parser = argparse.ArgumentParser(description='Parse flags for running the cluster env')
     parser.add_argument("-r", "--run", help="Boolean parameter, if true, run containers",
                         action="store_true")
     parser.add_argument("-b", "--build", help="Boolean parameter, if true build containers",

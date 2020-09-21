@@ -119,7 +119,6 @@ celerybeat.pid
 # Environments
 .env
 .venv
-python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/gym_pycr_pwcrack/dao/network/
 venv/
 ENV/
 env.bak/
