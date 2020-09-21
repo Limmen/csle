@@ -3,23 +3,23 @@ import gym
 from abc import ABC
 import numpy as np
 import os
-from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
-from gym_pycr_pwcrack.dao.env.env_state import EnvState
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.agent.agent_log import AgentLog
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.envs.logic.transition_operator import TransitionOperator
-from gym_pycr_pwcrack.dao.env.node import Node
-from gym_pycr_pwcrack.dao.env.flag import Flag
-from gym_pycr_pwcrack.dao.env.node_type import NodeType
-from gym_pycr_pwcrack.dao.env.network_config import NetworkConfig
+from gym_pycr_pwcrack.dao.network.node import Node
+from gym_pycr_pwcrack.dao.network.flag import Flag
+from gym_pycr_pwcrack.dao.network.node_type import NodeType
+from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
-from gym_pycr_pwcrack.dao.env.env_mode import EnvMode
+from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig, NMAPActions
-from gym_pycr_pwcrack.dao.env.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.dao.env.network_service import NetworkService
-from gym_pycr_pwcrack.dao.env.transport_protocol import TransportProtocol
-from gym_pycr_pwcrack.dao.env.vulnerability import Vulnerability
+from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.dao.network.network_service import NetworkService
+from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
+from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """

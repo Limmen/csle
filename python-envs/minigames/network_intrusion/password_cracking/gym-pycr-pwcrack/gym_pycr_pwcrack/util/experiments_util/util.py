@@ -1,5 +1,5 @@
 """
-Utility functions for experiments with the cgc-bta-env
+Utility functions for experiments with the cgc-bta-network
 """
 import io
 import json

@@ -1,4 +1,4 @@
-from gym_pycr_pwcrack.dao.env.transport_protocol import TransportProtocol
+from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 
 class PortObservationState:
 

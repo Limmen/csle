@@ -217,7 +217,7 @@ counter_cache_save_period: 7200
 # Supported values are: NativeAllocator, JEMallocAllocator
 #
 # If you intend to use JEMallocAllocator you have to install JEMalloc as library and
-# modify cassandra-env.sh as directed in the file.
+# modify cassandra-network.sh as directed in the file.
 #
 # Defaults to NativeAllocator
 # memory_allocator: NativeAllocator

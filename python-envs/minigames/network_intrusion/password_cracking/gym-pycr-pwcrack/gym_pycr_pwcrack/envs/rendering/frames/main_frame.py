@@ -7,9 +7,9 @@ import pyglet
 from gym_pycr_pwcrack.envs.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
 import gym_pycr_pwcrack.constants.constants as constants
-from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
-from gym_pycr_pwcrack.dao.env.node_type import NodeType
+from gym_pycr_pwcrack.dao.network.node_type import NodeType
 
 class MainFrame(pyglet.window.Window):
     """

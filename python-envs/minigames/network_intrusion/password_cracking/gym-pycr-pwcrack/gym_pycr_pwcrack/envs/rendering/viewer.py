@@ -23,18 +23,18 @@ except ImportError as e:
 import numpy as np
 import sys
 from gym_pycr_pwcrack.envs.rendering.frames.main_frame import MainFrame
-from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
-from gym_pycr_pwcrack.dao.env.node import Node
-from gym_pycr_pwcrack.dao.env.network_config import NetworkConfig
-from gym_pycr_pwcrack.dao.env.flag import Flag
-from gym_pycr_pwcrack.dao.env.node_type import NodeType
+from gym_pycr_pwcrack.dao.network.node import Node
+from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
+from gym_pycr_pwcrack.dao.network.flag import Flag
+from gym_pycr_pwcrack.dao.network.node_type import NodeType
 from gym_pycr_pwcrack.dao.agent.agent_log import AgentLog
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
-from gym_pycr_pwcrack.dao.env.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.dao.env.env_mode import EnvMode
+from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 
 class Viewer():
 
@@ -91,7 +91,7 @@ class Viewer():
 
     def render(self, return_rgb_array = False):
         """
-        Renders a state of the env.
+        Renders a state of the network.
 
         :param return_rgb_array: boolean whether to return rgb array or not
         :return: RGB array or bool

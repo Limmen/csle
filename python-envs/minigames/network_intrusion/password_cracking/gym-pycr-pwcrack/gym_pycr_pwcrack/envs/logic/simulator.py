@@ -1,11 +1,11 @@
 from typing import Union, List
 import numpy as np
-from gym_pycr_pwcrack.dao.env.env_state import EnvState
-from gym_pycr_pwcrack.dao.env.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.dao.env.transport_protocol import TransportProtocol
+from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
 

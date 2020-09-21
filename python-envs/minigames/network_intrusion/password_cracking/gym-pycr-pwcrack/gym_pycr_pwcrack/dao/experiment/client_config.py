@@ -19,7 +19,7 @@ class ClientConfig:
         :param env_name: name of the environment for the experiment
         :param output_dir: directory to save outputs (results)
         :param title: title in the GUI
-        :param env_config: env configuration
+        :param env_config: network configuration
         :param initial_state_path: path to initial state
         :param run_many: if this is true, it will try to run many experiments in a row, using different random seeds
         :param random_seeds: list of random seeds when running several experiments in a row
