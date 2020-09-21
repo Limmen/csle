@@ -58,6 +58,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
+        #print("reward:{}, action:{}".format(reward, action))
         self.env_state = s_prime
         obs = self.env_state.get_observation()
         self.agent_state.time_step += 1

@@ -363,11 +363,11 @@ class MainFrame(pyglet.window.Window):
         self.t_label.text = str(self.state.time_step)
         for m in range(len(self.state_labels)):
             for c in range(len(self.state_labels[m])):
-                self.state_labels[m][c].text = str(self.state.machines_state[m][c])
+                self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
         for p in range(len(self.ports_labels)):
             for c in range(len(self.ports_labels[p])):
                 if c < 4:
-                    self.ports_labels[p][c].text = str(self.state.ports_state[p][c])
+                    self.ports_labels[p][c].text = str(int(self.state.ports_state[p][c]))
                 else:
                     service = "-" if int(self.state.ports_state[p][2]) not in self.state.service_lookup_inv else str(
                         self.state.service_lookup_inv[int(self.state.ports_state[p][2])])

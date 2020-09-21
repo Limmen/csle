@@ -14,3 +14,6 @@ class Action:
         self.noise = noise
         self.ip = ip
         self.subnet = subnet
+
+    def __str__(self):
+        return "id:{},name:{},ip:{},subnet:{}".format(self.id, self.name, self.ip, self.subnet)

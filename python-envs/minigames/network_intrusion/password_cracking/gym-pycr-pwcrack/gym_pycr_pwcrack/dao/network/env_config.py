@@ -18,7 +18,12 @@ class EnvConfig:
         self.cluster_config = cluster_config
         self.render_config = render_config
 
-        self.ping_scan_miss_p = 0.02
-        self.udp_port_scan_miss_p = 0.07
-        self.syn_stealth_scan_miss_p = 0.04
-        self.os_scan_miss_p = 0.08
+        self.ping_scan_miss_p = 0.00
+        self.udp_port_scan_miss_p = 0.00
+        self.syn_stealth_scan_miss_p = 0.00
+        self.os_scan_miss_p = 0.00
+
+        # self.ping_scan_miss_p = 0.02
+        # self.udp_port_scan_miss_p = 0.07
+        # self.syn_stealth_scan_miss_p = 0.04
+        # self.os_scan_miss_p = 0.08

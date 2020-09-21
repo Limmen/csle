@@ -16,26 +16,47 @@ class SimulatorUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
                                new_machines_obs: List[MachineObservationState]) -> \
-            Union[List[MachineObservationState], int]:
+            Union[List[MachineObservationState], int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
-        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln
+        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m
         """
         merged_machines = []
-        total_new_ports_found, total_new_os_found, total_new_vuln_found = 0,0,0
-        for o_m in new_machines_obs:
-            for n_m in old_machines_obs:
+        total_new_ports_found, total_new_os_found, total_new_vuln_found, total_new_machines = 0,0,0,0
+
+        # Add updated machines to merged state
+        for n_m in new_machines_obs:
+            exists = False
+            merged_m = n_m
+            for i, o_m in enumerate(old_machines_obs):
                 if n_m.ip == o_m.ip:
-                    o_m, num_new_ports_found, num_new_os_found, num_new_vuln_found = \
+                    merged_m, num_new_ports_found, num_new_os_found, num_new_vuln_found = \
                         SimulatorUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m)
                     total_new_ports_found += num_new_ports_found
                     total_new_os_found += num_new_os_found
                     total_new_vuln_found += num_new_vuln_found
-            merged_machines.append(o_m)
-        return merged_machines, total_new_ports_found, total_new_os_found, total_new_vuln_found
+                    exists = True
+            merged_machines.append(merged_m)
+            if not exists:
+                total_new_ports_found += len(merged_m.ports)
+                new_os = 0 if merged_m.os == "unknown" else 1
+                total_new_os_found += new_os
+                total_new_vuln_found += len(merged_m.vuln)
+                total_new_machines += 1
+
+        # Add old machines to merged state
+        for o_m in old_machines_obs:
+            exists = False
+            for m_m in merged_machines:
+                if o_m.ip == m_m.ip:
+                    exists = True
+            if not exists:
+                merged_machines.append(o_m)
+
+        return merged_machines, total_new_ports_found, total_new_os_found, total_new_vuln_found, total_new_machines
 
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \
@@ -69,7 +90,6 @@ class SimulatorUtil:
         if n_os == "unknown" and o_os != "unknown":
             merged_os = o_os
         new_os = 0 if merged_os == o_os else 1
-        print("merged_os:{}, n_os:{}, o_os:{}, new_os:{}".format(merged_os, n_os, o_os, new_os))
         return merged_os, new_os
 
     @staticmethod
@@ -150,9 +170,9 @@ class SimulatorUtil:
         :param protocol: the tranport protocol for the scan
         :return: s_prime, reward
         """
-        total_new_ports, total_new_os, total_new_vuln = 0, 0, 0
+        total_new_ports, total_new_os, total_new_vuln, total_new_machines = 0, 0, 0, 0
 
-        # Scan action on a whole subnetwork
+        # Scan action on a single host
         if not a.subnet:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
@@ -167,6 +187,7 @@ class SimulatorUtil:
             new_machines_obs = []
             merged = False
             for o_m in s.obs_state.machines:
+                # Machine was already known, merge state
                 if o_m.ip == a.ip:
                     merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_vuln_found = \
                         SimulatorUtil.merge_new_machine_obs_with_old_machine_obs(s.obs_state.machines, new_m_obs)
@@ -177,12 +198,17 @@ class SimulatorUtil:
                     total_new_vuln += num_new_vuln_found
                 else:
                     new_machines_obs.append(o_m)
+            # New machine, was not known before
             if not merged:
                 new_machines_obs.append(new_m_obs)
+                total_new_machines +=1
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
+            reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                   num_new_vuln_found=total_new_vuln, num_successful_exploit=0,
+                                                   total_new_machines=total_new_machines)
 
-        # Scan action on a single node
+        # Scan action on a whole subnet
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
@@ -194,12 +220,13 @@ class SimulatorUtil:
                                                         protocol=protocol)
                         m_obs.ports.append(port_obs)
                 new_m_obs.append(m_obs)
-            new_machines_obs, total_new_ports, total_new_os, total_new_vuln = \
+            new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines = \
                 SimulatorUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
-        reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                               num_new_vuln_found=total_new_vuln, num_successful_exploit=0)
+            reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                   num_new_vuln_found=total_new_vuln, num_successful_exploit=0,
+                                                   num_new_machines = total_new_machines)
         return s_prime, reward
 
     @staticmethod
@@ -215,7 +242,7 @@ class SimulatorUtil:
         :param os: boolean flag whether the host scan should check the operating system too
         :return: s_prime, reward
         """
-        total_new_ports, total_new_os, total_new_vuln = 0,0,0
+        total_new_ports, total_new_os, total_new_vuln, total_new_machines = 0,0,0,0
         # Scan a whole subnetwork
         if not a.subnet:
             new_m_obs = None
@@ -227,6 +254,8 @@ class SimulatorUtil:
             new_machines_obs = []
             merged = False
             for o_m in s.obs_state.machines:
+
+                # Existing machine, it was already known
                 if o_m.ip == a.ip:
                     merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_vuln_found = \
                         SimulatorUtil.merge_new_machine_obs_with_old_machine_obs(s.obs_state.machines, new_m_obs)
@@ -237,10 +266,16 @@ class SimulatorUtil:
                     total_new_vuln += num_new_vuln_found
                 else:
                     new_machines_obs.append(o_m)
+
+            # New machine, it was not known before
             if not merged:
+                total_new_machines += 1
                 new_machines_obs.append(new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
+            reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                   num_new_vuln_found=total_new_vuln, num_successful_exploit=0,
+                                                   num_new_machines=total_new_machines)
 
         # Scan a single host
         else:
@@ -251,18 +286,19 @@ class SimulatorUtil:
                     if os:
                         m_obs.os = node.os
                     new_m_obs.append(m_obs)
-            new_machines_obs, total_new_ports, total_new_os, total_new_vuln = \
+            new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines = \
                 SimulatorUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
 
-        reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                               num_new_vuln_found=total_new_vuln, num_successful_exploit=0)
+            reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                   num_new_vuln_found=total_new_vuln, num_successful_exploit=0,
+                                                   num_new_machines=total_new_machines)
         return s_prime, reward
 
     @staticmethod
     def reward_function(num_new_ports_found : int = 0, num_new_os_found : int = 0, num_new_vuln_found: int= 0,
-                        num_successful_exploit : int = 0) -> int:
+                        num_successful_exploit : int = 0, num_new_machines : int = 0) -> int:
         """
         Implements the reward function
 
@@ -270,9 +306,8 @@ class SimulatorUtil:
         :param num_new_os_found: number of new operating systems detected
         :param num_new_vuln_found: number of new vulnerabilities detected
         :param num_successful_exploit: number of successful exploits
+        :param num_new_machines: number of new machines
         :return: reward
         """
-        print("reward: n_p:{}, n_os:{}, n_vuln:{}, n_e:{}".format(num_new_ports_found, num_new_os_found,
-                                                                  num_new_vuln_found, num_successful_exploit))
-        reward = num_new_ports_found + num_new_os_found + num_new_vuln_found + num_successful_exploit
+        reward = num_new_ports_found + num_new_os_found + num_new_vuln_found + num_successful_exploit + num_new_machines
         return reward
