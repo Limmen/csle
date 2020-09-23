@@ -44,7 +44,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                       vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                       os_lookup = constants.OS.os_lookup)
         self.observation_space = self.env_state.observation_space
-        self.action_space = self.env_config.action_conf.num_actions
+        self.action_space = self.env_config.action_conf.action_space
         self.num_actions = self.env_config.action_conf.num_actions
         self.reward_range = (float(0), float(1))
         self.num_states = 100

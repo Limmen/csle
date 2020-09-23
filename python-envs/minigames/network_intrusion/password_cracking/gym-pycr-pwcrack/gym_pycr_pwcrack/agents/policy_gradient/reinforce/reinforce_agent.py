@@ -390,10 +390,10 @@ class ReinforceAgent(PolicyGradientAgent):
 
             # Log average metrics every <self.config.eval_log_frequency> episodes
             if episode % self.config.eval_log_frequency == 0 and log:
-                self.log_metrics(iteration=episode, result=self.eval_result, episode_rewards=episode_rewards,
+                self.log_metrics(iteration=train_episode, result=self.eval_result, episode_rewards=episode_rewards,
                                  episode_steps=episode_steps, eval = True)
 
-            # # Save gifs
+            # Save gifs
             if self.config.gifs and self.config.video:
                 self.env.generate_gif(self.config.gif_dir + "/episode_" + str(train_episode) + "_"
                                       + time_str + ".gif", self.config.video_fps)

@@ -6,9 +6,10 @@ import gym
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_pwcrack.agents.policy_gradient.reinforce_agent import ReinforceAgent
+from gym_pycr_pwcrack.agents.policy_gradient.reinforce.reinforce_agent import ReinforceAgent
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
 
 class Runner:
     """
@@ -38,6 +39,8 @@ class Runner:
         agent: TrainAgent = None
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env, config.pg_agent_config)
+        elif config.agent_type == AgentType.PPO_BASELINE.value:
+            agent = PPOBaselineAgent(env, config.pg_agent_config)
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()
