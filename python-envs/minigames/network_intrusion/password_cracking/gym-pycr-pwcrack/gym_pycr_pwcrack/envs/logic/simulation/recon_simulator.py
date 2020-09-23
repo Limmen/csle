@@ -23,8 +23,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -40,8 +40,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.ping_scan_miss_p,
                                                           os=False)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -57,8 +57,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.udp_port_scan_miss_p,
                                                                        protocol=TransportProtocol.UDP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -74,8 +74,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -91,8 +91,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -108,8 +108,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -125,8 +125,8 @@ class ReconSimulator:
         s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -141,8 +141,8 @@ class ReconSimulator:
         """
         s_prime, reward = SimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.os_scan_miss_p, os=True)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -159,8 +159,8 @@ class ReconSimulator:
                                                                        miss_p=env_config.vulscan_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -177,6 +177,6 @@ class ReconSimulator:
                                                                        miss_p=env_config.vulners_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)
-        done = SimulatorUtil.simulate_detection(a=a)
-        s_prime.detected = done
+        done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+        s_prime.obs_state.detected = done
         return s_prime, reward, done

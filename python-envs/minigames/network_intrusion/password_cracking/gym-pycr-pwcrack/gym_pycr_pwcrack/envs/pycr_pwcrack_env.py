@@ -65,9 +65,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = self.env_config.action_conf.actions[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         self.env_state = s_prime
-        if None in self.env_state.obs_state.machines:
-            print("None in machines, action:{}".format(action))
-            print("machines:{}".format(self.env_state.obs_state.machines))
         obs = self.env_state.get_observation()
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
@@ -83,7 +80,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         if self.env_state.obs_state.detected:
             self.agent_state.num_detections += 1
-        if self.env_state.obs_state.all_flags:
+        elif self.env_state.obs_state.all_flags:
             self.agent_state.num_all_flags += 1
         self.env_state.reset_state()
         obs = self.env_state.get_observation()
@@ -468,7 +465,8 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
 
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,
-                                   render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config)
+                                   render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config,
+                                   simulate_detection=False)
             env_config.ping_scan_miss_p = 0.02
             env_config.udp_port_scan_miss_p = 0.07
             env_config.syn_stealth_scan_miss_p = 0.04

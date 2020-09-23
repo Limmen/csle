@@ -91,6 +91,20 @@ class MainFrame(pyglet.window.Window):
                                      self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
                                      bold=False)
 
+        # Draw N_D label
+        batch_label("N_D:", 25,
+                    self.height - 125, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.n_d_label = batch_label(str(self.state.num_detections), 100,
+                                   self.height - 125, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                   bold=False)
+
+        # Draw N_AF label
+        batch_label("N_AF:", 25,
+                    self.height - 150, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.n_af_label = batch_label(str(self.state.num_all_flags), 100,
+                                     self.height - 150, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                     bold=False)
+
         # Draw router
         if self.env_config.network_conf.router is not None:
             create_circle_fill(self.width / 2 + 20, self.height - 75, 8, self.batch, self.first_foreground,
@@ -393,6 +407,8 @@ class MainFrame(pyglet.window.Window):
         self.n_e_label.text = str(self.state.num_episodes)
         self.r_label.text = str(self.state.episode_reward)
         self.t_label.text = str(self.state.time_step)
+        self.n_d_label.text = str(self.state.num_detections)
+        self.n_af_label.text = str(self.state.num_all_flags)
         for m in range(len(self.state_labels)):
             for c in range(len(self.state_labels[m])):
                 self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
