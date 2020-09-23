@@ -28,6 +28,7 @@ RUN apt-get -y install vsftpd
 RUN apt-get -y install inetutils-inetd fingerd
 RUN apt-get -y --force-yes install mongodb-org
 RUN apt-get -y install default-jdk
+RUN apt-get -y install sshpass
 
 # Setup users
 

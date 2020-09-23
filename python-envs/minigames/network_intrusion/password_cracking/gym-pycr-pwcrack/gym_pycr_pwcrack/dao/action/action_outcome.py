@@ -9,3 +9,4 @@ class ActionOutcome(Enum):
     """
     SHELL_ACCESS = 0
     INFORMATION_GATHERING = 1
+    LOGIN = 2

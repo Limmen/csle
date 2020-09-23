@@ -167,6 +167,10 @@ class NMAP:
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
 
+class AUXILLARY:
+    USER_PLACEHOLDER = "USER_PLACEHOLDER"
+    PW_PLACEHOLDER = "USER_PLACEHOLDER"
+
 
 
 

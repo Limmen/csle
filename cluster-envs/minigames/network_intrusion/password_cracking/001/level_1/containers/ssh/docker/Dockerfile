@@ -29,6 +29,7 @@ RUN apt-get -y install dnsutils
 RUN apt-get -y install git
 RUN apt-get -y install swi-prolog
 RUN apt-get -y install openjdk-8-jdk
+RUN apt-get -y install sshpass
 
 # Setup users
 

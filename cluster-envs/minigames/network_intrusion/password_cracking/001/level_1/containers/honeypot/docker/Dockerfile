@@ -32,6 +32,7 @@ RUN apt-get -y install ntp
 RUN apt-get -y install finger-server
 RUN apt-get -y install default-jdk
 RUN apt-get -y install wget
+RUN apt-get -y install sshpass
 
 # Setup users
 

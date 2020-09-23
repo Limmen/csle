@@ -10,6 +10,7 @@ def test_env(env_name : str, num_steps : int):
     num_actions = env.env_config.action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
+    #actions = np.array([70, 127])
 
     #actions = np.array([71])
     #actions = np.array([9, 16])

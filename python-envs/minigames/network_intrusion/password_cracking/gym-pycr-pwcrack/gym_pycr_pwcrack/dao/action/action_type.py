@@ -9,3 +9,4 @@ class ActionType(Enum):
     """
     RECON = 0
     EXPLOIT = 1
+    POST_EXPLOIT = 2

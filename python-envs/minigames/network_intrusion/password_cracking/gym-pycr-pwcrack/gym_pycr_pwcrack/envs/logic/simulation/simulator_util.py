@@ -81,6 +81,7 @@ class SimulatorUtil:
         merged_vulnerabilities, num_new_vuln_found = SimulatorUtil.merge_vulnerabilities(o_m.vuln, n_m.vuln)
         n_m.vuln = merged_vulnerabilities
         n_m, new_shell_access = SimulatorUtil.merge_shell_access(o_m, n_m)
+        n_m = SimulatorUtil.merge_logged_in(o_m, n_m)
         return n_m, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access
 
     @staticmethod
@@ -102,19 +103,32 @@ class SimulatorUtil:
     def merge_shell_access(o_m: MachineObservationState, n_m: MachineObservationState) -> \
             Union[MachineObservationState, int]:
         """
-        Helper function for merging an old machine observation OS with new information collected
+        Helper function for merging an old machine observation shell access with new information collected
 
-        :param o_os: the old OS
-        :param n_os: the newly observed OS
-        :return: the merged os, 1 if it was a newly detected OS, otherwise 0
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with update shell-access parameters, 1 if new access otherwise 0
         """
         new_access = 0
         if not o_m.shell_access and n_m.shell_access:
             new_access = 1
         if not n_m.shell_access:
             n_m.shell_access = o_m.shell_access
-            n_m.shell_access_commands = o_m.shell_access_commands
+            n_m.shell_access_credentials = o_m.shell_access_credentials
         return n_m, new_access
+
+    @staticmethod
+    def merge_logged_in(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation logged in with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated logged-in flag
+        """
+        if not n_m.logged_in:
+            n_m.logged_in = o_m.logged_in
+        return n_m
 
     @staticmethod
     def merge_ports(o_ports: List[PortObservationState], n_ports: List[PortObservationState], acc : bool = True) \
@@ -374,7 +388,7 @@ class SimulatorUtil:
                             new_m_obs.vuln.append(vuln_obs)
                             if a.action_outcome == ActionOutcome.SHELL_ACCESS:
                                 new_m_obs.shell_access = True
-                                new_m_obs.shell_access_commands = vuln.commands
+                                new_m_obs.shell_access_credentials = vuln.credentials
                             vuln_match = True
                             vuln_service = vuln.service
 
@@ -398,12 +412,11 @@ class SimulatorUtil:
                     total_new_shell_access += new_shell_access
                     total_new_ports += num_new_ports_found
                     total_new_os += num_new_os_found
-                # new machine
                 else:
-                    total_new_machines += 1
                     new_machines_obs.append(o_m)
             # New machine, was not known before
             if not merged:
+                total_new_machines += 1
                 new_machines_obs.append(new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
@@ -425,7 +438,7 @@ class SimulatorUtil:
                                                                  protocol=vuln.protocol, cvss=vuln.cvss)
                         if a.action_outcome == ActionOutcome.SHELL_ACCESS:
                             m_obs.shell_access = True
-                            m_obs.shell_access_commands = vuln.commands
+                            m_obs.shell_access_credentials = vuln.credentials
                         m_obs.vuln.append(vuln_obs)
                         vulnerable_services.append(vuln.name)
 

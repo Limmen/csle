@@ -27,6 +27,7 @@ RUN apt-get -y install nikto
 RUN apt-get -y install traceroute
 RUN apt-get -y install finger
 RUN apt-get -y install git
+RUN apt-get -y install sshpass
 
 # Setup users
 

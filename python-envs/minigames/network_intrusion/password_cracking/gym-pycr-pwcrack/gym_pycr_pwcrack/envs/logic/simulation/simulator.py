@@ -6,6 +6,7 @@ from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.simulation.recon_simulator import ReconSimulator
 from gym_pycr_pwcrack.envs.logic.simulation.exploit_simulator import ExploitSimulator
+from gym_pycr_pwcrack.envs.logic.simulation.post_exploit_simulator import PostExploitSimulator
 
 class Simulator:
     """
@@ -26,8 +27,10 @@ class Simulator:
             return Simulator.recon_action(s=s, a=a, env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
             return Simulator.exploit_action(s=s, a=a, env_config=env_config)
+        elif a.type == ActionType.POST_EXPLOIT:
+            return Simulator.post_exploit_action(s=s, a=a, env_config=env_config)
         else:
-            raise ValueError("Action type not recognized")
+            raise ValueError("Action type:{} not recognized".format(a.type))
 
     @staticmethod
     def recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
@@ -60,7 +63,7 @@ class Simulator:
         elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
         else:
-            raise ValueError("Recon action: {} not recognized".format(a.id))
+            raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
     def exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
@@ -91,6 +94,13 @@ class Simulator:
         elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         else:
-            raise ValueError("Exploit action: {} not recognized".format(a.id))
+            raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
+
+    @staticmethod
+    def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        if a.id == ActionId.SSH_LOGIN:
+            return PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 
 

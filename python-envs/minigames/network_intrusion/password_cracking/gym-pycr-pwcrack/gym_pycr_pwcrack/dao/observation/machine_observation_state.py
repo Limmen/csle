@@ -10,7 +10,8 @@ class MachineObservationState:
         self.ports : List[PortObservationState] = []
         self.vuln : List[VulnerabilityObservationState] = []
         self.shell_access = False
-        self.shell_access_commands = []
+        self.shell_access_credentials = []
+        self.logged_in = False
 
     def __str__(self):
         return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{}".format(self.ip, self.os, self.shell_access,

@@ -15,11 +15,14 @@ from gym_pycr_pwcrack.dao.network.node_type import NodeType
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
-from gym_pycr_pwcrack.dao.action.action_config import ActionConfig, NMAPActions
+from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
+from gym_pycr_pwcrack.dao.action.nmap_actions import NMAPActions
+from gym_pycr_pwcrack.dao.action.ssh_actions import SSHActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
+from gym_pycr_pwcrack.dao.action.action import Action
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -64,8 +67,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
         self.agent_state.obs_state = self.env_state.obs_state
-        sn_tag = "sn" if action.subnet else "h"
-        self.agent_state.env_log.add_entry(action.name + "[" + sn_tag + "]")
+        self.__update_log(action)
         return obs, reward, done, info
 
     def reset(self) -> np.ndarray:
@@ -113,6 +115,14 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.viewer = None
 
     # -------- Private methods ------------
+
+    def __update_log(self, action : Action) -> None:
+        if not action.subnet:
+            tag = str(action.ip.rsplit(".", 1)[-1])
+        else:
+            tag = "*"
+        self.agent_state.env_log.add_entry(action.name + "[." + tag + "]")
+
     def __setup_viewer(self):
         """
         Setup for the viewer to use for rendering
@@ -136,97 +146,104 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
         if env_config is None:
             subnet_mask = "172.18.1.0/24"
             nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
-                          os="linux", vulnerabilities=[]),
+                          os="linux", vulnerabilities=[], credentials=["admin:admin", "jessica:water"]),
                      Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER,
                           flags=[Flag(name="flag2", path="/home/kim", id=2)], level=3, os="linux",
+                          credentials=["admin:admin", "puppet:puppet", "user:123123"],
                           services=[
-                              NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=53, name="domain"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=80, name="http"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=9042, name="cassandra"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=9160, name="cassandra"),
-                              NetworkService(protocol=TransportProtocol.UDP, port=53, name="domain"),
+                              NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
+                                             credentials=["admin:admin", "puppet:puppet", "user:123123"]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=53, name="domain", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=9042, name="cassandra", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=9160, name="cassandra", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.UDP, port=53, name="domain", credentials=[]),
                           ],
                           vulnerabilities=[
                               Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
-                                            commands=[
-                                                "sshpass -p admin admin@172.18.1.2"
-                                            ],
+                                            credentials=["admin:admin"],
                                             port=22, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, commands=[],
+                              Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                             port=22, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, commands=[],
+                              Vulnerability(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, commands=[],
+                              Vulnerability(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, commands=[],
+                              Vulnerability(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, commands=[],
+                              Vulnerability(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, commands=[],
+                              Vulnerability(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, commands=[],
+                              Vulnerability(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, commands=[],
+                              Vulnerability(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, commands=[],
+                              Vulnerability(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, commands=[],
+                              Vulnerability(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP),
-                              Vulnerability(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, commands=[],
+                              Vulnerability(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, credentials=[],
                                             port=53, protocol=TransportProtocol.TCP)
                           ]
                           ),
                      Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
                           flags=[Flag(name="flag1", path="/home/admin", id=1)], level=3,
+                          credentials=["admin:admin", "john:doe", "vagrant:vagrant"],
                           services=[
-                              NetworkService(protocol=TransportProtocol.TCP, port=23,name="telnet"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=80, name="http")
+                              NetworkService(protocol=TransportProtocol.TCP, port=23,name="telnet",
+                                             credentials=["admin:admin", "john:doe", "vagrant:vagrant"]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[])
                           ], vulnerabilities=[
-                             Vulnerability(name="CVE-2020-15523", cve="CVE-2020-15523", cvss=6.9, commands=[], port=80,
+                             Vulnerability(name="CVE-2020-15523", cve="CVE-2020-15523", cvss=6.9, credentials=[], port=80,
                                            protocol=TransportProtocol.TCP),
-                             Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, commands=[], port=80,
+                             Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
                                            protocol=TransportProtocol.TCP),
-                             Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, commands=[],
+                             Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[],
                                            port=23, protocol=TransportProtocol.TCP, service="telnet")
                          ]
                           ),
                      Node(ip="172.18.1.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                          credentials=["admin:admin", "test:qwerty", "oracle:abc123"],
                           services=[
-                              NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=5432, name="postgresql"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=6667, name="irc"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=9092, name="kafka"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=38969, name="kafka"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=42843, name="kafka"),
-                              NetworkService(protocol=TransportProtocol.UDP, port=123, name="ntp"),
-                              NetworkService(protocol=TransportProtocol.UDP, port=161, name="snmp")
+                              NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=5432, name="postgresql", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=6667, name="irc", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=9092, name="kafka", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=38969, name="kafka", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=42843, name="kafka", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.UDP, port=123, name="ntp", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.UDP, port=161, name="snmp", credentials=[])
                           ],
                           vulnerabilities=[]),
                      Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER,
                           flags=[Flag(name="flag3", path="/home/euler", id=3),
                                  Flag(name="flag4", path="/home/euler", id=4)], level=3,
                           os="linux",
+                          credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"],
                           services=[
-                              NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=79, name="finger"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=8009, name="ajp13"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=8080, name="http"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=10011, name="teamspeak"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=10022, name="teamspeak"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=30033, name="teamspeak"),
-                              NetworkService(protocol=TransportProtocol.TCP, port=27017, name="mongod"),
+                              NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp",
+                                             credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=79, name="finger", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=8009, name="ajp13", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=8080, name="http", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=10011, name="teamspeak", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=10022, name="teamspeak",credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=30033, name="teamspeak", credentials=[]),
+                              NetworkService(protocol=TransportProtocol.TCP, port=27017, name="mongod", credentials=[]),
                           ],
-                          vulnerabilities=[]
+                          vulnerabilities=[
+                              Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
+                                            port=22,
+                                            protocol=TransportProtocol.TCP),
+                              Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=[],
+                                            port=21, protocol=TransportProtocol.TCP, service="ftp")
+                          ]
                           ),
                      Node(ip="172.18.1.191", ip_id=191, id=6, type=NodeType.HACKER, flags=[], level=1, services=[],
-                          os="linux", vulnerabilities=[
-                             Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, commands=[], port=22,
-                                           protocol=TransportProtocol.TCP),
-                             Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, commands=[],
-                                           port=21, protocol=TransportProtocol.TCP, service="ftp")
-                         ])]
+                          os="linux", vulnerabilities=[], credentials=["agent:agent"]
+                          )]
             adj_matrix = [
                 [0, 1, 1, 1, 1, 1],
                 [1, 0, 0, 0, 0, 0],
@@ -403,7 +420,17 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                 NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
                 NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
                 NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-                NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False)
+                NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
+
+                # --- Post-Exploits ---
+
+                # SSH Login
+                SSHActions.SSH_LOGIN(ip="172.18.1.10"),
+                SSHActions.SSH_LOGIN(ip="172.18.1.2"),
+                SSHActions.SSH_LOGIN(ip="172.18.1.3"),
+                SSHActions.SSH_LOGIN(ip="172.18.1.21"),
+                SSHActions.SSH_LOGIN(ip="172.18.1.79"),
+                SSHActions.SSH_LOGIN(ip="172.18.1.191")
 
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,

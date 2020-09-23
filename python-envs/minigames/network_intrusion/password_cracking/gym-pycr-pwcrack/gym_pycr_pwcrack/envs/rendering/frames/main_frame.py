@@ -185,6 +185,7 @@ class MainFrame(pyglet.window.Window):
         labels.append("#v")
         labels.append("s(cvss)")
         labels.append("sh")
+        labels.append("p")
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
             batch_label(labels[c], x_start+w/2+c*(w), y, 10, (0, 0, 0, 255), self.batch,
@@ -223,10 +224,10 @@ class MainFrame(pyglet.window.Window):
             if c == 0:
                 batch_label(labels[c], int(x_start+15 + c * w), y_s-65, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
             elif c == 2:
-                batch_label(labels[c], int(x_start + 0 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start + 10 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 3:
-                batch_label(labels[c], int(x_start + 15 + (c + 1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start + 25 + (c + 1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 1:
                 batch_label(labels[c], int(x_start +30 + c * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
