@@ -9,7 +9,7 @@ import time
 import argparse
 import os
 import sys
-from gym_pycr_pwcrack.dao.client_config import ClientConfig
+from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0"):

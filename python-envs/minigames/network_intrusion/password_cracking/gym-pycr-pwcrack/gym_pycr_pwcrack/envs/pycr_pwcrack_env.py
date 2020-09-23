@@ -35,12 +35,17 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     def __init__(self, env_config : EnvConfig):
         self.env_config = env_config
         self.env_state = EnvState(network_config=self.env_config.network_conf, num_ports=self.env_config.num_ports,
-                                  num_vuln=self.env_config.num_vuln)
+                                  num_vuln=self.env_config.num_vuln,
+                                  service_lookup=constants.SERVICES.service_lookup,
+                                  vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
+                                  os_lookup=constants.OS.os_lookup)
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=constants.SERVICES.service_lookup,
                                       vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                       os_lookup = constants.OS.os_lookup)
-        self.observation_space = gym.spaces.Box(low=0, high=10, dtype=np.int32, shape=(10, 10,))
+        self.observation_space = self.env_state.observation_space
+        self.action_space = self.env_config.action_conf.num_actions
+        self.num_actions = self.env_config.action_conf.num_actions
         self.reward_range = (float(0), float(1))
         self.num_states = 100
         self.viewer = None
@@ -65,12 +70,14 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = self.env_config.action_conf.actions[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         self.env_state = s_prime
-        obs = self.env_state.get_observation()
+        if self.env_state.obs_state.detected:
+            reward = reward - self.env_config.detection_reward
+        m_obs, p_obs = self.env_state.get_observation()
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
         self.agent_state.obs_state = self.env_state.obs_state
         self.__update_log(action)
-        return obs, reward, done, info
+        return m_obs, reward, done, info
 
     def reset(self) -> np.ndarray:
         """
@@ -83,12 +90,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         elif self.env_state.obs_state.all_flags:
             self.agent_state.num_all_flags += 1
         self.env_state.reset_state()
-        obs = self.env_state.get_observation()
+        m_obs, p_obs = self.env_state.get_observation()
         self.agent_state.num_episodes += 1
         self.agent_state.cumulative_reward += self.agent_state.episode_reward
         self.agent_state.time_step = 0
         self.agent_state.episode_reward = 0
-        return obs
+        self.agent_state.env_log.reset()
+        return m_obs
 
     def render(self, mode: str = 'human'):
         """
@@ -110,6 +118,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         arr = self.viewer.render(return_rgb_array=mode == 'rgb_array')
         return arr
 
+    def is_action_legal(self, action_id : int):
+        if action_id <= len(self.env_config.action_conf.actions)-1:
+            return True
+        else:
+            return False
+
     def close(self) -> None:
         """
         Closes the viewer (cleanup)
@@ -117,8 +131,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         if self.viewer:
             self.viewer.close()
-            self.viewer.mainframe.new_window()
             self.viewer = None
+            #self.
+            #self.viewer.mainframe.new_window()
 
     # -------- Private methods ------------
 
@@ -466,7 +481,7 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,
                                    render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config,
-                                   simulate_detection=False)
+                                   simulate_detection=True, detection_reward=10)
             env_config.ping_scan_miss_p = 0.02
             env_config.udp_port_scan_miss_p = 0.07
             env_config.syn_stealth_scan_miss_p = 0.04

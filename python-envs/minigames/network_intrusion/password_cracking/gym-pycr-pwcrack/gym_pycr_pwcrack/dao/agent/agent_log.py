@@ -6,3 +6,6 @@ class AgentLog:
 
     def add_entry(self, msg):
         self.log.append(msg)
+
+    def reset(self):
+        self.log = []

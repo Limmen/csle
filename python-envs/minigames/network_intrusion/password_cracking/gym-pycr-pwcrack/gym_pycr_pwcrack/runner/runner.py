@@ -3,9 +3,9 @@ Generic runner for running experiments with pycr environments
 """
 from typing import Union
 import gym
-from gym_pycr_pwcrack.dao.client_config import ClientConfig
-from gym_pycr_pwcrack.dao.agent_type import AgentType
-from gym_pycr_pwcrack.dao.experiment_result import ExperimentResult
+from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
+from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
+from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.policy_gradient.reinforce_agent import ReinforceAgent
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent

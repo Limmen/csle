@@ -1,7 +1,7 @@
 import os
 from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
-from gym_pycr_pwcrack.dao.client_config import ClientConfig
-from gym_pycr_pwcrack.dao.agent_type import AgentType
+from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
+from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
 
 def default_config() -> ClientConfig:
@@ -17,7 +17,7 @@ def default_config() -> ClientConfig:
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=10000, video_frequency=11,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=1000, input_dim=4,
+                                                checkpoint_freq=1000, input_dim=180,
                                                 output_dim=17,
                                                 pi_hidden_dim=32,
                                                 pi_hidden_layers=1, batch_size=8,
@@ -25,12 +25,13 @@ def default_config() -> ClientConfig:
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0)
-    env_name = "pycr-pwcrack-simple-v1"
+    env_name = "pycr-pwcrack-simple-sim-v1"
     client_config = ClientConfig(env_name=env_name, pg_agent_config=pg_agent_config,
                                  agent_type=AgentType.REINFORCE.value,
                                  output_dir=util.default_output_dir(),
                                  title="REINFORCE simple v1",
-                                 run_many=False, random_seeds=[0, 999, 299, 399, 499])
+                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
+                                 random_seed=399)
     return client_config
 
 
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     else:
         config = default_config()
     if not config.run_many:
-        util.run_experiment(config, 0)
+        util.run_experiment(config, config.random_seed)
     else:
         train_csv_paths = []
         eval_csv_paths = []

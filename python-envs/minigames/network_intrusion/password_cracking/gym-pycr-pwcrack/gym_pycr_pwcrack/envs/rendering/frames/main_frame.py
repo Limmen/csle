@@ -421,9 +421,11 @@ class MainFrame(pyglet.window.Window):
                         self.state.service_lookup_inv[int(self.state.ports_state[p][2])])
                     self.ports_labels[p][c].text = service
         num_logs = len(self.state.env_log.log)
-        for i in range(num_logs):
-            if i < len(self.log_labels)-1:
+        for i in range(len(self.log_labels)):
+            if i < num_logs-1:
                 self.log_labels[i].text = str(num_logs - 1 - i) + ":" + self.state.env_log.log[num_logs - 1 - i]
+            else:
+                self.log_labels[i].text = ""
 
         for v in range(len(self.vuln_labels)):
             self.vuln_labels[v][0].text = str(int(self.state.vuln_state[v][0]))

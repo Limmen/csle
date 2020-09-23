@@ -8,7 +8,7 @@ class EnvConfig:
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
                  render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
-                 cluster_config : ClusterConfig = None, simulate_detection : bool = True):
+                 cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10):
         self.network_conf = network_conf
         self.action_conf = action_conf
         self.num_nodes = len(network_conf.nodes)
@@ -18,6 +18,7 @@ class EnvConfig:
         self.cluster_config = cluster_config
         self.render_config = render_config
         self.simulate_detection = simulate_detection
+        self.detection_reward = detection_reward
 
         self.ping_scan_miss_p = 0.00
         self.udp_port_scan_miss_p = 0.00

@@ -9,7 +9,7 @@ import torch
 from abc import ABC, abstractmethod
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
-from gym_pycr_pwcrack.dao.experiment_result import ExperimentResult
+from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 
 class PolicyGradientAgent(TrainAgent, ABC):

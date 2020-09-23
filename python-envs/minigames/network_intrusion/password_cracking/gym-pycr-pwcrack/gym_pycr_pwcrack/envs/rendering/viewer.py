@@ -116,7 +116,7 @@ class Viewer():
         # than the requested one.
         arr = arr.reshape(buffer.height, buffer.width, 4)
         arr = arr[::-1, :, 0:3]
-        return arr
+        return np.array([arr])
 
 if __name__ == '__main__':
     nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2),
