@@ -11,11 +11,11 @@ class EnvState:
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
         self.num_vuln = num_vuln
-        self.obs_state = ObservationState(num_machines=len(network_config.nodes), num_ports=self.num_ports,
-                                          num_vuln=num_vuln)
+        self.reset_state()
 
     def get_observation(self):
         pass
 
     def reset_state(self):
-        pass
+        self.obs_state = ObservationState(num_machines=len(self.network_config.nodes), num_ports=self.num_ports,
+                                          num_vuln=self.num_vuln)

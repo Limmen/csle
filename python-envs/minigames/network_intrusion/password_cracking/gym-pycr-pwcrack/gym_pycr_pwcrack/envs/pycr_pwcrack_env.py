@@ -18,6 +18,8 @@ from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.action.nmap_actions import NMAPActions
 from gym_pycr_pwcrack.dao.action.ssh_actions import SSHActions
+from gym_pycr_pwcrack.dao.action.ftp_actions import FTPActions
+from gym_pycr_pwcrack.dao.action.telnet_actions import TelnetActions
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.network.network_service import NetworkService
@@ -62,7 +64,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
-        #print("reward:{}, action:{}".format(reward, action))
         self.env_state = s_prime
         obs = self.env_state.get_observation()
         self.agent_state.time_step += 1
@@ -439,8 +440,24 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                 SSHActions.SSH_LOGIN(ip="172.18.1.79"),
                 SSHActions.SSH_LOGIN(ip="172.18.1.191"),
 
+                # FTP Login
+                FTPActions.FTP_LOGIN(ip="172.18.1.10"),
+                FTPActions.FTP_LOGIN(ip="172.18.1.2"),
+                FTPActions.FTP_LOGIN(ip="172.18.1.3"),
+                FTPActions.FTP_LOGIN(ip="172.18.1.21"),
+                FTPActions.FTP_LOGIN(ip="172.18.1.79"),
+                FTPActions.FTP_LOGIN(ip="172.18.1.191"),
+
+                # Telnet Login
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.10"),
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.2"),
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.3"),
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.21"),
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.79"),
+                TelnetActions.Telnet_LOGIN(ip="172.18.1.191"),
+
                 # Search file system for flag
-                ShellActions.BASH_FIND_FLAG()
+                ShellActions.FIND_FLAG()
 
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,

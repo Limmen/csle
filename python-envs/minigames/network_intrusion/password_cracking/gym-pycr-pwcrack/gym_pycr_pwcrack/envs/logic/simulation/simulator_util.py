@@ -544,3 +544,74 @@ class SimulatorUtil:
         reward = num_new_ports_found + num_new_os_found + num_new_vuln_found + num_new_machines \
                  + num_new_shell_access + num_new_root + num_new_flag_pts
         return reward
+
+    @staticmethod
+    def simulate_service_login_helper(s: EnvState, a: Action, env_config: EnvConfig, service_name : str = "ssh") \
+            -> Union[EnvState, int]:
+        """
+        Helper function for simulating login to various network services
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the env config
+        :param service_name: the name of the service to login to
+        :return: s_prime, reward
+        """
+        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
+        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        new_m_obs = None
+        for node in env_config.network_conf.nodes:
+            if node.ip == a.ip:
+                new_m_obs = MachineObservationState(ip=node.ip)
+                credentials = None
+                access = False
+                for o_m in s.obs_state.machines:
+                    if o_m.ip == node.ip:
+                        access = o_m.shell_access
+                        credentials = o_m.shell_access_credentials
+                if access:
+                    for service in node.services:
+                        if service.name == service_name:
+                            for cr in service.credentials:
+                                if cr in credentials:
+                                    new_m_obs.logged_in = True
+
+                    if new_m_obs.logged_in:
+                        for cr in credentials:
+                            cr_user = cr.split(":")[0]
+                            if cr_user in node.root:
+                                new_m_obs.root = True
+
+        new_machines_obs = []
+        merged = False
+        for o_m in s.obs_state.machines:
+            # Machine was already known, merge state
+            if o_m.ip == a.ip:
+                merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access, \
+                new_root, new_flag_pts = SimulatorUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                new_machines_obs.append(merged_machine_obs)
+                merged = True
+                total_new_vuln += num_new_vuln_found
+                total_new_shell_access += new_shell_access
+                total_new_ports += num_new_ports_found
+                total_new_os += num_new_os_found
+                total_new_root += new_root
+                total_new_flag_pts += new_flag_pts
+            else:
+                if new_m_obs.logged_in:
+                    o_m.logged_in = False
+                new_machines_obs.append(o_m)
+        # New machine, was not known before
+        if not merged:
+            total_new_machines += 1
+            new_machines_obs.append(new_m_obs)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+        reward = SimulatorUtil.reward_function(num_new_ports_found=total_new_ports,
+                                               num_new_os_found=total_new_os,
+                                               num_new_vuln_found=total_new_vuln,
+                                               num_new_machines=total_new_machines,
+                                               num_new_shell_access=total_new_shell_access,
+                                               num_new_root=total_new_root,
+                                               num_new_flag_pts=total_new_flag_pts)
+        return s_prime, reward

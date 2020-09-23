@@ -20,9 +20,11 @@ def test_env(env_name : str, num_steps : int):
     #actions = np.array([5,2])
     for i in range(num_steps):
         action = np.random.choice(actions)
-        res = env.step(action)
+        obs, reward, done, info = env.step(action)
         env.render()
-        time.sleep(0.01)
+        if done:
+            env.reset()
+        time.sleep(0.001)
     env.reset()
     env.close()
 

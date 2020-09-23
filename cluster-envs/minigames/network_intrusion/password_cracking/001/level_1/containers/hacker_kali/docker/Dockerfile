@@ -28,6 +28,7 @@ RUN apt-get -y install traceroute
 RUN apt-get -y install finger
 RUN apt-get -y install git
 RUN apt-get -y install sshpass
+RUN apt-get -y install lftp
 
 # Setup users
 

@@ -385,6 +385,8 @@ class MainFrame(pyglet.window.Window):
         for sp_fl in self.flags_sprites:
             if sp_fl[1] in self.state.flags_state:
                 sp_fl[0].visible = True
+            else:
+                sp_fl[0].visible = False
 
     def update_labels(self):
         self.c_r_label.text = str(self.state.cumulative_reward)
