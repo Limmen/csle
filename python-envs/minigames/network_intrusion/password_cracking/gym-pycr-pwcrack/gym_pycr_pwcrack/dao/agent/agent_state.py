@@ -25,14 +25,16 @@ class AgentState:
         self.ports_state = None
         self.vuln_state = None
         self.os_state = None
+        self.flags_state = None
         self.initialize_render_state()
 
 
     def initialize_render_state(self) -> np.ndarray:
-        self.machines_state = np.zeros((self.obs_state.num_machines, 8 + self.obs_state.num_ports + self.obs_state.num_vuln))
+        self.machines_state = np.zeros((self.obs_state.num_machines, 10 + self.obs_state.num_ports + self.obs_state.num_vuln))
         self.ports_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_ports, 4))
         self.vuln_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_vuln, 2))
         self.os_state = np.zeros((self.obs_state.num_machines, 1))
+        self.flags_state = set()
         vuln_state_idx = 0
         ports_state_idx = 0
         os_state_idx = 0
@@ -92,6 +94,17 @@ class AgentState:
 
                 # Logged in
                 self.machines_state[i][7 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(self.obs_state.machines[i].logged_in)
+
+                # Root Access
+                self.machines_state[i][8 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(
+                    self.obs_state.machines[i].root)
+
+                # Flag pts
+                flag_pts_score = sum([f.score for f in self.obs_state.machines[i].flags_found])
+                self.machines_state[i][9 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(flag_pts_score)
+
+                # Flags visualize
+                self.flags_state = self.flags_state.union(self.obs_state.machines[i].flags_found)
 
 
 

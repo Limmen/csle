@@ -136,7 +136,8 @@ class MainFrame(pyglet.window.Window):
                                                                         batch=self.batch,
                                                                         group=self.background)
                                 flag_sprite.scale = 0.05
-                                self.flags_sprites.append(flag_sprite)
+                                flag_sprite.visible = False
+                                self.flags_sprites.append((flag_sprite, flag))
 
                             nodes_to_coords[node.id] = (x, y)
                             x = x + x_sep
@@ -186,6 +187,8 @@ class MainFrame(pyglet.window.Window):
         labels.append("s(cvss)")
         labels.append("sh")
         labels.append("p")
+        labels.append("root")
+        labels.append("flags")
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
             batch_label(labels[c], x_start+w/2+c*(w), y, 10, (0, 0, 0, 255), self.batch,
@@ -378,6 +381,11 @@ class MainFrame(pyglet.window.Window):
             raise ValueError("error")
         pyglet.resource.reindex()
 
+    def update_flags(self):
+        for sp_fl in self.flags_sprites:
+            if sp_fl[1] in self.state.flags_state:
+                sp_fl[0].visible = True
+
     def update_labels(self):
         self.c_r_label.text = str(self.state.cumulative_reward)
         self.n_e_label.text = str(self.state.num_episodes)
@@ -421,6 +429,8 @@ class MainFrame(pyglet.window.Window):
         self.batch.draw()
         # Update labels
         self.update_labels()
+        # Update flags
+        self.update_flags()
         # Make this window the current OpenGL rendering context
         self.switch_to()
 

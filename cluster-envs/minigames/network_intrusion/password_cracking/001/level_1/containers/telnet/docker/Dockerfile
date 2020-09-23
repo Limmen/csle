@@ -37,7 +37,7 @@ RUN /make_non_root_users.sh
 
 # Create flag
 ADD docker/create_flag.sh /create_flag.sh
-ADD docker/flag_info.txt /flag_info.txt
+ADD docker/fl_info.txt /fl_info.txt
 RUN chmod 777 /create_flag.sh
 RUN /create_flag.sh
 

@@ -18,6 +18,7 @@ from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.action.nmap_actions import NMAPActions
 from gym_pycr_pwcrack.dao.action.ssh_actions import SSHActions
+from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
@@ -117,8 +118,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     # -------- Private methods ------------
 
     def __update_log(self, action : Action) -> None:
+        tag = "-"
         if not action.subnet:
-            tag = str(action.ip.rsplit(".", 1)[-1])
+            if action.ip is not None:
+                tag = str(action.ip.rsplit(".", 1)[-1])
         else:
             tag = "*"
         self.agent_state.env_log.add_entry(action.name + "[." + tag + "]")
@@ -146,10 +149,12 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
         if env_config is None:
             subnet_mask = "172.18.1.0/24"
             nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
-                          os="linux", vulnerabilities=[], credentials=["admin:admin", "jessica:water"]),
+                          os="linux", vulnerabilities=[], credentials=["admin:admin", "jessica:water"],
+                          root=["admin"]),
                      Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER,
-                          flags=[Flag(name="flag2", path="/home/kim", id=2)], level=3, os="linux",
-                          credentials=["admin:admin", "puppet:puppet", "user:123123"],
+                          flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
+                          credentials=["admin:test32121", "puppet:puppet", "user1:123123"],
+                          root=["admin", "user1"],
                           services=[
                               NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                              credentials=["admin:admin", "puppet:puppet", "user:123123"]),
@@ -161,7 +166,7 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                           ],
                           vulnerabilities=[
                               Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
-                                            credentials=["admin:admin"],
+                                            credentials=["puppet:puppet"],
                                             port=22, protocol=TransportProtocol.TCP),
                               Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                             port=22, protocol=TransportProtocol.TCP),
@@ -188,8 +193,9 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                           ]
                           ),
                      Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
-                          flags=[Flag(name="flag1", path="/home/admin", id=1)], level=3,
-                          credentials=["admin:admin", "john:doe", "vagrant:vagrant"],
+                          flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
+                          credentials=["admin:admin", "john:doe", "vagrant:test_pw1"],
+                          root=["admin", "john"],
                           services=[
                               NetworkService(protocol=TransportProtocol.TCP, port=23,name="telnet",
                                              credentials=["admin:admin", "john:doe", "vagrant:vagrant"]),
@@ -199,12 +205,13 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                                            protocol=TransportProtocol.TCP),
                              Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
                                            protocol=TransportProtocol.TCP),
-                             Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[],
+                             Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=["admin:admin"],
                                            port=23, protocol=TransportProtocol.TCP, service="telnet")
                          ]
                           ),
                      Node(ip="172.18.1.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
                           credentials=["admin:admin", "test:qwerty", "oracle:abc123"],
+                          root=["admin", "test"],
                           services=[
                               NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
                               NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka", credentials=[]),
@@ -218,10 +225,11 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                           ],
                           vulnerabilities=[]),
                      Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER,
-                          flags=[Flag(name="flag3", path="/home/euler", id=3),
-                                 Flag(name="flag4", path="/home/euler", id=4)], level=3,
+                          flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1),
+                                 Flag(name="flag4", path="/root", id=4, requires_root=True, score=1)], level=3,
                           os="linux",
                           credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"],
+                          root=["l_hopital", "pi"],
                           services=[
                               NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp",
                                              credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"]),
@@ -237,13 +245,12 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                               Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                             port=22,
                                             protocol=TransportProtocol.TCP),
-                              Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=[],
+                              Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=["pi:pi"],
                                             port=21, protocol=TransportProtocol.TCP, service="ftp")
                           ]
                           ),
                      Node(ip="172.18.1.191", ip_id=191, id=6, type=NodeType.HACKER, flags=[], level=1, services=[],
-                          os="linux", vulnerabilities=[], credentials=["agent:agent"]
-                          )]
+                          os="linux", vulnerabilities=[], credentials=["agent:agent"], root=["agent"])]
             adj_matrix = [
                 [0, 1, 1, 1, 1, 1],
                 [1, 0, 0, 0, 0, 0],
@@ -430,7 +437,10 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
                 SSHActions.SSH_LOGIN(ip="172.18.1.3"),
                 SSHActions.SSH_LOGIN(ip="172.18.1.21"),
                 SSHActions.SSH_LOGIN(ip="172.18.1.79"),
-                SSHActions.SSH_LOGIN(ip="172.18.1.191")
+                SSHActions.SSH_LOGIN(ip="172.18.1.191"),
+
+                # Search file system for flag
+                ShellActions.BASH_FIND_FLAG()
 
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,

@@ -8,7 +8,7 @@
   "subnet_mask_2": "255.255.255.0",
   "root_users_file": "root_users.txt",
   "non_root_users_file": "non_root_users.txt",
-  "flag_info_file": "flag_info.txt",
+  "flag_info_file": "fl_info.txt",
   "containers": [
     {
       "name": "router",
@@ -35,23 +35,23 @@
       "root_users" : [
         {
           "username": "admin",
-          "password": "admin"
+          "password": "test32121"
         },
+        {
+          "username": "user1",
+          "password": "123123"
+        }
+      ],
+      "non_root_users" : [
         {
           "username": "puppet",
           "password": "puppet"
         }
       ],
-      "non_root_users" : [
-        {
-          "username": "user",
-          "password": "123123"
-        }
-      ],
       "flags": [
         {
           "name": "flag2",
-          "path": "/home/puppet",
+          "path": "/tmp",
           "id": "2"
         }
       ]
@@ -73,13 +73,13 @@
       "non_root_users" : [
         {
           "username": "vagrant",
-          "password": "vagrant"
+          "password": "test_pw1"
         }
       ],
       "flags": [
         {
           "name": "flag1",
-          "path": "/home/admin",
+          "path": "/root",
           "id": "1"
         }
       ]
@@ -116,21 +116,26 @@
           "password": "l_hopital"
         },
         {
-          "username": "euler",
-          "password": "euler"
+          "username": "pi",
+          "password": "pi"
         }
       ],
       "non_root_users" : [
         {
-          "username": "pi",
-          "password": "pi"
+          "username": "euler",
+          "password": "euler"
         }
       ],
       "flags": [
         {
           "name": "flag3",
-          "path": "/home/pi",
+          "path": "/tmp",
           "id": "3"
+        },
+        {
+          "name": "flag4",
+          "path": "/root",
+          "id": "4"
         }
       ]
     },

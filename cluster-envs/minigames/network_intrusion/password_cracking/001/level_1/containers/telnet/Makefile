@@ -14,9 +14,9 @@ ROOT_PW_1=admin
 ROOT_USER_2=john
 ROOT_PW_2=doe
 NON_ROOT_USER_1=vagrant
-NON_ROOT_PW_1=vagrant
-FLAG_INFO_FILE=flag_info.txt
-FLAG_PATH_1=/home/admin
+NON_ROOT_PW_1=test_pw1
+FLAG_INFO_FILE=fl_info.txt
+FLAG_PATH_1=/root
 FLAG_NAME_1=flag1
 
 all: rm-image rm-network build net

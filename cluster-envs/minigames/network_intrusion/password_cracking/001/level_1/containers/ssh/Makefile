@@ -10,13 +10,13 @@ IP=172.18.1.2
 ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
 ROOT_USER_1=admin
-ROOT_PW_1=admin
-ROOT_USER_2=puppet
-ROOT_PW_2=puppet
-NON_ROOT_USER_1=user
-NON_ROOT_PW_1=123123
-FLAG_INFO_FILE=flag_info.txt
-FLAG_PATH_1=/home/puppet
+ROOT_PW_1=test32121
+ROOT_USER_2=user1
+ROOT_PW_2=123123
+NON_ROOT_USER_1=puppet
+NON_ROOT_PW_1=puppet
+FLAG_INFO_FILE=fl_info.txt
+FLAG_PATH_1=/tmp
 FLAG_NAME_1=flag2
 
 all: rm-image rm-network build net

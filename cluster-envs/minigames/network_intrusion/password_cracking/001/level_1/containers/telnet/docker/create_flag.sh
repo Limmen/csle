@@ -1,6 +1,6 @@
 #!/bin/bash
 
-flaginfo=`cat flag_info.txt`
+flaginfo=`cat fl_info.txt`
 set -- "$flaginfo"
 IFS=":"; declare -a Array=($*)
 flagpath=${Array[0]}

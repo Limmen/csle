@@ -11,13 +11,15 @@ ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
 ROOT_USER_1=l_hopital
 ROOT_PW_1=l_hopital
-ROOT_USER_2=euler
-ROOT_PW_2=euler
-NON_ROOT_USER_1=pi
-NON_ROOT_PW_1=pi
-FLAG_INFO_FILE=flag_info.txt
-FLAG_PATH_1=/home/pi
+ROOT_USER_2=pi
+ROOT_PW_2=pi
+NON_ROOT_USER_1=euler
+NON_ROOT_PW_1=euler
+FLAG_INFO_FILE=fl_info.txt
+FLAG_PATH_1=/tmp
 FLAG_NAME_1=flag3
+FLAG_PATH_2=/root
+FLAG_NAME2=flag4
 
 all: rm-image rm-network build net
 
@@ -26,7 +28,7 @@ users:
 	echo "${NON_ROOT_USER_1}:${NON_ROOT_PW_1}" > ./docker/${NON_ROOT_USERS_FILE}
 
 flags:
-	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
+	echo "${FLAG_PATH_1}:${FLAG_NAME_1} ${FLAG_PATH_2}:${FLAG_NAME_2}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
 	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..

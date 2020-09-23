@@ -100,6 +100,8 @@ class Simulator:
     def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
         if a.id == ActionId.SSH_LOGIN:
             return PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.BASH_FIND_FLAG:
+            return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 

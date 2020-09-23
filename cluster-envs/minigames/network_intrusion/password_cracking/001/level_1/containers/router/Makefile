@@ -13,7 +13,7 @@ ROOT_USER_1=admin
 ROOT_PW_1=admin
 NON_ROOT_USER_1=jessica
 NON_ROOT_PW_1=water
-FLAG_INFO_FILE=flag_info.txt
+FLAG_INFO_FILE=fl_info.txt
 FLAG_PATH_1=/home/admin
 FLAG_NAME_1=flag0
 
