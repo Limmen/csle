@@ -11,6 +11,7 @@ class EnvState:
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
         self.num_vuln = num_vuln
+        self.obs_state : ObservationState
         self.reset_state()
 
     def get_observation(self):

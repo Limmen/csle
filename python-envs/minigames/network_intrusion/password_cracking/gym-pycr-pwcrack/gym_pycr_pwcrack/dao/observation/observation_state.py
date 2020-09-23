@@ -8,6 +8,8 @@ class ObservationState:
         self.num_ports = num_ports
         self.num_vuln = num_vuln
         self.machines : List[MachineObservationState] = []
+        self.detected = False
+        self.all_flags = False
 
 
     def sort_machines(self):

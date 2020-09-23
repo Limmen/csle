@@ -13,5 +13,5 @@ class FTPActions:
         return Action(id=id, name="FTP Login", cmd=cmd,
                       type=ActionType.POST_EXPLOIT,
                       descr="Uses known credentials to login with FTP on a server",
-                      cost=0.1, noise=0.1,
+                      cost=0.01, noise=0.01,
                       ip=ip, subnet=False, action_outcome=ActionOutcome.LOGIN)

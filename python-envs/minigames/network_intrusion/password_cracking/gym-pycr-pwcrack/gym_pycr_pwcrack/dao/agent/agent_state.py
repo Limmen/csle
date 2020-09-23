@@ -8,13 +8,16 @@ class AgentState:
                  episode_reward : int = 0,
                  cumulative_reward : int = 0, time_step : int = 0, num_episodes: int = 0,
                  vuln_lookup : dict = None,
-                 service_lookup : dict = None, os_lookup : dict = None):
+                 service_lookup : dict = None, os_lookup : dict = None,
+                 num_detections : int = 0, num_all_flags : int = 0):
         self.obs_state = obs_state
         self.env_log = env_log
         self.episode_reward = episode_reward
         self.cumulative_reward = cumulative_reward
         self.time_step = time_step
         self.num_episodes = num_episodes
+        self.num_detections = num_detections
+        self.num_all_flags = num_all_flags
         self.vuln_lookup = vuln_lookup
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
         self.service_lookup = service_lookup

@@ -18,7 +18,7 @@ class NMAPActions:
         return Action(id=id, name="TCP SYN (Stealth) Scan", cmd=cmd,
                       type=ActionType.RECON,
                       descr="A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
-                      cost=1.6*cost_noise_multiplier, noise=2*cost_noise_multiplier,
+                      cost=0.1*cost_noise_multiplier, noise=0.01*cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -34,7 +34,7 @@ class NMAPActions:
                type=ActionType.RECON,
                descr="A host discovery scan, it is quick because it only checks of hosts are up with Ping, without "
                      "scanning the ports.",
-               cost=1*cost_noise_multiplier, noise=1*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -49,7 +49,7 @@ class NMAPActions:
         return Action(id=id, name="UDP Port Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="",
-               cost=2*cost_noise_multiplier, noise=3*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -63,7 +63,7 @@ class NMAPActions:
         return Action(id=id, name="TCP Connection (Non-Stealth) Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
-               cost=6*cost_noise_multiplier, noise=5*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -78,7 +78,7 @@ class NMAPActions:
                cmd=cmd,
                type=ActionType.RECON,
                descr="A special type of TCP port scan using FIN, can avoid IDS and firewalls that block SYN scans",
-               cost=2*cost_noise_multiplier, noise=3*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -93,7 +93,7 @@ class NMAPActions:
                cmd=cmd,
                type=ActionType.RECON,
                descr="A special type of TCP port scan using Null, can avoid IDS and firewalls that block SYN scans",
-               cost=2*cost_noise_multiplier, noise=3*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -108,7 +108,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.RECON,
                descr="A special type of TCP port scan using XMas Tree, "
                      "can avoid IDS and firewalls that block SYN scans",
-               cost=2*cost_noise_multiplier, noise=3*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -123,7 +123,7 @@ class NMAPActions:
         return Action(id=id, name="OS detection scan",
                cmd=cmd, type=ActionType.RECON,
                descr="OS detection/guess scan",
-               cost=4*cost_noise_multiplier, noise=4*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -138,7 +138,7 @@ class NMAPActions:
         return Action(id=id, name="vulscan.nse vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
                descr="Uses a vulcan.nse script to turn NMAP into a vulnerability scanner",
-               cost=173*cost_noise_multiplier, noise=5*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -153,7 +153,7 @@ class NMAPActions:
         return Action(id=id, name="nmap_vulners vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
                descr="Uses vulners.nse script to turn NMAP into a vulnerability scanner",
-               cost=170*cost_noise_multiplier, noise=5*cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
 
     @staticmethod
@@ -171,7 +171,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames "
                      "for Telnet where username=password",
-                      cost=49*cost_noise_multiplier, noise=6*cost_noise_multiplier,
+                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="telnet-weak-password")
 
@@ -190,7 +190,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                       "for SSH where username=password",
-               cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="ssh-weak-password")
 
@@ -209,7 +209,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for FTP where username=password",
-               cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="ftp-weak-password")
 
@@ -228,7 +228,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for Cassandra where username=password",
-                      cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="cassandra-weak-password")
 
@@ -247,7 +247,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for IRC where username=password",
-                      cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="irc-weak-password")
 
@@ -266,7 +266,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for MongoDB where username=password",
-                      cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="mongo-weak-password")
 
@@ -285,7 +285,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for MySQL where username=password",
-               cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="mysql-weak-password")
 
@@ -304,7 +304,7 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for SMTP where username=password",
-               cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="smtp-weak-password")
 
@@ -323,6 +323,6 @@ class NMAPActions:
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
                      "for Postgres where username=password",
-               cost=49 * cost_noise_multiplier, noise=6 * cost_noise_multiplier,
+               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="postgres-weak-password")

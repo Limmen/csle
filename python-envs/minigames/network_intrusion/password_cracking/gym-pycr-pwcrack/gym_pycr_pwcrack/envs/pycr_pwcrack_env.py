@@ -65,6 +65,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = self.env_config.action_conf.actions[action_id]
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         self.env_state = s_prime
+        if None in self.env_state.obs_state.machines:
+            print("None in machines, action:{}".format(action))
+            print("machines:{}".format(self.env_state.obs_state.machines))
         obs = self.env_state.get_observation()
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
@@ -78,6 +81,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
+        if self.env_state.obs_state.detected:
+            self.agent_state.num_detections += 1
+        if self.env_state.obs_state.all_flags:
+            self.agent_state.num_all_flags += 1
         self.env_state.reset_state()
         obs = self.env_state.get_observation()
         self.agent_state.num_episodes += 1

@@ -11,6 +11,7 @@ def test_env(env_name : str, num_steps : int):
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     #actions = np.array([70, 127, 132])
+    #actions = actions[120:]
 
     #actions = np.array([71])
     #actions = np.array([9, 16])
@@ -24,12 +25,12 @@ def test_env(env_name : str, num_steps : int):
         env.render()
         if done:
             env.reset()
-        time.sleep(0.001)
+        #time.sleep(0.001)
     env.reset()
     env.close()
 
 def test_all():
-    test_env("pycr-pwcrack-simple-sim-v1", num_steps=10000)
+    test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()
