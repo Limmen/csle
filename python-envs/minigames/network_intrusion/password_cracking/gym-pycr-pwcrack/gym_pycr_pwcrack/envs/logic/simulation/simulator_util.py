@@ -633,6 +633,6 @@ class SimulatorUtil:
     @staticmethod
     def simulate_detection(a: Action, env_config: EnvConfig) -> bool:
         if env_config.simulate_detection:
-            return np.random.rand() < a.noise
+            return np.random.rand() < (a.noise + env_config.base_detection_p)
         else:
             return False

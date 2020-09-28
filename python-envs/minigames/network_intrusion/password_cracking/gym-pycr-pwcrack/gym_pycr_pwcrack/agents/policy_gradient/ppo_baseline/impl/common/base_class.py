@@ -10,24 +10,29 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, U
 import gym
 import numpy as np
 import torch as th
+from torch.utils.tensorboard import SummaryWriter
 
 from stable_baselines3.common import logger, utils
-from stable_baselines3.common.callbacks import BaseCallback, CallbackList, ConvertCallback, EvalCallback
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.preprocessing import is_image_space
-from stable_baselines3.common.save_util import load_from_zip_file, recursive_getattr, recursive_setattr, save_to_zip_file
-from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback
-from stable_baselines3.common.utils import (
+from stable_baselines3.common.save_util import load_from_zip_file, recursive_getattr, recursive_setattr, \
+    save_to_zip_file
+
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.utils import (
     check_for_correct_spaces,
     get_device,
     get_schedule_fn,
     set_random_seed,
     update_learning_rate,
 )
-from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.type_aliases import GymEnv, MaybeCallback
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.callbacks import BaseCallback, CallbackList, ConvertCallback, EvalCallback
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize
 
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.policies import BasePolicy, get_policy_from_name
+from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 
 
 def maybe_make_env(env: Union[GymEnv, str, None], monitor_wrapper: bool, verbose: int) -> Optional[GymEnv]:
@@ -78,29 +83,38 @@ class BaseAlgorithm(ABC):
     """
 
     def __init__(
-        self,
-        policy: Type[BasePolicy],
-        env: Union[GymEnv, str, None],
-        policy_base: Type[BasePolicy],
-        learning_rate: Union[float, Callable],
-        policy_kwargs: Dict[str, Any] = None,
-        tensorboard_log: Optional[str] = None,
-        verbose: int = 0,
-        device: Union[th.device, str] = "auto",
-        support_multi_env: bool = False,
-        create_eval_env: bool = False,
-        monitor_wrapper: bool = True,
-        seed: Optional[int] = None,
-        use_sde: bool = False,
-        sde_sample_freq: int = -1,
+            self,
+            policy: Type[BasePolicy],
+            env: Union[GymEnv, str, None],
+            policy_base: Type[BasePolicy],
+            learning_rate: Union[float, Callable],
+            policy_kwargs: Dict[str, Any] = None,
+            verbose: int = 0,
+            device: Union[th.device, str] = "auto",
+            support_multi_env: bool = False,
+            create_eval_env: bool = False,
+            monitor_wrapper: bool = True,
+            seed: Optional[int] = None,
+            use_sde: bool = False,
+            sde_sample_freq: int = -1,
+            pg_agent_config: PolicyGradientAgentConfig = None
     ):
+        self.pg_agent_config = pg_agent_config
+        self.train_result = ExperimentResult()
+        self.eval_result = ExperimentResult()
+
+        try:
+            self.tensorboard_writer = SummaryWriter(self.pg_agent_config.tensorboard_dir)
+            self.tensorboard_writer.add_hparams(self.pg_agent_config.hparams_dict(), {})
+        except:
+            print("error creating tensorboard writer")
 
         if isinstance(policy, str) and policy_base is not None:
             self.policy_class = get_policy_from_name(policy_base, policy)
         else:
             self.policy_class = policy
 
-        self.device = get_device(device)
+        self.device = get_device(device, pg_agent_config=self.pg_agent_config)
         if verbose > 0:
             print(f"Using {self.device} device")
 
@@ -121,7 +135,6 @@ class BaseAlgorithm(ABC):
         self.start_time = None
         self.policy = None
         self.learning_rate = learning_rate
-        self.tensorboard_log = tensorboard_log
         self.lr_schedule = None  # type: Optional[Callable]
         self._last_obs = None  # type: Optional[np.ndarray]
         self._last_dones = None  # type: Optional[np.ndarray]
@@ -139,6 +152,12 @@ class BaseAlgorithm(ABC):
         self.ep_success_buffer = None  # type: Optional[deque]
         # For logging
         self._n_updates = 0  # type: int
+
+        self.num_episodes = 0
+        self.num_eval_episodes = 0
+        self.num_eval_episodes_total = 0
+        self.num_episodes_total = 0
+        self.cumulative_reward = 0
 
         # Create and wrap the env if needed
         if env is not None:
@@ -173,6 +192,75 @@ class BaseAlgorithm(ABC):
                 print("Wrapping the env in a VecTransposeImage.")
             env = VecTransposeImage(env)
         return env
+
+    def log_metrics(self, iteration: int, result: ExperimentResult, episode_rewards: list,
+                    episode_steps: list, episode_avg_loss: list = None,
+                    eval: bool = False, lr: float = None, total_num_episodes: int = 0) -> None:
+        """
+        Logs average metrics for the last <self.config.log_frequency> episodes
+
+        :param iteration: the training iteration (equivalent to episode if batching is not used)
+        :param result: the result object to add the results to
+        :param episode_rewards: list of attacker episode rewards for the last <self.config.log_frequency> episodes
+        :param episode_steps: list of episode steps for the last <self.config.log_frequency> episodes
+        :param episode_avg_loss: list of episode attacker loss for the last <self.config.log_frequency> episodes
+        :param eval: boolean flag whether the metrics are logged in an evaluation context.
+        :param lr: the learning rate of the attacker
+        :param total_num_episodes: number of training episodes
+        :return: None
+        """
+        avg_episode_rewards = np.mean(episode_rewards)
+        if lr is None:
+            lr = 0.0
+        if not eval and episode_avg_loss is not None:
+            avg_episode_loss = np.mean(episode_avg_loss)
+        else:
+            avg_episode_loss = 0.0
+
+        avg_episode_steps = np.mean(episode_steps)
+        if eval:
+            log_str = "[Eval] iter:{},avg_R:{:.2f}, avg_t:{:.2f}, lr:{:.2E}".format(
+                iteration, avg_episode_rewards, avg_episode_steps, lr)
+        else:
+            log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R:{:.2f},avg_t:{:.2f}," \
+                      "loss:{:.6f},lr:{:.2E},episode:{}".format(
+                iteration, self.pg_agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
+                lr, total_num_episodes)
+        self.pg_agent_config.logger.info(log_str)
+        print(log_str)
+        if self.pg_agent_config.tensorboard:
+            self.log_tensorboard(iteration, avg_episode_rewards,avg_episode_steps,
+                                 avg_episode_loss, self.pg_agent_config.epsilon, lr, eval=eval)
+
+        result.avg_episode_steps.append(avg_episode_steps)
+        result.avg_episode_rewards.append(avg_episode_rewards)
+        result.epsilon_values.append(self.pg_agent_config.epsilon)
+        result.avg_episode_loss.append(avg_episode_loss)
+        result.lr_list.append(lr)
+
+    def log_tensorboard(self, episode: int, avg_episode_rewards: float,
+                        avg_episode_steps: float, episode_avg_loss: float,
+                        epsilon: float, lr: float, eval=False) -> None:
+        """
+        Log metrics to tensorboard
+
+        :param episode: the episode
+        :param avg_episode_rewards: the average attacker episode reward
+        :param avg_episode_steps: the average number of episode steps
+        :param episode_avg_loss: the average episode loss
+        :param epsilon: the exploration rate
+        :param lr: the learning rate of the attacker
+        :param eval: boolean flag whether eval or not
+        :return: None
+        """
+        train_or_eval = "eval" if eval else "train"
+        self.tensorboard_writer.add_scalar('avg_episode_rewards/' + train_or_eval,
+                                           avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('episode_steps/' + train_or_eval, avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
+        self.tensorboard_writer.add_scalar('epsilon', epsilon, episode)
+        if not eval:
+            self.tensorboard_writer.add_scalar('lr', lr, episode)
 
     @abstractmethod
     def _setup_model(self) -> None:
@@ -271,16 +359,16 @@ class BaseAlgorithm(ABC):
 
     @abstractmethod
     def learn(
-        self,
-        total_timesteps: int,
-        callback: MaybeCallback = None,
-        log_interval: int = 100,
-        tb_log_name: str = "run",
-        eval_env: Optional[GymEnv] = None,
-        eval_freq: int = -1,
-        n_eval_episodes: int = 5,
-        eval_log_path: Optional[str] = None,
-        reset_num_timesteps: bool = True,
+            self,
+            total_timesteps: int,
+            callback: MaybeCallback = None,
+            log_interval: int = 100,
+            tb_log_name: str = "run",
+            eval_env: Optional[GymEnv] = None,
+            eval_freq: int = -1,
+            n_eval_episodes: int = 5,
+            eval_log_path: Optional[str] = None,
+            reset_num_timesteps: bool = True,
     ) -> "BaseAlgorithm":
         """
         Return a trained model.
@@ -298,11 +386,11 @@ class BaseAlgorithm(ABC):
         """
 
     def predict(
-        self,
-        observation: np.ndarray,
-        state: Optional[np.ndarray] = None,
-        mask: Optional[np.ndarray] = None,
-        deterministic: bool = False,
+            self,
+            observation: np.ndarray,
+            state: Optional[np.ndarray] = None,
+            mask: Optional[np.ndarray] = None,
+            deterministic: bool = False,
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the model's action(s) from an observation
@@ -318,7 +406,7 @@ class BaseAlgorithm(ABC):
 
     @classmethod
     def load(
-        cls, load_path: str, env: Optional[GymEnv] = None, device: Union[th.device, str] = "auto", **kwargs
+            cls, load_path: str, env: Optional[GymEnv] = None, device: Union[th.device, str] = "auto", **kwargs
     ) -> "BaseAlgorithm":
         """
         Load the model from a zip-file
@@ -398,12 +486,12 @@ class BaseAlgorithm(ABC):
             self.eval_env.seed(seed)
 
     def _init_callback(
-        self,
-        callback: MaybeCallback,
-        eval_env: Optional[VecEnv] = None,
-        eval_freq: int = 10000,
-        n_eval_episodes: int = 5,
-        log_path: Optional[str] = None,
+            self,
+            callback: MaybeCallback,
+            eval_env: Optional[VecEnv] = None,
+            eval_freq: int = 10000,
+            n_eval_episodes: int = 5,
+            log_path: Optional[str] = None,
     ) -> BaseCallback:
         """
         :param callback: (MaybeCallback) Callback(s) called at every step with state of the algorithm.
@@ -429,6 +517,7 @@ class BaseAlgorithm(ABC):
                 log_path=log_path,
                 eval_freq=eval_freq,
                 n_eval_episodes=n_eval_episodes,
+                pg_agent_config=self.pg_agent_config
             )
             callback = CallbackList([callback, eval_callback])
 
@@ -436,15 +525,15 @@ class BaseAlgorithm(ABC):
         return callback
 
     def _setup_learn(
-        self,
-        total_timesteps: int,
-        eval_env: Optional[GymEnv],
-        callback: MaybeCallback = None,
-        eval_freq: int = 10000,
-        n_eval_episodes: int = 5,
-        log_path: Optional[str] = None,
-        reset_num_timesteps: bool = True,
-        tb_log_name: str = "run",
+            self,
+            total_timesteps: int,
+            eval_env: Optional[GymEnv],
+            callback: MaybeCallback = None,
+            eval_freq: int = 10000,
+            n_eval_episodes: int = 5,
+            log_path: Optional[str] = None,
+            reset_num_timesteps: bool = True,
+            tb_log_name: str = "run",
     ) -> Tuple[int, BaseCallback]:
         """
         Initialize different variables needed for training.
@@ -490,7 +579,7 @@ class BaseAlgorithm(ABC):
         eval_env = self._get_eval_env(eval_env)
 
         # Configure logger's outputs
-        utils.configure_logger(self.verbose, self.tensorboard_log, tb_log_name, reset_num_timesteps)
+        #utils.configure_logger(self.verbose, self.tensorboard_log, tb_log_name, reset_num_timesteps)
 
         # Create eval callback if needed
         callback = self._init_callback(callback, eval_env, eval_freq, n_eval_episodes, log_path)
@@ -524,10 +613,10 @@ class BaseAlgorithm(ABC):
         return ["policy", "device", "env", "eval_env", "replay_buffer", "rollout_buffer", "_vec_normalize_env"]
 
     def save(
-        self,
-        path: Union[str, pathlib.Path, io.BufferedIOBase],
-        exclude: Optional[Iterable[str]] = None,
-        include: Optional[Iterable[str]] = None,
+            self,
+            path: Union[str, pathlib.Path, io.BufferedIOBase],
+            exclude: Optional[Iterable[str]] = None,
+            include: Optional[Iterable[str]] = None,
     ) -> None:
         """
         Save all the attributes of the object and the model parameters in a zip-file.

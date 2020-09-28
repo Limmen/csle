@@ -5,16 +5,13 @@ import gym
 import numpy as np
 import torch as th
 
-from stable_baselines3.common import logger
-from stable_baselines3.common.buffers import RolloutBuffer
-from stable_baselines3.common.callbacks import BaseCallback
-from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback
-from stable_baselines3.common.utils import safe_mean
-from stable_baselines3.common.vec_env import VecEnv
-
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.buffers import RolloutBuffer
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.type_aliases import GymEnv, MaybeCallback
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.callbacks import BaseCallback
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.base_class import BaseAlgorithm
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.policies import ActorCriticPolicy
-
+from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -70,6 +67,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
+        pg_agent_config: PolicyGradientAgentConfig = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -85,7 +83,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             create_eval_env=create_eval_env,
             support_multi_env=True,
             seed=seed,
-            tensorboard_log=tensorboard_log,
+            pg_agent_config = pg_agent_config
         )
 
         self.n_steps = n_steps
@@ -95,6 +93,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.vf_coef = vf_coef
         self.max_grad_norm = max_grad_norm
         self.rollout_buffer = None
+        self.iteration = 0
+        self.num_episodes = 0
+        self.num_episodes_total = 0
 
         if _init_setup_model:
             self._setup_model()
@@ -123,7 +124,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
     def collect_rollouts(
         self, env: VecEnv, callback: BaseCallback, rollout_buffer: RolloutBuffer, n_rollout_steps: int
-    ) -> bool:
+    ) -> Union[bool, int, int]:
         """
         Collect rollouts using the current policy and fill a `RolloutBuffer`.
 
@@ -142,6 +143,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         if self.use_sde:
             self.policy.reset_noise(env.num_envs)
 
+        # Avg metrics
+        episode_rewards = []
+        episode_steps = []
+
+        # Per episode metrics
+        episode_reward = 0
+        episode_step = 0
+
         callback.on_rollout_start()
 
         while n_steps < n_rollout_steps:
@@ -149,42 +158,36 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 # Sample a new noise matrix
                 self.policy.reset_noise(env.num_envs)
 
-            with th.no_grad():
-                # Convert to pytorch tensor
-                obs_tensor = th.as_tensor(self._last_obs).to(self.device)
-                actions, values, log_probs = self.policy.forward(obs_tensor)
-            actions = actions.cpu().numpy()
-
-            # Rescale and perform action
-            clipped_actions = actions
-            # Clip the actions to avoid out of bound error
-            if isinstance(self.action_space, gym.spaces.Box):
-                clipped_actions = np.clip(actions, self.action_space.low, self.action_space.high)
-
-            new_obs, rewards, dones, infos = env.step(clipped_actions)
+            new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(self.env, rollout_buffer)
 
             self.num_timesteps += env.num_envs
 
             # Give access to local variables
             callback.update_locals(locals())
-            if callback.on_step() is False:
+            if callback.on_step(iteration=self.iteration) is False:
                 return False
 
+            # Record step metrics
             self._update_info_buffer(infos)
             n_steps += 1
+            self.num_timesteps += env.num_envs
+            episode_reward += rewards
+            episode_step += 1
 
-            if isinstance(self.action_space, gym.spaces.Discrete):
-                # Reshape in case of discrete action
-                actions = actions.reshape(-1, 1)
-            rollout_buffer.add(self._last_obs, actions, rewards, self._last_dones, values, log_probs)
-            self._last_obs = new_obs
-            self._last_dones = dones
+            if dones:
+                # Record episode metrics
+                self.num_episodes += 1
+                self.num_episodes_total += 1
+                episode_rewards.append(episode_reward)
+                episode_steps.append(episode_step)
+                episode_reward = 0
+                episode_step = 0
 
         rollout_buffer.compute_returns_and_advantage(values, dones=dones)
 
         callback.on_rollout_end()
 
-        return True
+        return True, episode_rewards, episode_steps
 
     def train(self) -> None:
         """
@@ -205,37 +208,67 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         eval_log_path: Optional[str] = None,
         reset_num_timesteps: bool = True,
     ) -> "OnPolicyAlgorithm":
-        iteration = 0
 
+        self.pg_agent_config.logger.info("Setting up Training Configuration")
+        print("Setting up Training Configuration")
+
+        self.iteration = 0
         total_timesteps, callback = self._setup_learn(
             total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps, tb_log_name
         )
 
         callback.on_training_start(locals(), globals())
+        self.pg_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
+        self.pg_agent_config.logger.info(self.pg_agent_config.to_str())
 
-        while self.num_timesteps < total_timesteps:
+        # Tracking metrics
+        episode_rewards = []
+        episode_rewards_a = []
+        episode_steps = []
+        episode_avg_loss = []
+        episode_avg_loss_a = []
+        lr = 0.0
 
-            continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+        while self.iteration < self.pg_agent_config.num_iterations:
+
+            continue_training, rollouts_rewards, rollouts_steps  = self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+
+            episode_rewards.extend(rollouts_rewards)
+            episode_steps.extend(rollouts_steps)
 
             if continue_training is False:
                 break
 
-            iteration += 1
+            self.iteration += 1
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
-            # Display training infos
-            if log_interval is not None and iteration % log_interval == 0:
-                fps = int(self.num_timesteps / (time.time() - self.start_time))
-                logger.record("time/iterations", iteration, exclude="tensorboard")
-                if len(self.ep_info_buffer) > 0 and len(self.ep_info_buffer[0]) > 0:
-                    logger.record("rollout/ep_rew_mean", safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
-                    logger.record("rollout/ep_len_mean", safe_mean([ep_info["l"] for ep_info in self.ep_info_buffer]))
-                logger.record("time/fps", fps)
-                logger.record("time/time_elapsed", int(time.time() - self.start_time), exclude="tensorboard")
-                logger.record("time/total_timesteps", self.num_timesteps, exclude="tensorboard")
-                logger.dump(step=self.num_timesteps)
+            if self.iteration % self.pg_agent_config.train_log_frequency == 0:
+                self.log_metrics(iteration=self.iteration, result=self.train_result,
+                                 episode_rewards=episode_rewards,
+                                 episode_avg_loss=episode_avg_loss,
+                                 eval=False, lr=self.lr_schedule(self.num_timesteps),
+                                 total_num_episodes=self.num_episodes_total,
+                                 episode_steps=episode_steps)
+                episode_rewards = []
+                episode_rewards_a = []
+                episode_avg_loss = []
+                episode_avg_loss = []
+                episode_avg_loss_a = []
+                episode_steps = []
+                self.num_episodes = 0
 
-            self.train()
+            # Save models every <self.config.checkpoint_frequency> iterations
+            if self.iteration % self.pg_agent_config.checkpoint_freq == 0:
+                self.save_model()
+                if self.pg_agent_config.save_dir is not None:
+                    time_str = str(time.time())
+                    self.train_result.to_csv(
+                        self.pg_agent_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
+                    self.eval_result.to_csv(
+                        self.pg_agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
+
+            entropy_loss, pg_loss, value_loss, lr = self.train()
+            episode_avg_loss.append(entropy_loss + pg_loss + value_loss)
 
         callback.on_training_end()
 
@@ -248,3 +281,46 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         state_dicts = ["policy", "policy.optimizer"]
 
         return state_dicts, []
+
+
+    def step_policy(self, env, rollout_buffer):
+        with th.no_grad():
+            # Convert to pytorch tensor
+            obs_tensor = th.as_tensor(self._last_obs).to(self.device)
+            actions, values, log_probs = self.policy.forward(obs_tensor)
+        actions = actions.cpu().numpy()
+
+        # Rescale and perform action
+        clipped_actions = actions
+        # Clip the actions to avoid out of bound error
+        if isinstance(self.action_space, gym.spaces.Box):
+            clipped_actions = np.clip(actions, self.action_space.low, self.action_space.high)
+
+        new_obs, rewards, dones, infos = env.step(clipped_actions)
+
+        if isinstance(self.action_space, gym.spaces.Discrete):
+            # Reshape in case of discrete action
+            actions = actions.reshape(-1, 1)
+
+        rollout_buffer.add(self._last_obs, actions, rewards, self._last_dones, values, log_probs)
+
+        self._last_obs = new_obs
+        self._last_dones = dones
+
+        return new_obs, rewards, dones, infos, values, log_probs, actions
+
+
+    def save_model(self) -> None:
+        """
+        Saves the PyTorch Model Weights
+
+        :return: None
+        """
+        time_str = str(time.time())
+        if self.pg_agent_config.save_dir is not None:
+            path = self.pg_agent_config.save_dir + "/" + time_str + "_policy_network.zip"
+            self.pg_agent_config.logger.info("Saving policy-network to: {}".format(path))
+            self.save(path, exclude=["tensorboard_writer"])
+        else:
+            self.pg_agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
+            print("Save path not defined, not saving policy-networks to disk")

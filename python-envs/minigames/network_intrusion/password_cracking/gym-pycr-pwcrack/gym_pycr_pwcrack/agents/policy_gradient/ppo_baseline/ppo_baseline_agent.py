@@ -71,7 +71,7 @@ class PPOBaselineAgent(PolicyGradientAgent):
                     seed=self.config.random_seed,
                     policy_kwargs=policy_kwargs,
                     device=device,
-                    #pg_agent_config=self.config,
+                    pg_agent_config=self.config,
                     vf_coef=self.config.vf_coef,
                     ent_coef=self.config.ent_coef,
                     use_sde=self.config.use_sde,
@@ -82,7 +82,7 @@ class PPOBaselineAgent(PolicyGradientAgent):
 
 
         # Video config
-        if self.config.video:
+        if self.config.video or self.config.gifs:
             time_str = str(time.time())
             if self.config.video_dir is None:
                 raise AssertionError("Video is set to True but no video_dir is provided, please specify "

@@ -481,7 +481,7 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             ])
             env_config = EnvConfig(network_conf=network_conf, action_conf=action_config, num_ports=10, num_vuln=10,
                                    render_config=render_config, env_mode=EnvMode.SIMULATION, cluster_config=cluster_config,
-                                   simulate_detection=True, detection_reward=10)
+                                   simulate_detection=True, detection_reward=10, base_detection_p=0.05)
             env_config.ping_scan_miss_p = 0.02
             env_config.udp_port_scan_miss_p = 0.07
             env_config.syn_stealth_scan_miss_p = 0.04

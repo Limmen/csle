@@ -9,16 +9,16 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    pg_agent_config = PolicyGradientAgentConfig(gamma=0.0, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.9,
-                                                min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=True, eval_log_frequency=1,
+    pg_agent_config = PolicyGradientAgentConfig(gamma=0.0, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
+                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
+                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_episodes=1000000000,
+                                                num_iterations=1000000000,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=10000000, video_frequency=11,
+                                                eval_frequency=100, video_frequency=11,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=15, input_dim=4 * 2,
+                                                checkpoint_freq=100, input_dim=4 * 2,
                                                 output_dim=1 + (2*48),
                                                 pi_hidden_dim=64, pi_hidden_layers=2,
                                                 vf_hidden_dim=64, vf_hidden_layers=2,

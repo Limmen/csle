@@ -37,8 +37,8 @@ class PycrPwCrackMonitor(Wrapper):
         return observation, reward, done, info
 
     def reset(self, **kwargs):
-        if (self.openai_baseline and len(self.episode_frames) > 0) or (self.openai_baseline and not self.openai_baseline_reset):
-            return
+        # if (self.openai_baseline and len(self.episode_frames) > 0) or (self.openai_baseline and not self.openai_baseline_reset):
+        #     return
         self._before_reset()
         observation = self.env.reset(**kwargs)
         self._after_reset(observation)
@@ -206,10 +206,11 @@ class PycrPwCrackMonitor(Wrapper):
         self.episode_frames = []
 
         # Record video
-        frames = self.video_recorder.capture_frame()
-        if frames is not None:
-            for frame in frames:
-                self.episode_frames.append(frame)
+        if ((self.episode_id-1) % (self.video_frequency) == 0):
+            frames = self.video_recorder.capture_frame()
+            if frames is not None:
+                for frame in frames:
+                    self.episode_frames.append(frame)
 
         # Bump *after* all reset activity has finished
         self.episode_id += 1
