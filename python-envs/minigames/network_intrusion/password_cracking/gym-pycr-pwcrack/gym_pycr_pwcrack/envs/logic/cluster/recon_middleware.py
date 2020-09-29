@@ -18,6 +18,10 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
+        print("executing cmd:{}".format(a.cmd))
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(a.cmd[0])
+        for line in stdout:
+            print(line.strip('\n'))
         # s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
         #                                                                miss_p=env_config.syn_stealth_scan_miss_p,
         #                                                                protocol=TransportProtocol.TCP)

@@ -171,7 +171,6 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
 
 # -------- Version 1 ------------
 class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
-
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig):
         if env_config is None:
             render_config = PyCrPwCrackSimpleBase.render_conf()
@@ -180,7 +179,7 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             network_conf = PyCrPwCrackSimpleBase.network_conf()
             action_conf = PyCrPwCrackSimpleBase.action_conf(network_conf)
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
-                                                          cluster_config=cluster_config, render_config=render_config)
+                                                          cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
 
         super().__init__(env_config=env_config)

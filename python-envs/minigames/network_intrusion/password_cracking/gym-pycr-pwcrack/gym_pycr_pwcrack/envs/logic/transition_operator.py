@@ -16,7 +16,7 @@ class TransitionOperator:
             try:
                 return ClusterMiddleware.transition(s=s,a=a,env_config=env_config)
             except Exception as e:
-                print("Could not execute action on the Cluster, using simulation instead")
+                print("Could not execute action on the Cluster, using simulation instead. \n Error:{}".format(str(e)))
                 return Simulator.transition(s=s, a=a, env_config=env_config)
 
         else:

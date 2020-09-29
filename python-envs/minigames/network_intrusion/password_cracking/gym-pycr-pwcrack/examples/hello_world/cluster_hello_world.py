@@ -1,4 +1,4 @@
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackSimpleSim1Env
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackSimpleSim1Env, PyCRPwCrackSimpleCluster1Env
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 import gym
 import time
@@ -16,7 +16,7 @@ def test_env(env_name : str, num_steps : int):
     num_actions = env.env_config.action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
-    #actions = np.array([70, 127, 132])
+    actions = np.array([1])
     for i in range(num_steps):
         action = np.random.choice(actions)
         obs, reward, done, info = env.step(action)
@@ -48,12 +48,26 @@ def test_ssh():
     agent_conn.connect('172.18.1.191', username='agent', password='agent', sock=agent_channel)
     print("agent connected")
 
+    #
+
     stdin, stdout, stderr = agent_conn.exec_command('ls /')
     for line in stdout:
         print(line.strip('\n'))
 
+    stdin, stdout, stderr = agent_conn.exec_command('su root')
+    for line in stdout:
+        print(line.strip('\n'))
+
+    stdin, stdout, stderr = agent_conn.exec_command('nmap -sS --min-rate 100000 --max-retries 1 -T5 -oX 0.xml 172.18.1.10')
+    for line in stdout:
+        print(line.strip('\n'))
+    for line in stderr:
+        print(line.strip('\n'))
+
 def test_all():
-    test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
+    test_ssh()
+    #test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

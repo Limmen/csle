@@ -62,6 +62,9 @@ RUN git clone https://github.com/danielmiessler/SecLists
 # Alias
 RUN echo "alias ll='ls -al'" >> /root.bashrc
 
+# Setup root passwd
+RUN echo "root:root" | /usr/sbin/chpasswd
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 
