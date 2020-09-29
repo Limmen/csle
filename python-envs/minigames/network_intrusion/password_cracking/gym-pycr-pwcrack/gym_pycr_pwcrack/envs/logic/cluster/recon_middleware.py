@@ -1,7 +1,9 @@
 from typing import Union
+import time
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
+from gym_pycr_pwcrack.envs.logic.cluster.cluster_util import ClusterUtil
 
 class ReconMiddleware:
     """
@@ -18,14 +20,9 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("executing cmd:{}".format(a.cmd))
-        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(a.cmd[0])
-        for line in stdout:
-            print(line.strip('\n'))
-        # s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
-        #                                                                miss_p=env_config.syn_stealth_scan_miss_p,
-        #                                                                protocol=TransportProtocol.TCP)
-        # done = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        # s_prime.obs_state.detected = done
-        # return s_prime, reward, done
+        cache_result = ClusterUtil.check_nmap_action_cache(a=a,env_config=env_config)
+        if cache_result is None:
+            ClusterUtil.execute_cmd(a=a, env_config=env_config)
+        else:
+            print("cache hit")
         return s, 0, False

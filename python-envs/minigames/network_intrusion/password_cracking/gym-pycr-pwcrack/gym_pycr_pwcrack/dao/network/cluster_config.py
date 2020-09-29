@@ -1,4 +1,5 @@
 import paramiko
+import time
 
 class ClusterConfig:
     """
@@ -17,7 +18,7 @@ class ClusterConfig:
         self.server_username = server_username
         self.server_conn = None
         self.agent_conn = None
-        self.agent_channel = None
+        self.relay_channel = None
 
     def connect_server(self):
         """
@@ -52,15 +53,17 @@ class ClusterConfig:
             if self.server_conn is None:
                 self.connect_server()
             server_transport = self.server_conn.get_transport()
-            agent_addr = (self.agent_ip, 22)  # edited#
-            server_addr = (self.server_ip, 22)  # edited#
+            agent_addr = (self.agent_ip, 22)
+            server_addr = (self.server_ip, 22)
 
-            agent_channel = server_transport.open_channel("direct-tcpip", agent_addr, server_addr)
-            self.agent_channel = agent_channel
+            relay_channel = server_transport.open_channel("direct-tcpip", agent_addr, server_addr)
+            self.relay_channel = relay_channel
             agent_conn = paramiko.SSHClient()
             agent_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            agent_conn.connect(self.agent_ip, username=self.agent_username, password=self.agent_pw, sock=agent_channel)
+            agent_conn.connect(self.agent_ip, username=self.agent_username, password=self.agent_pw, sock=relay_channel)
             self.agent_conn = agent_conn
+            self.agent_channel = self.agent_conn.invoke_shell()
+
 
         # Connect directly to agent with ssh
         else:
@@ -68,11 +71,39 @@ class ClusterConfig:
             agent_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             agent_conn.connect(self.server_ip, username=self.server_username, password=self.agent_pw)
             self.agent_conn = agent_conn
+            self.agent_channel = self.agent_conn.invoke_shell()
 
         print("Agent host connected successfully")
+
+        self._su_root()
+
+        print("Root access")
+
+
+    def _su_root(self):
+
+        # clear output
+        if self.agent_channel.recv_ready():
+            output = self.agent_channel.recv(5000)
+
+        self.agent_channel.send("su root\n")
+        time.sleep(0.2)
+        self.agent_channel.send("root\n")
+        time.sleep(0.2)
+
+        # clear output
+        if self.agent_channel.recv_ready():
+            output = self.agent_channel.recv(5000)
+
+        self.agent_channel.send("whoami\n")
+        time.sleep(0.2)
+        if self.agent_channel.recv_ready():
+            output = self.agent_channel.recv(5000)
+            output_str = output.decode("utf-8")
+            assert "root" in output_str
 
 
     def close(self):
         self.agent_conn.close()
-        self.agent_channel.close()
+        self.relay_channel.close()
         self.server_conn.close()

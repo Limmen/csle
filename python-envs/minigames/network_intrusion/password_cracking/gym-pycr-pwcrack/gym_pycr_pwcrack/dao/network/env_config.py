@@ -1,3 +1,4 @@
+import re
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
@@ -34,3 +35,8 @@ class EnvConfig:
         self.mongo_dict_attack_miss_p = 0.00
         self.cassandra_dict_attack_miss_p = 0.00
         self.ftp_dict_attack_miss_p = 0.00
+
+        self.shell_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+        self.shell_read_wait = 0.1
+        self.max_nmap_command_output_size = 10000000
+        self.nmap_cache_dir = "/home/agent/"
