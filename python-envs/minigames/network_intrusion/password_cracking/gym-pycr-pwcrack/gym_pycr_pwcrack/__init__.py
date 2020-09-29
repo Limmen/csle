@@ -3,9 +3,16 @@ Register OpenAI Envs
 """
 from gym.envs.registration import register
 
-# -------- Difficulty Level: Simple, Version 1 ------------
+# -------- Difficulty Level: Simple, Mode: Simulation, Version: 1 ------------
 register(
     id='pycr-pwcrack-simple-sim-v1',
     entry_point='gym_pycr_pwcrack.envs:PyCRPwCrackSimpleSim1Env',
-    kwargs={'env_config': None}
+    kwargs={'env_config': None, 'cluster_config': None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-pwcrack-simple-cluster-v1',
+    entry_point='gym_pycr_pwcrack.envs:PyCRPwCrackSimpleCluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None}
 )
