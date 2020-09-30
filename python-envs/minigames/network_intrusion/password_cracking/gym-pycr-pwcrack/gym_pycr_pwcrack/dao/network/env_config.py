@@ -40,3 +40,7 @@ class EnvConfig:
         self.shell_read_wait = 0.1
         self.max_nmap_command_output_size = 10000000
         self.nmap_cache_dir = "/home/agent/"
+        self.nmap_cache = []
+        self.retry_timeout = 2
+        self.num_retries = 2
+        self.use_nmap_cache = True

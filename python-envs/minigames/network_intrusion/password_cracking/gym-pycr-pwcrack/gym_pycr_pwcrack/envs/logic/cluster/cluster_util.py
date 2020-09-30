@@ -1,6 +1,7 @@
 from typing import Union, List
 import time
 from xml.etree.ElementTree import fromstring
+import xml.etree.ElementTree as ET
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_result import NmapScanResult
@@ -21,10 +22,15 @@ class ClusterUtil:
 
     @staticmethod
     def execute_cmd(a : Action, env_config : EnvConfig):
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(a.cmd[0])
+        return stdin, stdout, stderr
+
+    @staticmethod
+    def execute_cmd_interactive(a: Action, env_config: EnvConfig):
         env_config.cluster_config.agent_channel.send(a.cmd[0] + "\n")
 
     @staticmethod
-    def read_result(env_config : EnvConfig) -> str:
+    def read_result_interactive(env_config : EnvConfig) -> str:
         while not env_config.cluster_config.agent_channel.recv_ready():
             time.sleep(env_config.shell_read_wait)
         output = env_config.cluster_config.agent_channel.recv(5000)
@@ -32,9 +38,30 @@ class ClusterUtil:
         output_str = env_config.shell_escape.sub("", output_str)
         return output_str
 
+    @staticmethod
+    def check_nmap_action_cache(a: Action, env_config: EnvConfig):
+        query = str(a.id.value) + "_" + a.ip + ".xml"
+        if a.subnet:
+            query = str(a.id.value) + ".xml"
+
+        # Search through cache
+        if query in env_config.nmap_cache:
+            return query
+
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command("ls -1 " + env_config.nmap_cache_dir)
+        cache_list = []
+        for line in stdout:
+            cache_list.append(line.replace("\n", ""))
+        env_config.nmap_cache = cache_list
+
+        # Search through updated cache
+        if query in env_config.nmap_cache:
+            return query
+
+        return None
 
     @staticmethod
-    def check_nmap_action_cache(a : Action, env_config : EnvConfig):
+    def check_nmap_action_cache_interactive(a : Action, env_config : EnvConfig):
 
         # Clear channel
         if env_config.cluster_config.agent_channel.recv_ready():
@@ -42,7 +69,7 @@ class ClusterUtil:
 
         # List cache
         env_config.cluster_config.agent_channel.send("ls -1 " + env_config.nmap_cache_dir + "\n")
-        result_str = ClusterUtil.read_result(env_config=env_config)
+        result_str = ClusterUtil.read_result_interactive(env_config=env_config)
         cache_list = result_str.split('\r\n')
         cache_list = cache_list[1:-1]  # remove command ([0]) and prompt ([-1])
 
@@ -57,8 +84,25 @@ class ClusterUtil:
         return None
 
     @staticmethod
-    def parse_nmap_scan(file_name : str, env_config : EnvConfig):
-        print("parsing file:{}".format(file_name))
+    def delete_cache_file(file_name: str, env_config: EnvConfig):
+        cmd = "rm -f " + env_config.nmap_cache_dir + file_name
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(cmd)
+        env_config.nmap_cache = []
+        return stdin, stdout, stderr
+
+    @staticmethod
+    def parse_nmap_scan(file_name: str, env_config: EnvConfig):
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        try:
+            xml_tree = ET.parse(remote_file)
+        finally:
+            remote_file.close()
+        xml_data = xml_tree.getroot()
+        return xml_data
+
+    @staticmethod
+    def parse_nmap_scan_interactive(file_name : str, env_config : EnvConfig):
         env_config.cluster_config.agent_channel.send("cat " + env_config.nmap_cache_dir + file_name + "\n")
         while not env_config.cluster_config.agent_channel.recv_ready():
             time.sleep(env_config.shell_read_wait)

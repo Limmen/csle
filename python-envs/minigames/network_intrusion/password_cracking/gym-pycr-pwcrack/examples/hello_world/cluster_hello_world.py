@@ -6,6 +6,7 @@ import numpy as np
 import paramiko
 import re
 from xml.etree.ElementTree import XML, fromstring
+import xml.etree.ElementTree as ET
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_result import NmapScanResult
 from gym_pycr_pwcrack.dao.action_results.nmap_host import NmapHostResult
 from gym_pycr_pwcrack.dao.action_results.nmap_host_status import NmapHostStatus
@@ -33,6 +34,47 @@ def test_env(env_name : str, num_steps : int):
         time.sleep(0.001)
     env.reset()
     env.close()
+
+def test_ssh2():
+    key = paramiko.RSAKey.from_private_key_file("/Users/kimham/.ssh/pycr_id_rsa")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect('172.31.212.91', username='kim', pkey=key)
+    print("connected")
+    stdin, stdout, stderr = client.exec_command('ll')
+    for line in stdout:
+        print(line.strip('\n'))
+    server_transport = client.get_transport()
+
+    dest_addr = ('172.18.1.191', 22)  # edited#
+    local_addr = ('172.31.212.91', 22)  # edited#
+    relay_channel = server_transport.open_channel("direct-tcpip", dest_addr, local_addr)
+    print("channel created")
+
+    agent_conn = paramiko.SSHClient()
+    agent_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    agent_conn.connect('172.18.1.191', username='agent', password='agent', sock=relay_channel)
+    print("agent connected")
+
+    # stdin, stdout, stderr = agent_conn.exec_command("ls -al /")
+    # for line in stdout:
+    #     print(line.strip('\n'))
+    #
+    # stdin, stdout, stderr = agent_conn.exec_command("sudo nmap -sS --min-rate 100000 --max-retries 1 -T5 -oX 0.xml 172.18.1.10")
+    # for line in stdout:
+    #     print(line.strip('\n'))
+
+    sftp_client = agent_conn.open_sftp()
+    remote_file = sftp_client.open('/home/agent/19.xml')
+    try:
+        xml_data = ET.parse(remote_file)
+        root = xml_data.getroot()
+        print("root:{}".format(root))
+        # for line in remote_file:
+        #     print(line)
+    finally:
+        remote_file.close()
+
 
 def test_ssh():
     key = paramiko.RSAKey.from_private_key_file("/Users/kimham/.ssh/pycr_id_rsa")
@@ -191,6 +233,7 @@ def test_all():
     #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
     #test_ssh()
     test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
+    #test_ssh2()
 
 if __name__ == '__main__':
     test_all()

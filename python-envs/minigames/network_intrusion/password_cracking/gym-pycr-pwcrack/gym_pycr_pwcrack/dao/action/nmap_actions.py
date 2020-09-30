@@ -16,7 +16,7 @@ class NMAPActions:
             id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sS " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
+        cmd = ["sudo nmap -sS " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
               + file_name + ip]
         return Action(id=id, name="TCP SYN (Stealth) Scan", cmd=cmd,
                       type=ActionType.RECON,
@@ -34,7 +34,7 @@ class NMAPActions:
             id = ActionId.PING_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sP " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap -sP " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="Ping Scan", cmd=cmd,
                type=ActionType.RECON,
@@ -53,7 +53,7 @@ class NMAPActions:
             id = ActionId.UDP_PORT_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sU -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
+        cmd = ["sudo nmap -sU -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
               file_name + " "+ ip]
         return Action(id=id, name="UDP Port Scan", cmd=cmd,
                type=ActionType.RECON,
@@ -71,7 +71,7 @@ class NMAPActions:
             id = ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sT -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sT -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="TCP Connection (Non-Stealth) Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -88,7 +88,7 @@ class NMAPActions:
             id = ActionId.TCP_FIN_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sF " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sF " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="FIN Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -106,7 +106,7 @@ class NMAPActions:
             id = ActionId.TCP_NULL_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sN " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sN " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Null Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -124,7 +124,7 @@ class NMAPActions:
             id = ActionId.TCP_XMAS_TREE_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sX " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sX " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Xmas Tree Scan",
                cmd=cmd, type=ActionType.RECON,
                descr="A special type of TCP port scan using XMas Tree, "
@@ -142,7 +142,7 @@ class NMAPActions:
             id = ActionId.OS_DETECTION_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -O --osscan-guess --max-os-tries 1 " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap -O --osscan-guess --max-os-tries 1 " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="OS detection scan",
                cmd=cmd, type=ActionType.RECON,
@@ -160,7 +160,7 @@ class NMAPActions:
             id = ActionId.VULSCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sV --script=vulscan/vulscan.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap -sV --script=vulscan/vulscan.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="vulscan.nse vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
@@ -178,7 +178,7 @@ class NMAPActions:
             id = ActionId.NMAP_VULNERS_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap -sV --script vulners.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
+        cmd = ["sudo nmap -sV --script vulners.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
               + file_name + ip]
         return Action(id=id, name="nmap_vulners vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
@@ -198,7 +198,7 @@ class NMAPActions:
             telnet_args = constants.NMAP.TELNET_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + telnet_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
+        cmd = ["sudo nmap " + telnet_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
               file_name + ip]
         return Action(id=id, name="Telnet dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -220,7 +220,7 @@ class NMAPActions:
             ssh_args = constants.NMAP.SSH_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + ssh_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
+        cmd = ["sudo nmap " + ssh_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
               file_name + ip]
         return Action(id=id, name="SSH dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -242,7 +242,7 @@ class NMAPActions:
             file_name = str(id.value) + ".xml "
             ftp_args = constants.NMAP.FTP_BRUTE_SUBNET
 
-        cmd = ["nmap " + ftp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap " + ftp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="FTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -265,7 +265,7 @@ class NMAPActions:
             cassandra_args = constants.NMAP.CASSANDRA_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + cassandra_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap " + cassandra_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="Cassandra dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -287,7 +287,7 @@ class NMAPActions:
             irc_args = constants.NMAP.IRC_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + irc_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap " + irc_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="IRC dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -310,7 +310,7 @@ class NMAPActions:
             id = ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + mongo_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
+        cmd = ["sudo nmap " + mongo_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
               + file_name + ip]
         return Action(id=id, name="MongoDB dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -331,7 +331,7 @@ class NMAPActions:
             mysql_args = constants.NMAP.MYSQL_BRUTE_SUBNET
             id = ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
-        cmd = ["nmap " + mysql_args + " " + constants.NMAP.SPEED_ARGS + " " \
+        cmd = ["sudo nmap " + mysql_args + " " + constants.NMAP.SPEED_ARGS + " " \
               + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="MySQL dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -353,7 +353,7 @@ class NMAPActions:
             id = ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + smtp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap " + smtp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="SMTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
@@ -375,7 +375,7 @@ class NMAPActions:
             id = ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["nmap " + postgres_args + " " + constants.NMAP.SPEED_ARGS + " " \
+        cmd = ["sudo nmap " + postgres_args + " " + constants.NMAP.SPEED_ARGS + " " \
               + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Postgres dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,

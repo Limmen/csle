@@ -45,6 +45,10 @@ ADD docker/fl_info.txt /fl_info.txt
 RUN chmod 777 /create_flag.sh
 RUN /create_flag.sh
 
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker/sudoers /etc/sudoers
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 #CMD /start.sh
 

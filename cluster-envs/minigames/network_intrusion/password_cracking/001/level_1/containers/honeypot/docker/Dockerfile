@@ -72,6 +72,10 @@ RUN wget http://www-us.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz
 RUN tar xzf kafka_2.13-2.4.0.tgz
 RUN mv kafka_2.13-2.4.0 /usr/local/kafka
 
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker/sudoers /etc/sudoers
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

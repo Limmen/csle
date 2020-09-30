@@ -81,5 +81,9 @@ RUN chmod 777 /start.sh
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker/sudoers /etc/sudoers
+
 # Hack to keep container running (otherwise K8 thinks task is finished)
 #CMD ["sh", "-c", "tail -f /dev/null"]
