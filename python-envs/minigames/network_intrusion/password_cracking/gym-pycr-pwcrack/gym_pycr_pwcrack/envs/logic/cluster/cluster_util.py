@@ -22,8 +22,22 @@ class ClusterUtil:
 
     @staticmethod
     def execute_cmd(a : Action, env_config : EnvConfig):
-        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(a.cmd[0])
-        return stdin, stdout, stderr
+        transport_conn = env_config.cluster_config.agent_conn.get_transport()
+        session = transport_conn.open_session()
+        session.exec_command(a.cmd[0])
+        outdata, errdata = b'', b''
+        # Wait for completion
+        while True:
+            # Reading from output streams
+            while session.recv_ready():
+                outdata += session.recv(1000)
+            while session.recv_stderr_ready():
+                errdata += session.recv_stderr(1000)
+
+            # Check for completion
+            if session.exit_status_ready():
+                break
+        return outdata, errdata
 
     @staticmethod
     def execute_cmd_interactive(a: Action, env_config: EnvConfig):
@@ -187,7 +201,7 @@ class ClusterUtil:
                 port_status = NmapPortStatus.DOWN
                 protocol = TransportProtocol._from_str(child.attrib["protocol"])
                 port_id = child.attrib["portid"]
-                service_name = "none"
+                service_name = "unknown"
                 for child_2 in list(child.iter()):
                     if child_2.tag == "state":
                         port_status = ClusterUtil._parse_nmap_port_status_xml(child_2)
@@ -234,3 +248,29 @@ class ClusterUtil:
                                                  num_new_flag_pts=total_new_flag_pts,
                                                  cost=a.cost)
         return s_prime, reward
+
+    @staticmethod
+    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig):
+        cache_result = None
+        if env_config.use_nmap_cache:
+            cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config)
+        if cache_result is None:
+            ClusterUtil.execute_cmd(a=a, env_config=env_config)
+            cache_result = str(a.id.value) + "_" + a.ip + ".xml"
+            if a.subnet:
+                cache_result = str(a.id.value) + ".xml"
+
+        for i in range(env_config.num_retries):
+            try:
+                xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+                break
+            except Exception as e:
+                ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
+                ClusterUtil.execute_cmd(a=a, env_config=env_config)
+                time.sleep(env_config.retry_timeout)
+                xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+                break
+
+        scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
+        return s_prime, reward, False

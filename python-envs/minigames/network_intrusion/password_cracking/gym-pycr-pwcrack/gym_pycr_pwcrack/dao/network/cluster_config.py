@@ -19,6 +19,7 @@ class ClusterConfig:
         self.server_conn = None
         self.agent_conn = None
         self.relay_channel = None
+        self.cluster_services = set()
 
     def connect_server(self):
         """
@@ -101,6 +102,28 @@ class ClusterConfig:
             output = self.agent_channel.recv(5000)
             output_str = output.decode("utf-8")
             assert "root" in output_str
+
+
+    def download_cluster_services(self):
+        print("Downloading cluster services...")
+        key = paramiko.RSAKey.from_private_key_file("/Users/kimham/.ssh/pycr_id_rsa")
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect('172.31.212.91', username='kim', pkey=key)
+
+        sftp_client = self.agent_conn.open_sftp()
+        remote_file = sftp_client.open("/nmap-services")
+        cluster_services = []
+        try:
+            for line in remote_file:
+                if not line.startswith("#"):
+                    service = line.split(" ", 1)[0]
+                    service = service.split("\t", 1)[0]
+                    cluster_services.append(service)
+        finally:
+            remote_file.close()
+        self.cluster_services = cluster_services
+        print("{} services downloaded successfully".format(len(self.cluster_services)))
 
 
     def close(self):

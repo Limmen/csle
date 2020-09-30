@@ -20,26 +20,76 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        cache_result = None
-        if env_config.use_nmap_cache:
-            cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config)
-        if cache_result is None:
-            ClusterUtil.execute_cmd(a=a, env_config=env_config)
-            cache_result = str(a.id.value) + "_" + a.ip + ".xml"
-            if a.subnet:
-                cache_result = str(a.id.value) + ".xml"
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
-        for i in range(env_config.num_retries):
-            try:
-                xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
-                break
-            except Exception as e:
-                ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
-                ClusterUtil.execute_cmd(a=a, env_config=env_config)
-                time.sleep(env_config.retry_timeout)
-                xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
-                break
+    @staticmethod
+    def execute_ping_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a Ping Scan action
 
-        scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
-        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
-        return s_prime, reward, False
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_udp_port_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a UDP Port Scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_tcp_con_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a TCP CON Stealth scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_tcp_fin_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a TCP FIN scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_tcp_null_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a TCP Null scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_tcp_xmas_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a TCP Xmas scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)

@@ -1,6 +1,7 @@
 from gym_pycr_pwcrack.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
+import gym_pycr_pwcrack.constants.constants as constants
 
 class NmapPort:
 
@@ -18,6 +19,9 @@ class NmapPort:
 
     def to_obs(self) -> PortObservationState:
         open = self.status == NmapPortStatus.UP
+        if self.service_name not in constants.SERVICES.service_lookup:
+            print("unknown service:{}".format(self.service_name))
+            self.service_name = "unknown"
         port_obs = PortObservationState(port = self.port_id, open=open, service=self.service_name,
                                         protocol=self.protocol)
         return port_obs

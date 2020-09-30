@@ -26,6 +26,18 @@ class ClusterMiddleware:
     def recon_action(s: EnvState, a: Action, env_config: EnvConfig):
         if a.id == ActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_SYN_STEALTH_SCAN_HOST:
             return ReconMiddleware.execute_tcp_syn_stealth_scan(s=s,a=a,env_config=env_config)
+        elif a.id == ActionId.PING_SCAN_SUBNET or a.id == ActionId.PING_SCAN_HOST:
+            return ReconMiddleware.execute_ping_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.UDP_PORT_SCAN_SUBNET or a.id == ActionId.UDP_PORT_SCAN_HOST:
+            return ReconMiddleware.execute_udp_port_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_HOST:
+            return ReconMiddleware.execute_tcp_con_stealth_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.TCP_FIN_SCAN_SUBNET or a.id == ActionId.TCP_FIN_SCAN_HOST:
+            return ReconMiddleware.execute_tcp_fin_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.TCP_NULL_SCAN_SUBNET or a.id == ActionId.TCP_NULL_SCAN_HOST:
+            return ReconMiddleware.execute_tcp_null_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == ActionId.TCP_XMAS_TREE_SCAN_SUBNET:
+            return ReconMiddleware.execute_tcp_xmas_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

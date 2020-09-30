@@ -16,7 +16,7 @@ class NMAPActions:
             id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sS " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
+        cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
               + file_name + ip]
         return Action(id=id, name="TCP SYN (Stealth) Scan", cmd=cmd,
                       type=ActionType.RECON,
@@ -34,7 +34,7 @@ class NMAPActions:
             id = ActionId.PING_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sP " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
+        cmd = ["sudo nmap -sP -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
               + " " + file_name + ip]
         return Action(id=id, name="Ping Scan", cmd=cmd,
                type=ActionType.RECON,
@@ -53,7 +53,7 @@ class NMAPActions:
             id = ActionId.UDP_PORT_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sU -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
+        cmd = ["sudo nmap -sU -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
               file_name + " "+ ip]
         return Action(id=id, name="UDP Port Scan", cmd=cmd,
                type=ActionType.RECON,
@@ -71,7 +71,7 @@ class NMAPActions:
             id = ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sT -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sT -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="TCP Connection (Non-Stealth) Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -88,7 +88,7 @@ class NMAPActions:
             id = ActionId.TCP_FIN_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sF " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sF -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="FIN Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -106,7 +106,7 @@ class NMAPActions:
             id = ActionId.TCP_NULL_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sN " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sN -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Null Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -124,7 +124,7 @@ class NMAPActions:
             id = ActionId.TCP_XMAS_TREE_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sX " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sX -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Xmas Tree Scan",
                cmd=cmd, type=ActionType.RECON,
                descr="A special type of TCP port scan using XMas Tree, "

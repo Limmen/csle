@@ -92,3 +92,12 @@ class EnvState:
     def reset_state(self):
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes), num_ports=self.num_ports,
                                           num_vuln=self.num_vuln)
+
+
+    def merge_services_with_cluster(self, cluster_services):
+        max_id = max(self.service_lookup.values())
+        for service in cluster_services:
+            if service not in self.service_lookup:
+                max_id += 1
+                self.service_lookup[service] = max_id
+        self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}

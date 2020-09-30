@@ -27,10 +27,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                   service_lookup=constants.SERVICES.service_lookup,
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                   os_lookup=constants.OS.os_lookup)
-        self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
-                                      service_lookup=constants.SERVICES.service_lookup,
-                                      vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
-                                      os_lookup = constants.OS.os_lookup)
         self.observation_space = self.env_state.observation_space
         self.action_space = self.env_config.action_conf.action_space
         self.num_actions = self.env_config.action_conf.num_actions
@@ -43,7 +39,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             'video.frames_per_second': 50  # Video rendering speed
         }
         self.step_outcome = None
-        self.env_config.cluster_config.connect_agent()
+        if self.env_config.env_mode == EnvMode.CLUSTER:
+            self.env_config.cluster_config.connect_agent()
+            self.env_config.cluster_config.download_cluster_services()
+            self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
+
+        self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
+                                      service_lookup=self.env_state.service_lookup,
+                                      vuln_lookup=self.env_state.vuln_lookup,
+                                      os_lookup=self.env_state.os_lookup)
 
     # -------- API ------------
     def step(self, action_id : int) -> Union[np.ndarray, int, bool, dict]:
@@ -159,12 +163,10 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig):
         if env_config is None:
             render_config = PyCrPwCrackSimpleBase.render_conf()
-            if cluster_config is None:
-                cluster_config = PyCrPwCrackSimpleBase.cluster_conf()
             network_conf = PyCrPwCrackSimpleBase.network_conf()
             action_conf = PyCrPwCrackSimpleBase.action_conf(network_conf)
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
-                                                          cluster_config=cluster_config, render_config=render_config)
+                                                          cluster_config=None, render_config=render_config)
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------

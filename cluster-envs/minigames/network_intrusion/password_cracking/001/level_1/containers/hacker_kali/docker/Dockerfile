@@ -73,6 +73,9 @@ ADD docker/sshd_config /etc/ssh/sshd_config
 RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker/sudoers /etc/sudoers
 
+# Download nmap-services
+RUN wget https://raw.githubusercontent.com/nmap/nmap/master/nmap-services
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 
