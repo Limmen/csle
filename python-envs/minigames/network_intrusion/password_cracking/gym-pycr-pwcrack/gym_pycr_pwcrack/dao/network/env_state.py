@@ -101,3 +101,12 @@ class EnvState:
                 max_id += 1
                 self.service_lookup[service] = max_id
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
+
+
+    def merge_cves_with_cluster(self, cluster_cves):
+        max_id = max(self.vuln_lookup.values())
+        for cve in cluster_cves:
+            if cve not in self.vuln_lookup:
+                max_id += 1
+                self.vuln_lookup[cve] = max_id
+        self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}

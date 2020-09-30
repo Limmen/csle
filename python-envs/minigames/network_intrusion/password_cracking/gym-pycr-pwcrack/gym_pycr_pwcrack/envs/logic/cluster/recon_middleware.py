@@ -93,3 +93,42 @@ class ReconMiddleware:
         :return: s_prime, reward, done
         """
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_os_detection_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a OS detection scan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_vulscan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a vulscan action
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print(a.cmd)
+        pass
+
+
+    @staticmethod
+    def execute_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Performs a nmap_vulners scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print(a.cmd)
+        pass

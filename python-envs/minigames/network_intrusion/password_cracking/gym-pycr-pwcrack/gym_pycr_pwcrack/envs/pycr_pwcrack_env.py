@@ -43,6 +43,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.env_config.cluster_config.connect_agent()
             self.env_config.cluster_config.download_cluster_services()
             self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
+            self.env_config.cluster_config.download_cves()
+            self.env_state.merge_cves_with_cluster(self.env_config.cluster_config.cluster_cves)
 
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,

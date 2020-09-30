@@ -13,6 +13,7 @@ from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_pwcrack.dao.action_results.nmap_os import NmapOs
 
 class ClusterUtil:
     """
@@ -147,6 +148,8 @@ class ClusterUtil:
         mac_addr = None
         hostnames = []
         ports = []
+        os = None
+        os_matches = []
         for child in list(xml_data.iter()):
             if child.tag == "status":
                 status = ClusterUtil._parse_nmap_status_xml(child)
@@ -160,8 +163,11 @@ class ClusterUtil:
                 hostnames = ClusterUtil._parse_nmap_hostnames_xml(child)
             elif child.tag == "ports":
                 ports = ClusterUtil._parse_nmap_ports_xml(child)
+            elif child.tag == "os":
+                os_matches = ClusterUtil._parse_nmap_os_xml(child)
+                os = NmapOs.get_best_match(os_matches)
         nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
-                                          hostnames=hostnames, ports=ports)
+                                          hostnames=hostnames, ports=ports, os=os, os_matches=os_matches)
         return nmap_host_result
 
 
@@ -222,6 +228,29 @@ class ClusterUtil:
         if xml_data.attrib["state"] == "open":
             port_status = NmapPortStatus.UP
         return port_status
+
+    @staticmethod
+    def _parse_nmap_os_xml(xml_data) -> NmapPortStatus:
+        os_matches = []
+        for child in list(xml_data.iter()):
+            if child.tag == "osmatch":
+                name = child.attrib["name"]
+                accuracy = int(child.attrib["accuracy"])
+                t_acc_cmp = 0
+                vendor = ""
+                osfamily = ""
+                for c2 in list(child.iter()):
+                    if c2.tag == "osclass":
+                        t_acc = int(c2.attrib["accuracy"])
+                        if t_acc > t_acc_cmp:
+                            vendor = c2.attrib["vendor"]
+                            osfamily = c2.attrib["osfamily"]
+                            t_acc_cmp = t_acc
+
+                os_match = NmapOs(name=name, vendor=vendor, osfamily=osfamily, accuracy=accuracy)
+                os_matches.append(os_match)
+        return os_matches
+
 
     @staticmethod
     def merge_scan_result_with_state(scan_result : NmapScanResult, s: EnvState,

@@ -76,6 +76,29 @@ ADD docker/sudoers /etc/sudoers
 # Download nmap-services
 RUN wget https://raw.githubusercontent.com/nmap/nmap/master/nmap-services
 
+# Download CVEs
+RUN wget https://cve.mitre.org/data/downloads/allitems.csv
+
+# Conda
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
+RUN wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh
+
+# make non-activate conda commands available
+ENV PATH=$CONDA_DIR/bin:$PATH
+# make conda activate command available from /bin/bash --login shells
+RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
+# make conda activate command available from /bin/bash --interative shells
+RUN conda init bash
+
+# Prep CVEs
+ADD docker/cve_prep.py /cve_prep.py
+RUN python /cve_prep.py
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

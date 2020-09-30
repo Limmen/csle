@@ -19,7 +19,8 @@ class ClusterConfig:
         self.server_conn = None
         self.agent_conn = None
         self.relay_channel = None
-        self.cluster_services = set()
+        self.cluster_services = []
+        self.cluster_cves = []
 
     def connect_server(self):
         """
@@ -106,11 +107,6 @@ class ClusterConfig:
 
     def download_cluster_services(self):
         print("Downloading cluster services...")
-        key = paramiko.RSAKey.from_private_key_file("/Users/kimham/.ssh/pycr_id_rsa")
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect('172.31.212.91', username='kim', pkey=key)
-
         sftp_client = self.agent_conn.open_sftp()
         remote_file = sftp_client.open("/nmap-services")
         cluster_services = []
@@ -124,6 +120,22 @@ class ClusterConfig:
             remote_file.close()
         self.cluster_services = cluster_services
         print("{} services downloaded successfully".format(len(self.cluster_services)))
+
+
+    def download_cves(self):
+        print("Downloading CVEs...")
+        sftp_client = self.agent_conn.open_sftp()
+        remote_file = sftp_client.open("/allitems_prep.csv", "r")
+        cves = []
+        try:
+            start = time.time()
+            for line in remote_file:
+                cves.append(line)
+            end = time.time()
+        finally:
+            remote_file.close()
+        self.cluster_cves = cves
+        print("{} services downloaded successfully in {}s".format(len(self.cluster_cves), end - start))
 
 
     def close(self):

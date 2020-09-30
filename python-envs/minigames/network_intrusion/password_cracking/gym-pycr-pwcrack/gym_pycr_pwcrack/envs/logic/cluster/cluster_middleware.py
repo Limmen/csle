@@ -38,6 +38,12 @@ class ClusterMiddleware:
             return ReconMiddleware.execute_tcp_null_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == ActionId.TCP_XMAS_TREE_SCAN_SUBNET:
             return ReconMiddleware.execute_tcp_xmas_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.OS_DETECTION_SCAN_HOST or a.id == ActionId.OS_DETECTION_SCAN_SUBNET:
+            return ReconMiddleware.execute_os_detection_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.VULSCAN_HOST or a.id == ActionId.VULSCAN_SUBNET:
+            return ReconMiddleware.execute_vulscan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
+            return ReconMiddleware.execute_nmap_vulners(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
