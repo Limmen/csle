@@ -135,7 +135,7 @@ class ClusterConfig:
         finally:
             remote_file.close()
         self.cluster_cves = cves
-        print("{} services downloaded successfully in {}s".format(len(self.cluster_cves), end - start))
+        print("{} cves downloaded successfully in {}s".format(len(self.cluster_cves), end - start))
 
 
     def close(self):
