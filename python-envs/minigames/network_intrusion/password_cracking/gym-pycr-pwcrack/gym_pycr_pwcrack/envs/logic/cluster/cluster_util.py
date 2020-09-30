@@ -251,15 +251,29 @@ class ClusterUtil:
 
     @staticmethod
     def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig):
-        cache_result = None
+        cache_id = str(a.id.value) + "_" + a.ip + ".xml"
+        if a.subnet:
+            cache_id = str(a.id.value) + ".xml"
+
+        # Check in-memory cache
+        cache_value = None
+        if env_config.use_nmap_cache:
+            cache_value = env_config.nmap_scan_cache.get(cache_id)
+            if cache_value is not None:
+                cache_result = cache_id
+                s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=cache_value, s=s, a=a)
+                return s_prime, reward, False
+
+        # Check On-disk cache
         if env_config.use_nmap_cache:
             cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config)
+
+        # If cache miss, then execute cmd
         if cache_result is None:
             ClusterUtil.execute_cmd(a=a, env_config=env_config)
-            cache_result = str(a.id.value) + "_" + a.ip + ".xml"
-            if a.subnet:
-                cache_result = str(a.id.value) + ".xml"
+            cache_result = cache_id
 
+        # Read result
         for i in range(env_config.num_retries):
             try:
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
@@ -272,5 +286,7 @@ class ClusterUtil:
                 break
 
         scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+        if env_config.use_nmap_cache:
+            env_config.nmap_scan_cache.add(cache_id, scan_result)
         s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
         return s_prime, reward, False
