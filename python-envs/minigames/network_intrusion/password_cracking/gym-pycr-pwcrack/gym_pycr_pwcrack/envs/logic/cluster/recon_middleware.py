@@ -20,9 +20,14 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        cache_result = ClusterUtil.check_nmap_action_cache(a=a,env_config=env_config)
-        if cache_result is None:
-            ClusterUtil.execute_cmd(a=a, env_config=env_config)
-        else:
-            print("cache hit")
-        return s, 0, False
+        cache_result = None
+        while cache_result == None:
+            cache_result = ClusterUtil.check_nmap_action_cache(a=a,env_config=env_config)
+            if cache_result is None:
+                ClusterUtil.execute_cmd(a=a, env_config=env_config)
+            else:
+                print("cache hit")
+        xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+        scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
+        return s_prime, reward, False

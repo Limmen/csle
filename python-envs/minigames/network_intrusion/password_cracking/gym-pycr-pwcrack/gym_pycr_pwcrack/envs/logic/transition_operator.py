@@ -13,11 +13,12 @@ class TransitionOperator:
         if env_config.env_mode == EnvMode.SIMULATION:
             return Simulator.transition(s=s,a=a,env_config=env_config)
         elif env_config.env_mode == EnvMode.CLUSTER:
-            try:
-                return ClusterMiddleware.transition(s=s,a=a,env_config=env_config)
-            except Exception as e:
-                print("Could not execute action on the Cluster, using simulation instead. \n Error:{}".format(str(e)))
-                return Simulator.transition(s=s, a=a, env_config=env_config)
+            return ClusterMiddleware.transition(s=s, a=a, env_config=env_config)
+            # try:
+            #     return ClusterMiddleware.transition(s=s,a=a,env_config=env_config)
+            # except Exception as e:
+            #     print("Could not execute action on the Cluster, using simulation instead. \n Error:{}".format(str(e)))
+            #     return Simulator.transition(s=s, a=a, env_config=env_config)
 
         else:
             raise ValueError("Invalid environment mode")

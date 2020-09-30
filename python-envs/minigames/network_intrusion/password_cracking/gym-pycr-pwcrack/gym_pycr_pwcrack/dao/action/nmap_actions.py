@@ -10,11 +10,14 @@ class NMAPActions:
     def TCP_SYN_STEALTH_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.TCP_SYN_STEALTH_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -sS " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + str(id.value) + ".xml " + ip]
+              + file_name + ip]
         return Action(id=id, name="TCP SYN (Stealth) Scan", cmd=cmd,
                       type=ActionType.RECON,
                       descr="A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -25,11 +28,14 @@ class NMAPActions:
     def PING_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.PING_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.PING_SCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -sP " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="Ping Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A host discovery scan, it is quick because it only checks of hosts are up with Ping, without "
@@ -41,11 +47,14 @@ class NMAPActions:
     def UDP_PORT_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.UDP_PORT_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.UDP_PORT_SCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -sU -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              str(id.value) + ".xml" + " "+ ip]
+              file_name + " "+ ip]
         return Action(id=id, name="UDP Port Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="",
@@ -56,10 +65,13 @@ class NMAPActions:
     def TCP_CON_NON_STEALTH_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.TCP_CON_NON_STEALTH_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET
-        cmd = ["nmap -sT -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["nmap -sT -p-" + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="TCP Connection (Non-Stealth) Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -70,10 +82,13 @@ class NMAPActions:
     def TCP_FIN_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.TCP_FIN_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TCP_FIN_SCAN_SUBNET
-        cmd = ["nmap -sF " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["nmap -sF " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="FIN Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -85,10 +100,13 @@ class NMAPActions:
     def TCP_NULL_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.TCP_NULL_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TCP_NULL_SCAN_SUBNET
-        cmd = ["nmap -sN " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["nmap -sN " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Null Scan",
                cmd=cmd,
                type=ActionType.RECON,
@@ -100,10 +118,13 @@ class NMAPActions:
     def TCP_XMAS_TREE_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.TCP_XMAS_TREE_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TCP_XMAS_TREE_SCAN_SUBNET
-        cmd = ["nmap -sX " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["nmap -sX " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Xmas Tree Scan",
                cmd=cmd, type=ActionType.RECON,
                descr="A special type of TCP port scan using XMas Tree, "
@@ -115,11 +136,14 @@ class NMAPActions:
     def OS_DETECTION_SCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.OS_DETECTION_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.OS_DETECTION_SCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -O --osscan-guess --max-os-tries 1 " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="OS detection scan",
                cmd=cmd, type=ActionType.RECON,
                descr="OS detection/guess scan",
@@ -130,11 +154,14 @@ class NMAPActions:
     def VULSCAN(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.VULSCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.VULSCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -sV --script=vulscan/vulscan.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="vulscan.nse vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
                descr="Uses a vulcan.nse script to turn NMAP into a vulnerability scanner",
@@ -145,11 +172,14 @@ class NMAPActions:
     def NMAP_VULNERS(ip:str, subnet=True) -> Action:
         cost_noise_multiplier = 1
         id = ActionId.NMAP_VULNERS_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.NMAP_VULNERS_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap -sV --script vulners.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + str(id.value) + ".xml " + ip]
+              + file_name + ip]
         return Action(id=id, name="nmap_vulners vulnerability scanner",
                cmd=cmd, type=ActionType.RECON,
                descr="Uses vulners.nse script to turn NMAP into a vulnerability scanner",
@@ -161,12 +191,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         telnet_args = constants.NMAP.TELNET_BRUTE_HOST
         id = ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET
             telnet_args = constants.NMAP.TELNET_BRUTE_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + telnet_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              str(id.value) + ".xml " + ip]
+              file_name + ip]
         return Action(id=id, name="Telnet dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames "
@@ -180,12 +213,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         ssh_args = constants.NMAP.SSH_BRUTE_HOST
         id = ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET
             ssh_args = constants.NMAP.SSH_BRUTE_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + ssh_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              str(id.value) + ".xml " + ip]
+              file_name + ip]
         return Action(id=id, name="SSH dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -199,12 +235,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         ftp_args = constants.NMAP.FTP_BRUTE_HOST
         id = ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            file_name = str(id.value) + ".xml "
             ftp_args = constants.NMAP.FTP_BRUTE_SUBNET
+
         cmd = ["nmap " + ftp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="FTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -218,12 +257,16 @@ class NMAPActions:
         cost_noise_multiplier = 1
         cassandra_args = constants.NMAP.CASSANDRA_BRUTE_HOST
         id = ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET
             cassandra_args = constants.NMAP.CASSANDRA_BRUTE_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + cassandra_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="Cassandra dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -237,12 +280,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         irc_args = constants.NMAP.IRC_BRUTE_HOST
         id = ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             id = ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET
             irc_args = constants.NMAP.IRC_BRUTE_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + irc_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="IRC dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -256,12 +302,16 @@ class NMAPActions:
         cost_noise_multiplier = 1
         mongo_args = constants.NMAP.MONGO_BRUTE_HOST
         id = ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+
         if subnet:
             cost_noise_multiplier = 10
             mongo_args = constants.NMAP.MONGO_BRUTE_SUBNET
             id = ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + mongo_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + str(id.value) + ".xml " + ip]
+              + file_name + ip]
         return Action(id=id, name="MongoDB dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -275,12 +325,14 @@ class NMAPActions:
         cost_noise_multiplier = 1
         mysql_args = constants.NMAP.MYSQL_BRUTE_HOST
         id = ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             mysql_args = constants.NMAP.MYSQL_BRUTE_SUBNET
             id = ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET
+            file_name = str(id.value) + ".xml "
         cmd = ["nmap " + mysql_args + " " + constants.NMAP.SPEED_ARGS + " " \
-              + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+              + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="MySQL dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -294,12 +346,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         smtp_args = constants.NMAP.SMTP_BRUTE_HOST
         id = ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             smtp_args = constants.NMAP.SMTP_BRUTE_SUBNET
             id = ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + smtp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + str(id.value) + ".xml " + ip]
+              + " " + file_name + ip]
         return Action(id=id, name="SMTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -313,12 +368,15 @@ class NMAPActions:
         cost_noise_multiplier = 1
         postgres_args = constants.NMAP.POSTGRES_BRUTE_HOST
         id = ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
             postgres_args = constants.NMAP.POSTGRES_BRUTE_SUBNET
             id = ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+            file_name = str(id.value) + ".xml "
+
         cmd = ["nmap " + postgres_args + " " + constants.NMAP.SPEED_ARGS + " " \
-              + constants.NMAP.FILE_ARGS + " " + str(id.value) + ".xml " + ip]
+              + constants.NMAP.FILE_ARGS + " " + file_name + ip]
         return Action(id=id, name="Postgres dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"

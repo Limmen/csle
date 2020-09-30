@@ -65,6 +65,14 @@ RUN echo "alias ll='ls -al'" >> /root.bashrc
 # Setup root passwd
 RUN echo "root:root" | /usr/sbin/chpasswd
 
+# Setup root SSH
+RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+ADD docker/sshd_config /etc/ssh/sshd_config
+
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker/sudoers /etc/sudoers
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

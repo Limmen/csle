@@ -76,6 +76,9 @@ class ClusterConfig:
         print("Agent host connected successfully")
 
         self._su_root()
+        root_conn = paramiko.SSHClient()
+        root_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        root_command_channel = root_conn.connect(self.agent_ip, username=self.agent_username, password=self.agent_pw, sock=relay_channel)
 
         print("Root access")
 

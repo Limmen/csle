@@ -23,7 +23,7 @@ def test_env(env_name : str, num_steps : int):
     num_actions = env.env_config.action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
-    actions = np.array([1])
+    actions = np.array([0,1,2,3,4,5,6])
     for i in range(num_steps):
         action = np.random.choice(actions)
         obs, reward, done, info = env.step(action)
@@ -127,8 +127,6 @@ def test_ssh():
         children = list(child.iter())
         if tag == "host":
             status = NmapPortStatus.DOWN
-            ip_addr = None
-            mac_addr = None
             hostnames = []
             ports = []
             for c_1 in children:
@@ -157,10 +155,8 @@ def test_ssh():
                         mac_addr = addr
                 elif c_1.tag == "hostnames":
                     for c_2 in list(c_1.iter())[1:]:
-                        # print(c_2.items())
-                        # print("c2:{}".format(c_2))
-                        # print(list(c_1.iter()))
-                        hostnames.append(c_2.attrib["name"])
+                        if c_2.tag == "hostname":
+                            hostnames.append(c_2.attrib["name"])
                 elif c_1.tag == "ports":
                     for c_2 in list(c_1.iter())[1:]:
                         if c_2.tag == "port":
@@ -178,8 +174,8 @@ def test_ssh():
                                     service_name = c_3.attrib["name"]
                             port = NmapPort(port_id=port_id, protocol=protocol, status=status, service_name=service_name)
                             ports.append(port)
-                nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
-                                                  hostnames=hostnames, ports=ports)
+                # nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
+                #                                   hostnames=hostnames, ports=ports)
                 t_1 = c_1.tag
                 print(t_1)
 
@@ -193,8 +189,8 @@ def test_ssh():
 
 def test_all():
     #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
-    test_ssh()
-    #test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
+    #test_ssh()
+    test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()
