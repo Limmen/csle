@@ -10,10 +10,11 @@ from gym_pycr_pwcrack.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port import NmapPort
 from gym_pycr_pwcrack.dao.action_results.nmap_addr_type import NmapAddrType
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
-from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_pwcrack.dao.action_results.nmap_os import NmapOs
+import gym_pycr_pwcrack.constants.constants as constants
+from gym_pycr_pwcrack.dao.action_results.nmap_vuln import NmapVuln
 
 class ClusterUtil:
     """
@@ -148,6 +149,7 @@ class ClusterUtil:
         mac_addr = None
         hostnames = []
         ports = []
+        vulnerabilities = []
         os = None
         os_matches = []
         for child in list(xml_data.iter()):
@@ -162,12 +164,13 @@ class ClusterUtil:
             elif child.tag == "hostnames":
                 hostnames = ClusterUtil._parse_nmap_hostnames_xml(child)
             elif child.tag == "ports":
-                ports = ClusterUtil._parse_nmap_ports_xml(child)
+                ports, vulnerabilities = ClusterUtil._parse_nmap_ports_xml(child)
             elif child.tag == "os":
                 os_matches = ClusterUtil._parse_nmap_os_xml(child)
                 os = NmapOs.get_best_match(os_matches)
         nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
-                                          hostnames=hostnames, ports=ports, os=os, os_matches=os_matches)
+                                          hostnames=hostnames, ports=ports, os=os, os_matches=os_matches,
+                                          vulnerabilities=vulnerabilities)
         return nmap_host_result
 
 
@@ -200,8 +203,9 @@ class ClusterUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data) -> List[NmapPort]:
+    def _parse_nmap_ports_xml(xml_data) -> Union[List[NmapPort], List[NmapVuln]]:
         ports = []
+        vulnerabilities = []
         for child in list(xml_data.iter()):
             if child.tag == "port":
                 port_status = NmapPortStatus.DOWN
@@ -213,9 +217,11 @@ class ClusterUtil:
                         port_status = ClusterUtil._parse_nmap_port_status_xml(child_2)
                     elif child_2.tag == "service":
                         service_name = ClusterUtil._parse_nmap_service_name_xml(child_2)
+                    elif child_2.tag == "script":
+                        vulnerabilities = ClusterUtil._parse_nmap_script(child, port=port_id, protocol=protocol)
                 port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name)
                 ports.append(port)
-        return ports
+        return ports, vulnerabilities
 
 
     @staticmethod
@@ -230,7 +236,7 @@ class ClusterUtil:
         return port_status
 
     @staticmethod
-    def _parse_nmap_os_xml(xml_data) -> NmapPortStatus:
+    def _parse_nmap_os_xml(xml_data) -> NmapOs:
         os_matches = []
         for child in list(xml_data.iter()):
             if child.tag == "osmatch":
@@ -250,6 +256,29 @@ class ClusterUtil:
                 os_match = NmapOs(name=name, vendor=vendor, osfamily=osfamily, accuracy=accuracy)
                 os_matches.append(os_match)
         return os_matches
+
+    @staticmethod
+    def _parse_nmap_table_vuln(xml_data, port: int, protocol: TransportProtocol) -> NmapVuln:
+        cvss = constants.VULNERABILITIES.default_cvss
+        id = ""
+        for child in list(xml_data.iter()):
+            if child.tag == "elem":
+                if "key" in child.keys():
+                    if child.attrib["key"] == "cvss":
+                        cvss = float(child.text)
+                    elif child.attrib["key"] == "id":
+                        id = child.text
+        vuln = NmapVuln(name=id, port=port, protocol=protocol, cvss=cvss)
+        return vuln
+
+    @staticmethod
+    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol) -> List[NmapVuln]:
+        vulnerabilities = []
+        for child in list(xml_data.iter()):
+            if child.tag == "table":
+                vuln = ClusterUtil._parse_nmap_table_vuln(xml_data, port=port, protocol=protocol)
+                vulnerabilities.append(vuln)
+        return vulnerabilities
 
 
     @staticmethod

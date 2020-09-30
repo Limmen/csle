@@ -116,8 +116,7 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print(a.cmd)
-        pass
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
 
     @staticmethod
@@ -130,5 +129,4 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print(a.cmd)
-        pass
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)

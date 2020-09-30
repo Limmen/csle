@@ -130,7 +130,7 @@ class ClusterConfig:
         try:
             start = time.time()
             for line in remote_file:
-                cves.append(line)
+                cves.append(line.replace("\n",""))
             end = time.time()
         finally:
             remote_file.close()

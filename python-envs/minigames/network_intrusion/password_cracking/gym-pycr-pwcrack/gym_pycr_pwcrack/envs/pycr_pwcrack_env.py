@@ -168,7 +168,8 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             network_conf = PyCrPwCrackSimpleBase.network_conf()
             action_conf = PyCrPwCrackSimpleBase.action_conf(network_conf)
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
-                                                          cluster_config=None, render_config=render_config)
+                                                          cluster_conf=None, render_conf=render_config)
+            env_config.simulate_detection = False
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------

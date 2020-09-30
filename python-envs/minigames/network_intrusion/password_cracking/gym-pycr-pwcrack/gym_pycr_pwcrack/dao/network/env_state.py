@@ -33,7 +33,7 @@ class EnvState:
             if len(self.obs_state.machines) > i:
                 self.machines_obs[i][0] = i + 1
                 self.obs_state.machines[i].sort_ports()
-                self.obs_state.machines[i].sort_vuln(constants.VULNERABILITIES.vuln_lookup)
+                self.obs_state.machines[i].sort_vuln(self.vuln_lookup)
 
                 # IP
                 host_ip = int(self.obs_state.machines[i].ip.rsplit(".", 1)[-1])

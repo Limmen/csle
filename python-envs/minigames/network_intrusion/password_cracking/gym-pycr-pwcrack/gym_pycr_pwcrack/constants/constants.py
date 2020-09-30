@@ -178,6 +178,7 @@ class VULNERABILITIES:
     vuln_lookup["CVE-2020-15523"] = 24
     vuln_lookup["CVE-2020-14422"] = 25
     vuln_lookup_inv = {v: k for k, v in vuln_lookup.items()}
+    default_cvss = 2.0
 
     
 class OS:
