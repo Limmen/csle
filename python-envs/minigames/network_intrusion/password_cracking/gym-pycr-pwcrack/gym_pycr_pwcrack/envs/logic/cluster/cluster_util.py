@@ -415,7 +415,7 @@ class ClusterUtil:
         if constants.NMAP_XML.ID in xml_data.keys():
             if xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.VULNERS_SCRIPT_ID:
                 return ClusterUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service)
-            elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.TELNET_BRUTE_SCRIPT_ID:
+            elif xml_data.attrib[constants.NMAP_XML.ID] in constants.NMAP_XML.BRUTE_SCRIPTS:
                 return ClusterUtil._parse_nmap_telnet_brute(xml_data, port=port, protocol=protocol, service=service)
         return []
 

@@ -276,6 +276,17 @@ class NMAP_XML:
     MAC = "mac"
     VULNERS_SCRIPT_ID = "vulners"
     TELNET_BRUTE_SCRIPT_ID = "telnet-brute"
+    SSH_BRUTE_SCRIPT_ID = "ssh-brute"
+    FTP_BRUTE_SCRIPT_ID = "ftp-brute"
+    CASSANDRA_BRUTE_SCRIPT_ID = "cassandra-brute"
+    IRC_BRUTE_SCRIPT_ID = "irc-brute"
+    MONGO_BRUTE_SCRIPT_ID = "mongo-brute"
+    MYSQL_BRUTE_SCRIPT_ID = "mysql-brute"
+    SMTP_BRUTE_SCRIPT_ID = "smtp-brute"
+    POSTGRES_BRUTE_SCRIPT_ID = "postgres-brute"
+    BRUTE_SCRIPTS = [TELNET_BRUTE_SCRIPT_ID, SSH_BRUTE_SCRIPT_ID, FTP_BRUTE_SCRIPT_ID, CASSANDRA_BRUTE_SCRIPT_ID,
+                     IRC_BRUTE_SCRIPT_ID, MONGO_BRUTE_SCRIPT_ID, MYSQL_BRUTE_SCRIPT_ID, SMTP_BRUTE_SCRIPT_ID,
+                     POSTGRES_BRUTE_SCRIPT_ID]
     USERNAME = "username"
     PASSWORD = "password"
     ACCOUNTS = "Accounts"
