@@ -292,5 +292,11 @@ class NMAP_XML:
     ACCOUNTS = "Accounts"
 
 
+class TELNET:
+    PROMPT = b':~$'
+    LOCALHOST = "127.0.0.1"
+    LOGIN_PROMPT = b"login: "
+    PASSWORD_PROMPT = b"Password: "
+    INCORRECT_LOGIN = "Login incorrect"
 
 

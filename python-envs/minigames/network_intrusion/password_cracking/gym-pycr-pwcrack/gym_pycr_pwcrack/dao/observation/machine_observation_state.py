@@ -17,10 +17,15 @@ class MachineObservationState:
         self.root = False
         self.flags_found = set()
         self.ssh_connections :List[ConnectionObservationState] = []
+        self.ftp_connections: List[ConnectionObservationState] = []
+        self.telnet_connections: List[ConnectionObservationState] = []
 
     def __str__(self):
-        return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{},num_cred{}".format(
-            self.ip, self.os, self.shell_access, len(self.ports), len(self.vuln),  len(self.shell_access_credentials))
+        return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{},num_cred{},num_ssh_connections:{}," \
+               "num_ftp_connections:{},num_telnet_connections:{}".format(self.ip, self.os, self.shell_access, len(self.ports),
+                                                  len(self.vuln),  len(self.shell_access_credentials),
+                                                  len(self.ssh_connections), len(self.ftp_connections),
+                                                                         len(self.telnet_connections))
 
     def sort_ports(self):
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)

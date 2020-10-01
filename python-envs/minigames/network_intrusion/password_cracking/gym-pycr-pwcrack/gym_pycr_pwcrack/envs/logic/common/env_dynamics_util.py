@@ -299,3 +299,11 @@ class EnvDynamicsUtil:
             alive = conn.get_transport().is_active()
         return alive
 
+    @staticmethod
+    def check_if_telnet_connection_is_alive(conn) -> bool:
+        return True
+
+    @staticmethod
+    def check_if_ftp_connection_is_alive(conn) -> bool:
+        return True
+

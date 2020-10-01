@@ -50,3 +50,9 @@ class EnvConfig:
         self.use_nmap_cache = True
         self.nmap_scan_cache = NMAPScanCache()
         self.action_costs = ActionCosts()
+        self.port_forward_next_port = 4000
+
+    def get_port_forward_port(self) -> int:
+        p = self.port_forward_next_port
+        self.port_forward_next_port +=1
+        return p
