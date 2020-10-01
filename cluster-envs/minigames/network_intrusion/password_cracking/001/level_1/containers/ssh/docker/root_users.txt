@@ -1,1 +1,1 @@
-admin:admin puppet:puppet
+admin:test32121 user1:123123

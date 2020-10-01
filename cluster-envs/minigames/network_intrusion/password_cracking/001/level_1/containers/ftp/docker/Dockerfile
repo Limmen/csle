@@ -18,7 +18,7 @@ RUN apt-get -y install iputils-ping
 RUN apt-get -y install sudo
 RUN apt-get -y install emacs
 RUN apt-get -y install curl
-RUN apt-get -y install htop
+#RUN apt-get -y install htop
 RUN apt-get -y install telnet
 RUN apt-get -y install xinetd telnetd
 RUN apt-get -y install ssh

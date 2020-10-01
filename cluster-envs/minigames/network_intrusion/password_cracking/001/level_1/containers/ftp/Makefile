@@ -31,7 +31,7 @@ flags:
 	echo "${FLAG_PATH_1}:${FLAG_NAME_1} ${FLAG_PATH_2}:${FLAG_NAME_2}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
-	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
+	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
 
 net:
 	docker network create --subnet=$(SUBNET_MASK_1) $(NETWORK) || echo "network already created"

@@ -5,6 +5,7 @@ from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
+from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 
 class EnvConfig:
 
@@ -46,3 +47,4 @@ class EnvConfig:
         self.num_retries = 2
         self.use_nmap_cache = True
         self.nmap_scan_cache = NMAPScanCache()
+        self.action_costs = ActionCosts()

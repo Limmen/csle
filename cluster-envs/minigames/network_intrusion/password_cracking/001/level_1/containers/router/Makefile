@@ -17,7 +17,7 @@ FLAG_INFO_FILE=fl_info.txt
 FLAG_PATH_1=/home/admin
 FLAG_NAME_1=flag0
 
-all: rm-image rm-network build net
+all: clean rm-image rm-net build net run
 
 users:
 	echo "${ROOT_USER_1}:${ROOT_PW_1}" > ./docker/${ROOT_USERS_FILE}
@@ -27,7 +27,7 @@ flags:
 	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
-	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
+	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
 
 
 net:

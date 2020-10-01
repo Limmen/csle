@@ -243,6 +243,38 @@ class AUXILLARY:
     PW_PLACEHOLDER = "USER_PLACEHOLDER"
 
 
+class NMAP_XML:
+    HOST = "host"
+    STATUS = "status"
+    ADDRESS = "address"
+    HOSTNAMES = "hostnames"
+    PORTS = "ports"
+    OS = "os"
+    STATE = "state"
+    STATUS_UP = "up"
+    ADDR = "addr"
+    ADDR_TYPE = "addrtype"
+    HOSTNAME = "hostname"
+    NAME = "name"
+    PORT = "port"
+    PORT_ID = "portid"
+    UNKNOWN = "unknown"
+    SERVICE = "service"
+    SCRIPT = "script"
+    OPEN_STATE = "open"
+    OS_MATCH = "osmatch"
+    ACCURACY = "accuracy"
+    OS_CLASS = "osclass"
+    VENDOR = "vendor"
+    OS_FAMILY = "osfamily"
+    ELEM = "elem"
+    KEY = "key"
+    CVSS = "cvss"
+    ID = "id"
+    TABLE = "table"
+    IP = "ip"
+    MAC = "mac"
+
 
 
 

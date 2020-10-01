@@ -98,6 +98,14 @@ class Simulator:
 
     @staticmethod
     def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Simulates a post-exploit action
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
         if a.id == ActionId.SSH_LOGIN:
             return PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
         if a.id == ActionId.FIND_FLAG:

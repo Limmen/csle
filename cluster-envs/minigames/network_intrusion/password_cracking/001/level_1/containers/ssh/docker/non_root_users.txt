@@ -1,1 +1,1 @@
-user:123123
+puppet:puppet

@@ -412,6 +412,8 @@ class MainFrame(pyglet.window.Window):
         for m in range(len(self.state_labels)):
             for c in range(len(self.state_labels[m])):
                 self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
+                if len(str(int(self.state.machines_state[m][c]))) > 3:
+                    self.state_labels[m][c].font_size = 6
         for p in range(len(self.ports_labels)):
             for c in range(len(self.ports_labels[p])):
                 if c < 4:
@@ -433,6 +435,8 @@ class MainFrame(pyglet.window.Window):
                 self.state.vuln_lookup_inv[int(self.state.vuln_state[v][0])])
             self.vuln_labels[v][1].text = vuln_name
             self.vuln_labels[v][2].text = str(int(self.state.vuln_state[v][1]))
+            if len(str(int(self.state.vuln_state[v][0]))) > 3:
+                self.vuln_labels[v][0].font_size = 6
 
         for o in range(len(self.os_labels)):
             if o < len(self.state.os_state):

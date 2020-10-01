@@ -2,8 +2,13 @@ from typing import List, Union
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
 
 class EnvDynamicsUtil:
+    """
+    Class containing common utilities that are used both in simulation-mode and in cluster-mode.
+    """
 
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
@@ -242,4 +247,23 @@ class EnvDynamicsUtil:
                  + num_new_shell_access + num_new_root + num_new_flag_pts
         reward = int((reward - cost))
         return reward
+
+    @staticmethod
+    def is_all_flags_collected(s: EnvState, env_config: EnvConfig) -> bool:
+        """
+        Checks if all flags are collected (then episode is done)
+
+        :param s: current state
+        :param env_config: environment config
+        :return: True if all flags are collected otherwise false
+        """
+        total_flags = set()
+        for node in env_config.network_conf.nodes:
+            for flag in node.flags:
+                total_flags.add(flag)
+        found_flags = set()
+        for node in s.obs_state.machines:
+            found_flags = found_flags.union(node.flags_found)
+
+        return total_flags == found_flags
 

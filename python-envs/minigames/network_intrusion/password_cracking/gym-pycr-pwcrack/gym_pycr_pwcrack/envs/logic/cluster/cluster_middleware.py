@@ -5,14 +5,23 @@ from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.cluster.recon_middleware import ReconMiddleware
+from gym_pycr_pwcrack.envs.logic.cluster.exploit_middleware import ExploitMiddleware
 
 class ClusterMiddleware:
-
-    def __init__(self):
-        pass
+    """
+    Class that provides a middleware between the OpenAI Gym Env and the Cluster
+    """
 
     @staticmethod
     def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Implements the transition operator T: (s,a) -> (s',r)
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
         if a.type == ActionType.RECON:
             return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
@@ -24,6 +33,14 @@ class ClusterMiddleware:
 
     @staticmethod
     def recon_action(s: EnvState, a: Action, env_config: EnvConfig):
+        """
+        Implements the transition of a reconnaissance action
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
         if a.id == ActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_SYN_STEALTH_SCAN_HOST:
             return ReconMiddleware.execute_tcp_syn_stealth_scan(s=s,a=a,env_config=env_config)
         elif a.id == ActionId.PING_SCAN_SUBNET or a.id == ActionId.PING_SCAN_HOST:
@@ -49,8 +66,43 @@ class ClusterMiddleware:
 
     @staticmethod
     def exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
-        raise NotImplemented
+        """
+        Implements transition of an exploit action
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return ExploitMiddleware.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
     def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
+        """
+        Implements the transition of a post-exploit action
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
         raise NotImplemented

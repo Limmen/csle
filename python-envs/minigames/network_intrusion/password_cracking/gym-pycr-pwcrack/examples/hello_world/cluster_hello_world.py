@@ -14,10 +14,16 @@ from gym_pycr_pwcrack.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port import NmapPort
 
 def test_env(env_name : str, num_steps : int):
-    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                   server_username="kim")
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                server_username="kim")
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim")
+    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
     env.reset()
 
@@ -26,7 +32,7 @@ def test_env(env_name : str, num_steps : int):
     print("num actions:{}".format(num_actions))
     actions = np.array([0,1,2,3,4,5,6, 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,
                         34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62])
-    actions = np.array([56, 57, 58, 59, 60, 61, 62])
+    #actions = np.array([56, 57, 58, 59, 60, 61, 62])
     for i in range(num_steps):
         action = np.random.choice(actions)
         obs, reward, done, info = env.step(action)
@@ -216,19 +222,10 @@ def test_ssh():
                                         port_status = NmapPortStatus.UP
                                 if c_3.tag == "service":
                                     service_name = c_3.attrib["name"]
-                            port = NmapPort(port_id=port_id, protocol=protocol, status=status, service_name=service_name)
+                            port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name)
                             ports.append(port)
-                # nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
-                #                                   hostnames=hostnames, ports=ports)
                 t_1 = c_1.tag
                 print(t_1)
-
-                #nmap_host_result = NmapHostResult()
-        #print(child.tag)
-        #print(child.text)
-        #print(child.tail)
-        #print(child.items())
-        #print(child.getchildren())
 
 
 def test_all():

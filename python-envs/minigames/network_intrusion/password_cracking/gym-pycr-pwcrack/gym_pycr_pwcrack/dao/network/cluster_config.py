@@ -6,7 +6,8 @@ class ClusterConfig:
     DTO with data for connecting to the cluster and executing commands
     """
 
-    def __init__(self, server_ip : str, agent_ip : str, agent_username: str, agent_pw : str,
+    def __init__(self, agent_ip : str, agent_username: str, agent_pw : str,
+                 server_ip: str = None,
                  server_connection : bool = False,
                  server_private_key_file : str = None, server_username : str = None):
         self.agent_ip = agent_ip
@@ -71,7 +72,7 @@ class ClusterConfig:
         else:
             agent_conn = paramiko.SSHClient()
             agent_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            agent_conn.connect(self.server_ip, username=self.server_username, password=self.agent_pw)
+            agent_conn.connect(self.agent_ip, username=self.agent_username, password=self.agent_pw)
             self.agent_conn = agent_conn
             self.agent_channel = self.agent_conn.invoke_shell()
 
