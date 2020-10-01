@@ -82,6 +82,7 @@ class EnvDynamicsUtil:
         n_m = EnvDynamicsUtil.merge_logged_in(o_m, n_m)
         n_m, new_root = EnvDynamicsUtil.merge_root(o_m, n_m)
         n_m, new_flag_pts = EnvDynamicsUtil.merge_flags(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_connections(o_m, n_m)
         return n_m, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access, new_root, new_flag_pts
 
     @staticmethod
@@ -170,6 +171,20 @@ class EnvDynamicsUtil:
                 new_flag_points += flag.score
         n_m.flags_found = n_m.flags_found.union(o_m.flags_found)
         return n_m, new_flag_points
+
+    @staticmethod
+    def merge_connections(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation shell-connections with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated connections
+        """
+        # Stale connections are removed
+        if len(n_m.ssh_connections) == 0:
+            n_m.ssh_connections = o_m.ssh_connections
+        return n_m
 
     @staticmethod
     def merge_ports(o_ports: List[PortObservationState], n_ports: List[PortObservationState], acc: bool = True) \
@@ -275,4 +290,12 @@ class EnvDynamicsUtil:
             found_flags = found_flags.union(node.flags_found)
 
         return total_flags == found_flags
+
+
+    @staticmethod
+    def check_if_ssh_connection_is_alive(conn) -> bool:
+        alive = False
+        if conn.get_transport() is not None:
+            alive = conn.get_transport().is_active()
+        return alive
 

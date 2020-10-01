@@ -2,6 +2,7 @@ from typing import List
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_pwcrack.dao.network.credential import Credential
+from gym_pycr_pwcrack.dao.observation.connection_observation_state import ConnectionObservationState
 
 class MachineObservationState:
 
@@ -15,6 +16,7 @@ class MachineObservationState:
         self.logged_in = False
         self.root = False
         self.flags_found = set()
+        self.ssh_connections :List[ConnectionObservationState] = []
 
     def __str__(self):
         return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{},num_cred{}".format(

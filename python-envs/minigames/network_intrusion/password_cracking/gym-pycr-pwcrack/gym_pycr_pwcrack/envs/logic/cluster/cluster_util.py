@@ -23,16 +23,16 @@ class ClusterUtil:
     """
 
     @staticmethod
-    def execute_cmd(cmd : str, env_config : EnvConfig) -> Union[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd : str, conn) -> Union[bytes, bytes, float]:
         """
-        Executes an action on the cluster, this is a synchronous operation that waits for the completion of the action
-        before returning
+        Executes an action on the cluster over a ssh connection,
+        this is a synchronous operation that waits for the completion of the action before returning
 
         :param cmd: the command to execute
-        :param env_config: the environment configuration
+        :param conn: the ssh connection
         :return: outdata, errdata, total_time
         """
-        transport_conn = env_config.cluster_config.agent_conn.get_transport()
+        transport_conn = conn.get_transport()
         session = transport_conn.open_session()
         start = time.time()
         session.exec_command(cmd)
@@ -147,7 +147,7 @@ class ClusterUtil:
         :return: outdata, errdata, total_time
         """
         cmd = "rm -f " + env_config.nmap_cache_dir + file_name
-        return ClusterUtil.execute_cmd(cmd=cmd, env_config=env_config)
+        return ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.cluster_config.agent_conn)
 
     @staticmethod
     def parse_nmap_scan(file_name: str, env_config: EnvConfig) -> ET.Element:
@@ -552,7 +552,8 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
-            outdata, errdata, total_time = ClusterUtil.execute_cmd(cmd=a.cmd[0], env_config=env_config)
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
+                                                                       conn=env_config.cluster_config.agent_conn)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=total_time)
             cache_result = cache_id
 
@@ -563,7 +564,8 @@ class ClusterUtil:
                 break
             except Exception as e:
                 ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
-                outdata, errdata, total_time = ClusterUtil.execute_cmd(cmd=a.cmd[0], env_config=env_config)
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
+                                                                           conn=env_config.cluster_config.agent_conn)
                 env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=total_time)
                 time.sleep(env_config.retry_timeout)
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)

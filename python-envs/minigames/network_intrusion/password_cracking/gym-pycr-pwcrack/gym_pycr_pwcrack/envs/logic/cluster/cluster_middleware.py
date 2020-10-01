@@ -6,6 +6,7 @@ from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.cluster.recon_middleware import ReconMiddleware
 from gym_pycr_pwcrack.envs.logic.cluster.exploit_middleware import ExploitMiddleware
+from gym_pycr_pwcrack.envs.logic.cluster.post_exploit_middleware import PostExploitMiddleware
 
 class ClusterMiddleware:
     """
@@ -105,4 +106,13 @@ class ClusterMiddleware:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        raise NotImplemented
+        if a.id == ActionId.SSH_LOGIN:
+            return PostExploitMiddleware.execute_ssh_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.FIND_FLAG:
+            return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.FTP_LOGIN:
+            return PostExploitMiddleware.execute_ftp_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.TELNET_LOGIN:
+            return PostExploitMiddleware.execute_telnet_login(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))

@@ -75,8 +75,13 @@ RUN wget https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-
 RUN tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2
 RUN touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker/sudoers /etc/sudoers
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 
 # Hack to keep container running (otherwise K8 thinks task is finished)
 #CMD ["sh", "-c", "tail -f /dev/null"]
+
