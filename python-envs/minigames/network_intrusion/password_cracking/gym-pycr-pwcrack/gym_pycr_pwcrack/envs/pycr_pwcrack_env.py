@@ -23,7 +23,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     def __init__(self, env_config : EnvConfig):
         self.env_config = env_config
         self.env_state = EnvState(network_config=self.env_config.network_conf, num_ports=self.env_config.num_ports,
-                                  num_vuln=self.env_config.num_vuln,
+                                  num_vuln=self.env_config.num_vuln, num_sh=self.env_config.num_sh,
                                   service_lookup=constants.SERVICES.service_lookup,
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                   os_lookup=constants.OS.os_lookup)

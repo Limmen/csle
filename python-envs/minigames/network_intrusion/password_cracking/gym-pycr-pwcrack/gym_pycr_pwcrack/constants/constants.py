@@ -274,6 +274,11 @@ class NMAP_XML:
     TABLE = "table"
     IP = "ip"
     MAC = "mac"
+    VULNERS_SCRIPT_ID = "vulners"
+    TELNET_BRUTE_SCRIPT_ID = "telnet-brute"
+    USERNAME = "username"
+    PASSWORD = "password"
+    ACCOUNTS = "Accounts"
 
 
 

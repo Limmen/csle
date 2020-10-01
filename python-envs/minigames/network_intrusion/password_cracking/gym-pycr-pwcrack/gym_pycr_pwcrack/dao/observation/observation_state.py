@@ -3,13 +3,14 @@ from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineOb
 
 class ObservationState:
 
-    def __init__(self, num_machines : int, num_ports : int, num_vuln : int):
+    def __init__(self, num_machines : int, num_ports : int, num_vuln : int, num_sh : int):
         self.num_machines = num_machines
         self.num_ports = num_ports
         self.num_vuln = num_vuln
         self.machines : List[MachineObservationState] = []
         self.detected = False
         self.all_flags = False
+        self.num_sh = num_sh
 
 
     def sort_machines(self):

@@ -2,16 +2,16 @@ import gym
 import numpy as np
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
-import gym_pycr_pwcrack.constants.constants as constants
 
 class EnvState:
 
-    def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int,
+    def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int, num_sh : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None):
         self.network_config = network_config
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
         self.num_vuln = num_vuln
+        self.num_sh = num_sh
         self.vuln_lookup = vuln_lookup
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
         self.service_lookup = service_lookup
@@ -34,6 +34,7 @@ class EnvState:
                 self.machines_obs[i][0] = i + 1
                 self.obs_state.machines[i].sort_ports()
                 self.obs_state.machines[i].sort_vuln(self.vuln_lookup)
+                self.obs_state.machines[i].sort_shell_access(self.service_lookup)
 
                 # IP
                 host_ip = int(self.obs_state.machines[i].ip.rsplit(".", 1)[-1])
@@ -84,6 +85,14 @@ class EnvState:
                 flag_pts_score = sum([f.score for f in self.obs_state.machines[i].flags_found])
                 self.machines_obs[i][9 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(flag_pts_score)
 
+                # sh_services
+                services = []
+                for j, sh_c in enumerate(self.obs_state.machines[i].shell_access_credentials):
+                    if sh_c.service is not None:
+                        s_id = self.service_lookup[sh_c.service]
+                        if j < self.obs_state.num_sh and s_id not in services:
+                            services.append(s_id)
+                            self.machines_obs[i][j + 3 + self.obs_state.num_ports + self.obs_state.num_vuln] = s_id
 
         return self.machines_obs, self.ports_protocols_obs
 
@@ -91,7 +100,7 @@ class EnvState:
 
     def reset_state(self):
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes), num_ports=self.num_ports,
-                                          num_vuln=self.num_vuln)
+                                          num_vuln=self.num_vuln, num_sh=self.num_sh)
 
 
     def merge_services_with_cluster(self, cluster_services):

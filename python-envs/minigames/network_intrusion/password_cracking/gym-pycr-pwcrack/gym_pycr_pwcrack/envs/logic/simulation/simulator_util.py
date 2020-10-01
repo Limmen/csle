@@ -348,8 +348,9 @@ class SimulatorUtil:
                     for service in node.services:
                         if service.name == service_name:
                             for cr in service.credentials:
-                                if cr in credentials:
-                                    new_m_obs.logged_in = True
+                                for a_cr in credentials:
+                                    if a_cr.username == cr.username and a_cr.pw == cr.pw:
+                                        new_m_obs.logged_in = True
 
                     if new_m_obs.logged_in:
                         for cr in credentials:

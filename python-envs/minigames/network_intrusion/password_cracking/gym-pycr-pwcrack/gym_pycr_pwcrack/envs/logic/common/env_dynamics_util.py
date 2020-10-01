@@ -112,6 +112,15 @@ class EnvDynamicsUtil:
         new_access = 0
         if not o_m.shell_access and n_m.shell_access:
             new_access = 1
+            merged_credentials = o_m.shell_access_credentials
+            for cr in n_m.shell_access_credentials:
+                duplicate = False
+                for cr_2 in o_m.shell_access_credentials:
+                    if cr == cr_2:
+                        duplicate = True
+                if not duplicate:
+                    merged_credentials.append(cr)
+            n_m.shell_access_credentials = merged_credentials
         if not n_m.shell_access:
             n_m.shell_access = o_m.shell_access
             n_m.shell_access_credentials = o_m.shell_access_credentials

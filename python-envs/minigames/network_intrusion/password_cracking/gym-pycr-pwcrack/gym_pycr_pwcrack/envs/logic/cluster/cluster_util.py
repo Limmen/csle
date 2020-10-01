@@ -15,6 +15,7 @@ from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_pwcrack.dao.action_results.nmap_os import NmapOs
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.action_results.nmap_vuln import NmapVuln
+from gym_pycr_pwcrack.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
 
 class ClusterUtil:
     """
@@ -218,6 +219,7 @@ class ClusterUtil:
         hostnames = []
         ports = []
         vulnerabilities = []
+        credentials = []
         os = None
         os_matches = []
         for child in list(xml_data.iter()):
@@ -232,13 +234,13 @@ class ClusterUtil:
             elif child.tag == constants.NMAP_XML.HOSTNAMES:
                 hostnames = ClusterUtil._parse_nmap_hostnames_xml(child)
             elif child.tag == constants.NMAP_XML.PORTS:
-                ports, vulnerabilities = ClusterUtil._parse_nmap_ports_xml(child)
+                ports, vulnerabilities, credentials = ClusterUtil._parse_nmap_ports_xml(child)
             elif child.tag == constants.NMAP_XML.OS:
                 os_matches = ClusterUtil._parse_nmap_os_xml(child)
                 os = NmapOs.get_best_match(os_matches)
         nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
                                           hostnames=hostnames, ports=ports, os=os, os_matches=os_matches,
-                                          vulnerabilities=vulnerabilities)
+                                          vulnerabilities=vulnerabilities, credentials=credentials)
         return nmap_host_result
 
 
@@ -289,15 +291,16 @@ class ClusterUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data) -> Union[List[NmapPort], List[NmapVuln]]:
+    def _parse_nmap_ports_xml(xml_data) -> Union[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
         :param xml_data: the ports XML element
-        :return: (List NmapPort, List NmapVuln)
+        :return: (List NmapPort, List NmapVuln, ListNmapBruteCredentials)
         """
         ports = []
         vulnerabilities = []
+        credentials = []
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.PORT:
                 port_status = NmapPortStatus.DOWN
@@ -310,10 +313,17 @@ class ClusterUtil:
                     elif child_2.tag == constants.NMAP_XML.SERVICE:
                         service_name = ClusterUtil._parse_nmap_service_name_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
-                        vulnerabilities = ClusterUtil._parse_nmap_script(child, port=port_id, protocol=protocol)
-                port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name)
-                ports.append(port)
-        return ports, vulnerabilities
+                        result = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
+                                                                service=service_name)
+                        if len(result) > 0:
+                            if isinstance(result[0], NmapVuln):
+                                vulnerabilities = result
+                            elif isinstance(result[0], NmapBruteCredentials):
+                                credentials = result
+                if port_status == NmapPortStatus.UP:
+                    port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name)
+                    ports.append(port)
+        return ports, vulnerabilities, credentials
 
 
     @staticmethod
@@ -368,13 +378,14 @@ class ClusterUtil:
         return os_matches
 
     @staticmethod
-    def _parse_nmap_table_vuln(xml_data, port: int, protocol: TransportProtocol) -> NmapVuln:
+    def _parse_nmap_table_vuln(xml_data, port: int, protocol: TransportProtocol, service: str) -> NmapVuln:
         """
-        Parses a Table XML element
+        Parses a Table XML element with vulnerabilities
 
         :param xml_data: the XML table element
         :param port: the port element parent
         :param protocol: the protocol of the parent
+        :param service: the service running on the port
         :return: parsed Nmap vulnerability
         """
         cvss = constants.VULNERABILITIES.default_cvss
@@ -386,25 +397,99 @@ class ClusterUtil:
                         cvss = float(child.text)
                     elif child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.ID:
                         id = child.text
-        vuln = NmapVuln(name=id, port=port, protocol=protocol, cvss=cvss)
+        vuln = NmapVuln(name=id, port=port, protocol=protocol, cvss=cvss, service=service)
         return vuln
 
     @staticmethod
-    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol) -> List[NmapVuln]:
+    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str) \
+            -> Union[List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a XML script element
 
         :param xml_data: the XML script element
         :param port: the port of the parent element
         :param protocol: the protocol of the parent element
+        :param service: the service running on the port
+        :return: a list of parsed nmap vulnerabilities or a list of parsed credentials
+        """
+        if constants.NMAP_XML.ID in xml_data.keys():
+            if xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.VULNERS_SCRIPT_ID:
+                return ClusterUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service)
+            elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.TELNET_BRUTE_SCRIPT_ID:
+                return ClusterUtil._parse_nmap_telnet_brute(xml_data, port=port, protocol=protocol, service=service)
+        return []
+
+    @staticmethod
+    def _parse_nmap_vulners(xml_data, port: int, protocol: TransportProtocol, service: str) -> List[NmapVuln]:
+        """
+        Parses a XML result from a vulners scan
+
+        :param xml_data: the XML script element
+        :param port: the port of the parent element
+        :param protocol: the protocol of the parent element
+        :param service: the service running on the port
         :return: a list of parsed nmap vulnerabilities
         """
         vulnerabilities = []
-        for child in list(xml_data.iter()):
+        for child in list(xml_data.iter())[1:]:
             if child.tag == constants.NMAP_XML.TABLE:
-                vuln = ClusterUtil._parse_nmap_table_vuln(xml_data, port=port, protocol=protocol)
-                vulnerabilities.append(vuln)
+                for c_2 in list(child.iter())[1:]:
+                    if c_2.tag == constants.NMAP_XML.TABLE:
+                        vuln = ClusterUtil._parse_nmap_table_vuln(c_2, port=port, protocol=protocol, service=service)
+                        vulnerabilities.append(vuln)
+                break
         return vulnerabilities
+
+    @staticmethod
+    def _parse_nmap_telnet_brute(xml_data, port: int, protocol: TransportProtocol, service: str) \
+            -> List[NmapBruteCredentials]:
+        """
+        Parses a XML result from a telnet brute force dictionary scan
+
+        :param xml_data: the XML script element
+        :param port: the port of the parent element
+        :param protocol: the protocol of the parent element
+        :param service: the service running on the port
+        :return: a list of found credentials
+        """
+        credentials = []
+        for child in list(xml_data.iter())[1:]:
+            if child.tag == constants.NMAP_XML.TABLE:
+                if constants.NMAP_XML.KEY in child.keys():
+                    if child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.ACCOUNTS:
+                        for c_2 in list(child.iter())[1:]:
+                            if c_2.tag == constants.NMAP_XML.TABLE:
+                                cred = ClusterUtil._parse_nmap_table_cred(c_2, port=port, protocol=protocol, service=service)
+                                credentials.append(cred)
+                        break
+        return credentials
+
+    @staticmethod
+    def _parse_nmap_table_cred(xml_data, port: int, protocol: TransportProtocol, service: str) -> NmapBruteCredentials:
+        """
+        Parses a Table XML element with credentials
+
+        :param xml_data: the XML table element
+        :param port: the port element parent
+        :param protocol: the protocol of the parent
+        :param service: the service running on the port
+        :return: parsed Nmap credentials
+        """
+        username = ""
+        pw = ""
+        state = ""
+        for child in list(xml_data.iter()):
+            if child.tag == constants.NMAP_XML.ELEM:
+                if constants.NMAP_XML.KEY in child.keys():
+                    if child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.USERNAME:
+                        username = child.text
+                    elif child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.PASSWORD:
+                        pw = child.text
+                    elif child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.STATE:
+                        state = child.text
+        credentials = NmapBruteCredentials(username=username, pw=pw, state=state, port=port, protocol= protocol,
+                                           service=service)
+        return credentials
 
 
     @staticmethod

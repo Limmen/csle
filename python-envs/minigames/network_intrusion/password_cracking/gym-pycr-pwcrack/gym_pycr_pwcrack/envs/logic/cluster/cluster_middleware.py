@@ -75,23 +75,23 @@ class ClusterMiddleware:
         :return: s', r, done
         """
         if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
-            return ExploitMiddleware.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
+            return ExploitMiddleware.execute_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

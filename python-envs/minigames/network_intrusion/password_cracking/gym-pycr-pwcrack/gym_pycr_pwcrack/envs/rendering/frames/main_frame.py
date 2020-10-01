@@ -203,6 +203,10 @@ class MainFrame(pyglet.window.Window):
         labels.append("p")
         labels.append("root")
         labels.append("flags")
+
+        for i in range(self.state.obs_state.num_sh):
+            labels.append("sh_" + str(i))
+
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
             batch_label(labels[c], x_start+w/2+c*(w), y, 10, (0, 0, 0, 255), self.batch,
@@ -366,9 +370,12 @@ class MainFrame(pyglet.window.Window):
         # Draw log
 
         # Draw Log title
-        log_x = end_state_x_log + (self.width - end_state_x_log) / 2
+        #log_x = end_state_x_log + (self.width - end_state_x_log) / 2
+        log_x = 1000
+        y_log = y_s - 40
         batch_label("Log", log_x,
-                    y_log+60, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+                    y_log, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+        y_log = y_log-60
         x = log_x
         h = 20
         max_logs = 100

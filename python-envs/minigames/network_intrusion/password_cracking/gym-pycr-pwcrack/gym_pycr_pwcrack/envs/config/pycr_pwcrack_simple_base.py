@@ -15,21 +15,36 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
+from gym_pycr_pwcrack.dao.network.credential import Credential
 
 class PyCrPwCrackSimpleBase:
 
     @staticmethod
     def nodes():
         nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
-                      os="linux", vulnerabilities=[], credentials=["admin:admin", "jessica:water"],
+                      os="linux", vulnerabilities=[], credentials=[
+                Credential(username="admin", pw="admin"),
+                Credential(username="jessica", pw="water")
+            ],
                       root=["admin"]),
                  Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER,
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
-                      credentials=["admin:test32121", "puppet:puppet", "user1:123123"],
+                      credentials=[
+                          Credential(username="admin", pw="test32121"),
+                          Credential(username="puppet", pw="puppet"),
+                          Credential(username="user1", pw="123123")
+                      ],
                       root=["admin", "user1"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
-                                         credentials=["admin:admin", "puppet:puppet", "user:123123"]),
+                                         credentials=[
+                                             Credential(username="admin", pw="test32121", port=22,
+                                                        protocol = TransportProtocol.TCP, service = "ssh"),
+                                             Credential(username="puppet", pw="puppet",
+                                                        protocol = TransportProtocol.TCP, service = "ssh"),
+                                             Credential(username="user1", pw="123123",
+                                                        protocol = TransportProtocol.TCP, service = "ssh")
+                                         ]),
                           NetworkService(protocol=TransportProtocol.TCP, port=53, name="domain", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=9042, name="cassandra", credentials=[]),
@@ -66,11 +81,22 @@ class PyCrPwCrackSimpleBase:
                       ),
                  Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
                       flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
-                      credentials=["admin:admin", "john:doe", "vagrant:test_pw1"],
+                      credentials=[
+                          Credential(username="admin", pw="admin"),
+                          Credential(username="john", pw="doe"),
+                          Credential(username="vagrant", pw="test_pw1")
+                      ],
                       root=["admin", "john"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
-                                         credentials=["admin:admin", "john:doe", "vagrant:vagrant"]),
+                                         credentials=[
+                                             Credential(username="admin", pw="admin",
+                                                        port=23, protocol=TransportProtocol.TCP, service="telnet"),
+                                             Credential(username="john", pw="doe",
+                                                        port=23, protocol=TransportProtocol.TCP, service="telnet"),
+                                             Credential(username="vagrant", pw="test_pw1",
+                                                        port=23, protocol=TransportProtocol.TCP, service="telnet")
+                                         ]),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[])
                       ], vulnerabilities=[
                          Vulnerability(name="CVE-2020-15523", cve="CVE-2020-15523", cvss=6.9, credentials=[], port=80,
@@ -82,7 +108,11 @@ class PyCrPwCrackSimpleBase:
                      ]
                       ),
                  Node(ip="172.18.1.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
-                      credentials=["admin:admin", "test:qwerty", "oracle:abc123"],
+                      credentials=[
+                          Credential(username="admin", pw="admin"),
+                          Credential(username="test", pw="qwerty"),
+                          Credential(username="oracle", pw="abc123")
+                      ],
                       root=["admin", "test"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
@@ -100,11 +130,22 @@ class PyCrPwCrackSimpleBase:
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1),
                              Flag(name="flag4", path="/root", id=4, requires_root=True, score=1)], level=3,
                       os="linux",
-                      credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"],
+                      credentials=[
+                          Credential(username="l_hopital", pw="l_hopital"),
+                          Credential(username="euler", pw="euler"),
+                          Credential(username="pi", pw="pi")
+                      ],
                       root=["l_hopital", "pi"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp",
-                                         credentials=["l_hopital:l_hoptical", "euler:euler", "pi:pi"]),
+                                         credentials=[
+                                             Credential(username="l_hopital", pw="l_hopital",
+                                                        port=21, protocol=TransportProtocol.TCP, service="ftp"),
+                                             Credential(username="euler", pw="euler",
+                                                        port=21, protocol=TransportProtocol.TCP, service="ftp"),
+                                             Credential(username="pi", pw="pi",
+                                                        port=21, protocol=TransportProtocol.TCP, service="ftp")
+                                         ]),
                           NetworkService(protocol=TransportProtocol.TCP, port=79, name="finger", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=8009, name="ajp13", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=8080, name="http", credentials=[]),
@@ -122,7 +163,11 @@ class PyCrPwCrackSimpleBase:
                       ]
                       ),
                  Node(ip="172.18.1.191", ip_id=191, id=6, type=NodeType.HACKER, flags=[], level=1, services=[],
-                      os="linux", vulnerabilities=[], credentials=["agent:agent"], root=["agent"])]
+                      os="linux", vulnerabilities=[],
+                      credentials=[
+                          Credential(username="agent", pw="agent")
+                      ],
+                      root=["agent"])]
         return nodes
 
     @staticmethod
@@ -366,6 +411,7 @@ class PyCrPwCrackSimpleBase:
     def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
                    render_conf: RenderConfig):
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
+                               num_sh=3,
                                render_config=render_conf, env_mode=EnvMode.SIMULATION, cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05)
         env_config.ping_scan_miss_p = 0.02
@@ -374,6 +420,3 @@ class PyCrPwCrackSimpleBase:
         env_config.os_scan_miss_p = 0.08
         env_config.vulners_miss_p = 0.09
         return env_config
-
-
-

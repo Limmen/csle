@@ -10,6 +10,7 @@ from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 class EnvConfig:
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
+                 num_sh : int,
                  render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01):
@@ -18,6 +19,7 @@ class EnvConfig:
         self.num_nodes = len(network_conf.nodes)
         self.num_ports = num_ports
         self.num_vuln = num_vuln
+        self.num_sh = num_sh
         self.env_mode = env_mode
         self.cluster_config = cluster_config
         self.render_config = render_config

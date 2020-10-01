@@ -33,7 +33,8 @@ class AgentState:
 
 
     def initialize_render_state(self) -> np.ndarray:
-        self.machines_state = np.zeros((self.obs_state.num_machines, 10 + self.obs_state.num_ports + self.obs_state.num_vuln))
+        self.machines_state = np.zeros((self.obs_state.num_machines, 10 + self.obs_state.num_ports
+                                        + self.obs_state.num_vuln + self.obs_state.num_sh))
         self.ports_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_ports, 4))
         self.vuln_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_vuln, 2))
         self.os_state = np.zeros((self.obs_state.num_machines, 1))
@@ -48,6 +49,7 @@ class AgentState:
             if len(self.obs_state.machines) > i:
                 self.obs_state.machines[i].sort_ports()
                 self.obs_state.machines[i].sort_vuln(self.vuln_lookup)
+                self.obs_state.machines[i].sort_shell_access(self.service_lookup)
 
                 # IP
                 host_ip = int(self.obs_state.machines[i].ip.rsplit(".", 1)[-1])
@@ -72,13 +74,13 @@ class AgentState:
                         ports_state_idx += 1
 
                 # Vulnerabilities
-                for j, v in enumerate(self.obs_state.machines[i].vuln):
-                    v_id = self.vuln_lookup[v.name]
+                for j, sh_c in enumerate(self.obs_state.machines[i].vuln):
+                    v_id = self.vuln_lookup[sh_c.name]
                     if j < self.obs_state.num_vuln:
                         self.machines_state[i][j + 3 + self.obs_state.num_ports] = v_id
                         if float(v_id) not in self.vuln_state[:,0]:
                             self.vuln_state[vuln_state_idx][0] = v_id
-                            self.vuln_state[vuln_state_idx][1] = v.cvss
+                            self.vuln_state[vuln_state_idx][1] = sh_c.cvss
                             vuln_state_idx += 1
 
 
@@ -105,6 +107,15 @@ class AgentState:
                 # Flag pts
                 flag_pts_score = sum([f.score for f in self.obs_state.machines[i].flags_found])
                 self.machines_state[i][9 + self.obs_state.num_ports + self.obs_state.num_vuln] = int(flag_pts_score)
+
+                # sh_services
+                services = []
+                for j, sh_c in enumerate(self.obs_state.machines[i].shell_access_credentials):
+                    if sh_c.service is not None:
+                        s_id = self.service_lookup[sh_c.service]
+                        if j < self.obs_state.num_sh and s_id not in services:
+                            services.append(s_id)
+                            self.machines_state[i][j + 10 + self.obs_state.num_ports + self.obs_state.num_vuln] = s_id
 
                 # Flags visualize
                 self.flags_state = self.flags_state.union(self.obs_state.machines[i].flags_found)
