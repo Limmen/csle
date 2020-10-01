@@ -184,6 +184,10 @@ class EnvDynamicsUtil:
         # Stale connections are removed
         if len(n_m.ssh_connections) == 0:
             n_m.ssh_connections = o_m.ssh_connections
+        if len(n_m.telnet_connections) == 0:
+            n_m.telnet_connections = o_m.telnet_connections
+        if len(n_m.ftp_connections) == 0:
+            n_m.ftp_connections = o_m.ftp_connections
         return n_m
 
     @staticmethod
@@ -294,6 +298,11 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def check_if_ssh_connection_is_alive(conn) -> bool:
+        """
+        Utility function to check whether a SSH connection is alive or not
+        :param conn: the connection to check
+        :return: true or false
+        """
         alive = False
         if conn.get_transport() is not None:
             alive = conn.get_transport().is_active()
@@ -301,9 +310,21 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def check_if_telnet_connection_is_alive(conn) -> bool:
+        """
+        Utility function to check whether a Telnet connection is alive or not
+
+        :param conn: the connection to check
+        :return: true or false
+        """
         return True
 
     @staticmethod
     def check_if_ftp_connection_is_alive(conn) -> bool:
+        """
+        Utilitty function to check whether a FTP connection is alive or not
+
+        :param conn: the connection to check
+        :return: true or false
+        """
         return True
 

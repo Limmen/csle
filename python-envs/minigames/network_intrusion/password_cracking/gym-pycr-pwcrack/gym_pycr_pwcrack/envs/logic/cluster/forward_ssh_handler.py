@@ -3,11 +3,12 @@ try:
     import SocketServer
 except ImportError:
     import socketserver as SocketServer
+import gym_pycr_pwcrack.constants.constants as constants
 
 class ForwardSSHHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         chan = self.server.ssh_transport.open_channel(
-            "direct-tcpip",
+            constants.SSH.DIRECT_CHANNEL,
             (self.server.chain_host, self.server.chain_port),
             self.request.getpeername(),
         )

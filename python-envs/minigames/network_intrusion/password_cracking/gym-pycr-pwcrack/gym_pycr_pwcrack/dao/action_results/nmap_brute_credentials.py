@@ -17,5 +17,5 @@ class NmapBruteCredentials:
 
 
     def to_obs(self):
-        return Credential(username=self.username, pw=self.pw, port=self.port, service=self.service,
+        return Credential(username=self.username, pw=self.pw, port=int(self.port), service=self.service,
                                           protocol=self.protocol)

@@ -291,6 +291,10 @@ class NMAP_XML:
     PASSWORD = "password"
     ACCOUNTS = "Accounts"
 
+class SSH:
+    SERVICE_NAME ="ssh"
+    DEFAULT_PORT = 22
+    DIRECT_CHANNEL = "direct-tcpip"
 
 class TELNET:
     PROMPT = b':~$'
@@ -298,5 +302,23 @@ class TELNET:
     LOGIN_PROMPT = b"login: "
     PASSWORD_PROMPT = b"Password: "
     INCORRECT_LOGIN = "Login incorrect"
+    SERVICE_NAME="telnet"
+    DEFAULT_PORT = 23
+
+class FTP:
+    INCORRECT_LOGIN = "Login incorrect"
+    SERVICE_NAME = "ftp"
+    DEFAULT_PORT = 21
+    LOCALHOST = "127.0.0.1"
+
+class COMMON:
+    CVE_FILE = "/allitems_prep.csv"
+    SERVICES_FILE = "/nmap-services"
+    DEFAULT_RECV_SIZE = 5000
+
+class COMMANDS:
+    CHANNEL_WHOAMI = "whoami\n"
+    CHANNEL_SU_ROOT = "su root\n"
+    CHANNEL_ROOT = "root\n"
 
 

@@ -1,5 +1,6 @@
 import paramiko
 import time
+import gym_pycr_pwcrack.constants.constants as constants
 
 class ClusterConfig:
     """
@@ -59,7 +60,7 @@ class ClusterConfig:
             agent_addr = (self.agent_ip, 22)
             server_addr = (self.server_ip, 22)
 
-            relay_channel = server_transport.open_channel("direct-tcpip", agent_addr, server_addr)
+            relay_channel = server_transport.open_channel(constants.SSH.DIRECT_CHANNEL, agent_addr, server_addr)
             self.relay_channel = relay_channel
             agent_conn = paramiko.SSHClient()
             agent_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -87,21 +88,21 @@ class ClusterConfig:
 
         # clear output
         if self.agent_channel.recv_ready():
-            output = self.agent_channel.recv(5000)
+            output = self.agent_channel.recv(constants.COMMON.DEFAULT_RECV_SIZE)
 
-        self.agent_channel.send("su root\n")
+        self.agent_channel.send(constants.COMMANDS.CHANNEL_SU_ROOT)
         time.sleep(0.2)
-        self.agent_channel.send("root\n")
+        self.agent_channel.send(constants.COMMANDS.CHANNEL_ROOT)
         time.sleep(0.2)
 
         # clear output
         if self.agent_channel.recv_ready():
-            output = self.agent_channel.recv(5000)
+            output = self.agent_channel.recv(constants.COMMON.DEFAULT_RECV_SIZE)
 
-        self.agent_channel.send("whoami\n")
+        self.agent_channel.send(constants.COMMANDS.CHANNEL_WHOAMI)
         time.sleep(0.2)
         if self.agent_channel.recv_ready():
-            output = self.agent_channel.recv(5000)
+            output = self.agent_channel.recv(constants.COMMON.DEFAULT_RECV_SIZE)
             output_str = output.decode("utf-8")
             assert "root" in output_str
 
@@ -109,7 +110,7 @@ class ClusterConfig:
     def download_cluster_services(self):
         print("Downloading cluster services...")
         sftp_client = self.agent_conn.open_sftp()
-        remote_file = sftp_client.open("/nmap-services")
+        remote_file = sftp_client.open(constants.COMMON.SERVICES_FILE)
         cluster_services = []
         try:
             for line in remote_file:
@@ -126,7 +127,7 @@ class ClusterConfig:
     def download_cves(self):
         print("Downloading CVEs...")
         sftp_client = self.agent_conn.open_sftp()
-        remote_file = sftp_client.open("/allitems_prep.csv", "r")
+        remote_file = sftp_client.open(constants.COMMON.CVE_FILE, "r")
         cves = []
         try:
             start = time.time()

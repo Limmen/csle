@@ -19,6 +19,8 @@ class MachineObservationState:
         self.ssh_connections :List[ConnectionObservationState] = []
         self.ftp_connections: List[ConnectionObservationState] = []
         self.telnet_connections: List[ConnectionObservationState] = []
+        self.logged_in_services = []
+        self.root_services = []
 
     def __str__(self):
         return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{},num_cred{},num_ssh_connections:{}," \

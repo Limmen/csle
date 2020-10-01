@@ -2,12 +2,12 @@ import select
 import telnetlib
 import threading
 import time
+from ftplib import FTP
 
 try:
     import SocketServer
 except ImportError:
     import socketserver as SocketServer
-
 import paramiko
 
 class ForwardServer(SocketServer.ThreadingTCPServer):
@@ -108,6 +108,42 @@ def main():
             wait = False
         server_thread.forward_server.shutdown()
 
+def ftp_test():
+    server = ("172.18.1.191", 22)
+    remote = ("172.18.1.79", 21)
+    port = 4000
+    password = "agent"
+    username = "agent"
+
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    client.connect(
+        server[0],
+        server[1],
+        username=username,
+        password=password,
+    )
+    print("Now forwarding port {} to {}:{}".format(str(port), remote[0], remote[1]))
+    server_thread = ForwardTunnelThread(local_port=port, remote_host=remote[0], remote_port=remote[1],
+                                        transport=client.get_transport())
+    server_thread.start()
+
+    host = "127.0.0.1"
+    port = port
+    ftp = FTP()
+    res = ftp.connect(host=host, port=port, timeout=5)
+    print("res")
+    res = ftp.login("pi", "pi3")
+    print(res)
+
+    # with FTP('127.0.0.1', 'pi', 'pi') as ftp:
+    #     print(ftp.pwd())  # Usually default is /
+    while True:
+        pass
+
 
 if __name__ == "__main__":
-    main()
+    ftp_test()
+    #main()

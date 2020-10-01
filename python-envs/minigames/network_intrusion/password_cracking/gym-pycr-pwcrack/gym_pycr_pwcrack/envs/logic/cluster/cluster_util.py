@@ -2,6 +2,9 @@ from typing import Union, List
 from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
 import time
+import paramiko
+import telnetlib
+from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_result import NmapScanResult
@@ -16,6 +19,9 @@ from gym_pycr_pwcrack.dao.action_results.nmap_os import NmapOs
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.action_results.nmap_vuln import NmapVuln
 from gym_pycr_pwcrack.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
+from gym_pycr_pwcrack.dao.observation.connection_observation_state import ConnectionObservationState
+from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_pwcrack.envs.logic.cluster.forward_tunnel_thread import ForwardTunnelThread
 
 class ClusterUtil:
     """
@@ -487,7 +493,7 @@ class ClusterUtil:
                         pw = child.text
                     elif child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.STATE:
                         state = child.text
-        credentials = NmapBruteCredentials(username=username, pw=pw, state=state, port=port, protocol= protocol,
+        credentials = NmapBruteCredentials(username=username, pw=pw, state=state, port=int(port), protocol=protocol,
                                            service=service)
         return credentials
 
@@ -576,3 +582,346 @@ class ClusterUtil:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
         s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
         return s_prime, reward, False
+
+
+    @staticmethod
+    def login_service_helper(s: EnvState, a: Action, alive_check, service_name : str,
+                             env_config: EnvConfig) -> Union[EnvState, int, bool]:
+        """
+        Helper function for logging in to a network service in the cluster
+
+        :param s: the current state
+        :param a: the action of the login
+        :param alive_check:  the function to check whether current connections are alive or not
+        :param service_name: name of the service to login to
+        :param env_config: environment config
+        :return: s_prime, reward, done
+        """
+        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
+        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        target_machine = None
+        non_used_credentials = []
+        root = False
+        for m in s.obs_state.machines:
+            if m.ip == a.ip:
+                target_machine = m
+                break
+
+        # Check if already logged in
+        if target_machine is not None:
+            alive_connections = []
+            root = False
+            connected = False
+            connections = []
+            if service_name == constants.TELNET.SERVICE_NAME:
+                connections = target_machine.telnet_connections
+            elif service_name == constants.SSH.SERVICE_NAME:
+                connections = target_machine.ssh_connections
+            elif service_name == constants.FTP.SERVICE_NAME:
+                connections = target_machine.ftp_connections
+            for c in connections:
+                if alive_check(c.conn):
+                    connected = True
+                    alive_connections.append(c)
+                    if c.root:
+                        root = c.root
+                else:
+                    if c.tunnel_thread is not None:
+                        # stop the tunnel thread that does port forwarding
+                        c.tunnel_thread.forward_server.shutdown()
+            if len(target_machine.logged_in_services) == 1 and target_machine.logged_in_services[0] == service_name:
+                target_machine.logged_in = connected
+            if len(target_machine.root_services) == 1 and target_machine.root_services[0] == service_name:
+                target_machine.root = root
+            if not connected and service_name in target_machine.logged_in_services:
+                target_machine.logged_in_services.remove(service_name)
+            if not root and service_name in target_machine.root_services:
+                target_machine.root_services.remove(service_name)
+            non_used_credentials = []
+            root = False
+            for cr in target_machine.shell_access_credentials:
+                if cr.service == service_name:
+                    already_logged_in = False
+                    for c in alive_connections:
+                        if not root and c.root:
+                            root = True
+                        if c.username == cr.username:
+                            already_logged_in = True
+                    if not already_logged_in:
+                        non_used_credentials.append(cr)
+
+            if service_name == constants.TELNET.SERVICE_NAME:
+                target_machine.telnet_connections = alive_connections
+            elif service_name == constants.SSH.SERVICE_NAME:
+                target_machine.ssh_connections = alive_connections
+            elif service_name == constants.FTP.SERVICE_NAME:
+                target_machine.ftp_connections = alive_connections
+
+        if target_machine is None or root or len(non_used_credentials) == 0:
+            s_prime = s
+            if target_machine is not None:
+                new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+                total_new_shell_access, total_new_flag_pts = \
+                    EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
+                s_prime.obs_state.machines = new_machines_obs
+            reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                     num_new_vuln_found=total_new_vuln,
+                                                     num_new_machines=total_new_machines,
+                                                     num_new_shell_access=total_new_shell_access,
+                                                     num_new_root=total_new_root,
+                                                     num_new_flag_pts=total_new_flag_pts,
+                                                     cost=a.cost)
+            return s_prime, reward, False
+
+        # If not logged in and there are credentials, setup a new connection
+        connected = False
+        users = []
+        target_connections = []
+        ports = []
+        if service_name == constants.SSH.SERVICE_NAME:
+            connected, users, target_connections, ports = ClusterUtil._ssh_setup_connection(
+                target_machine=target_machine, a=a, env_config=env_config)
+        elif service_name == constants.TELNET.SERVICE_NAME:
+            connected, users, target_connections, tunnel_threads, forward_ports, ports = \
+                ClusterUtil._telnet_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
+        elif service_name == constants.FTP.SERVICE_NAME:
+            connected, users, target_connections, tunnel_threads, forward_ports, ports = \
+                ClusterUtil._ftp_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
+        s_prime = s
+        if connected:
+            root = False
+            target_machine.logged_in = True
+            if service_name not in target_machine.logged_in_services:
+                target_machine.logged_in_services.append(service_name)
+            if service_name not in target_machine.root_services:
+                target_machine.root_services.append(service_name)
+            for i in range(len(target_connections)):
+                # Check if root
+                c_root = False
+                if service_name == constants.SSH.SERVICE_NAME:
+                    c_root = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
+                                                                  target_connections=target_connections, i=i,
+                                                                  ports=ports)
+                elif service_name == constants.TELNET.SERVICE_NAME:
+                    c_root = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
+                                                                     target_connections=target_connections,
+                                                                     i=i, tunnel_threads=tunnel_threads,
+                                                                     forward_ports=forward_ports, ports=ports)
+                elif service_name == constants.FTP.SERVICE_NAME:
+                    c_root = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
+                                                                  target_connections=target_connections,
+                                                                  i=i, tunnel_threads=tunnel_threads,
+                                                                  forward_ports=forward_ports, ports=ports)
+                if c_root:
+                    root = True
+
+            target_machine.root = root
+            new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+            total_new_shell_access, total_new_flag_pts = \
+                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
+            s_prime.obs_state.machines = new_machines_obs
+
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 cost=a.cost)
+        return s_prime, reward, False
+
+
+    @staticmethod
+    def _ssh_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
+            -> Union[bool, List[str], List, List[int]]:
+        """
+        Helper function for setting up a SSH connection
+
+        :param target_machine: the target machine to connect to
+        :param a: the action of the connection
+        :param env_config: the environment config
+        :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports
+        """
+        connected = False
+        users = []
+        target_connections = []
+        ports = []
+        for cr in target_machine.shell_access_credentials:
+            if cr.service == constants.SSH.SERVICE_NAME:
+                try:
+                    agent_addr = (env_config.cluster_config.agent_ip, cr.port)
+                    target_addr = (a.ip, cr.port)
+                    agent_transport = env_config.cluster_config.agent_conn.get_transport()
+                    relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr)
+                    target_conn = paramiko.SSHClient()
+                    target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                    target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel)
+                    connected = True
+                    users.append(cr.username)
+                    target_connections.append(target_conn)
+                    ports.append(cr.port)
+                except:
+                    pass
+        return connected, users, target_connections, ports
+
+    @staticmethod
+    def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
+                                 target_connections: List, i : int, ports: List[int]) -> bool:
+        """
+        Helper function for finalizing a SSH connection and setting up the DTO
+
+        :param target_machine: the target machine to connect to
+        :param users: list of connected users
+        :param target_connections: list of connection handles
+        :param i: current index
+        :param ports: list of ports of the connections
+        :return: boolean whether the connection has root privileges or not
+        """
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -v",
+                                                                   conn=target_connections[i])
+        root = False
+        if not "Sorry, user {} may not run sudo".format(users[i]) in errdata.decode("utf-8"):
+            root = True
+            target_machine.root = True
+        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
+                                                    root=root,
+                                                    service=constants.SSH.SERVICE_NAME,
+                                                    port=ports[i])
+        target_machine.ssh_connections.append(connection_dto)
+        return root
+
+    @staticmethod
+    def _telnet_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
+            -> Union[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+        """
+        Helper function for setting up a Telnet connection to a target machine
+
+        :param target_machine: the target machine to connect to
+        :param a: the action of the connection
+        :param env_config: the environment config
+        :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
+                 list of ports
+        """
+        connected = False
+        users = []
+        target_connections = []
+        tunnel_threads = []
+        forward_ports = []
+        ports = []
+        for cr in target_machine.shell_access_credentials:
+            if cr.service == constants.TELNET.SERVICE_NAME:
+                try:
+                    forward_port = env_config.get_port_forward_port()
+                    tunnel_thread = ForwardTunnelThread(local_port=forward_port,
+                                                        remote_host=a.ip, remote_port=cr.port,
+                                                        transport=env_config.cluster_config.agent_conn.get_transport())
+                    tunnel_thread.start()
+                    target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port)
+                    target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=5)
+                    target_conn.write((cr.username + "\n").encode())
+                    target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=5)
+                    target_conn.write((cr.pw + "\n").encode())
+                    response = target_conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                    if not constants.TELNET.INCORRECT_LOGIN in response.decode("utf-8"):
+                        connected = True
+                        users.append(cr.username)
+                        target_connections.append(target_conn)
+                        tunnel_threads.append(tunnel_thread)
+                        forward_ports.append(forward_port)
+                        ports.append(cr.port)
+                except Exception as e:
+                    print("telnet exception:{}".format(str(e)))
+                    pass
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports
+
+    @staticmethod
+    def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
+                                    tunnel_threads: List, forward_ports : List[int], ports: List[int]) -> bool:
+        """
+        Helper function for finalizing a Telnet connection to a target machine and creating the DTO
+
+        :param target_machine: the target machine to connect to
+        :param users: list of connected users
+        :param target_connections: list of connection handles
+        :param i: current index
+        :param tunnel_threads: list of tunnel threads
+        :param forward_ports: list of forwarded ports
+        :param ports: list of ports of the connections
+        :return: boolean whether the connection has root privileges or not
+        """
+        target_connections[i].write("sudo -v\n".encode())
+        response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=5)
+        root = False
+        if not "Sorry, user {} may not run sudo".format(users[i]) in response.decode("utf-8"):
+            root = True
+        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
+                                                    service=constants.TELNET.SERVICE_NAME, tunnel_thread=tunnel_threads[i],
+                                                    tunnel_port=forward_ports[i],
+                                                    port=ports[i])
+        target_machine.telnet_connections.append(connection_dto)
+        return root
+
+    @staticmethod
+    def _ftp_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
+            -> Union[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+        """
+        Helper function for setting up a FTP connection
+
+        :param target_machine: the target machine to connect to
+        :param a: the action of the connection
+        :param env_config: the environment config
+        :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
+                 list of ports
+        """
+        connected = False
+        users = []
+        target_connections = []
+        tunnel_threads = []
+        forward_ports = []
+        ports = []
+        for cr in target_machine.shell_access_credentials:
+            if cr.service == constants.FTP.SERVICE_NAME:
+                try:
+                    forward_port = env_config.get_port_forward_port()
+                    tunnel_thread = ForwardTunnelThread(local_port=forward_port,
+                                                        remote_host=a.ip, remote_port=cr.port,
+                                                        transport=env_config.cluster_config.agent_conn.get_transport())
+                    tunnel_thread.start()
+                    target_conn = FTP()
+                    target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=5)
+                    login_result = target_conn.login(cr.username, cr.pw)
+                    if constants.FTP.INCORRECT_LOGIN not in login_result:
+                        connected = True
+                        users.append(cr.username)
+                        target_connections.append(target_conn)
+                        tunnel_threads.append(tunnel_thread)
+                        forward_ports.append(forward_port)
+                        ports.append(cr.port)
+                except Exception as e:
+                    print("FTP exception: {}".format(str(e)))
+
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports
+
+    @staticmethod
+    def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
+                                 tunnel_threads: List, forward_ports: List[int], ports: List[int]) -> bool:
+        """
+        Helper function for creating the connection DTO for FTP
+
+        :param target_machine: the target machine to connect to
+        :param users: list of users that are connected
+        :param target_connections: list of connections to the target
+        :param i: current index
+        :param tunnel_threads: list of tunnel threads to the target
+        :param forward_ports: list of forwarded ports to the target
+        :param ports: list of ports of the connections
+        :return: boolean, whether the connection has root privileges
+        """
+        root = False
+        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
+                                                    service=constants.FTP.SERVICE_NAME,
+                                                    tunnel_thread=tunnel_threads[i],
+                                                    tunnel_port=forward_ports[i],
+                                                    port=ports[i])
+        target_machine.ftp_connections.append(connection_dto)
+        return root

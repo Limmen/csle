@@ -384,7 +384,6 @@ class MainFrame(pyglet.window.Window):
         for i in range(max_logs):
             y_t = 5 + y_log - ((i - 1) * h)
             if y_t > 0:
-                #self.state.env_log.log[num_logs - 1 - i]
                 l = batch_label("", x, y_t, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
                 self.log_labels.append(l)
@@ -421,6 +420,9 @@ class MainFrame(pyglet.window.Window):
                 self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
                 if len(str(int(self.state.machines_state[m][c]))) > 3:
                     self.state_labels[m][c].font_size = 6
+                else:
+                    if self.state_labels[m][c].font_size == 6:
+                        self.state_labels[m][c].font_size = 10
         for p in range(len(self.ports_labels)):
             for c in range(len(self.ports_labels[p])):
                 if c < 4:
