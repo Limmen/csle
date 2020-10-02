@@ -12,13 +12,14 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
-                               new_machines_obs: List[MachineObservationState]) -> \
+                               new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
             Union[List[MachineObservationState], int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
+        :param env_config: environment config
         :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a
         """
         merged_machines = []
@@ -27,6 +28,8 @@ class EnvDynamicsUtil:
 
         # Add updated machines to merged state
         for n_m in new_machines_obs:
+            if n_m.ip == env_config.hacker_ip:
+                continue
             exists = False
             merged_m = n_m
             for i, o_m in enumerate(old_machines_obs):

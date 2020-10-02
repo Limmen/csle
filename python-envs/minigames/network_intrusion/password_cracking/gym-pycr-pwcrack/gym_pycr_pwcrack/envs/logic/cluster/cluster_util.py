@@ -59,15 +59,47 @@ class ClusterUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig):
+    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig) -> None:
+        """
+        Caches the estimated cost of an action by writing it to a file
+
+        :param total_time: the total time of executing the action
+        :param action: the action
+        :param env_config: the environment config
+        :return: None
+        """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
         file_name = env_config.nmap_cache_dir + str(action.id.value)
         if not action.subnet:
             file_name = file_name + "_" + action.ip
-        file_name = file_name + "_cost.txt"
+        file_name = file_name + constants.FILE_PATTERNS.COST_FILE_SUFFIX
         remote_file = sftp_client.file(file_name, mode="w")
         try:
             remote_file.write(str(round(total_time, 1)) + "\n")
+        finally:
+            remote_file.close()
+
+    @staticmethod
+    def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str,files: List[str],
+                                     ip : str) \
+            -> None:
+        """
+        Caches the result of a file system scan
+        :param action: the action
+        :param env_config: the env config
+        :param service: the service used to connect to the file system
+        :param user: the user
+        :param files: the result to cache
+        :param ip: the ip
+        :return: None
+        """
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + ip + "_" + service \
+                    + "_" + user + ".txt"
+        remote_file = sftp_client.file(file_name, mode="w")
+        try:
+            for file in files:
+                remote_file.write(file + "\n")
         finally:
             remote_file.close()
 
@@ -92,7 +124,7 @@ class ClusterUtil:
         """
         while not env_config.cluster_config.agent_channel.recv_ready():
             time.sleep(env_config.shell_read_wait)
-        output = env_config.cluster_config.agent_channel.recv(5000)
+        output = env_config.cluster_config.agent_channel.recv(constants.COMMON.LARGE_RECV_SIZE)
         output_str = output.decode("utf-8")
         output_str = env_config.shell_escape.sub("", output_str)
         return output_str
@@ -106,15 +138,16 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + a.ip + ".xml"
+        query = str(a.id.value) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
-            query = str(a.id.value) + ".xml"
+            query = str(a.id.value) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
 
         # Search through cache
         if query in env_config.nmap_cache:
             return query
 
-        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command("ls -1 " + env_config.nmap_cache_dir)
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
+                                                                                  + env_config.nmap_cache_dir)
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))
@@ -125,6 +158,54 @@ class ClusterUtil:
             return query
 
         return None
+
+    @staticmethod
+    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service : str, user: str):
+        """
+        Checks if an nmap action is cached or not
+
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: None or the name of the file where the result is cached
+        """
+        query = str(a.id.value) + "_" + ip + "_" + service + "_" + user + ".txt"
+
+        # Search through cache
+        if query in env_config.filesystem_file_cache:
+            return query
+
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
+                                                                                  + env_config.nmap_cache_dir)
+        cache_list = []
+        for line in stdout:
+            cache_list.append(line.replace("\n", ""))
+        env_config.filesystem_file_cache = cache_list
+
+        # Search through updated cache
+        if query in env_config.filesystem_file_cache:
+            return query
+
+        return None
+
+    @staticmethod
+    def parse_file_scan_file(file_name: str, env_config: EnvConfig) -> List[str]:
+        """
+        Parses a file containing cached results of a file scan on a server
+
+        :param file_name: name of the file to parse
+        :param env_config: environment config
+        :return: a list of files
+        """
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        files = []
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            files = data.split("\n")
+        finally:
+            remote_file.close()
+        return files
 
     @staticmethod
     def check_nmap_action_cache_interactive(a : Action, env_config : EnvConfig):
@@ -141,15 +222,16 @@ class ClusterUtil:
             output = env_config.cluster_config.agent_channel.recv(5000)
 
         # List cache
-        env_config.cluster_config.agent_channel.send("ls -1 " + env_config.nmap_cache_dir + "\n")
+        env_config.cluster_config.agent_channel.send(constants.COMMANDS.LIST_CACHE
+                                                     + env_config.nmap_cache_dir + "\n")
         result_str = ClusterUtil.read_result_interactive(env_config=env_config)
         cache_list = result_str.split('\r\n')
         cache_list = cache_list[1:-1]  # remove command ([0]) and prompt ([-1])
 
         # Search through cache
-        query = str(a.id.value) + "_" + a.ip + ".xml"
+        query = str(a.id.value) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
-            query = str(a.id.value) + ".xml"
+            query = str(a.id.value) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         for item in cache_list:
             if item == query:
                 return item
@@ -532,7 +614,7 @@ class ClusterUtil:
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 
@@ -683,7 +765,8 @@ class ClusterUtil:
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                 total_new_shell_access, total_new_flag_pts, total_new_root = \
-                    EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
+                    EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
+                                                           env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
             # Use measured cost
@@ -710,7 +793,7 @@ class ClusterUtil:
             connected, users, target_connections, tunnel_threads, forward_ports, ports = \
                 ClusterUtil._telnet_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
         elif service_name == constants.FTP.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells = \
                 ClusterUtil._ftp_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
         s_prime = s
         if connected:
@@ -736,14 +819,15 @@ class ClusterUtil:
                     c_root = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
                                                                   target_connections=target_connections,
                                                                   i=i, tunnel_threads=tunnel_threads,
-                                                                  forward_ports=forward_ports, ports=ports)
+                                                                  forward_ports=forward_ports, ports=ports,
+                                                                  interactive_shells=i_shells)
                 if c_root:
                     root = True
 
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
+                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
 
         # Use measured cost
@@ -907,6 +991,7 @@ class ClusterUtil:
         tunnel_threads = []
         forward_ports = []
         ports = []
+        interactive_shells = []
         for cr in target_machine.shell_access_credentials:
             if cr.service == constants.FTP.SERVICE_NAME:
                 try:
@@ -925,14 +1010,26 @@ class ClusterUtil:
                         tunnel_threads.append(tunnel_thread)
                         forward_ports.append(forward_port)
                         ports.append(cr.port)
+                        # Create LFTP connection too to be able to search file system
+                        shell = env_config.cluster_config.agent_conn.invoke_shell()
+                        # clear output
+                        if shell.recv_ready():
+                            shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                        shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ip + "\n")
+                        time.sleep(0.2)
+                        # clear output
+                        if shell.recv_ready():
+                            o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                        interactive_shells.append(shell)
                 except Exception as e:
                     print("FTP exception: {}".format(str(e)))
 
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells
 
     @staticmethod
     def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
-                                 tunnel_threads: List, forward_ports: List[int], ports: List[int]) -> bool:
+                                 tunnel_threads: List, forward_ports: List[int], ports: List[int],
+                                 interactive_shells: List) -> bool:
         """
         Helper function for creating the connection DTO for FTP
 
@@ -943,6 +1040,7 @@ class ClusterUtil:
         :param tunnel_threads: list of tunnel threads to the target
         :param forward_ports: list of forwarded ports to the target
         :param ports: list of ports of the connections
+        :param interactive_shells: shells for LFTP
         :return: boolean, whether the connection has root privileges
         """
         root = False
@@ -950,6 +1048,7 @@ class ClusterUtil:
                                                     service=constants.FTP.SERVICE_NAME,
                                                     tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
-                                                    port=ports[i])
+                                                    port=ports[i],
+                                                    interactive_shell = interactive_shells[i])
         target_machine.ftp_connections.append(connection_dto)
         return root

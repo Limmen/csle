@@ -310,15 +310,24 @@ class FTP:
     SERVICE_NAME = "ftp"
     DEFAULT_PORT = 21
     LOCALHOST = "127.0.0.1"
+    LFTP_PROMPT = ":~>"
+    LFTP_PREFIX = "lftp ftp://"
+    ACCESS_FAILED = "Access failed"
 
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"
     DEFAULT_RECV_SIZE = 5000
+    LARGE_RECV_SIZE = 1000000
 
 class COMMANDS:
     CHANNEL_WHOAMI = "whoami\n"
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
+    LIST_CACHE = "ls -1 "
+
+class FILE_PATTERNS:
+    COST_FILE_SUFFIX = "_cost.txt"
+    NMAP_ACTION_RESULT_SUFFIX = ".xml"
 
 

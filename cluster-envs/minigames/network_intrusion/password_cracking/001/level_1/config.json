@@ -131,11 +131,6 @@
           "name": "flag3",
           "path": "/tmp",
           "id": "3"
-        },
-        {
-          "name": "flag4",
-          "path": "/root",
-          "id": "4"
         }
       ]
     },

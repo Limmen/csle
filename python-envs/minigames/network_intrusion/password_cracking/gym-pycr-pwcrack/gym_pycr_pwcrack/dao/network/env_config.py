@@ -14,8 +14,7 @@ class EnvConfig:
     """
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
-                 num_sh : int,
-                 render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
+                 num_sh : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01):
         """
@@ -26,6 +25,7 @@ class EnvConfig:
         :param num_ports: number of ports per machine in the state
         :param num_vuln: number of vuln per machine to keep in state
         :param num_sh: number of shell connections per machine to keep in state
+        :param hacker_ip: ip of the hacker
         :param render_config: the render config
         :param env_mode: the env mode (e.g. cluster or sim)
         :param cluster_config: the cluster config
@@ -45,6 +45,7 @@ class EnvConfig:
         self.simulate_detection = simulate_detection
         self.detection_reward = detection_reward
         self.base_detection_p = base_detection_p
+        self.hacker_ip = hacker_ip
 
         self.ping_scan_miss_p = 0.00
         self.udp_port_scan_miss_p = 0.00
@@ -73,6 +74,7 @@ class EnvConfig:
         self.flag_lookup = self._create_flags_lookup()
         self.use_file_system_cache = True
         self.filesystem_scan_cache = FileSystemScanCache()
+        self.filesystem_file_cache = []
 
     def get_port_forward_port(self) -> int:
         """

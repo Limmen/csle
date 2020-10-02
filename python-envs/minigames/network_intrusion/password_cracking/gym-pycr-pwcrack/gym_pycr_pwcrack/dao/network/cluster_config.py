@@ -184,6 +184,7 @@ class ClusterConfig:
             if not a.subnet and a.ip is not None:
                 file_name = file_name + "_" + a.ip
             file_name = file_name + "_cost.txt"
+            remote_file = None
             try:
                 remote_file = sftp_client.open(file_name, mode="r")
                 cost_str = remote_file.read()
@@ -192,6 +193,7 @@ class ClusterConfig:
             except:
                 pass
             finally:
-                remote_file.close()
+                if remote_file is not None:
+                    remote_file.close()
         print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs)))
         return action_costs

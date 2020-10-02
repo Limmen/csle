@@ -18,8 +18,8 @@ NON_ROOT_PW_1=euler
 FLAG_INFO_FILE=fl_info.txt
 FLAG_PATH_1=/tmp
 FLAG_NAME_1=flag3
-FLAG_PATH_2=/root
-FLAG_NAME2=flag4
+#FLAG_PATH_2=/root
+#FLAG_NAME2=flag4
 
 all: rm-image rm-network build net
 
@@ -28,7 +28,7 @@ users:
 	echo "${NON_ROOT_USER_1}:${NON_ROOT_PW_1}" > ./docker/${NON_ROOT_USERS_FILE}
 
 flags:
-	echo "${FLAG_PATH_1}:${FLAG_NAME_1} ${FLAG_PATH_2}:${FLAG_NAME_2}" > ./docker/${FLAG_INFO_FILE}
+	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
 	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..

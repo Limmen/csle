@@ -136,8 +136,7 @@ class PyCrPwCrackSimpleBase:
                       ],
                       vulnerabilities=[]),
                  Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER,
-                      flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1),
-                             Flag(name="flag4", path="/root", id=4, requires_root=True, score=1)], level=3,
+                      flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
                           Credential(username="l_hopital", pw="l_hopital"),
@@ -242,7 +241,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_SYN_STEALTH_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.TCP_SYN_STEALTH_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.TCP_SYN_STEALTH_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(ip="172.18.1.191", subnet=False),
 
             # Ping Scan
             NMAPActions.PING_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -251,7 +249,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.PING_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.PING_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.PING_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.PING_SCAN(ip="172.18.1.191", subnet=False),
 
             # UDP Port Scan
             NMAPActions.UDP_PORT_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -260,7 +257,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.UDP_PORT_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.UDP_PORT_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.UDP_PORT_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.UDP_PORT_SCAN(ip="172.18.1.191", subnet=False),
 
             # TCP CON Non-stealth Scan
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -269,7 +265,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(ip="172.18.1.191", subnet=False),
 
             # TCP FIN Scan
             NMAPActions.TCP_FIN_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -278,7 +273,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_FIN_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.TCP_FIN_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.TCP_FIN_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.TCP_FIN_SCAN(ip="172.18.1.191", subnet=False),
 
             # TCP Null Scan
             NMAPActions.TCP_NULL_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -287,7 +281,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_NULL_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.TCP_NULL_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.TCP_NULL_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.TCP_NULL_SCAN(ip="172.18.1.191", subnet=False),
 
             # TCP XMAS Tree Scan
             NMAPActions.TCP_XMAS_TREE_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -296,7 +289,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_XMAS_TREE_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.TCP_XMAS_TREE_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.TCP_XMAS_TREE_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.TCP_XMAS_TREE_SCAN(ip="172.18.1.191", subnet=False),
 
             # OS Detection Scan
             NMAPActions.OS_DETECTION_SCAN(ip=network_conf.subnet_mask, subnet=True),
@@ -305,7 +297,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.OS_DETECTION_SCAN(ip="172.18.1.3", subnet=False),
             NMAPActions.OS_DETECTION_SCAN(ip="172.18.1.21", subnet=False),
             NMAPActions.OS_DETECTION_SCAN(ip="172.18.1.79", subnet=False),
-            NMAPActions.OS_DETECTION_SCAN(ip="172.18.1.191", subnet=False),
 
             NMAPActions.NMAP_VULNERS(ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.NMAP_VULNERS(ip="172.18.1.10", subnet=False),
@@ -313,7 +304,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.NMAP_VULNERS(ip="172.18.1.3", subnet=False),
             NMAPActions.NMAP_VULNERS(ip="172.18.1.21", subnet=False),
             NMAPActions.NMAP_VULNERS(ip="172.18.1.79", subnet=False),
-            NMAPActions.NMAP_VULNERS(ip="172.18.1.191", subnet=False),
 
             # --- Exploits ---
 
@@ -324,7 +314,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # SSH
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -333,7 +322,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # FTP
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -342,7 +330,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # Cassandra
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -351,7 +338,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # IRC
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -360,7 +346,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # Mongo
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -369,7 +354,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # MySql
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -378,7 +362,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # STMP
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -387,7 +370,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # Postgres
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip=network_conf.subnet_mask, subnet=True),
@@ -396,7 +378,6 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.3", subnet=False),
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.21", subnet=False),
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.79", subnet=False),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(ip="172.18.1.191", subnet=False),
 
             # --- Post-Exploits ---
 
@@ -406,7 +387,6 @@ class PyCrPwCrackSimpleBase:
             SSHActions.SSH_LOGIN(ip="172.18.1.3"),
             SSHActions.SSH_LOGIN(ip="172.18.1.21"),
             SSHActions.SSH_LOGIN(ip="172.18.1.79"),
-            SSHActions.SSH_LOGIN(ip="172.18.1.191"),
 
             # FTP Login
             FTPActions.FTP_LOGIN(ip="172.18.1.10"),
@@ -414,7 +394,6 @@ class PyCrPwCrackSimpleBase:
             FTPActions.FTP_LOGIN(ip="172.18.1.3"),
             FTPActions.FTP_LOGIN(ip="172.18.1.21"),
             FTPActions.FTP_LOGIN(ip="172.18.1.79"),
-            FTPActions.FTP_LOGIN(ip="172.18.1.191"),
 
             # Telnet Login
             TelnetActions.Telnet_LOGIN(ip="172.18.1.10"),
@@ -422,7 +401,6 @@ class PyCrPwCrackSimpleBase:
             TelnetActions.Telnet_LOGIN(ip="172.18.1.3"),
             TelnetActions.Telnet_LOGIN(ip="172.18.1.21"),
             TelnetActions.Telnet_LOGIN(ip="172.18.1.79"),
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.191"),
 
             # Search file system for flag
             ShellActions.FIND_FLAG()
@@ -448,9 +426,10 @@ class PyCrPwCrackSimpleBase:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3,
-                               render_config=render_conf, env_mode=EnvMode.SIMULATION, cluster_config=cluster_conf,
-                               simulate_detection=True, detection_reward=10, base_detection_p=0.05)
+                               num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
+                               cluster_config=cluster_conf,
+                               simulate_detection=True, detection_reward=10, base_detection_p=0.05,
+                               hacker_ip="172.18.1.191")
         env_config.ping_scan_miss_p = 0.02
         env_config.udp_port_scan_miss_p = 0.07
         env_config.syn_stealth_scan_miss_p = 0.04
