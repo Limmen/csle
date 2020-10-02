@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -10,7 +10,7 @@ class ReconMiddleware:
     """
 
     @staticmethod
-    def execute_tcp_syn_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_tcp_syn_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP SYN Stealth Scan action
 
@@ -22,7 +22,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_ping_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_ping_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a Ping Scan action
 
@@ -34,7 +34,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_udp_port_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_udp_port_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a UDP Port Scan action
 
@@ -46,7 +46,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_tcp_con_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_tcp_con_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP CON Stealth scan action
 
@@ -58,7 +58,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_tcp_fin_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_tcp_fin_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP FIN scan action
 
@@ -70,7 +70,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_tcp_null_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_tcp_null_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP Null scan action
 
@@ -82,7 +82,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_tcp_xmas_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_tcp_xmas_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP Xmas scan action
 
@@ -94,7 +94,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_os_detection_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_os_detection_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a OS detection scan action
 
@@ -106,7 +106,7 @@ class ReconMiddleware:
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
 
     @staticmethod
-    def execute_vulscan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_vulscan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a vulscan action
 
@@ -119,7 +119,7 @@ class ReconMiddleware:
 
 
     @staticmethod
-    def execute_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def execute_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a nmap_vulners scan
 

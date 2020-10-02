@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple
 import gym
 from abc import ABC
 import numpy as np
@@ -56,7 +56,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.last_obs = self.env_state.get_observation()
 
     # -------- API ------------
-    def step(self, action_id : int) -> Union[np.ndarray, int, bool, dict]:
+    def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 

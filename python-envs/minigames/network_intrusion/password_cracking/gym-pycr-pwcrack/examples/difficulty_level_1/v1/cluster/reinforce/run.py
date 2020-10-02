@@ -4,39 +4,32 @@ from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
 
-
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    pg_agent_config = PolicyGradientAgentConfig(gamma=0.0, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+    pg_agent_config = PolicyGradientAgentConfig(gamma=0.999, alpha=0.001, epsilon=1, render=False, eval_sleep=0.9,
+                                                min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
+                                                epsilon_decay=0.9999, video=True, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=1000000000,
+                                                num_episodes=1000000,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=11,
+                                                eval_frequency=10000, video_frequency=11,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=100, input_dim=4 * 2,
-                                                output_dim=1 + (2*48),
-                                                pi_hidden_dim=64, pi_hidden_layers=2,
-                                                vf_hidden_dim=64, vf_hidden_layers=2,
-                                                shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=2000,
-                                                gpu=False, tensorboard=True,
+                                                checkpoint_freq=1000, input_dim=180,
+                                                output_dim=17,
+                                                pi_hidden_dim=32,
+                                                pi_hidden_layers=1, batch_size=8,
+                                                gpu=True, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                                                state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64
-                                                )
+                                                state_length=1, gpu_id=0)
     env_name = "pycr-pwcrack-simple-sim-v1"
     client_config = ClientConfig(env_name=env_name, pg_agent_config=pg_agent_config,
-                                 agent_type=AgentType.PPO_BASELINE.value,
+                                 agent_type=AgentType.REINFORCE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline v0",
+                                 title="REINFORCE simple v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399)
     return client_config
@@ -59,7 +52,7 @@ def write_default_config(path:str = None) -> None:
 if __name__ == '__main__':
 
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v1 simulation"
+    experiment_title = "REINFORCE simple v1"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

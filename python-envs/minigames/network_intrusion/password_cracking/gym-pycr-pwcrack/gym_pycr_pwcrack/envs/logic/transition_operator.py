@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
@@ -14,7 +14,7 @@ class TransitionOperator:
     """
 
     @staticmethod
-    def transition(s : EnvState, a : Action, env_config : EnvConfig) -> Union[EnvState, int, bool]:
+    def transition(s : EnvState, a : Action, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition operator of the MDP/Markov Game, supporting both simulation and cluster mode
         (s, a) --> (s', r)

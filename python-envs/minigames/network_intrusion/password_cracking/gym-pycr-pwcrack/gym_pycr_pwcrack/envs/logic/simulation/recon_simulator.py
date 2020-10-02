@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -11,7 +11,7 @@ class ReconSimulator:
     """
 
     @staticmethod
-    def simulate_tcp_syn_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_tcp_syn_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP SYN Stealth Scan action
 
@@ -28,7 +28,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_ping_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_ping_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a Ping Scan action
 
@@ -45,7 +45,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_udp_port_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_udp_port_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a UDP port scan action
 
@@ -62,7 +62,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_con_non_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_con_non_stealth_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP CON Scan (non-stealth) action
 
@@ -79,7 +79,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_fin_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_fin_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP FIN Scan action
 
@@ -96,7 +96,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_null_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_tcp_null_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP NULL Scan action
 
@@ -113,7 +113,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_xmas_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_tcp_xmas_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a TCP XMAS Scan action
 
@@ -130,7 +130,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_os_detection_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_os_detection_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs an OS Detection scan action
 
@@ -146,7 +146,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_vulscan(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_vulscan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a nmap vulnerability scan using "vulscan" action
 
@@ -164,7 +164,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def simulate_nmap_vulners(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a nmap vulnerability scan using "vulners" action
 

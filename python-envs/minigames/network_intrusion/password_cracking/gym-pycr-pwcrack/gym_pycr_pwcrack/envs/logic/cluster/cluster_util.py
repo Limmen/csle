@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Tuple, List
 from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
 import time
@@ -29,7 +29,7 @@ class ClusterUtil:
     """
 
     @staticmethod
-    def execute_ssh_cmd(cmd : str, conn) -> Union[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd : str, conn) -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the cluster over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning
@@ -59,7 +59,8 @@ class ClusterUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig) -> None:
+    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig, ip : str = None,
+                             user: str = None, service : str = None) -> None:
         """
         Caches the estimated cost of an action by writing it to a file
 
@@ -70,8 +71,15 @@ class ClusterUtil:
         """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
         file_name = env_config.nmap_cache_dir + str(action.id.value)
-        if not action.subnet:
+        if not action.subnet and action.ip is not None:
             file_name = file_name + "_" + action.ip
+        elif ip is not None:
+            file_name = file_name + "_" + ip
+        if service is not None:
+            file_name = file_name + "_" + service
+        if user is not None:
+            file_name = file_name + "_" + user
+
         file_name = file_name + constants.FILE_PATTERNS.COST_FILE_SUFFIX
         remote_file = sftp_client.file(file_name, mode="w")
         try:
@@ -239,7 +247,7 @@ class ClusterUtil:
         return None
 
     @staticmethod
-    def delete_cache_file(file_name: str, env_config: EnvConfig) -> Union[bytes, bytes, float]:
+    def delete_cache_file(file_name: str, env_config: EnvConfig) -> Tuple[bytes, bytes, float]:
         """
         Deletes the file that contains the cached result of some operation
 
@@ -360,7 +368,7 @@ class ClusterUtil:
         return status
 
     @staticmethod
-    def _parse_nmap_address_xml(xml_data) -> Union[str, NmapAddrType]:
+    def _parse_nmap_address_xml(xml_data) -> Tuple[str, NmapAddrType]:
         """
         Parses a address element in the xml tree
 
@@ -392,7 +400,7 @@ class ClusterUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data) -> Union[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
+    def _parse_nmap_ports_xml(xml_data) -> Tuple[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
@@ -503,7 +511,7 @@ class ClusterUtil:
 
     @staticmethod
     def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str) \
-            -> Union[List[NmapVuln], List[NmapBruteCredentials]]:
+            -> Tuple[List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a XML script element
 
@@ -595,7 +603,7 @@ class ClusterUtil:
 
     @staticmethod
     def merge_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
-            -> Union[EnvState, float]:
+            -> Tuple[EnvState, float]:
         """
         Merges a NMAP scan result with an existing observation state
 
@@ -631,7 +639,7 @@ class ClusterUtil:
         return s_prime, reward
 
     @staticmethod
-    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, float, bool]:
+    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Helpe function for executing a NMAP scan action on the cluster. Implements caching.
 
@@ -689,7 +697,7 @@ class ClusterUtil:
 
     @staticmethod
     def login_service_helper(s: EnvState, a: Action, alive_check, service_name : str,
-                             env_config: EnvConfig) -> Union[EnvState, int, bool]:
+                             env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Helper function for logging in to a network service in the cluster
 
@@ -845,7 +853,7 @@ class ClusterUtil:
 
     @staticmethod
     def _ssh_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Union[bool, List[str], List, List[int]]:
+            -> Tuple[bool, List[str], List, List[int]]:
         """
         Helper function for setting up a SSH connection
 
@@ -904,7 +912,7 @@ class ClusterUtil:
 
     @staticmethod
     def _telnet_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Union[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
         """
         Helper function for setting up a Telnet connection to a target machine
 
@@ -975,7 +983,7 @@ class ClusterUtil:
 
     @staticmethod
     def _ftp_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Union[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
         """
         Helper function for setting up a FTP connection
 

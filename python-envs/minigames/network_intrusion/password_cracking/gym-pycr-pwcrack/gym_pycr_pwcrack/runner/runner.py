@@ -1,7 +1,7 @@
 """
 Generic runner for running experiments with pycr environments
 """
-from typing import Union
+from typing import Tuple
 import gym
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
@@ -27,7 +27,7 @@ class Runner:
         return Runner.train(config)
 
     @staticmethod
-    def train(config: ClientConfig) -> Union[ExperimentResult, ExperimentResult]:
+    def train(config: ClientConfig) -> Tuple[ExperimentResult, ExperimentResult]:
         """
         Trains an agent agent in the environment
 
@@ -35,7 +35,7 @@ class Runner:
         :return: trainresult, evalresult
         """
         env: PyCRPwCrackEnv = None
-        env = gym.make(config.env_name, env_config = config.env_config)
+        env = gym.make(config.env_name, env_config = config.env_config, cluster_config = config.cluster_config)
         agent: TrainAgent = None
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env, config.pg_agent_config)

@@ -1,7 +1,7 @@
 """
 Utility functions for experiments with the pycr environments
 """
-from typing import Union
+from typing import Tuple
 import io
 import json
 import jsonpickle
@@ -13,7 +13,7 @@ import sys
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
 
-def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Union[str, str]:
+def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
     Runs an inidividual experiment
 

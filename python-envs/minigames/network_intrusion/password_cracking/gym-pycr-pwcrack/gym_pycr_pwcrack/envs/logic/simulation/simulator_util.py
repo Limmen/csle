@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple
 import numpy as np
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
@@ -17,7 +17,7 @@ class SimulatorUtil:
 
     @staticmethod
     def simulate_port_vuln_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
-                                       protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> Union[EnvState, int]:
+                                       protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> Tuple[EnvState, int]:
         """
         Helper function for simulating port-scan and vuln-scan actions
 
@@ -120,7 +120,7 @@ class SimulatorUtil:
 
     @staticmethod
     def simulate_host_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float, os=False) -> \
-            Union[EnvState, int]:
+            Tuple[EnvState, int]:
         """
         Helper method for simulating a host-scan (i.e non-port scan) action
 
@@ -202,7 +202,7 @@ class SimulatorUtil:
 
     @staticmethod
     def simulate_dictionary_pw_exploit_same_user(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
-                                                 vuln_name : str) -> Union[EnvState, int]:
+                                                 vuln_name : str) -> Tuple[EnvState, int]:
         """
         Helper function for simulating dictionary scans against some service and with the constraint that
         only username-password combinations where username==password are tried.
@@ -322,7 +322,7 @@ class SimulatorUtil:
 
     @staticmethod
     def simulate_service_login_helper(s: EnvState, a: Action, env_config: EnvConfig, service_name : str = "ssh") \
-            -> Union[EnvState, int]:
+            -> Tuple[EnvState, int]:
         """
         Helper function for simulating login to various network services
 

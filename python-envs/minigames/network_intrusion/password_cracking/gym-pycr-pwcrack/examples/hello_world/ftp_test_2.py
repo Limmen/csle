@@ -193,7 +193,8 @@ def ftp_test():
     if shell.recv_ready():
         output = shell.recv(5000)
 
-    shell.send("lftp ftp://pi:pi@172.18.1.79\n")
+    #shell.send("lftp ftp://pi:pi@172.18.1.79\n")
+    shell.send("lftp ftp://ftp:ftp@172.18.1.79\n")
     time.sleep(0.2)
     if shell.recv_ready():
         output = shell.recv(5000)
@@ -211,15 +212,26 @@ def ftp_test():
 
     shell.send("find / | grep 'flag*'\n")
     output = b""
-    # clear output
-    if shell.recv_ready():
-        shell.recv(5000)
+    print("recv ready:{}".format(shell.recv_ready()))
+    # # clear output
+    # if shell.recv_ready():
+    #     shell.recv(5000)
     command_complete = False
+    max_timeouts = 3
+    timeouts = 0
     while not command_complete:
         while not shell.recv_ready():
             time.sleep(0.5)
+            #print("timeouts:{}".format(timeouts))
+            # if timeouts > max_timeouts:
+            #     break
+            timeouts += 1
+        # if shell.recv_ready():
+        #     output += shell.recv(10000000000)
+        #     timeouts = 0
+        # else:
+        #     break
         output += shell.recv(10000000000)
-        print("output:{}".format(output))
         if ":~>" in output.decode():
             command_complete = True
 

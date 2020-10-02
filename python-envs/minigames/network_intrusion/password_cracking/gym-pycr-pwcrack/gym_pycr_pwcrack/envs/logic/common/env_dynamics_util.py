@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Tuple
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
@@ -13,7 +13,7 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
                                new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
-            Union[List[MachineObservationState], int, int, int, int, int, int]:
+            Tuple[List[MachineObservationState], int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
@@ -65,7 +65,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \
-            -> Union[MachineObservationState, int, int, int, int, int, int]:
+            -> Tuple[MachineObservationState, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
 
@@ -89,7 +89,7 @@ class EnvDynamicsUtil:
         return n_m, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access, new_root, new_flag_pts
 
     @staticmethod
-    def merge_os(o_os: str, n_os: str) -> Union[str, int]:
+    def merge_os(o_os: str, n_os: str) -> Tuple[str, int]:
         """
         Helper function for merging an old machine observation OS with new information collected
 
@@ -105,7 +105,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_shell_access(o_m: MachineObservationState, n_m: MachineObservationState) -> \
-            Union[MachineObservationState, int]:
+            Tuple[MachineObservationState, int]:
         """
         Helper function for merging an old machine observation shell access with new information collected
 
@@ -195,7 +195,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_ports(o_ports: List[PortObservationState], n_ports: List[PortObservationState], acc: bool = True) \
-            -> Union[List[PortObservationState], int]:
+            -> Tuple[List[PortObservationState], int]:
         """
         Helper function for merging two port lists
 
@@ -228,7 +228,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_vulnerabilities(o_vuln: List[VulnerabilityObservationState], n_vuln: List[VulnerabilityObservationState],
-                              acc: bool = True) -> Union[List[VulnerabilityObservationState], int]:
+                              acc: bool = True) -> Tuple[List[VulnerabilityObservationState], int]:
         """
         Helper function for merging two vulnerability lists lists
 

@@ -12,7 +12,8 @@ class ClientConfig:
                  pg_agent_config: PolicyGradientAgentConfig = None,
                  output_dir:str = None, title = None,
                  env_config = None, run_many :bool = False,
-                 random_seeds : list = None, random_seed = 0, agent_type : int = 0):
+                 random_seeds : list = None, random_seed = 0, agent_type : int = 0,
+                 cluster_config = None):
         """
         Class constructor, initializes the DTO
 
@@ -26,6 +27,7 @@ class ClientConfig:
         :param random_seed: specific random seed
         :param pg_agent_config: policy gradient agent config
         :param agent_type: agent_type
+        :param cluster_config: cluster_config
         """
         self.env_name = env_name
         self.logger = None
@@ -37,3 +39,4 @@ class ClientConfig:
         self.random_seed = random_seed
         self.pg_agent_config = pg_agent_config
         self.agent_type = agent_type
+        self.cluster_config = cluster_config

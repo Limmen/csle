@@ -311,6 +311,7 @@ class FTP:
     DEFAULT_PORT = 21
     LOCALHOST = "127.0.0.1"
     LFTP_PROMPT = ":~>"
+    LFTP_PROMPT_2 = ":/>"
     LFTP_PREFIX = "lftp ftp://"
     ACCESS_FAILED = "Access failed"
 
@@ -325,6 +326,7 @@ class COMMANDS:
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "
+    SUDO = "sudo"
 
 class FILE_PATTERNS:
     COST_FILE_SUFFIX = "_cost.txt"

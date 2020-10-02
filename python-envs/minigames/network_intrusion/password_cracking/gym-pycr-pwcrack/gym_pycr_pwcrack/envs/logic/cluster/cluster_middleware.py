@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Tuple
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -14,7 +14,7 @@ class ClusterMiddleware:
     """
 
     @staticmethod
-    def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Union[EnvState, int, bool]:
+    def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
 
@@ -33,7 +33,7 @@ class ClusterMiddleware:
             raise ValueError("Action type not recognized")
 
     @staticmethod
-    def recon_action(s: EnvState, a: Action, env_config: EnvConfig):
+    def recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition of a reconnaissance action
 
@@ -66,7 +66,7 @@ class ClusterMiddleware:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
+    def exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements transition of an exploit action
 
@@ -97,7 +97,7 @@ class ClusterMiddleware:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig):
+    def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition of a post-exploit action
 
