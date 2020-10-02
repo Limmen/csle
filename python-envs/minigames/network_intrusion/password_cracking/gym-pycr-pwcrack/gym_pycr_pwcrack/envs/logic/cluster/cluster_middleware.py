@@ -114,5 +114,7 @@ class ClusterMiddleware:
             return PostExploitMiddleware.execute_ftp_login(s=s, a=a, env_config=env_config)
         if a.id == ActionId.TELNET_LOGIN:
             return PostExploitMiddleware.execute_telnet_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.FIND_FLAG:
+            return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))

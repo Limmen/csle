@@ -58,7 +58,7 @@ class EnvDynamicsUtil:
                 merged_machines.append(o_m)
 
         return merged_machines, total_new_ports_found, total_new_os_found, total_new_vuln_found, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts
+               total_new_shell_access, total_new_flag_pts, total_new_root
 
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \

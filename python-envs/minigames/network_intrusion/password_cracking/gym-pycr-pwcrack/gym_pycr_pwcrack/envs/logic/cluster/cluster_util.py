@@ -531,7 +531,7 @@ class ClusterUtil:
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts = \
+        total_new_shell_access, total_new_flag_pts, total_new_root = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -682,7 +682,7 @@ class ClusterUtil:
             s_prime = s
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                total_new_shell_access, total_new_flag_pts = \
+                total_new_shell_access, total_new_flag_pts, total_new_root = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
                 s_prime.obs_state.machines = new_machines_obs
 
@@ -742,7 +742,7 @@ class ClusterUtil:
 
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts = \
+            total_new_shell_access, total_new_flag_pts, total_new_root = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
             s_prime.obs_state.machines = new_machines_obs
 

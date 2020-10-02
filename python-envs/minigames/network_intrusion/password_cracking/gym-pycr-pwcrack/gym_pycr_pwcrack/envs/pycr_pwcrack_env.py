@@ -14,6 +14,7 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
+from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -131,7 +132,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         machine_discovered = False
         target_machine = None
+        logged_in = False
         for m in self.env_state.obs_state.machines:
+            if m.logged_in:
+                logged_in = True
             if m.ip == action.ip:
                 machine_discovered = True
                 target_machine = m
@@ -143,6 +147,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
         if machine_discovered and action.type == ActionType.POST_EXPLOIT \
                 and target_machine.shell_access and len(target_machine.shell_access_credentials) > 0:
+            return True
+
+        # Bash action not tied to specific IP only possible when having shell access and being logged in
+        if action.id == ActionId.FIND_FLAG and logged_in:
             return True
 
         return False

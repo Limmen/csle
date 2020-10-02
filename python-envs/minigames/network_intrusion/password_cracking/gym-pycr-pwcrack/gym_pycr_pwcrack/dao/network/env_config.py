@@ -6,7 +6,7 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
-
+from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystemScanCache
 
 class EnvConfig:
     """
@@ -70,6 +70,9 @@ class EnvConfig:
         self.nmap_scan_cache = NMAPScanCache()
         self.action_costs = ActionCosts()
         self.port_forward_next_port = 4000
+        self.flag_lookup = self._create_flags_lookup()
+        self.use_file_system_cache = True
+        self.filesystem_scan_cache = FileSystemScanCache()
 
     def get_port_forward_port(self) -> int:
         """
@@ -78,3 +81,15 @@ class EnvConfig:
         p = self.port_forward_next_port
         self.port_forward_next_port +=1
         return p
+
+    def _create_flags_lookup(self) -> dict:
+        """
+        Creates a lookup dict of (flagpath -> FlagDTO)
+
+        :return: returns dict of (flagpath -> FlagDTO)
+        """
+        flags_lookup = {}
+        for node in self.network_conf.nodes:
+            for flag in node.flags:
+                flags_lookup[(node.ip, flag.path + "/" + flag.name)] = flag
+        return flags_lookup

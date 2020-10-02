@@ -105,7 +105,7 @@ class SimulatorUtil:
 
                 new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts = \
+            total_new_shell_access, total_new_flag_pts, total_new_root = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
@@ -186,7 +186,7 @@ class SimulatorUtil:
                         m_obs.os = node.os
                     new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts = \
+            total_new_shell_access, total_new_flag_pts, total_new_root = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
@@ -305,7 +305,7 @@ class SimulatorUtil:
                 new_m_obs.append(m_obs)
 
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts = \
+            total_new_shell_access, total_new_flag_pts, total_new_root = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
