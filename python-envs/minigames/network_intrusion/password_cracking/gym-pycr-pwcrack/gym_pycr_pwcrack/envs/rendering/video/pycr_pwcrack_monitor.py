@@ -11,6 +11,9 @@ FILE_PREFIX = 'openaigym'
 MANIFEST_PREFIX = FILE_PREFIX + '.manifest'
 
 class PycrPwCrackMonitor(Wrapper):
+    """
+    Helper class that sets up the openAIgym environment for recording videos and GIFs
+    """
     def __init__(self, env, directory, video_callable=None, force=False, resume=False,
                  write_upon_reset=False, uid=None, mode=None, video_frequency = 1, openai_baseline = False):
         super(PycrPwCrackMonitor, self).__init__(env)
@@ -37,7 +40,8 @@ class PycrPwCrackMonitor(Wrapper):
         return observation, reward, done, info
 
     def reset(self, **kwargs):
-        # if (self.openai_baseline and len(self.episode_frames) > 0) or (self.openai_baseline and not self.openai_baseline_reset):
+        # if (self.openai_baseline and len(self.episode_frames) > 0) or (self.openai_baseline
+        # and not self.openai_baseline_reset):
         #     return
         self._before_reset()
         observation = self.env.reset(**kwargs)
@@ -52,19 +56,25 @@ class PycrPwCrackMonitor(Wrapper):
 
     def _start(self, directory, video_callable=None, force=False, resume=False,
               write_upon_reset=False, uid=None, mode=None):
-        """Start monitoring.
+        """
+        Start monitoring.
 
         Args:
             directory (str): A per-training run directory where to record stats.
-            video_callable (Optional[function, False]): function that takes in the index of the episode and outputs a boolean, indicating whether we should record a video on this episode. The default (for video_callable is None) is to take perfect cubes, capped at 1000. False disables video recording.
-            force (bool): Clear out existing training data from this directory (by deleting every file prefixed with "openaigym.").
+            video_callable (Optional[function, False]): function that takes in the index of the episode and outputs a boolean,
+            indicating whether we should record a video on this episode. The default (for video_callable is None)
+            is to take perfect cubes, capped at 1000. False disables video recording.
+            force (bool): Clear out existing training data from this directory (by deleting
+            every file prefixed with "openaigym.").
             resume (bool): Retain the training data already in this directory, which will be merged with our new data
-            write_upon_reset (bool): Write the manifest file on each reset. (This is currently a JSON file, so writing it is somewhat expensive.)
+            write_upon_reset (bool): Write the manifest file on each reset. (This is currently a JSON file,
+            so writing it is somewhat expensive.)
             uid (Optional[str]): A unique id used as part of the suffix for the file. By default, uses os.getpid().
             mode (['evaluation', 'training']): Whether this is an evaluation or training episode.
         """
         if self.env.spec is None:
-            logger.warn("Trying to monitor an environment which has no 'spec' set. This usually means you did not create it via 'gym.make', and is recommended only for advanced users.")
+            logger.warn("Trying to monitor an environment which has no 'spec' set. This usually means you did not "
+                        "create it via 'gym.make', and is recommended only for advanced users.")
             env_id = '(unknown)'
         else:
             env_id = self.env.spec.id
@@ -81,7 +91,8 @@ class PycrPwCrackMonitor(Wrapper):
         elif video_callable == False:
             video_callable = disable_videos
         elif not callable(video_callable):
-            raise error.Error('You must provide a function, None, or False for video_callable, not {}: {}'.format(type(video_callable), video_callable))
+            raise error.Error('You must provide a function, None, or False for video_callable, '
+                              'not {}: {}'.format(type(video_callable), video_callable))
         self.video_callable = video_callable
 
         # Check on whether we need to clear anything
@@ -92,7 +103,8 @@ class PycrPwCrackMonitor(Wrapper):
             if len(training_manifests) > 0:
                 raise error.Error('''Trying to write to monitor directory {} with existing monitor files: {}.
 
- You should use a unique directory for each training run, or use 'force=True' to automatically clear previous monitor files.'''.format(directory, ', '.join(training_manifests[:5])))
+ You should use a unique directory for each training run, or use 'force=True' to automatically clear 
+ previous monitor files.'''.format(directory, ', '.join(training_manifests[:5])))
 
         self._monitor_id = monitor_closer.register(self)
 
@@ -227,7 +239,8 @@ class PycrPwCrackMonitor(Wrapper):
         # TODO: calculate a more correct 'episode_id' upon merge
         self.video_recorder = pycr_pwcrack_video_recorder.PycrPwCrackVideoRecorder(
             env=self.env,
-            base_path=os.path.join(self.directory, '{}.video.{}.video{:06}'.format(self.file_prefix, self.file_infix, self.episode_id)),
+            base_path=os.path.join(self.directory, '{}.video.{}.video{:06}'.format(self.file_prefix, self.file_infix,
+                                                                                   self.episode_id)),
             metadata={'episode_id': self.episode_id},
             enabled=True
             #enabled=self._video_enabled(),
@@ -342,7 +355,8 @@ def load_results(training_dir):
             env_infos.append(contents['env_info'])
 
     env_info = collapse_env_infos(env_infos, training_dir)
-    data_sources, initial_reset_timestamps, timestamps, episode_lengths, episode_rewards, episode_types, initial_reset_timestamp = merge_stats_files(stats_files)
+    data_sources, initial_reset_timestamps, timestamps, episode_lengths, episode_rewards, episode_types, \
+    initial_reset_timestamp = merge_stats_files(stats_files)
 
     return {
         'manifests': manifests,
@@ -368,7 +382,8 @@ def merge_stats_files(stats_files):
     for i, path in enumerate(stats_files):
         with open(path) as f:
             content = json.load(f)
-            if len(content['timestamps'])==0: continue # so empty file doesn't mess up results, due to null initial_reset_timestamp
+            # so empty file doesn't mess up results, due to null initial_reset_timestamp
+            if len(content['timestamps'])==0: continue
             data_sources += [i] * len(content['timestamps'])
             timestamps += content['timestamps']
             episode_lengths += content['episode_lengths']
@@ -394,7 +409,8 @@ def merge_stats_files(stats_files):
     else:
         initial_reset_timestamp = 0
 
-    return data_sources, initial_reset_timestamps, timestamps, episode_lengths, episode_rewards, episode_types, initial_reset_timestamp
+    return data_sources, initial_reset_timestamps, timestamps, episode_lengths, episode_rewards, episode_types, \
+           initial_reset_timestamp
 
 # TODO training_dir isn't used except for error messages, clean up the layering
 def collapse_env_infos(env_infos, training_dir):
@@ -403,9 +419,11 @@ def collapse_env_infos(env_infos, training_dir):
     first = env_infos[0]
     for other in env_infos[1:]:
         if first != other:
-            raise error.Error('Found two unequal env_infos: {} and {}. This usually indicates that your training directory {} has commingled results from multiple runs.'.format(first, other, training_dir))
+            raise error.Error('Found two unequal env_infos: {} and {}. This usually indicates that your training '
+                              'directory {} has commingled results from multiple runs.'.format(first, other, training_dir))
 
     for key in ['env_id', 'gym_version']:
         if key not in first:
-            raise error.Error("env_info {} from training directory {} is missing expected key {}. This is unexpected and likely indicates a bug in gym.".format(first, training_dir, key))
+            raise error.Error("env_info {} from training directory {} is missing expected key {}. "
+                              "This is unexpected and likely indicates a bug in gym.".format(first, training_dir, key))
     return first

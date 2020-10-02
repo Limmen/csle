@@ -1,5 +1,4 @@
 from typing import Union
-import time
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action

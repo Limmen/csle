@@ -9,11 +9,11 @@ from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.agent.agent_log import AgentLog
 import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.envs.logic.transition_operator import TransitionOperator
-from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
+from gym_pycr_pwcrack.dao.action.action_type import ActionType
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -45,11 +45,14 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
             self.env_config.cluster_config.download_cves()
             self.env_state.merge_cves_with_cluster(self.env_config.cluster_config.cluster_cves)
+            self.env_config.action_costs = self.env_config.cluster_config.load_action_costs(
+                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir)
 
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,
                                       vuln_lookup=self.env_state.vuln_lookup,
                                       os_lookup=self.env_state.os_lookup)
+        self.last_obs = self.env_state.get_observation()
 
     # -------- API ------------
     def step(self, action_id : int) -> Union[np.ndarray, int, bool, dict]:
@@ -60,6 +63,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :return: (obs, reward, done, info)
         """
         info = {}
+        if not self.is_action_legal(action_id):
+            return self.last_obs, -1, False, info
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
@@ -68,6 +73,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if self.env_state.obs_state.detected:
             reward = reward - self.env_config.detection_reward
         m_obs, p_obs = self.env_state.get_observation()
+        self.last_obs = m_obs
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
         self.agent_state.obs_state = self.env_state.obs_state
@@ -86,6 +92,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.agent_state.num_all_flags += 1
         self.env_state.reset_state()
         m_obs, p_obs = self.env_state.get_observation()
+        self.last_obs = m_obs
         self.agent_state.num_episodes += 1
         self.agent_state.cumulative_reward += self.agent_state.episode_reward
         self.agent_state.time_step = 0
@@ -114,10 +121,31 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         return arr
 
     def is_action_legal(self, action_id : int):
-        if action_id <= len(self.env_config.action_conf.actions)-1:
-            return True
-        else:
+        if action_id > len(self.env_config.action_conf.actions) - 1:
             return False
+        action = self.env_config.action_conf.actions[action_id]
+
+        # Recon on subnet is always possible
+        if action.subnet:
+            return True
+
+        machine_discovered = False
+        target_machine = None
+        for m in self.env_state.obs_state.machines:
+            if m.ip == action.ip:
+                machine_discovered = True
+                target_machine = m
+
+        # If IP is discovered, then IP specific action without other prerequisites is legal
+        if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
+            return True
+
+        # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
+        if machine_discovered and action.type == ActionType.POST_EXPLOIT \
+                and target_machine.shell_access and len(target_machine.shell_access_credentials) > 0:
+            return True
+
+        return False
 
     def close(self) -> None:
         """
@@ -139,7 +167,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 tag = str(action.ip.rsplit(".", 1)[-1])
         else:
             tag = "*"
-        self.agent_state.env_log.add_entry(action.name + "[." + tag + "]")
+        self.agent_state.env_log.add_entry(action.name + "[." + tag + "]" + " c:" + str(action.cost))
 
     def __setup_viewer(self):
         """

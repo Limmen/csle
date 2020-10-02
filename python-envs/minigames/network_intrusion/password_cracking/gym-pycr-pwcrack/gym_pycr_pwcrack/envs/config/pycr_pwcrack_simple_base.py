@@ -1,3 +1,4 @@
+from typing import List
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.node import Node
 from gym_pycr_pwcrack.dao.network.flag import Flag
@@ -18,9 +19,17 @@ from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.network.credential import Credential
 
 class PyCrPwCrackSimpleBase:
-
+    """
+    Base configuration of level 1 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
+    and all the config of the environment have to be hardcoded)
+    """
     @staticmethod
-    def nodes():
+    def nodes() -> List[Node]:
+        """
+        Returns the configuration of all nodes in the environment
+
+        :return: list of node configs
+        """
         nodes = [Node(ip="172.18.1.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
                       os="linux", vulnerabilities=[], credentials=[
                 Credential(username="admin", pw="admin"),
@@ -171,7 +180,12 @@ class PyCrPwCrackSimpleBase:
         return nodes
 
     @staticmethod
-    def adj_matrix():
+    def adj_matrix() -> List:
+        """
+        Returns the adjacency matrix that defines the topology
+
+        :return: adjacency matrix
+        """
         adj_matrix = [
             [0, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 0, 0],
@@ -183,19 +197,28 @@ class PyCrPwCrackSimpleBase:
         return adj_matrix
 
     @staticmethod
-    def subnet_mask():
+    def subnet_mask() -> str:
+        """
+        :return: the subnet mask
+        """
         subnet_mask = "172.18.1.0/24"
         return subnet_mask
 
     @staticmethod
-    def network_conf():
+    def network_conf() -> NetworkConfig:
+        """
+        :return: The network configuration
+        """
         network_conf = NetworkConfig(subnet_mask=PyCrPwCrackSimpleBase.subnet_mask(),
                                      nodes=PyCrPwCrackSimpleBase.nodes(),
                                      adj_matrix=PyCrPwCrackSimpleBase.adj_matrix())
         return network_conf
 
     @staticmethod
-    def cluster_conf():
+    def cluster_conf() -> ClusterConfig:
+        """
+        :return: the default cluster config
+        """
         cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
                                        agent_username="agent", agent_pw="agent", server_connection=True,
                                        server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
@@ -203,7 +226,11 @@ class PyCrPwCrackSimpleBase:
         return cluster_config
 
     @staticmethod
-    def action_conf(network_conf : NetworkConfig):
+    def action_conf(network_conf : NetworkConfig) -> ActionConfig:
+        """
+        :param network_conf: the network config
+        :return: the action config
+        """
         action_config = ActionConfig(actions=[
 
             # --- ReCon ---
@@ -403,13 +430,23 @@ class PyCrPwCrackSimpleBase:
         return action_config
 
     @staticmethod
-    def render_conf():
+    def render_conf() -> RenderConfig:
+        """
+        :return: the render config
+        """
         render_config = RenderConfig()
         return render_config
 
     @staticmethod
     def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
-                   render_conf: RenderConfig):
+                   render_conf: RenderConfig) -> EnvConfig:
+        """
+        :param network_conf: the network config
+        :param action_conf: the action config
+        :param cluster_conf: the cluster config
+        :param render_conf: the render config
+        :return: The complete environment config
+        """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
                                num_sh=3,
                                render_config=render_conf, env_mode=EnvMode.SIMULATION, cluster_config=cluster_conf,

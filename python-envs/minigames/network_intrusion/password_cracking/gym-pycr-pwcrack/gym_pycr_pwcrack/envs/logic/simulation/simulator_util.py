@@ -396,6 +396,13 @@ class SimulatorUtil:
 
     @staticmethod
     def simulate_detection(a: Action, env_config: EnvConfig) -> bool:
+        """
+        Simulates probability that an attack is detected by a defender
+
+        :param a: the action
+        :param env_config: the environment config
+        :return: boolean, true if detected otherwise false
+        """
         if env_config.simulate_detection:
             return np.random.rand() < (a.noise + env_config.base_detection_p)
         else:

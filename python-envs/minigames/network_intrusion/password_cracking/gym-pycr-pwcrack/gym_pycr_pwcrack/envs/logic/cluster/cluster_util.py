@@ -59,6 +59,19 @@ class ClusterUtil:
         return outdata, errdata, total_time
 
     @staticmethod
+    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig):
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        file_name = env_config.nmap_cache_dir + str(action.id.value)
+        if not action.subnet:
+            file_name = file_name + "_" + action.ip
+        file_name = file_name + "_cost.txt"
+        remote_file = sftp_client.file(file_name, mode="w")
+        try:
+            remote_file.write(str(round(total_time, 1)) + "\n")
+        finally:
+            remote_file.close()
+
+    @staticmethod
     def execute_cmd_interactive(a: Action, env_config: EnvConfig) -> None:
         """
         Executes an action on the cluster using an interactive shell (non synchronous)
@@ -499,7 +512,8 @@ class ClusterUtil:
 
 
     @staticmethod
-    def merge_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action) -> Union[EnvState, float]:
+    def merge_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
+            -> Union[EnvState, float]:
         """
         Merges a NMAP scan result with an existing observation state
 
@@ -522,6 +536,9 @@ class ClusterUtil:
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 
+        # Use measured cost
+        if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
+            a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_vuln_found=total_new_vuln,
                                                  num_new_machines=total_new_machines,
@@ -549,7 +566,8 @@ class ClusterUtil:
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
-                s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=cache_value, s=s, a=a)
+                s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=cache_value, s=s, a=a,
+                                                                           env_config=env_config)
                 return s_prime, reward, False
 
         # Check On-disk cache
@@ -560,7 +578,8 @@ class ClusterUtil:
         if cache_result is None:
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
                                                                        conn=env_config.cluster_config.agent_conn)
-            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=total_time)
+            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
+            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
             cache_result = cache_id
 
         # Read result
@@ -572,7 +591,8 @@ class ClusterUtil:
                 ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
                 outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
                                                                            conn=env_config.cluster_config.agent_conn)
-                env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=total_time)
+                ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
+                env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
                 time.sleep(env_config.retry_timeout)
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
                 break
@@ -580,7 +600,8 @@ class ClusterUtil:
         scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
-        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a)
+        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a,
+                                                                   env_config=env_config)
         return s_prime, reward, False
 
 
@@ -664,6 +685,10 @@ class ClusterUtil:
                 total_new_shell_access, total_new_flag_pts = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
                 s_prime.obs_state.machines = new_machines_obs
+
+            # Use measured cost
+            if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
+                a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                      num_new_vuln_found=total_new_vuln,
                                                      num_new_machines=total_new_machines,
@@ -721,6 +746,9 @@ class ClusterUtil:
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine])
             s_prime.obs_state.machines = new_machines_obs
 
+        # Use measured cost
+        if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
+            a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_vuln_found=total_new_vuln,
                                                  num_new_machines=total_new_machines,

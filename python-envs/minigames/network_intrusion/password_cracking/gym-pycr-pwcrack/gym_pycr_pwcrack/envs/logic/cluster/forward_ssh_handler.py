@@ -6,6 +6,9 @@ except ImportError:
 import gym_pycr_pwcrack.constants.constants as constants
 
 class ForwardSSHHandler(SocketServer.BaseRequestHandler):
+    """
+    SSH Server for forwarding local port over a SSH tunnel
+    """
     def handle(self):
         chan = self.server.ssh_transport.open_channel(
             constants.SSH.DIRECT_CHANNEL,

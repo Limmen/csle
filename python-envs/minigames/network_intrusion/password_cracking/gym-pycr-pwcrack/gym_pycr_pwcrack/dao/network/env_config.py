@@ -7,13 +7,32 @@ from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 
+
 class EnvConfig:
+    """
+    Class containing the complete configuration of a pycrpwcrack env
+    """
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
                  num_sh : int,
                  render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01):
+        """
+        Initialize the config
+
+        :param network_conf: the network config
+        :param action_conf: the action config
+        :param num_ports: number of ports per machine in the state
+        :param num_vuln: number of vuln per machine to keep in state
+        :param num_sh: number of shell connections per machine to keep in state
+        :param render_config: the render config
+        :param env_mode: the env mode (e.g. cluster or sim)
+        :param cluster_config: the cluster config
+        :param simulate_detection: boolean flag whether to simulate detections or not
+        :param detection_reward: reward when a detection happens
+        :param base_detection_p: base detection probability for simulation
+        """
         self.network_conf = network_conf
         self.action_conf = action_conf
         self.num_nodes = len(network_conf.nodes)
@@ -53,6 +72,9 @@ class EnvConfig:
         self.port_forward_next_port = 4000
 
     def get_port_forward_port(self) -> int:
+        """
+        :return: Gets the next port to forward
+        """
         p = self.port_forward_next_port
         self.port_forward_next_port +=1
         return p

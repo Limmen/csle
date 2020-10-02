@@ -19,6 +19,12 @@ class MainFrame(pyglet.window.Window):
     """
 
     def __init__(self, env_config: EnvConfig, init_state : AgentState):
+        """
+        Initialize frame
+        :param env_config: trhe environment config
+        :param init_state: the initial state to render
+        """
+
         # call constructor of parent class
         super(MainFrame, self).__init__(height=700, width=1300, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
@@ -408,7 +414,12 @@ class MainFrame(pyglet.window.Window):
             else:
                 sp_fl[0].visible = False
 
-    def update_labels(self):
+    def update_labels(self) -> None:
+        """
+        Helper function that updates labels with the new state
+
+        :return: None
+        """
         self.c_r_label.text = str(self.state.cumulative_reward)
         self.n_e_label.text = str(self.state.num_episodes)
         self.r_label.text = str(self.state.episode_reward)
@@ -455,7 +466,12 @@ class MainFrame(pyglet.window.Window):
                 self.os_labels[o][1].text = os_name
 
 
-    def on_draw(self):
+    def on_draw(self) -> None:
+        """
+        Called every time the frame is updated
+
+        :return: None
+        """
         # Clear the window
         self.clear()
         # Draw batch with the frame contents
@@ -467,11 +483,22 @@ class MainFrame(pyglet.window.Window):
         # Make this window the current OpenGL rendering context
         self.switch_to()
 
-    def set_state(self, state : AgentState):
+    def set_state(self, state : AgentState) -> None:
+        """
+        Sets the render state
+
+        :param state: the new state
+        :return: None
+        """
         self.state = state
         self.state.initialize_render_state()
 
-    def new_window(self):
+    def new_window(self) -> None:
+        """
+        Helper function to reset state when creating a new window
+
+        :return: None
+        """
         self.batch = pyglet.graphics.Batch()
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)

@@ -1,6 +1,9 @@
+from typing import List
 import paramiko
 import time
 import gym_pycr_pwcrack.constants.constants as constants
+from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
+from gym_pycr_pwcrack.dao.action.action import Action
 
 class ClusterConfig:
     """
@@ -84,7 +87,12 @@ class ClusterConfig:
         print("Root access")
 
 
-    def _su_root(self):
+    def _su_root(self) -> None:
+        """
+        Uses an interactive channel to change to root account
+
+        :return: None
+        """
 
         # clear output
         if self.agent_channel.recv_ready():
@@ -107,7 +115,12 @@ class ClusterConfig:
             assert "root" in output_str
 
 
-    def download_cluster_services(self):
+    def download_cluster_services(self) -> None:
+        """
+        Downloads a list of services from the server to populate the lookup table
+
+        :return: None
+        """
         print("Downloading cluster services...")
         sftp_client = self.agent_conn.open_sftp()
         remote_file = sftp_client.open(constants.COMMON.SERVICES_FILE)
@@ -124,7 +137,12 @@ class ClusterConfig:
         print("{} services downloaded successfully".format(len(self.cluster_services)))
 
 
-    def download_cves(self):
+    def download_cves(self) -> None:
+        """
+        Downloads a list of CVEs from the server to populate the lookup table
+
+        :return: None
+        """
         print("Downloading CVEs...")
         sftp_client = self.agent_conn.open_sftp()
         remote_file = sftp_client.open(constants.COMMON.CVE_FILE, "r")
@@ -140,7 +158,40 @@ class ClusterConfig:
         print("{} cves downloaded successfully in {}s".format(len(self.cluster_cves), end - start))
 
 
-    def close(self):
+    def close(self) -> None:
+        """
+        Closes the cluster connection
+
+        :return: None
+        """
         self.agent_conn.close()
         self.relay_channel.close()
         self.server_conn.close()
+
+
+    def load_action_costs(self, actions: List[Action], dir: str) -> ActionCosts:
+        """
+        Loads measured action costs from the cluster
+
+        :param actions: list of actions
+        :return: action costs
+        """
+        print("Loading action costs from cluster..")
+        action_costs = ActionCosts()
+        sftp_client = self.agent_conn.open_sftp()
+        for a in actions:
+            file_name = dir + str(a.id.value)
+            if not a.subnet and a.ip is not None:
+                file_name = file_name + "_" + a.ip
+            file_name = file_name + "_cost.txt"
+            try:
+                remote_file = sftp_client.open(file_name, mode="r")
+                cost_str = remote_file.read()
+                cost = float(cost_str)
+                action_costs.add_cost(action_id=a.id, ip=a.ip, cost=cost)
+            except:
+                pass
+            finally:
+                remote_file.close()
+        print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs)))
+        return action_costs

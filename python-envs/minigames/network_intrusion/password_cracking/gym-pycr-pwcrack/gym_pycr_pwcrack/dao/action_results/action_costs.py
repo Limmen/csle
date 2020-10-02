@@ -15,3 +15,7 @@ class ActionCosts:
     def get_cost(self, action_id : ActionId, ip: str):
         key = (action_id, ip)
         return self.costs[key]
+
+    def exists(self, action_id: ActionId, ip: str):
+        key = (action_id, ip)
+        return key in self.costs

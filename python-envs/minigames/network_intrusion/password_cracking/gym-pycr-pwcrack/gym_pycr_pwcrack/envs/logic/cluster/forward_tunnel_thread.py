@@ -3,6 +3,9 @@ from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_server import ForwardSSHSer
 from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_handler import ForwardSSHHandler
 
 class ForwardTunnelThread(threading.Thread):
+    """
+    Thread that starts up a SSH tunnel that forwards a local port to a remote machine
+    """
 
     def __init__(self, local_port : int, remote_host : str, remote_port: int, transport):
         super().__init__()

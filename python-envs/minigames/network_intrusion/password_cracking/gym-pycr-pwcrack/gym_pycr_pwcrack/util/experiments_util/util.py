@@ -1,6 +1,7 @@
 """
-Utility functions for experiments with the cgc-bta-network
+Utility functions for experiments with the pycr environments
 """
+from typing import Union
 import io
 import json
 import jsonpickle
@@ -12,7 +13,15 @@ import sys
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
 
-def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0"):
+def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Union[str, str]:
+    """
+    Runs an inidividual experiment
+
+    :param config: the config of the experiment
+    :param random_seed: random seed
+    :param title: title of the experiment
+    :return: train_csv_path, eval_csv_path
+    """
     time_str = str(time.time())
     create_artefact_dirs(config.output_dir, random_seed)
     logger = setup_logger(title, config.output_dir + "/results/logs/" +
@@ -89,7 +98,6 @@ def setup_logger(name: str, logdir: str, time_str = None):
 
     # add the handlers to the logger
     logger.addHandler(fh)
-    #logger.addHandler(ch)
     return logger
 
 

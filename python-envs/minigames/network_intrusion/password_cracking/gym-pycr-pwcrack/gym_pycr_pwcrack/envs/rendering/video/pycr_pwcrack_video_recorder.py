@@ -43,7 +43,8 @@ class PycrPwCrackVideoRecorder(object):
             if 'ansi' in modes:
                 self.ansi_mode = True
             else:
-                logger.info('Disabling video recorder because {} neither supports video mode "rgb_array" nor "ansi".'.format(env))
+                logger.info('Disabling video recorder because {} neither supports video '
+                            'mode "rgb_array" nor "ansi".'.format(env))
                 # Whoops, turns out we shouldn't be enabled after all
                 self.enabled = False
                 return
@@ -68,8 +69,10 @@ class PycrPwCrackVideoRecorder(object):
         path_base, actual_ext = os.path.splitext(self.path)
 
         if actual_ext != required_ext:
-            hint = " HINT: The environment is text-only, therefore we're recording its text output in a structured JSON format." if self.ansi_mode else ''
-            raise error.Error("Invalid path given: {} -- must have file extension {}.{}".format(self.path, required_ext, hint))
+            hint = " HINT: The environment is text-only, therefore we're recording its text output " \
+                   "in a structured JSON format." if self.ansi_mode else ''
+            raise error.Error("Invalid path given: {} -- must have file extension {}.{}".format(
+                self.path, required_ext, hint))
         # Touch the file in any case, so we know it's present. (This
         # corrects for platform platform differences. Using ffmpeg on
         # OS X, the file is precreated, but not on Linux.
@@ -107,7 +110,8 @@ class PycrPwCrackVideoRecorder(object):
                     else:
                         # Indicates a bug in the environment: don't want to raise
                         # an error here.
-                        logger.warn('Env returned None on render(). Disabling further rendering for video recorder by marking as disabled: path=%s metadata_path=%s', self.path, self.metadata_path)
+                        logger.warn('Env returned None on render(). Disabling further rendering for video recorder '
+                                    'by marking as disabled: path=%s metadata_path=%s', self.path, self.metadata_path)
                         self.broken = True
                 else:
                     self.last_frame = frame
@@ -138,7 +142,8 @@ class PycrPwCrackVideoRecorder(object):
 
         # If broken, get rid of the output file, otherwise we'd leak it.
         if self.broken:
-            logger.info('Cleaning up paths for broken video recorder: path=%s metadata_path=%s', self.path, self.metadata_path)
+            logger.info('Cleaning up paths for broken video recorder: path=%s metadata_path=%s',
+                        self.path, self.metadata_path)
 
             # Might have crashed before even starting the output file, don't try to remove in that case.
             if os.path.exists(self.path):
@@ -192,7 +197,8 @@ class TextEncoder(object):
         elif isinstance(frame, StringIO):
             string = frame.getvalue()
         else:
-            raise error.InvalidFrame('Wrong type {} for {}: text frame must be a string or StringIO'.format(type(frame), frame))
+            raise error.InvalidFrame('Wrong type {} for {}: text frame must be a string or '
+                                     'StringIO'.format(type(frame), frame))
 
         frame_bytes = string.encode('utf-8')
 
@@ -200,7 +206,8 @@ class TextEncoder(object):
             raise error.InvalidFrame('Frame must end with a newline: """{}"""'.format(string))
 
         if six.b('\r') in frame_bytes:
-            raise error.InvalidFrame('Frame contains carriage returns (only newlines are allowed: """{}"""'.format(string))
+            raise error.InvalidFrame('Frame contains carriage returns (only newlines are '
+                                     'allowed: """{}"""'.format(string))
 
         self.frames.append(frame_bytes)
 
@@ -213,7 +220,8 @@ class TextEncoder(object):
         # https://rosettacode.org/wiki/Terminal_control/Cursor_positioning#Python
         clear_code = six.b("%c[2J\033[1;1H" % (27))
         # Decode the bytes as UTF-8 since JSON may only contain UTF-8
-        events = [ (frame_duration, (clear_code+frame.replace(six.b('\n'),six.b('\r\n'))).decode('utf-8'))  for frame in self.frames ]
+        events = [ (frame_duration, (clear_code+frame.replace(six.b('\n'),six.b('\r\n'))).decode('utf-8'))
+                   for frame in self.frames ]
 
         # Calculate frame size from the largest frames.
         # Add some padding since we'll get cut off otherwise.
@@ -245,7 +253,8 @@ class ImageEncoder(object):
         # Frame shape should be lines-first, so w and h are swapped
         h, w, pixfmt = frame_shape
         if pixfmt != 3 and pixfmt != 4:
-            raise error.InvalidFrame("Your frame has shape {}, but we require (w,h,3) or (w,h,4), i.e., RGB values for a w-by-h image, with an optional alpha channel.".format(frame_shape))
+            raise error.InvalidFrame("Your frame has shape {}, but we require (w,h,3) or (w,h,4), i.e., "
+                                     "RGB values for a w-by-h image, with an optional alpha channel.".format(frame_shape))
         self.wh = (w,h)
         self.includes_alpha = (pixfmt == 4)
         self.frame_shape = frame_shape
@@ -256,7 +265,10 @@ class ImageEncoder(object):
         elif distutils.spawn.find_executable('ffmpeg') is not None:
             self.backend = 'ffmpeg'
         else:
-            raise error.DependencyNotInstalled("""Found neither the ffmpeg nor avconv executables. On OS X, you can install ffmpeg via `brew install ffmpeg`. On most Ubuntu variants, `sudo apt-get install ffmpeg` should do it. On Ubuntu 14.04, however, you'll need to install avconv with `sudo apt-get install libav-tools`.""")
+            raise error.DependencyNotInstalled("""Found neither the ffmpeg nor avconv executables. 
+            On OS X, you can install ffmpeg via `brew install ffmpeg`. 
+            On most Ubuntu variants, `sudo apt-get install ffmpeg` should do it. 
+            On Ubuntu 14.04, however, you'll need to install avconv with `sudo apt-get install libav-tools`.""")
 
         self.start()
 
@@ -297,11 +309,14 @@ class ImageEncoder(object):
 
     def capture_frame(self, frame):
         if not isinstance(frame, (np.ndarray, np.generic)):
-            raise error.InvalidFrame('Wrong type {} for {} (must be np.ndarray or np.generic)'.format(type(frame), frame))
+            raise error.InvalidFrame('Wrong type {} for {} (must be np.ndarray or '
+                                     'np.generic)'.format(type(frame), frame))
         if frame.shape != self.frame_shape:
-            raise error.InvalidFrame("Your frame has shape {}, but the VideoRecorder is configured for shape {}.".format(frame.shape, self.frame_shape))
+            raise error.InvalidFrame("Your frame has shape {}, but the VideoRecorder is "
+                                     "configured for shape {}.".format(frame.shape, self.frame_shape))
         if frame.dtype != np.uint8:
-            raise error.InvalidFrame("Your frame has data type {}, but we require uint8 (i.e. RGB values from 0-255).".format(frame.dtype))
+            raise error.InvalidFrame("Your frame has data type {}, but we require uint8 "
+                                     "(i.e. RGB values from 0-255).".format(frame.dtype))
 
         if distutils.version.LooseVersion(np.__version__) >= distutils.version.LooseVersion('1.9.0'):
             self.proc.stdin.write(frame.tobytes())
