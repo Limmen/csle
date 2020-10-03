@@ -152,7 +152,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_step = 0
 
         callback.on_rollout_start()
-
+        dones = False
         while n_steps < n_rollout_steps:
             if self.use_sde and self.sde_sample_freq > 0 and n_steps % self.sde_sample_freq == 0:
                 # Sample a new noise matrix
@@ -165,7 +165,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             # Give access to local variables
             callback.update_locals(locals())
             if callback.on_step(iteration=self.iteration) is False:
-                return False
+                episode_rewards.append(episode_reward)
+                episode_steps.append(episode_step)
+                return False, episode_rewards, episode_steps
 
             # Record step metrics
             self._update_info_buffer(infos)
@@ -186,7 +188,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         rollout_buffer.compute_returns_and_advantage(values, dones=dones)
 
         callback.on_rollout_end()
-
+        if not dones:
+            episode_rewards.append(episode_reward)
+            episode_steps.append(episode_step)
         return True, episode_rewards, episode_steps
 
     def train(self) -> None:
@@ -214,7 +218,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         self.iteration = 0
         total_timesteps, callback = self._setup_learn(
-            total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps, tb_log_name
+            total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps,
+            tb_log_name
         )
 
         callback.on_training_start(locals(), globals())
@@ -231,7 +236,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         while self.iteration < self.pg_agent_config.num_iterations:
 
-            continue_training, rollouts_rewards, rollouts_steps  = self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+            continue_training, rollouts_rewards, rollouts_steps  = self.collect_rollouts(self.env, callback,
+                                                                                         self.rollout_buffer,
+                                                                                         n_rollout_steps=self.n_steps)
 
             episode_rewards.extend(rollouts_rewards)
             episode_steps.extend(rollouts_steps)
