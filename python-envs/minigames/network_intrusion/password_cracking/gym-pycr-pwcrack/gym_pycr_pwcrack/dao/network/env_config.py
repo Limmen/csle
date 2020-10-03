@@ -77,6 +77,17 @@ class EnvConfig:
         self.filesystem_scan_cache = FileSystemScanCache()
         self.filesystem_file_cache = []
 
+        self.flag_found_reward_mult = 20
+        self.port_found_reward_mult = 1
+        self.os_found_reward_mult = 1
+        self.vuln_found_reward_mult = 1
+        self.machine_found_reward_mult = 1
+        self.shell_access_found_reward_mult = 5
+        self.root_found_reward_mult = 5
+        self.cost_coefficient = 1
+        self.detection_reward = -10
+        self.all_flags_reward = 100
+
     def get_port_forward_port(self) -> int:
         """
         :return: Gets the next port to forward

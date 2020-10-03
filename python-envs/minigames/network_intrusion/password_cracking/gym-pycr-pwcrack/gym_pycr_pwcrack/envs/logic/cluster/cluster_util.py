@@ -635,7 +635,8 @@ class ClusterUtil:
                                                  num_new_shell_access=total_new_shell_access,
                                                  num_new_root=total_new_root,
                                                  num_new_flag_pts=total_new_flag_pts,
-                                                 cost=a.cost)
+                                                 cost=a.cost,
+                                                 env_config=env_config)
         return s_prime, reward
 
     @staticmethod
@@ -786,7 +787,8 @@ class ClusterUtil:
                                                      num_new_shell_access=total_new_shell_access,
                                                      num_new_root=total_new_root,
                                                      num_new_flag_pts=total_new_flag_pts,
-                                                     cost=a.cost)
+                                                     cost=a.cost,
+                                                     env_config=env_config)
             return s_prime, reward, False
 
         # If not logged in and there are credentials, setup a new connection
@@ -847,7 +849,8 @@ class ClusterUtil:
                                                  num_new_shell_access=total_new_shell_access,
                                                  num_new_root=total_new_root,
                                                  num_new_flag_pts=total_new_flag_pts,
-                                                 cost=a.cost)
+                                                 cost=a.cost,
+                                                 env_config=env_config)
         return s_prime, reward, False
 
 

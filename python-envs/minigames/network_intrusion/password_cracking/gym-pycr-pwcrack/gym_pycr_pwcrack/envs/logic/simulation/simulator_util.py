@@ -82,7 +82,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
 
         # Scan action on a whole subnet
         else:
@@ -115,7 +115,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
         return s_prime, reward
 
     @staticmethod
@@ -174,7 +174,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
 
         # Scan a whole subnetwork
         else:
@@ -197,7 +197,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
         return s_prime, reward
 
     @staticmethod
@@ -274,7 +274,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
 
         # Scan action on a whole subnet
         else:
@@ -315,7 +315,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   cost=a.cost)
+                                                   cost=a.cost, env_config=env_config)
 
         return s_prime, reward
 
@@ -390,20 +390,24 @@ class SimulatorUtil:
                                                num_new_shell_access=total_new_shell_access,
                                                num_new_root=total_new_root,
                                                num_new_flag_pts=total_new_flag_pts,
-                                               cost=a.cost)
+                                               cost=a.cost, env_config=env_config)
         return s_prime, reward
 
 
     @staticmethod
-    def simulate_detection(a: Action, env_config: EnvConfig) -> bool:
+    def simulate_detection(a: Action, env_config: EnvConfig) -> Tuple[bool, int]:
         """
         Simulates probability that an attack is detected by a defender
 
         :param a: the action
         :param env_config: the environment config
-        :return: boolean, true if detected otherwise false
+        :return: boolean, true if detected otherwise false, reward
         """
         if env_config.simulate_detection:
-            return np.random.rand() < (a.noise + env_config.base_detection_p)
+            detected = np.random.rand() < (a.noise + env_config.base_detection_p)
+            r = env_config.detection_reward
+            if not detected:
+                r = 0
+            return detected, r
         else:
-            return False
+            return False, 0

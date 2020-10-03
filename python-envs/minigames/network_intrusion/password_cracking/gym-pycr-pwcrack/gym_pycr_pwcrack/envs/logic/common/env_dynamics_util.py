@@ -261,7 +261,7 @@ class EnvDynamicsUtil:
     @staticmethod
     def reward_function(num_new_ports_found: int = 0, num_new_os_found: int = 0, num_new_vuln_found: int = 0,
                         num_new_machines: int = 0, num_new_shell_access: int = 0, num_new_root: int = 0,
-                        num_new_flag_pts: int = 0, cost: float = 0.0) -> int:
+                        num_new_flag_pts: int = 0, cost: float = 0.0, env_config: EnvConfig  = None) -> int:
         """
         Implements the reward function
 
@@ -272,10 +272,17 @@ class EnvDynamicsUtil:
         :param num_new_shell_access: number of new shell access to different machines
         :param num_new_root: number of new root access to different machines
         :param cost: cost of the action that was performed
+        :param env_config: env config
         :return: reward
         """
-        reward = num_new_ports_found + num_new_os_found + num_new_vuln_found + num_new_machines \
-                 + num_new_shell_access + num_new_root + num_new_flag_pts
+        reward = env_config.port_found_reward_mult*num_new_ports_found + \
+                 env_config.os_found_reward_mult*num_new_os_found + \
+                 env_config.vuln_found_reward_mult*num_new_vuln_found + \
+                 env_config.machine_found_reward_mult*num_new_machines + \
+                 env_config.shell_access_found_reward_mult*num_new_shell_access + \
+                 env_config.root_found_reward_mult*num_new_root + \
+                 env_config.flag_found_reward_mult* num_new_flag_pts
+        cost = cost*env_config.cost_coefficient
         reward = int((reward - cost))
         return reward
 
