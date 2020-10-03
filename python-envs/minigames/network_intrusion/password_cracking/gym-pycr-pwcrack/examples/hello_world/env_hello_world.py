@@ -17,7 +17,7 @@ def test_env(env_name : str, num_steps : int):
         env.render()
         if done:
             env.reset()
-        time.sleep(0.5)
+        time.sleep(0.001)
     env.reset()
     env.close()
 

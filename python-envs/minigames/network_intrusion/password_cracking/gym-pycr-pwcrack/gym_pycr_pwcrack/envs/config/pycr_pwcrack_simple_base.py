@@ -62,7 +62,10 @@ class PyCrPwCrackSimpleBase:
                       ],
                       vulnerabilities=[
                           Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
-                                        credentials=["puppet:puppet"],
+                                        credentials=[
+                                            Credential(username="puppet", pw="puppet",
+                                                       protocol=TransportProtocol.TCP, service="ssh")
+                                        ],
                                         port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                         port=22, protocol=TransportProtocol.TCP),
@@ -112,7 +115,9 @@ class PyCrPwCrackSimpleBase:
                                        protocol=TransportProtocol.TCP),
                          Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
                                        protocol=TransportProtocol.TCP),
-                         Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=["admin:admin"],
+                         Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[
+                             Credential(username="admin", pw="admin")
+                         ],
                                        port=23, protocol=TransportProtocol.TCP, service="telnet")
                      ]
                       ),
@@ -166,7 +171,9 @@ class PyCrPwCrackSimpleBase:
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                         port=22,
                                         protocol=TransportProtocol.TCP),
-                          Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=["pi:pi"],
+                          Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=[
+                              Credential(username="pi", pw="pi")
+                          ],
                                         port=21, protocol=TransportProtocol.TCP, service="ftp")
                       ]
                       ),

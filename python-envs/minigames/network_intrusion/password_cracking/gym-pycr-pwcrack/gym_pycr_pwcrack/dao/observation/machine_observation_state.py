@@ -36,4 +36,6 @@ class MachineObservationState:
         self.vuln = sorted(self.vuln, key=lambda x: vuln_lookup[x.name], reverse=False)
 
     def sort_shell_access(self, service_lookup):
-        self.shell_access_credentials = sorted(self.shell_access_credentials, key=lambda x: service_lookup[x.service], reverse=False)
+        self.shell_access_credentials = sorted(self.shell_access_credentials,
+                                               key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
+                                               reverse=False)

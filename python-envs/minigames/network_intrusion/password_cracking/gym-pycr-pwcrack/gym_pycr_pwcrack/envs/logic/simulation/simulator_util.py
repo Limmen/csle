@@ -354,7 +354,7 @@ class SimulatorUtil:
 
                     if new_m_obs.logged_in:
                         for cr in credentials:
-                            cr_user = cr.split(":")[0]
+                            cr_user = cr.username
                             if cr_user in node.root:
                                 new_m_obs.root = True
 
