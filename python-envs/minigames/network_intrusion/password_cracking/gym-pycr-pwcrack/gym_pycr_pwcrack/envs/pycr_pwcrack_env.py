@@ -28,7 +28,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                   num_vuln=self.env_config.num_vuln, num_sh=self.env_config.num_sh,
                                   service_lookup=constants.SERVICES.service_lookup,
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
-                                  os_lookup=constants.OS.os_lookup)
+                                  os_lookup=constants.OS.os_lookup, num_flags=self.env_config.num_flags)
         self.observation_space = self.env_state.observation_space
         self.action_space = self.env_config.action_conf.action_space
         self.num_actions = self.env_config.action_conf.num_actions
@@ -78,12 +78,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
-        st = time.time()
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
-        end = time.time()
-        total_time = end - st
-        if total_time>1:
-            print("action:{}, time:{}".format(action_id, total_time))
         if self.agent_state.time_step > self.env_config.max_episode_length:
             done = True
         self.env_state = s_prime
@@ -95,6 +90,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.agent_state.episode_reward += reward
         self.agent_state.obs_state = self.env_state.obs_state
         self.__update_log(action)
+        info["flags"] = self.env_state.obs_state.catched_flags
         return m_obs, reward, done, info
 
     def reset(self) -> np.ndarray:
@@ -103,6 +99,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
+        self.__checkpoint_log()
         if self.env_state.obs_state.detected:
             self.agent_state.num_detections += 1
         elif self.env_state.obs_state.all_flags:
@@ -208,6 +205,20 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.viewer = Viewer(env_config=self.env_config, init_state=self.agent_state)
         self.viewer.start()
 
+
+    def __checkpoint_log(self) -> None:
+        """
+        Checkpoints the agent log for an episode
+
+        :return: None
+        """
+        if not self.env_config.checkpoint_dir == None \
+                and self.agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
+            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_agent.log"
+            with open(file_path, "w") as outfile:
+                outfile.write("\n".join(self.agent_state.env_log.log))
+
+
 # -------- Concrete envs ------------
 
 # -------- Difficulty 1 (Simple) ------------
@@ -217,7 +228,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 # -------- Version 1 ------------
 class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
 
-    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig):
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrPwCrackSimpleBase.render_conf()
             network_conf = PyCrPwCrackSimpleBase.network_conf()
@@ -225,14 +236,16 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
             env_config.simulate_detection = True
-            #env_config.simulate_detection = False
+            # env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.SIMULATION
+            env_config.checkpoint_dir = checkpoint_dir
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------
 
 # -------- Version 1 ------------
 class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
-    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig):
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrPwCrackSimpleBase.render_conf()
             if cluster_config is None:
@@ -242,7 +255,7 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
-
+            env_config.checkpoint_dir = checkpoint_dir
         super().__init__(env_config=env_config)
 
 

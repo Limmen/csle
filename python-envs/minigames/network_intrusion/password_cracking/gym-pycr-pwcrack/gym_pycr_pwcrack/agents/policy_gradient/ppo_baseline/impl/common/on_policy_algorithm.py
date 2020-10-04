@@ -147,6 +147,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         # Avg metrics
         episode_rewards = []
         episode_steps = []
+        episode_flags = []
+        episode_flags_percentage = []
 
         # Per episode metrics
         episode_reward = 0
@@ -161,21 +163,23 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
             new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(env, rollout_buffer)
 
+            # Record step metrics
             self.num_timesteps += env.num_envs
+            self._update_info_buffer(infos)
+            n_steps += 1
+            self.num_timesteps += env.num_envs
+            episode_reward += rewards
+            episode_step += 1
 
             # Give access to local variables
             callback.update_locals(locals())
             if callback.on_step(iteration=self.iteration) is False:
                 episode_rewards.append(episode_reward)
                 episode_steps.append(episode_step)
+                episode_flags.append(infos[0]["flags"])
+                print("test:{}".format(infos[0]["flags"]/self.env.envs[0].env_config.num_flags))
+                episode_flags_percentage.append(infos[0]["flags"]/self.env.envs[0].env_config.num_flags)
                 return False, episode_rewards, episode_steps
-
-            # Record step metrics
-            self._update_info_buffer(infos)
-            n_steps += 1
-            self.num_timesteps += env.num_envs
-            episode_reward += rewards
-            episode_step += 1
 
             if dones:
                 # Record episode metrics
@@ -183,6 +187,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.num_episodes_total += 1
                 episode_rewards.append(episode_reward)
                 episode_steps.append(episode_step)
+                episode_flags.append(infos[0]["flags"])
+                episode_flags_percentage.append(infos[0]["flags"] / self.env.envs[0].env_config.num_flags)
                 episode_reward = 0
                 episode_step = 0
 
@@ -192,7 +198,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         if not dones:
             episode_rewards.append(episode_reward)
             episode_steps.append(episode_step)
-        return True, episode_rewards, episode_steps
+        return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage
 
     def train(self) -> None:
         """
@@ -229,20 +235,21 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         # Tracking metrics
         episode_rewards = []
-        episode_rewards_a = []
+        episode_flags = []
         episode_steps = []
-        episode_avg_loss = []
-        episode_avg_loss_a = []
+        episode_loss = []
+        episode_flags_percentage = []
         lr = 0.0
 
         while self.iteration < self.pg_agent_config.num_iterations:
 
-            continue_training, rollouts_rewards, rollouts_steps  = self.collect_rollouts(self.env, callback,
-                                                                                         self.rollout_buffer,
-                                                                                         n_rollout_steps=self.n_steps)
+            continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage = \
+                self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
 
             episode_rewards.extend(rollouts_rewards)
             episode_steps.extend(rollouts_steps)
+            episode_flags.extend(rollouts_flags)
+            episode_flags_percentage.extend(rollouts_flags_percentage)
 
             if continue_training is False:
                 break
@@ -253,16 +260,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.iteration % self.pg_agent_config.train_log_frequency == 0:
                 self.log_metrics(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
-                                 episode_avg_loss=episode_avg_loss,
+                                 episode_avg_loss=episode_loss,
                                  eval=False, lr=self.lr_schedule(self.num_timesteps),
                                  total_num_episodes=self.num_episodes_total,
-                                 episode_steps=episode_steps)
+                                 episode_steps=episode_steps,
+                                 episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage)
                 episode_rewards = []
-                episode_rewards_a = []
-                episode_avg_loss = []
-                episode_avg_loss = []
-                episode_avg_loss_a = []
+                episode_loss = []
+                episode_flags = []
                 episode_steps = []
+                episode_flags_percentage = []
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations
@@ -276,7 +283,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         self.pg_agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
             entropy_loss, pg_loss, value_loss, lr = self.train()
-            episode_avg_loss.append(entropy_loss + pg_loss + value_loss)
+            episode_loss.append(entropy_loss + pg_loss + value_loss)
 
         callback.on_training_end()
 

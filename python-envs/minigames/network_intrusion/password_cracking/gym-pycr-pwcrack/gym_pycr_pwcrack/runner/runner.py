@@ -35,7 +35,8 @@ class Runner:
         :return: trainresult, evalresult
         """
         env: PyCRPwCrackEnv = None
-        env = gym.make(config.env_name, env_config = config.env_config, cluster_config = config.cluster_config)
+        env = gym.make(config.env_name, env_config = config.env_config, cluster_config = config.cluster_config,
+                       checkpoint_dir = config.env_checkpoint_dir)
         agent: TrainAgent = None
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env, config.pg_agent_config)

@@ -6,12 +6,14 @@ from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
 class EnvState:
 
     def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int, num_sh : int,
+                 num_flags : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None):
         self.network_config = network_config
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
         self.num_vuln = num_vuln
         self.num_sh = num_sh
+        self.num_flags = num_flags
         self.vuln_lookup = vuln_lookup
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
         self.service_lookup = service_lookup
@@ -111,7 +113,8 @@ class EnvState:
                 for c in m.ftp_connections:
                     self.cached_ftp_connections[(m.ip, c.username, c.port)] = c
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes), num_ports=self.num_ports,
-                                          num_vuln=self.num_vuln, num_sh=self.num_sh)
+                                          num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
+                                          catched_flags=0)
 
 
     def merge_services_with_cluster(self, cluster_services):

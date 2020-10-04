@@ -15,6 +15,7 @@
         "server_private_key_file": null,
         "server_username": null
     },
+    "env_checkpoint_dir": null,
     "env_config": null,
     "env_name": "pycr-pwcrack-simple-cluster-v1",
     "logger": null,
@@ -61,7 +62,7 @@
         "mini_batch_size": 64,
         "multi_input_channel": false,
         "num_episodes": 5000,
-        "num_iterations": 1000000000,
+        "num_iterations": 25,
         "optimization_iterations": 10,
         "optimizer": "Adam",
         "output_dim": 114,
@@ -93,11 +94,8 @@
     "random_seed": 399,
     "random_seeds": [
         0,
-        999,
-        299,
-        399,
-        499
+        999
     ],
-    "run_many": false,
+    "run_many": true,
     "title": "PPO-Baseline v0"
 }

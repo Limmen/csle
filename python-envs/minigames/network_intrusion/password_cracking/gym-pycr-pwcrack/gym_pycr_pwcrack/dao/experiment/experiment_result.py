@@ -13,7 +13,8 @@ class ExperimentResult:
                  avg_episode_rewards_a: List[float] = None,
                  avg_episode_steps: List[int] = None, epsilon_values: List[float] = None,
                  cumulative_reward: List[int] = None, avg_episode_loss: List[float] = None,
-                 lr_list : List[float] = None):
+                 lr_list : List[float] = None, avg_episode_flags : List[int] = None,
+                 avg_episode_flags_percentage: List[float] = None):
         """
         Constructor, initializes the DTO
 
@@ -23,6 +24,8 @@ class ExperimentResult:
         :param cumulative_reward: list of attacker cumulative rewards
         :param avg_episode_loss: average loss for attacker
         :param lr_list: learning rates
+        :param avg_episode_flags: avg number of flags catched per episode
+        :param avg_episode_flags_percentage: avg % of flags catched per episode
         """
         self.avg_episode_rewards = avg_episode_rewards
         self.avg_episode_rewards_a = avg_episode_rewards_a
@@ -31,6 +34,8 @@ class ExperimentResult:
         self.cumulative_reward = cumulative_reward
         self.avg_episode_loss = avg_episode_loss
         self.lr_list = lr_list
+        self.avg_episode_flags = avg_episode_flags
+        self.avg_episode_flags_percentage = avg_episode_flags_percentage
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -45,6 +50,10 @@ class ExperimentResult:
             self.avg_episode_loss = []
         if lr_list is None:
             self.lr_list = []
+        if avg_episode_flags is None:
+            self.avg_episode_flags = []
+        if avg_episode_flags_percentage is None:
+            self.avg_episode_flags_percentage = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -54,10 +63,11 @@ class ExperimentResult:
         :return: None
         """
         metrics = [self.avg_episode_rewards, self.avg_episode_rewards_a, self.avg_episode_steps, self.epsilon_values,
-                   self.cumulative_reward, self.avg_episode_loss, self.lr_list]
+                   self.cumulative_reward, self.avg_episode_loss, self.lr_list, self.avg_episode_flags,
+                   self.avg_episode_flags_percentage]
         metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
                          "epsilon_values", "cumulative_reward", "avg_episode_loss",
-                         "lr_list"]
+                         "lr_list", "avg_episode_flags", "avg_episode_flags_percentage"]
         filtered_metric_labels = []
         filtered_metrics = []
         for i in range(len(metrics)):

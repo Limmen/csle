@@ -50,6 +50,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
     # Tracking metrics
     episode_rewards = []
     episode_steps = []
+    episode_flags = []
+    episode_flags_percentage = []
 
     env.envs[0].enabled = True
     env.envs[0].stats_recorder.closed = False
@@ -87,6 +89,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         # Record episode metrics
         episode_rewards.append(episode_reward)
         episode_steps.append(episode_length)
+        episode_flags.append(_info[0]["flags"])
+        episode_flags_percentage.append(_info[0]["flags"]/env.envs[0].env_config.num_flags)
 
         # Update eval stats
         model.num_eval_episodes += 1
@@ -95,7 +99,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         # Log average metrics every <self.config.eval_log_frequency> episodes
         if episode % pg_agent_config.eval_log_frequency == 0:
             model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
-                              episode_steps=episode_steps, eval=True)
+                              episode_steps=episode_steps, eval=True, episode_flags = episode_flags,
+                              episode_flags_percentage=episode_flags_percentage)
 
         # Save gifs
         if pg_agent_config.gifs or pg_agent_config.video:
@@ -111,7 +116,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
 
     # Log average eval statistics
     model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
-                      episode_steps=episode_steps, eval=True)
+                      episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
+                      episode_flags_percentage=episode_flags_percentage)
 
     mean_reward = np.mean(episode_rewards)
     std_reward = np.std(episode_rewards)

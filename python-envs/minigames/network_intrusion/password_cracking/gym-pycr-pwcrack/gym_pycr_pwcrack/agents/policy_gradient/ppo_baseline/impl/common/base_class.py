@@ -195,7 +195,8 @@ class BaseAlgorithm(ABC):
 
     def log_metrics(self, iteration: int, result: ExperimentResult, episode_rewards: list,
                     episode_steps: list, episode_avg_loss: list = None,
-                    eval: bool = False, lr: float = None, total_num_episodes: int = 0) -> None:
+                    eval: bool = False, lr: float = None, total_num_episodes: int = 0,
+                    episode_flags : list = None, episode_flags_percentage: list = None) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -207,9 +208,13 @@ class BaseAlgorithm(ABC):
         :param eval: boolean flag whether the metrics are logged in an evaluation context.
         :param lr: the learning rate of the attacker
         :param total_num_episodes: number of training episodes
+        :param episode_flags: number of flags catched per episode
+        :param episode_flags_percentage: percentage of flags catched per episode
         :return: None
         """
         avg_episode_rewards = np.mean(episode_rewards)
+        avg_episode_flags = np.mean(episode_flags)
+        avg_episode_flags_percentage = np.mean(episode_flags_percentage)
         if lr is None:
             lr = 0.0
         if not eval and episode_avg_loss is not None:
@@ -219,28 +224,34 @@ class BaseAlgorithm(ABC):
 
         avg_episode_steps = np.mean(episode_steps)
         if eval:
-            log_str = "[Eval] iter:{},avg_R:{:.2f}, avg_t:{:.2f}, lr:{:.2E}".format(
-                iteration, avg_episode_rewards, avg_episode_steps, lr)
+            log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}".format(
+                iteration, avg_episode_rewards, avg_episode_steps, lr, avg_episode_flags,
+                avg_episode_flags_percentage)
         else:
             log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R:{:.2f},avg_t:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{}".format(
+                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F:{:.2f},avg_F%:{:.2f}".format(
                 iteration, self.pg_agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
-                lr, total_num_episodes)
+                lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage)
         self.pg_agent_config.logger.info(log_str)
         print(log_str)
         if self.pg_agent_config.tensorboard:
             self.log_tensorboard(iteration, avg_episode_rewards,avg_episode_steps,
-                                 avg_episode_loss, self.pg_agent_config.epsilon, lr, eval=eval)
+                                 avg_episode_loss, self.pg_agent_config.epsilon, lr, eval=eval,
+                                 avg_flags_catched=avg_episode_flags,
+                                 avg_episode_flags_percentage=avg_episode_flags_percentage)
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.avg_episode_rewards.append(avg_episode_rewards)
         result.epsilon_values.append(self.pg_agent_config.epsilon)
         result.avg_episode_loss.append(avg_episode_loss)
+        result.avg_episode_flags.append(avg_episode_flags)
+        result.avg_episode_flags_percentage.append(avg_episode_flags_percentage)
         result.lr_list.append(lr)
 
     def log_tensorboard(self, episode: int, avg_episode_rewards: float,
                         avg_episode_steps: float, episode_avg_loss: float,
-                        epsilon: float, lr: float, eval=False) -> None:
+                        epsilon: float, lr: float, eval=False, avg_flags_catched : int = 0,
+                        avg_episode_flags_percentage : list = None) -> None:
         """
         Log metrics to tensorboard
 
@@ -251,6 +262,8 @@ class BaseAlgorithm(ABC):
         :param epsilon: the exploration rate
         :param lr: the learning rate of the attacker
         :param eval: boolean flag whether eval or not
+        :param avg_flags_catched: avg number of flags catched per episode
+        :param avg_episode_flags_percentage: avg percentage of flags catched per episode
         :return: None
         """
         train_or_eval = "eval" if eval else "train"
@@ -258,7 +271,10 @@ class BaseAlgorithm(ABC):
                                            avg_episode_rewards, episode)
         self.tensorboard_writer.add_scalar('episode_steps/' + train_or_eval, avg_episode_steps, episode)
         self.tensorboard_writer.add_scalar('episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
-        self.tensorboard_writer.add_scalar('epsilon', epsilon, episode)
+        self.tensorboard_writer.add_scalar('epsilon/' + train_or_eval, epsilon, episode)
+        self.tensorboard_writer.add_scalar('avg_episode_flags/' + train_or_eval, avg_flags_catched, episode)
+        self.tensorboard_writer.add_scalar('avg_episode_flags_percentage/' + train_or_eval,
+                                           avg_episode_flags_percentage, episode)
         if not eval:
             self.tensorboard_writer.add_scalar('lr', lr, episode)
 

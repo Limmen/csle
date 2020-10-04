@@ -1,8 +1,10 @@
 import os
+import glob
 from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
+from gym_pycr_pwcrack.util.experiments_util import plotting_util
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 
 def default_config() -> ClientConfig:
@@ -13,7 +15,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=1000000000,
+                                                num_iterations=25,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -40,8 +42,9 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v0",
-                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
+                                 run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_config=cluster_config)
+    #random_seeds=[0, 999, 299, 399, 499]
     return client_config
 
 
@@ -61,6 +64,7 @@ def write_default_config(path:str = None) -> None:
 # Program entrypoint
 if __name__ == '__main__':
 
+    # Setup
     args = util.parse_args(util.default_config_path())
     experiment_title = "PPO simple v1 cluster"
     if args.configpath is not None and not args.noconfig:
@@ -69,18 +73,38 @@ if __name__ == '__main__':
         config = util.read_config(args.configpath)
     else:
         config = default_config()
-    if not config.run_many:
-        util.run_experiment(config, config.random_seed)
+
+    # Plot
+    if args.plotonly:
+        if args.csvfile is not None:
+            plotting_util.plot_csv_files([args.csvfile],
+                                        config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+        elif config.run_many:
+            csv_files = []
+            for seed in config.random_seeds:
+                p = glob.glob(config.output_dir + "/results/data/" + str(seed) + "/*_train.csv")[0]
+                csv_files.append(p)
+            plotting_util.plot_csv_files(csv_files, config.output_dir + "/results/plots/")
+        else:
+            p = glob.glob(config.output_dir + "/results/data/" + str(config.random_seed) + "/*_train.csv")[0]
+            plotting_util.plot_csv_files([p], config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+
+    # Run experiment
     else:
-        train_csv_paths = []
-        eval_csv_paths = []
-        for seed in config.random_seeds:
-            if args.configpath is not None and not args.noconfig:
-                if not os.path.exists(args.configpath):
-                    write_default_config()
-                config = util.read_config(args.configpath)
-            else:
-                config = default_config()
-            train_csv_path, eval_csv_path = util.run_experiment(config, seed)
-            train_csv_paths.append(train_csv_path)
-            eval_csv_paths.append(eval_csv_path)
+        if not config.run_many:
+            util.run_experiment(config, config.random_seed)
+        else:
+            train_csv_paths = []
+            eval_csv_paths = []
+            for seed in config.random_seeds:
+                if args.configpath is not None and not args.noconfig:
+                    if not os.path.exists(args.configpath):
+                        write_default_config()
+                    config = util.read_config(args.configpath)
+                else:
+                    config = default_config()
+                train_csv_path, eval_csv_path = util.run_experiment(config, seed)
+                train_csv_paths.append(train_csv_path)
+                eval_csv_paths.append(eval_csv_path)
+
+            plotting_util.plot_csv_files(train_csv_paths, config.output_dir + "/results/plots/")

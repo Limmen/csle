@@ -426,4 +426,5 @@ class PyCrPwCrackSimpleBase:
         env_config.syn_stealth_scan_miss_p = 0.04
         env_config.os_scan_miss_p = 0.08
         env_config.vulners_miss_p = 0.09
+        env_config.num_flags = 3
         return env_config

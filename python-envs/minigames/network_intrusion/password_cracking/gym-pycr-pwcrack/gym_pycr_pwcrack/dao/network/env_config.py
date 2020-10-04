@@ -92,6 +92,9 @@ class EnvConfig:
         self.base_step_reward = -1
 
         self.filter_illegal_actions = True
+        self.checkpoint_dir = None
+        self.checkpoint_freq = 1000
+        self.num_flags = 0
 
     def get_port_forward_port(self) -> int:
         """

@@ -32,6 +32,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     config.pg_agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
     config.pg_agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
                                              + str(random_seed) + "/"
+    config.env_checkpoint_dir = default_output_dir() + "/results/env_data/" + str(random_seed) + "/"
     config.logger = logger
     config.pg_agent_config.logger = logger
     config.pg_agent_config.random_seed = random_seed
@@ -69,6 +70,9 @@ def create_artefact_dirs(output_dir: str, random_seed : int) -> None:
         os.makedirs(output_dir + "/results/gifs/" + str(random_seed) + "/")
     if not os.path.exists(output_dir + "/results/tensorboard/" + str(random_seed) + "/"):
         os.makedirs(output_dir + "/results/tensorboard/" + str(random_seed) + "/")
+    if not os.path.exists(output_dir + "/results/env_data/" + str(random_seed) + "/"):
+        os.makedirs(output_dir + "/results/env_data/" + str(random_seed) + "/")
+
 
 
 def setup_logger(name: str, logdir: str, time_str = None):
