@@ -10,6 +10,9 @@ from gym_pycr_pwcrack.agents.policy_gradient.reinforce.reinforce_agent import Re
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
+from gym_pycr_pwcrack.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
+from gym_pycr_pwcrack.util.experiments_util.simulator import Simulator
+from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 
 class Runner:
     """
@@ -24,6 +27,12 @@ class Runner:
         :param config: configuration for the run
         :return: the result
         """
+        if config.mode == RunnerMode.TRAIN_ATTACKER.value:
+            return Runner.train(config)
+        elif config.mode == RunnerMode.SIMULATE.value:
+            return Runner.simulate(config)
+        else:
+            raise AssertionError("Runner mode not recognized: {}".format(config.mode))
         return Runner.train(config)
 
     @staticmethod
@@ -49,3 +58,26 @@ class Runner:
         eval_result = agent.eval_result
         env.cleanup()
         return train_result, eval_result
+
+    @staticmethod
+    def simulate(config: ClientConfig) -> ExperimentResult:
+        """
+        Runs a simulation with two pre-defined policies against each other
+
+        :param config: the simulation config
+        :return: experiment result
+        """
+        env: PyCRPwCrackEnv = None
+        env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+                       checkpoint_dir=config.env_checkpoint_dir)
+        attacker: PPOAttackerBotAgent = None
+        if config.agent_type == AgentType.PPO_BASELINE.value:
+            if config.pg_agent_config is None or config.pg_agent_config.load_path is None:
+                raise ValueError("To run a simulation with a PPO agent, the path to the saved "
+                                 "model must be specified")
+            attacker = PPOAttackerBotAgent(pg_config=config.pg_agent_config, env_config=env.env_config,
+                                           model_path=config.pg_agent_config.load_path, env=env)
+        else:
+            raise AssertionError("Agent type not recognized: {}".format(config.attacker_type))
+        simulator = Simulator(env, config.simulation_config, attacker=attacker)
+        return simulator.simulate()

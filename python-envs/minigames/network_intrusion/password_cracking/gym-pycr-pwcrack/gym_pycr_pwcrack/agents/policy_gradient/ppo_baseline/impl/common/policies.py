@@ -234,7 +234,7 @@ class BasePolicy(BaseModel):
             (used in recurrent policies)
         """
         observation = np.array(observation)
-        vectorized_env = is_vectorized_observation(observation, self.observation_space)
+        #vectorized_env = is_vectorized_observation(observation, self.observation_space)
         observation = observation.reshape((-1,) + self.observation_space.shape)
         observation = th.as_tensor(observation).to(self.device)
         with th.no_grad():

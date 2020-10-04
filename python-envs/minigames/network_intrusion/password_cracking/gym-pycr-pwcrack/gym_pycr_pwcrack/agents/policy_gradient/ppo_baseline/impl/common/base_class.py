@@ -423,7 +423,8 @@ class BaseAlgorithm(ABC):
 
     @classmethod
     def load(
-            cls, load_path: str, env: Optional[GymEnv] = None, device: Union[th.device, str] = "auto", **kwargs
+            cls, load_path: str, env: Optional[GymEnv] = None, device: Union[th.device, str] = "auto",
+            pg_agent_config: PolicyGradientAgentConfig = None, **kwargs
     ) -> "BaseAlgorithm":
         """
         Load the model from a zip-file
@@ -434,25 +435,25 @@ class BaseAlgorithm(ABC):
         :param device: (Union[th.device, str]) Device on which the code should run.
         :param kwargs: extra arguments to change the model when loading
         """
-        data, params, tensors = load_from_zip_file(load_path, device=device)
+        data, params, tensors = load_from_zip_file(load_path)
 
-        if "policy_kwargs" in data:
-            for arg_to_remove in ["device"]:
-                if arg_to_remove in data["policy_kwargs"]:
-                    del data["policy_kwargs"][arg_to_remove]
+        # if "policy_kwargs" in data:
+        #     for arg_to_remove in ["device"]:
+        #         if arg_to_remove in data["policy_kwargs"]:
+        #             del data["policy_kwargs"][arg_to_remove]
 
-        if "policy_kwargs" in kwargs and kwargs["policy_kwargs"] != data["policy_kwargs"]:
-            raise ValueError(
-                f"The specified policy kwargs do not equal the stored policy kwargs."
-                f"Stored kwargs: {data['policy_kwargs']}, specified kwargs: {kwargs['policy_kwargs']}"
-            )
+        # if "policy_kwargs" in kwargs and kwargs["policy_kwargs"] != data["policy_kwargs"]:
+        #     raise ValueError(
+        #         f"The specified policy kwargs do not equal the stored policy kwargs."
+        #         f"Stored kwargs: {data['policy_kwargs']}, specified kwargs: {kwargs['policy_kwargs']}"
+        #     )
 
-        # check if observation space and action space are part of the saved parameters
-        if "observation_space" not in data or "action_space" not in data:
-            raise KeyError("The observation_space and action_space were not given, can't verify new environments")
+        # # check if observation space and action space are part of the saved parameters
+        # if "observation_space" not in data or "action_space" not in data:
+        #     raise KeyError("The observation_space and action_space were not given, can't verify new environments")
         # check if given env is valid
-        if env is not None:
-            check_for_correct_spaces(env, data["observation_space"], data["action_space"])
+        # if env is not None:
+        #     check_for_correct_spaces(env, data["observation_space"], data["action_space"])
         # if no new env was given use stored env if possible
         if env is None and "env" in data:
             env = data["env"]

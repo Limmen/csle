@@ -2,6 +2,8 @@
 Client configuration for running experiments (parsed from JSON)
 """
 from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_pwcrack.dao.experiment.simulation_config import SimulationConfig
 
 class ClientConfig:
     """
@@ -13,7 +15,9 @@ class ClientConfig:
                  output_dir:str = None, title = None,
                  env_config = None, run_many :bool = False,
                  random_seeds : list = None, random_seed = 0, agent_type : int = 0,
-                 cluster_config = None, env_checkpoint_dir : str = None):
+                 cluster_config = None, env_checkpoint_dir : str = None,
+                 mode: RunnerMode = RunnerMode.TRAIN_ATTACKER,
+                 simulation_config: SimulationConfig = None):
         """
         Class constructor, initializes the DTO
 
@@ -29,6 +33,8 @@ class ClientConfig:
         :param agent_type: agent_type
         :param cluster_config: cluster_config
         :param env_checkpoint_dir: checkpoint dir for env data
+        :param mode: the mode for the experiment
+        :param simulation_config: the simulation config
         """
         self.env_name = env_name
         self.logger = None
@@ -42,3 +48,5 @@ class ClientConfig:
         self.agent_type = agent_type
         self.cluster_config = cluster_config
         self.env_checkpoint_dir = env_checkpoint_dir
+        self.mode = mode
+        self.simulation_config = simulation_config

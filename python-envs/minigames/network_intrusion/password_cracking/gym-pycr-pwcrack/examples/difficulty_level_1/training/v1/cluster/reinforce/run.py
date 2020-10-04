@@ -3,6 +3,7 @@ from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentCo
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
+from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 
 def default_config() -> ClientConfig:
     """
@@ -31,7 +32,7 @@ def default_config() -> ClientConfig:
                                  output_dir=util.default_output_dir(),
                                  title="REINFORCE simple v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
-                                 random_seed=399)
+                                 random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
 
 

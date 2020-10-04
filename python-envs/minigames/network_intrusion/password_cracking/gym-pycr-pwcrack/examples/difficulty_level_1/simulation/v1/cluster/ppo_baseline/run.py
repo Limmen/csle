@@ -4,13 +4,18 @@ from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentCo
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
-from gym_pycr_pwcrack.util.experiments_util import plotting_util
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.dao.experiment.simulation_config import SimulationConfig
+from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
+    simulation_config = SimulationConfig(render=False, sleep=0.8, video=True, log_frequency=1,
+                                         video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                                         num_episodes=1000,
+                                         gifs=True, gif_dir=util.default_output_dir() + "/results/gifs", video_frequency=1)
     pg_agent_config = PolicyGradientAgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
@@ -33,7 +38,8 @@ def default_config() -> ClientConfig:
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
-                                                render_steps=20, illegal_action_logit=-100
+                                                render_steps=20, illegal_action_logit=-100,
+                                                load_path="/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/399/1601837275.338192_policy_network.zip"
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
@@ -43,7 +49,8 @@ def default_config() -> ClientConfig:
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v0",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
-                                 random_seed=399, cluster_config=cluster_config)
+                                 random_seed=399, cluster_config=cluster_config,
+                                 mode=RunnerMode.SIMULATE.value, simulation_config=simulation_config)
     return client_config
 
 
@@ -73,37 +80,4 @@ if __name__ == '__main__':
     else:
         config = default_config()
 
-    # Plot
-    if args.plotonly:
-        if args.csvfile is not None:
-            plotting_util.plot_csv_files([args.csvfile],
-                                        config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
-        elif config.run_many:
-            csv_files = []
-            for seed in config.random_seeds:
-                p = glob.glob(config.output_dir + "/results/data/" + str(seed) + "/*_train.csv")[0]
-                csv_files.append(p)
-            plotting_util.plot_csv_files(csv_files, config.output_dir + "/results/plots/")
-        else:
-            p = glob.glob(config.output_dir + "/results/data/" + str(config.random_seed) + "/*_train.csv")[0]
-            plotting_util.plot_csv_files([p], config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
-
-    # Run experiment
-    else:
-        if not config.run_many:
-            util.run_experiment(config, config.random_seed)
-        else:
-            train_csv_paths = []
-            eval_csv_paths = []
-            for seed in config.random_seeds:
-                if args.configpath is not None and not args.noconfig:
-                    if not os.path.exists(args.configpath):
-                        write_default_config()
-                    config = util.read_config(args.configpath)
-                else:
-                    config = default_config()
-                train_csv_path, eval_csv_path = util.run_experiment(config, seed)
-                train_csv_paths.append(train_csv_path)
-                eval_csv_paths.append(eval_csv_path)
-
-            plotting_util.plot_csv_files(train_csv_paths, config.output_dir + "/results/plots/")
+    util.run_experiment(config, config.random_seed)
