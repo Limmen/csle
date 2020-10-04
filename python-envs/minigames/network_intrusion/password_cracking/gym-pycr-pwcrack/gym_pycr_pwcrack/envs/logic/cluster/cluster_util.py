@@ -833,53 +833,57 @@ class ClusterUtil:
         target_connections = []
         ports = []
         if service_name == constants.SSH.SERVICE_NAME:
-            connected, users, target_connections, ports, cost = ClusterUtil._ssh_setup_connection(
+            connected, users, target_connections, ports, cost, non_failed_credentials = ClusterUtil._ssh_setup_connection(
                 a=a, env_config=env_config, credentials=non_used_nor_cached_credentials)
         elif service_name == constants.TELNET.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials = \
                 ClusterUtil._telnet_setup_connection(a=a, env_config=env_config,
                                                      credentials=non_used_nor_cached_credentials)
         elif service_name == constants.FTP.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost, non_failed_credentials = \
                 ClusterUtil._ftp_setup_connection(a=a, env_config=env_config,
                                                   credentials=non_used_nor_cached_credentials)
-        total_cost += cost
+
         s_prime = s
-        if connected:
-            root = False
-            target_machine.logged_in = True
-            if service_name not in target_machine.logged_in_services:
-                target_machine.logged_in_services.append(service_name)
-            if service_name not in target_machine.root_services:
-                target_machine.root_services.append(service_name)
-            for i in range(len(target_connections)):
-                # Check if root
-                c_root = False
-                if service_name == constants.SSH.SERVICE_NAME:
-                    c_root, cost = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
-                                                                  target_connections=target_connections, i=i,
-                                                                  ports=ports)
-                elif service_name == constants.TELNET.SERVICE_NAME:
-                    c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
-                                                                     target_connections=target_connections,
-                                                                     i=i, tunnel_threads=tunnel_threads,
-                                                                     forward_ports=forward_ports, ports=ports)
-                elif service_name == constants.FTP.SERVICE_NAME:
-                    c_root, cost = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
-                                                                  target_connections=target_connections,
-                                                                  i=i, tunnel_threads=tunnel_threads,
-                                                                  forward_ports=forward_ports, ports=ports,
-                                                                  interactive_shells=i_shells)
-                total_cost += cost
-                if c_root:
-                    root = True
-
-
+        if len(non_failed_credentials) > 0:
+            total_cost += cost
+            if connected:
+                root = False
+                target_machine.logged_in = True
+                target_machine.shell_access_credentials = non_failed_credentials
+                if service_name not in target_machine.logged_in_services:
+                    target_machine.logged_in_services.append(service_name)
+                if service_name not in target_machine.root_services:
+                    target_machine.root_services.append(service_name)
+                for i in range(len(target_connections)):
+                    # Check if root
+                    c_root = False
+                    if service_name == constants.SSH.SERVICE_NAME:
+                        c_root, cost = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
+                                                                      target_connections=target_connections, i=i,
+                                                                      ports=ports)
+                    elif service_name == constants.TELNET.SERVICE_NAME:
+                        c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
+                                                                         target_connections=target_connections,
+                                                                         i=i, tunnel_threads=tunnel_threads,
+                                                                         forward_ports=forward_ports, ports=ports)
+                    elif service_name == constants.FTP.SERVICE_NAME:
+                        c_root, cost = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
+                                                                      target_connections=target_connections,
+                                                                      i=i, tunnel_threads=tunnel_threads,
+                                                                      forward_ports=forward_ports, ports=ports,
+                                                                      interactive_shells=i_shells)
+                    total_cost += cost
+                    if c_root:
+                        root = True
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
+        else:
+            target_machine.shell_access = False
+            target_machine.shell_access_credentials = []
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_cost, True
@@ -888,7 +892,7 @@ class ClusterUtil:
     @staticmethod
     def _ssh_setup_connection(a: Action, env_config: EnvConfig,
                               credentials = List[Credential]) \
-            -> Tuple[bool, List[str], List, List[int], float]:
+            -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
         """
         Helper function for setting up a SSH connection
 
@@ -896,13 +900,14 @@ class ClusterUtil:
         :param env_config: the environment config
         :param credentials: list of credentials to try
         :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
-                 cost
+                 cost, non_failed_credentials
         """
         connected = False
         users = []
         target_connections = []
         ports = []
         start = time.time()
+        non_failed_credentials = []
         for cr in credentials:
             if cr.service == constants.SSH.SERVICE_NAME:
                 try:
@@ -917,11 +922,14 @@ class ClusterUtil:
                     users.append(cr.username)
                     target_connections.append(target_conn)
                     ports.append(cr.port)
+                    non_failed_credentials.append(cr)
                 except:
                     pass
+            else:
+                non_failed_credentials.append(cr)
         end = time.time()
         total_time = end-start
-        return connected, users, target_connections, ports, total_time
+        return connected, users, target_connections, ports, total_time, non_failed_credentials
 
     @staticmethod
     def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
@@ -955,7 +963,7 @@ class ClusterUtil:
     @staticmethod
     def _telnet_setup_connection(a: Action, env_config: EnvConfig,
                                  credentials = List[Credential]) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
         """
         Helper function for setting up a Telnet connection to a target machine
 
@@ -972,6 +980,7 @@ class ClusterUtil:
         forward_ports = []
         ports = []
         start = time.time()
+        non_failed_credentials = []
         for cr in credentials:
             if cr.service == constants.TELNET.SERVICE_NAME:
                 try:
@@ -993,12 +1002,14 @@ class ClusterUtil:
                         tunnel_threads.append(tunnel_thread)
                         forward_ports.append(forward_port)
                         ports.append(cr.port)
+                    non_failed_credentials.append(cr)
                 except Exception as e:
                     print("telnet exception:{}".format(str(e)))
-                    pass
+            else:
+                non_failed_credentials.append(cr)
         end = time.time()
         total_time = end-start
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, total_time
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, total_time, non_failed_credentials
 
     @staticmethod
     def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
@@ -1034,7 +1045,7 @@ class ClusterUtil:
     @staticmethod
     def _ftp_setup_connection(a: Action, env_config: EnvConfig,
                               credentials = List[Credential]) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float,  List[Credential]]:
         """
         Helper function for setting up a FTP connection
 
@@ -1042,7 +1053,7 @@ class ClusterUtil:
         :param env_config: the environment config
         :param credentials: list of credentials to try
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports, cost
+                 list of ports, cost, non_failed_credentials
         """
         connected = False
         users = []
@@ -1052,6 +1063,7 @@ class ClusterUtil:
         ports = []
         interactive_shells = []
         start = time.time()
+        non_failed_credentials = []
         for cr in credentials:
             if cr.service == constants.FTP.SERVICE_NAME:
                 try:
@@ -1081,11 +1093,15 @@ class ClusterUtil:
                         if shell.recv_ready():
                             o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                         interactive_shells.append(shell)
+                        non_failed_credentials.append(cr)
                 except Exception as e:
                     print("FTP exception: {}".format(str(e)))
+            else:
+                non_failed_credentials.append(cr)
         end = time.time()
         total_time = end-start
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time, \
+               non_failed_credentials
 
     @staticmethod
     def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,

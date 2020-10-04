@@ -283,7 +283,7 @@ class EnvDynamicsUtil:
                  env_config.root_found_reward_mult*num_new_root + \
                  env_config.flag_found_reward_mult* num_new_flag_pts
         cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
-        reward = int((reward - cost))
+        reward = env_config.base_step_reward + int((reward - cost))
         return reward
 
     @staticmethod

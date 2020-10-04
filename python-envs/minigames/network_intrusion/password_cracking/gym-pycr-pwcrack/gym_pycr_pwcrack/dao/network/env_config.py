@@ -88,8 +88,8 @@ class EnvConfig:
         self.detection_reward = -50
         self.all_flags_reward = 100
         self.sum_costs = 1
-
         self.max_episode_length = 100
+        self.base_step_reward = -1
 
         self.filter_illegal_actions = True
 
