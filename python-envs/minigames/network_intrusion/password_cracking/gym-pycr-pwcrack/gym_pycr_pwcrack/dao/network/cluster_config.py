@@ -170,17 +170,24 @@ class ClusterConfig:
         self.server_conn.close()
 
 
-    def load_action_costs(self, actions: List[Action], dir: str) -> ActionCosts:
+    def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],
+                          network_service_ids: List[ActionId], shell_ids: List[ActionId]) -> ActionCosts:
         """
         Loads measured action costs from the cluster
 
         :param actions: list of actions
+        :param nmap_ids: list of ids of nmap actions
+        :param network_service_ids: list of ids of network service actions
+        :param shell_ids: list of ids of shell actions
         :return: action costs
         """
         print("Loading action costs from cluster..")
         action_costs = ActionCosts()
         sftp_client = self.agent_conn.open_sftp()
-        for a in actions:
+
+        # Load Nmap costs
+        nmap_actions = list(filter(lambda x: x.id in nmap_ids, actions))
+        for a in nmap_actions:
             file_name = dir + str(a.id.value)
             if not a.subnet and a.ip is not None:
                 file_name = file_name + "_" + a.ip
@@ -197,31 +204,51 @@ class ClusterConfig:
                 if remote_file is not None:
                     remote_file.close()
 
-        # Load file system cache which is user and service specific
-        id = ActionId.FIND_FLAG
-        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
-        stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
-        file_list = []
-        for line in stdout:
-            line_str = line.replace("\n", "")
-            if "_cost" in line_str:
-                file_list.append(line_str)
-        for file in file_list:
-            parts = file.split("_")
-            ip = parts[1]
-            service = parts[2]
-            user = parts[3]
+        # Load network service actions costs
+        network_service_actions = list(filter(lambda x: x.id in network_service_ids, actions))
+        for a in network_service_actions:
+            file_name = dir + str(a.id.value)
+            file_name = file_name + "_" + a.ip
+            file_name = file_name + "_cost.txt"
             remote_file = None
             try:
-                remote_file = sftp_client.open(file, mode="r")
+                remote_file = sftp_client.open(file_name, mode="r")
                 cost_str = remote_file.read()
                 cost = float(cost_str)
-                action_costs.find_add_cost(action_id=id, ip=ip, cost=cost, user=user, service=service)
-            except Exception as e:
-                print("{}".format(str(e)))
+                action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
+            except:
+                pass
             finally:
                 if remote_file is not None:
                     remote_file.close()
+
+        # Load shell action costs which are user and service specific
+        shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
+        for a in shell_actions:
+            id = a.id
+            cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
+            stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+            file_list = []
+            for line in stdout:
+                line_str = line.replace("\n", "")
+                if "_cost" in line_str:
+                    file_list.append(line_str)
+            for file in file_list:
+                parts = file.split("_")
+                ip = parts[1]
+                service = parts[2]
+                user = parts[3]
+                remote_file = None
+                try:
+                    remote_file = sftp_client.open(file, mode="r")
+                    cost_str = remote_file.read()
+                    cost = float(cost_str)
+                    action_costs.find_add_cost(action_id=id, ip=ip, cost=cost, user=user, service=service)
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
 
         print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs)))
         return action_costs

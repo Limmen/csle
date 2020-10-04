@@ -38,7 +38,7 @@ def test_env(env_name : str, num_steps : int):
     #actions = np.array([127])
     #actions = np.array([119,120,121,122,123,124,125])
     for i in range(num_steps):
-        legal_actions = list(filter(lambda x: env.is_action_legal(x), actions))
+        legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         env.render()

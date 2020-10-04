@@ -8,9 +8,7 @@ from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.action.nmap_actions import NMAPActions
-from gym_pycr_pwcrack.dao.action.ssh_actions import SSHActions
-from gym_pycr_pwcrack.dao.action.ftp_actions import FTPActions
-from gym_pycr_pwcrack.dao.action.telnet_actions import TelnetActions
+from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.network.network_service import NetworkService
@@ -388,26 +386,12 @@ class PyCrPwCrackSimpleBase:
 
             # --- Post-Exploits ---
 
-            # SSH Login
-            SSHActions.SSH_LOGIN(ip="172.18.1.10"),
-            SSHActions.SSH_LOGIN(ip="172.18.1.2"),
-            SSHActions.SSH_LOGIN(ip="172.18.1.3"),
-            SSHActions.SSH_LOGIN(ip="172.18.1.21"),
-            SSHActions.SSH_LOGIN(ip="172.18.1.79"),
-
-            # FTP Login
-            FTPActions.FTP_LOGIN(ip="172.18.1.10"),
-            FTPActions.FTP_LOGIN(ip="172.18.1.2"),
-            FTPActions.FTP_LOGIN(ip="172.18.1.3"),
-            FTPActions.FTP_LOGIN(ip="172.18.1.21"),
-            FTPActions.FTP_LOGIN(ip="172.18.1.79"),
-
-            # Telnet Login
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.10"),
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.2"),
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.3"),
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.21"),
-            TelnetActions.Telnet_LOGIN(ip="172.18.1.79"),
+            # Network Service Login
+            NetworkServiceActions.SERVICE_LOGIN(ip="172.18.1.10"),
+            NetworkServiceActions.SERVICE_LOGIN(ip="172.18.1.2"),
+            NetworkServiceActions.SERVICE_LOGIN(ip="172.18.1.3"),
+            NetworkServiceActions.SERVICE_LOGIN(ip="172.18.1.21"),
+            NetworkServiceActions.SERVICE_LOGIN(ip="172.18.1.79"),
 
             # Search file system for flag
             ShellActions.FIND_FLAG()

@@ -698,7 +698,7 @@ class ClusterUtil:
 
     @staticmethod
     def login_service_helper(s: EnvState, a: Action, alive_check, service_name : str,
-                             env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+                             env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int, float, bool]:
         """
         Helper function for logging in to a network service in the cluster
 
@@ -707,10 +707,12 @@ class ClusterUtil:
         :param alive_check:  the function to check whether current connections are alive or not
         :param service_name: name of the service to login to
         :param env_config: environment config
-        :return: s_prime, reward, done
+        :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+                   total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        total_cost = 0
         target_machine = None
         non_used_credentials = []
         root = False
@@ -778,18 +780,8 @@ class ClusterUtil:
                                                            env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
-            # Use measured cost
-            if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
-                a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
-            reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                     num_new_vuln_found=total_new_vuln,
-                                                     num_new_machines=total_new_machines,
-                                                     num_new_shell_access=total_new_shell_access,
-                                                     num_new_root=total_new_root,
-                                                     num_new_flag_pts=total_new_flag_pts,
-                                                     cost=a.cost,
-                                                     env_config=env_config)
-            return s_prime, reward, False
+            return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+                   total_new_shell_access, total_new_flag_pts, total_new_root, total_cost, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -797,14 +789,15 @@ class ClusterUtil:
         target_connections = []
         ports = []
         if service_name == constants.SSH.SERVICE_NAME:
-            connected, users, target_connections, ports = ClusterUtil._ssh_setup_connection(
+            connected, users, target_connections, ports, cost = ClusterUtil._ssh_setup_connection(
                 target_machine=target_machine, a=a, env_config=env_config)
         elif service_name == constants.TELNET.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost = \
                 ClusterUtil._telnet_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
         elif service_name == constants.FTP.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost = \
                 ClusterUtil._ftp_setup_connection(target_machine=target_machine, a=a, env_config=env_config)
+        total_cost += cost
         s_prime = s
         if connected:
             root = False
@@ -817,22 +810,24 @@ class ClusterUtil:
                 # Check if root
                 c_root = False
                 if service_name == constants.SSH.SERVICE_NAME:
-                    c_root = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
+                    c_root, cost = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
                                                                   target_connections=target_connections, i=i,
                                                                   ports=ports)
                 elif service_name == constants.TELNET.SERVICE_NAME:
-                    c_root = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
+                    c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
                                                                      target_connections=target_connections,
                                                                      i=i, tunnel_threads=tunnel_threads,
                                                                      forward_ports=forward_ports, ports=ports)
                 elif service_name == constants.FTP.SERVICE_NAME:
-                    c_root = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
+                    c_root, cost = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
                                                                   target_connections=target_connections,
                                                                   i=i, tunnel_threads=tunnel_threads,
                                                                   forward_ports=forward_ports, ports=ports,
                                                                   interactive_shells=i_shells)
+                total_cost += cost
                 if c_root:
                     root = True
+
 
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -840,35 +835,27 @@ class ClusterUtil:
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
 
-        # Use measured cost
-        if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
-            a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
-        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_vuln_found=total_new_vuln,
-                                                 num_new_machines=total_new_machines,
-                                                 num_new_shell_access=total_new_shell_access,
-                                                 num_new_root=total_new_root,
-                                                 num_new_flag_pts=total_new_flag_pts,
-                                                 cost=a.cost,
-                                                 env_config=env_config)
-        return s_prime, reward, False
+        return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_cost, True
 
 
     @staticmethod
     def _ssh_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Tuple[bool, List[str], List, List[int]]:
+            -> Tuple[bool, List[str], List, List[int], float]:
         """
         Helper function for setting up a SSH connection
 
         :param target_machine: the target machine to connect to
         :param a: the action of the connection
         :param env_config: the environment config
-        :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports
+        :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
+                 cost
         """
         connected = False
         users = []
         target_connections = []
         ports = []
+        start = time.time()
         for cr in target_machine.shell_access_credentials:
             if cr.service == constants.SSH.SERVICE_NAME:
                 try:
@@ -885,11 +872,13 @@ class ClusterUtil:
                     ports.append(cr.port)
                 except:
                     pass
-        return connected, users, target_connections, ports
+        end = time.time()
+        total_time = end-start
+        return connected, users, target_connections, ports, total_time
 
     @staticmethod
     def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
-                                 target_connections: List, i : int, ports: List[int]) -> bool:
+                                 target_connections: List, i : int, ports: List[int]) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
@@ -898,8 +887,9 @@ class ClusterUtil:
         :param target_connections: list of connection handles
         :param i: current index
         :param ports: list of ports of the connections
-        :return: boolean whether the connection has root privileges or not
+        :return: boolean whether the connection has root privileges or not, cost
         """
+        start = time.time()
         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -v",
                                                                    conn=target_connections[i])
         root = False
@@ -911,11 +901,13 @@ class ClusterUtil:
                                                     service=constants.SSH.SERVICE_NAME,
                                                     port=ports[i])
         target_machine.ssh_connections.append(connection_dto)
-        return root
+        end = time.time()
+        total_time = end-start
+        return root, total_time
 
     @staticmethod
     def _telnet_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float]:
         """
         Helper function for setting up a Telnet connection to a target machine
 
@@ -923,7 +915,7 @@ class ClusterUtil:
         :param a: the action of the connection
         :param env_config: the environment config
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports
+                 list of ports, cost
         """
         connected = False
         users = []
@@ -931,6 +923,7 @@ class ClusterUtil:
         tunnel_threads = []
         forward_ports = []
         ports = []
+        start = time.time()
         for cr in target_machine.shell_access_credentials:
             if cr.service == constants.TELNET.SERVICE_NAME:
                 try:
@@ -955,11 +948,14 @@ class ClusterUtil:
                 except Exception as e:
                     print("telnet exception:{}".format(str(e)))
                     pass
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports
+        end = time.time()
+        total_time = end-start
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, total_time
 
     @staticmethod
     def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
-                                    tunnel_threads: List, forward_ports : List[int], ports: List[int]) -> bool:
+                                    tunnel_threads: List, forward_ports : List[int], ports: List[int]) \
+            -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
 
@@ -970,8 +966,9 @@ class ClusterUtil:
         :param tunnel_threads: list of tunnel threads
         :param forward_ports: list of forwarded ports
         :param ports: list of ports of the connections
-        :return: boolean whether the connection has root privileges or not
+        :return: boolean whether the connection has root privileges or not, cost
         """
+        start = time.time()
         target_connections[i].write("sudo -v\n".encode())
         response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=5)
         root = False
@@ -982,11 +979,13 @@ class ClusterUtil:
                                                     tunnel_port=forward_ports[i],
                                                     port=ports[i])
         target_machine.telnet_connections.append(connection_dto)
-        return root
+        end = time.time()
+        total_time = end-start
+        return root, total_time
 
     @staticmethod
     def _ftp_setup_connection(target_machine: MachineObservationState, a: Action, env_config: EnvConfig) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float]:
         """
         Helper function for setting up a FTP connection
 
@@ -994,7 +993,7 @@ class ClusterUtil:
         :param a: the action of the connection
         :param env_config: the environment config
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports
+                 list of ports, cost
         """
         connected = False
         users = []
@@ -1003,6 +1002,7 @@ class ClusterUtil:
         forward_ports = []
         ports = []
         interactive_shells = []
+        start = time.time()
         for cr in target_machine.shell_access_credentials:
             if cr.service == constants.FTP.SERVICE_NAME:
                 try:
@@ -1034,13 +1034,14 @@ class ClusterUtil:
                         interactive_shells.append(shell)
                 except Exception as e:
                     print("FTP exception: {}".format(str(e)))
-
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells
+        end = time.time()
+        total_time = end-start
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time
 
     @staticmethod
     def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
                                  tunnel_threads: List, forward_ports: List[int], ports: List[int],
-                                 interactive_shells: List) -> bool:
+                                 interactive_shells: List) -> Tuple[bool, float]:
         """
         Helper function for creating the connection DTO for FTP
 
@@ -1052,7 +1053,7 @@ class ClusterUtil:
         :param forward_ports: list of forwarded ports to the target
         :param ports: list of ports of the connections
         :param interactive_shells: shells for LFTP
-        :return: boolean, whether the connection has root privileges
+        :return: boolean, whether the connection has root privileges, cost
         """
         root = False
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
@@ -1062,4 +1063,218 @@ class ClusterUtil:
                                                     port=ports[i],
                                                     interactive_shell = interactive_shells[i])
         target_machine.ftp_connections.append(connection_dto)
-        return root
+        return root, 0
+
+    @staticmethod
+    def _find_flag_using_ssh(machine: MachineObservationState, env_config: EnvConfig, a: Action,
+                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+        """
+        Utility function for using existing SSH connections to a specific machine to search the file system for flags
+
+        :param machine: the machine to search
+        :param env_config: the env config
+        :param a: the action of finding the flags
+        :param new_m_obs: the updated machine observation with the found flags
+        :return: the updated machine observation with the found flags, cost, root
+        """
+        total_cost = 0
+        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: x.root, reverse=True)
+        root_scan = False
+        for c in ssh_connections_sorted_by_root:
+            cache_file = \
+                ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                                                          service=constants.SSH.SERVICE_NAME,
+                                                          user=c.username)
+            if cache_file is not None:
+                flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
+                                                              env_config=env_config)
+            else:
+                cmd = a.cmd[0]
+                if c.root:
+                    cmd = constants.COMMANDS.SUDO + " " + cmd
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                 env_config=env_config, ip=machine.ip,
+                                                 user=c.username,
+                                                 service=constants.SSH.SERVICE_NAME)
+                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                      service=constants.SSH.SERVICE_NAME,
+                                                      cost=float(total_time))
+                outdata_str = outdata.decode()
+                flag_paths = outdata_str.split("\n")
+                # Persist cache
+                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                         service=constants.SSH.SERVICE_NAME, user=c.username,
+                                                         files=flag_paths, ip=machine.ip)
+
+            # Check for flags
+            for fp in flag_paths:
+                fp = fp.replace(".txt", "")
+                if (machine.ip, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+
+            # Update cost
+            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                   service=constants.SSH.SERVICE_NAME):
+                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                             service=constants.SSH.SERVICE_NAME)
+                total_cost += cost
+
+            if c.root:
+                root_scan = True
+                break
+
+        return new_m_obs, total_cost, root_scan
+
+    @staticmethod
+    def _find_flag_using_telnet(machine: MachineObservationState, env_config: EnvConfig, a: Action,
+                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+        """
+        Utility function for using existing Telnet connections to a specific machine to search the file system for flags
+
+        :param machine: the machine to search
+        :param env_config: the env config
+        :param a: the action of finding the flags
+        :param new_m_obs: the updated machine observation with the found flags
+        :return: the updated machine observation with the found flags, cost, root
+        """
+        total_cost = 0
+        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: x.root,
+                                                   reverse=True)
+        root_scan = False
+        for c in telnet_connections_sorted_by_root:
+            cache_file = \
+                ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                                                          service=constants.TELNET.SERVICE_NAME,
+                                                          user=c.username)
+            if cache_file is not None:
+                flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
+                                                              env_config=env_config)
+            else:
+                cmd = a.cmd[0] + "\n"
+                if c.root:
+                    cmd = constants.COMMANDS.SUDO + " " + cmd
+                start = time.time()
+                c.conn.write(cmd.encode())
+                response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                end = time.time()
+                total_time = end - start
+                ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                 env_config=env_config, ip=machine.ip,
+                                                 user=c.username,
+                                                 service=constants.TELNET.SERVICE_NAME)
+                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                      service=constants.TELNET.SERVICE_NAME,
+                                                      cost=float(total_time))
+                flag_paths = response.decode().strip().split("\r\n")
+                # Persist cache
+                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                         service=constants.TELNET.SERVICE_NAME, user=c.username,
+                                                         files=flag_paths, ip=machine.ip)
+
+            # Check for flags
+            for fp in flag_paths:
+                fp = fp.replace(".txt", "")
+                if (machine.ip, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+
+            # Update cost
+            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                   service=constants.TELNET.SERVICE_NAME):
+                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                             service=constants.TELNET.SERVICE_NAME)
+                total_cost += cost
+
+            if c.root:
+                root_scan = True
+                break
+
+        return new_m_obs, total_cost, root_scan
+
+    @staticmethod
+    def _find_flag_using_ftp(machine: MachineObservationState, env_config: EnvConfig, a: Action,
+                                new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+        """
+        Utility function for using existing FTP connections to a specific machine to search the file system for flags
+
+        :param machine: the machine to search
+        :param env_config: the env config
+        :param a: the action of finding the flags
+        :param new_m_obs: the updated machine observation with the found flags
+        :return: the updated machine observation with the found flags, cost, root
+        """
+        total_cost = 0
+        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: x.root, reverse=True)
+        root_scan = False
+        for c in ftp_connections_sorted_by_root:
+            cache_file = \
+                ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                                                          service=constants.FTP.SERVICE_NAME,
+                                                          user=c.username)
+            if cache_file is not None:
+                flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
+                                                              env_config=env_config)
+            else:
+                cmd = a.alt_cmd[0] + "\n"
+                if c.root:
+                    cmd = constants.COMMANDS.SUDO + " " + cmd
+                start = time.time()
+                c.interactive_shell.send(cmd)
+                output = b""
+                # clear output
+                if c.interactive_shell.recv_ready():
+                    c.interactive_shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                command_complete = False
+                timeouts = 0
+                while not command_complete:
+                    while not c.interactive_shell.recv_ready():
+                        if timeouts > env_config.shell_max_timeouts:
+                            break
+                        time.sleep(env_config.shell_read_wait)
+                        timeouts += 1
+                    if c.interactive_shell.recv_ready():
+                        output += c.interactive_shell.recv(constants.COMMON.LARGE_RECV_SIZE)
+                        timeouts = 0
+                        if constants.FTP.LFTP_PROMPT in output.decode() \
+                                or constants.FTP.LFTP_PROMPT_2 in output.decode():
+                            command_complete = True
+                            end = time.time()
+                            total_time = end - start
+                            ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                             env_config=env_config, ip=machine.ip,
+                                                             user=c.username,
+                                                             service=constants.FTP.SERVICE_NAME)
+                            env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                  service=constants.FTP.SERVICE_NAME,
+                                                                  cost=float(total_time))
+                    else:
+                        break
+
+                output_str = output.decode("utf-8")
+                output_str = env_config.shell_escape.sub("", output_str)
+                output_list = output_str.split('\r\n')
+                output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
+                flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x, output_list))
+
+                # Persist cache
+                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                         service=constants.FTP.SERVICE_NAME, user=c.username,
+                                                         files=flag_paths, ip=machine.ip)
+            # Check for flags
+            for fp in flag_paths:
+                fp = fp.replace(".txt", "")
+                if (machine.ip, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+
+            # Update cost
+            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                   service=constants.FTP.SERVICE_NAME):
+                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                             service=constants.FTP.SERVICE_NAME)
+                total_cost += cost
+
+            if c.root:
+                root_scan = True
+                break
+
+        return new_m_obs, total_cost, root_scan

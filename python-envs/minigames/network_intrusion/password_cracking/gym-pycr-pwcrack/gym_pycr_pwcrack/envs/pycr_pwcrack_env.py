@@ -47,7 +47,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.env_config.cluster_config.download_cves()
             self.env_state.merge_cves_with_cluster(self.env_config.cluster_config.cluster_cves)
             self.env_config.action_costs = self.env_config.cluster_config.load_action_costs(
-                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir)
+                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
+                nmap_ids=self.env_config.action_conf.nmap_action_ids,
+                network_service_ids=self.env_config.action_conf.network_service_action_ids,
+                shell_ids=self.env_config.action_conf.shell_action_ids)
 
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,

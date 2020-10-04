@@ -106,14 +106,8 @@ class ClusterMiddleware:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == ActionId.SSH_LOGIN:
-            return PostExploitMiddleware.execute_ssh_login(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.FIND_FLAG:
-            return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.FTP_LOGIN:
-            return PostExploitMiddleware.execute_ftp_login(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.TELNET_LOGIN:
-            return PostExploitMiddleware.execute_telnet_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.NETWORK_SERVICE_LOGIN:
+            return PostExploitMiddleware.execute_service_login(s=s, a=a, env_config=env_config)
         if a.id == ActionId.FIND_FLAG:
             return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
         else:
