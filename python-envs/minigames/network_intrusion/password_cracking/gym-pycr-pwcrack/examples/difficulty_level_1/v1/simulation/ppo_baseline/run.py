@@ -10,13 +10,13 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     pg_agent_config = PolicyGradientAgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
+                                                min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                                 num_iterations=1000000000,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=11,
+                                                eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=100, input_dim=6*30,
                                                 output_dim=124,
@@ -30,7 +30,8 @@ def default_config() -> ClientConfig:
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64
+                                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
+                                                render_steps=20, illegal_action_logit = -100
                                                 )
     env_name = "pycr-pwcrack-simple-sim-v1"
     client_config = ClientConfig(env_name=env_name, pg_agent_config=pg_agent_config,

@@ -1,1 +1,1 @@
-/tmp:flag3 /root:
+/tmp:flag3

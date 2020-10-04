@@ -65,6 +65,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
+            print("illegal action")
             return self.last_obs, -1, False, info
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))

@@ -480,15 +480,19 @@ class ActorCriticPolicy(BasePolicy):
         :return: (Distribution) Action distribution
         """
         mean_actions = self.action_net(latent_pi)
+        #mean_actions = mean_actions*100
+        #print("actions sum:{}".format(th.sum(mean_actions)))
 
         action_logits = mean_actions.clone()
         if non_legal_actions is not None and len(non_legal_actions) > 0:
             if len(action_logits.shape) == 1:
                 # action_probs_1[non_legal_actions] = 0.00000000000001 # Don't set to zero due to invalid distribution errors
-                action_logits[non_legal_actions] = 0.0
+                action_logits[non_legal_actions] = self.pg_agent_config.illegal_action_logit
             elif len(action_logits.shape) == 2:
                 # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
-                action_logits[:, non_legal_actions] = 0.0
+                #print("logits prior masking:{}".format(action_logits))
+                action_logits[:, non_legal_actions] = self.pg_agent_config.illegal_action_logit
+                #print("logits:{}".format(action_logits))
             else:
                 raise AssertionError("Invalid shape of action probabilties")
         action_logits_1 = action_logits.to(self.device)

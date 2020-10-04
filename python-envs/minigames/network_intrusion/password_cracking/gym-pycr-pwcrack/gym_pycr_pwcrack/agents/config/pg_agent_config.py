@@ -34,7 +34,7 @@ class PolicyGradientAgentConfig:
                  mini_batch_size : int = 64, render_steps: int = 20, num_iterations : int = 50,
                  multi_input_channel : bool = False, fw_input_dim : int = 64, traffic_input_dim : int = 64,
                  ar_policy : bool = False, learning_attacker : bool = False, attacker_output_dim : int = 4,
-                 attacker_input_dim: int = 40
+                 attacker_input_dim: int = 40, illegal_action_logit = -100
                  ):
         """
         Initialize environment and hyperparameters
@@ -172,6 +172,7 @@ class PolicyGradientAgentConfig:
         self.learning_attacker = learning_attacker
         self.attacker_output_dim = attacker_output_dim
         self.attacker_input_dim = attacker_input_dim
+        self.illegal_action_logit = illegal_action_logit
 
 
     def to_str(self) -> str:
@@ -187,7 +188,7 @@ class PolicyGradientAgentConfig:
                "output_dim:{24},critic_loss_fn:{25},state_length:{26}" \
                "gpu_id:{27},eps_clip:{28},input_dim:{29},lr_progress_decay:{30},lr_progress_power_decay:{31}," \
                "optimization_iterations:{32},gae_lambda:{33},features_dim:{34}," \
-               "ent_coef:{35},vf_coef:{36},use_sde:{37},sde_sample_freq:{38}".format(
+               "ent_coef:{35},vf_coef:{36},use_sde:{37},sde_sample_freq:{38},illegal_action_logit:{39}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -195,7 +196,7 @@ class PolicyGradientAgentConfig:
             self.random_seed, self.eval_epsilon, self.clip_gradient, self.max_gradient_norm, self.output_dim,
             self.critic_loss_fn, self.state_length, self.gpu_id, self.eps_clip, self.input_dim, self.lr_progress_decay,
             self.lr_progress_power_decay, self.optimization_iterations, self.gae_lambda, self.features_dim,
-            self.ent_coef, self.vf_coef, self.use_sde, self.sde_sample_freq)
+            self.ent_coef, self.vf_coef, self.use_sde, self.sde_sample_freq, self.illegal_action_logit)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -257,6 +258,7 @@ class PolicyGradientAgentConfig:
             writer.writerow(["vf_coef", str(self.vf_coef)])
             writer.writerow(["use_sde", str(self.use_sde)])
             writer.writerow(["sde_sample_freq", str(self.sde_sample_freq)])
+            writer.writerow(["illegal_action_logit", str(self.illegal_action_logit)])
 
 
     def hparams_dict(self):
@@ -300,4 +302,5 @@ class PolicyGradientAgentConfig:
         hparams["vf_coef"] = self.vf_coef
         hparams["use_sde"] = self.use_sde
         hparams["sde_sample_freq"] = self.sde_sample_freq
+        hparams["illegal_action_logit"] = self.illegal_action_logit
         return hparams

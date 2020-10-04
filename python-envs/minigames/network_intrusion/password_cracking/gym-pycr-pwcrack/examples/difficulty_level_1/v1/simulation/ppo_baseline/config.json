@@ -18,7 +18,7 @@
         "eps_clip": 0.2,
         "epsilon": 1,
         "epsilon_decay": 0.9999,
-        "eval_episodes": 1,
+        "eval_episodes": 10,
         "eval_epsilon": 0.0,
         "eval_frequency": 100,
         "eval_log_frequency": 1,
@@ -33,6 +33,7 @@
         "gpu": false,
         "gpu_id": 0,
         "hidden_activation": "ReLU",
+        "illegal_action_logit": -100,
         "input_dim": 180,
         "learning_attacker": false,
         "load_path": null,
@@ -72,7 +73,7 @@
         "video": false,
         "video_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/v1/simulation/ppo_baseline/results/videos",
         "video_fps": 5,
-        "video_frequency": 11
+        "video_frequency": 10
     },
     "py/object": "gym_pycr_pwcrack.dao.experiment.client_config.ClientConfig",
     "random_seed": 399,
