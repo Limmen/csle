@@ -22,7 +22,11 @@ from stable_baselines3.common.distributions import (
 from stable_baselines3.common.preprocessing import get_action_dim, is_image_space, preprocess_obs
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
 from stable_baselines3.common.utils import get_device, is_vectorized_observation
-from stable_baselines3.common.vec_env import VecTransposeImage
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecTransposeImage
+from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 
 class BaseModel(nn.Module, ABC):
@@ -57,6 +61,7 @@ class BaseModel(nn.Module, ABC):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
+        pg_agent_config: PolicyGradientAgentConfig = None
     ):
         super(BaseModel, self).__init__()
 
@@ -77,6 +82,7 @@ class BaseModel(nn.Module, ABC):
 
         self.features_extractor_class = features_extractor_class
         self.features_extractor_kwargs = features_extractor_kwargs
+        self.pg_agent_config = pg_agent_config
 
     @abstractmethod
     def forward(self, *args, **kwargs):
@@ -217,6 +223,8 @@ class BasePolicy(BaseModel):
         state: Optional[np.ndarray] = None,
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
+        env_config: EnvConfig = None,
+        env_state: EnvState = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the policy action and state from an observation (and optional state).
@@ -229,72 +237,16 @@ class BasePolicy(BaseModel):
         :return: (Tuple[np.ndarray, Optional[np.ndarray]]) the model's action and the next state
             (used in recurrent policies)
         """
-        # TODO (GH/1): add support for RNN policies
-        # if state is None:
-        #     state = self.initial_state
-        # if mask is None:
-        #     mask = [False for _ in range(self.n_envs)]
         observation = np.array(observation)
-
-        # Handle the different cases for images
-        # as PyTorch use channel first format
-        if is_image_space(self.observation_space):
-            if not (
-                observation.shape == self.observation_space.shape or observation.shape[1:] == self.observation_space.shape
-            ):
-                # Try to re-order the channels
-                transpose_obs = VecTransposeImage.transpose_image(observation)
-                if (
-                    transpose_obs.shape == self.observation_space.shape
-                    or transpose_obs.shape[1:] == self.observation_space.shape
-                ):
-                    observation = transpose_obs
-
         vectorized_env = is_vectorized_observation(observation, self.observation_space)
-
         observation = observation.reshape((-1,) + self.observation_space.shape)
-
         observation = th.as_tensor(observation).to(self.device)
         with th.no_grad():
-            actions = self._predict(observation, deterministic=deterministic)
+            actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
+                                    env_state=env_state)
         # Convert to numpy
         actions = actions.cpu().numpy()
-
-        if isinstance(self.action_space, gym.spaces.Box):
-            if self.squash_output:
-                # Rescale to proper domain when using squashing
-                actions = self.unscale_action(actions)
-            else:
-                # Actions could be on arbitrary scale, so clip the actions to avoid
-                # out of bound error (e.g. if sampling from a Gaussian distribution)
-                actions = np.clip(actions, self.action_space.low, self.action_space.high)
-        if not vectorized_env:
-            if state is not None:
-                raise ValueError("Error: The environment must be vectorized when using recurrent policies.")
-            actions = actions[0]
         return actions, state
-
-    def scale_action(self, action: np.ndarray) -> np.ndarray:
-        """
-        Rescale the action from [low, high] to [-1, 1]
-        (no need for symmetric action space)
-
-        :param action: (np.ndarray) Action to scale
-        :return: (np.ndarray) Scaled action
-        """
-        low, high = self.action_space.low, self.action_space.high
-        return 2.0 * ((action - low) / (high - low)) - 1.0
-
-    def unscale_action(self, scaled_action: np.ndarray) -> np.ndarray:
-        """
-        Rescale the action from [-1, 1] to [low, high]
-        (no need for symmetric action space)
-
-        :param scaled_action: Action to un-scale
-        """
-        low, high = self.action_space.low, self.action_space.high
-        return low + (0.5 * (scaled_action + 1.0) * (high - low))
-
 
 class ActorCriticPolicy(BasePolicy):
     """
@@ -349,6 +301,7 @@ class ActorCriticPolicy(BasePolicy):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
+        pg_agent_config: PolicyGradientAgentConfig = None
     ):
 
         if optimizer_kwargs is None:
@@ -365,6 +318,7 @@ class ActorCriticPolicy(BasePolicy):
             optimizer_class=optimizer_class,
             optimizer_kwargs=optimizer_kwargs,
             squash_output=squash_output,
+            pg_agent_config=pg_agent_config
         )
 
         # Default network architecture, from stable-baselines
@@ -384,6 +338,7 @@ class ActorCriticPolicy(BasePolicy):
         self.normalize_images = normalize_images
         self.log_std_init = log_std_init
         dist_kwargs = None
+
         # Keyword arguments for gSDE distribution
         if use_sde:
             dist_kwargs = {
@@ -444,9 +399,6 @@ class ActorCriticPolicy(BasePolicy):
         :param lr_schedule: (Callable) Learning rate schedule
             lr_schedule(1) is the initial learning rate
         """
-        # Note: If net_arch is None and some features extractor is used,
-        #       net_arch here is an empty list and mlp_extractor does not
-        #       really contain any layers (acts like an identity module).
         self.mlp_extractor = MlpExtractor(self.features_dim, net_arch=self.net_arch, activation_fn=self.activation_fn)
 
         latent_dim_pi = self.mlp_extractor.latent_dim_pi
@@ -457,25 +409,9 @@ class ActorCriticPolicy(BasePolicy):
                 self.features_dim, self.sde_net_arch, self.activation_fn
             )
 
-        if isinstance(self.action_dist, DiagGaussianDistribution):
-            self.action_net, self.log_std = self.action_dist.proba_distribution_net(
-                latent_dim=latent_dim_pi, log_std_init=self.log_std_init
-            )
-        elif isinstance(self.action_dist, StateDependentNoiseDistribution):
-            latent_sde_dim = latent_dim_pi if self.sde_net_arch is None else latent_sde_dim
-            self.action_net, self.log_std = self.action_dist.proba_distribution_net(
-                latent_dim=latent_dim_pi, latent_sde_dim=latent_sde_dim, log_std_init=self.log_std_init
-            )
-        elif isinstance(self.action_dist, CategoricalDistribution):
-            self.action_net = self.action_dist.proba_distribution_net(latent_dim=latent_dim_pi)
-        elif isinstance(self.action_dist, MultiCategoricalDistribution):
-            self.action_net = self.action_dist.proba_distribution_net(latent_dim=latent_dim_pi)
-        elif isinstance(self.action_dist, BernoulliDistribution):
-            self.action_net = self.action_dist.proba_distribution_net(latent_dim=latent_dim_pi)
-        else:
-            raise NotImplementedError(f"Unsupported distribution '{self.action_dist}'.")
-
+        self.action_net = self.action_dist.proba_distribution_net(latent_dim=latent_dim_pi)
         self.value_net = nn.Linear(self.mlp_extractor.latent_dim_vf, 1)
+
         # Init weights: use orthogonal initialization
         # with small initial weight for the output
         if self.ortho_init:
@@ -495,7 +431,8 @@ class ActorCriticPolicy(BasePolicy):
         # Setup optimizer with initial learning rate
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
 
-    def forward(self, obs: th.Tensor, deterministic: bool = False) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
+    def forward(self, obs: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
+                env_config: EnvConfig = None) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
         Forward pass in all the networks (actor and critic)
 
@@ -506,7 +443,14 @@ class ActorCriticPolicy(BasePolicy):
         latent_pi, latent_vf, latent_sde = self._get_latent(obs)
         # Evaluate the values for the given observations
         values = self.value_net(latent_vf)
-        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde)
+
+        # Masking legal actions
+        actions = list(range(self.pg_agent_config.output_dim))
+        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+            action, env_config=env_config, env_state=env_state), actions))
+
+        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
+                                                         non_legal_actions=non_legal_actions)
         actions = distribution.get_actions(deterministic=deterministic)
         log_prob = distribution.log_prob(actions)
         return actions, values, log_prob
@@ -530,7 +474,8 @@ class ActorCriticPolicy(BasePolicy):
             latent_sde = self.sde_features_extractor(features)
         return latent_pi, latent_vf, latent_sde
 
-    def _get_action_dist_from_latent(self, latent_pi: th.Tensor, latent_sde: Optional[th.Tensor] = None) -> Distribution:
+    def _get_action_dist_from_latent(self, latent_pi: th.Tensor, latent_sde: Optional[th.Tensor] = None,
+                                     non_legal_actions : List[int] = None) -> Distribution:
         """
         Retrieve action distribution given the latent codes.
 
@@ -540,23 +485,22 @@ class ActorCriticPolicy(BasePolicy):
         """
         mean_actions = self.action_net(latent_pi)
 
-        if isinstance(self.action_dist, DiagGaussianDistribution):
-            return self.action_dist.proba_distribution(mean_actions, self.log_std)
-        elif isinstance(self.action_dist, CategoricalDistribution):
-            # Here mean_actions are the logits before the softmax
-            return self.action_dist.proba_distribution(action_logits=mean_actions)
-        elif isinstance(self.action_dist, MultiCategoricalDistribution):
-            # Here mean_actions are the flattened logits
-            return self.action_dist.proba_distribution(action_logits=mean_actions)
-        elif isinstance(self.action_dist, BernoulliDistribution):
-            # Here mean_actions are the logits (before rounding to get the binary actions)
-            return self.action_dist.proba_distribution(action_logits=mean_actions)
-        elif isinstance(self.action_dist, StateDependentNoiseDistribution):
-            return self.action_dist.proba_distribution(mean_actions, self.log_std, latent_sde)
-        else:
-            raise ValueError("Invalid action distribution")
+        action_logits = mean_actions.clone()
+        if non_legal_actions is not None and len(non_legal_actions) > 0:
+            if len(action_logits.shape) == 1:
+                # action_probs_1[non_legal_actions] = 0.00000000000001 # Don't set to zero due to invalid distribution errors
+                action_logits[non_legal_actions] = 0.0
+            elif len(action_logits.shape) == 2:
+                # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
+                action_logits[:, non_legal_actions] = 0.0
+            else:
+                raise AssertionError("Invalid shape of action probabilties")
+        action_logits_1 = action_logits.to(self.device)
+        return self.action_dist.proba_distribution(action_logits=action_logits_1)
 
-    def _predict(self, observation: th.Tensor, deterministic: bool = False) -> th.Tensor:
+
+    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
+                env_config: EnvConfig = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -565,7 +509,13 @@ class ActorCriticPolicy(BasePolicy):
         :return: (th.Tensor) Taken action according to the policy
         """
         latent_pi, _, latent_sde = self._get_latent(observation)
-        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde)
+
+        # Masking legal actions
+        actions = list(range(self.pg_agent_config.output_dim))
+        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+            action, env_config=env_config, env_state=env_state), actions))
+
+        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)
 
     def evaluate_actions(self, obs: th.Tensor, actions: th.Tensor) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:

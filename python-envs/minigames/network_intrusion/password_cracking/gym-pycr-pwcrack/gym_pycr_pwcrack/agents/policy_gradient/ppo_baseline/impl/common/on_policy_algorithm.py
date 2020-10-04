@@ -118,6 +118,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.action_space,
             self.lr_schedule,
             use_sde=self.use_sde,
+            pg_agent_config = self.pg_agent_config,
             **self.policy_kwargs  # pytype:disable=not-instantiable
         )
         self.policy = self.policy.to(self.device)
@@ -158,7 +159,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 # Sample a new noise matrix
                 self.policy.reset_noise(env.num_envs)
 
-            new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(self.env, rollout_buffer)
+            new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(env, rollout_buffer)
 
             self.num_timesteps += env.num_envs
 
@@ -294,7 +295,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         with th.no_grad():
             # Convert to pytorch tensor
             obs_tensor = th.as_tensor(self._last_obs).to(self.device)
-            actions, values, log_probs = self.policy.forward(obs_tensor)
+            actions, values, log_probs = self.policy.forward(obs_tensor, env_config=env.envs[0].env_config,
+                                                             env_state=env.envs[0].env_state)
         actions = actions.cpu().numpy()
 
         # Rescale and perform action

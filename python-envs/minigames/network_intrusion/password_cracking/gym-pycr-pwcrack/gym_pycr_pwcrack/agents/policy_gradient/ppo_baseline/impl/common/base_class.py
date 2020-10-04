@@ -402,7 +402,8 @@ class BaseAlgorithm(ABC):
         :return: (Tuple[np.ndarray, Optional[np.ndarray]]) the model's action and the next state
             (used in recurrent policies)
         """
-        return self.policy.predict(observation, state, mask, deterministic)
+        return self.policy.predict(observation, state, mask, deterministic, env_config=self.env.envs[0].env_config,
+                                   env_state=self.env.envs[0].env_state)
 
     @classmethod
     def load(

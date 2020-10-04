@@ -64,7 +64,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :return: (obs, reward, done, info)
         """
         info = {}
-        if not self.is_action_legal(action_id):
+        if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             return self.last_obs, -1, False, info
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
@@ -121,10 +121,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         arr = self.viewer.render(return_rgb_array=mode == 'rgb_array')
         return arr
 
-    def is_action_legal(self, action_id : int):
-        if action_id > len(self.env_config.action_conf.actions) - 1:
+    @staticmethod
+    def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState):
+        if not env_config.filter_illegal_actions:
+            return True
+        if action_id > len(env_config.action_conf.actions) - 1:
             return False
-        action = self.env_config.action_conf.actions[action_id]
+        action = env_config.action_conf.actions[action_id]
 
         # Recon on subnet is always possible
         if action.subnet:
@@ -133,7 +136,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         machine_discovered = False
         target_machine = None
         logged_in = False
-        for m in self.env_state.obs_state.machines:
+        for m in env_state.obs_state.machines:
             if m.logged_in:
                 logged_in = True
             if m.ip == action.ip:
@@ -205,8 +208,8 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             action_conf = PyCrPwCrackSimpleBase.action_conf(network_conf)
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
-            #env_config.simulate_detection = True
-            env_config.simulate_detection = False
+            env_config.simulate_detection = True
+            #env_config.simulate_detection = False
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------
