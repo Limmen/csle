@@ -13,7 +13,7 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
                                new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
-            Tuple[List[MachineObservationState], int, int, int, int, int, int]:
+            Tuple[List[MachineObservationState], int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
@@ -282,7 +282,7 @@ class EnvDynamicsUtil:
                  env_config.shell_access_found_reward_mult*num_new_shell_access + \
                  env_config.root_found_reward_mult*num_new_root + \
                  env_config.flag_found_reward_mult* num_new_flag_pts
-        cost = cost*env_config.cost_coefficient
+        cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
         reward = int((reward - cost))
         return reward
 

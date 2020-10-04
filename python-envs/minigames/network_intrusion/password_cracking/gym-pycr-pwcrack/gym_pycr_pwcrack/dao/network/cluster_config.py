@@ -198,6 +198,7 @@ class ClusterConfig:
                 cost_str = remote_file.read()
                 cost = float(cost_str)
                 action_costs.add_cost(action_id=a.id, ip=a.ip, cost=cost)
+                a.cost = cost
             except:
                 pass
             finally:
@@ -216,6 +217,7 @@ class ClusterConfig:
                 cost_str = remote_file.read()
                 cost = float(cost_str)
                 action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
+                a.cost = cost
             except:
                 pass
             finally:
@@ -244,6 +246,7 @@ class ClusterConfig:
                     cost_str = remote_file.read()
                     cost = float(cost_str)
                     action_costs.find_add_cost(action_id=id, ip=ip, cost=cost, user=user, service=service)
+                    a.cost = cost
                 except Exception as e:
                     print("{}".format(str(e)))
                 finally:

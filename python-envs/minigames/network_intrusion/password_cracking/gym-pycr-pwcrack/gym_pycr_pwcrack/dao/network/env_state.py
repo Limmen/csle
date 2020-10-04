@@ -18,11 +18,14 @@ class EnvState:
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
         self.os_lookup = os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
-        self.obs_state : ObservationState
+        self.obs_state : ObservationState = None
         self.reset_state()
         self.num_m_features = 10 + self.obs_state.num_ports + self.obs_state.num_vuln
         self.observation_space = gym.spaces.Box(low=0, high=10, dtype=np.int32, shape=(
             self.obs_state.num_machines, self.num_m_features,))
+        self.cached_ssh_connections = {}
+        self.cached_telnet_connections = {}
+        self.cached_ftp_connections = {}
 
     def get_observation(self):
         self.machines_obs = np.zeros(
@@ -99,6 +102,14 @@ class EnvState:
 
 
     def reset_state(self):
+        if self.obs_state is not None:
+            for m in self.obs_state.machines:
+                for c in m.ssh_connections:
+                    self.cached_ssh_connections[(m.ip, c.username, c.port)] = c
+                for c in m.telnet_connections:
+                    self.cached_telnet_connections[(m.ip, c.username, c.port)] = c
+                for c in m.ftp_connections:
+                    self.cached_ftp_connections[(m.ip, c.username, c.port)] = c
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes), num_ports=self.num_ports,
                                           num_vuln=self.num_vuln, num_sh=self.num_sh)
 

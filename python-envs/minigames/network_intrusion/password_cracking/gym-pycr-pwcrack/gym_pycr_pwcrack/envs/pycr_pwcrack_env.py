@@ -1,5 +1,6 @@
 from typing import Tuple
 import gym
+import time
 from abc import ABC
 import numpy as np
 import os
@@ -51,7 +52,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 nmap_ids=self.env_config.action_conf.nmap_action_ids,
                 network_service_ids=self.env_config.action_conf.network_service_action_ids,
                 shell_ids=self.env_config.action_conf.shell_action_ids)
-
+        self.env_config.scale_rewards_prep()
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,
                                       vuln_lookup=self.env_state.vuln_lookup,
@@ -69,11 +70,22 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action")
-            return self.last_obs, -1, False, info
+            done = False
+            self.agent_state.time_step += 1
+            if self.agent_state.time_step > self.env_config.max_episode_length:
+                done = True
+            return self.last_obs, -1, done, info
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
+        st = time.time()
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
+        end = time.time()
+        total_time = end - st
+        if total_time>1:
+            print("action:{}, time:{}".format(action_id, total_time))
+        if self.agent_state.time_step > self.env_config.max_episode_length:
+            done = True
         self.env_state = s_prime
         if self.env_state.obs_state.detected:
             reward = reward - self.env_config.detection_reward

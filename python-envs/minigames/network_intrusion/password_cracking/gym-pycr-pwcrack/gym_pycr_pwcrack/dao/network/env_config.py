@@ -87,6 +87,9 @@ class EnvConfig:
         self.cost_coefficient = 1
         self.detection_reward = -50
         self.all_flags_reward = 100
+        self.sum_costs = 1
+
+        self.max_episode_length = 100
 
         self.filter_illegal_actions = True
 
@@ -109,3 +112,7 @@ class EnvConfig:
             for flag in node.flags:
                 flags_lookup[(node.ip, flag.path + "/" + flag.name)] = flag
         return flags_lookup
+
+    def scale_rewards_prep(self):
+        sum_costs = sum(list(map(lambda x: x.cost, self.action_conf.actions)))
+        self.sum_costs = sum_costs
