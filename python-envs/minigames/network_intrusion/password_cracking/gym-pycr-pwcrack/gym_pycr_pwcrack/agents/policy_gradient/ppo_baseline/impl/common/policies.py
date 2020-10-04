@@ -10,20 +10,16 @@ import numpy as np
 import torch as th
 from torch import nn as nn
 
-from stable_baselines3.common.distributions import (
-    BernoulliDistribution,
-    CategoricalDistribution,
-    DiagGaussianDistribution,
+from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
+from stable_baselines3.common.utils import get_device, is_vectorized_observation
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.torch_layers import BaseFeaturesExtractor, \
+    FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
+from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.distributions import (
     Distribution,
-    MultiCategoricalDistribution,
     StateDependentNoiseDistribution,
     make_proba_distribution,
 )
-from stable_baselines3.common.preprocessing import get_action_dim, is_image_space, preprocess_obs
-from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
-from stable_baselines3.common.utils import get_device, is_vectorized_observation
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecTransposeImage
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
