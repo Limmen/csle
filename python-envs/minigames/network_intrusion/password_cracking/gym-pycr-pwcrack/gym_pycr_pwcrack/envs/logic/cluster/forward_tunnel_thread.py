@@ -21,3 +21,6 @@ class ForwardTunnelThread(threading.Thread):
 
     def run(self):
         self.forward_server.serve_forever()
+
+    def shutdown(self):
+        self.forward_server.shutdown()

@@ -62,7 +62,7 @@
         "mini_batch_size": 64,
         "multi_input_channel": false,
         "num_episodes": 5000,
-        "num_iterations": 25,
+        "num_iterations": 10,
         "optimization_iterations": 10,
         "optimizer": "Adam",
         "output_dim": 114,
@@ -94,8 +94,11 @@
     "random_seed": 399,
     "random_seeds": [
         0,
-        999
+        999,
+        299,
+        399,
+        499
     ],
-    "run_many": true,
+    "run_many": false,
     "title": "PPO-Baseline v0"
 }

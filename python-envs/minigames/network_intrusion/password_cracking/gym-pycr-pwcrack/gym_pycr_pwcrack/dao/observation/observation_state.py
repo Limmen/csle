@@ -13,8 +13,13 @@ class ObservationState:
         self.all_flags = False
         self.num_sh = num_sh
         self.num_flags = num_flags
-        self.catched_flags = 0
+        self.catched_flags = catched_flags
 
 
     def sort_machines(self):
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
+
+
+    def cleanup(self):
+        for m in self.machines:
+            m.cleanup()

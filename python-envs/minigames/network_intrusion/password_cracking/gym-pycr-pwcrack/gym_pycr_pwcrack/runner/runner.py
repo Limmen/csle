@@ -47,4 +47,5 @@ class Runner:
         agent.train()
         train_result = agent.train_result
         eval_result = agent.eval_result
+        env.cleanup()
         return train_result, eval_result

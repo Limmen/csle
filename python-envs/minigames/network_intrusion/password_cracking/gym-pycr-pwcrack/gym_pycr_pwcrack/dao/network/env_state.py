@@ -133,3 +133,18 @@ class EnvState:
                 max_id += 1
                 self.vuln_lookup[cve] = max_id
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
+
+
+    def cleanup(self):
+        """
+        Cleanup
+        :return:
+        """
+        for _, c in self.cached_ssh_connections.items():
+            c.cleanup()
+        for _, c in self.cached_ftp_connections.items():
+            c.cleanup()
+        for _, c in self.cached_telnet_connections.items():
+            c.cleanup()
+
+        self.obs_state.cleanup()

@@ -15,7 +15,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=25,
+                                                num_iterations=10,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -42,9 +42,8 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v0",
-                                 run_many=True, random_seeds=[0, 999],
+                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, cluster_config=cluster_config)
-    #random_seeds=[0, 999, 299, 399, 499]
     return client_config
 
 

@@ -15,3 +15,16 @@ class ConnectionObservationState:
 
     def __str__(self):
         return "username:{},root:{},service:{},port:{}".format(self.username, self.root, self.service, self.port)
+
+    def cleanup(self) -> None:
+        """
+        Utility function for cleaning up the connection.
+
+        :return: None
+        """
+        if self.tunnel_thread is not None:
+            self.tunnel_thread.shutdown()
+        if self.interactive_shell is not None:
+            self.interactive_shell.close()
+        if self.conn is not None:
+            self.conn.close()

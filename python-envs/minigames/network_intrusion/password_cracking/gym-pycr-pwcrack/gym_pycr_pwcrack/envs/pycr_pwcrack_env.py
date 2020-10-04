@@ -182,6 +182,18 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             #self.
             #self.viewer.mainframe.new_window()
 
+    def cleanup(self) -> None:
+        """
+        Cleans up environment state. This method is particularly useful in cluster mode where there are
+        SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.
+
+        :return: None
+        """
+        if self.env_config.env_mode == EnvMode.SIMULATION:
+            return
+        else:
+            self.env_state.cleanup()
+
     # -------- Private methods ------------
 
     def __update_log(self, action : Action) -> None:

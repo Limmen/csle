@@ -39,3 +39,17 @@ class MachineObservationState:
         self.shell_access_credentials = sorted(self.shell_access_credentials,
                                                key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
                                                reverse=False)
+
+    def cleanup(self):
+        """
+        Cleans up environment state. This method is particularly useful in cluster mode where there are
+        SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.
+
+        :return: None
+        """
+        for c in self.ssh_connections:
+            c.cleanup()
+        for c in self.ftp_connections:
+            c.cleanup()
+        for c in self.telnet_connections:
+            c.cleanup()
