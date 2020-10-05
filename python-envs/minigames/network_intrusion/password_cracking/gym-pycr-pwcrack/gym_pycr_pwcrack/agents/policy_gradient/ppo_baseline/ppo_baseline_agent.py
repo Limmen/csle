@@ -66,7 +66,7 @@ class PPOBaselineAgent(TrainAgent):
                     gae_lambda=self.config.gae_lambda,
                     clip_range=self.config.eps_clip,
                     max_grad_norm=self.config.max_gradient_norm,
-                    verbose=1, tensorboard_log=self.config.tensorboard_dir,
+                    verbose=1,
                     seed=self.config.random_seed,
                     policy_kwargs=policy_kwargs,
                     device=device,
