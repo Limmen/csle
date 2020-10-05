@@ -3,9 +3,14 @@ from typing import Any, Callable, Dict, List, Optional, Type
 import gym
 import torch as th
 from torch import nn
-
-from stable_baselines3.common.policies import BasePolicy, register_policy
-from stable_baselines3.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, NatureCNN, create_mlp
+import numpy as np
+from gym_pycr_pwcrack.agents.openai_baselines.common.policies import BasePolicy, register_policy
+from gym_pycr_pwcrack.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, \
+    NatureCNN, create_mlp
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 class QNetwork(BasePolicy):
     """
@@ -57,11 +62,19 @@ class QNetwork(BasePolicy):
         """
         return self.q_net(self.extract_features(obs))
 
-    def _predict(self, observation: th.Tensor, deterministic: bool = True) -> th.Tensor:
+    def _predict(self, observation: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
+                env_config: EnvConfig = None) -> th.Tensor:
         q_values = self.forward(observation)
-        # Greedy action
-        action = q_values.argmax(dim=1).reshape(-1)
-        return action
+
+        # Masking legal actions
+        actions = list(range(env_config.action_conf.num_actions))
+        legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
+            action, env_config=env_config, env_state=env_state), actions))
+
+        # Greedy actions
+        action = legal_actions[th.argmax(q_values.squeeze()[legal_actions]).item()]
+        #action = q_values.argmax(dim=1).reshape(-1)
+        return np.array([action])
 
     def _get_data(self) -> Dict[str, Any]:
         data = super()._get_data()
@@ -110,6 +123,7 @@ class DQNPolicy(BasePolicy):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
+        agent_config : AgentConfig = None
     ):
         super(DQNPolicy, self).__init__(
             observation_space,
@@ -118,6 +132,7 @@ class DQNPolicy(BasePolicy):
             features_extractor_kwargs,
             optimizer_class=optimizer_class,
             optimizer_kwargs=optimizer_kwargs,
+            agent_config=agent_config
         )
 
         if net_arch is None:
@@ -165,8 +180,9 @@ class DQNPolicy(BasePolicy):
     def forward(self, obs: th.Tensor, deterministic: bool = True) -> th.Tensor:
         return self._predict(obs, deterministic=deterministic)
 
-    def _predict(self, obs: th.Tensor, deterministic: bool = True) -> th.Tensor:
-        return self.q_net._predict(obs, deterministic=deterministic)
+    def _predict(self, obs: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
+                env_config: EnvConfig = None) -> th.Tensor:
+        return self.q_net._predict(obs, deterministic=deterministic, env_config=env_config, env_state=env_state)
 
     def _get_data(self) -> Dict[str, Any]:
         data = super()._get_data()
@@ -232,6 +248,6 @@ class CnnPolicy(DQNPolicy):
             optimizer_kwargs,
         )
 
-
 register_policy("MlpPolicy", MlpPolicy)
 register_policy("CnnPolicy", CnnPolicy)
+register_policy("DQNPolicy", DQNPolicy)

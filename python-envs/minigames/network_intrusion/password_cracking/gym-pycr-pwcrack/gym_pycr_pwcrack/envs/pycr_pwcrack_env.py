@@ -69,8 +69,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
-            print("illegal action")
+            print("illegal action:{}".format(action_id))
             done = False
+            info["flags"] = self.env_state.obs_state.catched_flags
             self.agent_state.time_step += 1
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True

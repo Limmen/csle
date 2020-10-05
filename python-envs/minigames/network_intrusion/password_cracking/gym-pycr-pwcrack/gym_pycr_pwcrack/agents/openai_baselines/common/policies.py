@@ -201,7 +201,8 @@ class BasePolicy(BaseModel):
                 module.bias.data.fill_(0.0)
 
     @abstractmethod
-    def _predict(self, observation: th.Tensor, deterministic: bool = False) -> th.Tensor:
+    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
+                env_config: EnvConfig = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -240,8 +241,9 @@ class BasePolicy(BaseModel):
         with th.no_grad():
             actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
                                     env_state=env_state)
-        # Convert to numpy
-        actions = actions.cpu().numpy()
+        if type(actions) == th.Tensor:
+            # Convert to numpy
+            actions = actions.cpu().numpy()
         return actions, state
 
 class ActorCriticPolicy(BasePolicy):

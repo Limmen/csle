@@ -34,18 +34,8 @@ class DQNBaselineAgent(TrainAgent):
 
         # Custom MLP policy
         net_arch = []
-        pi_arch = []
-        vf_arch = []
         for l in range(self.config.shared_layers):
             net_arch.append(self.config.shared_hidden_dim)
-        for l in range(self.config.pi_hidden_layers):
-            pi_arch.append(self.config.pi_hidden_dim)
-        for l in range(self.config.vf_hidden_layers):
-            vf_arch.append(self.config.vf_hidden_dim)
-
-
-        net_dict = {"pi":pi_arch, "vf":vf_arch}
-        net_arch.append(net_dict)
 
         policy_kwargs = dict(activation_fn=self.get_hidden_activation(), net_arch=net_arch)
         device = "cpu" if not self.config.gpu else "cuda:" + str(self.config.gpu_id)
@@ -55,6 +45,7 @@ class DQNBaselineAgent(TrainAgent):
             temp = self.config.alpha
             lr_decay_func = lambda x: temp*math.pow(x, self.config.lr_progress_power_decay)
             self.config.alpha = lr_decay_func
+
         model = DQN(
             policy, self.env, learning_rate=self.config.alpha, buffer_size=self.config.buffer_size,
             learning_starts=self.config.learning_starts,batch_size=self.config.batch_size,
@@ -63,7 +54,8 @@ class DQNBaselineAgent(TrainAgent):
             exploration_fraction=self.config.exploration_fraction,
             exploration_initial_eps=self.config.exploration_initial_eps,
             exploration_final_eps=self.config.exploration_final_eps,
-            agent_config=self.config
+            agent_config=self.config, device=device,
+            policy_kwargs=policy_kwargs,
         )
 
         if self.config.load_path is not None:
@@ -80,7 +72,7 @@ class DQNBaselineAgent(TrainAgent):
                                       video_frequency=self.config.video_frequency, openai_baseline=True)
             eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 
-        model.learn(total_timesteps=self.config.num_episodes,
+        model.learn(total_timesteps=self.config.num_iterations,
                     log_interval=self.config.train_log_frequency,
                     eval_freq=self.config.eval_frequency,
                     n_eval_episodes=self.config.eval_episodes,

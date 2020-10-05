@@ -64,7 +64,6 @@ class BaseAlgorithm(ABC):
     :param learning_rate: (float or callable) learning rate for the optimizer,
         it can be a function of the current progress remaining (from 1 to 0)
     :param policy_kwargs: (Dict[str, Any]) Additional arguments to be passed to the policy on creation
-    :param tensorboard_log: (str) the log location for tensorboard (if None, no logging)
     :param verbose: (int) The verbosity level: 0 none, 1 training information, 2 debug
     :param device: (Union[th.device, str]) Device on which the code should run.
         By default, it will try to use a Cuda compatible device and fallback to cpu
@@ -196,7 +195,8 @@ class BaseAlgorithm(ABC):
     def log_metrics(self, iteration: int, result: ExperimentResult, episode_rewards: list,
                     episode_steps: list, episode_avg_loss: list = None,
                     eval: bool = False, lr: float = None, total_num_episodes: int = 0,
-                    episode_flags : list = None, episode_flags_percentage: list = None) -> None:
+                    episode_flags : list = None, episode_flags_percentage: list = None,
+                    eps: float = None) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -210,8 +210,11 @@ class BaseAlgorithm(ABC):
         :param total_num_episodes: number of training episodes
         :param episode_flags: number of flags catched per episode
         :param episode_flags_percentage: percentage of flags catched per episode
+        :param eps: epsilon exploration rate
         :return: None
         """
+        if eps is None:
+            eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
         avg_episode_flags = np.mean(episode_flags)
         avg_episode_flags_percentage = np.mean(episode_flags_percentage)
@@ -229,14 +232,14 @@ class BaseAlgorithm(ABC):
                 avg_episode_flags_percentage)
         else:
             log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R:{:.2f},avg_t:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F:{:.2f},avg_F%:{:.2f}".format(
+                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F:{:.2f},avg_F%:{:.2f},eps:{:.2f}".format(
                 iteration, self.agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
-                lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage)
+                lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps)
         self.agent_config.logger.info(log_str)
         print(log_str)
         if self.agent_config.tensorboard:
             self.log_tensorboard(iteration, avg_episode_rewards,avg_episode_steps,
-                                 avg_episode_loss, self.agent_config.epsilon, lr, eval=eval,
+                                 avg_episode_loss, eps, lr, eval=eval,
                                  avg_flags_catched=avg_episode_flags,
                                  avg_episode_flags_percentage=avg_episode_flags_percentage)
 
@@ -251,7 +254,7 @@ class BaseAlgorithm(ABC):
     def log_tensorboard(self, episode: int, avg_episode_rewards: float,
                         avg_episode_steps: float, episode_avg_loss: float,
                         epsilon: float, lr: float, eval=False, avg_flags_catched : int = 0,
-                        avg_episode_flags_percentage : list = None) -> None:
+                        avg_episode_flags_percentage : list = None,) -> None:
         """
         Log metrics to tensorboard
 
@@ -418,6 +421,7 @@ class BaseAlgorithm(ABC):
         :return: (Tuple[np.ndarray, Optional[np.ndarray]]) the model's action and the next state
             (used in recurrent policies)
         """
+        print("calling predict2")
         return self.policy.predict(observation, state, mask, deterministic, env_config=self.env.envs[0].env_config,
                                    env_state=self.env.envs[0].env_state)
 
@@ -596,9 +600,6 @@ class BaseAlgorithm(ABC):
 
         eval_env = self._get_eval_env(eval_env)
 
-        # Configure logger's outputs
-        #utils.configure_logger(self.verbose, self.tensorboard_log, tb_log_name, reset_num_timesteps)
-
         # Create eval callback if needed
         callback = self._init_callback(callback, eval_env, eval_freq, n_eval_episodes, log_path)
 
@@ -683,3 +684,18 @@ class BaseAlgorithm(ABC):
             params_to_save[name] = attr.state_dict()
 
         save_to_zip_file(path, data=data, params=params_to_save, tensors=tensors)
+
+    def save_model(self) -> None:
+        """
+        Saves the PyTorch Model Weights
+
+        :return: None
+        """
+        time_str = str(time.time())
+        if self.agent_config.save_dir is not None:
+            path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
+            self.agent_config.logger.info("Saving policy-network to: {}".format(path))
+            self.save(path, exclude=["tensorboard_writer"])
+        else:
+            self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
+            print("Save path not defined, not saving policy-networks to disk")

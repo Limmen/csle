@@ -59,9 +59,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         max_grad_norm: float,
         use_sde: bool,
         sde_sample_freq: int,
-        tensorboard_log: Optional[str] = None,
         create_eval_env: bool = False,
-        monitor_wrapper: bool = True,
         policy_kwargs: Optional[Dict[str, Any]] = None,
         verbose: int = 0,
         seed: Optional[int] = None,
@@ -167,7 +165,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.num_timesteps += env.num_envs
             self._update_info_buffer(infos)
             n_steps += 1
-            self.num_timesteps += env.num_envs
             episode_reward += rewards
             episode_step += 1
 
@@ -177,7 +174,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 episode_rewards.append(episode_reward)
                 episode_steps.append(episode_step)
                 episode_flags.append(infos[0]["flags"])
-                print("test:{}".format(infos[0]["flags"]/self.env.envs[0].env_config.num_flags))
                 episode_flags_percentage.append(infos[0]["flags"]/self.env.envs[0].env_config.num_flags)
                 return False, episode_rewards, episode_steps
 
@@ -324,19 +320,3 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self._last_dones = dones
 
         return new_obs, rewards, dones, infos, values, log_probs, actions
-
-
-    def save_model(self) -> None:
-        """
-        Saves the PyTorch Model Weights
-
-        :return: None
-        """
-        time_str = str(time.time())
-        if self.agent_config.save_dir is not None:
-            path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
-            self.agent_config.logger.info("Saving policy-network to: {}".format(path))
-            self.save(path, exclude=["tensorboard_writer"])
-        else:
-            self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
-            print("Save path not defined, not saving policy-networks to disk")

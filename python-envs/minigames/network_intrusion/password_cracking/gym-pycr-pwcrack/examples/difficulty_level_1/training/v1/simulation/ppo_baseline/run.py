@@ -37,7 +37,7 @@ def default_config() -> ClientConfig:
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline v0",
+                                 title="PPO-Baseline v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399)
     return client_config

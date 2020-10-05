@@ -13,6 +13,7 @@ from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.ppo_baseline_agent imp
 from gym_pycr_pwcrack.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
 from gym_pycr_pwcrack.util.experiments_util.simulator import Simulator
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_pwcrack.agents.dqn.dqn_baseline_agent import DQNBaselineAgent
 
 class Runner:
     """
@@ -51,6 +52,8 @@ class Runner:
             agent = ReinforceAgent(env, config.agent_config)
         elif config.agent_type == AgentType.PPO_BASELINE.value:
             agent = PPOBaselineAgent(env, config.agent_config)
+        elif config.agent_type == AgentType.DQN_BASELINE.value:
+            agent = DQNBaselineAgent(env, config.agent_config)
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()

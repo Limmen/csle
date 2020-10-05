@@ -4,12 +4,14 @@ import numpy as np
 import torch as th
 from torch.nn import functional as F
 
-from stable_baselines3.common import logger
-from stable_baselines3.common.off_policy_algorithm import OffPolicyAlgorithm
+from gym_pycr_pwcrack.agents.openai_baselines.common.off_policy_algorithm import OffPolicyAlgorithm
 from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from gym_pycr_pwcrack.agents.openai_baselines.common.utils import get_linear_fn, polyak_update
 from gym_pycr_pwcrack.agents.dqn.impl.policies import DQNPolicy
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 class DQN(OffPolicyAlgorithm):
     """
@@ -44,7 +46,6 @@ class DQN(OffPolicyAlgorithm):
     :param exploration_initial_eps: initial value of random action probability
     :param exploration_final_eps: final value of random action probability
     :param max_grad_norm: The maximum value for the gradient clipping
-    :param tensorboard_log: the log location for tensorboard (if None, no logging)
     :param create_eval_env: Whether to create a second environment that will be
         used for evaluating the agent periodically. (Only available when passing string for the environment)
     :param policy_kwargs: additional arguments to be passed to the policy on creation
@@ -74,7 +75,6 @@ class DQN(OffPolicyAlgorithm):
         exploration_initial_eps: float = 1.0,
         exploration_final_eps: float = 0.05,
         max_grad_norm: float = 10,
-        tensorboard_log: Optional[str] = None,
         create_eval_env: bool = False,
         policy_kwargs: Optional[Dict[str, Any]] = None,
         verbose: int = 0,
@@ -99,7 +99,6 @@ class DQN(OffPolicyAlgorithm):
             n_episodes_rollout,
             action_noise=None,  # No action noise
             policy_kwargs=policy_kwargs,
-            tensorboard_log=tensorboard_log,
             verbose=verbose,
             device=device,
             create_eval_env=create_eval_env,
@@ -141,9 +140,7 @@ class DQN(OffPolicyAlgorithm):
         """
         if self.num_timesteps % self.target_update_interval == 0:
             polyak_update(self.q_net.parameters(), self.q_net_target.parameters(), self.tau)
-
         self.exploration_rate = self.exploration_schedule(self._current_progress_remaining)
-        logger.record("rollout/exploration rate", self.exploration_rate)
 
     def train(self, gradient_steps: int, batch_size: int = 100) -> None:
         # Update learning rate according to schedule
@@ -184,8 +181,7 @@ class DQN(OffPolicyAlgorithm):
         # Increase update counter
         self._n_updates += gradient_steps
 
-        logger.record("train/n_updates", self._n_updates, exclude="tensorboard")
-        logger.record("train/loss", np.mean(losses))
+        return np.mean(losses)
 
     def predict(
         self,
@@ -193,6 +189,8 @@ class DQN(OffPolicyAlgorithm):
         state: Optional[np.ndarray] = None,
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
+        env_config : EnvConfig = None,
+        env_state : EnvState = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Overrides the base_class predict function to include epsilon-greedy exploration.
@@ -206,9 +204,15 @@ class DQN(OffPolicyAlgorithm):
         """
         if not deterministic and np.random.rand() < self.exploration_rate:
             n_batch = observation.shape[0]
-            action = np.array([self.action_space.sample() for _ in range(n_batch)])
+            assert n_batch == 1
+            actions = list(range(self.env.envs[0].env_config.action_conf.num_actions))
+            legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
+                action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), actions))
+            action = np.array([np.random.choice(legal_actions)])
+            #action = np.array([self.action_space.sample() for _ in range(n_batch)])
         else:
-            action, state = self.policy.predict(observation, state, mask, deterministic)
+            action, state = self.policy.predict(observation, state, mask, deterministic, env_config=env_config,
+                                                env_state=env_state)
         return action, state
 
     def learn(

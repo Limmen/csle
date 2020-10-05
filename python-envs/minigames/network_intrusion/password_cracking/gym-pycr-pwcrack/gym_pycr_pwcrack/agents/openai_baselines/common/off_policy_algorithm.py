@@ -1,6 +1,5 @@
 import io
 import pathlib
-import time
 import warnings
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
@@ -8,7 +7,6 @@ import gym
 import numpy as np
 import torch as th
 
-from stable_baselines3.common import logger
 from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.save_util import load_from_pkl, save_to_pkl
 
@@ -17,9 +15,9 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.buffers import ReplayBuffer
 from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback
 from gym_pycr_pwcrack.agents.openai_baselines.common.policies import BasePolicy
 from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback, RolloutReturn
-from gym_pycr_pwcrack.agents.openai_baselines.common.utils import safe_mean
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 class OffPolicyAlgorithm(BaseAlgorithm):
     """
@@ -49,7 +47,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         at a cost of more complexity.
         See https://github.com/DLR-RM/stable-baselines3/issues/37#issuecomment-637501195
     :param policy_kwargs: Additional arguments to be passed to the policy on creation
-    :param tensorboard_log: the log location for tensorboard (if None, no logging)
     :param verbose: The verbosity level: 0 none, 1 training information, 2 debug
     :param device: Device on which the code should run.
         By default, it will try to use a Cuda compatible device and fallback to cpu
@@ -87,7 +84,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         action_noise: Optional[ActionNoise] = None,
         optimize_memory_usage: bool = False,
         policy_kwargs: Dict[str, Any] = None,
-        tensorboard_log: Optional[str] = None,
         verbose: int = 0,
         device: Union[th.device, str] = "auto",
         support_multi_env: bool = False,
@@ -107,7 +103,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             policy_base=policy_base,
             learning_rate=learning_rate,
             policy_kwargs=policy_kwargs,
-            tensorboard_log=tensorboard_log,
             verbose=verbose,
             device=device,
             support_multi_env=support_multi_env,
@@ -165,6 +160,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             self.observation_space,
             self.action_space,
             self.lr_schedule,
+            agent_config = self.agent_config,
             **self.policy_kwargs  # pytype:disable=not-instantiable
         )
         self.policy = self.policy.to(self.device)
@@ -246,9 +242,15 @@ class OffPolicyAlgorithm(BaseAlgorithm):
 
         callback.on_training_start(locals(), globals())
 
+        episode_rewards = []
+        episode_flags = []
+        episode_steps = []
+        episode_loss = []
+        episode_flags_percentage = []
+
         while self.num_timesteps < total_timesteps:
 
-            rollout = self.collect_rollouts(
+            rollout, rollout_rewards, rollout_timesteps, rollout_flags, rollout_percentage = self.collect_rollouts(
                 self.env,
                 n_episodes=self.n_episodes_rollout,
                 n_steps=self.train_freq,
@@ -258,6 +260,12 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 replay_buffer=self.replay_buffer,
                 log_interval=log_interval,
             )
+            self.iteration += 1
+            if self.num_timesteps > self.learning_starts:
+                episode_rewards.extend(rollout_rewards)
+                episode_steps.extend(rollout_timesteps)
+                episode_flags.extend(rollout_flags)
+                episode_flags_percentage.extend(rollout_percentage)
 
             if rollout.continue_training is False:
                 break
@@ -266,7 +274,28 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 # If no `gradient_steps` is specified,
                 # do as many gradients steps as steps performed during the rollout
                 gradient_steps = self.gradient_steps if self.gradient_steps > 0 else rollout.episode_timesteps
-                self.train(batch_size=self.batch_size, gradient_steps=gradient_steps)
+                avg_loss = self.train(batch_size=self.batch_size, gradient_steps=gradient_steps)
+                episode_loss.append(avg_loss)
+
+            # Log training infos
+            if self.iteration % self.agent_config.train_log_frequency == 0:
+                if self.num_timesteps > self.learning_starts:
+                    self.log_metrics(iteration=self.num_timesteps, result=self.train_result,
+                                     episode_rewards=episode_rewards,
+                                     episode_avg_loss=episode_loss,
+                                     eval=False, lr=self.lr_schedule(self.num_timesteps),
+                                     total_num_episodes=self.num_timesteps,
+                                     episode_steps=episode_steps,
+                                     episode_flags=episode_flags,
+                                     episode_flags_percentage=episode_flags_percentage,
+                                     eps=self.exploration_rate)
+                    episode_loss = []
+                    episode_rewards = []
+                    episode_steps = []
+                    episode_flags = []
+                    episode_flags_percentage = []
+                else:
+                    print("Warmup")
 
         callback.on_training_end()
 
@@ -299,49 +328,21 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         # Select action randomly or according to policy
         if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
             # Warmup phase
-            unscaled_action = np.array([self.action_space.sample()])
+            actions = list(range(self.env.envs[0].env_config.action_conf.num_actions))
+            legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
+                action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), actions))
+            unscaled_action = np.array([np.random.choice(legal_actions)])
         else:
             # Note: when using continuous actions,
             # we assume that the policy uses tanh to scale the action
             # We use non-deterministic action in the case of SAC, for TD3, it does not matter
-            unscaled_action, _ = self.predict(self._last_obs, deterministic=False)
-
-        # Rescale the action from [low, high] to [-1, 1]
-        if isinstance(self.action_space, gym.spaces.Box):
-            scaled_action = self.policy.scale_action(unscaled_action)
-
-            # Add noise to the action (improve exploration)
-            if action_noise is not None:
-                scaled_action = np.clip(scaled_action + action_noise(), -1, 1)
-
-            # We store the scaled action in the buffer
-            buffer_action = scaled_action
-            action = self.policy.unscale_action(scaled_action)
-        else:
-            # Discrete case, no need to normalize or clip
-            buffer_action = unscaled_action
-            action = buffer_action
+            unscaled_action, _ = self.predict(self._last_obs, deterministic=False,
+                                              env_config=self.env.envs[0].env_config,
+                                              env_state=self.env.envs[0].env_state)
+        # Discrete case, no need to normalize or clip
+        buffer_action = unscaled_action
+        action = buffer_action
         return action, buffer_action
-
-    def _dump_logs(self) -> None:
-        """
-        Write log.
-        """
-        fps = int(self.num_timesteps / (time.time() - self.start_time))
-        logger.record("time/episodes", self._episode_num, exclude="tensorboard")
-        if len(self.ep_info_buffer) > 0 and len(self.ep_info_buffer[0]) > 0:
-            logger.record("rollout/ep_rew_mean", safe_mean([ep_info["r"] for ep_info in self.ep_info_buffer]))
-            logger.record("rollout/ep_len_mean", safe_mean([ep_info["l"] for ep_info in self.ep_info_buffer]))
-        logger.record("time/fps", fps)
-        logger.record("time/time_elapsed", int(time.time() - self.start_time), exclude="tensorboard")
-        logger.record("time/total timesteps", self.num_timesteps, exclude="tensorboard")
-        if self.use_sde:
-            logger.record("train/std", (self.actor.get_std()).mean().item())
-
-        if len(self.ep_success_buffer) > 0:
-            logger.record("rollout/success rate", safe_mean(self.ep_success_buffer))
-        # Pass the number of timesteps for tensorboard
-        logger.dump(step=self.num_timesteps)
 
     def _on_step(self) -> None:
         """
@@ -380,7 +381,11 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         :param log_interval: Log data every ``log_interval`` episodes
         :return:
         """
-        episode_rewards, total_timesteps = [], []
+
+        # Avg metrics
+        episode_rewards, total_timesteps, episode_flags, episode_flags_percentage = [], [], [], []
+
+        # Per episode metrics
         total_steps, total_episodes = 0, 0
 
         assert isinstance(env, VecEnv), "You must pass a VecEnv"
@@ -408,9 +413,11 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 # Rescale and perform action
                 new_obs, reward, done, infos = env.step(action)
 
+                # Record step metrics
                 self.num_timesteps += 1
                 episode_timesteps += 1
                 total_steps += 1
+                episode_reward += reward
 
                 # Give access to local variables
                 callback.update_locals(locals())
@@ -418,7 +425,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 if callback.on_step() is False:
                     return RolloutReturn(0.0, total_steps, total_episodes, continue_training=False)
 
-                episode_reward += reward
 
                 # Retrieve reward and episode length if using Monitor wrapper
                 self._update_info_buffer(infos, done)
@@ -456,16 +462,15 @@ class OffPolicyAlgorithm(BaseAlgorithm):
                 self._episode_num += 1
                 episode_rewards.append(episode_reward)
                 total_timesteps.append(episode_timesteps)
+                episode_flags.append(infos[0]["flags"])
+                episode_flags_percentage.append(infos[0]["flags"] / self.env.envs[0].env_config.num_flags)
 
                 if action_noise is not None:
                     action_noise.reset()
-
-                # Log training infos
-                if log_interval is not None and self._episode_num % log_interval == 0:
-                    self._dump_logs()
 
         mean_reward = np.mean(episode_rewards) if total_episodes > 0 else 0.0
 
         callback.on_rollout_end()
 
-        return RolloutReturn(mean_reward, total_steps, total_episodes, continue_training)
+        return RolloutReturn(mean_reward, total_steps, total_episodes, continue_training), episode_rewards, \
+               total_timesteps, episode_flags, episode_flags_percentage
