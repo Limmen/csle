@@ -32,17 +32,17 @@ def default_config() -> ClientConfig:
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
+                                                vf_coef=0.5, gae_lambda=0.95, max_gradient_norm=0.5,
+                                                mini_batch_size=64,
                                                 render_steps=20, illegal_action_logit=-100
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
-                                 agent_type=AgentType.PPO_BASELINE.value,
+                                 agent_type=AgentType.A2C_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline v1",
+                                 title="A2C-Baseline v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v1 cluster"
+    experiment_title = "A2C simple v1 cluster"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()
