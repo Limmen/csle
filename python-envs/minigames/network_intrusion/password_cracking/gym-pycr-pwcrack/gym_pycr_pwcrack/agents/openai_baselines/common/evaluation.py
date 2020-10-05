@@ -4,17 +4,17 @@ from typing import Callable, List, Optional, Tuple, Union
 import gym
 import numpy as np
 import time
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
 
 if typing.TYPE_CHECKING:
-    from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.base_class import BaseAlgorithm
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+    from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_episodes : int=10,
                     deterministic : bool= True,
                     render : bool =False, callback: Optional[Callable] = None,
                     reward_threshold: Optional[float] = None,
-                    return_episode_rewards: bool = False, pg_agent_config : PolicyGradientAgentConfig = None,
+                    return_episode_rewards: bool = False, agent_config : AgentConfig = None,
                     train_episode = 1):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
@@ -38,11 +38,11 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
     if isinstance(env, VecEnv):
         assert env.num_envs == 1, "You must pass only one environment when using this function"
 
-    pg_agent_config.logger.info("Starting Evaluation")
+    agent_config.logger.info("Starting Evaluation")
 
     model.num_eval_episodes = 0
 
-    if pg_agent_config.eval_episodes < 1:
+    if agent_config.eval_episodes < 1:
         return
     done = False
     state = None
@@ -63,10 +63,10 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         done = False
         episode_reward = 0.0
         episode_length = 0
-        for i in range(pg_agent_config.render_steps):
-            if pg_agent_config.eval_render:
+        for i in range(agent_config.render_steps):
+            if agent_config.eval_render:
                 env.render()
-                #time.sleep(pg_agent_config.eval_sleep)
+                #time.sleep(agent_config.eval_sleep)
 
             action, state = model.predict(obs, state=state, deterministic=deterministic)
             obs, reward, done, _info = env.step(action)
@@ -81,10 +81,10 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
             #     env.render()
 
         # Render final frame when game completed
-        if pg_agent_config.eval_render:
+        if agent_config.eval_render:
             env.render()
-            #time.sleep(pg_agent_config.eval_sleep)
-        pg_agent_config.logger.info("Eval episode: {}, Episode ended after {} steps".format(episode, episode_length))
+            #time.sleep(agent_config.eval_sleep)
+        agent_config.logger.info("Eval episode: {}, Episode ended after {} steps".format(episode, episode_length))
 
         # Record episode metrics
         episode_rewards.append(episode_reward)
@@ -97,13 +97,13 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         model.num_eval_episodes_total += 1
 
         # Log average metrics every <self.config.eval_log_frequency> episodes
-        if episode % pg_agent_config.eval_log_frequency == 0:
+        if episode % agent_config.eval_log_frequency == 0:
             model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
                               episode_steps=episode_steps, eval=True, episode_flags = episode_flags,
                               episode_flags_percentage=episode_flags_percentage)
 
         # Save gifs
-        if pg_agent_config.gifs or pg_agent_config.video:
+        if agent_config.gifs or agent_config.video:
             # Add frames to tensorboard
             for idx, frame in enumerate(env.envs[0].episode_frames):
                 model.tensorboard_writer.add_image(str(train_episode) + "_eval_frames/" + str(idx),
@@ -111,8 +111,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
                                                    dataformats="HWC")
 
             # Save Gif
-            env.envs[0].generate_gif(pg_agent_config.gif_dir + "episode_" + str(train_episode) + "_"
-                                     + time_str + ".gif", pg_agent_config.video_fps)
+            env.envs[0].generate_gif(agent_config.gif_dir + "episode_" + str(train_episode) + "_"
+                                     + time_str + ".gif", agent_config.video_fps)
 
     # Log average eval statistics
     model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
@@ -122,7 +122,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
     mean_reward = np.mean(episode_rewards)
     std_reward = np.std(episode_rewards)
 
-    pg_agent_config.logger.info("Evaluation Complete")
+    agent_config.logger.info("Evaluation Complete")
     print("Evaluation Complete")
     env.close()
     env.reset()

@@ -6,8 +6,8 @@ import gym
 import numpy as np
 import torch as th
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.callbacks import BaseCallback
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
 
 GymEnv = Union[gym.Env, VecEnv]
 GymObs = Union[Tuple, Dict[str, Any], np.ndarray, int]

@@ -27,10 +27,10 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     logger = setup_logger(title, config.output_dir + "/results/logs/" +
                                str(random_seed) + "/",
                                time_str=time_str)
-    config.pg_agent_config.save_dir = default_output_dir() + "/results/data/" + str(random_seed) + "/"
-    config.pg_agent_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
-    config.pg_agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
-    config.pg_agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
+    config.agent_config.save_dir = default_output_dir() + "/results/data/" + str(random_seed) + "/"
+    config.agent_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
+    config.agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
+    config.agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
                                              + str(random_seed) + "/"
     config.env_checkpoint_dir = default_output_dir() + "/results/env_data/" + str(random_seed) + "/"
 
@@ -40,10 +40,10 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
 
 
     config.logger = logger
-    config.pg_agent_config.logger = logger
-    config.pg_agent_config.random_seed = random_seed
+    config.agent_config.logger = logger
+    config.agent_config.random_seed = random_seed
     config.random_seed = random_seed
-    config.pg_agent_config.to_csv(
+    config.agent_config.to_csv(
         config.output_dir + "/results/hyperparameters/" + str(random_seed) + "/" + time_str + ".csv")
     train_csv_path = ""
     eval_csv_path = ""

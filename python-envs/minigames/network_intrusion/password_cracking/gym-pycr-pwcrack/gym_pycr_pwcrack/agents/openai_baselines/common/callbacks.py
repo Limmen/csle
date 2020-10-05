@@ -8,13 +8,13 @@ import gym
 import numpy as np
 
 from stable_baselines3.common import logger
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.evaluation import evaluate_policy
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import DummyVecEnv, VecEnv, sync_envs_normalization
+from gym_pycr_pwcrack.agents.openai_baselines.common.evaluation import evaluate_policy
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import DummyVecEnv, VecEnv, sync_envs_normalization
 
 if typing.TYPE_CHECKING:
-    from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.base_class import BaseAlgorithm
+    from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
 
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 class BaseCallback(ABC):
     """
@@ -295,7 +295,7 @@ class EvalCallback(EventCallback):
         deterministic: bool = True,
         render: bool = False,
         verbose: int = 1,
-        pg_agent_config: PolicyGradientAgentConfig = None
+        agent_config: AgentConfig = None
     ):
         super(EvalCallback, self).__init__(callback_on_new_best, verbose=verbose)
         self.n_eval_episodes = n_eval_episodes
@@ -304,7 +304,7 @@ class EvalCallback(EventCallback):
         self.last_mean_reward = -np.inf
         self.deterministic = deterministic
         self.render = render
-        self.pg_agent_config = pg_agent_config
+        self.agent_config = agent_config
 
         # Convert to VecEnv for consistency
         if not isinstance(eval_env, VecEnv):
@@ -346,7 +346,7 @@ class EvalCallback(EventCallback):
                 render=self.render,
                 deterministic=self.deterministic,
                 return_episode_rewards=True,
-                pg_agent_config=self.pg_agent_config
+                agent_config=self.agent_config
             )
 
             mean_reward, std_reward = np.mean(episode_rewards), np.std(episode_rewards)

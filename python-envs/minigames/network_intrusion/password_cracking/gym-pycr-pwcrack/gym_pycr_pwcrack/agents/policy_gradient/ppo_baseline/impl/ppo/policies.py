@@ -1,6 +1,6 @@
 # This file is here just to define MlpPolicy/CnnPolicy
 # that work for PPO
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.policies import \
+from gym_pycr_pwcrack.agents.openai_baselines.common.policies import \
     ActorCriticCnnPolicy, ActorCriticPolicy, register_policy
 
 MlpPolicy = ActorCriticPolicy

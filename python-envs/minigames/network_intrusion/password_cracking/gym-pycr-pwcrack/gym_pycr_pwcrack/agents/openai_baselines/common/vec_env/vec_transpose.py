@@ -3,7 +3,7 @@ from gym import spaces
 
 from stable_baselines3.common.preprocessing import is_image_space
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.base_vec_env import VecEnv, VecEnvStepReturn, VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import VecEnv, VecEnvStepReturn, VecEnvWrapper
 
 
 class VecTransposeImage(VecEnvWrapper):

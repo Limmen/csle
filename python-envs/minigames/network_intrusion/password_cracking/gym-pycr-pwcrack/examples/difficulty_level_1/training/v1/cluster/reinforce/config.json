@@ -4,7 +4,7 @@
     "env_name": "pycr-pwcrack-simple-sim-v1",
     "logger": null,
     "output_dir": "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/v1/reinforce",
-    "pg_agent_config": {
+    "agent_config": {
         "alpha": 0.001,
         "ar_policy": false,
         "attacker_input_dim": 40,
@@ -51,7 +51,7 @@
         "output_dim": 17,
         "pi_hidden_dim": 32,
         "pi_hidden_layers": 1,
-        "py/object": "gym_pycr_pwcrack.agents.config.pg_agent_config.PolicyGradientAgentConfig",
+        "py/object": "gym_pycr_pwcrack.agents.config.agent_config.AgentConfig",
         "random_seed": 0,
         "render": false,
         "render_steps": 20,

@@ -1,11 +1,11 @@
 """
-Configuration for Policy gradient agents
+Configuration for training agents
 """
 import csv
 
-class PolicyGradientAgentConfig:
+class AgentConfig:
     """
-    DTO with configuration for PolicyGradientAgent
+    DTO with configuration for training agents
     """
 
     def __init__(self, gamma :float = 0.8, alpha:float = 0.1,
@@ -32,9 +32,11 @@ class PolicyGradientAgentConfig:
                  ent_coef: float = 0.0, vf_coef: float = 0.5, use_sde: bool = False, sde_sample_freq: int = 4,
                  shared_hidden_dim : int = 64, shared_hidden_layers = 4,
                  mini_batch_size : int = 64, render_steps: int = 20, num_iterations : int = 50,
-                 multi_input_channel : bool = False, fw_input_dim : int = 64, traffic_input_dim : int = 64,
-                 ar_policy : bool = False, learning_attacker : bool = False, attacker_output_dim : int = 4,
-                 attacker_input_dim: int = 40, illegal_action_logit = -100
+                 multi_input_channel : bool = False,
+                 ar_policy : bool = False, illegal_action_logit = -100, buffer_size : int = 1000000,
+                 tau : float = 1.0, learning_starts : int = 50000, train_freq : int = 4, gradient_steps: int = 1,
+                 target_update_interval: int = 10000, exploration_fraction: float = 0.1,
+                 exploration_initial_eps: float = 1.0, exploration_final_eps: float = 0.05
                  ):
         """
         Initialize environment and hyperparameters
@@ -96,15 +98,21 @@ class PolicyGradientAgentConfig:
         :param multiple_heads: boolean flag whether to use multi-headed NN for the combinatorial action space
         :param shared_hidden_layers_dim: dimension of the shared hidden layers
         :param shared_hidden_layers: number of shared hidden layers
-        :param rule_hidden_layers: number of hidden layers of rule-head
-        :param rule_hidden_dim: dimension of hidden layers of rule head
-        :param protocol_hidden_layers: number of hidden layers of protocol-head
-        :param protocol_hidden_dim: dimension of hidden layers of protocol head
-        :param source_hidden_layers: number of hidden layers of source-head
-        :param source_hidden_dim: dimension of hidden layers of source head
-        :param port_hidden_layers: number of hidden layers of port-head
-        :param port_hidden_dim: dimension of hidden layers of port head
-        :param multi_headed_type: the type of the multi-headed architecture
+        :param mini_batch_size: the minibatch size to use for training
+        :param render_steps: maximum number of steps when rendering an episode
+        :param num_iterations: number of training iterations
+        :param multi_input_channel: boolean flag whether to use a multi-input channel or not if supported
+        :param ar_policy: boolean flag whether to use auto-regressive policy or not if supported
+        :param illegal_action_logit: value to mask illegal action logits with
+        :param buffer_size: size of the replay buffer for off-policy algorithms
+        :param tau: tau
+        :param learning_starts: specify how much warmup to use to populate replay buffer
+        :param train_freq: train frequency for off policy algos
+        :param gradient_steps: gradient steps for off policy algos
+        :param target_update_interval: update interval with target network for DQN
+        :param exploration_fraction: exploration fraction for off policy algos
+        :param exploration_initial_eps: exploration initial eps for off policy algos
+        :param exploration_final_eps: exploration final eps for off policy algos
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -166,13 +174,17 @@ class PolicyGradientAgentConfig:
         self.render_steps = render_steps
         self.num_iterations = num_iterations
         self.multi_input_channel = multi_input_channel
-        self.fw_input_dim = fw_input_dim
-        self.traffic_input_dim = traffic_input_dim
         self.ar_policy = ar_policy
-        self.learning_attacker = learning_attacker
-        self.attacker_output_dim = attacker_output_dim
-        self.attacker_input_dim = attacker_input_dim
         self.illegal_action_logit = illegal_action_logit
+        self.buffer_size = buffer_size
+        self.tau = tau
+        self.learning_starts = learning_starts
+        self.train_freq = train_freq
+        self.gradient_steps = gradient_steps
+        self.target_update_interval = target_update_interval
+        self.exploration_fraction = exploration_fraction
+        self.exploration_initial_eps = exploration_initial_eps
+        self.exploration_final_eps = exploration_final_eps
 
 
     def to_str(self) -> str:
@@ -188,7 +200,14 @@ class PolicyGradientAgentConfig:
                "output_dim:{24},critic_loss_fn:{25},state_length:{26}" \
                "gpu_id:{27},eps_clip:{28},input_dim:{29},lr_progress_decay:{30},lr_progress_power_decay:{31}," \
                "optimization_iterations:{32},gae_lambda:{33},features_dim:{34}," \
-               "ent_coef:{35},vf_coef:{36},use_sde:{37},sde_sample_freq:{38},illegal_action_logit:{39}".format(
+               "ent_coef:{35},vf_coef:{36},use_sde:{37},sde_sample_freq:{38},illegal_action_logit:{39}," \
+               "save_dir:{40}, load_path:{41}, pi_hidden_dim:{42}, pi_hidden_layers:{43}," \
+               "vf_hidden_layers:{44},vf_hidden_dim:{45},gpu:{46},tensorboard:{47},tensorboard_dir:{48}," \
+               "optimizer:{50},lr_exp_decay:{51},hidden_activation:{52},render_steps:{53}," \
+               "num_iterations:{54},mini_batch_size:{55},shared_hidden_dim:{56},shared_hidden_layers:{57}," \
+               "ar_policy:{58},buffer_size:{59},tau:{60},learning_starts:{61},train_freq:{62}," \
+               "gradient_steps:{63},target_update_interval:{64},exploration_fraction:{65}," \
+               "exploration_initial_eps:{66},exploration_final_eps:{67}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -196,7 +215,14 @@ class PolicyGradientAgentConfig:
             self.random_seed, self.eval_epsilon, self.clip_gradient, self.max_gradient_norm, self.output_dim,
             self.critic_loss_fn, self.state_length, self.gpu_id, self.eps_clip, self.input_dim, self.lr_progress_decay,
             self.lr_progress_power_decay, self.optimization_iterations, self.gae_lambda, self.features_dim,
-            self.ent_coef, self.vf_coef, self.use_sde, self.sde_sample_freq, self.illegal_action_logit)
+            self.ent_coef, self.vf_coef, self.use_sde, self.sde_sample_freq, self.illegal_action_logit,
+            self.save_dir, self.load_path, self.pi_hidden_dim, self.pi_hidden_layers, self.vf_hidden_layers,
+            self.vf_hidden_dim, self.gpu, self.tensorboard, self.tensorboard_dir,self.optimizer,
+            self.lr_exp_decay, self.hidden_activation, self.render_steps, self.num_iterations, self.mini_batch_size,
+            self.shared_hidden_dim, self.shared_layers, self.ar_policy,self.buffer_size,self.tau,
+            self.learning_starts, self.train_freq, self.gradient_steps, self.target_update_interval,
+            self.target_update_interval, self.exploration_fraction,self.exploration_initial_eps,
+            self.exploration_final_eps)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -259,6 +285,15 @@ class PolicyGradientAgentConfig:
             writer.writerow(["use_sde", str(self.use_sde)])
             writer.writerow(["sde_sample_freq", str(self.sde_sample_freq)])
             writer.writerow(["illegal_action_logit", str(self.illegal_action_logit)])
+            writer.writerow(["buffer_size", str(self.buffer_size)])
+            writer.writerow(["tau", str(self.tau)])
+            writer.writerow(["learning_starts", str(self.learning_starts)])
+            writer.writerow(["train_freq", str(self.train_freq)])
+            writer.writerow(["gradient_steps", str(self.gradient_steps)])
+            writer.writerow(["target_update_interval", str(self.target_update_interval)])
+            writer.writerow(["exploration_fraction", str(self.exploration_fraction)])
+            writer.writerow(["exploration_initial_eps", str(self.exploration_initial_eps)])
+            writer.writerow(["exploration_final_eps", str(self.exploration_final_eps)])
 
 
     def hparams_dict(self):
@@ -303,4 +338,13 @@ class PolicyGradientAgentConfig:
         hparams["use_sde"] = self.use_sde
         hparams["sde_sample_freq"] = self.sde_sample_freq
         hparams["illegal_action_logit"] = self.illegal_action_logit
+        hparams["buffer_size"] = self.buffer_size
+        hparams["tau"] = self.tau
+        hparams["learning_starts"] = self.learning_starts
+        hparams["train_freq"] = self.train_freq
+        hparams["gradient_steps"] = self.gradient_steps
+        hparams["target_update_interval"] = self.target_update_interval
+        hparams["exploration_fraction"] = self.exploration_fraction
+        hparams["exploration_initial_eps"] = self.exploration_initial_eps
+        hparams["exploration_final_eps"] = self.exploration_final_eps
         return hparams

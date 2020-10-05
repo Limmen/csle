@@ -3,11 +3,11 @@ import os
 from gym.wrappers.monitoring import video_recorder
 
 from stable_baselines3.common import logger
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.base_vec_env import VecEnvWrapper
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.dummy_vec_env import DummyVecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.subproc_vec_env import SubprocVecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_frame_stack import VecFrameStack
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_normalize import VecNormalize
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_frame_stack import VecFrameStack
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_normalize import VecNormalize
 
 class VecVideoRecorder(VecEnvWrapper):
     """

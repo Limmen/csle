@@ -7,14 +7,14 @@ from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PP
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 class PPOAttackerBotAgent:
     """
     Class implementing an attack policy that acts greedily according to a given policy network
     """
 
-    def __init__(self, pg_config: PolicyGradientAgentConfig, env_config: EnvConfig, model_path: str = None,
+    def __init__(self, pg_config: AgentConfig, env_config: EnvConfig, model_path: str = None,
                  env: PyCRPwCrackEnv = None):
         """
         Constructor, initializes the policy
@@ -25,9 +25,9 @@ class PPOAttackerBotAgent:
         if model_path is None:
             raise ValueError("Cannot create a PPOAttackerBotAgent without specifying the path to the model")
         self.env = env
-        self.pg_agent_config = pg_config
+        self.agent_config = pg_config
         self.model_path = model_path
-        self.device = "cpu" if not self.pg_agent_config.gpu else "cuda:" + str(self.pg_agent_config.gpu_id)
+        self.device = "cpu" if not self.agent_config.gpu else "cuda:" + str(self.agent_config.gpu_id)
         self.initialize_models()
 
 
@@ -38,8 +38,8 @@ class PPOAttackerBotAgent:
         """
         policy = "MlpPolicy"
         # Initialize models
-        self.model = PPO.load(env=self.env, load_path=self.pg_agent_config.load_path, device=self.device,
-                              pg_agent_config=self.pg_agent_config)
+        self.model = PPO.load(env=self.env, load_path=self.agent_config.load_path, device=self.device,
+                              agent_config=self.agent_config)
 
     def action(self, s: EnvState) -> int:
         """
@@ -49,7 +49,7 @@ class PPOAttackerBotAgent:
         :return: action_id
         """
         try:
-            #actions = list(range(self.pg_agent_config.output_dim))
+            #actions = list(range(self.agent_config.output_dim))
             # non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
             #     action, env_config=self.env_config, env_state=s), actions))
             m_obs, p_obs = s.get_observation()

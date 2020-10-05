@@ -2,7 +2,7 @@ import warnings
 
 import numpy as np
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.base_vec_env import VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import VecEnvWrapper
 
 class VecCheckNan(VecEnvWrapper):
     """

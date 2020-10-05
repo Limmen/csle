@@ -48,9 +48,9 @@ class Runner:
                        checkpoint_dir = config.env_checkpoint_dir)
         agent: TrainAgent = None
         if config.agent_type == AgentType.REINFORCE.value:
-            agent = ReinforceAgent(env, config.pg_agent_config)
+            agent = ReinforceAgent(env, config.agent_config)
         elif config.agent_type == AgentType.PPO_BASELINE.value:
-            agent = PPOBaselineAgent(env, config.pg_agent_config)
+            agent = PPOBaselineAgent(env, config.agent_config)
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()
@@ -72,11 +72,11 @@ class Runner:
                        checkpoint_dir=config.env_checkpoint_dir)
         attacker: PPOAttackerBotAgent = None
         if config.agent_type == AgentType.PPO_BASELINE.value:
-            if config.pg_agent_config is None or config.pg_agent_config.load_path is None:
+            if config.agent_config is None or config.agent_config.load_path is None:
                 raise ValueError("To run a simulation with a PPO agent, the path to the saved "
                                  "model must be specified")
-            attacker = PPOAttackerBotAgent(pg_config=config.pg_agent_config, env_config=env.env_config,
-                                           model_path=config.pg_agent_config.load_path, env=env)
+            attacker = PPOAttackerBotAgent(pg_config=config.agent_config, env_config=env.env_config,
+                                           model_path=config.agent_config.load_path, env=env)
         else:
             raise AssertionError("Agent type not recognized: {}".format(config.attacker_type))
         simulator = Simulator(env, config.simulation_config, attacker=attacker)

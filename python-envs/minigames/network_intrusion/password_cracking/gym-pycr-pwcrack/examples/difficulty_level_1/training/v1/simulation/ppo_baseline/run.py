@@ -1,5 +1,5 @@
 import os
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
@@ -9,7 +9,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    pg_agent_config = PolicyGradientAgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -34,7 +34,7 @@ def default_config() -> ClientConfig:
                                                 render_steps=20, illegal_action_logit = -100
                                                 )
     env_name = "pycr-pwcrack-simple-sim-v1"
-    client_config = ClientConfig(env_name=env_name, pg_agent_config=pg_agent_config,
+    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v0",

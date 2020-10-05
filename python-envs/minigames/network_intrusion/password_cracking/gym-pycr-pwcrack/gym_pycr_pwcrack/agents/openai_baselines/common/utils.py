@@ -18,7 +18,7 @@ from stable_baselines3.common import logger
 from stable_baselines3.common.preprocessing import is_image_space
 from stable_baselines3.common.type_aliases import GymEnv
 from stable_baselines3.common.vec_env import VecTransposeImage
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 
 def set_random_seed(seed: int, using_cuda: bool = False) -> None:
@@ -129,7 +129,7 @@ def constant_fn(val: float) -> Callable:
     return func
 
 
-def get_device(device: Union[th.device, str] = 'auto', pg_agent_config : PolicyGradientAgentConfig = None) -> th.device:
+def get_device(device: Union[th.device, str] = 'auto', agent_config : AgentConfig = None) -> th.device:
     """
     Retrieve PyTorch device.
     It checks that the requested device is available first.
@@ -139,8 +139,8 @@ def get_device(device: Union[th.device, str] = 'auto', pg_agent_config : PolicyG
     :param device: (Union[str, th.device]) One for 'auto', 'cuda', 'cpu'
     :return: (th.device)
     """
-    if pg_agent_config is not None:
-        device = "cpu" if not pg_agent_config.gpu else "cuda:" + str(pg_agent_config.gpu_id)
+    if agent_config is not None:
+        device = "cpu" if not agent_config.gpu else "cuda:" + str(agent_config.gpu_id)
         return th.device(device)
     # Cuda by default
     if device == 'auto':

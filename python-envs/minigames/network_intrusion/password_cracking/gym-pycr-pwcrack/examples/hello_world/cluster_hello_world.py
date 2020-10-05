@@ -7,9 +7,6 @@ import paramiko
 import re
 from xml.etree.ElementTree import XML, fromstring
 import xml.etree.ElementTree as ET
-from gym_pycr_pwcrack.dao.action_results.nmap_scan_result import NmapScanResult
-from gym_pycr_pwcrack.dao.action_results.nmap_host import NmapHostResult
-from gym_pycr_pwcrack.dao.action_results.nmap_host_status import NmapHostStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port import NmapPort
 

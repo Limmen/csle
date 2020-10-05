@@ -3,14 +3,14 @@ import typing
 from copy import deepcopy
 from typing import Optional, Type, Union
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv, VecEnvWrapper
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.dummy_vec_env import DummyVecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.subproc_vec_env import SubprocVecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_check_nan import VecCheckNan
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_frame_stack import VecFrameStack
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_normalize import VecNormalize
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_transpose import VecTransposeImage
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.vec_video_recorder import VecVideoRecorder
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv, VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_check_nan import VecCheckNan
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_frame_stack import VecFrameStack
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_normalize import VecNormalize
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_transpose import VecTransposeImage
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.vec_video_recorder import VecVideoRecorder
 
 # Avoid circular import
 if typing.TYPE_CHECKING:

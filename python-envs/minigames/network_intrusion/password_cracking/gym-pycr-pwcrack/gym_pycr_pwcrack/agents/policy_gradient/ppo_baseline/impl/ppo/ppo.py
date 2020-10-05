@@ -5,12 +5,11 @@ import torch as th
 from gym import spaces
 from torch.nn import functional as F
 
-from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback
-from stable_baselines3.common.utils import explained_variance, get_schedule_fn
-
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.policies import ActorCriticPolicy
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.on_policy_algorithm import OnPolicyAlgorithm
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.openai_baselines.common.utils import explained_variance, get_schedule_fn
+from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
+from gym_pycr_pwcrack.agents.openai_baselines.common.policies import ActorCriticPolicy
+from gym_pycr_pwcrack.agents.openai_baselines.common.on_policy_algorithm import OnPolicyAlgorithm
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 
 class PPO(OnPolicyAlgorithm):
@@ -88,7 +87,7 @@ class PPO(OnPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        pg_agent_config: PolicyGradientAgentConfig = None
+        agent_config: AgentConfig = None
     ):
 
         super(PPO, self).__init__(
@@ -110,7 +109,7 @@ class PPO(OnPolicyAlgorithm):
             create_eval_env=create_eval_env,
             seed=seed,
             _init_setup_model=False,
-            pg_agent_config=pg_agent_config
+            agent_config=agent_config
         )
 
         self.batch_size = batch_size

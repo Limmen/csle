@@ -12,10 +12,10 @@ from torch import nn as nn
 
 from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
 from stable_baselines3.common.utils import get_device, is_vectorized_observation
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.torch_layers import BaseFeaturesExtractor, \
+from gym_pycr_pwcrack.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, \
     FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.distributions import (
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.agents.openai_baselines.common.distributions import (
     Distribution,
     StateDependentNoiseDistribution,
     make_proba_distribution,
@@ -57,7 +57,7 @@ class BaseModel(nn.Module, ABC):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
-        pg_agent_config: PolicyGradientAgentConfig = None
+        agent_config: AgentConfig = None
     ):
         super(BaseModel, self).__init__()
 
@@ -78,7 +78,7 @@ class BaseModel(nn.Module, ABC):
 
         self.features_extractor_class = features_extractor_class
         self.features_extractor_kwargs = features_extractor_kwargs
-        self.pg_agent_config = pg_agent_config
+        self.agent_config = agent_config
 
     @abstractmethod
     def forward(self, *args, **kwargs):
@@ -297,7 +297,7 @@ class ActorCriticPolicy(BasePolicy):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
-        pg_agent_config: PolicyGradientAgentConfig = None
+        agent_config: AgentConfig = None
     ):
 
         if optimizer_kwargs is None:
@@ -314,7 +314,7 @@ class ActorCriticPolicy(BasePolicy):
             optimizer_class=optimizer_class,
             optimizer_kwargs=optimizer_kwargs,
             squash_output=squash_output,
-            pg_agent_config=pg_agent_config
+            agent_config=agent_config
         )
 
         # Default network architecture, from stable-baselines
@@ -441,7 +441,7 @@ class ActorCriticPolicy(BasePolicy):
         values = self.value_net(latent_vf)
 
         # Masking legal actions
-        actions = list(range(self.pg_agent_config.output_dim))
+        actions = list(range(self.agent_config.output_dim))
         non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
             action, env_config=env_config, env_state=env_state), actions))
 
@@ -487,10 +487,10 @@ class ActorCriticPolicy(BasePolicy):
         if non_legal_actions is not None and len(non_legal_actions) > 0:
             if len(action_logits.shape) == 1:
                 # action_probs_1[non_legal_actions] = 0.00000000000001 # Don't set to zero due to invalid distribution errors
-                action_logits[non_legal_actions] = self.pg_agent_config.illegal_action_logit
+                action_logits[non_legal_actions] = self.agent_config.illegal_action_logit
             elif len(action_logits.shape) == 2:
                 # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
-                action_logits[:, non_legal_actions] = self.pg_agent_config.illegal_action_logit
+                action_logits[:, non_legal_actions] = self.agent_config.illegal_action_logit
             else:
                 raise AssertionError("Invalid shape of action probabilties")
         action_logits_1 = action_logits.to(self.device)
@@ -509,7 +509,7 @@ class ActorCriticPolicy(BasePolicy):
         latent_pi, _, latent_sde = self._get_latent(observation)
 
         # Masking legal actions
-        actions = list(range(self.pg_agent_config.output_dim))
+        actions = list(range(self.agent_config.output_dim))
         non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
             action, env_config=env_config, env_state=env_state), actions))
 

@@ -1,6 +1,6 @@
 import os
 import glob
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.util.experiments_util import util
@@ -16,7 +16,7 @@ def default_config() -> ClientConfig:
                                          video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                          num_episodes=1000,
                                          gifs=True, gif_dir=util.default_output_dir() + "/results/gifs", video_frequency=1)
-    pg_agent_config = PolicyGradientAgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -44,7 +44,7 @@ def default_config() -> ClientConfig:
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
-    client_config = ClientConfig(env_name=env_name, pg_agent_config=pg_agent_config,
+    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v0",

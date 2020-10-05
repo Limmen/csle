@@ -5,8 +5,8 @@ from typing import Callable, List, Optional, Sequence
 import gym
 import numpy as np
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.base_vec_env import VecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env.util import copy_obs_dict, dict_to_obs, obs_space_info
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import VecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.util import copy_obs_dict, dict_to_obs, obs_space_info
 
 
 class DummyVecEnv(VecEnv):

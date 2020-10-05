@@ -21,7 +21,7 @@
     "logger": null,
     "mode": 1,
     "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline",
-    "pg_agent_config": {
+    "agent_config": {
         "alpha": 0.0005,
         "ar_policy": false,
         "attacker_input_dim": 40,
@@ -69,7 +69,7 @@
         "output_dim": 114,
         "pi_hidden_dim": 128,
         "pi_hidden_layers": 1,
-        "py/object": "gym_pycr_pwcrack.agents.config.pg_agent_config.PolicyGradientAgentConfig",
+        "py/object": "gym_pycr_pwcrack.agents.config.agent_config.AgentConfig",
         "random_seed": 0,
         "render": false,
         "render_steps": 20,

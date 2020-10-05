@@ -1,5 +1,5 @@
 """
-An agent for the cgc-bta env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
+An agent for the cgc-bta env that uses the DQN algorithm from OpenAI stable baselines
 """
 import time
 import torch
@@ -10,12 +10,11 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
+from gym_pycr_pwcrack.agents.dqn.impl.dqn import DQN
 
-
-class PPOBaselineAgent(TrainAgent):
+class DQNBaselineAgent(TrainAgent):
     """
-    An agent for the pycr-pwcrack env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
+    An agent for the cgc-bta env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
     """
 
     def __init__(self, env: PyCRPwCrackEnv, config: AgentConfig):
@@ -24,7 +23,7 @@ class PPOBaselineAgent(TrainAgent):
 
         :param config: the configuration
         """
-        super(PPOBaselineAgent, self).__init__(env, config)
+        super(DQNBaselineAgent, self).__init__(env, config)
 
     def train(self) -> ExperimentResult:
         """
@@ -56,28 +55,19 @@ class PPOBaselineAgent(TrainAgent):
             temp = self.config.alpha
             lr_decay_func = lambda x: temp*math.pow(x, self.config.lr_progress_power_decay)
             self.config.alpha = lr_decay_func
-
-        model = PPO(policy, self.env,
-                    batch_size=self.config.mini_batch_size,
-                    learning_rate=self.config.alpha,
-                    n_steps=self.config.batch_size,
-                    n_epochs=self.config.optimization_iterations,
-                    gamma=self.config.gamma,
-                    gae_lambda=self.config.gae_lambda,
-                    clip_range=self.config.eps_clip,
-                    max_grad_norm=self.config.max_gradient_norm,
-                    verbose=1, tensorboard_log=self.config.tensorboard_dir,
-                    seed=self.config.random_seed,
-                    policy_kwargs=policy_kwargs,
-                    device=device,
-                    agent_config=self.config,
-                    vf_coef=self.config.vf_coef,
-                    ent_coef=self.config.ent_coef,
-                    use_sde=self.config.use_sde,
-                    sde_sample_freq=self.config.sde_sample_freq)
+        model = DQN(
+            policy, self.env, learning_rate=self.config.alpha, buffer_size=self.config.buffer_size,
+            learning_starts=self.config.learning_starts,batch_size=self.config.batch_size,
+            tau=self.config.tau,gamma=self.config.gamma,train_freq=self.config.train_freq,
+            gradient_steps=self.config.gradient_steps,target_update_interval=self.config.target_update_interval,
+            exploration_fraction=self.config.exploration_fraction,
+            exploration_initial_eps=self.config.exploration_initial_eps,
+            exploration_final_eps=self.config.exploration_final_eps,
+            agent_config=self.config
+        )
 
         if self.config.load_path is not None:
-            PPO.load(self.config.load_path, policy, agent_config=self.config)
+            DQN.load(self.config.load_path, policy, agent_config=self.config)
 
 
         # Video config

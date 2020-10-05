@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 from gym import spaces
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv, VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv, VecEnvWrapper
 
 
 class VecFrameStack(VecEnvWrapper):

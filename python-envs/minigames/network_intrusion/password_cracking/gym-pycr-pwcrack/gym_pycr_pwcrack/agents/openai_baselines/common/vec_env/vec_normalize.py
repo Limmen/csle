@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 
 from stable_baselines3.common.running_mean_std import RunningMeanStd
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv, VecEnvWrapper
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv, VecEnvWrapper
 
 
 class VecNormalize(VecEnvWrapper):

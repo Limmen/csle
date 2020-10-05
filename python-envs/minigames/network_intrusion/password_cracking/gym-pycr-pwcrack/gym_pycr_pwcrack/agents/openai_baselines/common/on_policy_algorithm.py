@@ -5,13 +5,13 @@ import gym
 import numpy as np
 import torch as th
 
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.buffers import RolloutBuffer
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.type_aliases import GymEnv, MaybeCallback
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecEnv
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.callbacks import BaseCallback
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.base_class import BaseAlgorithm
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.policies import ActorCriticPolicy
-from gym_pycr_pwcrack.agents.config.pg_agent_config import PolicyGradientAgentConfig
+from gym_pycr_pwcrack.agents.openai_baselines.common.buffers import RolloutBuffer
+from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback
+from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
+from gym_pycr_pwcrack.agents.openai_baselines.common.policies import ActorCriticPolicy
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -67,7 +67,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        pg_agent_config: PolicyGradientAgentConfig = None
+        agent_config: AgentConfig = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -83,7 +83,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             create_eval_env=create_eval_env,
             support_multi_env=True,
             seed=seed,
-            pg_agent_config = pg_agent_config
+            agent_config = agent_config
         )
 
         self.n_steps = n_steps
@@ -118,7 +118,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.action_space,
             self.lr_schedule,
             use_sde=self.use_sde,
-            pg_agent_config = self.pg_agent_config,
+            agent_config = self.agent_config,
             **self.policy_kwargs  # pytype:disable=not-instantiable
         )
         self.policy = self.policy.to(self.device)
@@ -220,7 +220,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         reset_num_timesteps: bool = True,
     ) -> "OnPolicyAlgorithm":
 
-        self.pg_agent_config.logger.info("Setting up Training Configuration")
+        self.agent_config.logger.info("Setting up Training Configuration")
         print("Setting up Training Configuration")
 
         self.iteration = 0
@@ -230,8 +230,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         )
 
         callback.on_training_start(locals(), globals())
-        self.pg_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
-        self.pg_agent_config.logger.info(self.pg_agent_config.to_str())
+        self.agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
+        self.agent_config.logger.info(self.agent_config.to_str())
 
         # Tracking metrics
         episode_rewards = []
@@ -241,7 +241,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_flags_percentage = []
         lr = 0.0
 
-        while self.iteration < self.pg_agent_config.num_iterations:
+        while self.iteration < self.agent_config.num_iterations:
 
             continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage = \
                 self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
@@ -257,7 +257,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.iteration += 1
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
-            if self.iteration % self.pg_agent_config.train_log_frequency == 0:
+            if self.iteration % self.agent_config.train_log_frequency == 0:
                 self.log_metrics(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
                                  episode_avg_loss=episode_loss,
@@ -273,14 +273,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations
-            if self.iteration % self.pg_agent_config.checkpoint_freq == 0:
+            if self.iteration % self.agent_config.checkpoint_freq == 0:
                 self.save_model()
-                if self.pg_agent_config.save_dir is not None:
+                if self.agent_config.save_dir is not None:
                     time_str = str(time.time())
                     self.train_result.to_csv(
-                        self.pg_agent_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
+                        self.agent_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
                     self.eval_result.to_csv(
-                        self.pg_agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
+                        self.agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
             entropy_loss, pg_loss, value_loss, lr = self.train()
             episode_loss.append(entropy_loss + pg_loss + value_loss)
@@ -333,10 +333,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         :return: None
         """
         time_str = str(time.time())
-        if self.pg_agent_config.save_dir is not None:
-            path = self.pg_agent_config.save_dir + "/" + time_str + "_policy_network.zip"
-            self.pg_agent_config.logger.info("Saving policy-network to: {}".format(path))
+        if self.agent_config.save_dir is not None:
+            path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
+            self.agent_config.logger.info("Saving policy-network to: {}".format(path))
             self.save(path, exclude=["tensorboard_writer"])
         else:
-            self.pg_agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
+            self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
             print("Save path not defined, not saving policy-networks to disk")

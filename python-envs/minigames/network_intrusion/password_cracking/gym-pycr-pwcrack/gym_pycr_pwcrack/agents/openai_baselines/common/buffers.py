@@ -12,8 +12,8 @@ except ImportError:
     psutil = None
 
 from stable_baselines3.common.preprocessing import get_action_dim, get_obs_shape
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.type_aliases import ReplayBufferSamples, RolloutBufferSamples
-from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.common.vec_env import VecNormalize
+from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import ReplayBufferSamples, RolloutBufferSamples
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecNormalize
 
 
 class BaseBuffer(object):
