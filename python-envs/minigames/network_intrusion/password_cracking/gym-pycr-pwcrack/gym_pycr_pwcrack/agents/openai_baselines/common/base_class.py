@@ -33,6 +33,8 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import DummyVecEnv,
 from gym_pycr_pwcrack.agents.openai_baselines.common.policies import BasePolicy, get_policy_from_name
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
+from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
+from gym_pycr_pwcrack.dao.network.env_state import EnvState
 
 
 def maybe_make_env(env: Union[GymEnv, str, None], monitor_wrapper: bool, verbose: int) -> Optional[GymEnv]:
@@ -410,6 +412,8 @@ class BaseAlgorithm(ABC):
             state: Optional[np.ndarray] = None,
             mask: Optional[np.ndarray] = None,
             deterministic: bool = False,
+            env_config : EnvConfig = None,
+            env_state : EnvState = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the model's action(s) from an observation

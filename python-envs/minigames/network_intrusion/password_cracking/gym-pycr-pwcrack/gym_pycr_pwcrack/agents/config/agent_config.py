@@ -36,7 +36,8 @@ class AgentConfig:
                  ar_policy : bool = False, illegal_action_logit = -100, buffer_size : int = 1000000,
                  tau : float = 1.0, learning_starts : int = 50000, train_freq : int = 4, gradient_steps: int = 1,
                  target_update_interval: int = 10000, exploration_fraction: float = 0.1,
-                 exploration_initial_eps: float = 1.0, exploration_final_eps: float = 0.05
+                 exploration_initial_eps: float = 1.0, exploration_final_eps: float = 0.05,
+                 policy_delay : int = 2, target_policy_noise : float = 0.2, target_noise_clip : float = 0.5
                  ):
         """
         Initialize environment and hyperparameters
@@ -113,6 +114,9 @@ class AgentConfig:
         :param exploration_fraction: exploration fraction for off policy algos
         :param exploration_initial_eps: exploration initial eps for off policy algos
         :param exploration_final_eps: exploration final eps for off policy algos
+        :param policy_delay: policy delay for TD3 and similar algos
+        :param target_policy_noise: policy noise for TD3 and similar algos
+        :param target_noise_clip: target noise for TD3 and similar algos
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -185,6 +189,9 @@ class AgentConfig:
         self.exploration_fraction = exploration_fraction
         self.exploration_initial_eps = exploration_initial_eps
         self.exploration_final_eps = exploration_final_eps
+        self.policy_delay = policy_delay
+        self.target_policy_noise = target_policy_noise
+        self.target_noise_clip = target_noise_clip
 
 
     def to_str(self) -> str:
@@ -207,7 +214,8 @@ class AgentConfig:
                "num_iterations:{54},mini_batch_size:{55},shared_hidden_dim:{56},shared_hidden_layers:{57}," \
                "ar_policy:{58},buffer_size:{59},tau:{60},learning_starts:{61},train_freq:{62}," \
                "gradient_steps:{63},target_update_interval:{64},exploration_fraction:{65}," \
-               "exploration_initial_eps:{66},exploration_final_eps:{67}".format(
+               "exploration_initial_eps:{66},exploration_final_eps:{67},policy_delay:{68}," \
+               "target_policy_noise:{69},target_noise_clip:{70}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -222,7 +230,7 @@ class AgentConfig:
             self.shared_hidden_dim, self.shared_layers, self.ar_policy,self.buffer_size,self.tau,
             self.learning_starts, self.train_freq, self.gradient_steps, self.target_update_interval,
             self.target_update_interval, self.exploration_fraction,self.exploration_initial_eps,
-            self.exploration_final_eps)
+            self.exploration_final_eps, self.policy_delay, self.target_policy_noise, self.target_noise_clip)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -294,6 +302,9 @@ class AgentConfig:
             writer.writerow(["exploration_fraction", str(self.exploration_fraction)])
             writer.writerow(["exploration_initial_eps", str(self.exploration_initial_eps)])
             writer.writerow(["exploration_final_eps", str(self.exploration_final_eps)])
+            writer.writerow(["policy_delay", str(self.policy_delay)])
+            writer.writerow(["target_policy_noise", str(self.target_policy_noise)])
+            writer.writerow(["target_noise_clip", str(self.target_noise_clip)])
 
 
     def hparams_dict(self):
@@ -347,4 +358,7 @@ class AgentConfig:
         hparams["exploration_fraction"] = self.exploration_fraction
         hparams["exploration_initial_eps"] = self.exploration_initial_eps
         hparams["exploration_final_eps"] = self.exploration_final_eps
+        hparams["policy_delay"] = self.policy_delay
+        hparams["target_policy_noise"] = self.target_policy_noise
+        hparams["target_noise_clip"] = self.target_noise_clip
         return hparams

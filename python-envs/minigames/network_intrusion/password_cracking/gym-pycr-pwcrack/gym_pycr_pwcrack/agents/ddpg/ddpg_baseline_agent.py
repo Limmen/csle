@@ -1,5 +1,5 @@
 """
-An agent for the cgc-bta env that uses the DQN algorithm from OpenAI stable baselines
+An agent for the cgc-bta env that uses the DDPG algorithm from OpenAI stable baselines
 """
 import time
 import torch
@@ -10,11 +10,11 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
-from gym_pycr_pwcrack.agents.dqn.impl.dqn import DQN
+from gym_pycr_pwcrack.agents.ddpg.impl.ddpg import DDPG
 
-class DQNBaselineAgent(TrainAgent):
+class DDPGBaselineAgent(TrainAgent):
     """
-    An agent for the cgc-bta env that uses the TD3 Policy Gradient algorithm from OpenAI stable baselines
+    An agent for the cgc-bta env that uses the DDPG algorithm from OpenAI stable baselines
     """
 
     def __init__(self, env: PyCRPwCrackEnv, config: AgentConfig):
@@ -23,7 +23,7 @@ class DQNBaselineAgent(TrainAgent):
 
         :param config: the configuration
         """
-        super(DQNBaselineAgent, self).__init__(env, config)
+        super(DDPGBaselineAgent, self).__init__(env, config)
 
     def train(self) -> ExperimentResult:
         """
@@ -46,20 +46,18 @@ class DQNBaselineAgent(TrainAgent):
             lr_decay_func = lambda x: temp*math.pow(x, self.config.lr_progress_power_decay)
             self.config.alpha = lr_decay_func
 
-        model = DQN(
+        model = DDPG(
             policy, self.env, learning_rate=self.config.alpha, buffer_size=self.config.buffer_size,
             learning_starts=self.config.learning_starts,batch_size=self.config.batch_size,
             tau=self.config.tau,gamma=self.config.gamma,train_freq=self.config.train_freq,
-            gradient_steps=self.config.gradient_steps,target_update_interval=self.config.target_update_interval,
-            exploration_fraction=self.config.exploration_fraction,
-            exploration_initial_eps=self.config.exploration_initial_eps,
-            exploration_final_eps=self.config.exploration_final_eps,
+            gradient_steps=self.config.gradient_steps,
             agent_config=self.config, device=device,
             policy_kwargs=policy_kwargs,
+            n_episodes_rollout=-1
         )
 
         if self.config.load_path is not None:
-            DQN.load(self.config.load_path, policy, agent_config=self.config)
+            DDPG.load(self.config.load_path, policy, agent_config=self.config)
 
 
         # Video config

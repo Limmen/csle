@@ -141,6 +141,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return True
         if action_id > len(env_config.action_conf.actions) - 1:
             return False
+
         action = env_config.action_conf.actions[action_id]
 
         # Recon on subnet is always possible
