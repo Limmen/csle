@@ -30,7 +30,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                   os_lookup=constants.OS.os_lookup, num_flags=self.env_config.num_flags)
         self.observation_space = self.env_state.observation_space
+        self.m_selection_observation_space = self.env_state.m_selection_observation_space
+        self.m_action_observation_space = self.env_state.m_action_observation_space
         self.action_space = self.env_config.action_conf.action_space
+        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.obs_state.num_machines)
+        self.m_action_space = self.env_config.action_conf.m_action_space
         self.num_actions = self.env_config.action_conf.num_actions
         self.reward_range = (float(0), float(1))
         self.num_states = 100
@@ -79,6 +83,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
+        action.ip = self.env_state.obs_state.get_action_id(action)
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         if self.agent_state.time_step > self.env_config.max_episode_length:
             done = True
@@ -143,6 +148,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return False
 
         action = env_config.action_conf.actions[action_id]
+        action.ip = env_state.obs_state.get_action_id(action)
 
         # Recon on subnet is always possible
         if action.subnet:
@@ -195,6 +201,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return
         else:
             self.env_state.cleanup()
+
+
+    def convert_ar_action(self, machine_idx, action_idx):
+        key = (machine_idx, action_idx)
+        return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
 

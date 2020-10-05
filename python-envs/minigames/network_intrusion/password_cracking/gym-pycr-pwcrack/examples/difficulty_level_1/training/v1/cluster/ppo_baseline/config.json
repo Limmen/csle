@@ -44,7 +44,7 @@
         "mini_batch_size": 64,
         "multi_input_channel": false,
         "num_episodes": 5000,
-        "num_iterations": 500,
+        "num_iterations": 1000,
         "optimization_iterations": 10,
         "optimizer": "Adam",
         "output_dim": 114,

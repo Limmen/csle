@@ -135,6 +135,8 @@ class BaseAlgorithm(ABC):
         self.action_noise = None  # type: Optional[ActionNoise]
         self.start_time = None
         self.policy = None
+        self.m_selection_policy = None
+        self.m_action_policy = None
         self.learning_rate = learning_rate
         self.lr_schedule = None  # type: Optional[Callable]
         self._last_obs = None  # type: Optional[np.ndarray]

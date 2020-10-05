@@ -12,8 +12,10 @@ except ImportError:
     psutil = None
 
 from stable_baselines3.common.preprocessing import get_action_dim, get_obs_shape
-from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import ReplayBufferSamples, RolloutBufferSamples
+from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import ReplayBufferSamples, RolloutBufferSamples, \
+    RolloutBufferSamplesAR
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecNormalize
+from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
 
 class BaseBuffer(object):
@@ -381,3 +383,175 @@ class RolloutBuffer(BaseBuffer):
             self.returns[batch_inds].flatten(),
         )
         return RolloutBufferSamples(*tuple(map(self.to_torch, data)))
+
+
+
+class RolloutBufferAR(BaseBuffer):
+    """
+    Rollout buffer used in on-policy algorithms like A2C/PPO using auto-regressive policy
+
+    :param buffer_size: (int) Max number of element in the buffer
+    :param observation_space: (spaces.Space) Observation space
+    :param action_space: (spaces.Space) Action space
+    :param device: (th.device)
+    :param gae_lambda: (float) Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+        Equivalent to classic advantage when set to 1.
+    :param gamma: (float) Discount factor
+    :param n_envs: (int) Number of parallel environments
+    :param agent_config: agent config
+    """
+
+    def __init__(
+        self,
+        buffer_size: int,
+        observation_space: spaces.Space,
+        action_space: spaces.Space,
+        device: Union[th.device, str] = "cpu",
+        gae_lambda: float = 1,
+        gamma: float = 0.99,
+        n_envs: int = 1,
+        agent_config : AgentConfig = None
+    ):
+
+        super(RolloutBufferAR, self).__init__(buffer_size, observation_space, action_space, device, n_envs=n_envs)
+        self.gae_lambda = gae_lambda
+        self.agent_config = agent_config
+        self.gamma = gamma
+        self.network_observations, self.machine_observations, self.m_selection_actions, self.m_actions, \
+        self.rewards, self.m_selection_advantages, self.m_action_advantages = None, None, None, None, None, None, None
+        self.m_selection_returns, self.m_action_returns, self.dones, self.m_selection_values, self.m_action_values, \
+        self.m_selection_log_probs, self.m_action_log_probs = None, None, None, None, None, None, None
+        self.generator_ready = False
+        self.reset()
+
+    def reset(self) -> None:
+        self.network_observations = np.zeros((self.buffer_size, self.n_envs, self.agent_config.input_dim), dtype=np.float32)
+        self.machine_observations = np.zeros((self.buffer_size, self.n_envs, self.agent_config.input_dim2),
+                                             dtype=np.float32)
+        self.m_selection_actions = np.zeros((self.buffer_size, self.n_envs, self.agent_config.output_dim), dtype=np.float32)
+        self.m_actions = np.zeros((self.buffer_size, self.n_envs, self.agent_config.output_dim2), dtype=np.float32)
+        self.rewards = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_selection_returns = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_action_returns = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.dones = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_selection_values = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_action_values = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_selection_log_probs = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_action_log_probs = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_selection_advantages = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.m_action_advantages = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
+        self.generator_ready = False
+        super(RolloutBufferAR, self).reset()
+
+    def compute_returns_and_advantage(self, last_value: th.Tensor, dones: np.ndarray, machine_action : bool = False) -> None:
+        """
+        Post-processing step: compute the returns (sum of discounted rewards)
+        and GAE advantage.
+        Adapted from Stable-Baselines PPO2.
+
+        Uses Generalized Advantage Estimation (https://arxiv.org/abs/1506.02438)
+        to compute the advantage. To obtain vanilla advantage (A(s) = R - V(S))
+        where R is the discounted reward with value bootstrap,
+        set ``gae_lambda=1.0`` during initialization.
+
+        :param last_value: (th.Tensor)
+        :param dones: (np.ndarray)
+
+        """
+        # convert to numpy
+        last_value = last_value.clone().cpu().numpy().flatten()
+
+        last_gae_lam = 0
+        for step in reversed(range(self.buffer_size)):
+            if step == self.buffer_size - 1:
+                next_non_terminal = 1.0 - dones
+                next_value = last_value
+            else:
+                next_non_terminal = 1.0 - self.dones[step + 1]
+                if machine_action:
+                    next_value = self.m_action_values[step + 1]
+                else:
+                    next_value = self.m_selection_values[step + 1]
+            if machine_action:
+                delta = self.rewards[step] + self.gamma * next_value * next_non_terminal - self.m_action_values[step]
+                last_gae_lam = delta + self.gamma * self.gae_lambda * next_non_terminal * last_gae_lam
+                self.m_action_advantages[step] = last_gae_lam
+            else:
+                delta = self.rewards[step] + self.gamma * next_value * next_non_terminal - self.m_selection_values[step]
+                last_gae_lam = delta + self.gamma * self.gae_lambda * next_non_terminal * last_gae_lam
+                self.m_selection_advantages[step] = last_gae_lam
+        if machine_action:
+            self.m_action_returns = self.m_action_advantages + self.m_action_advantages
+        else:
+            self.m_selection_returns = self.m_selection_advantages + self.m_selection_values
+
+    def add(
+        self, network_obs: np.ndarray, machine_obs: np.ndarray, m_selection_action: np.ndarray, m_action: np.ndarray,
+            reward: np.ndarray, done: np.ndarray, m_selection_value: th.Tensor, m_action_value: th.Tensor,
+            m_selection_log_prob: th.Tensor, m_action_log_prob: th.Tensor
+    ) -> None:
+        """
+        :param network_obs: (np.ndarray) Observation
+        :param action: (np.ndarray) Action
+        :param reward: (np.ndarray)
+        :param done: (np.ndarray) End of episode signal.
+        :param value: (th.Tensor) estimated value of the current state
+            following the current policy.
+        :param m_selection_log_prob: (th.Tensor) log probability of the action
+            following the current policy.
+        """
+        if len(m_selection_log_prob.shape) == 0:
+            # Reshape 0-d tensor to avoid error
+            m_selection_log_prob = m_selection_log_prob.reshape(-1, 1)
+
+        self.network_observations[self.pos] = np.array(network_obs).copy()
+        self.machine_observations[self.pos] = np.array(machine_obs).copy()
+        self.m_selection_actions[self.pos] = np.array(m_selection_action).copy()
+        self.m_actions[self.pos] = np.array(m_action).copy()
+        self.rewards[self.pos] = np.array(reward).copy()
+        self.dones[self.pos] = np.array(done).copy()
+        self.m_selection_values[self.pos] = m_selection_value.clone().cpu().numpy().flatten()
+        self.m_action_values[self.pos] = m_action_value.clone().cpu().numpy().flatten()
+        self.m_selection_log_probs[self.pos] = m_selection_log_prob.clone().cpu().numpy()
+        self.m_action_log_probs[self.pos] = m_action_log_prob.clone().cpu().numpy()
+        self.pos += 1
+        if self.pos == self.buffer_size:
+            self.full = True
+
+    def get(self, batch_size: Optional[int] = None) -> Generator[RolloutBufferSamplesAR, None, None]:
+        assert self.full, ""
+        indices = np.random.permutation(self.buffer_size * self.n_envs)
+        # Prepare the data
+        if not self.generator_ready:
+            for tensor in ["network_observations", "machine_observations", "m_selection_actions",
+                           "m_actions", "m_selection_values", "m_action_values", "m_selection_log_probs",
+                           "m_action_log_probs", "m_selection_advantages", "m_action_advantages",
+                           "m_selection_returns", "m_action_returns"]:
+                self.__dict__[tensor] = self.swap_and_flatten(self.__dict__[tensor])
+            self.generator_ready = True
+
+        # Return everything, don't create minibatches
+        if batch_size is None:
+            batch_size = self.buffer_size * self.n_envs
+
+        start_idx = 0
+        while start_idx < self.buffer_size * self.n_envs:
+            yield self._get_samples(indices[start_idx : start_idx + batch_size])
+            start_idx += batch_size
+
+    def _get_samples(self, batch_inds: np.ndarray, env: Optional[VecNormalize] = None) -> RolloutBufferSamplesAR:
+        data = (
+            self.network_observations[batch_inds],
+            self.machine_observations[batch_inds],
+            self.m_selection_actions[batch_inds],
+            self.m_actions[batch_inds],
+            self.m_selection_values[batch_inds].flatten(),
+            self.m_action_values[batch_inds].flatten(),
+            self.m_selection_log_probs[batch_inds].flatten(),
+            self.m_action_log_probs[batch_inds].flatten(),
+            self.m_selection_advantages[batch_inds].flatten(),
+            self.m_action_advantages[batch_inds].flatten(),
+            self.m_selection_returns[batch_inds].flatten(),
+            self.m_action_returns[batch_inds].flatten(),
+        )
+        return RolloutBufferSamplesAR(*tuple(map(self.to_torch, data)))

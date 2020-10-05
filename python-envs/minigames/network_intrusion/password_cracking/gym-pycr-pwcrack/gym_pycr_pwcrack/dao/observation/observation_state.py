@@ -1,5 +1,6 @@
 from typing import List
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_pwcrack.dao.action.action import Action
 
 class ObservationState:
 
@@ -23,3 +24,10 @@ class ObservationState:
     def cleanup(self):
         for m in self.machines:
             m.cleanup()
+
+
+    def get_action_id(self, a : Action):
+        if a.index < len(self.machines) and a.index != -1:
+            self.sort_machines()
+            return self.machines[a.index].ip
+        return a.ip

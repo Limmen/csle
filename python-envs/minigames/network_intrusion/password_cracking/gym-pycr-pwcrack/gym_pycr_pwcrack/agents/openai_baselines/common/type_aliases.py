@@ -39,3 +39,18 @@ class RolloutReturn(NamedTuple):
     episode_timesteps: int
     n_episodes: int
     continue_training: bool
+
+
+class RolloutBufferSamplesAR(NamedTuple):
+    network_observations: th.Tensor
+    machine_observations: th.Tensor
+    m_selection_actions: th.Tensor
+    m_actions: th.Tensor
+    m_selection_old_values: th.Tensor
+    m_action_old_values: th.Tensor
+    m_selection_old_log_prob: th.Tensor
+    m_action_old_log_prob: th.Tensor
+    m_selection_advantages: th.Tensor
+    m_action_advantages: th.Tensor
+    m_selection_returns: th.Tensor
+    m_action_returns: th.Tensor

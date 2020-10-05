@@ -96,6 +96,9 @@ class EnvConfig:
         self.checkpoint_freq = 1000
         self.num_flags = 0
 
+        self.ip_to_machine_id_mapping = {}
+
+
     def get_port_forward_port(self) -> int:
         """
         :return: Gets the next port to forward

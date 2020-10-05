@@ -6,7 +6,7 @@ from gym_pycr_pwcrack.dao.action.action_outcome import ActionOutcome
 class Action:
 
     def __init__(self, id : ActionId, name :str, cmd : List[str], type: ActionType, descr: str, cost: float,
-                 noise : float, ip :str, subnet : bool = False,
+                 noise : float, ip :str, index: int, subnet : bool = False,
                  action_outcome: ActionOutcome = ActionOutcome.INFORMATION_GATHERING,
                  vulnerability: str = None, alt_cmd = List[str]):
         self.id = id
@@ -21,6 +21,7 @@ class Action:
         self.action_outcome = action_outcome
         self.vulnerability = vulnerability
         self.alt_cmd = alt_cmd
+        self.index = index
 
     def __str__(self):
-        return "id:{},name:{},ip:{},subnet:{}".format(self.id, self.name, self.ip, self.subnet)
+        return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)

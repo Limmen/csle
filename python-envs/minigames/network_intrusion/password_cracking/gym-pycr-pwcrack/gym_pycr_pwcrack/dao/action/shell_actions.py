@@ -13,5 +13,5 @@ class ShellActions:
         return Action(id=id, name="Find flag", cmd=cmd,
                       type=ActionType.POST_EXPLOIT,
                       descr="Searches the file system for a flag",
-                      cost=0.0, noise=0.0,
+                      cost=0.0, noise=0.0, index=5,
                       ip=None, subnet=False, action_outcome=ActionOutcome.FLAG, alt_cmd=alt_cmd)

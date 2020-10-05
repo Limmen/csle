@@ -5,7 +5,7 @@ import gym
 import numpy as np
 import torch as th
 
-from gym_pycr_pwcrack.agents.openai_baselines.common.buffers import RolloutBuffer
+from gym_pycr_pwcrack.agents.openai_baselines.common.buffers import RolloutBuffer, RolloutBufferAR
 from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
 from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback
@@ -102,24 +102,56 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self._setup_lr_schedule()
         self.set_random_seed(self.seed)
 
-        self.rollout_buffer = RolloutBuffer(
-            self.n_steps,
-            self.observation_space,
-            self.action_space,
-            self.device,
-            gamma=self.gamma,
-            gae_lambda=self.gae_lambda,
-            n_envs=self.n_envs,
-        )
-        self.policy = self.policy_class(
-            self.observation_space,
-            self.action_space,
-            self.lr_schedule,
-            use_sde=self.use_sde,
-            agent_config = self.agent_config,
-            **self.policy_kwargs  # pytype:disable=not-instantiable
-        )
-        self.policy = self.policy.to(self.device)
+        if not self.agent_config.ar_policy:
+            self.rollout_buffer = RolloutBuffer(
+                self.n_steps,
+                self.observation_space,
+                self.action_space,
+                self.device,
+                gamma=self.gamma,
+                gae_lambda=self.gae_lambda,
+                n_envs=self.n_envs,
+            )
+        else:
+            self.rollout_buffer = RolloutBufferAR(
+                self.n_steps,
+                self.observation_space,
+                self.action_space,
+                self.device,
+                gamma=self.gamma,
+                gae_lambda=self.gae_lambda,
+                n_envs=self.n_envs,
+                agent_config = self.agent_config
+            )
+        if not self.agent_config.ar_policy:
+            self.policy = self.policy_class(
+                self.observation_space,
+                self.action_space,
+                self.lr_schedule,
+                use_sde=self.use_sde,
+                agent_config = self.agent_config,
+                **self.policy_kwargs  # pytype:disable=not-instantiable
+            )
+            self.policy = self.policy.to(self.device)
+        else:
+            self.m_selection_policy = self.policy_class(
+                self.env.envs[0].m_selection_observation_space,
+                self.env.envs[0].m_selection_action_space,
+                self.lr_schedule,
+                use_sde=self.use_sde,
+                agent_config=self.agent_config,
+                **self.policy_kwargs  # pytype:disable=not-instantiable
+            )
+            self.m_selection_policy = self.m_selection_policy.to(self.device)
+            self.m_action_policy = self.policy_class(
+                self.env.envs[0].m_action_observation_space,
+                self.env.envs[0].m_action_space,
+                self.lr_schedule,
+                use_sde=self.use_sde,
+                agent_config=self.agent_config,
+                **self.policy_kwargs  # pytype:disable=not-instantiable
+            )
+            self.m_action_policy = self.m_selection_policy.to(self.device)
 
     def collect_rollouts(
         self, env: VecEnv, callback: BaseCallback, rollout_buffer: RolloutBuffer, n_rollout_steps: int
@@ -159,7 +191,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 # Sample a new noise matrix
                 self.policy.reset_noise(env.num_envs)
 
-            new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(env, rollout_buffer)
+            if not self.agent_config.ar_policy:
+                new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(env, rollout_buffer)
+            else:
+                new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
+                m_action_log_probs, m_selection_actions, m_actions = self.step_policy_ar(env, rollout_buffer)
 
             # Record step metrics
             self.num_timesteps += env.num_envs
@@ -188,7 +224,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 episode_reward = 0
                 episode_step = 0
 
-        rollout_buffer.compute_returns_and_advantage(values, dones=dones)
+        if not self.agent_config.ar_policy:
+            rollout_buffer.compute_returns_and_advantage(values, dones=dones)
+        else:
+            rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
+            rollout_buffer.compute_returns_and_advantage(m_actions, dones=dones, machine_action=True)
 
         callback.on_rollout_end()
         if not dones:
@@ -278,7 +318,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     self.eval_result.to_csv(
                         self.agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
-            entropy_loss, pg_loss, value_loss, lr = self.train()
+            if not self.agent_config.ar_policy:
+                entropy_loss, pg_loss, value_loss, lr = self.train()
+            else:
+                entropy_loss, pg_loss, value_loss, lr = self.train_ar()
             episode_loss.append(entropy_loss + pg_loss + value_loss)
 
         callback.on_training_end()
@@ -289,7 +332,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         """
         cf base class
         """
-        state_dicts = ["policy", "policy.optimizer"]
+        if not self.agent_config.ar_policy:
+            state_dicts = ["policy", "policy.optimizer"]
+        else:
+            state_dicts = ["m_selection_policy", "m_selection_policy.optimizer",
+                           "m_action_policy", "m_action_policy.optimizer"]
 
         return state_dicts, []
 
@@ -320,3 +367,33 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self._last_dones = dones
 
         return new_obs, rewards, dones, infos, values, log_probs, actions
+
+    def step_policy_ar(self, env, rollout_buffer):
+        with th.no_grad():
+            # Convert to pytorch tensor
+            network_obs_tensor = th.as_tensor(self._last_obs).to(self.device)
+            m_selection_actions, m_selection_values, m_selection_log_probs = \
+                self.m_selection_policy.forward(network_obs_tensor, env_config=env.envs[0].env_config,
+                                                env_state=env.envs[0].env_state)
+            m_selection_actions = m_selection_actions.cpu().numpy()
+            machine_obs = network_obs_tensor[m_selection_actions]
+            machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
+            m_actions, m_action_values, m_action_log_probs = \
+                self.m_action_policy.forward(machine_obs_tensor, env_config=env.envs[0].env_config,
+                                                env_state=env.envs[0].env_state)
+            actions = env.envs[0].convert_ar_action(m_selection_actions, m_actions)
+
+        new_obs, rewards, dones, infos = env.step(actions)
+
+        if isinstance(self.action_space, gym.spaces.Discrete):
+            # Reshape in case of discrete action
+            m_selection_actions = actions.reshape(-1, 1)
+
+        rollout_buffer.add(self._last_obs, machine_obs, m_selection_actions, m_actions, rewards, self._last_dones,
+                           m_selection_values, m_action_values, m_selection_log_probs, m_action_log_probs)
+
+        self._last_obs = new_obs
+        self._last_dones = dones
+
+        return new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
+               m_action_log_probs, m_selection_actions, m_actions

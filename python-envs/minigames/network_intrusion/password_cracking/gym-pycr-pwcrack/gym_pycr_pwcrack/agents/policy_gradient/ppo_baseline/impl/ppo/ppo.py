@@ -226,6 +226,160 @@ class PPO(OnPolicyAlgorithm):
 
         return np.mean(entropy_losses), np.mean(pg_losses), np.mean(value_losses), lr
 
+    def train_ar(self) -> None:
+        """
+        Update policy using the currently gathered
+        rollout buffer.
+        """
+        # Update optimizer learning rate
+        self._update_learning_rate(self.m_selection_policy.optimizer)
+        lr = self.m_selection_policy.optimizer.param_groups[0]["lr"]
+        self._update_learning_rate(self.m_action_policy.optimizer)
+        lr = self.m_action_policy.optimizer.param_groups[0]["lr"]
+
+        # Compute current clip range
+        clip_range = self.clip_range(self._current_progress_remaining)
+        # Optional: clip range for the value function
+        if self.clip_range_vf is not None:
+            clip_range_vf = self.clip_range_vf(self._current_progress_remaining)
+
+        entropy_losses_m_selection, all_kl_divs_m_selection = [], []
+        pg_losses_m_selection, value_losses_m_selection = [], []
+        clip_fractions_m_selection = []
+
+        entropy_losses_m_, all_kl_divs_m = [], []
+        pg_losses_m, value_losses_m = [], []
+        clip_fractions_m = []
+
+        # train for gradient_steps epochs
+        for epoch in range(self.n_epochs):
+            m_selection_approx_kl_divs = []
+            m_action_approx_kl_divs = []
+            # Do a complete pass on the rollout buffer
+            for rollout_data in self.rollout_buffer.get(self.batch_size):
+                m_selection_actions = rollout_data.m_selection_actions
+                if isinstance(self.env.envs[0].m_selection_action_space, spaces.Discrete):
+                    # Convert discrete action from float to long
+                    m_selection_actions = rollout_data.m_selection_actions.long().flatten()
+
+                m_actions = rollout_data.m_actions
+                if isinstance(self.env.envs[0].m_action_space, spaces.Discrete):
+                    # Convert discrete action from float to long
+                    m_actions = rollout_data.m_actions.long().flatten()
+
+                # Re-sample the noise matrix because the log_std has changed
+                # TODO: investigate why there is no issue with the gradient
+                # if that line is commented (as in SAC)
+                if self.use_sde:
+                    self.m_selection_policy.reset_noise(self.batch_size)
+                    self.m_action_policy.reset_noise(self.batch_size)
+
+                m_selection_values, m_selection_log_prob, m_selection_entropy = \
+                    self.m_selection_policy.evaluate_actions(rollout_data.network_observations, m_selection_actions)
+                m_selection_values = m_selection_values.flatten()
+                # Normalize advantage
+                m_selection_advantages = rollout_data.m_selection_advantages
+                m_selection_advantages = (m_selection_advantages - m_selection_advantages.mean()) \
+                                         / (m_selection_advantages.std() + 1e-8)
+
+                m_action_values, m_action_log_prob, m_action_entropy = \
+                    self.m_action_policy.evaluate_actions(rollout_data.machine_observations, m_actions)
+                m_action_values = m_action_values.flatten()
+                # Normalize advantage
+                m_action_advantages = rollout_data.m_action_advantages
+                m_action_advantages = (m_action_advantages - m_action_advantages.mean()) \
+                                         / (m_action_advantages.std() + 1e-8)
+
+                # ratio between old and new policy, should be one at the first iteration
+                m_selection_ratio = th.exp(m_selection_log_prob - rollout_data.m_selection_old_log_prob)
+                m_action_ratio = th.exp(m_action_log_prob - rollout_data.m_action_old_log_prob)
+
+                # clipped surrogate loss
+                m_selection_policy_loss_1 = m_selection_advantages * m_selection_ratio
+                m_selection_policy_loss_2 = m_selection_advantages * th.clamp(m_selection_ratio, 1 - clip_range, 1 + clip_range)
+                m_selection_policy_loss = -th.min(m_selection_policy_loss_1, m_selection_policy_loss_2).mean()
+
+                m_action_policy_loss_1 = m_action_advantages * m_action_ratio
+                m_action_policy_loss_2 = m_action_advantages * th.clamp(m_action_ratio, 1 - clip_range,
+                                                                              1 + clip_range)
+                m_action_policy_loss = -th.min(m_action_policy_loss_1, m_action_policy_loss_2).mean()
+
+                # Logging
+                pg_losses_m_selection.append(m_selection_policy_loss.item())
+                clip_fraction = th.mean((th.abs(m_selection_ratio - 1) > clip_range).float()).item()
+                clip_fractions_m_selection.append(clip_fraction)
+
+                pg_losses_m.append(m_action_policy_loss.item())
+                clip_fraction = th.mean((th.abs(m_action_ratio - 1) > clip_range).float()).item()
+                clip_fractions_m.append(clip_fraction)
+
+                if self.clip_range_vf is None:
+                    # No clipping
+                    m_selection_values_pred = m_selection_values
+                    m_action_values_pred = m_action_values
+                else:
+                    # Clip the different between old and new value
+                    # NOTE: this depends on the reward scaling
+                    m_selection_values_pred = rollout_data.m_selection_old_values + th.clamp(
+                        m_selection_values - rollout_data.m_selection_old_values, -clip_range_vf, clip_range_vf
+                    )
+                    m_action_values_pred = rollout_data.m_action_old_values + th.clamp(
+                        m_action_values - rollout_data.m_action_old_values, -clip_range_vf, clip_range_vf
+                    )
+                # Value loss using the TD(gae_lambda) target
+                m_selection_value_loss = F.mse_loss(rollout_data.m_selection_returns, m_selection_values_pred)
+                value_losses_m_selection.append(m_selection_value_loss.item())
+
+                m_action_value_loss = F.mse_loss(rollout_data.m_action_returns, m_action_values_pred)
+                value_losses_m.append(m_action_value_loss.item())
+
+                # Entropy loss favor exploration
+                if m_selection_entropy is None:
+                    # Approximate entropy when no analytical form
+                    m_selection_entropy_loss = -th.mean(-m_selection_log_prob)
+                else:
+                    m_selection_entropy_loss = -th.mean(m_selection_entropy)
+                if m_action_entropy is None:
+                    m_action_entropy_loss = -th.mean(-m_action_log_prob)
+                else:
+                    m_action_entropy_loss = -th.mean(m_action_entropy)
+
+                entropy_losses_m_selection.append(m_selection_entropy_loss.item())
+                entropy_losses_m_.append(m_action_entropy_loss.item())
+
+                m_selection_loss = m_selection_policy_loss + self.ent_coef * m_selection_entropy_loss \
+                                   + self.vf_coef * m_selection_value_loss
+                m_action_loss = m_action_policy_loss + self.ent_coef * m_action_entropy_loss \
+                                   + self.vf_coef * m_action_value_loss
+
+                # Optimization step
+                self.m_selection_policy.optimizer.zero_grad()
+                m_selection_loss.backward()
+                # Clip grad norm
+                th.nn.utils.clip_grad_norm_(self.m_selection_policy.parameters(), self.max_grad_norm)
+                self.m_selection_policy.optimizer.step()
+                m_selection_approx_kl_divs.append(th.mean(rollout_data.m_selection_old_log_prob -
+                                              m_selection_log_prob).detach().cpu().numpy())
+
+                # Optimization step
+                self.m_action_policy.optimizer.zero_grad()
+                m_action_loss.backward()
+                # Clip grad norm
+                th.nn.utils.clip_grad_norm_(self.m_action_policy.parameters(), self.max_grad_norm)
+                self.m_action_policy.optimizer.step()
+                m_action_approx_kl_divs.append(th.mean(rollout_data.m_action_old_log_prob -
+                                              m_action_log_prob).detach().cpu().numpy())
+
+            all_kl_divs_m_selection.append(np.mean(m_selection_approx_kl_divs))
+            all_kl_divs_m.append(np.mean(m_action_approx_kl_divs))
+
+        self._n_updates += self.n_epochs
+        explained_var = explained_variance(self.rollout_buffer.returns.flatten(), self.rollout_buffer.values.flatten())
+
+        return np.mean(entropy_losses_m_selection) + np.mean(entropy_losses_m_), \
+               np.mean(pg_losses_m_selection) + np.mean(pg_losses_m), \
+               np.mean(value_losses_m_selection) + np.mean(value_losses_m), lr
+
     def learn(
         self,
         total_timesteps: int,
