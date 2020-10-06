@@ -1,4 +1,16 @@
-# TODO
+# `gym-pycr-pwcrack`
+
+`gym-pycr-pwcrack` is a reinforcement learning environment for studying the "first line of defense" against
+network intrusions. Specifically the environment focuses on reconnaissance, password vulnerabilities, 
+intrusion detection, and dictionary attacks. The environment provides a MDP or Markov Game interface for 
+OpenAI Gym that can be used to train reinforcement learning agents. 
+
+Moreover, the repository contains code to reproduce baseline results for various reinforcement learning algorithms, including:
+
+- DQN
+- REINFORCE with baseline
+- PPO
+- AC3
 
 ## Useful commands
 
@@ -21,3 +33,14 @@ docker system prune # remove unused images and containers
 docker container prune # remove stopped containers   
 ```
 
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+[LICENSE](LICENSE.md)
+
+Creative Commons
+
+(C) 2020, Kim Hammar
