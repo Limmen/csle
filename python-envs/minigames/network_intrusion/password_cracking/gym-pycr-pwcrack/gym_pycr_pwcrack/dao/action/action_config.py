@@ -10,8 +10,10 @@ class ActionConfig:
         self.num_actions = len(self.actions)
         self.action_space = gym.spaces.Discrete(self.num_actions)
         self.action_lookup_d = {}
+        self.action_lookup_d_val = {}
         for action in actions:
             self.action_lookup_d[action.id] = action
+            self.action_lookup_d_val[action.id.value] = action
 
         self.nmap_action_ids = [ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.PING_SCAN_HOST,
                                 ActionId.UDP_PORT_SCAN_HOST, ActionId.TCP_CON_NON_STEALTH_SCAN_HOST,

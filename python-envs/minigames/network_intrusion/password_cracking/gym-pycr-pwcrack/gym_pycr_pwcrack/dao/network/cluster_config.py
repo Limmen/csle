@@ -171,7 +171,8 @@ class ClusterConfig:
 
 
     def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],
-                          network_service_ids: List[ActionId], shell_ids: List[ActionId]) -> ActionCosts:
+                          network_service_ids: List[ActionId], shell_ids: List[ActionId],
+                          action_lookup_d_val: dict) -> ActionCosts:
         """
         Loads measured action costs from the cluster
 
@@ -179,6 +180,7 @@ class ClusterConfig:
         :param nmap_ids: list of ids of nmap actions
         :param network_service_ids: list of ids of network service actions
         :param shell_ids: list of ids of shell actions
+        :param action_lookup_d_val: dict for converting action id to action
         :return: action costs
         """
         print("Loading action costs from cluster..")
@@ -186,43 +188,49 @@ class ClusterConfig:
         sftp_client = self.agent_conn.open_sftp()
 
         # Load Nmap costs
-        nmap_actions = list(filter(lambda x: x.id in nmap_ids, actions))
-        for a in nmap_actions:
-            file_name = dir + str(a.id.value)
-            if not a.subnet and a.ip is not None:
-                file_name = file_name + "_" + a.ip
-            file_name = file_name + "_cost.txt"
-            remote_file = None
-            try:
-                remote_file = sftp_client.open(file_name, mode="r")
-                cost_str = remote_file.read()
-                cost = float(cost_str)
-                action_costs.add_cost(action_id=a.id, ip=a.ip, cost=cost)
-                a.cost = cost
-            except:
-                pass
-            finally:
-                if remote_file is not None:
-                    remote_file.close()
+        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _cost"
+        stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+        file_list = []
+        for line in stdout:
+            line_str = line.replace("\n", "")
+            file_list.append(line_str)
 
-        # Load network service actions costs
-        network_service_actions = list(filter(lambda x: x.id in network_service_ids, actions))
-        for a in network_service_actions:
-            file_name = dir + str(a.id.value)
-            file_name = file_name + "_" + a.ip
-            file_name = file_name + "_cost.txt"
-            remote_file = None
-            try:
-                remote_file = sftp_client.open(file_name, mode="r")
-                cost_str = remote_file.read()
-                cost = float(cost_str)
-                action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
-                a.cost = cost
-            except:
-                pass
-            finally:
-                if remote_file is not None:
-                    remote_file.close()
+        nmap_id_values = list(map(lambda x: x.value, nmap_ids))
+        network_service_actions_id_values = list(map(lambda x: x.value, network_service_ids))
+        for file in file_list:
+            parts = file.split("_")
+            id = int(parts[0])
+            if id in nmap_id_values:
+                a = action_lookup_d_val[int(id)]
+                ip = parts[1]
+                remote_file = None
+                try:
+                    remote_file = sftp_client.open(file, mode="r")
+                    cost_str = remote_file.read()
+                    cost = float(cost_str)
+                    action_costs.add_cost(action_id=a.id, ip=ip, cost=cost)
+                    a.cost = cost
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
+
+            elif id in network_service_actions_id_values:
+                a = action_lookup_d_val[int(id)]
+                ip = parts[1]
+                remote_file = None
+                try:
+                    remote_file = sftp_client.open(file, mode="r")
+                    cost_str = remote_file.read()
+                    cost = float(cost_str)
+                    action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
+                    a.cost = cost
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
 
         # Load shell action costs which are user and service specific
         shell_actions = list(filter(lambda x: x.id in shell_ids, actions))

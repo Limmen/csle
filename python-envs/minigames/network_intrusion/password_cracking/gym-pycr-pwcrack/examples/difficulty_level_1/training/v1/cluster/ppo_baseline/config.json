@@ -93,10 +93,10 @@
         "py/object": "gym_pycr_pwcrack.dao.network.cluster_config.ClusterConfig",
         "relay_channel": null,
         "server_conn": null,
-        "server_connection": true,
-        "server_ip": "172.31.212.91",
-        "server_private_key_file": "/home/kim/.ssh/id_rsa",
-        "server_username": "kim"
+        "server_connection": false,
+        "server_ip": null,
+        "server_private_key_file": null,
+        "server_username": null
     },
     "env_checkpoint_dir": null,
     "env_config": null,
