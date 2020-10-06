@@ -98,7 +98,6 @@ class EnvConfig:
 
         self.ip_to_machine_id_mapping = {}
         self.save_trajectories = False
-
         self.blacklist_ips = ["172.18.1.1"]
 
 

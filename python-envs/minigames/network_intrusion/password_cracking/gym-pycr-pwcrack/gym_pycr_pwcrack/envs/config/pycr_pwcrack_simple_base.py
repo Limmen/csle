@@ -15,6 +15,7 @@ from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.network.credential import Credential
+from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class PyCrPwCrackSimpleBase:
     """
@@ -235,167 +236,77 @@ class PyCrPwCrackSimpleBase:
         :param network_conf: the network config
         :return: the action config
         """
-        action_config = ActionConfig(actions=[
+        actions = []
 
-            # --- ReCon ---
+        # Host actions
+        for idx in range(len(network_conf.nodes)):
+            actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.PING_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.TCP_FIN_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.TCP_NULL_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.TCP_XMAS_TREE_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.OS_DETECTION_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.NMAP_VULNERS(index=idx, subnet=False))
+            actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
 
-            # TCP SYN Stealth Scan
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=0, subnet=False),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=1, subnet=False),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=2, subnet=False),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=3, subnet=False),
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=4, subnet=False),
+        # Subnet actions
+        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.UDP_PORT_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_CON_NON_STEALTH_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_FIN_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_NULL_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_XMAS_TREE_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.OS_DETECTION_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.NMAP_VULNERS(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
 
-            # Ping Scan
-            NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.PING_SCAN(index=0, subnet=False),
-            NMAPActions.PING_SCAN(index=1, subnet=False),
-            NMAPActions.PING_SCAN(index=2, subnet=False),
-            NMAPActions.PING_SCAN(index=3, subnet=False),
-            NMAPActions.PING_SCAN(index=4, subnet=False),
-
-            # UDP Port Scan
-            NMAPActions.UDP_PORT_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.UDP_PORT_SCAN(index=0, subnet=False),
-            NMAPActions.UDP_PORT_SCAN(index=1, subnet=False),
-            NMAPActions.UDP_PORT_SCAN(index=2, subnet=False),
-            NMAPActions.UDP_PORT_SCAN(index=3, subnet=False),
-            NMAPActions.UDP_PORT_SCAN(index=4, subnet=False),
-
-            # TCP CON Non-stealth Scan
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=0, subnet=False),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=1, subnet=False),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=2, subnet=False),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=3, subnet=False),
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=4, subnet=False),
-
-            # TCP FIN Scan
-            NMAPActions.TCP_FIN_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TCP_FIN_SCAN(index=0, subnet=False),
-            NMAPActions.TCP_FIN_SCAN(index=1, subnet=False),
-            NMAPActions.TCP_FIN_SCAN(index=2, subnet=False),
-            NMAPActions.TCP_FIN_SCAN(index=3, subnet=False),
-            NMAPActions.TCP_FIN_SCAN(index=4, subnet=False),
-
-            # TCP Null Scan
-            NMAPActions.TCP_NULL_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TCP_NULL_SCAN(index=0, subnet=False),
-            NMAPActions.TCP_NULL_SCAN(index=1, subnet=False),
-            NMAPActions.TCP_NULL_SCAN(index=2, subnet=False),
-            NMAPActions.TCP_NULL_SCAN(index=3, subnet=False),
-            NMAPActions.TCP_NULL_SCAN(index=4, subnet=False),
-
-            # TCP XMAS Tree Scan
-            NMAPActions.TCP_XMAS_TREE_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=0, subnet=False),
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=1, subnet=False),
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=2, subnet=False),
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=3, subnet=False),
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=4, subnet=False),
-
-            # OS Detection Scan
-            NMAPActions.OS_DETECTION_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.OS_DETECTION_SCAN(index=0, subnet=False),
-            NMAPActions.OS_DETECTION_SCAN(index=1, subnet=False),
-            NMAPActions.OS_DETECTION_SCAN(index=2, subnet=False),
-            NMAPActions.OS_DETECTION_SCAN(index=3, subnet=False),
-            NMAPActions.OS_DETECTION_SCAN(index=4, subnet=False),
-
-            NMAPActions.NMAP_VULNERS(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.NMAP_VULNERS(index=0, subnet=False),
-            NMAPActions.NMAP_VULNERS(index=1, subnet=False),
-            NMAPActions.NMAP_VULNERS(index=2, subnet=False),
-            NMAPActions.NMAP_VULNERS(index=3, subnet=False),
-            NMAPActions.NMAP_VULNERS(index=4, subnet=False),
-
-            # --- Exploits ---
-
-            # Telnet
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # SSH
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # FTP
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # Cassandra
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # IRC
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # Mongo
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # MySql
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # STMP
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # Postgres
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=3, subnet=False),
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
-
-            # --- Post-Exploits ---
-
-            # Network Service Login
-            NetworkServiceActions.SERVICE_LOGIN(index=0),
-            NetworkServiceActions.SERVICE_LOGIN(index=1),
-            NetworkServiceActions.SERVICE_LOGIN(index=2),
-            NetworkServiceActions.SERVICE_LOGIN(index=3),
-            NetworkServiceActions.SERVICE_LOGIN(index=4),
-
-            # Search file system for flag
-            ShellActions.FIND_FLAG()
-        ])
+        actions = sorted(actions, key=lambda x: (x.id.value, x.index))
+        nmap_action_ids = [
+            ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
+            ActionId.PING_SCAN_HOST, ActionId.PING_SCAN_SUBNET,
+            ActionId.UDP_PORT_SCAN_HOST, ActionId.UDP_PORT_SCAN_SUBNET,
+            ActionId.TCP_CON_NON_STEALTH_SCAN_HOST, ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET,
+            ActionId.TCP_FIN_SCAN_HOST, ActionId.TCP_FIN_SCAN_SUBNET,
+            ActionId.TCP_NULL_SCAN_HOST, ActionId.TCP_NULL_SCAN_SUBNET,
+            ActionId.TCP_XMAS_TREE_SCAN_HOST, ActionId.TCP_XMAS_TREE_SCAN_SUBNET,
+            ActionId.OS_DETECTION_SCAN_HOST, ActionId.OS_DETECTION_SCAN_SUBNET,
+            ActionId.NMAP_VULNERS_HOST, ActionId.NMAP_VULNERS_SUBNET,
+            ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST, ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST, ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+        ]
+        network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
+        shell_action_ids = [ActionId.FIND_FLAG]
+        action_config = ActionConfig(actions=actions, nmap_action_ids=nmap_action_ids,
+                                     network_service_action_ids=network_service_action_ids,
+                                     shell_action_ids=shell_action_ids)
         return action_config
 
     @staticmethod
@@ -427,4 +338,5 @@ class PyCrPwCrackSimpleBase:
         env_config.os_scan_miss_p = 0.08
         env_config.vulners_miss_p = 0.09
         env_config.num_flags = 3
+        env_config.blacklist_ips = ["172.18.1.1"]
         return env_config

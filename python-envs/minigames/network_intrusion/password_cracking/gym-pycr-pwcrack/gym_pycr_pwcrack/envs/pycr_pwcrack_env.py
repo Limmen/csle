@@ -36,6 +36,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.m_selection_action_space = gym.spaces.Discrete(self.env_state.obs_state.num_machines)
         self.m_action_space = self.env_config.action_conf.m_action_space
         self.num_actions = self.env_config.action_conf.num_actions
+        self.network_orig_shape = self.env_state.network_orig_shape
+        self.machine_orig_shape = self.env_state.machine_orig_shape
         self.reward_range = (float(0), float(1))
         self.num_states = 100
         self.viewer = None
@@ -216,6 +218,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
     def convert_ar_action(self, machine_idx, action_idx):
         key = (machine_idx, action_idx)
+        print("converter:{}".format(self.env_config.action_conf.ar_action_converter))
         return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
@@ -262,7 +265,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         if self.env_config.save_trajectories and not self.env_config.checkpoint_dir == None \
                 and self.agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
-            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_trajectories.log"
+            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_trajectories.pickle"
             with open(file_path, "wb") as outfile:
                 pickle.dump(self.trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
                 self.trajectories = []
@@ -285,9 +288,11 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
             env_config.simulate_detection = True
+            env_config.save_trajectories = False
             # env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------
@@ -304,7 +309,9 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackSimpleBase.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
 
 

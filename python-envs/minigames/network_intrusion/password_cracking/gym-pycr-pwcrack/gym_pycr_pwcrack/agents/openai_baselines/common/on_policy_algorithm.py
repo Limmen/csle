@@ -151,7 +151,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 agent_config=self.agent_config,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
-            self.m_action_policy = self.m_selection_policy.to(self.device)
+            self.m_action_policy = self.m_action_policy.to(self.device)
 
     def collect_rollouts(
         self, env: VecEnv, callback: BaseCallback, rollout_buffer: RolloutBuffer, n_rollout_steps: int
@@ -379,12 +379,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.m_selection_policy.forward(network_obs_tensor, env_config=env.envs[0].env_config,
                                                 env_state=env.envs[0].env_state)
             m_selection_actions = m_selection_actions.cpu().numpy()
-            machine_obs = network_obs_tensor[m_selection_actions]
+            network_obs_2 = network_obs_tensor.reshape((network_obs_tensor.shape[0], )
+                                                       + self.env.envs[0].network_orig_shape)
+            machine_obs = network_obs_2[:, m_selection_actions].reshape((network_obs_tensor.shape[0],) +
+                                                                        self.env.envs[0].machine_orig_shape)
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
             m_actions, m_action_values, m_action_log_probs = \
                 self.m_action_policy.forward(machine_obs_tensor, env_config=env.envs[0].env_config,
                                                 env_state=env.envs[0].env_state)
-            actions = env.envs[0].convert_ar_action(m_selection_actions, m_actions)
+            m_actions = m_actions.cpu().numpy()
+            actions = env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
+            actions = np.array([actions])
 
         new_obs, rewards, dones, infos = env.step(actions)
 

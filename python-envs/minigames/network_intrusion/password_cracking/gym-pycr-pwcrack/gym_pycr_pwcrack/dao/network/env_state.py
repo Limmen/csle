@@ -27,6 +27,8 @@ class EnvState:
             self.obs_state.num_machines*self.num_m_features,))
         self.m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             self.obs_state.num_machines * self.num_m_features,))
+        self.network_orig_shape = (self.obs_state.num_machines, self.num_m_features)
+        self.machine_orig_shape = (self.num_m_features,)
         self.m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(self.num_m_features,))
         self.cached_ssh_connections = {}
         self.cached_telnet_connections = {}
