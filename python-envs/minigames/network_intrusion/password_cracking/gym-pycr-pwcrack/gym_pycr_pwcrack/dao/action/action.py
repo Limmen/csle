@@ -2,6 +2,7 @@ from typing import List
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action.action_outcome import ActionOutcome
+import gym_pycr_pwcrack.constants.constants as constants
 
 class Action:
 
@@ -25,3 +26,9 @@ class Action:
 
     def __str__(self):
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)
+
+    def nmap_cmd(self):
+        file_name = str(self.id.value) + "_" + self.ip + ".xml "
+        if self.subnet:
+            file_name = str(self.id.value) + ".xml "
+        return self.cmd[0] + constants.NMAP.FILE_ARGS + " " + file_name + self.ip

@@ -16,8 +16,7 @@ class NMAPActions:
             id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + file_name + ip]
+        cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="TCP SYN (Stealth) Scan", cmd=cmd,
                       type=ActionType.RECON,
                       descr="A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -35,8 +34,7 @@ class NMAPActions:
             id = ActionId.PING_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sP -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap -sP -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Ping Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A host discovery scan, it is quick because it only checks of hosts are up with Ping, without "
@@ -55,8 +53,7 @@ class NMAPActions:
             id = ActionId.UDP_PORT_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sU -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              file_name + " "+ ip]
+        cmd = ["sudo nmap -sU -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="UDP Port Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="", index=index,
@@ -73,7 +70,7 @@ class NMAPActions:
             id = ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sT -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sT -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="TCP Connection (Non-Stealth) Scan", cmd=cmd,
                type=ActionType.RECON, index=index,
                descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
@@ -90,7 +87,7 @@ class NMAPActions:
             id = ActionId.TCP_FIN_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sF -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sF -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="FIN Scan",
                cmd=cmd,
                type=ActionType.RECON, index=index,
@@ -108,7 +105,7 @@ class NMAPActions:
             id = ActionId.TCP_NULL_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sN -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sN -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Null Scan",
                cmd=cmd, index=index,
                type=ActionType.RECON,
@@ -126,7 +123,7 @@ class NMAPActions:
             id = ActionId.TCP_XMAS_TREE_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sX -p- " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap -sX -p- " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Xmas Tree Scan",
                cmd=cmd, type=ActionType.RECON, index=index,
                descr="A special type of TCP port scan using XMas Tree, "
@@ -144,8 +141,7 @@ class NMAPActions:
             id = ActionId.OS_DETECTION_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -O --osscan-guess --max-os-tries 1 " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap -O --osscan-guess --max-os-tries 1 " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="OS detection scan",
                cmd=cmd, type=ActionType.RECON,
                descr="OS detection/guess scan", index=index,
@@ -180,8 +176,7 @@ class NMAPActions:
             id = ActionId.NMAP_VULNERS_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sV --script vulners.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + file_name + ip]
+        cmd = ["sudo nmap -sV --script vulners.nse " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="nmap_vulners vulnerability scanner",
                cmd=cmd, type=ActionType.RECON, index=index,
                descr="Uses vulners.nse script to turn NMAP into a vulnerability scanner",
@@ -200,8 +195,7 @@ class NMAPActions:
             telnet_args = constants.NMAP.TELNET_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + telnet_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              file_name + ip]
+        cmd = ["sudo nmap " + telnet_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Telnet dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames "
@@ -222,8 +216,7 @@ class NMAPActions:
             ssh_args = constants.NMAP.SSH_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + ssh_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " + \
-              file_name + ip]
+        cmd = ["sudo nmap " + ssh_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="SSH dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -244,8 +237,7 @@ class NMAPActions:
             file_name = str(id.value) + ".xml "
             ftp_args = constants.NMAP.FTP_BRUTE_SUBNET
 
-        cmd = ["sudo nmap " + ftp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap " + ftp_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="FTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -267,8 +259,7 @@ class NMAPActions:
             cassandra_args = constants.NMAP.CASSANDRA_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + cassandra_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap " + cassandra_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Cassandra dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -289,8 +280,7 @@ class NMAPActions:
             irc_args = constants.NMAP.IRC_BRUTE_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + irc_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap " + irc_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="IRC dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -312,8 +302,7 @@ class NMAPActions:
             id = ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + mongo_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS + " " \
-              + file_name + ip]
+        cmd = ["sudo nmap " + mongo_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="MongoDB dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -333,8 +322,7 @@ class NMAPActions:
             mysql_args = constants.NMAP.MYSQL_BRUTE_SUBNET
             id = ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
-        cmd = ["sudo nmap " + mysql_args + " " + constants.NMAP.SPEED_ARGS + " " \
-              + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap " + mysql_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="MySQL dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -355,8 +343,7 @@ class NMAPActions:
             id = ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + smtp_args + " " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap " + smtp_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="SMTP dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames"
@@ -377,8 +364,7 @@ class NMAPActions:
             id = ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap " + postgres_args + " " + constants.NMAP.SPEED_ARGS + " " \
-              + constants.NMAP.FILE_ARGS + " " + file_name + ip]
+        cmd = ["sudo nmap " + postgres_args + " " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Postgres dictionary attack for username=pw",
                cmd=cmd, type=ActionType.EXPLOIT, index=index,
                descr="A dictionary attack that tries common passwords and usernames"

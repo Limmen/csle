@@ -1,6 +1,6 @@
 from typing import Tuple
 import gym
-import time
+import pickle
 from abc import ABC
 import numpy as np
 import os
@@ -62,6 +62,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                       vuln_lookup=self.env_state.vuln_lookup,
                                       os_lookup=self.env_state.os_lookup)
         self.last_obs = self.env_state.get_observation()
+        self.trajectory = []
+        self.trajectories = []
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
@@ -71,6 +73,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
+        self.trajectory = []
+        self.trajectory.append(self.last_obs)
+        self.trajectory.append(action_id)
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action:{}".format(action_id))
@@ -96,7 +101,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.agent_state.episode_reward += reward
         self.agent_state.obs_state = self.env_state.obs_state
         self.__update_log(action)
+        self.trajectory.append(m_obs)
+        self.trajectory.append(reward)
         info["flags"] = self.env_state.obs_state.catched_flags
+        if self.env_config.save_trajectories:
+            self.trajectories.append(self.trajectory)
         return m_obs, reward, done, info
 
     def reset(self) -> np.ndarray:
@@ -106,6 +115,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :return: initial observation
         """
         self.__checkpoint_log()
+        self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:
             self.agent_state.num_detections += 1
         elif self.env_state.obs_state.all_flags:
@@ -242,6 +252,19 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_agent.log"
             with open(file_path, "w") as outfile:
                 outfile.write("\n".join(self.agent_state.env_log.log))
+
+    def __checkpoint_trajectories(self) -> None:
+        """
+        Checkpoints agent trajectories
+
+        :return: None
+        """
+        if self.env_config.save_trajectories and not self.env_config.checkpoint_dir == None \
+                and self.agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
+            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_trajectories.log"
+            with open(file_path, "wb") as outfile:
+                pickle.dump(self.trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
+                self.trajectories = []
 
 
 # -------- Concrete envs ------------

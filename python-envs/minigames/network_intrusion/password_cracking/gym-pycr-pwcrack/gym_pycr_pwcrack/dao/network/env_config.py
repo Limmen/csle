@@ -97,6 +97,9 @@ class EnvConfig:
         self.num_flags = 0
 
         self.ip_to_machine_id_mapping = {}
+        self.save_trajectories = False
+
+        self.blacklist_ips = ["172.18.1.1"]
 
 
     def get_port_forward_port(self) -> int:

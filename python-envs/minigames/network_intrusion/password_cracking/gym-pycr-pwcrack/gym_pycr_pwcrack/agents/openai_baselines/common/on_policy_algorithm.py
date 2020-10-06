@@ -300,7 +300,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  eval=False, lr=self.lr_schedule(self.num_timesteps),
                                  total_num_episodes=self.num_episodes_total,
                                  episode_steps=episode_steps,
-                                 episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage)
+                                 episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
+                                 progress_left = self._current_progress_remaining,
+                                 n_af = self.env.envs[0].agent_state.num_all_flags,
+                                 n_d = self.env.envs[0].agent_state.num_detections)
                 episode_rewards = []
                 episode_loss = []
                 episode_flags = []

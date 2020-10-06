@@ -28,7 +28,7 @@ class EnvDynamicsUtil:
 
         # Add updated machines to merged state
         for n_m in new_machines_obs:
-            if n_m.ip == env_config.hacker_ip:
+            if n_m.ip == env_config.hacker_ip or n_m.ip in env_config.blacklist_ips:
                 continue
             exists = False
             merged_m = n_m

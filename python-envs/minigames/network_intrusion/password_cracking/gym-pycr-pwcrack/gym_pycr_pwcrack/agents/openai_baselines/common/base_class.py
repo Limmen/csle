@@ -200,7 +200,8 @@ class BaseAlgorithm(ABC):
                     episode_steps: list, episode_avg_loss: list = None,
                     eval: bool = False, lr: float = None, total_num_episodes: int = 0,
                     episode_flags : list = None, episode_flags_percentage: list = None,
-                    eps: float = None) -> None:
+                    eps: float = None, progress_left : float = 1.0,
+                    n_af: int = 0, n_d : int = 0) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -231,14 +232,16 @@ class BaseAlgorithm(ABC):
 
         avg_episode_steps = np.mean(episode_steps)
         if eval:
-            log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}".format(
+            log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
+                      "n_af:{},n_d:{}".format(
                 iteration, avg_episode_rewards, avg_episode_steps, lr, avg_episode_flags,
-                avg_episode_flags_percentage)
+                avg_episode_flags_percentage, n_af, n_d)
         else:
             log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R:{:.2f},avg_t:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F:{:.2f},avg_F%:{:.2f},eps:{:.2f}".format(
+                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F:{:.2f},avg_F%:{:.2f},eps:{:.2f}," \
+                      "n_af:{},n_d:{}".format(
                 iteration, self.agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
-                lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps)
+                lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps, n_af, n_d)
         self.agent_config.logger.info(log_str)
         print(log_str)
         if self.agent_config.tensorboard:

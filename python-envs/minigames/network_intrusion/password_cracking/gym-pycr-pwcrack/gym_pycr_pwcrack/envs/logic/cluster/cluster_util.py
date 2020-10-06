@@ -668,7 +668,7 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
-            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
                                                                        conn=env_config.cluster_config.agent_conn)
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
@@ -681,7 +681,7 @@ class ClusterUtil:
                 break
             except Exception as e:
                 ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
-                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.cmd[0],
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
                                                                            conn=env_config.cluster_config.agent_conn)
                 ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
                 env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
@@ -710,7 +710,7 @@ class ClusterUtil:
         :param env_config: environment config
         :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn
-        """
+        """        
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
