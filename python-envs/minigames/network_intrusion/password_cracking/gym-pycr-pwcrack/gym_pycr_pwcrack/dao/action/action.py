@@ -28,7 +28,7 @@ class Action:
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)
 
     def nmap_cmd(self):
-        file_name = str(self.id.value) + "_" + self.ip + ".xml "
+        file_name = str(self.id.value) + "_" + str(self.index) + "_" + self.ip + ".xml "
         if self.subnet:
-            file_name = str(self.id.value) + ".xml "
+            file_name = str(self.id.value) + "_" + str(self.index) + ".xml "
         return self.cmd[0] + constants.NMAP.FILE_ARGS + " " + file_name + self.ip

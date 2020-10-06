@@ -14,7 +14,7 @@ class ActionConfig:
         self.action_lookup_d_val = {}
         for action in actions:
             self.action_lookup_d[(action.id, action.index)] = action
-            self.action_lookup_d_val[action.id.value] = action
+            self.action_lookup_d_val[(action.id.value, action.index)] = action
 
         self.nmap_action_ids = nmap_action_ids
         self.network_service_action_ids = network_service_action_ids

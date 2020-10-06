@@ -71,7 +71,7 @@ class ClusterUtil:
         :return: None
         """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
-        file_name = env_config.nmap_cache_dir + str(action.id.value)
+        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(action.index)
         if not action.subnet and action.ip is not None:
             file_name = file_name + "_" + action.ip
         elif ip is not None:
@@ -103,7 +103,7 @@ class ClusterUtil:
         :return: None
         """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
-        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + ip + "_" + service \
+        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(action.index) + "_" + ip + "_" + service \
                     + "_" + user + ".txt"
         remote_file = sftp_client.file(file_name, mode="w")
         try:
@@ -147,9 +147,9 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
-            query = str(a.id.value) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+            query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
 
         # Search through cache
         if query in env_config.nmap_cache:
@@ -177,7 +177,7 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + ip + "_" + service + "_" + user + ".txt"
+        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + ".txt"
 
         # Search through cache
         if query in env_config.filesystem_file_cache:
@@ -238,9 +238,9 @@ class ClusterUtil:
         cache_list = cache_list[1:-1]  # remove command ([0]) and prompt ([-1])
 
         # Search through cache
-        query = str(a.id.value) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
-            query = str(a.id.value) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+            query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         for item in cache_list:
             if item == query:
                 return item
@@ -650,9 +650,9 @@ class ClusterUtil:
         :param env_config: the env config
         :return: s', reward, done
         """
-        cache_id = str(a.id.value) + "_" + a.ip + ".xml"
+        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
         if a.subnet:
-            cache_id = str(a.id.value) + ".xml"
+            cache_id = str(a.id.value) + "_" + str(a.index) + ".xml"
 
         # Check in-memory cache
         if env_config.use_nmap_cache:

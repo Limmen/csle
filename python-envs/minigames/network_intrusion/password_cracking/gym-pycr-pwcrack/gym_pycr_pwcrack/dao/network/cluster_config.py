@@ -201,8 +201,9 @@ class ClusterConfig:
             parts = file.split("_")
             id = int(parts[0])
             if id in nmap_id_values:
-                a = action_lookup_d_val[int(id)]
-                ip = parts[1]
+                idx = parts[1]
+                a = action_lookup_d_val[(int(id), idx)]
+                ip = parts[2]
                 remote_file = None
                 try:
                     remote_file = sftp_client.open(file, mode="r")
@@ -217,8 +218,9 @@ class ClusterConfig:
                         remote_file.close()
 
             elif id in network_service_actions_id_values:
-                a = action_lookup_d_val[int(id)]
-                ip = parts[1]
+                idx = parts[1]
+                a = action_lookup_d_val[(int(id), idx)]
+                ip = parts[2]
                 remote_file = None
                 try:
                     remote_file = sftp_client.open(file, mode="r")
@@ -245,9 +247,10 @@ class ClusterConfig:
                     file_list.append(line_str)
             for file in file_list:
                 parts = file.split("_")
-                ip = parts[1]
-                service = parts[2]
-                user = parts[3]
+                idx = parts[1]
+                ip = parts[2]
+                service = parts[3]
+                user = parts[4]
                 remote_file = None
                 try:
                     remote_file = sftp_client.open(file, mode="r")
