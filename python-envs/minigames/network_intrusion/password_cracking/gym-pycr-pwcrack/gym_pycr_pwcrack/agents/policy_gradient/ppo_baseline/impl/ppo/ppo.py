@@ -374,7 +374,7 @@ class PPO(OnPolicyAlgorithm):
             all_kl_divs_m.append(np.mean(m_action_approx_kl_divs))
 
         self._n_updates += self.n_epochs
-        explained_var = explained_variance(self.rollout_buffer.returns.flatten(), self.rollout_buffer.values.flatten())
+        #explained_var = explained_variance(self.rollout_buffer.returns.flatten(), self.rollout_buffer.values.flatten())
 
         return np.mean(entropy_losses_m_selection) + np.mean(entropy_losses_m_), \
                np.mean(pg_losses_m_selection) + np.mean(pg_losses_m), \

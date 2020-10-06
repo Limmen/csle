@@ -1,19 +1,19 @@
 from typing import List
 import gym
 from gym_pycr_pwcrack.dao.action.action import Action
-from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class ActionConfig:
 
     def __init__(self, actions: List[Action], nmap_action_ids : List[int], network_service_action_ids: List[int],
-                 shell_action_ids : List[int]):
+                 shell_action_ids : List[int], num_indices):
         self.actions = actions
         self.num_actions = len(self.actions)
+        self.num_indices = num_indices
         self.action_space = gym.spaces.Discrete(self.num_actions)
         self.action_lookup_d = {}
         self.action_lookup_d_val = {}
         for action in actions:
-            self.action_lookup_d[action.id] = action
+            self.action_lookup_d[(action.id, action.index)] = action
             self.action_lookup_d_val[action.id.value] = action
 
         self.nmap_action_ids = nmap_action_ids
@@ -23,8 +23,31 @@ class ActionConfig:
         self.num_node_specific_actions = len(self.action_ids)
         self.m_action_space = gym.spaces.Discrete(self.num_node_specific_actions)
         self.ar_action_converter = {}
-        print("action 8:{}".format(self.action_ids[8]))
-        for i, a in enumerate(self.actions):
+
+        # Add all (temp
+        for j, a in enumerate(self.actions):
             idx2 = self.action_ids.index(a.id)
-            key = (a.index, idx2)
-            self.ar_action_converter[key] = i
+            key = (num_indices, idx2)
+            self.ar_action_converter[key] = j
+
+        # Add subnet actions
+        for j, a in enumerate(self.actions):
+            idx2 = self.action_ids.index(a.id)
+            if a.index == self.num_indices:
+                key = (num_indices, idx2)
+                self.ar_action_converter[key] = j
+
+        # Add subnet actions to all machines
+        for i in range(num_indices):
+            for j, a in enumerate(self.actions):
+                idx2 = self.action_ids.index(a.id)
+                if a.index == self.num_indices:
+                    key = (i, idx2)
+                    self.ar_action_converter[key] = j
+
+        # Add rest of actions
+        for i, a in enumerate(self.actions):
+            if a.index != self.num_indices:
+                idx2 = self.action_ids.index(a.id)
+                key = (a.index, idx2)
+                self.ar_action_converter[key] = i

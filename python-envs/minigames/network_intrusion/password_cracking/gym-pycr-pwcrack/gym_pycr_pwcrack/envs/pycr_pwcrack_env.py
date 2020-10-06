@@ -33,7 +33,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.m_selection_observation_space = self.env_state.m_selection_observation_space
         self.m_action_observation_space = self.env_state.m_action_observation_space
         self.action_space = self.env_config.action_conf.action_space
-        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.obs_state.num_machines)
+        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.obs_state.num_machines+1)
         self.m_action_space = self.env_config.action_conf.m_action_space
         self.num_actions = self.env_config.action_conf.num_actions
         self.network_orig_shape = self.env_state.network_orig_shape
@@ -154,14 +154,20 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         return arr
 
     @staticmethod
-    def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState):
+    def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
+                        m_action: bool = False, m_index : int = None) -> bool:
+        if m_selection:
+            return PyCRPwCrackEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,env_state=env_state)
+        elif m_action:
+            return PyCRPwCrackEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config, env_state=env_state,
+                                                     machine_index=m_index)
         if not env_config.filter_illegal_actions:
             return True
         if action_id > len(env_config.action_conf.actions) - 1:
             return False
 
         action = env_config.action_conf.actions[action_id]
-        action.ip = env_state.obs_state.get_action_ip(action)
+        ip = env_state.obs_state.get_action_ip(action)
 
         # Recon on subnet is always possible
         if action.subnet:
@@ -170,17 +176,17 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         machine_discovered = False
         target_machine = None
         logged_in = False
+
         for m in env_state.obs_state.machines:
             if m.logged_in:
                 logged_in = True
-            if m.ip == action.ip:
+            if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
             return True
-
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
         if machine_discovered and action.type == ActionType.POST_EXPLOIT \
                 and target_machine.shell_access and len(target_machine.shell_access_credentials) > 0:
@@ -217,8 +223,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
 
     def convert_ar_action(self, machine_idx, action_idx):
+        m_selection_legal = PyCRPwCrackEnv._is_action_legal_m_selection(machine_idx, env_config=self.env_config,
+                                                           env_state=self.env_state)
+        m_legal = PyCRPwCrackEnv._is_action_legal_m_action(action_idx, env_config=self.env_config,
+                                                           env_state=self.env_state, machine_index=machine_idx)
         key = (machine_idx, action_idx)
-        print("converter:{}".format(self.env_config.action_conf.ar_action_converter))
+        action = self.env_config.action_conf.ar_action_converter[key]
+        action_legal = PyCRPwCrackEnv.is_action_legal(action, env_config=self.env_config, env_state=self.env_state)
         return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
@@ -269,6 +280,65 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             with open(file_path, "wb") as outfile:
                 pickle.dump(self.trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
                 self.trajectories = []
+
+    @staticmethod
+    def _is_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState):
+        # Subnet actions are always legal
+        if action_id == env_config.num_nodes:
+            return True
+
+        # If machine is discovered then it is a legal action
+        if action_id < len(env_state.obs_state.machines):
+            m = env_state.obs_state.machines[action_id]
+            if m is not None:
+                return True
+
+        return False
+
+    @staticmethod
+    def _is_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int):
+        action_id_id = env_config.action_conf.action_ids[action_id]
+        key = (action_id_id, machine_index)
+        if key not in env_config.action_conf.action_lookup_d:
+            return False
+        action = env_config.action_conf.action_lookup_d[(action_id_id, machine_index)]
+        logged_in = False
+        for m in env_state.obs_state.machines:
+            if m.logged_in:
+                logged_in = True
+
+        if machine_index == env_config.num_nodes:
+            if action.subnet or action.index == env_config.num_nodes:
+                # Recon an exploits are always legal
+                if action.type == ActionType.RECON or action.type == ActionType.EXPLOIT:
+                    return True
+                # Bash action not tied to specific IP only possible when having shell access and being logged in
+                if action.id == ActionId.FIND_FLAG and logged_in:
+                    return True
+                return False
+            else:
+                return False
+        else:
+            if action.subnet or action.index == env_config.num_nodes:
+                return False
+            else:
+                # Recon an exploits are always legal
+                if action.type == ActionType.RECON or action.type == ActionType.EXPLOIT:
+                    return True
+
+                if machine_index < len(env_state.obs_state.machines):
+                    env_state.obs_state.sort_machines()
+                    target_machine = env_state.obs_state.machines[machine_index]
+
+                    # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
+                    if action.type == ActionType.POST_EXPLOIT and target_machine.shell_access \
+                            and len(target_machine.shell_access_credentials) > 0:
+                        return True
+
+                    # Bash action not tied to specific IP only possible when having shell access and being logged in
+                    if action.id == ActionId.FIND_FLAG and logged_in:
+                        return True
+        return False
 
 
 # -------- Concrete envs ------------

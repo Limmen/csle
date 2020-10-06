@@ -428,8 +428,8 @@ class RolloutBufferAR(BaseBuffer):
         self.network_observations = np.zeros((self.buffer_size, self.n_envs, self.agent_config.input_dim), dtype=np.float32)
         self.machine_observations = np.zeros((self.buffer_size, self.n_envs, self.agent_config.input_dim_2),
                                              dtype=np.float32)
-        self.m_selection_actions = np.zeros((self.buffer_size, self.n_envs, self.agent_config.output_dim), dtype=np.float32)
-        self.m_actions = np.zeros((self.buffer_size, self.n_envs, self.agent_config.output_dim_2), dtype=np.float32)
+        self.m_selection_actions = np.zeros((self.buffer_size, self.n_envs, 1), dtype=np.float32)
+        self.m_actions = np.zeros((self.buffer_size, self.n_envs, 1), dtype=np.float32)
         self.rewards = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
         self.m_selection_returns = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)
         self.m_action_returns = np.zeros((self.buffer_size, self.n_envs), dtype=np.float32)

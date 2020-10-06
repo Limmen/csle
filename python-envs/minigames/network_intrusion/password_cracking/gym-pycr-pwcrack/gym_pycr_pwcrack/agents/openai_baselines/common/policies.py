@@ -299,7 +299,9 @@ class ActorCriticPolicy(BasePolicy):
         normalize_images: bool = True,
         optimizer_class: Type[th.optim.Optimizer] = th.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
-        agent_config: AgentConfig = None
+        agent_config: AgentConfig = None,
+        m_selection: bool = False,
+        m_action: bool = False
     ):
 
         if optimizer_kwargs is None:
@@ -317,6 +319,9 @@ class ActorCriticPolicy(BasePolicy):
             squash_output=squash_output,
             agent_config=agent_config
         )
+
+        self.m_selection = m_selection
+        self.m_action = m_action
 
         # Default network architecture, from stable-baselines
         if net_arch is None:
@@ -429,7 +434,7 @@ class ActorCriticPolicy(BasePolicy):
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
 
     def forward(self, obs: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
+                env_config: EnvConfig = None, m_index : int = None) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
         Forward pass in all the networks (actor and critic)
 
@@ -442,9 +447,21 @@ class ActorCriticPolicy(BasePolicy):
         values = self.value_net(latent_vf)
 
         # Masking legal actions
-        actions = list(range(self.agent_config.output_dim))
-        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-            action, env_config=env_config, env_state=env_state), actions))
+        if self.m_action:
+            actions = list(range(self.agent_config.output_dim_2))
+        else:
+            actions = list(range(self.agent_config.output_dim))
+
+        if self.agent_config.ar_policy:
+            if self.m_action:
+                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=env_config, env_state=env_state, m_action=True, m_index = m_index), actions))
+            elif self.m_selection:
+                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=env_config, env_state=env_state, m_selection=True), actions))
+        else:
+            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                action, env_config=env_config, env_state=env_state), actions))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
                                                          non_legal_actions=non_legal_actions)

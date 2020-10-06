@@ -306,7 +306,7 @@ class PyCrPwCrackSimpleBase:
         shell_action_ids = [ActionId.FIND_FLAG]
         action_config = ActionConfig(actions=actions, nmap_action_ids=nmap_action_ids,
                                      network_service_action_ids=network_service_action_ids,
-                                     shell_action_ids=shell_action_ids)
+                                     shell_action_ids=shell_action_ids, num_indices=len(network_conf.nodes))
         return action_config
 
     @staticmethod

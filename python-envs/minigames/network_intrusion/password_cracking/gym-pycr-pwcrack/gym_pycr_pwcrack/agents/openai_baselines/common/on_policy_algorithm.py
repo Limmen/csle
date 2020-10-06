@@ -140,6 +140,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.lr_schedule,
                 use_sde=self.use_sde,
                 agent_config=self.agent_config,
+                m_selection = True,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
             self.m_selection_policy = self.m_selection_policy.to(self.device)
@@ -149,6 +150,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.lr_schedule,
                 use_sde=self.use_sde,
                 agent_config=self.agent_config,
+                m_action = True,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
             self.m_action_policy = self.m_action_policy.to(self.device)
@@ -228,7 +230,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             rollout_buffer.compute_returns_and_advantage(values, dones=dones)
         else:
             rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
-            rollout_buffer.compute_returns_and_advantage(m_actions, dones=dones, machine_action=True)
+            rollout_buffer.compute_returns_and_advantage(m_action_values, dones=dones, machine_action=True)
 
         callback.on_rollout_end()
         if not dones:
@@ -381,21 +383,28 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             m_selection_actions = m_selection_actions.cpu().numpy()
             network_obs_2 = network_obs_tensor.reshape((network_obs_tensor.shape[0], )
                                                        + self.env.envs[0].network_orig_shape)
-            machine_obs = network_obs_2[:, m_selection_actions].reshape((network_obs_tensor.shape[0],) +
+            idx = m_selection_actions[0]
+            if m_selection_actions[0] > 5:
+                idx = 0
+            machine_obs = network_obs_2[:, idx].reshape((network_obs_tensor.shape[0],) +
                                                                         self.env.envs[0].machine_orig_shape)
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
             m_actions, m_action_values, m_action_log_probs = \
                 self.m_action_policy.forward(machine_obs_tensor, env_config=env.envs[0].env_config,
-                                                env_state=env.envs[0].env_state)
+                                                env_state=env.envs[0].env_state, m_index=m_selection_actions[0])
             m_actions = m_actions.cpu().numpy()
             actions = env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
 
         new_obs, rewards, dones, infos = env.step(actions)
 
-        if isinstance(self.action_space, gym.spaces.Discrete):
+        if isinstance(self.env.envs[0].m_selection_action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
-            m_selection_actions = actions.reshape(-1, 1)
+            m_selection_actions = m_selection_actions.reshape(-1, 1)
+        
+        if isinstance(self.env.envs[0].m_action_space, gym.spaces.Discrete):
+            # Reshape in case of discrete action
+            m_actions = m_actions.reshape(-1, 1)
 
         rollout_buffer.add(self._last_obs, machine_obs, m_selection_actions, m_actions, rewards, self._last_dones,
                            m_selection_values, m_action_values, m_selection_log_probs, m_action_log_probs)

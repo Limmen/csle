@@ -23,7 +23,7 @@ def default_config() -> ClientConfig:
                                eval_frequency=100, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=100, input_dim=6 * 30,
-                               output_dim=6,
+                               output_dim=6+1,
                                pi_hidden_dim=128, pi_hidden_layers=1,
                                vf_hidden_dim=128, vf_hidden_layers=1,
                                shared_hidden_layers=1, shared_hidden_dim=128,
@@ -36,7 +36,7 @@ def default_config() -> ClientConfig:
                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
                                render_steps=20, illegal_action_logit=-100, ar_policy=True,
-                               input_dim_2=30, output_dim_2=40, pi_hidden_dim_2=128, pi_hidden_layers_2=1,
+                               input_dim_2=30, output_dim_2=38, pi_hidden_dim_2=128, pi_hidden_layers_2=1,
                                vf_hidden_layers_2=1, vf_hidden_dim_2=128
                                )
     env_name = "pycr-pwcrack-simple-cluster-v1"
