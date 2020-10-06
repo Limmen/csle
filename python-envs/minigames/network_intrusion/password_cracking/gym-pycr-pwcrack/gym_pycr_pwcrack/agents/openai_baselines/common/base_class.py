@@ -444,7 +444,7 @@ class BaseAlgorithm(ABC):
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
             m_actions, state2 = self.m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
                                                     env_config=self.env.envs[0].env_config,
-                                                    env_state=self.env.envs[0].env_state)
+                                                    env_state=self.env.envs[0].env_state, m_index = m_selection_actions[0])
             actions = self.env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
             return actions, state2

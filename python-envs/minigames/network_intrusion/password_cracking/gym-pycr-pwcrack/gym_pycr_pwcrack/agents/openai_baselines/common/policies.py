@@ -202,7 +202,7 @@ class BasePolicy(BaseModel):
 
     @abstractmethod
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -221,7 +221,8 @@ class BasePolicy(BaseModel):
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
         env_config: EnvConfig = None,
-        env_state: EnvState = None
+        env_state: EnvState = None,
+        m_index: int = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the policy action and state from an observation (and optional state).
@@ -240,7 +241,7 @@ class BasePolicy(BaseModel):
         observation = th.as_tensor(observation).to(self.device)
         with th.no_grad():
             actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
-                                    env_state=env_state)
+                                    env_state=env_state, m_index=m_index)
         if type(actions) == th.Tensor:
             # Convert to numpy
             actions = actions.cpu().numpy()
@@ -516,7 +517,7 @@ class ActorCriticPolicy(BasePolicy):
 
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -527,9 +528,21 @@ class ActorCriticPolicy(BasePolicy):
         latent_pi, _, latent_sde = self._get_latent(observation)
 
         # Masking legal actions
-        actions = list(range(self.agent_config.output_dim))
-        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-            action, env_config=env_config, env_state=env_state), actions))
+        if self.m_action:
+            actions = list(range(self.agent_config.output_dim_2))
+        else:
+            actions = list(range(self.agent_config.output_dim))
+
+        if self.agent_config.ar_policy:
+            if self.m_action:
+                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
+            elif self.m_selection:
+                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=env_config, env_state=env_state, m_selection=True), actions))
+        else:
+            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                action, env_config=env_config, env_state=env_state), actions))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)
