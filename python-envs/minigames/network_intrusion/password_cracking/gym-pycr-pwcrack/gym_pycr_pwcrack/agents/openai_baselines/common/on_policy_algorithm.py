@@ -315,7 +315,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
             # Save models every <self.config.checkpoint_frequency> iterations
             if self.iteration % self.agent_config.checkpoint_freq == 0:
-                self.save_model()
+                try:
+                    self.save_model()
+                except Exception as e:
+                    print("There was an error saving the model: {}".format(str(e)))
                 if self.agent_config.save_dir is not None:
                     time_str = str(time.time())
                     self.train_result.to_csv(

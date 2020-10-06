@@ -99,7 +99,10 @@ class PPOBaselineAgent(TrainAgent):
         self.config.logger.info("Training Complete")
 
         # Save networks
-        model.save_model()
+        try:
+            model.save_model()
+        except Exception as e:
+            print("There was en error saving the model:{}".format(str(e)))
 
         # Save other game data
         if self.config.save_dir is not None:
