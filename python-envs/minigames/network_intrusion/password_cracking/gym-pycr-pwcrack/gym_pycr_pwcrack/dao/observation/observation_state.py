@@ -26,8 +26,8 @@ class ObservationState:
             m.cleanup()
 
 
-    def get_action_id(self, a : Action):
-        if a.index < len(self.machines) and a.index != -1:
+    def get_action_ip(self, a : Action):
+        if a.index < len(self.machines) and a.index < self.num_machines:
             self.sort_machines()
             return self.machines[a.index].ip
         return a.ip

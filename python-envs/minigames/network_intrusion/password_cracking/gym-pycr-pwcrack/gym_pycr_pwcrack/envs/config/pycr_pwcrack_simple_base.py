@@ -240,7 +240,7 @@ class PyCrPwCrackSimpleBase:
             # --- ReCon ---
 
             # TCP SYN Stealth Scan
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TCP_SYN_STEALTH_SCAN(index=0, subnet=False),
             NMAPActions.TCP_SYN_STEALTH_SCAN(index=1, subnet=False),
             NMAPActions.TCP_SYN_STEALTH_SCAN(index=2, subnet=False),
@@ -248,7 +248,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_SYN_STEALTH_SCAN(index=4, subnet=False),
 
             # Ping Scan
-            NMAPActions.PING_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.PING_SCAN(index=0, subnet=False),
             NMAPActions.PING_SCAN(index=1, subnet=False),
             NMAPActions.PING_SCAN(index=2, subnet=False),
@@ -256,7 +256,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.PING_SCAN(index=4, subnet=False),
 
             # UDP Port Scan
-            NMAPActions.UDP_PORT_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.UDP_PORT_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.UDP_PORT_SCAN(index=0, subnet=False),
             NMAPActions.UDP_PORT_SCAN(index=1, subnet=False),
             NMAPActions.UDP_PORT_SCAN(index=2, subnet=False),
@@ -264,7 +264,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.UDP_PORT_SCAN(index=4, subnet=False),
 
             # TCP CON Non-stealth Scan
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TCP_CON_NON_STEALTH_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=0, subnet=False),
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=1, subnet=False),
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=2, subnet=False),
@@ -272,7 +272,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_CON_NON_STEALTH_SCAN(index=4, subnet=False),
 
             # TCP FIN Scan
-            NMAPActions.TCP_FIN_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TCP_FIN_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TCP_FIN_SCAN(index=0, subnet=False),
             NMAPActions.TCP_FIN_SCAN(index=1, subnet=False),
             NMAPActions.TCP_FIN_SCAN(index=2, subnet=False),
@@ -280,7 +280,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_FIN_SCAN(index=4, subnet=False),
 
             # TCP Null Scan
-            NMAPActions.TCP_NULL_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TCP_NULL_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TCP_NULL_SCAN(index=0, subnet=False),
             NMAPActions.TCP_NULL_SCAN(index=1, subnet=False),
             NMAPActions.TCP_NULL_SCAN(index=2, subnet=False),
@@ -288,7 +288,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_NULL_SCAN(index=4, subnet=False),
 
             # TCP XMAS Tree Scan
-            NMAPActions.TCP_XMAS_TREE_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TCP_XMAS_TREE_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TCP_XMAS_TREE_SCAN(index=0, subnet=False),
             NMAPActions.TCP_XMAS_TREE_SCAN(index=1, subnet=False),
             NMAPActions.TCP_XMAS_TREE_SCAN(index=2, subnet=False),
@@ -296,14 +296,14 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TCP_XMAS_TREE_SCAN(index=4, subnet=False),
 
             # OS Detection Scan
-            NMAPActions.OS_DETECTION_SCAN(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.OS_DETECTION_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.OS_DETECTION_SCAN(index=0, subnet=False),
             NMAPActions.OS_DETECTION_SCAN(index=1, subnet=False),
             NMAPActions.OS_DETECTION_SCAN(index=2, subnet=False),
             NMAPActions.OS_DETECTION_SCAN(index=3, subnet=False),
             NMAPActions.OS_DETECTION_SCAN(index=4, subnet=False),
 
-            NMAPActions.NMAP_VULNERS(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.NMAP_VULNERS(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.NMAP_VULNERS(index=0, subnet=False),
             NMAPActions.NMAP_VULNERS(index=1, subnet=False),
             NMAPActions.NMAP_VULNERS(index=2, subnet=False),
@@ -313,7 +313,7 @@ class PyCrPwCrackSimpleBase:
             # --- Exploits ---
 
             # Telnet
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -321,7 +321,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # SSH
-            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -329,7 +329,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # FTP
-            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -337,7 +337,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # Cassandra
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -345,7 +345,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # IRC
-            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -353,7 +353,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # Mongo
-            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -361,7 +361,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # MySql
-            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -369,7 +369,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # STMP
-            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),
@@ -377,7 +377,7 @@ class PyCrPwCrackSimpleBase:
             NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=4, subnet=False),
 
             # Postgres
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=5, ip=network_conf.subnet_mask, subnet=True),
+            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True),
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=0, subnet=False),
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=1, subnet=False),
             NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=2, subnet=False),

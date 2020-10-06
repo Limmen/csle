@@ -89,7 +89,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
-        action.ip = self.env_state.obs_state.get_action_id(action)
+        action.ip = self.env_state.obs_state.get_action_ip(action)
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         if self.agent_state.time_step > self.env_config.max_episode_length:
             done = True
@@ -159,7 +159,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return False
 
         action = env_config.action_conf.actions[action_id]
-        action.ip = env_state.obs_state.get_action_id(action)
+        action.ip = env_state.obs_state.get_action_ip(action)
 
         # Recon on subnet is always possible
         if action.subnet:

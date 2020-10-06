@@ -835,17 +835,14 @@ class ClusterUtil:
         if service_name == constants.SSH.SERVICE_NAME:
             connected, users, target_connections, ports, cost, non_failed_credentials = ClusterUtil._ssh_setup_connection(
                 a=a, env_config=env_config, credentials=non_used_nor_cached_credentials)
-            print("SSH Connected:{}".format(connected))
         elif service_name == constants.TELNET.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials = \
                 ClusterUtil._telnet_setup_connection(a=a, env_config=env_config,
                                                      credentials=non_used_nor_cached_credentials)
-            print("Telnet Connected:{}".format(connected))
         elif service_name == constants.FTP.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost, non_failed_credentials = \
                 ClusterUtil._ftp_setup_connection(a=a, env_config=env_config,
                                                   credentials=non_used_nor_cached_credentials)
-            print("FTP Connected:{}".format(connected))
 
         s_prime = s
         if len(non_failed_credentials) > 0:

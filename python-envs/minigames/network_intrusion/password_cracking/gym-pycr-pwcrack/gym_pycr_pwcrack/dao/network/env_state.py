@@ -21,7 +21,7 @@ class EnvState:
         self.os_lookup = os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.obs_state : ObservationState = None
-        self.reset_state()
+        self.reset_state() # Init obs state
         self.num_m_features = 10 + self.obs_state.num_ports + self.obs_state.num_vuln
         self.observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             self.obs_state.num_machines*self.num_m_features,))
