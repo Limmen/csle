@@ -382,6 +382,7 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.base_step_reward = -50
         super().__init__(env_config=env_config)
 
 

@@ -82,11 +82,11 @@ class EnvConfig:
         self.os_found_reward_mult = 1
         self.vuln_found_reward_mult = 1
         self.machine_found_reward_mult = 1
-        self.shell_access_found_reward_mult = 5
-        self.root_found_reward_mult = 5
+        self.shell_access_found_reward_mult = 10
+        self.root_found_reward_mult = 10
         self.cost_coefficient = 1
         self.detection_reward = -50
-        self.all_flags_reward = 100
+        self.all_flags_reward = 500
         self.sum_costs = 1
         self.max_episode_length = 100
         self.base_step_reward = -1

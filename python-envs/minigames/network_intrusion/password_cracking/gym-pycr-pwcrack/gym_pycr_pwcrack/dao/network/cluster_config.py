@@ -202,7 +202,7 @@ class ClusterConfig:
             id = int(parts[0])
             if id in nmap_id_values:
                 idx = parts[1]
-                a = action_lookup_d_val[(int(id), idx)]
+                a = action_lookup_d_val[(int(id), int(idx))]
                 ip = parts[2]
                 remote_file = None
                 try:
@@ -219,7 +219,7 @@ class ClusterConfig:
 
             elif id in network_service_actions_id_values:
                 idx = parts[1]
-                a = action_lookup_d_val[(int(id), idx)]
+                a = action_lookup_d_val[(int(id), int(idx))]
                 ip = parts[2]
                 remote_file = None
                 try:

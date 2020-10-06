@@ -923,8 +923,8 @@ class ClusterUtil:
                     target_connections.append(target_conn)
                     ports.append(cr.port)
                     non_failed_credentials.append(cr)
-                except:
-                    pass
+                except Exception as e:
+                    print("SSH exception :{}".format(str(e)))
             else:
                 non_failed_credentials.append(cr)
         end = time.time()
@@ -1141,7 +1141,7 @@ class ClusterUtil:
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
         :return: the updated machine observation with the found flags, cost, root
-        """
+        """        
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: x.root, reverse=True)
         root_scan = False

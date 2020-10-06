@@ -16,7 +16,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=1000,
+                                                num_iterations=300,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -33,7 +33,7 @@ def default_config() -> ClientConfig:
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
+                                                eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=20, illegal_action_logit=-100
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
@@ -47,7 +47,7 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v1",
-                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
+                                 run_many=True, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
 
