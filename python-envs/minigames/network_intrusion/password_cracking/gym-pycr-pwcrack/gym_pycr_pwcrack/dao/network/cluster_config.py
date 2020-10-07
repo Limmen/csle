@@ -208,7 +208,7 @@ class ClusterConfig:
                 try:
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
-                    cost = float(cost_str)
+                    cost = round(float(cost_str), 1)
                     action_costs.add_cost(action_id=a.id, ip=ip, cost=cost)
                     a.cost = cost
                 except Exception as e:
@@ -225,7 +225,7 @@ class ClusterConfig:
                 try:
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
-                    cost = float(cost_str)
+                    cost = round(float(cost_str),1)
                     action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
                     a.cost = cost
                 except Exception as e:
@@ -255,7 +255,7 @@ class ClusterConfig:
                 try:
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
-                    cost = float(cost_str)
+                    cost = round(float(cost_str), 1)
                     action_costs.find_add_cost(action_id=id, ip=ip, cost=cost, user=user, service=service)
                     a.cost = cost
                 except Exception as e:

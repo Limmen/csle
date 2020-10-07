@@ -12,20 +12,20 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    simulation_config = SimulationConfig(render=False, sleep=0.8, video=True, log_frequency=1,
+    simulation_config = SimulationConfig(render=True, sleep=2, video=True, log_frequency=1,
                                          video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                          num_episodes=1000,
                                          gifs=True, gif_dir=util.default_output_dir() + "/results/gifs", video_frequency=1)
-    agent_config = AgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=True, eval_sleep=0.0,
+                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=100,
+                                                epsilon_decay=0.9999, video=False, eval_log_frequency=100,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                                 num_iterations=10,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=10,
+                                                eval_frequency=1000, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=100, input_dim=6 * 30,
+                                                checkpoint_freq=1000, input_dim=6 * 30,
                                                 output_dim=114,
                                                 pi_hidden_dim=128, pi_hidden_layers=1,
                                                 vf_hidden_dim=128, vf_hidden_layers=1,
@@ -39,11 +39,15 @@ def default_config() -> ClientConfig:
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
                                                 render_steps=20, illegal_action_logit=-100,
-                                                load_path="/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/399/1601837275.338192_policy_network.zip"
+                                                load_path="/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/models/1602061268.012527_policy_network.zip"
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
-    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+    # cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False)
+    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+                                   agent_username="agent", agent_pw="agent", server_connection=True,
+                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                   server_username="kim")
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),

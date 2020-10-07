@@ -75,16 +75,17 @@ class Simulator:
             if self.config.render:
                 self.env.render()
                 time.sleep(self.config.sleep)
+
             self.config.logger.info("Simulation episode: {}, Game ended after {} steps".format(episode, i))
             episode_steps.append(episode_step)
 
             # Log average metrics every <self.config.eval_log_frequency> episodes
-            if episode % self.config.log_frequency == 0:
+            if episode > 0 and episode % self.config.log_frequency == 0:
                 self.log_metrics(self.experiment_result, episode_steps)
                 episode_steps = []
-            if self.config.gifs and self.config.video:
-                self.env.generate_gif(self.config.gif_dir + "episode_" + str(episode) + "_"
-                                      + time_str + ".gif", self.config.video_fps)
+                if self.config.gifs and self.config.video:
+                    self.env.generate_gif(self.config.gif_dir + "episode_" + str(episode) + "_"
+                                          + time_str + ".gif", self.config.video_fps)
 
             done = False
             obs = self.env.reset()
