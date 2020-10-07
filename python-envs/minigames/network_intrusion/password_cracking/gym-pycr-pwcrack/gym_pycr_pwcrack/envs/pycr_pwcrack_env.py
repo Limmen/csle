@@ -131,6 +131,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.agent_state.time_step = 0
         self.agent_state.episode_reward = 0
         self.agent_state.env_log.reset()
+        self.agent_state.obs_state = self.env_state.obs_state
         return m_obs
 
     def render(self, mode: str = 'human'):

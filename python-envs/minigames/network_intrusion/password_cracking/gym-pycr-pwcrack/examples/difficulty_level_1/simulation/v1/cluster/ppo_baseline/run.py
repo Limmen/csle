@@ -12,7 +12,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    simulation_config = SimulationConfig(render=True, sleep=2, video=True, log_frequency=1,
+    simulation_config = SimulationConfig(render=True, sleep=0, video=True, log_frequency=1000,
                                          video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                          num_episodes=1000,
                                          gifs=True, gif_dir=util.default_output_dir() + "/results/gifs", video_frequency=1)

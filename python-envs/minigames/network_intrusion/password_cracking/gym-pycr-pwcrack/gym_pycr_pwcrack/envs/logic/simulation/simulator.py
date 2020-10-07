@@ -106,14 +106,14 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == ActionId.SSH_LOGIN:
-            return PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.NETWORK_SERVICE_LOGIN:
+            s_1, r_1, _ = PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
+            s_2, r_2, _ = PostExploitSimulator.simulate_ftp_login(s=s_1, a=a, env_config=env_config)
+            s_3, r_3, done = PostExploitSimulator.simulate_telnet_login(s=s_2, a=a, env_config=env_config)
+            reward = r_3 + r_2 + r_1
+            return s_3, reward, done
         if a.id == ActionId.FIND_FLAG:
             return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.FTP_LOGIN:
-            return PostExploitSimulator.simulate_ftp_login(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.TELNET_LOGIN:
-            return PostExploitSimulator.simulate_telnet_login(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 

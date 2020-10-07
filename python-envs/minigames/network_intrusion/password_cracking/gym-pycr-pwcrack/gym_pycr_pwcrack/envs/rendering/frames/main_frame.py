@@ -517,6 +517,9 @@ class MainFrame(pyglet.window.Window):
                     for link in self.node_ip_to_links[node.ip]:
                         batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
                                        constants.RENDERING.LINE_WIDTH)
+                if node.ip in self.node_ip_to_ip_lbl:
+                    lbl = self.node_ip_to_ip_lbl[node.ip]
+                    lbl.text = ""
 
         for m in self.state.obs_state.machines:
             node = self.node_ip_to_node[m.ip]
