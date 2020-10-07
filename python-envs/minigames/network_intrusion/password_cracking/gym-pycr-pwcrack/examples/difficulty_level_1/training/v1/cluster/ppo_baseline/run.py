@@ -78,11 +78,32 @@ if __name__ == '__main__':
     else:
         config = default_config()
 
+    args.plotonly = True
+    args.resultdirs = "results,results2"
     # Plot
     if args.plotonly:
         if args.csvfile is not None:
             plotting_util.plot_csv_files([args.csvfile],
                                         config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+        elif args.resultdirs is not None:
+            rds = args.resultdirs.split(",")
+            total_files = []
+            for rd in rds:
+                if config.run_many:
+                    csv_files = []
+                    for seed in config.random_seeds:
+                        p = glob.glob(config.output_dir + "/" + rd + "/data/" + str(seed) + "/*_train.csv")[0]
+                        csv_files.append(p)
+                    total_files.append(csv_files)
+                    #plotting_util.plot_csv_files(csv_files, config.output_dir + "/" + rd + "/plots/")
+                else:
+                    p = glob.glob(config.output_dir + "/" + rd + "/data/" + str(config.random_seed) + "/*_train.csv")[0]
+                    total_files.append([p])
+                    # plotting_util.plot_csv_files([p], config.output_dir + "/" + rd + "/plots/"
+                    #                              + str(config.random_seed) + "/")
+
+            plotting_util.plot_two_csv_files(total_files, config.output_dir + "/")
+
         elif config.run_many:
             csv_files = []
             for seed in config.random_seeds:

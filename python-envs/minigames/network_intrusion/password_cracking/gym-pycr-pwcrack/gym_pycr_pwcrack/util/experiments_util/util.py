@@ -152,6 +152,7 @@ def parse_args(default_config_path):
     parser.add_argument("-nc", "--noconfig", help="Boolean parameter, if true always override config",
                         action="store_true")
     parser.add_argument("-cs", "--csvfile", help="CSV file for plotting", type=str)
+    parser.add_argument("-rd", "--resultdirs", help="List of comma-separated result dirs to combine for plotting", type=str)
     args = parser.parse_args()
     return args
 
