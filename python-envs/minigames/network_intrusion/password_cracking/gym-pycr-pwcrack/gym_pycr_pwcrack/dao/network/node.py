@@ -9,7 +9,7 @@ class Node:
 
     def __init__(self, ip: str, ip_id: int, id : int, type: NodeType, flags: List[Flag], level : int,
                  vulnerabilities : List[Vulnerability], services : List[NetworkService], os : str,
-                 credentials : List[Credential], root : List[str]):
+                 credentials : List[Credential], root : List[str], visible : bool = True):
         self.ip = ip
         self.ip_id = ip_id
         self.id = id
@@ -21,3 +21,4 @@ class Node:
         self.os = os
         self.credentials = credentials
         self.root = root
+        self.visible = visible

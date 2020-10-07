@@ -1,7 +1,7 @@
 """
 The main frame for the pycr-pwcrack environment
 """
-from typing import List
+import numpy as np
 import os
 import pyglet
 from gym_pycr_pwcrack.envs.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
@@ -41,6 +41,9 @@ class MainFrame(pyglet.window.Window):
         self.flags_sprites = []
         self.setup_resources_path()
         self.state = init_state
+        self.node_ip_to_coords = {}
+        self.node_ip_to_node = {}
+        self.node_ip_to_ip_lbl = {}
         self.create_batch()
         self.set_state(self.state)
         self.switch_to()
@@ -64,9 +67,12 @@ class MainFrame(pyglet.window.Window):
                                                     group=self.background)
         self.hacker_sprite.scale = 0.25
 
-        batch_label("." + str(self.env_config.network_conf.hacker.ip_id), self.width / 2 + 60,
+        lbl = batch_label("." + str(self.env_config.network_conf.hacker.ip_id), self.width / 2 + 60,
                     self.height - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+        self.node_ip_to_ip_lbl[self.env_config.network_conf.hacker.ip] = lbl
         nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-50)
+        self.node_ip_to_coords[self.env_config.network_conf.hacker.ip] = (self.width / 2 + 20, self.height - 50)
+        self.node_ip_to_node[self.env_config.network_conf.hacker.ip] = self.env_config.network_conf.hacker
 
         # Draw subnet Mask
         batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
@@ -114,10 +120,13 @@ class MainFrame(pyglet.window.Window):
         # Draw router
         if self.env_config.network_conf.router is not None:
             create_circle_fill(self.width / 2 + 20, self.height - 75, 8, self.batch, self.first_foreground,
-                               constants.RENDERING.BLUE_PURPLE)
-            batch_label("." + str(self.env_config.network_conf.router.ip_id), self.width / 2 + 50,
+                               constants.RENDERING.WHITE)
+            lbl = batch_label("", self.width / 2 + 50,
                         self.height - 75, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+            self.node_ip_to_ip_lbl[self.env_config.network_conf.router.ip] = lbl
             nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 75)
+            self.node_ip_to_coords[self.env_config.network_conf.router.ip] = (self.width / 2 + 20, self.height - 75)
+            self.node_ip_to_node[self.env_config.network_conf.router.ip] = self.env_config.network_conf.router
         else:
             raise ValueError("Router is not defined in network config")
 
@@ -146,9 +155,10 @@ class MainFrame(pyglet.window.Window):
                         if node.type == NodeType.SERVER:
                             if x > x_max:
                                 x = x_start
-                            create_circle_fill(x, y, 8, self.batch, self.first_foreground, constants.RENDERING.BLACK)
-                            batch_label("." + str(node.ip_id), x - 30, y, 12, (0, 0, 0, 255), self.batch,
+                            create_circle_fill(x, y, 8, self.batch, self.first_foreground, constants.RENDERING.WHITE)
+                            lbl = batch_label("", x - 30, y, 12, (0, 0, 0, 255), self.batch,
                                         self.second_foreground)
+                            self.node_ip_to_ip_lbl[node.ip] = lbl
                             for i, flag in enumerate(node.flags):
                                 # Draw flag
                                 flag_sprite = pyglet.sprite.Sprite(self.flag_avatar, x=x-(20*(i+1)),
@@ -160,6 +170,8 @@ class MainFrame(pyglet.window.Window):
                                 self.flags_sprites.append((flag_sprite, flag))
 
                             nodes_to_coords[node.id] = (x, y)
+                            self.node_ip_to_coords[node.ip] = (x, y)
+                            self.node_ip_to_node[node.ip] = node
                             x = x + x_sep
                 y = y - y_sep
 
@@ -465,6 +477,25 @@ class MainFrame(pyglet.window.Window):
                     self.state.os_lookup_inv[int(self.state.os_state[o][0])])
                 self.os_labels[o][1].text = os_name
 
+    def update_topology(self):
+        for node in self.env_config.network_conf.nodes:
+            if node.type != NodeType.HACKER:
+                coords = self.node_ip_to_coords[node.ip]
+                create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground,
+                                   constants.RENDERING.WHITE)
+        for m in self.state.obs_state.machines:
+            node = self.node_ip_to_node[m.ip]
+            if node.type == NodeType.HACKER:
+                continue
+            coords = self.node_ip_to_coords[node.ip]
+            if node.type == NodeType.ROUTER:
+                color = constants.RENDERING.BLUE_PURPLE
+            elif node.type == NodeType.SERVER:
+                color = constants.RENDERING.BLACK
+            create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground, color)
+            lbl = self.node_ip_to_ip_lbl[node.ip]
+            lbl.text = "." + str(node.ip_id)
+
 
     def on_draw(self) -> None:
         """
@@ -480,6 +511,8 @@ class MainFrame(pyglet.window.Window):
         self.update_labels()
         # Update flags
         self.update_flags()
+        # Update topology
+        self.update_topology()
         # Make this window the current OpenGL rendering context
         self.switch_to()
 
