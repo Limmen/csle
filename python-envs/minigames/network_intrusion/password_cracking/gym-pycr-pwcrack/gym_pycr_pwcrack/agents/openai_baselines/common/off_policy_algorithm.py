@@ -8,8 +8,7 @@ import numpy as np
 import torch as th
 
 from stable_baselines3.common.noise import ActionNoise
-from stable_baselines3.common.save_util import load_from_pkl, save_to_pkl
-
+from gym_pycr_pwcrack.agents.openai_baselines.common.save_util import load_from_pkl, save_to_pkl
 from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
 from gym_pycr_pwcrack.agents.openai_baselines.common.buffers import ReplayBuffer
 from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback

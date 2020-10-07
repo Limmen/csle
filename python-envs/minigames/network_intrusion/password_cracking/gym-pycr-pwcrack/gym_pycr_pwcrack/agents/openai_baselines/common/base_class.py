@@ -16,8 +16,8 @@ from stable_baselines3.common import logger, utils
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.preprocessing import is_image_space
-from stable_baselines3.common.save_util import load_from_zip_file, recursive_getattr, recursive_setattr, \
-    save_to_zip_file
+from gym_pycr_pwcrack.agents.openai_baselines.common.save_util import load_from_zip_file, recursive_getattr, \
+    recursive_setattr, save_to_zip_file
 
 from gym_pycr_pwcrack.agents.openai_baselines.common.utils import (
     check_for_correct_spaces,

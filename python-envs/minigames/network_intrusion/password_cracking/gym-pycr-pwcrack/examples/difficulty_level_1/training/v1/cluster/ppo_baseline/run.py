@@ -16,12 +16,12 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=300,
+                                                num_iterations=10,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=100, input_dim=6 * 30,
+                                                checkpoint_freq=1, input_dim=6 * 30,
                                                 output_dim=133,
                                                 pi_hidden_dim=128, pi_hidden_layers=1,
                                                 vf_hidden_dim=128, vf_hidden_layers=1,
@@ -37,12 +37,16 @@ def default_config() -> ClientConfig:
                                                 render_steps=20, illegal_action_logit=-100
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
-    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+    # cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
+    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+                                   agent_username="agent", agent_pw="agent", server_connection=True,
+                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                   server_username="kim")
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
