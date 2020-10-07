@@ -44,6 +44,8 @@ class MainFrame(pyglet.window.Window):
         self.node_ip_to_coords = {}
         self.node_ip_to_node = {}
         self.node_ip_to_ip_lbl = {}
+        self.node_ip_to_links = {}
+        self.id_to_node = {}
         self.create_batch()
         self.set_state(self.state)
         self.switch_to()
@@ -73,6 +75,7 @@ class MainFrame(pyglet.window.Window):
         nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-50)
         self.node_ip_to_coords[self.env_config.network_conf.hacker.ip] = (self.width / 2 + 20, self.height - 50)
         self.node_ip_to_node[self.env_config.network_conf.hacker.ip] = self.env_config.network_conf.hacker
+        self.id_to_node[self.env_config.network_conf.hacker.id] = self.env_config.network_conf.hacker
 
         # Draw subnet Mask
         batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
@@ -127,6 +130,7 @@ class MainFrame(pyglet.window.Window):
             nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 75)
             self.node_ip_to_coords[self.env_config.network_conf.router.ip] = (self.width / 2 + 20, self.height - 75)
             self.node_ip_to_node[self.env_config.network_conf.router.ip] = self.env_config.network_conf.router
+            self.id_to_node[self.env_config.network_conf.router.id] = self.env_config.network_conf.router
         else:
             raise ValueError("Router is not defined in network config")
 
@@ -172,31 +176,57 @@ class MainFrame(pyglet.window.Window):
                             nodes_to_coords[node.id] = (x, y)
                             self.node_ip_to_coords[node.ip] = (x, y)
                             self.node_ip_to_node[node.ip] = node
+                            self.id_to_node[node.id] = node
                             x = x + x_sep
                 y = y - y_sep
 
         # Draw links
         for i in range(len(self.env_config.network_conf.adj_matrix)):
+            node1 = self.id_to_node[i+1]
+            node1_links = []
             for j in range(i+1, len(self.env_config.network_conf.adj_matrix[i])):
                 if self.env_config.network_conf.adj_matrix[i][j] == 1:
-                    color = constants.RENDERING.BLACK
-
+                    color = constants.RENDERING.WHITE
+                    node2 = self.id_to_node[j + 1]
+                    node2_links = []
                     # draw first straight line down
-                    batch_line(nodes_to_coords[i + 1][0], nodes_to_coords[i + 1][1],
-                                   nodes_to_coords[i + 1][0],  nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1])/2,
-                                   color, self.batch, self.background, constants.RENDERING.LINE_WIDTH)
+                    c_1 = nodes_to_coords[i + 1][0]
+                    c_2 = nodes_to_coords[i + 1][1]
+                    c_3 = nodes_to_coords[i + 1][0]
+                    c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
+
+                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,constants.RENDERING.LINE_WIDTH)
+                    node1_links.append((c_1, c_2, c_3, c_4))
+                    node2_links.append((c_1, c_2, c_3, c_4))
 
                     # draw horizontal line
-                    batch_line(nodes_to_coords[i + 1][0], nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2,
-                               nodes_to_coords[j + 1][0],
-                               nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2,
-                               color, self.batch, self.background, constants.RENDERING.LINE_WIDTH)
+                    c_1 = nodes_to_coords[i + 1][0]
+                    c_2 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
+                    c_3 = nodes_to_coords[j + 1][0]
+                    c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
+                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
+                                   constants.RENDERING.LINE_WIDTH)
+                    node1_links.append((c_1, c_2, c_3, c_4))
+                    node2_links.append((c_1, c_2, c_3, c_4))
 
                     # draw second straight line down
-                    batch_line(nodes_to_coords[j + 1][0],
-                               nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2,
-                               nodes_to_coords[j + 1][0], nodes_to_coords[j+1][1],
-                                color, self.batch, self.background, constants.RENDERING.LINE_WIDTH)
+                    c_1 = nodes_to_coords[j + 1][0]
+                    c_2 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
+                    c_3 = nodes_to_coords[j + 1][0]
+                    c_4 = nodes_to_coords[j+1][1]
+                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
+                                   constants.RENDERING.LINE_WIDTH)
+                    node1_links.append((c_1, c_2, c_3, c_4))
+                    node2_links.append((c_1, c_2, c_3, c_4))
+                    if node2.ip not in self.node_ip_to_links:
+                        self.node_ip_to_links[node2.ip] = node2_links
+                    else:
+                        self.node_ip_to_links[node2.ip] = self.node_ip_to_links[node2.ip] + node2_links
+
+            if node1.ip not in self.node_ip_to_links:
+                self.node_ip_to_links[node1.ip] = node1_links
+            else:
+                self.node_ip_to_links[node1.ip] = self.node_ip_to_links[node1.ip] + node1_links
 
         w = 30
         h = 25
@@ -483,6 +513,11 @@ class MainFrame(pyglet.window.Window):
                 coords = self.node_ip_to_coords[node.ip]
                 create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground,
                                    constants.RENDERING.WHITE)
+                if node.ip in self.node_ip_to_links:
+                    for link in self.node_ip_to_links[node.ip]:
+                        batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
+                                       constants.RENDERING.LINE_WIDTH)
+
         for m in self.state.obs_state.machines:
             node = self.node_ip_to_node[m.ip]
             if node.type == NodeType.HACKER:
@@ -495,6 +530,10 @@ class MainFrame(pyglet.window.Window):
             create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground, color)
             lbl = self.node_ip_to_ip_lbl[node.ip]
             lbl.text = "." + str(node.ip_id)
+            for link in self.node_ip_to_links[node.ip]:
+                batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
+                           self.background,
+                           constants.RENDERING.LINE_WIDTH)
 
 
     def on_draw(self) -> None:
