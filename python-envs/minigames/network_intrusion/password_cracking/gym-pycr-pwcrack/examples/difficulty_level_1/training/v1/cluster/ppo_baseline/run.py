@@ -78,8 +78,8 @@ if __name__ == '__main__':
     else:
         config = default_config()
 
-    args.plotonly = True
-    args.resultdirs = "results,results2"
+    # args.plotonly = True
+    # args.resultdirs = "results,results2"
     # Plot
     if args.plotonly:
         if args.csvfile is not None:
