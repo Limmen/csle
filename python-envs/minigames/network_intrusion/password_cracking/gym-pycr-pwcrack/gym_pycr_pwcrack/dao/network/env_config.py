@@ -16,7 +16,7 @@ class EnvConfig:
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
                  num_sh : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
-                 base_detection_p : float = 0.01):
+                 base_detection_p : float = 0.01, manual_play : bool = False):
         """
         Initialize the config
 
@@ -32,6 +32,7 @@ class EnvConfig:
         :param simulate_detection: boolean flag whether to simulate detections or not
         :param detection_reward: reward when a detection happens
         :param base_detection_p: base detection probability for simulation
+        :param manual_play: boolean flag whether manual play is used
         """
         self.network_conf = network_conf
         self.action_conf = action_conf
@@ -99,6 +100,7 @@ class EnvConfig:
         self.ip_to_machine_id_mapping = {}
         self.save_trajectories = False
         self.blacklist_ips = ["172.18.1.1"]
+        self.manual_play = manual_play
 
 
     def get_port_forward_port(self) -> int:

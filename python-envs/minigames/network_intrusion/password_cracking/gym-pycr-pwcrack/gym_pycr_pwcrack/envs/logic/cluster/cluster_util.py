@@ -948,7 +948,7 @@ class ClusterUtil:
         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -v",
                                                                    conn=target_connections[i])
         root = False
-        if not "Sorry, user {} may not run sudo".format(users[i]) in errdata.decode("utf-8"):
+        if not "may not run sudo".format(users[i]) in errdata.decode("utf-8"):
             root = True
             target_machine.root = True
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
@@ -1031,7 +1031,7 @@ class ClusterUtil:
         target_connections[i].write("sudo -v\n".encode())
         response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=5)
         root = False
-        if not "Sorry, user {} may not run sudo".format(users[i]) in response.decode("utf-8"):
+        if not "may not run sudo".format(users[i]) in response.decode("utf-8"):
             root = True
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME, tunnel_thread=tunnel_threads[i],

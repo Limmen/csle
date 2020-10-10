@@ -3,7 +3,9 @@ from gym_pycr_pwcrack.dao.agent.agent_log import AgentLog
 from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
 
 class AgentState:
-
+    """
+    DTO with agent's state information for rendering
+    """
     def __init__(self, obs_state : ObservationState, env_log: AgentLog,
                  episode_reward : int = 0,
                  cumulative_reward : int = 0, time_step : int = 0, num_episodes: int = 0,
@@ -30,9 +32,15 @@ class AgentState:
         self.os_state = None
         self.flags_state = None
         self.initialize_render_state()
+        self.manual_action = ""
 
 
-    def initialize_render_state(self) -> np.ndarray:
+    def initialize_render_state(self):
+        """
+        Initializes the render state
+
+        :return: None
+        """
         self.machines_state = np.zeros((self.obs_state.num_machines, 10 + self.obs_state.num_ports
                                         + self.obs_state.num_vuln + self.obs_state.num_sh))
         self.ports_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_ports, 4))

@@ -10,6 +10,7 @@ import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
 from gym_pycr_pwcrack.dao.network.node_type import NodeType
+from gym_pycr_pwcrack.envs import PyCRPwCrackEnv
 
 class MainFrame(pyglet.window.Window):
     """
@@ -18,7 +19,7 @@ class MainFrame(pyglet.window.Window):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EnvConfig, init_state : AgentState):
+    def __init__(self, env_config: EnvConfig, init_state : AgentState, env: PyCRPwCrackEnv = None):
         """
         Initialize frame
         :param env_config: trhe environment config
@@ -28,6 +29,7 @@ class MainFrame(pyglet.window.Window):
         # call constructor of parent class
         super(MainFrame, self).__init__(height=700, width=1300, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
+        self.env = env
         self.init_state = init_state
         self.batch = pyglet.graphics.Batch()
         self.background = pyglet.graphics.OrderedGroup(0)
@@ -119,6 +121,23 @@ class MainFrame(pyglet.window.Window):
         self.n_af_label = batch_label(str(self.state.num_all_flags), 100,
                                      self.height - 150, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
                                      bold=False)
+
+        # Draw manual action label
+        batch_label("Manual Action:", self.width / 2 + 350,
+                    self.height - 25, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        self.manual_action_label = batch_label(str(self.state.manual_action), self.width / 2 + 450,
+                                     self.height - 25, 10, (0, 0, 0, 255), self.batch, self.second_foreground,
+                                     bold=False)
+
+        # Draw manual action instructions
+        batch_label("Input ID", self.width / 2 + 330,
+                    self.height - 50, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        batch_label("[Enter]: execute", self.width / 2 + 350,
+                    self.height - 75, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        batch_label("[ESC]: reset", self.width / 2 + 340,
+                    self.height - 100, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+        batch_label("[TAB]: print actions", self.width / 2 + 360,
+                    self.height - 125, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
 
         # Draw router
         if self.env_config.network_conf.router is not None:
@@ -436,6 +455,53 @@ class MainFrame(pyglet.window.Window):
                             self.second_foreground)
                 self.log_labels.append(l)
 
+
+    def on_key_press(self, symbol, modifiers) -> None:
+        """
+        Event handler for on_key_press event.
+        The user can move the agent with key presses.
+        :param symbol: the symbol of the keypress
+        :param modifiers: _
+        :return: None
+        """
+        # Dont do anything if agent is playing
+        if not self.env_config.manual_play:
+            return
+
+        if symbol == pyglet.window.key._1:
+            self.state.manual_action = self.state.manual_action + "1"
+        elif symbol == pyglet.window.key._2:
+            self.state.manual_action = self.state.manual_action + "2"
+        elif symbol == pyglet.window.key._3:
+            self.state.manual_action = self.state.manual_action + "3"
+        elif symbol == pyglet.window.key._4:
+            self.state.manual_action = self.state.manual_action + "4"
+        elif symbol == pyglet.window.key._5:
+            self.state.manual_action = self.state.manual_action + "5"
+        elif symbol == pyglet.window.key._6:
+            self.state.manual_action = self.state.manual_action + "6"
+        elif symbol == pyglet.window.key._7:
+            self.state.manual_action = self.state.manual_action + "7"
+        elif symbol == pyglet.window.key._8:
+            self.state.manual_action = self.state.manual_action + "8"
+        elif symbol == pyglet.window.key._9:
+            self.state.manual_action = self.state.manual_action + "9"
+        elif symbol == pyglet.window.key._0:
+            self.state.manual_action = self.state.manual_action + "0"
+        elif symbol == pyglet.window.key.ENTER:
+            if self.env is not None:
+                action = int(self.state.manual_action)
+                self.env.step(action)
+            self.state.manual_action = ""
+        elif symbol == pyglet.window.key.BACKSPACE:
+            self.state.manual_action = self.state.manual_action[:-1]
+        elif symbol == pyglet.window.key.ESCAPE:
+            if self.env is not None:
+                self.env.reset()
+        elif symbol == pyglet.window.key.TAB:
+            if self.env is not None:
+                self.env.env_config.action_conf.print_actions()
+
     def setup_resources_path(self) -> None:
         """
         Setup path to resources (e.g. images)
@@ -468,6 +534,7 @@ class MainFrame(pyglet.window.Window):
         self.t_label.text = str(self.state.time_step)
         self.n_d_label.text = str(self.state.num_detections)
         self.n_af_label.text = str(self.state.num_all_flags)
+        self.manual_action_label.text = str(self.state.manual_action)
         for m in range(len(self.state_labels)):
             for c in range(len(self.state_labels[m])):
                 self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
@@ -486,7 +553,7 @@ class MainFrame(pyglet.window.Window):
                     self.ports_labels[p][c].text = service
         num_logs = len(self.state.env_log.log)
         for i in range(len(self.log_labels)):
-            if i < num_logs-1:
+            if i < num_logs:
                 self.log_labels[i].text = str(num_logs - 1 - i) + ":" + self.state.env_log.log[num_logs - 1 - i]
             else:
                 self.log_labels[i].text = ""
@@ -521,6 +588,7 @@ class MainFrame(pyglet.window.Window):
                     lbl = self.node_ip_to_ip_lbl[node.ip]
                     lbl.text = ""
 
+        drawn_links = set()
         for m in self.state.obs_state.machines:
             node = self.node_ip_to_node[m.ip]
             if node.type == NodeType.HACKER:
@@ -534,10 +602,13 @@ class MainFrame(pyglet.window.Window):
             lbl = self.node_ip_to_ip_lbl[node.ip]
             lbl.text = "." + str(node.ip_id)
             for link in self.node_ip_to_links[node.ip]:
-                batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
-                           self.background,
-                           constants.RENDERING.LINE_WIDTH)
-
+                if (link[0], link[1], link[2], link[3]) not in drawn_links and (link[2], link[3], link[0], link[1]) \
+                        not in drawn_links:
+                    batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
+                               self.background,
+                               constants.RENDERING.LINE_WIDTH)
+                    drawn_links.add((link[0], link[1], link[2], link[3]))
+                    drawn_links.add((link[2], link[3], link[0], link[1]))
 
     def on_draw(self) -> None:
         """
@@ -578,3 +649,16 @@ class MainFrame(pyglet.window.Window):
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)
         self.second_foreground = pyglet.graphics.OrderedGroup(2)
+
+    def update(self, dt) -> None:
+        """
+        Event handler for the update-event (timer-based typically), used to update the state of the grid.
+
+        :param dt: the number of seconds since the function was last called
+        :return: None
+        """
+        if self.env_config.manual_play and self.env is not None:
+            self.set_state(self.env.agent_state)
+        else:
+            self.set_state(self.state)
+        self.on_draw()

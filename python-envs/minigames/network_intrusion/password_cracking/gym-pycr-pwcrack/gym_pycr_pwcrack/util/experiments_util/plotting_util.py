@@ -1,14 +1,32 @@
-from typing import Union
+"""
+Utility functions for plotting training results
+"""
+
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
-import os
 
 def plot_rewards_flags_steps(rewards_data, rewards_means, rewards_stds,
                              flags_data, flags_means, flags_stds,
                              steps_data, steps_means, steps_stds,
                              file_name, markevery=10):
+    """
+    Plots rewards, flags %, and steps over training iterations with standard deviation indicated with
+    shaded areas.
+
+    :param rewards_data: the reward data to plot
+    :param rewards_means: the mean values of the reward data
+    :param rewards_stds: the stds of the reward data
+    :param flags_data: the flag data to plot
+    :param flags_means: the mean values of the flag data
+    :param flags_stds: the stds of the flag data
+    :param steps_data: the steps data to plot
+    :param steps_means: the mean values of the steps data
+    :param steps_stds: the standard deviation of the steps data
+    :param file_name: the file name to save the result
+    :param markevery: frequency of markers in the plot
+    :return: None
+    """
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(16, 3))
@@ -131,6 +149,31 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
                                flags_data_2, flags_means_2, flags_stds_2,
                                steps_data_2, steps_means_2, steps_stds_2,
                                file_name, markevery=10):
+    """
+    Plots rewards, flags % and steps of two different configurations
+
+    :param rewards_data_1: the reward data to plot of the first config
+    :param rewards_means_1: the mean values of the reward data of the first config
+    :param rewards_stds_1: the stds of the reward data of the first config
+    :param flags_data_1: the flag data to plot of the first config
+    :param flags_means_1: the mean values of the flag data of the first config
+    :param flags_stds_1: the stds of the flag data of the first config
+    :param steps_data_1: the steps data to plot of the first config
+    :param steps_means_1: the mean values of the steps data of the first config
+    :param steps_stds_1: the standard deviation of the steps data of the first config
+    :param rewards_data_2: the reward data to plot of the second config
+    :param rewards_means_2: the mean values of the reward data of the second config
+    :param rewards_stds_2: the stds of the reward data of the second config
+    :param flags_data_2: the flag data to plot of the second config
+    :param flags_means_2: the mean values of the flag data of the second config
+    :param flags_stds_2: the stds of the flag data of the second config
+    :param steps_data_2: the steps data to plot of the second config
+    :param steps_means_2: the mean values of the steps data of the second config
+    :param steps_stds_2: the standard deviation of the steps data of the second config
+    :param file_name_: the file name to save the result
+    :param markevery: frequency of markers in the plot
+    :return: None
+    """
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(16, 3))
@@ -292,6 +335,13 @@ def plot_csv_files(csv_files, output_dir : str):
 
 
 def plot_two_csv_files(csv_files, output_dir : str):
+    """
+    Helper function for plotting a list of csv files
+
+    :param csv_files:  the list of csv files to plot
+    :param output_dir: the output directory.
+    :return:
+    """
     dfs_1 = []
     dfs_2 = []
     for i, csv_file in enumerate(csv_files[0]):

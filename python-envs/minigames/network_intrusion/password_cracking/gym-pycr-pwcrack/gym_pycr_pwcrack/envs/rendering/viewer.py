@@ -25,16 +25,7 @@ import sys
 from gym_pycr_pwcrack.envs.rendering.frames.main_frame import MainFrame
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
-from gym_pycr_pwcrack.dao.network.node import Node
-from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
-from gym_pycr_pwcrack.dao.network.flag import Flag
-from gym_pycr_pwcrack.dao.network.node_type import NodeType
-from gym_pycr_pwcrack.dao.agent.agent_log import AgentLog
-import gym_pycr_pwcrack.constants.constants as constants
-from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
-from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
-from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
+from gym_pycr_pwcrack.envs import PyCRPwCrackEnv
 
 class Viewer():
 
@@ -59,6 +50,19 @@ class Viewer():
         self.isopen = True
         if interactive:
             pyglet.app.run()
+
+    def manual_start_attacker(self, env: PyCRPwCrackEnv) -> None:
+        """
+        Starts the PyCr-game app in a manual mode where the actions are controlled with the keyboard
+
+        :return: None
+        """
+        self.env_config.manual_play = True
+        self.mainframe = MainFrame(env_config=self.env_config, init_state=self.init_state, env=env)
+        self.mainframe.on_close = self.window_closed_by_user
+        self.isopen = True
+        pyglet.clock.schedule_interval(self.mainframe.update, 1 / 60.)
+        pyglet.app.run()
 
     def window_closed_by_user(self) -> None:
         """

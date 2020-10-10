@@ -17,6 +17,7 @@ from gym_pycr_pwcrack.agents.dqn.dqn_baseline_agent import DQNBaselineAgent
 from gym_pycr_pwcrack.agents.policy_gradient.a2c_baseline.a2c_baseline_agent import A2CBaselineAgent
 from gym_pycr_pwcrack.agents.td3.td3_baseline_agent import TD3BaselineAgent
 from gym_pycr_pwcrack.agents.ddpg.ddpg_baseline_agent import DDPGBaselineAgent
+from gym_pycr_pwcrack.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 class Runner:
     """
@@ -35,6 +36,8 @@ class Runner:
             return Runner.train(config)
         elif config.mode == RunnerMode.SIMULATE.value:
             return Runner.simulate(config)
+        elif config.mode == RunnerMode.MANUAL_ATTACKER.value:
+            return Runner.manual_play(config)
         else:
             raise AssertionError("Runner mode not recognized: {}".format(config.mode))
         return Runner.train(config)
@@ -93,3 +96,17 @@ class Runner:
             raise AssertionError("Agent type not recognized: {}".format(config.attacker_type))
         simulator = Simulator(env, config.simulation_config, attacker=attacker)
         return simulator.simulate()
+
+    @staticmethod
+    def manual_play(config: ClientConfig) -> ExperimentResult:
+        """
+        Starts the environment in manual mode where the user can specify actions using the keyboard
+
+        :param config: the manual play config
+        :return: experiment result
+        """
+        env: PyCRPwCrackEnv = None
+        env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+                       checkpoint_dir=config.env_checkpoint_dir)
+        ManualAttackerAgent(env_config=env.env_config, env=env)
+        return env

@@ -51,3 +51,19 @@ class ActionConfig:
                 idx2 = self.action_ids.index(a.id)
                 key = (a.index, idx2)
                 self.ar_action_converter[key] = i
+
+    def print_actions(self) -> None:
+        """
+        Utility function for printing the list of actions
+
+        :return: None
+        """
+        print("Actions:")
+        for i, action in enumerate(self.actions):
+            tag = "-"
+            if not action.subnet:
+                if action.ip is not None:
+                    tag = str(action.ip.rsplit(".", 1)[-1])
+            else:
+                tag = "*"
+            print(str(i) + ":" + action.name + "[." + tag + "] c:" + str(action.cost))

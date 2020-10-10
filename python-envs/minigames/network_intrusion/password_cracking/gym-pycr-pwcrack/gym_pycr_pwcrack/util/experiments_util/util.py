@@ -12,6 +12,7 @@ import os
 import sys
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
+from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
@@ -27,12 +28,17 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     logger = setup_logger(title, config.output_dir + "/results/logs/" +
                                str(random_seed) + "/",
                                time_str=time_str)
-    config.agent_config.save_dir = default_output_dir() + "/results/data/" + str(random_seed) + "/"
-    config.agent_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
-    config.agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
-    config.agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
-                                             + str(random_seed) + "/"
-    config.env_checkpoint_dir = default_output_dir() + "/results/env_data/" + str(random_seed) + "/"
+    if config.agent_config is not None:
+        config.agent_config.save_dir = default_output_dir() + "/results/data/" + str(random_seed) + "/"
+        config.agent_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
+        config.agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
+        config.agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
+                                                 + str(random_seed) + "/"
+        config.env_checkpoint_dir = default_output_dir() + "/results/env_data/" + str(random_seed) + "/"
+        config.agent_config.logger = logger
+        config.agent_config.random_seed = random_seed
+        config.agent_config.to_csv(
+            config.output_dir + "/results/hyperparameters/" + str(random_seed) + "/" + time_str + ".csv")
 
     if config.simulation_config is not None:
         config.simulation_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
@@ -40,21 +46,20 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
 
 
     config.logger = logger
-    config.agent_config.logger = logger
-    config.agent_config.random_seed = random_seed
     config.random_seed = random_seed
-    config.agent_config.to_csv(
-        config.output_dir + "/results/hyperparameters/" + str(random_seed) + "/" + time_str + ".csv")
     train_csv_path = ""
     eval_csv_path = ""
-    train_result, eval_result = Runner.run(config)
-    if len(train_result.avg_episode_steps) > 0:
-        train_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_train" + ".csv"
-        train_result.to_csv(train_csv_path)
-    if len(eval_result.avg_episode_steps) > 0:
-        eval_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_eval" + ".csv"
-        eval_result.to_csv(eval_csv_path)
-    return train_csv_path, eval_csv_path
+    if config.mode == RunnerMode.TRAIN_ATTACKER or config.mode == RunnerMode.SIMULATE:
+        train_result, eval_result = Runner.run(config)
+        if len(train_result.avg_episode_steps) > 0:
+            train_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_train" + ".csv"
+            train_result.to_csv(train_csv_path)
+        if len(eval_result.avg_episode_steps) > 0:
+            eval_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_eval" + ".csv"
+            eval_result.to_csv(eval_csv_path)
+        return train_csv_path, eval_csv_path
+    else:
+        Runner.run(config)
 
 
 def create_artefact_dirs(output_dir: str, random_seed : int) -> None:
