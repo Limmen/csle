@@ -337,3 +337,40 @@ class NIKTO:
     BASE_ARGS = "-port 80 -Format xml --maxtime 60s -timeout 5 "
     HOST_ARG = "-h "
     OUTPUT_ARG = "-output "
+
+
+#/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
+#crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24
+#
+# /usr/sbin/hping3 --scan known 172.18.1.2 --flood > output.txt
+# netcat -nvz 172.18.1.2 1-65535 > ncat.txt 2>&1
+# masscan 172.18.1.0/24 -p70-80 --banners --source-ip 172.18.1.191 -oX massscan.xml
+# masscan 172.18.1.0/24 -p0-65535 --banners --source-ip 172.18.1.191 -oX massscan.xml
+# add VULSCAN parsing of output
+# freevulnsearch https://github.com/OCSAF/freevulnsearch
+# https://github.com/xvass/vscan
+# firewalk.nse
+# http-enum.nse
+# http-grep.nse
+# http-waf-detect.nse
+# http-waf-fingerprint
+# get recon-ng with recon-cli working to analyze web vulnerabilities
+# https://nmap.org/nsedoc/scripts/finger.html
+# https://nmap.org/nsedoc/scripts/ip-forwarding.html
+# https://nmap.org/nsedoc/scripts/broadcast-avahi-dos.html
+# https://nmap.org/nsedoc/scripts/http-slowloris.html
+# DNS brute force: dns-brute.nse
+# nmap -p 80 --script hostmap-bfk.nse nmap.org
+# sudo nmap --traceroute --script traceroute-geolocation.nse -p 80 hackertarget.com
+# ssl-heartbleed.nse
+# https://www.ryanschulze.net/archives/2148 VULNERS CVE, https://vulners.com/ info
+
+# http-sql-injection.nse
+# whois-domain.nse
+# dns-fuzz.nse
+
+# Post exploitation scans, e.g. install backdoor actions, collect more information about the host (e.g. OS, etc), more vulnerabilities,
+# more usernames etc
+# Collect hostnames after nmap scans: cat 19_6.xml | grep "hostname", show in UI
+# More features, e.g. when logging on server do "netscan" to figure out running services. Also check running processes
+#

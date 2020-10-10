@@ -30,6 +30,10 @@ RUN apt-get -y install git
 RUN apt-get -y install sshpass
 RUN apt-get -y install lftp
 RUN apt-get -y install recon-ng
+RUN apt-get -y install netdiscover
+RUN apt-get -y install hping3
+RUN apt-get -y install netcat
+RUN apt-get -y install masscan
 
 # Setup users
 
