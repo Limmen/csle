@@ -46,3 +46,5 @@ class ActionId(Enum):
 
     NETWORK_SERVICE_LOGIN=38
     FIND_FLAG = 39
+
+    NIKTO_WEB_HOST_SCAN = 40

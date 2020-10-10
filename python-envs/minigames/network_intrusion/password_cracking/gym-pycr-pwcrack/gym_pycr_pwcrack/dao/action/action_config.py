@@ -4,8 +4,9 @@ from gym_pycr_pwcrack.dao.action.action import Action
 
 class ActionConfig:
 
-    def __init__(self, actions: List[Action], nmap_action_ids : List[int], network_service_action_ids: List[int],
-                 shell_action_ids : List[int], num_indices):
+    def __init__(self, num_indices : int, actions: List[Action] = None, nmap_action_ids : List[int] = None,
+                 network_service_action_ids: List[int] = None,
+                 shell_action_ids : List[int] = None, nikto_action_ids : List[int] = None):
         self.actions = actions
         self.num_actions = len(self.actions)
         self.num_indices = num_indices
@@ -19,7 +20,8 @@ class ActionConfig:
         self.nmap_action_ids = nmap_action_ids
         self.network_service_action_ids = network_service_action_ids
         self.shell_action_ids = shell_action_ids
-        self.action_ids = self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids
+        self.nikto_action_ids = nikto_action_ids
+        self.action_ids = self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids + self.nikto_action_ids
         self.num_node_specific_actions = len(self.action_ids)
         self.m_action_space = gym.spaces.Discrete(self.num_node_specific_actions)
         self.ar_action_converter = {}
@@ -62,8 +64,8 @@ class ActionConfig:
         for i, action in enumerate(self.actions):
             tag = "-"
             if not action.subnet:
-                if action.ip is not None:
-                    tag = str(action.ip.rsplit(".", 1)[-1])
+                if action.index is not None:
+                    tag = str(action.index)
             else:
                 tag = "*"
-            print(str(i) + ":" + action.name + "[." + tag + "] c:" + str(action.cost))
+            print(str(i) + ":" + action.name + "[" + tag + "] c:" + str(action.cost))

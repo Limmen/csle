@@ -333,3 +333,7 @@ class FILE_PATTERNS:
     NMAP_ACTION_RESULT_SUFFIX = ".xml"
 
 
+class NIKTO:
+    BASE_ARGS = "-port 80 -Format xml --maxtime 60s -timeout 5 "
+    HOST_ARG = "-h "
+    OUTPUT_ARG = "-output "

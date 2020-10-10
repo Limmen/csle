@@ -129,3 +129,17 @@ class ReconMiddleware:
         :return: s_prime, reward, done
         """
         return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_nikto_web_host_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Performs a nikto web host scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print("nikto web host scan todo")
+        ClusterUtil.execute_ssh_cmd(cmd=a.nikto_cmd(), conn=env_config.cluster_config.agent_conn)
+        return s, 0, False

@@ -29,6 +29,7 @@ RUN apt-get -y install finger
 RUN apt-get -y install git
 RUN apt-get -y install sshpass
 RUN apt-get -y install lftp
+RUN apt-get -y install recon-ng
 
 # Setup users
 

@@ -157,11 +157,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     @staticmethod
     def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
                         m_action: bool = False, m_index : int = None) -> bool:
+
+        # If using AR policy
         if m_selection:
-            return PyCRPwCrackEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,env_state=env_state)
+            return PyCRPwCrackEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,
+                                                               env_state=env_state)
         elif m_action:
-            return PyCRPwCrackEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config, env_state=env_state,
-                                                     machine_index=m_index)
+            return PyCRPwCrackEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config,
+                                                            env_state=env_state, machine_index=m_index)
+
         if not env_config.filter_illegal_actions:
             return True
         if action_id > len(env_config.action_conf.actions) - 1:
@@ -171,7 +175,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         ip = env_state.obs_state.get_action_ip(action)
 
         # Recon on subnet is always possible
-        if action.subnet:
+        if action.type == ActionType.RECON and action.subnet:
             return True
 
         machine_discovered = False
@@ -224,13 +228,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
 
     def convert_ar_action(self, machine_idx, action_idx):
-        m_selection_legal = PyCRPwCrackEnv._is_action_legal_m_selection(machine_idx, env_config=self.env_config,
-                                                           env_state=self.env_state)
-        m_legal = PyCRPwCrackEnv._is_action_legal_m_action(action_idx, env_config=self.env_config,
-                                                           env_state=self.env_state, machine_index=machine_idx)
         key = (machine_idx, action_idx)
-        action = self.env_config.action_conf.ar_action_converter[key]
-        action_legal = PyCRPwCrackEnv.is_action_legal(action, env_config=self.env_config, env_state=self.env_state)
         return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------

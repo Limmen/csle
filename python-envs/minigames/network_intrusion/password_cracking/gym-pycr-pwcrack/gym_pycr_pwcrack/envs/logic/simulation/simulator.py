@@ -62,6 +62,8 @@ class Simulator:
             return ReconSimulator.simulate_vulscan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.NIKTO_WEB_HOST_SCAN:
+            return ReconSimulator.simulate_nikto_web_host_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
