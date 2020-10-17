@@ -43,7 +43,7 @@ class EnvState:
             if len(self.obs_state.machines) > i:
                 self.machines_obs[i][0] = i + 1
                 self.obs_state.machines[i].sort_ports()
-                self.obs_state.machines[i].sort_vuln(self.vuln_lookup)
+                self.obs_state.machines[i].sort_cve_vuln(self.vuln_lookup)
                 self.obs_state.machines[i].sort_shell_access(self.service_lookup)
 
                 # IP
@@ -62,7 +62,7 @@ class EnvState:
                         self.ports_protocols_obs[i][j] = p.protocol.value
 
                 # Vulnerabilities
-                for j, v in enumerate(self.obs_state.machines[i].vuln):
+                for j, v in enumerate(self.obs_state.machines[i].cve_vulns):
                     v_id = self.vuln_lookup[v.name]
                     if j < self.obs_state.num_vuln:
                         self.machines_obs[i][j + 3 + self.obs_state.num_ports] = v_id
@@ -73,10 +73,10 @@ class EnvState:
 
                 # Num Vulnerabilities
                 self.machines_obs[i][4 + self.obs_state.num_ports + self.obs_state.num_vuln] = len(
-                    self.obs_state.machines[i].vuln)
+                    self.obs_state.machines[i].cve_vulns)
 
                 # Total CVSS score
-                total_cvss = sum(list(map(lambda x: x.cvss, self.obs_state.machines[i].vuln)))
+                total_cvss = sum(list(map(lambda x: x.cvss, self.obs_state.machines[i].cve_vulns)))
                 self.machines_obs[i][5 + self.obs_state.num_ports + self.obs_state.num_vuln] = total_cvss
 
                 # Shell Access

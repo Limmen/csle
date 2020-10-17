@@ -8,6 +8,8 @@ from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_result import NmapScanResult
+from gym_pycr_pwcrack.dao.action_results.nikto_scan_result import NiktoScanResult
+from gym_pycr_pwcrack.dao.action_results.nikto_vuln import NiktoVuln
 from gym_pycr_pwcrack.dao.action_results.nmap_host import NmapHostResult
 from gym_pycr_pwcrack.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port import NmapPort
@@ -262,7 +264,25 @@ class ClusterUtil:
     @staticmethod
     def parse_nmap_scan(file_name: str, env_config: EnvConfig) -> ET.Element:
         """
-        Parases an XML file containing the result of an nmap scan
+        Parses an XML file containing the result of an nmap scan
+
+        :param file_name: name of the file to parse
+        :param env_config: environment config
+        :return: the parsed xml file
+        """
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        try:
+            xml_tree = ET.parse(remote_file)
+        finally:
+            remote_file.close()
+        xml_data = xml_tree.getroot()
+        return xml_data
+
+    @staticmethod
+    def parse_nikto_scan(file_name: str, env_config: EnvConfig) -> ET.Element:
+        """
+        Parses an XML file containing the result of an nikt scan
 
         :param file_name: name of the file to parse
         :param env_config: environment config
@@ -314,7 +334,6 @@ class ClusterUtil:
                 hosts.append(host)
         result = NmapScanResult(hosts=hosts)
         return result
-
 
     @staticmethod
     def _parse_nmap_host_xml(xml_data) -> NmapHostResult:
@@ -603,7 +622,7 @@ class ClusterUtil:
 
 
     @staticmethod
-    def merge_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
+    def merge_nmap_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
             -> Tuple[EnvState, float]:
         """
         Merges a NMAP scan result with an existing observation state
@@ -622,7 +641,7 @@ class ClusterUtil:
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root = \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -631,11 +650,12 @@ class ClusterUtil:
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
             a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_vuln_found=total_new_vuln,
+                                                 num_new_cve_vuln_found=total_new_vuln,
                                                  num_new_machines=total_new_machines,
                                                  num_new_shell_access=total_new_shell_access,
                                                  num_new_root=total_new_root,
                                                  num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -658,8 +678,8 @@ class ClusterUtil:
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
-                s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=cache_value, s=s, a=a,
-                                                                           env_config=env_config)
+                s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=cache_value, s=s, a=a,
+                                                                                env_config=env_config)
                 return s_prime, reward, False
 
         # Check On-disk cache
@@ -692,8 +712,8 @@ class ClusterUtil:
         scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
-        s_prime, reward = ClusterUtil.merge_scan_result_with_state(scan_result=scan_result, s=s, a=a,
-                                                                   env_config=env_config)
+        s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
+                                                                        env_config=env_config)
         return s_prime, reward, False
 
 
@@ -712,7 +732,7 @@ class ClusterUtil:
                    total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn
         """        
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
         target_machine = None
         non_used_credentials = []
@@ -819,13 +839,14 @@ class ClusterUtil:
             s_prime = s
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                total_new_shell_access, total_new_flag_pts, total_new_root = \
+                total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
                                                            env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                   total_new_shell_access, total_new_flag_pts, total_new_root, total_cost, False
+                   total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+                   total_cost, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -878,7 +899,7 @@ class ClusterUtil:
                         root = True
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root = \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
         else:
@@ -886,7 +907,8 @@ class ClusterUtil:
             target_machine.shell_access_credentials = []
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_cost, True
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+               total_cost, True
 
 
     @staticmethod
@@ -1343,3 +1365,180 @@ class ClusterUtil:
                 break
 
         return new_m_obs, total_cost, root_scan
+
+    @staticmethod
+    def nikto_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+        """
+        Helper function for executing a NIKTO web scan action on the cluster. Implements caching.
+
+        :param s: the current env state
+        :param a: the Nikto action to execute
+        :param env_config: the env config
+        :return: s', reward, done
+        """
+        cache_result = None
+        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
+
+        # Check in-memory cache
+        if env_config.use_nikto_cache:
+            cache_value = env_config.nikto_scan_cache.get(cache_id)
+            if cache_value is not None:
+                s_prime, reward = ClusterUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
+                                                                                env_config=env_config)
+
+                return s_prime, reward, False
+
+        # Check On-disk cache
+        if env_config.use_nmap_cache:
+            cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config)
+
+        # If cache miss, then execute cmd
+        if cache_result is None:
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nikto_cmd(),
+                                                                       conn=env_config.cluster_config.agent_conn)
+            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
+            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+            cache_result = cache_id
+
+        # Read result
+        for i in range(env_config.num_retries):
+            try:
+                xml_data = ClusterUtil.parse_nikto_scan(file_name=cache_result, env_config=env_config)
+                scan_result = ClusterUtil.parse_nikto_scan_xml(xml_data)
+                break
+            except Exception as e:
+                # If no webserver, Nikto outputs nothing
+                scan_result = NiktoScanResult(ip=a.ip, vulnerabilities=[], port=80, sitename=a.ip)
+                break
+
+        if env_config.use_nikto_cache:
+            env_config.nikto_scan_cache.add(cache_id, scan_result)
+        s_prime, reward = ClusterUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
+                                                                        env_config=env_config)
+        return s_prime, reward, False
+
+    @staticmethod
+    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
+            -> Tuple[EnvState, float]:
+        """
+        Merges a Nikto scan result with an existing observation state
+
+        :param scan_result: the scan result
+        :param s: the current state
+        :param a: the action just executed
+        :return: s', reward
+        """
+        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
+        m_obs = None
+
+        for m in s.obs_state.machines:
+            if m.ip == scan_result.ip:
+                m_obs = MachineObservationState(ip=m.ip)
+
+        for vuln in scan_result.vulnerabilities:
+            vuln_obs = vuln.to_obs()
+            m_obs.osvdb_vulns.append(vuln_obs)
+
+        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+
+        # Use measured cost
+        if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
+            a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 cost=a.cost,
+                                                 env_config=env_config)
+        return s_prime, reward
+
+    @staticmethod
+    def parse_nikto_scan_xml(xml_data) -> NiktoScanResult:
+        """
+        Parses an XML Tree with Nikto Scan Result into a Nikto Scan DTO
+
+        :param xml_data: the xml tree of Nikto Scan Result to parse
+        :return: parsed nikto scan result
+        """
+        result = None
+        for child in xml_data:
+            if child.tag == constants.NIKTO_XML.SCANDETAILS:
+                result = ClusterUtil._parse_nikto_scandetails(child)
+            elif child.tag == constants.NIKTO_XML.ITEM:
+                result = ClusterUtil._parse_nikto_scandetails(xml_data)
+            elif child.tag == constants.NIKTO_XML.NIKTOSCAN:
+                result = ClusterUtil.parse_nikto_scan(xml_data)
+        return result
+
+    @staticmethod
+    def _parse_nikto_scandetails(xml_data) -> NiktoScanResult:
+        """
+        Parses a host-element in the XML tree
+
+        :param xml_data: the host element
+        :return: parsed nikto scan result
+        """
+        target_ip = ""
+        targetport = ""
+        sitename=""
+        vulnerabilities = []
+
+        if constants.NIKTO_XML.TARGETPORT in xml_data.keys():
+            targetport = xml_data.attrib[constants.NIKTO_XML.TARGETPORT]
+        if constants.NIKTO_XML.TARGETIP in xml_data.keys():
+            target_ip = xml_data.attrib[constants. NIKTO_XML.TARGETIP]
+        if constants.NIKTO_XML.SITENAME in xml_data.keys():
+            sitename = xml_data.attrib[constants.NIKTO_XML.SITENAME]
+
+        for child in list(xml_data.iter()):
+            if child.tag == constants.NIKTO_XML.ITEM:
+                vuln = ClusterUtil._parse_nmap_status_xml(child)
+        nikto_scan_result = NiktoScanResult(vulnerabilities=vulnerabilities,
+                                            port=targetport, ip=target_ip)
+        return nikto_scan_result
+
+    @staticmethod
+    def _parse_nikto_item(xml_data) -> NiktoVuln:
+        """
+        Parses a item in the XML tree of a Nikto scan
+
+        :param xml_data: the item element
+        :return: parsed nikto vuln
+        """
+        id = "",
+        osvdb_id = None
+        method = ""
+        iplink = ""
+        namelink = ""
+        uri = ""
+        description = ""
+
+        if constants.NIKTO_XML.METHOD in xml_data.keys():
+            method = xml_data.attrib[constants.NIKTO_XML.METHOD]
+        if constants.NIKTO_XML.OSVDB_ID in xml_data.keys():
+            method = int(xml_data.attrib[constants.NIKTO_XML.OSVDB_ID])
+        if constants.NIKTO_XML.ITEM_ID in xml_data.keys():
+            id = int(xml_data.attrib[constants.NIKTO_XML.ITEM_ID])
+
+        for child in list(xml_data.iter()):
+            if child.tag == constants.NIKTO_XML.DESCR:
+                description = child.text
+            elif child.tag == constants.NIKTO_XML.URI:
+                uri = child.text
+            elif child.tag == constants.NIKTO_XML.NAMELINK:
+                namelink = child.text
+            elif child.tag == constants.NIKTO_XML.IPLINK:
+                iplink = child.text
+
+        nikto_vuln = NiktoVuln(id=id, osvdb_id=osvdb_id, method=method, iplink=iplink, namelink=namelink,
+                               uri=uri, description=description)
+
+        return nikto_vuln

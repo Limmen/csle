@@ -7,6 +7,7 @@ from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystemScanCache
+from gym_pycr_pwcrack.dao.action_results.nikto_scan_cache import NiktoScanCache
 
 class EnvConfig:
     """
@@ -71,6 +72,8 @@ class EnvConfig:
         self.num_retries = 2
         self.use_nmap_cache = True
         self.nmap_scan_cache = NMAPScanCache()
+        self.use_nikto_cache = True
+        self.nikto_scan_cache = NiktoScanCache()
         self.action_costs = ActionCosts()
         self.port_forward_next_port = 4000
         self.flag_lookup = self._create_flags_lookup()
@@ -81,7 +84,8 @@ class EnvConfig:
         self.flag_found_reward_mult = 20
         self.port_found_reward_mult = 1
         self.os_found_reward_mult = 1
-        self.vuln_found_reward_mult = 1
+        self.cve_vuln_found_reward_mult = 1
+        self.osvdb_vuln_found_reward_mult = 1
         self.machine_found_reward_mult = 1
         self.shell_access_found_reward_mult = 10
         self.root_found_reward_mult = 10

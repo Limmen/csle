@@ -10,7 +10,8 @@ class MachineObservationState:
         self.ip = ip
         self.os="unknown"
         self.ports : List[PortObservationState] = []
-        self.vuln : List[VulnerabilityObservationState] = []
+        self.cve_vulns : List[VulnerabilityObservationState] = []
+        self.osvdb_vulns: List[VulnerabilityObservationState] = []
         self.shell_access = False
         self.shell_access_credentials : List[Credential] = []
         self.logged_in = False
@@ -23,22 +24,25 @@ class MachineObservationState:
         self.root_services = []
 
     def __str__(self):
-        return "ip:{},os:{},shell_access:{},num_ports:{},num_vuln:{},num_cred{},num_ssh_connections:{}," \
-               "num_ftp_connections:{},num_telnet_connections:{}".format(self.ip, self.os, self.shell_access, len(self.ports),
-                                                  len(self.vuln),  len(self.shell_access_credentials),
-                                                  len(self.ssh_connections), len(self.ftp_connections),
-                                                                         len(self.telnet_connections))
+        return "ip:{},os:{},shell_access:{},num_ports:{},num_cve_vuln:{},num_cred{},num_ssh_connections:{}," \
+               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{}".format(
+            self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
+            len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
+            len(self.telnet_connections), len(self.osvdb_vulns))
 
     def sort_ports(self):
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
 
-    def sort_vuln(self, vuln_lookup):
-        self.vuln = sorted(self.vuln, key=lambda x: vuln_lookup[x.name], reverse=False)
+    def sort_cve_vuln(self, vuln_lookup):
+        self.cve_vulns = sorted(self.cve_vulns, key=lambda x: vuln_lookup[x.name], reverse=False)
 
     def sort_shell_access(self, service_lookup):
         self.shell_access_credentials = sorted(self.shell_access_credentials,
                                                key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
                                                reverse=False)
+
+    def sort_osvdb_vuln(self):
+        self.osvdb_vulns = sorted(self.osvdb_vulns, key=lambda x: x.osvdb_id, reverse=False)
 
     def cleanup(self):
         """

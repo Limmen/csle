@@ -13,18 +13,18 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
                                new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
-            Tuple[List[MachineObservationState], int, int, int, int, int, int, int]:
+            Tuple[List[MachineObservationState], int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
         :param env_config: environment config
-        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a
+        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a, new_osvdb_v
         """
         merged_machines = []
-        total_new_ports_found, total_new_os_found, total_new_vuln_found, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, total_new_shell_access, \
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
 
         # Add updated machines to merged state
         for n_m in new_machines_obs:
@@ -34,21 +34,24 @@ class EnvDynamicsUtil:
             merged_m = n_m
             for i, o_m in enumerate(old_machines_obs):
                 if n_m.ip == o_m.ip:
-                    merged_m, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access, new_root, \
-                    new_flag_pts = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m)
+                    merged_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
+                    new_root, new_flag_pts, num_new_osvdb_vuln_found = \
+                        EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m)
                     total_new_ports_found += num_new_ports_found
                     total_new_os_found += num_new_os_found
-                    total_new_vuln_found += num_new_vuln_found
+                    total_new_cve_vuln_found += num_new_cve_vuln_found
                     total_new_shell_access += new_shell_access
                     total_new_root += new_root
                     total_new_flag_pts += new_flag_pts
+                    total_new_osvdb_vuln_found += num_new_osvdb_vuln_found
                     exists = True
             merged_machines.append(merged_m)
             if not exists:
                 total_new_ports_found += len(merged_m.ports)
                 new_os = 0 if merged_m.os == "unknown" else 1
                 total_new_os_found += new_os
-                total_new_vuln_found += len(merged_m.vuln)
+                total_new_cve_vuln_found += len(merged_m.cve_vulns)
+                total_new_osvdb_vuln_found += len(merged_m.osvdb_vulns)
                 total_new_machines += 1
 
         # Add old machines to merged state
@@ -60,33 +63,39 @@ class EnvDynamicsUtil:
             if not exists:
                 merged_machines.append(o_m)
 
-        return merged_machines, total_new_ports_found, total_new_os_found, total_new_vuln_found, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts, total_new_root
+        return merged_machines, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
+               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found
 
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \
-            -> Tuple[MachineObservationState, int, int, int, int, int, int]:
+            -> Tuple[MachineObservationState, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
 
         :param o_m: old machine observation
         :param n_m: newly collected machine information
-        :return: the merged machine observation state, n_new_ports, n_new_os, n_new_vuln, new_access, new_root, new_fl
+        :return: the merged machine observation state, n_new_ports, n_new_os, n_new_cve_vuln, new_access, new_root,
+                 new_fl, new_osvdb_vulns
         """
         if n_m == None:
-            return o_m, 0, 0, 0, 0, 0, 0
+            return o_m, 0, 0, 0, 0, 0, 0, 0
         merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports)
         n_m.ports = merged_ports
         merged_os, num_new_os_found = EnvDynamicsUtil.merge_os(o_m.os, n_m.os)
         n_m.os = merged_os
-        merged_vulnerabilities, num_new_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(o_m.vuln, n_m.vuln)
-        n_m.vuln = merged_vulnerabilities
+        merged_cve_vulnerabilities, num_new_cve_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(o_m.cve_vulns,
+                                                                                                   n_m.cve_vulns)
+        n_m.cve_vulns = merged_cve_vulnerabilities
+        merged_osvdb_vulnerabilities, num_new_osvdb_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(o_m.osvdb_vulns,
+                                                                                                   n_m.osvdb_vulns)
+        n_m.osvdb_vulns = merged_osvdb_vulnerabilities
         n_m, new_shell_access = EnvDynamicsUtil.merge_shell_access(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_logged_in(o_m, n_m)
         n_m, new_root = EnvDynamicsUtil.merge_root(o_m, n_m)
         n_m, new_flag_pts = EnvDynamicsUtil.merge_flags(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_connections(o_m, n_m)
-        return n_m, num_new_ports_found, num_new_os_found, num_new_vuln_found, new_shell_access, new_root, new_flag_pts
+        return n_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, new_root, \
+               new_flag_pts, num_new_osvdb_vuln_found
 
     @staticmethod
     def merge_os(o_os: str, n_os: str) -> Tuple[str, int]:
@@ -259,15 +268,17 @@ class EnvDynamicsUtil:
         return merged_vuln, num_new_vuln_found
 
     @staticmethod
-    def reward_function(num_new_ports_found: int = 0, num_new_os_found: int = 0, num_new_vuln_found: int = 0,
+    def reward_function(num_new_ports_found: int = 0, num_new_os_found: int = 0, num_new_cve_vuln_found: int = 0,
                         num_new_machines: int = 0, num_new_shell_access: int = 0, num_new_root: int = 0,
-                        num_new_flag_pts: int = 0, cost: float = 0.0, env_config: EnvConfig  = None) -> int:
+                        num_new_flag_pts: int = 0, num_new_osvdb_vuln_found : int = 0,
+                        cost: float = 0.0, env_config: EnvConfig  = None) -> int:
         """
         Implements the reward function
 
         :param num_new_ports_found: number of new ports detected
         :param num_new_os_found: number of new operating systems detected
-        :param num_new_vuln_found: number of new vulnerabilities detected
+        :param num_new_cve_vuln_found: number of new cve vulnerabilities detected
+        :param num_new_osvdb_vuln_found: number of new osvdb vulnerabilities detected
         :param num_new_machines: number of new machines
         :param num_new_shell_access: number of new shell access to different machines
         :param num_new_root: number of new root access to different machines
@@ -275,13 +286,14 @@ class EnvDynamicsUtil:
         :param env_config: env config
         :return: reward
         """
-        reward = env_config.port_found_reward_mult*num_new_ports_found + \
-                 env_config.os_found_reward_mult*num_new_os_found + \
-                 env_config.vuln_found_reward_mult*num_new_vuln_found + \
-                 env_config.machine_found_reward_mult*num_new_machines + \
-                 env_config.shell_access_found_reward_mult*num_new_shell_access + \
-                 env_config.root_found_reward_mult*num_new_root + \
-                 env_config.flag_found_reward_mult* num_new_flag_pts
+        reward = env_config.port_found_reward_mult * num_new_ports_found + \
+                 env_config.os_found_reward_mult * num_new_os_found + \
+                 env_config.cve_vuln_found_reward_mult * num_new_cve_vuln_found + \
+                 env_config.machine_found_reward_mult * num_new_machines + \
+                 env_config.shell_access_found_reward_mult * num_new_shell_access + \
+                 env_config.root_found_reward_mult * num_new_root + \
+                 env_config.flag_found_reward_mult * num_new_flag_pts + \
+                 env_config.osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found
         cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
         reward = env_config.base_step_reward + int((reward - cost))
         return reward

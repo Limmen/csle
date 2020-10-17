@@ -140,6 +140,4 @@ class ReconMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("nikto web host scan todo")
-        ClusterUtil.execute_ssh_cmd(cmd=a.nikto_cmd(), conn=env_config.cluster_config.agent_conn)
-        return s, 0, False
+        return ClusterUtil.nikto_scan_action_helper(s=s, a=a, env_config=env_config)

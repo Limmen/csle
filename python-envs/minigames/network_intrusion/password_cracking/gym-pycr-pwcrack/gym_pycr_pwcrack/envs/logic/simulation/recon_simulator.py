@@ -212,4 +212,4 @@ class ReconSimulator:
         :return: s_prime, reward, done
         """
         print("nikto web scan todo")
-        return s, reward, done
+        return s, 0, False

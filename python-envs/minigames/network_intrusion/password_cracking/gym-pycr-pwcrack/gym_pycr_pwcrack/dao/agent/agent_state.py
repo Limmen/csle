@@ -56,7 +56,7 @@ class AgentState:
             self.machines_state[i][0] = i + 1
             if len(self.obs_state.machines) > i:
                 self.obs_state.machines[i].sort_ports()
-                self.obs_state.machines[i].sort_vuln(self.vuln_lookup)
+                self.obs_state.machines[i].sort_cve_vuln(self.vuln_lookup)
                 self.obs_state.machines[i].sort_shell_access(self.service_lookup)
 
                 # IP
@@ -82,7 +82,7 @@ class AgentState:
                         ports_state_idx += 1
 
                 # Vulnerabilities
-                for j, sh_c in enumerate(self.obs_state.machines[i].vuln):
+                for j, sh_c in enumerate(self.obs_state.machines[i].cve_vulns):
                     v_id = self.vuln_lookup[sh_c.name]
                     if j < self.obs_state.num_vuln:
                         self.machines_state[i][j + 3 + self.obs_state.num_ports] = v_id
@@ -95,11 +95,11 @@ class AgentState:
                 # Num Open Ports
                 self.machines_state[i][3 + self.obs_state.num_ports + self.obs_state.num_vuln] = len(self.obs_state.machines[i].ports)
 
-                # Num Vulnerabilities
-                self.machines_state[i][4 + self.obs_state.num_ports + self.obs_state.num_vuln] = len(self.obs_state.machines[i].vuln)
+                # Num CVE Vulnerabilities
+                self.machines_state[i][4 + self.obs_state.num_ports + self.obs_state.num_vuln] = len(self.obs_state.machines[i].cve_vulns)
 
                 # Total CVSS score
-                total_cvss = sum(list(map(lambda x: x.cvss, self.obs_state.machines[i].vuln)))
+                total_cvss = sum(list(map(lambda x: x.cvss, self.obs_state.machines[i].cve_vulns)))
                 self.machines_state[i][5 + self.obs_state.num_ports + self.obs_state.num_vuln] = total_cvss
 
                 # Shell Access

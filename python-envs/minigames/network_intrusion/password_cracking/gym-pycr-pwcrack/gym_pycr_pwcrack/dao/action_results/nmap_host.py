@@ -40,7 +40,7 @@ class NmapHostResult:
         if self.os is not None:
             m_obs.os = self.os.vendor.lower()
         vulnerabilities = list(map(lambda x: x.to_obs(), self.vulnerabilities))
-        m_obs.vuln = vulnerabilities
+        m_obs.cve_vulns = vulnerabilities
         credentials = list(map(lambda x: x.to_obs(), self.credentials))
         m_obs.shell_access_credentials = credentials
         if len(credentials) > 0:

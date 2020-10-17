@@ -338,6 +338,22 @@ class NIKTO:
     HOST_ARG = "-h "
     OUTPUT_ARG = "-output "
 
+class NIKTO_XML:
+    NIKTOSCAN = "niktoscan"
+    SCANDETAILS = "scandetails"
+    ITEM = "item"
+    ITEM_ID = "id"
+    OSVDB_ID = "osvdbid"
+    DESCR = "description"
+    NAMELINK = "namelink"
+    IPLINK = "iplink"
+    URI = "uri"
+    TARGETPORT = "targetport"
+    TARGETIP = "targetip"
+    SITENAME = "sitename"
+    METHOD = "method"
+
+
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24
