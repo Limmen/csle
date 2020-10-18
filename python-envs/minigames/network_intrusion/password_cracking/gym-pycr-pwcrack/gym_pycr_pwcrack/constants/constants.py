@@ -238,6 +238,7 @@ class NMAP:
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
+    HTTP_ENUM = "--script=http-enum"
 
 class AUXILLARY:
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
@@ -297,6 +298,8 @@ class NMAP_XML:
     USERNAME = "username"
     PASSWORD = "password"
     ACCOUNTS = "Accounts"
+    HTTP_ENUM_SCRIPT = "http-enum"
+    OUTPUT = "output"
 
 class SSH:
     SERVICE_NAME ="ssh"
@@ -372,12 +375,9 @@ class MASSCAN:
 #
 # /usr/sbin/hping3 --scan known 172.18.1.2 --flood > output.txt
 # netcat -nvz 172.18.1.2 1-65535 > ncat.txt 2>&1
-# masscan 172.18.1.0/24 -p70-80 --banners --source-ip 172.18.1.191 -oX massscan.xml
-# masscan 172.18.1.0/24 -p0-65535 --banners --source-ip 172.18.1.191 -oX massscan.xml
 # add VULSCAN parsing of output
 # freevulnsearch https://github.com/OCSAF/freevulnsearch
 # https://github.com/xvass/vscan
-# firewalk.nse
 # http-enum.nse
 # http-grep.nse
 # http-waf-detect.nse

@@ -239,3 +239,16 @@ class ReconSimulator:
         """
         print("firewalk scan todo")
         return s, 0, False
+
+    @staticmethod
+    def simulate_http_enum(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Simulates a http enum scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print("http enum todo")
+        return s, 0, False

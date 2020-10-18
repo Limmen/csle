@@ -392,3 +392,22 @@ class NMAPActions:
                             "known as firewalking.",
                       cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
+
+    @staticmethod
+    def HTTP_ENUM(index: int, subnet=True, ip: str = "") -> Action:
+        cost_noise_multiplier = 1
+        http_enum_args = constants.NMAP.HTTP_ENUM
+        id = ActionId.HTTP_ENUM_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+        if subnet:
+            cost_noise_multiplier = 10
+            http_enum_args = constants.NMAP.HTTP_ENUM
+            id = ActionId.HTTP_ENUM_SUBNET
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["sudo nmap " + http_enum_args + " " + constants.NMAP.SPEED_ARGS + " "]
+        return Action(id=id, name="HTTP Enum",
+                      cmd=cmd, type=ActionType.RECON, index=index,
+                      descr="Enumerates directories used by popular web applications and servers.",
+                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
+                      ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)

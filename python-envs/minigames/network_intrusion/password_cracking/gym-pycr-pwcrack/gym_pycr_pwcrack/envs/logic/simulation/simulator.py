@@ -68,6 +68,8 @@ class Simulator:
             return ReconSimulator.simulate_masscan_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET:
             return ReconSimulator.simulate_firewalk_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET:
+            return ReconSimulator.simulate_firewalk_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

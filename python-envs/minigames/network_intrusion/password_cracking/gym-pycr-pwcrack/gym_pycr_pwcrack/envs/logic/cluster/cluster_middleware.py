@@ -68,6 +68,8 @@ class ClusterMiddleware:
             return ReconMiddleware.execute_masscan_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET:
             return ReconMiddleware.execute_firewalk_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET:
+            return ReconMiddleware.execute_http_enum(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

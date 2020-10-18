@@ -27,6 +27,7 @@ from gym_pycr_pwcrack.envs.logic.cluster.forward_tunnel_thread import ForwardTun
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action_results.nmap_hop import NmapHop
 from gym_pycr_pwcrack.dao.action_results.nmap_trace import NmapTrace
+from gym_pycr_pwcrack.dao.action_results.nmap_http_enum import NmapHttpEnum
 
 class ClusterUtil:
     """
@@ -436,6 +437,7 @@ class ClusterUtil:
         ports = []
         vulnerabilities = []
         credentials = []
+        http_enum = None
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.PORT:
                 port_status = NmapPortStatus.DOWN
@@ -455,8 +457,11 @@ class ClusterUtil:
                                 vulnerabilities = result
                             elif isinstance(result[0], NmapBruteCredentials):
                                 credentials = result
+                            elif isinstance(result[0], NmapHttpEnum):
+                                http_enum = result
                 if port_status == NmapPortStatus.UP:
-                    port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name)
+                    port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name,
+                                    http_enum=http_enum)
                     ports.append(port)
         return ports, vulnerabilities, credentials
 
@@ -552,6 +557,8 @@ class ClusterUtil:
                 return ClusterUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service)
             elif xml_data.attrib[constants.NMAP_XML.ID] in constants.NMAP_XML.BRUTE_SCRIPTS:
                 return ClusterUtil._parse_nmap_telnet_brute(xml_data, port=port, protocol=protocol, service=service)
+            elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_ENUM_SCRIPT:
+                return ClusterUtil._parse_nmap_http_enum_xml(xml_data)
         return []
 
     @staticmethod
@@ -1595,7 +1602,7 @@ class ClusterUtil:
         Parses a hop XML element in the XML tree
 
         :param xml_data: the hop XML element
-        :return: NmapTrace
+        :return: NmapHop
         """
         ttl = 0
         ip = ""
@@ -1611,3 +1618,17 @@ class ClusterUtil:
             host = xml_data.attrib[constants.NMAP_XML.HOST]
         nmap_hop = NmapHop(ttl=ttl, ipaddr=ip, rtt=rtt, host=host)
         return nmap_hop
+
+    @staticmethod
+    def _parse_nmap_http_enum_xml(xml_data) -> NmapHttpEnum:
+        """
+        Parses a http enum XML element in the XML tree
+
+        :param xml_data: the hop XML element
+        :return: HttpEnum
+        """
+        output = ""
+        if constants.NMAP_XML.OUTPUT in xml_data.keys():
+            output = xml_data.attrib[constants.NMAP_XML.OUTPUT]
+        nmap_http_enum = NmapHttpEnum(output=output)
+        return nmap_http_enum
