@@ -71,7 +71,9 @@ class Simulator:
         elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET:
             return ReconSimulator.simulate_http_enum(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.HTTP_GREP_HOST or a.id == ActionId.HTTP_GREP_SUBNET:
-            return ReconSimulator.simulate_http_enum(s=s, a=a, env_config=env_config)
+            return ReconSimulator.simulate_http_grep(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.FINGER_HOST or a.id == ActionId.FINGER_SUBNET:
+            return ReconSimulator.simulate_finger(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

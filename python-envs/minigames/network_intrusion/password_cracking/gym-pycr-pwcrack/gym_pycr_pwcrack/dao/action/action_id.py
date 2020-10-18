@@ -56,3 +56,5 @@ class ActionId(Enum):
     HTTP_ENUM_SUBNET = 46
     HTTP_GREP_HOST = 47
     HTTP_GREP_SUBNET = 48
+    FINGER_HOST = 49
+    FINGER_SUBNET = 50

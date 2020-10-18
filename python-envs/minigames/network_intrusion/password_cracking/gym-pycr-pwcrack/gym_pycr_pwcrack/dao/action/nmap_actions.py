@@ -430,3 +430,22 @@ class NMAPActions:
                       descr="Spiders a website and attempts to match all pages and urls to find ips and emails.",
                       cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
+
+    @staticmethod
+    def FINGER(index: int, subnet=True, ip: str = "") -> Action:
+        cost_noise_multiplier = 1
+        finger_args = constants.NMAP.FINGER
+        id = ActionId.FINGER_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+        if subnet:
+            cost_noise_multiplier = 10
+            finger_args = constants.NMAP.FINGER
+            id = ActionId.FINGER_SUBNET
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["sudo nmap " + finger_args + " " + constants.NMAP.SPEED_ARGS + " "]
+        return Action(id=id, name="Finger",
+                      cmd=cmd, type=ActionType.RECON, index=index,
+                      descr="Attempts to retrieve a list of usernames using the finger service.",
+                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
+                      ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)

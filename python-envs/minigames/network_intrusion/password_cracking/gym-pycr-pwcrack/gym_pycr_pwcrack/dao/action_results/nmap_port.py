@@ -10,7 +10,8 @@ class NmapPort:
 
     def __init__(self, port_id: int, protocol : TransportProtocol, status: NmapPortStatus = NmapPortStatus.DOWN,
                  service_name : str = "none", http_enum: NmapHttpEnum = None,
-                 http_grep: NmapHttpGrep = None, vulscan: NmapVulscan = None):
+                 http_grep: NmapHttpGrep = None, vulscan: NmapVulscan = None, service_version : str = "",
+                 service_fp : str = ""):
         self.port_id = port_id
         self.protocol = protocol
         self.status = status
@@ -18,10 +19,14 @@ class NmapPort:
         self.http_enum = http_enum
         self.http_grep = http_grep
         self.vulscan = vulscan
+        self.service_version = service_version
+        self.service_fp = service_fp
 
     def __str__(self):
-        return "port_id:{}, protocol:{}, status:{}, service_name:{}, http_enum:{}, http_grep:{}, vulscan:{}".format(
-            self.port_id, self.protocol, self.status, self.service_name, self.http_enum, self.http_grep, self.vulscan)
+        return "port_id:{}, protocol:{}, status:{}, service_name:{}, http_enum:{}, http_grep:{}, vulscan:{}, " \
+               "service_version:{}, service_fp:{}".format(
+            self.port_id, self.protocol, self.status, self.service_name, self.http_enum, self.http_grep, self.vulscan,
+        self.service_version, self.service_fp)
 
     def to_obs(self) -> PortObservationState:
         open = self.status == NmapPortStatus.UP
@@ -39,5 +44,6 @@ class NmapPort:
             vulscan = self.vulscan.output
         port_obs = PortObservationState(port = self.port_id, open=open, service=self.service_name,
                                         protocol=self.protocol, http_enum=hp_enum,
-                                        http_grep=hp_grep, vulscan=vulscan)
+                                        http_grep=hp_grep, vulscan=vulscan, version=self.service_version,
+                                        fingerprint=self.service_fp)
         return port_obs

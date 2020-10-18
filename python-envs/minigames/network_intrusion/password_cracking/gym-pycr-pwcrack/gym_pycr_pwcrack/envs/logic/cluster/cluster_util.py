@@ -448,11 +448,15 @@ class ClusterUtil:
                 protocol = TransportProtocol._from_str(child.attrib["protocol"])
                 port_id = child.attrib[constants.NMAP_XML.PORT_ID]
                 service_name = constants.NMAP_XML.UNKNOWN
+                service_version = ""
+                service_fp = ""
                 for child_2 in list(child.iter()):
                     if child_2.tag == constants.NMAP_XML.STATE:
                         port_status = ClusterUtil._parse_nmap_port_status_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SERVICE:
                         service_name = ClusterUtil._parse_nmap_service_name_xml(child_2)
+                        service_version = ClusterUtil._parse_nmap_service_version_xml(child_2)
+                        service_fp = ClusterUtil._parse_nmap_service_fp_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
                         result = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
                                                                 service=service_name)
@@ -469,7 +473,8 @@ class ClusterUtil:
                                 vulscan = result
                 if port_status == NmapPortStatus.UP:
                     port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name,
-                                    http_enum=http_enum, http_grep=http_grep, vulscan=vulscan)
+                                    http_enum=http_enum, http_grep=http_grep, vulscan=vulscan,
+                                    service_version=service_version, service_fp=service_fp)
                     ports.append(port)
         return ports, vulnerabilities, credentials
 
@@ -483,6 +488,32 @@ class ClusterUtil:
         :return: the name of the service
         """
         return xml_data.attrib[constants.NMAP_XML.NAME]
+
+    @staticmethod
+    def _parse_nmap_service_version_xml(xml_data) -> str:
+        """
+        Parses a XML service element
+
+        :param xml_data: the XML service element
+        :return: the version of the service
+        """
+        version = ""
+        if constants.NMAP_XML.VERSION in xml_data.keys():
+            version = xml_data.attrib[constants.NMAP_XML.VERSION]
+        return version
+
+    @staticmethod
+    def _parse_nmap_service_fp_xml(xml_data) -> str:
+        """
+        Parses a XML service element
+
+        :param xml_data: the XML service element
+        :return: the fingerprint of the service
+        """
+        servicefp = ""
+        if constants.NMAP_XML.SERVICEFP in xml_data.keys():
+            servicefp = xml_data.attrib[constants.NMAP_XML.SERVICEFP]
+        return servicefp
 
     @staticmethod
     def _parse_nmap_port_status_xml(xml_data) -> NmapPortStatus:

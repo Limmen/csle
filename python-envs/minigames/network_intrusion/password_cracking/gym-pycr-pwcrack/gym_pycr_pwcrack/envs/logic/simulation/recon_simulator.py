@@ -265,3 +265,16 @@ class ReconSimulator:
         """
         print("http grep todo")
         return s, 0, False
+
+    @staticmethod
+    def simulate_finger(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Simulates a finger scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print("finger todo")
+        return s, 0, False

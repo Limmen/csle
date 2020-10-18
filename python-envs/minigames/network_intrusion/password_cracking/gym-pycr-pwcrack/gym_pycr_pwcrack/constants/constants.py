@@ -240,6 +240,7 @@ class NMAP:
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
     HTTP_GREP = "--script=http-grep"
+    FINGER = "-sv -sC --script=finger"
 
 class AUXILLARY:
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
@@ -303,6 +304,8 @@ class NMAP_XML:
     OUTPUT = "output"
     HTTP_GREP_SCRIPT = "http-grep"
     VULSCAN_SCRIPT = "vulscan"
+    VERSION = "version"
+    SERVICEFP = "servicefp"
 
 class SSH:
     SERVICE_NAME ="ssh"
@@ -385,7 +388,6 @@ class MASSCAN:
 # https://nmap.org/nsedoc/scripts/ip-forwarding.html
 # https://nmap.org/nsedoc/scripts/broadcast-avahi-dos.html
 # https://nmap.org/nsedoc/scripts/http-slowloris.html
-# DNS brute force: dns-brute.nse
 # nmap -p 80 --script hostmap-bfk.nse nmap.org
 # sudo nmap --traceroute --script traceroute-geolocation.nse -p 80 hackertarget.com
 # ssl-heartbleed.nse
