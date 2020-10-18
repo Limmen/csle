@@ -172,6 +172,7 @@ class ClusterConfig:
 
     def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],
                           network_service_ids: List[ActionId], shell_ids: List[ActionId],
+                          nikto_ids: List[ActionId], masscan_ids: List[ActionId],
                           action_lookup_d_val: dict) -> ActionCosts:
         """
         Loads measured action costs from the cluster
@@ -180,6 +181,8 @@ class ClusterConfig:
         :param nmap_ids: list of ids of nmap actions
         :param network_service_ids: list of ids of network service actions
         :param shell_ids: list of ids of shell actions
+        :param nikto_ids: list of ids of nikto actions
+        :param masscan_ids: list of ids of masscan actions
         :param action_lookup_d_val: dict for converting action id to action
         :return: action costs
         """
@@ -196,6 +199,9 @@ class ClusterConfig:
             file_list.append(line_str)
 
         nmap_id_values = list(map(lambda x: x.value, nmap_ids))
+        masscan_id_values = list(map(lambda x: x.value, masscan_ids))
+        nikto_id_values = list(map(lambda x: x.value, nikto_ids))
+        nmap_id_values = nmap_id_values+masscan_id_values+nikto_ids
         network_service_actions_id_values = list(map(lambda x: x.value, network_service_ids))
         for file in file_list:
             parts = file.split("_")

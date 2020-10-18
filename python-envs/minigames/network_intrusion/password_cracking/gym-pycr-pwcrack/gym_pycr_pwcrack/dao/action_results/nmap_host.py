@@ -45,4 +45,5 @@ class NmapHostResult:
         m_obs.shell_access_credentials = credentials
         if len(credentials) > 0:
             m_obs.shell_access = True
+        m_obs.hostnames = self.hostnames
         return m_obs

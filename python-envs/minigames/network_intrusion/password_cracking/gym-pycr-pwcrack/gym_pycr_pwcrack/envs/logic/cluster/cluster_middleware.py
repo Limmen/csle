@@ -64,6 +64,8 @@ class ClusterMiddleware:
             return ReconMiddleware.execute_nmap_vulners(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.NIKTO_WEB_HOST_SCAN:
             return ReconMiddleware.execute_nikto_web_host_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.MASSCAN_HOST_SCAN or a.id == ActionId.MASSCAN_SUBNET_SCAN:
+            return ReconMiddleware.execute_masscan_host_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

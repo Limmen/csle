@@ -213,3 +213,16 @@ class ReconSimulator:
         """
         print("nikto web scan todo")
         return s, 0, False
+
+    @staticmethod
+    def simulate_masscan_host_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Simulates a masscan host scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print("masscan scan todo")
+        return s, 0, False

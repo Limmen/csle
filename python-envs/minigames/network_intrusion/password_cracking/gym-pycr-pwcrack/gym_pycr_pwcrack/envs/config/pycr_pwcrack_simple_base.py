@@ -9,6 +9,7 @@ from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 from gym_pycr_pwcrack.dao.action.nmap_actions import NMAPActions
 from gym_pycr_pwcrack.dao.action.nikto_actions import NIKTOActions
+from gym_pycr_pwcrack.dao.action.masscan_actions import MasscanActions
 from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
@@ -261,6 +262,7 @@ class PyCrPwCrackSimpleBase:
             actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
             actions.append(NIKTOActions.NIKTO_WEB_HOST_SCAN(index=idx))
+            actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=idx, subnet=False, host_ip = network_conf.hacker.ip))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
@@ -282,6 +284,8 @@ class PyCrPwCrackSimpleBase:
         actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
+        actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=len(network_conf.nodes), subnet=True,
+                                                        host_ip=network_conf.hacker.ip, ip=network_conf.subnet_mask))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -307,9 +311,11 @@ class PyCrPwCrackSimpleBase:
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
+        masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=len(network_conf.nodes), actions=actions, nmap_action_ids=nmap_action_ids,
                                      network_service_action_ids=network_service_action_ids,
-                                     shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids)
+                                     shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
+                                     masscan_action_ids=masscan_action_ids)
         return action_config
 
     @staticmethod

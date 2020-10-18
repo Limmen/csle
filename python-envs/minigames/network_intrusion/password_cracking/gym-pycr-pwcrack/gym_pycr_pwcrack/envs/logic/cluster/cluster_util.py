@@ -331,7 +331,7 @@ class ClusterUtil:
         for child in xml_data:
             if child.tag == constants.NMAP_XML.HOST:
                 host = ClusterUtil._parse_nmap_host_xml(child)
-                hosts.append(host)
+                hosts = ClusterUtil._merge_nmap_hosts(host, hosts)
         result = NmapScanResult(hosts=hosts)
         return result
 
@@ -351,6 +351,7 @@ class ClusterUtil:
         credentials = []
         os = None
         os_matches = []
+        status = "up"
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.STATUS:
                 status = ClusterUtil._parse_nmap_status_xml(child)
@@ -661,7 +662,8 @@ class ClusterUtil:
         return s_prime, reward
 
     @staticmethod
-    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, masscan : bool = False) \
+            -> Tuple[EnvState, float, bool]:
         """
         Helpe function for executing a NMAP scan action on the cluster. Implements caching.
 
@@ -688,7 +690,10 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
-            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
+            cmd = a.nmap_cmd()
+            if masscan:
+                cmd = a.masscan_cmd()
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd,
                                                                        conn=env_config.cluster_config.agent_conn)
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
@@ -698,18 +703,23 @@ class ClusterUtil:
         for i in range(env_config.num_retries):
             try:
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+                scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
                 break
             except Exception as e:
-                ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
-                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
-                                                                           conn=env_config.cluster_config.agent_conn)
-                ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-                env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
-                time.sleep(env_config.retry_timeout)
-                xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+                scan_result = NmapScanResult(hosts=[])
+                # ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
+                # outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
+                #                                                            conn=env_config.cluster_config.agent_conn)
+                # ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
+                # env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+                # time.sleep(env_config.retry_timeout)
+                # try:
+                #     xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
+                #     scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+                # except Exception as e2:
+                #     scan_result = NmapScanResult(hosts = [])
                 break
 
-        scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
         s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
@@ -1542,3 +1552,18 @@ class ClusterUtil:
                                uri=uri, description=description)
 
         return nikto_vuln
+
+
+    @staticmethod
+    def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult]) -> List[NmapHostResult]:
+        found = False
+        for h in hosts:
+            if h.ip_addr == host.ip_addr:
+                found = True
+                vulnerabilities = list(set(h.vulnerabilities).union(host.vulnerabilities))
+                h.vulnerabilities = vulnerabilities
+                ports = list(set(h.ports).union(host.ports))
+                h.ports = ports
+        if not found:
+            hosts.append(host)
+        return hosts

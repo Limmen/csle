@@ -141,3 +141,15 @@ class ReconMiddleware:
         :return: s_prime, reward, done
         """
         return ClusterUtil.nikto_scan_action_helper(s=s, a=a, env_config=env_config)
+
+    @staticmethod
+    def execute_masscan_host_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Performs a masscan host scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        return ClusterUtil.nmap_scan_action_helper(s=s, a=a, env_config=env_config, masscan=True)

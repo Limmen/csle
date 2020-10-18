@@ -36,3 +36,9 @@ class Action:
     def nikto_cmd(self):
         file_name = str(self.id.value) + "_" + str(self.index) + "_" + self.ip + ".xml "
         return self.cmd[0] + constants.NIKTO.HOST_ARG + self.ip + " " + constants.NIKTO.OUTPUT_ARG + file_name
+
+    def masscan_cmd(self):
+        file_name = str(self.id.value) + "_" + str(self.index) + "_" + self.ip + ".xml "
+        if self.subnet:
+            file_name = str(self.id.value) + "_" + str(self.index) + ".xml "
+        return self.cmd[0] + constants.MASSCAN.OUTPUT_ARG + " " + file_name + self.ip

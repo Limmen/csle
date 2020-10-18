@@ -22,13 +22,15 @@ class MachineObservationState:
         self.telnet_connections: List[ConnectionObservationState] = []
         self.logged_in_services = []
         self.root_services = []
+        self.hostnames = []
+
 
     def __str__(self):
         return "ip:{},os:{},shell_access:{},num_ports:{},num_cve_vuln:{},num_cred{},num_ssh_connections:{}," \
-               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{}".format(
+               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{}, hostnames:{}".format(
             self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
-            len(self.telnet_connections), len(self.osvdb_vulns))
+            len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames)
 
     def sort_ports(self):
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)

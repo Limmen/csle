@@ -237,6 +237,7 @@ class NMAP:
                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
+    FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
 
 class AUXILLARY:
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
@@ -353,6 +354,11 @@ class NIKTO_XML:
     SITENAME = "sitename"
     METHOD = "method"
 
+
+class MASSCAN:
+    BASE_ARGS = "-p0-1024 --max-rate 100000 --max-retries 1 --wait 0"
+    HOST_ARG = "--source-ip "
+    OUTPUT_ARG = "-oX "
 
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt

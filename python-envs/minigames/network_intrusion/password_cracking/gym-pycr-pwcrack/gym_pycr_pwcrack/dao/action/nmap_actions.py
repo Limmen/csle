@@ -372,3 +372,23 @@ class NMAPActions:
                cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.SHELL_ACCESS,
                       vulnerability="postgres-weak-password")
+
+    @staticmethod
+    def FIREWALK(index: int, subnet=True, ip: str = "") -> Action:
+        cost_noise_multiplier = 1
+        firewalk_args = constants.NMAP.FIREWALK_HOST
+        id = ActionId.FIREWALK_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+        if subnet:
+            cost_noise_multiplier = 10
+            firewalk_args = constants.NMAP.POSTGRES_BRUTE_SUBNET
+            id = ActionId.FIREWALK_SUBNET
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["sudo nmap " + firewalk_args + " " + constants.NMAP.SPEED_ARGS + " "]
+        return Action(id=id, name="Firewalk scan",
+                      cmd=cmd, type=ActionType.RECON, index=index,
+                      descr="Tries to discover firewall rules using an IP TTL expiration technique "
+                            "known as firewalking.",
+                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
+                      ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
