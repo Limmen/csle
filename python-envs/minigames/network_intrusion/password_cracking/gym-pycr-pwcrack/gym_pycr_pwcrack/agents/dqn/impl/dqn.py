@@ -205,7 +205,7 @@ class DQN(OffPolicyAlgorithm):
         if not deterministic and np.random.rand() < self.exploration_rate:
             n_batch = observation.shape[0]
             assert n_batch == 1
-            actions = list(range(self.env.envs[0].env_config.action_conf.num_actions))
+            actions = list(range(self.env.envs[0].env_config.all_actions_conf.num_actions))
             legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
                 action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), actions))
             action = np.array([np.random.choice(legal_actions)])

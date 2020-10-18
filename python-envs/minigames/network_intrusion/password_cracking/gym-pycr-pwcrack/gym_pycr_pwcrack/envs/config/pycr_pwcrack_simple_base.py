@@ -233,7 +233,7 @@ class PyCrPwCrackSimpleBase:
         return cluster_config
 
     @staticmethod
-    def action_conf(network_conf : NetworkConfig) -> ActionConfig:
+    def all_actions_conf(network_conf : NetworkConfig) -> ActionConfig:
         """
         :param network_conf: the network config
         :return: the action config
@@ -263,6 +263,7 @@ class PyCrPwCrackSimpleBase:
             actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
             actions.append(NIKTOActions.NIKTO_WEB_HOST_SCAN(index=idx))
             actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=idx, subnet=False, host_ip = network_conf.hacker.ip))
+            actions.append(NMAPActions.FIREWALK(index=idx, subnet=False))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
@@ -286,6 +287,8 @@ class PyCrPwCrackSimpleBase:
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
         actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=len(network_conf.nodes), subnet=True,
                                                         host_ip=network_conf.hacker.ip, ip=network_conf.subnet_mask))
+        actions.append(NMAPActions.FIREWALK(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -306,7 +309,8 @@ class PyCrPwCrackSimpleBase:
             ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+            ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.FIREWALK_HOST, ActionId.FIREWALK_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG]

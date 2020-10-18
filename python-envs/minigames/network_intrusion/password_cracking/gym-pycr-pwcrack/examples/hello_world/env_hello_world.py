@@ -7,7 +7,7 @@ def test_env(env_name : str, num_steps : int):
     env = gym.make(env_name, env_config=None)
     env.reset()
 
-    num_actions = env.env_config.action_conf.num_actions
+    num_actions = env.env_config.all_actions_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     #actions = np.array([70, 127, 132])

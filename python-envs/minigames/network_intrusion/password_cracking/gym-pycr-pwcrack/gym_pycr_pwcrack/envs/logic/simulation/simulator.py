@@ -65,7 +65,9 @@ class Simulator:
         elif a.id == ActionId.NIKTO_WEB_HOST_SCAN:
             return ReconSimulator.simulate_nikto_web_host_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.MASSCAN_HOST_SCAN or a.id == ActionId.MASSCAN_SUBNET_SCAN:
-            return ReconSimulator.simulate_masscan_host_scan(s=s, a=a, env_config=env_config)
+            return ReconSimulator.simulate_masscan_scan(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET:
+            return ReconSimulator.simulate_firewalk_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 

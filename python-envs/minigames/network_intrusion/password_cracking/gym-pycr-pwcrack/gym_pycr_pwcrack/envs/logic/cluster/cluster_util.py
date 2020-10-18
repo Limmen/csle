@@ -25,6 +25,8 @@ from gym_pycr_pwcrack.dao.observation.connection_observation_state import Connec
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.envs.logic.cluster.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_pwcrack.dao.network.credential import Credential
+from gym_pycr_pwcrack.dao.action_results.nmap_hop import NmapHop
+from gym_pycr_pwcrack.dao.action_results.nmap_trace import NmapTrace
 
 class ClusterUtil:
     """
@@ -352,6 +354,7 @@ class ClusterUtil:
         os = None
         os_matches = []
         status = "up"
+        trace = None
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.STATUS:
                 status = ClusterUtil._parse_nmap_status_xml(child)
@@ -368,9 +371,11 @@ class ClusterUtil:
             elif child.tag == constants.NMAP_XML.OS:
                 os_matches = ClusterUtil._parse_nmap_os_xml(child)
                 os = NmapOs.get_best_match(os_matches)
+            elif child.tag == constants.NMAP_XML.TRACE:
+                trace = ClusterUtil._parse_nmap_trace_xml(child)
         nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
                                           hostnames=hostnames, ports=ports, os=os, os_matches=os_matches,
-                                          vulnerabilities=vulnerabilities, credentials=credentials)
+                                          vulnerabilities=vulnerabilities, credentials=credentials, trace=trace)
         return nmap_host_result
 
 
@@ -1567,3 +1572,42 @@ class ClusterUtil:
         if not found:
             hosts.append(host)
         return hosts
+
+    @staticmethod
+    def _parse_nmap_trace_xml(xml_data) -> NmapTrace:
+        """
+        Parses a trace XML element in the XML tree
+
+        :param xml_data: the trace XML element
+        :return: NmapTrace
+        """
+        hops = []
+        for child in list(xml_data.iter()):
+            if child.tag == constants.NMAP_XML.HOP:
+                hop = ClusterUtil._parse_nmap_hop_xml(child)
+                hops.append(hop)
+        nmap_trace = NmapTrace(hops=hops)
+        return nmap_trace
+
+    @staticmethod
+    def _parse_nmap_hop_xml(xml_data) -> NmapHop:
+        """
+        Parses a hop XML element in the XML tree
+
+        :param xml_data: the hop XML element
+        :return: NmapTrace
+        """
+        ttl = 0
+        ip = ""
+        rtt = 0.0
+        host = ""
+        if constants.NMAP_XML.IPADDR in xml_data.keys():
+            ip = xml_data.attrib[constants.NMAP_XML.IPADDR]
+        if constants.NMAP_XML.RTT in xml_data.keys():
+            rtt = float(xml_data.attrib[constants.NMAP_XML.RTT])
+        if constants.NMAP_XML.TTL in xml_data.keys():
+            ttl = int(xml_data.attrib[constants.NMAP_XML.TTL])
+        if constants.NMAP_XML.HOST in xml_data.keys():
+            host = xml_data.attrib[constants.NMAP_XML.HOST]
+        nmap_hop = NmapHop(ttl=ttl, ipaddr=ip, rtt=rtt, host=host)
+        return nmap_hop

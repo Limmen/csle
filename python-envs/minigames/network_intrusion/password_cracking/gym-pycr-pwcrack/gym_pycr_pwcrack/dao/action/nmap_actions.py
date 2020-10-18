@@ -381,7 +381,7 @@ class NMAPActions:
         file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
-            firewalk_args = constants.NMAP.POSTGRES_BRUTE_SUBNET
+            firewalk_args = constants.NMAP.FIREWALK_HOST
             id = ActionId.FIREWALK_SUBNET
             file_name = str(id.value) + ".xml "
 

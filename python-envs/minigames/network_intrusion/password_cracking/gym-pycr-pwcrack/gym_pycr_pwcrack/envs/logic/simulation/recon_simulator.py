@@ -215,7 +215,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_masscan_host_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_masscan_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Simulates a masscan host scan
 
@@ -225,4 +225,17 @@ class ReconSimulator:
         :return: s_prime, reward, done
         """
         print("masscan scan todo")
+        return s, 0, False
+
+    @staticmethod
+    def simulate_firewalk_scan(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Simulates a firewalk scan
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        print("firewalk scan todo")
         return s, 0, False
