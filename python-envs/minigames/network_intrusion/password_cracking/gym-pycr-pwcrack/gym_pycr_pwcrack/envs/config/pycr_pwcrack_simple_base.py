@@ -266,6 +266,7 @@ class PyCrPwCrackSimpleBase:
             actions.append(NMAPActions.FIREWALK(index=idx, subnet=False))
             actions.append(NMAPActions.HTTP_ENUM(index=idx, subnet=False))
             actions.append(NMAPActions.HTTP_GREP(index=idx, subnet=False))
+            actions.append(NMAPActions.VULSCAN(index=idx, subnet=False))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
@@ -292,7 +293,7 @@ class PyCrPwCrackSimpleBase:
         actions.append(NMAPActions.FIREWALK(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.HTTP_ENUM(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.HTTP_GREP(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
-
+        actions.append(NMAPActions.VULSCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -316,7 +317,8 @@ class PyCrPwCrackSimpleBase:
             ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.FIREWALK_HOST, ActionId.FIREWALK_SUBNET,
             ActionId.HTTP_ENUM_HOST, ActionId.HTTP_ENUM_SUBNET,
-            ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET
+            ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET,
+            ActionId.VULSCAN_HOST, ActionId.VULSCAN_SUBNET,
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG]

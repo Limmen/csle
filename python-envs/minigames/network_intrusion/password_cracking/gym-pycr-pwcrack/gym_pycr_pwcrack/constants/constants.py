@@ -302,6 +302,7 @@ class NMAP_XML:
     HTTP_ENUM_SCRIPT = "http-enum"
     OUTPUT = "output"
     HTTP_GREP_SCRIPT = "http-grep"
+    VULSCAN_SCRIPT = "vulscan"
 
 class SSH:
     SERVICE_NAME ="ssh"
@@ -377,11 +378,8 @@ class MASSCAN:
 #
 # /usr/sbin/hping3 --scan known 172.18.1.2 --flood > output.txt
 # netcat -nvz 172.18.1.2 1-65535 > ncat.txt 2>&1
-# add VULSCAN parsing of output
 # freevulnsearch https://github.com/OCSAF/freevulnsearch
 # https://github.com/xvass/vscan
-# http-waf-detect.nse
-# http-waf-fingerprint
 # get recon-ng with recon-cli working to analyze web vulnerabilities
 # https://nmap.org/nsedoc/scripts/finger.html
 # https://nmap.org/nsedoc/scripts/ip-forwarding.html
