@@ -54,3 +54,5 @@ class ActionId(Enum):
     FIREWALK_SUBNET = 44
     HTTP_ENUM_HOST = 45
     HTTP_ENUM_SUBNET = 46
+    HTTP_GREP_HOST = 47
+    HTTP_GREP_SUBNET = 48

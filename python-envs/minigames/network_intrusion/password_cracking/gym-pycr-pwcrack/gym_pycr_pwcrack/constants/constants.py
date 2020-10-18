@@ -239,6 +239,7 @@ class NMAP:
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
+    HTTP_GREP = "--script=http-grep"
 
 class AUXILLARY:
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
@@ -300,6 +301,7 @@ class NMAP_XML:
     ACCOUNTS = "Accounts"
     HTTP_ENUM_SCRIPT = "http-enum"
     OUTPUT = "output"
+    HTTP_GREP_SCRIPT = "http-grep"
 
 class SSH:
     SERVICE_NAME ="ssh"
@@ -378,8 +380,6 @@ class MASSCAN:
 # add VULSCAN parsing of output
 # freevulnsearch https://github.com/OCSAF/freevulnsearch
 # https://github.com/xvass/vscan
-# http-enum.nse
-# http-grep.nse
 # http-waf-detect.nse
 # http-waf-fingerprint
 # get recon-ng with recon-cli working to analyze web vulnerabilities

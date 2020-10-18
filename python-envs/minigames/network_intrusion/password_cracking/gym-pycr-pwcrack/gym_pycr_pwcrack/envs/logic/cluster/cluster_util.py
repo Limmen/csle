@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union
 from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
 import time
@@ -28,6 +28,7 @@ from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action_results.nmap_hop import NmapHop
 from gym_pycr_pwcrack.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_pwcrack.dao.action_results.nmap_http_enum import NmapHttpEnum
+from gym_pycr_pwcrack.dao.action_results.nmap_http_grep import NmapHttpGrep
 
 class ClusterUtil:
     """
@@ -438,6 +439,7 @@ class ClusterUtil:
         vulnerabilities = []
         credentials = []
         http_enum = None
+        http_grep = None
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.PORT:
                 port_status = NmapPortStatus.DOWN
@@ -459,9 +461,11 @@ class ClusterUtil:
                                 credentials = result
                             elif isinstance(result[0], NmapHttpEnum):
                                 http_enum = result
+                            elif isinstance(result[0], NmapHttpGrep):
+                                http_grep = result
                 if port_status == NmapPortStatus.UP:
                     port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name,
-                                    http_enum=http_enum)
+                                    http_enum=http_enum, http_grep=http_grep)
                     ports.append(port)
         return ports, vulnerabilities, credentials
 
@@ -542,7 +546,7 @@ class ClusterUtil:
 
     @staticmethod
     def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str) \
-            -> Tuple[List[NmapVuln], List[NmapBruteCredentials]]:
+            -> Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep]:
         """
         Parses a XML script element
 
@@ -559,6 +563,8 @@ class ClusterUtil:
                 return ClusterUtil._parse_nmap_telnet_brute(xml_data, port=port, protocol=protocol, service=service)
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_ENUM_SCRIPT:
                 return ClusterUtil._parse_nmap_http_enum_xml(xml_data)
+            elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_GREP_SCRIPT:
+                return ClusterUtil._parse_nmap_http_grep_xml(xml_data)
         return []
 
     @staticmethod
@@ -1624,7 +1630,7 @@ class ClusterUtil:
         """
         Parses a http enum XML element in the XML tree
 
-        :param xml_data: the hop XML element
+        :param xml_data: the http enum XML element
         :return: HttpEnum
         """
         output = ""
@@ -1632,3 +1638,18 @@ class ClusterUtil:
             output = xml_data.attrib[constants.NMAP_XML.OUTPUT]
         nmap_http_enum = NmapHttpEnum(output=output)
         return nmap_http_enum
+
+
+    @staticmethod
+    def _parse_nmap_http_grep_xml(xml_data) -> NmapHttpGrep:
+        """
+        Parses a http grep XML element in the XML tree
+
+        :param xml_data: the hop XML element
+        :return: HttpEnum
+        """
+        output = ""
+        if constants.NMAP_XML.OUTPUT in xml_data.keys():
+            output = xml_data.attrib[constants.NMAP_XML.OUTPUT]
+        nmap_http_grep = NmapHttpGrep(output=output)
+        return nmap_http_grep
