@@ -49,7 +49,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     config.random_seed = random_seed
     train_csv_path = ""
     eval_csv_path = ""
-    if config.mode == RunnerMode.TRAIN_ATTACKER or config.mode == RunnerMode.SIMULATE:
+    if config.mode == RunnerMode.TRAIN_ATTACKER.value or config.mode == RunnerMode.SIMULATE.value:
         train_result, eval_result = Runner.run(config)
         if len(train_result.avg_episode_steps) > 0:
             train_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_train" + ".csv"
