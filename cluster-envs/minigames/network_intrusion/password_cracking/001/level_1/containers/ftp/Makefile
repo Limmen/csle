@@ -43,6 +43,10 @@ run: build net
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
 
+# Stop running containers
+stop:
+	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+
 # Stop and remove running containers
 clean:
 	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
