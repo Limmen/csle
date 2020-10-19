@@ -33,16 +33,12 @@ class PyCrPwCrackSimpleV1:
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask,
                                                         subnet=True))
-        actions.append(NMAPActions.UDP_PORT_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
-        actions.append(NMAPActions.OS_DETECTION_SCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.NMAP_VULNERS(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            ActionId.UDP_PORT_SCAN_SUBNET,
-            ActionId.OS_DETECTION_SCAN_SUBNET,
             ActionId.NMAP_VULNERS_SUBNET,
             ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
             ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
@@ -80,4 +76,19 @@ class PyCrPwCrackSimpleV1:
         env_config.vulners_miss_p = 0.09
         env_config.num_flags = 3
         env_config.blacklist_ips = ["172.18.1.1"]
+
+        env_config.flag_found_reward_mult = 20
+        env_config.port_found_reward_mult = 0
+        env_config.os_found_reward_mult = 0
+        env_config.cve_vuln_found_reward_mult = 0
+        env_config.osvdb_vuln_found_reward_mult = 0
+        env_config.machine_found_reward_mult = 1
+        env_config.shell_access_found_reward_mult = 20
+        env_config.root_found_reward_mult = 0
+        env_config.cost_coefficient = 0
+        env_config.detection_reward = 0
+        env_config.all_flags_reward = 0
+        env_config.new_login_reward_mult = 20
+        env_config.base_step_reward = -10
+        env_config.illegal_reward_action = -10
         return env_config

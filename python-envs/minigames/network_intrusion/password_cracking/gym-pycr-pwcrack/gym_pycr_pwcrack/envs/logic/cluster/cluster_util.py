@@ -697,7 +697,7 @@ class ClusterUtil:
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -712,6 +712,7 @@ class ClusterUtil:
                                                  num_new_root=total_new_root,
                                                  num_new_flag_pts=total_new_flag_pts,
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -794,10 +795,11 @@ class ClusterUtil:
         :param service_name: name of the service to login to
         :param env_config: environment config
         :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                   total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn
+                   total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn, total_new_osvdb_found,
+                   total_new_logged_in
         """        
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
         target_machine = None
         non_used_credentials = []
@@ -904,14 +906,15 @@ class ClusterUtil:
             s_prime = s
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+                total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+                total_new_logged_in = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
                                                            env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                   total_cost, False
+                   total_new_logged_in, total_cost, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -964,7 +967,8 @@ class ClusterUtil:
                         root = True
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+            total_new_logged_in = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
         else:
@@ -972,8 +976,8 @@ class ClusterUtil:
             target_machine.shell_access_credentials = []
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-               total_cost, True
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+            total_cost, True
 
 
     @staticmethod
@@ -1275,7 +1279,7 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-
+        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1340,7 +1344,7 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-
+        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1428,7 +1432,7 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-
+        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1494,7 +1498,7 @@ class ClusterUtil:
         :return: s', reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
         m_obs = None
 
         for m in s.obs_state.machines:
@@ -1506,7 +1510,7 @@ class ClusterUtil:
             m_obs.osvdb_vulns.append(vuln_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -1521,6 +1525,7 @@ class ClusterUtil:
                                                  num_new_root=total_new_root,
                                                  num_new_flag_pts=total_new_flag_pts,
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward

@@ -1,6 +1,7 @@
 from typing import List
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.action.action import Action
+from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class ObservationState:
 
@@ -15,6 +16,7 @@ class ObservationState:
         self.num_sh = num_sh
         self.num_flags = num_flags
         self.catched_flags = catched_flags
+        self.actions_tried = set()
 
 
     def sort_machines(self):
@@ -31,3 +33,49 @@ class ObservationState:
             self.sort_machines()
             return self.machines[a.index].ip
         return a.ip
+
+    def brute_tried(self, a: Action, m: MachineObservationState):
+        if m is not None:
+            if (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.ssh_brute_tried
+
+            if (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.telnet_brute_tried
+
+            if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.ftp_brute_tried
+
+            if (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.cassandra_brute_tried
+
+            if (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.irc_brute_tried
+
+            if (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.mongo_brute_tried
+
+            if (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.mysql_brute_tried
+
+            if (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.smtp_brute_tried
+
+            if (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
+                return m.postgres_brute_tried
+            return False
+        else:
+            brute_tried = True
+            for m2 in self.machines:
+                res = self.brute_tried(a=a, m=m2)
+                if not res:
+                    brute_tried = res
+            return brute_tried

@@ -24,6 +24,7 @@ class ClusterMiddleware:
         :return: s', r, done
         """
         if a.type == ActionType.RECON:
+            s.obs_state.actions_tried.add((a.id, a.index))
             return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
             return ClusterMiddleware.exploit_action(s=s, a=a, env_config=env_config)

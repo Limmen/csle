@@ -453,16 +453,18 @@ class ActorCriticPolicy(BasePolicy):
         else:
             actions = list(range(self.agent_config.output_dim))
 
-        if self.agent_config.ar_policy:
-            if self.m_action:
+        non_legal_actions = []
+        if self.agent_config.filter_illegal_actions:
+            if self.agent_config.ar_policy:
+                if self.m_action:
+                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                        action, env_config=env_config, env_state=env_state, m_action=True, m_index = m_index), actions))
+                elif self.m_selection:
+                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                        action, env_config=env_config, env_state=env_state, m_selection=True), actions))
+            else:
                 non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                    action, env_config=env_config, env_state=env_state, m_action=True, m_index = m_index), actions))
-            elif self.m_selection:
-                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                    action, env_config=env_config, env_state=env_state, m_selection=True), actions))
-        else:
-            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                action, env_config=env_config, env_state=env_state), actions))
+                    action, env_config=env_config, env_state=env_state), actions))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
                                                          non_legal_actions=non_legal_actions)
@@ -532,17 +534,18 @@ class ActorCriticPolicy(BasePolicy):
             actions = list(range(self.agent_config.output_dim_2))
         else:
             actions = list(range(self.agent_config.output_dim))
-
-        if self.agent_config.ar_policy:
-            if self.m_action:
+        non_legal_actions = []
+        if self.agent_config.filter_illegal_actions:
+            if self.agent_config.ar_policy:
+                if self.m_action:
+                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                        action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
+                elif self.m_selection:
+                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                        action, env_config=env_config, env_state=env_state, m_selection=True), actions))
+            else:
                 non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                    action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
-            elif self.m_selection:
-                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                    action, env_config=env_config, env_state=env_state, m_selection=True), actions))
-        else:
-            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                action, env_config=env_config, env_state=env_state), actions))
+                    action, env_config=env_config, env_state=env_state), actions))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)

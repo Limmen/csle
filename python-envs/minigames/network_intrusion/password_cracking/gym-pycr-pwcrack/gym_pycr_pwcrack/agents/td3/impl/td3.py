@@ -10,9 +10,6 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv,
 from gym_pycr_pwcrack.agents.openai_baselines.common.utils import polyak_update
 from gym_pycr_pwcrack.agents.td3.impl.policies import TD3Policy
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
-from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.network.env_state import EnvState
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 class TD3(OffPolicyAlgorithm):
     """

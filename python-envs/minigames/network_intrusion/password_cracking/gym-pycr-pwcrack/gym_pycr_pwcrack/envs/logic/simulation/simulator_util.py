@@ -30,7 +30,7 @@ class SimulatorUtil:
         :return: s_prime, reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, total_new_root, \
-        total_new_flag_pts = 0,0,0,0,0,0,0
+        total_new_flag_pts, total_new_osvb_vuln, total_new_logged_in = 0,0,0,0,0,0,0,0,0
 
         # Scan action on a single host
         if not a.subnet:
@@ -59,7 +59,8 @@ class SimulatorUtil:
                     # Machine was already known, merge state
                     if o_m.ip == a.ip:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                        new_root, new_flag_pts = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                        new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in \
+                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_ports += num_new_ports_found
@@ -68,6 +69,8 @@ class SimulatorUtil:
                         total_new_shell_access += new_shell_access
                         total_new_root += new_root
                         total_new_flag_pts += new_flag_pts
+                        total_new_osvb_vuln += num_new_osvdb_vuln_found
+                        total_new_logged_in += num_new_logged_in
                     else:
                         new_machines_obs.append(o_m)
                 # New machine, was not known before
@@ -82,6 +85,8 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
+                                                   num_new_osvdb_vuln_found=total_new_osvb_vuln,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
 
         # Scan action on a whole subnet
@@ -105,8 +110,9 @@ class SimulatorUtil:
 
                 new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+            total_new_logged_in \
+                = EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
@@ -116,6 +122,7 @@ class SimulatorUtil:
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
                                                    num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
         return s_prime, reward
 
@@ -133,7 +140,7 @@ class SimulatorUtil:
         :return: s_prime, reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts = 0,0,0,0,0,0,0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in = 0,0,0,0,0,0,0,0,0
         # Scan a a single host
         if not a.subnet:
             new_m_obs = None
@@ -151,7 +158,8 @@ class SimulatorUtil:
                     # Existing machine, it was already known
                     if o_m.ip == a.ip:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                        new_root, new_flag_pts = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                        new_root, new_flag_pts, num_new_osvdb_vuln, num_new_logged_in \
+                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_ports += num_new_ports_found
@@ -160,6 +168,8 @@ class SimulatorUtil:
                         total_new_shell_access += new_shell_access
                         total_new_root += new_root
                         total_new_flag_pts += new_flag_pts
+                        total_new_logged_in += num_new_logged_in
+                        total_new_osvdb_vuln += num_new_osvdb_vuln
                     else:
                         new_machines_obs.append(o_m)
 
@@ -175,6 +185,8 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
+                                                   num_new_osvdb_vuln_found=total_new_osvdb_vuln,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
 
         # Scan a whole subnetwork
@@ -187,7 +199,8 @@ class SimulatorUtil:
                         m_obs.os = node.os
                     new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+            total_new_logged_in = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
@@ -199,6 +212,7 @@ class SimulatorUtil:
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
                                                    num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
         return s_prime, reward
 
@@ -217,7 +231,7 @@ class SimulatorUtil:
         :return: s_prime, reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
         # Exploit on a single host
         if not a.subnet:
@@ -252,7 +266,8 @@ class SimulatorUtil:
                     # Machine was already known, merge state
                     if o_m.ip == a.ip:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                        new_root, new_flag_pts = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                        new_root, new_flag_pts, num_new_osvdb_vuln, num_new_logged_in = \
+                            EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_vuln += num_new_cve_vuln_found
@@ -261,6 +276,8 @@ class SimulatorUtil:
                         total_new_os += num_new_os_found
                         total_new_root += new_root
                         total_new_flag_pts += new_flag_pts
+                        total_new_osvdb_vuln += num_new_osvdb_vuln
+                        total_new_logged_in += num_new_logged_in
                     else:
                         new_machines_obs.append(o_m)
                 # New machine, was not known before
@@ -276,6 +293,8 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
+                                                   num_new_osvdb_vuln=total_new_osvdb_vuln,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
 
         # Scan action on a whole subnet
@@ -307,7 +326,8 @@ class SimulatorUtil:
                 new_m_obs.append(m_obs)
 
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found = \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+            total_new_logged_in = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
@@ -318,6 +338,7 @@ class SimulatorUtil:
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
                                                    num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                   num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
 
         return s_prime, reward

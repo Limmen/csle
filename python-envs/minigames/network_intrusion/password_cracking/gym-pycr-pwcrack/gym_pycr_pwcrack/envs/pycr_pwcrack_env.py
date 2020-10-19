@@ -29,7 +29,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                   num_vuln=self.env_config.num_vuln, num_sh=self.env_config.num_sh,
                                   service_lookup=constants.SERVICES.service_lookup,
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
-                                  os_lookup=constants.OS.os_lookup, num_flags=self.env_config.num_flags)
+                                  os_lookup=constants.OS.os_lookup, num_flags=self.env_config.num_flags,
+                                  state_type=self.env_config.state_type)
         self.observation_space = self.env_state.observation_space
         self.m_selection_observation_space = self.env_state.m_selection_observation_space
         self.m_action_observation_space = self.env_state.m_action_observation_space
@@ -84,13 +85,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.trajectory.append(action_id)
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
-            print("illegal action:{}".format(action_id))
+            #print("illegal action:{}".format(action_id))
             done = False
             info["flags"] = self.env_state.obs_state.catched_flags
             self.agent_state.time_step += 1
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True
-            return self.last_obs, -1, done, info
+            return self.last_obs, self.env_config.illegal_reward_action, done, info
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
@@ -177,6 +178,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = env_config.action_conf.actions[action_id]
         ip = env_state.obs_state.get_action_ip(action)
 
+        if (action.id, action.index) in env_state.obs_state.actions_tried:
+            return False
+
         # Recon on subnet is always possible
         if action.type == ActionType.RECON and action.subnet:
             return True
@@ -184,24 +188,41 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         machine_discovered = False
         target_machine = None
         logged_in = False
+        unscanned_filesystems = False
+        untried_credentials = False
 
         for m in env_state.obs_state.machines:
             if m.logged_in:
                 logged_in = True
+                if not m.filesystem_searched:
+                    unscanned_filesystems = True
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
+                untried_credentials = target_machine.untried_credentials
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
+            brute_tried = env_state.obs_state.brute_tried(a=action, m=target_machine)
+            if brute_tried:
+                return False
             return True
+
+        # If nothing new to scan, find-flag is illegal
+        if action.id == ActionId.FIND_FLAG and not unscanned_filesystems:
+            return False
+
+        # If no new credentials, login to service is illegal
+        if action.id == ActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
+            return False
+
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
         if machine_discovered and action.type == ActionType.POST_EXPLOIT \
                 and target_machine.shell_access and len(target_machine.shell_access_credentials) > 0:
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in
-        if action.id == ActionId.FIND_FLAG and logged_in:
+        if action.id == ActionId.FIND_FLAG and logged_in and unscanned_filesystems:
             return True
 
         return False
@@ -228,7 +249,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return
         else:
             self.env_state.cleanup()
-
 
     def convert_ar_action(self, machine_idx, action_idx):
         key = (machine_idx, action_idx)
@@ -403,7 +423,6 @@ class PyCRPwCrackSimpleClusterBaseEnv(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.base_step_reward = -50
         super().__init__(env_config=env_config)
 
 # -------- Version 1 ------------
@@ -422,7 +441,6 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.base_step_reward = -50
         super().__init__(env_config=env_config)
 
 

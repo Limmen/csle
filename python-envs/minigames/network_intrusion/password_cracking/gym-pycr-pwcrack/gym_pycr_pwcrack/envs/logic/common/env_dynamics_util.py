@@ -13,18 +13,19 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
                                new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
-            Tuple[List[MachineObservationState], int, int, int, int, int, int, int, int]:
+            Tuple[List[MachineObservationState], int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
         :param env_config: environment config
-        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a, new_osvdb_v
+        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a, new_osvdb_v,
+                                                 n_new_logged_in
         """
         merged_machines = []
         total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found = 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
         # Add updated machines to merged state
         for n_m in new_machines_obs:
@@ -35,7 +36,7 @@ class EnvDynamicsUtil:
             for i, o_m in enumerate(old_machines_obs):
                 if n_m.ip == o_m.ip:
                     merged_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                    new_root, new_flag_pts, num_new_osvdb_vuln_found = \
+                    new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in = \
                         EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m)
                     total_new_ports_found += num_new_ports_found
                     total_new_os_found += num_new_os_found
@@ -44,6 +45,7 @@ class EnvDynamicsUtil:
                     total_new_root += new_root
                     total_new_flag_pts += new_flag_pts
                     total_new_osvdb_vuln_found += num_new_osvdb_vuln_found
+                    total_new_logged_in += num_new_logged_in
                     exists = True
             merged_machines.append(merged_m)
             if not exists:
@@ -52,6 +54,10 @@ class EnvDynamicsUtil:
                 total_new_os_found += new_os
                 total_new_cve_vuln_found += len(merged_m.cve_vulns)
                 total_new_osvdb_vuln_found += len(merged_m.osvdb_vulns)
+                total_new_logged_in += 1 if merged_m.logged_in else 0
+                total_new_shell_access += 1 if merged_m.shell_access else 0
+                total_new_root += 1 if merged_m.root else 0
+                total_new_flag_pts += len(merged_m.flags_found)
                 total_new_machines += 1
 
         # Add old machines to merged state
@@ -64,18 +70,19 @@ class EnvDynamicsUtil:
                 merged_machines.append(o_m)
 
         return merged_machines, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found
+               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+               total_new_logged_in
 
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \
-            -> Tuple[MachineObservationState, int, int, int, int, int, int, int]:
+            -> Tuple[MachineObservationState, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
 
         :param o_m: old machine observation
         :param n_m: newly collected machine information
         :return: the merged machine observation state, n_new_ports, n_new_os, n_new_cve_vuln, new_access, new_root,
-                 new_fl, new_osvdb_vulns
+                 new_fl, new_osvdb_vulns, num_new_logged_in
         """
         if n_m == None:
             return o_m, 0, 0, 0, 0, 0, 0, 0
@@ -90,12 +97,16 @@ class EnvDynamicsUtil:
                                                                                                    n_m.osvdb_vulns)
         n_m.osvdb_vulns = merged_osvdb_vulnerabilities
         n_m, new_shell_access = EnvDynamicsUtil.merge_shell_access(o_m, n_m)
-        n_m = EnvDynamicsUtil.merge_logged_in(o_m, n_m)
+        n_m, num_new_logged_in = EnvDynamicsUtil.merge_logged_in(o_m, n_m)
         n_m, new_root = EnvDynamicsUtil.merge_root(o_m, n_m)
         n_m, new_flag_pts = EnvDynamicsUtil.merge_flags(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_connections(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_filesystem_scanned(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_trace(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_brute_tried(o_m, n_m)
         return n_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, new_root, \
-               new_flag_pts, num_new_osvdb_vuln_found
+               new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in
 
     @staticmethod
     def merge_os(o_os: str, n_os: str) -> Tuple[str, int]:
@@ -146,11 +157,14 @@ class EnvDynamicsUtil:
 
         :param o_os: the old machine observation
         :param n_os: the new machine observation
-        :return: the merged machine observation with updated logged-in flag
+        :return: the merged machine observation with updated logged-in flag, num_new_login
         """
+        num_new_logged_in = 0
+        if not o_m.logged_in and n_m.logged_in:
+            num_new_logged_in = 1
         if not n_m.logged_in:
             n_m.logged_in = o_m.logged_in
-        return n_m
+        return n_m, num_new_logged_in
 
     @staticmethod
     def merge_root(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
@@ -200,6 +214,75 @@ class EnvDynamicsUtil:
             n_m.telnet_connections = o_m.telnet_connections
         if len(n_m.ftp_connections) == 0:
             n_m.ftp_connections = o_m.ftp_connections
+        return n_m
+
+    @staticmethod
+    def merge_filesystem_scanned(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation file-system-scanned-flag with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated filesystem-scanned flag
+        """
+        if not n_m.filesystem_searched:
+            n_m.filesystem_searched = o_m.filesystem_searched
+        return n_m
+
+    @staticmethod
+    def merge_untried_credentials(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation untried-credentials-flag with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated untried-credentials flag
+        """
+        if not n_m.untried_credentials:
+            n_m.untried_credentials = o_m.untried_credentials
+        return n_m
+
+    @staticmethod
+    def merge_brute_tried(o_m: MachineObservationState,
+                                  n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation tried_brute_flags with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated brute-tried flags
+        """
+        if not n_m.telnet_brute_tried:
+            n_m.telnet_brute_tried = o_m.telnet_brute_tried
+        if not n_m.ssh_brute_tried:
+            n_m.ssh_brute_tried = o_m.ssh_brute_tried
+        if not n_m.ftp_brute_tried:
+            n_m.ftp_brute_tried = o_m.ftp_brute_tried
+        if not n_m.cassandra_brute_tried:
+            n_m.cassandra_brute_tried = o_m.cassandra_brute_tried
+        if not n_m.irc_brute_tried:
+            n_m.irc_brute_tried = o_m.irc_brute_tried
+        if not n_m.mongo_brute_tried:
+            n_m.mongo_brute_tried = o_m.mongo_brute_tried
+        if not n_m.mysql_brute_tried:
+            n_m.mysql_brute_tried = o_m.mysql_brute_tried
+        if not n_m.smtp_brute_tried:
+            n_m.smtp_brute_tried = o_m.smtp_brute_tried
+        if not n_m.postgres_brute_tried:
+            n_m.postgres_brute_tried = o_m.postgres_brute_tried
+        return n_m
+
+    @staticmethod
+    def merge_trace(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation trace with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated trace
+        """
+        if n_m.trace == None:
+            n_m.trace = o_m.trace
         return n_m
 
     @staticmethod
@@ -271,6 +354,7 @@ class EnvDynamicsUtil:
     def reward_function(num_new_ports_found: int = 0, num_new_os_found: int = 0, num_new_cve_vuln_found: int = 0,
                         num_new_machines: int = 0, num_new_shell_access: int = 0, num_new_root: int = 0,
                         num_new_flag_pts: int = 0, num_new_osvdb_vuln_found : int = 0,
+                        num_new_logged_in : int = 0,
                         cost: float = 0.0, env_config: EnvConfig  = None) -> int:
         """
         Implements the reward function
@@ -282,6 +366,7 @@ class EnvDynamicsUtil:
         :param num_new_machines: number of new machines
         :param num_new_shell_access: number of new shell access to different machines
         :param num_new_root: number of new root access to different machines
+        :param num_new_logged_in: number of new successful login sessions
         :param cost: cost of the action that was performed
         :param env_config: env config
         :return: reward
@@ -293,9 +378,13 @@ class EnvDynamicsUtil:
                  env_config.shell_access_found_reward_mult * num_new_shell_access + \
                  env_config.root_found_reward_mult * num_new_root + \
                  env_config.flag_found_reward_mult * num_new_flag_pts + \
-                 env_config.osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found
+                 env_config.osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found + \
+                 env_config.new_login_reward_mult * num_new_logged_in
         cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
-        reward = env_config.base_step_reward + int((reward - cost))
+        if reward == 0:
+            reward = env_config.base_step_reward - cost
+        else:
+            reward = reward - cost
         return reward
 
     @staticmethod

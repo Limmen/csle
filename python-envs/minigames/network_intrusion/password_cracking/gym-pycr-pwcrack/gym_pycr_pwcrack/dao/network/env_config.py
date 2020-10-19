@@ -90,12 +90,14 @@ class EnvConfig:
         self.machine_found_reward_mult = 1
         self.shell_access_found_reward_mult = 10
         self.root_found_reward_mult = 10
+        self.new_login_reward_mult = 1
         self.cost_coefficient = 1
         self.detection_reward = -50
         self.all_flags_reward = 500
         self.sum_costs = 1
         self.max_episode_length = 100
         self.base_step_reward = -1
+        self.illegal_reward_action = 0
 
         self.filter_illegal_actions = True
         self.checkpoint_dir = None
@@ -106,6 +108,7 @@ class EnvConfig:
         self.save_trajectories = False
         self.blacklist_ips = ["172.18.1.1"]
         self.manual_play = manual_play
+        self.state_type = state_type
 
 
     def get_port_forward_port(self) -> int:

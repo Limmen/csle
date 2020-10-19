@@ -39,7 +39,8 @@ class AgentConfig:
                  exploration_initial_eps: float = 1.0, exploration_final_eps: float = 0.05,
                  policy_delay : int = 2, target_policy_noise : float = 0.2, target_noise_clip : float = 0.5,
                  input_dim_2 : int = 30, output_dim_2 : int = 30, pi_hidden_dim_2 : int = 64,
-                 pi_hidden_layers_2 : int = 2, vf_hidden_layers_2 : int = 2, vf_hidden_dim_2 : int = 64
+                 pi_hidden_layers_2 : int = 2, vf_hidden_layers_2 : int = 2, vf_hidden_dim_2 : int = 64,
+                 filter_illegal_actions : bool = False
                  ):
         """
         Initialize environment and hyperparameters
@@ -119,6 +120,7 @@ class AgentConfig:
         :param policy_delay: policy delay for TD3 and similar algos
         :param target_policy_noise: policy noise for TD3 and similar algos
         :param target_noise_clip: target noise for TD3 and similar algos
+        :param filter_illegal_actions: boolean flag whether to filter illegal actions
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -200,6 +202,7 @@ class AgentConfig:
         self.pi_hidden_layers_2 = pi_hidden_layers_2
         self.vf_hidden_layers_2 = vf_hidden_layers_2
         self.vf_hidden_dim_2 = vf_hidden_dim_2
+        self.filter_illegal_actions = filter_illegal_actions
 
 
     def to_str(self) -> str:
@@ -225,7 +228,7 @@ class AgentConfig:
                "exploration_initial_eps:{66},exploration_final_eps:{67},policy_delay:{68}," \
                "target_policy_noise:{69},target_noise_clip:{70},input_dim_2:{71}," \
                "output_dim_2:{72},pi_hidden_dim_2:{73},pi_hidden_layers_2:{74}," \
-               "vf_hidden_layers_2:{75},vf_hidden_dim_2:{76}".format(
+               "vf_hidden_layers_2:{75},vf_hidden_dim_2:{76},filter_illegal_actions:{77}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -242,7 +245,7 @@ class AgentConfig:
             self.target_update_interval, self.exploration_fraction,self.exploration_initial_eps,
             self.exploration_final_eps, self.policy_delay, self.target_policy_noise, self.target_noise_clip,
             self.input_dim_2, self.output_dim_2, self.pi_hidden_dim_2, self.pi_hidden_layers_2, self.vf_hidden_layers_2,
-            self.vf_hidden_dim_2)
+            self.vf_hidden_dim_2, self.filter_illegal_actions)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -323,6 +326,7 @@ class AgentConfig:
             writer.writerow(["pi_hidden_layers_2", str(self.pi_hidden_layers_2)])
             writer.writerow(["vf_hidden_layers_2", str(self.vf_hidden_layers_2)])
             writer.writerow(["vf_hidden_dim_2", str(self.vf_hidden_dim_2)])
+            writer.writerow(["filter_illegal_actions", str(self.filter_illegal_actions)])
 
 
     def hparams_dict(self):
@@ -385,4 +389,5 @@ class AgentConfig:
         hparams["pi_hidden_layers_2"] = self.pi_hidden_layers_2
         hparams["vf_hidden_layers_2"] = self.vf_hidden_layers_2
         hparams["vf_hidden_dim_2"] = self.vf_hidden_dim_2
+        hparams["filter_illegal_actions"] = self.filter_illegal_actions
         return hparams

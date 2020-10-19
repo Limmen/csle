@@ -327,9 +327,10 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         # Select action randomly or according to policy
         if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
             # Warmup phase
-            actions = list(range(self.env.envs[0].env_config.all_actions_conf.num_actions))
-            legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
-                action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), actions))
+            legal_actions = list(range(self.env.envs[0].env_config.all_actions_conf.num_actions))
+            if self.agent_config.filter_illegal_actions:
+                legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), legal_actions))
             unscaled_action = np.array([np.random.choice(legal_actions)])
         else:
             # Note: when using continuous actions,
