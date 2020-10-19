@@ -18,6 +18,7 @@ from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
+from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
 
 class PyCrPwCrackSimpleBase:
     """
@@ -355,7 +356,7 @@ class PyCrPwCrackSimpleBase:
                                num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip="172.18.1.191")
+                               hacker_ip="172.18.1.191", state_type=StateType.BASE)
         env_config.ping_scan_miss_p = 0.02
         env_config.udp_port_scan_miss_p = 0.07
         env_config.syn_stealth_scan_miss_p = 0.04

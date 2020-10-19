@@ -8,6 +8,7 @@ from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystemScanCache
 from gym_pycr_pwcrack.dao.action_results.nikto_scan_cache import NiktoScanCache
+from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
 
 class EnvConfig:
     """
@@ -17,7 +18,7 @@ class EnvConfig:
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
                  num_sh : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
-                 base_detection_p : float = 0.01, manual_play : bool = False):
+                 base_detection_p : float = 0.01, manual_play : bool = False, state_type: StateType = StateType.BASE):
         """
         Initialize the config
 

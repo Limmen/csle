@@ -42,9 +42,15 @@ run: build net
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
 
-# Stop and remove running containers
-clean:
+start:
+	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+
+# Stop running containers
+stop:
 	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+
+# Stop and remove running containers
+clean: stop
 	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Expunge old container image

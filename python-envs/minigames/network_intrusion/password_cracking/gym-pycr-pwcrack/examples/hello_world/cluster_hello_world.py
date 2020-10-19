@@ -240,6 +240,7 @@ def test_all():
     #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
     #test_ssh()
     test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-simple-cluster-base-v1", num_steps=1000000000)
     #test_ssh2()
 
 if __name__ == '__main__':

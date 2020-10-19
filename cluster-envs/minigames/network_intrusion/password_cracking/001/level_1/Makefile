@@ -29,6 +29,22 @@ hacker_kali:
 net:
 	cd containers/router/ && $(MAKE) net
 
+stop:
+	cd containers/router/ && $(MAKE) stop
+	cd containers/ssh/ && $(MAKE) stop
+	cd containers/telnet/ && $(MAKE) stop
+	cd containers/honeypot/ && $(MAKE) stop
+	cd containers/ftp/ && $(MAKE) stop
+	cd containers/hacker_kali/ && $(MAKE) stop
+
+start:
+	cd containers/router/ && $(MAKE) start
+	cd containers/ssh/ && $(MAKE) start
+	cd containers/telnet/ && $(MAKE) start
+	cd containers/honeypot/ && $(MAKE) start
+	cd containers/ftp/ && $(MAKE) start
+	cd containers/hacker_kali/ && $(MAKE) start
+
 clean:
 	cd containers/router/ && $(MAKE) clean
 	cd containers/ssh/ && $(MAKE) clean
