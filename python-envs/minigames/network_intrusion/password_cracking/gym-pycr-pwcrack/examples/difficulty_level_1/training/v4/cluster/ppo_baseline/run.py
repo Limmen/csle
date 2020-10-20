@@ -52,7 +52,7 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v4",
-                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
+                                 run_many=True, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
 

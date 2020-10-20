@@ -387,3 +387,156 @@ def plot_two_csv_files(csv_files, output_dir : str):
                              flags_data_2, flags_means_2, flags_stds_2,
                              steps_data_2, steps_means_2, steps_stds_2,
                              output_dir + "rewards_flags_steps_" + str(i), markevery=25)
+
+def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
+                         flags_data_1, flags_means_1, flags_stds_1,
+                         steps_data_1, steps_means_1, steps_stds_1,
+
+                         rewards_data_2, rewards_means_2, rewards_stds_2,
+                         flags_data_2, flags_means_2, flags_stds_2,
+                         steps_data_2, steps_means_2, steps_stds_2,
+
+                         rewards_data_3, rewards_means_3, rewards_stds_3,
+                         flags_data_3, flags_means_3, flags_stds_3,
+                         steps_data_3, steps_means_3, steps_stds_3,
+
+                         rewards_data_4, rewards_means_4, rewards_stds_4,
+                         flags_data_4, flags_means_4, flags_stds_4,
+                         steps_data_4, steps_means_4, steps_stds_4,
+
+                         label_1, label_2, label_3, label_4, ylim_rew, ylim_step,
+                         file_name, markevery=10):
+    """
+    Plots rewards, flags % and steps of two different configurations
+    """
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 5))
+    plt.rcParams.update({'font.size': 12})
+
+    # ylims = (0, 920)
+
+    # Plot Rewards
+    ax[0].plot(np.array(list(range(len(rewards_means_1)))),
+               rewards_means_1, label=label_1, marker="s", ls='-', color="#599ad3",
+               markevery=markevery)
+    ax[0].fill_between(np.array(list(range(len(rewards_means_1)))),
+                       rewards_means_1 - rewards_stds_1, rewards_means_1 + rewards_stds_1,
+                       alpha=0.35, color="#599ad3")
+
+    ax[0].plot(np.array(list(range(len(rewards_means_2)))),
+               rewards_means_2, label=label_2, marker="o", ls='-', color="r",
+               markevery=markevery)
+    ax[0].fill_between(np.array(list(range(len(rewards_means_2)))),
+                       rewards_means_2 - rewards_stds_2, rewards_means_2 + rewards_stds_2,
+                       alpha=0.35, color="r")
+
+    ax[0].plot(np.array(list(range(len(rewards_means_3)))),
+               rewards_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
+               markevery=markevery)
+    ax[0].fill_between(np.array(list(range(len(rewards_means_3)))),
+                       rewards_means_3 - rewards_stds_3, rewards_means_3 + rewards_stds_3,
+                       alpha=0.35, color="#f9a65a")
+
+    ax[0].plot(np.array(list(range(len(rewards_means_4)))),
+               rewards_means_4, label=label_4, marker="^", ls='-', color="#661D98",
+               markevery=markevery)
+    ax[0].fill_between(np.array(list(range(len(rewards_means_4)))),
+                       rewards_means_4 - rewards_stds_4, rewards_means_4 + rewards_stds_4,
+                       alpha=0.35, color="#661D98")
+
+    ax[0].plot(np.array(list(range(len(rewards_means_1)))),
+               [95] * len(rewards_means_1), label="Optimal",
+               color="black",
+               linestyle="dashed")
+
+    ax[0].set_title("Episodic Rewards")
+    ax[0].set_xlabel("\# Iteration", fontsize=20)
+    ax[0].set_ylabel("Avg Episode Reward", fontsize=20)
+    ax[0].set_xlim(0, len(rewards_means_1))
+    # ax[0].set_ylim(-80, 100)
+    ax[0].set_ylim(ylim_rew)
+
+    # set the grid on
+    ax[0].grid('on')
+
+    # tweak the axis labels
+    xlab = ax[0].xaxis.get_label()
+    ylab = ax[0].yaxis.get_label()
+
+    xlab.set_size(10)
+    ylab.set_size(10)
+
+    # change the color of the top and right spines to opaque gray
+    ax[0].spines['right'].set_color((.8, .8, .8))
+    ax[0].spines['top'].set_color((.8, .8, .8))
+
+    ax[0].legend(loc="lower right")
+
+    # Plot Steps
+    ax[1].plot(np.array(list(range(len(steps_means_1)))),
+               steps_means_1, label=label_1, marker="s", ls='-', color="#599ad3",
+               markevery=markevery)
+    ax[1].fill_between(np.array(list(range(len(steps_means_1)))),
+                       steps_means_1 - steps_stds_1, steps_means_1 + steps_stds_1,
+                       alpha=0.35, color="#599ad3")
+
+    ax[1].plot(np.array(list(range(len(steps_means_2)))),
+               steps_means_2, label=label_2, marker="o", ls='-', color="r",
+               markevery=markevery)
+    ax[1].fill_between(np.array(list(range(len(steps_means_2)))),
+                       steps_means_2 - steps_stds_2, steps_means_2 + steps_stds_2,
+                       alpha=0.35, color="r")
+
+    ax[1].plot(np.array(list(range(len(steps_means_3)))),
+               steps_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
+               markevery=markevery)
+    ax[1].fill_between(np.array(list(range(len(steps_means_3)))),
+                       steps_means_3 - steps_stds_3, steps_means_3 + steps_stds_3,
+                       alpha=0.35, color="#f9a65a")
+
+    ax[1].plot(np.array(list(range(len(steps_means_4)))),
+               steps_means_4, label=label_4, marker="^", ls='-', color="#661D98",
+               markevery=markevery)
+    ax[1].fill_between(np.array(list(range(len(steps_means_4)))),
+                       steps_means_4 - steps_stds_4, steps_means_4 + steps_stds_4,
+                       alpha=0.35, color="#661D98")
+
+    ax[1].plot(np.array(list(range(len(steps_means_1)))),
+               [10] * len(steps_means_1), label="Optimal",
+               color="black",
+               linestyle="dashed")
+
+    ax[1].set_title("\# Steps per episode")
+    ax[1].set_xlabel("\# Iteration")
+    ax[1].set_ylabel("\# Steps")
+    ax[1].set_xlim(0, len(steps_means_1))
+    ax[1].set_ylim(ylim_step)
+
+    # set the grid on
+    ax[1].grid('on')
+
+    # tweak the axis labels
+    xlab = ax[1].xaxis.get_label()
+    ylab = ax[1].yaxis.get_label()
+
+    xlab.set_size(10)
+    ylab.set_size(10)
+
+    # change the color of the top and right spines to opaque gray
+    ax[1].spines['right'].set_color((.8, .8, .8))
+    ax[1].spines['top'].set_color((.8, .8, .8))
+
+    ax[1].legend(loc="upper right")
+
+    ax[1].xaxis.label.set_size(13.5)
+    ax[1].yaxis.label.set_size(13.5)
+    ax[0].xaxis.label.set_size(13.5)
+    ax[0].yaxis.label.set_size(13.5)
+
+    fig.tight_layout()
+    #plt.show()
+    # plt.subplots_adjust(wspace=0, hspace=0)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    # plt.close(fig)
