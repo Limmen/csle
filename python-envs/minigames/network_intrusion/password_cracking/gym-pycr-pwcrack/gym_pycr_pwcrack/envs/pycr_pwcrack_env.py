@@ -18,6 +18,8 @@ from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v1 import PyCrPwCrackSimpleV1
 from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v2 import PyCrPwCrackSimpleV2
+from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v3 import PyCrPwCrackSimpleV3
+from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v4 import PyCrPwCrackSimpleV4
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -468,6 +470,50 @@ class PyCRPwCrackSimpleCluster2Env(PyCRPwCrackEnv):
             network_conf = PyCrPwCrackSimpleBase.network_conf()
             action_conf = PyCrPwCrackSimpleV2.actions_conf(network_conf)
             env_config = PyCrPwCrackSimpleV2.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config)
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+
+# -------- Version 3 ------------
+
+class PyCRPwCrackSimpleCluster3Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V2. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackSimpleBase.render_conf()
+            if cluster_config is None:
+                cluster_config = PyCrPwCrackSimpleBase.cluster_conf()
+            network_conf = PyCrPwCrackSimpleBase.network_conf()
+            action_conf = PyCrPwCrackSimpleV3.actions_conf(network_conf)
+            env_config = PyCrPwCrackSimpleV3.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config)
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+
+# -------- Version 4 ------------
+
+class PyCRPwCrackSimpleCluster4Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V3. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackSimpleBase.render_conf()
+            if cluster_config is None:
+                cluster_config = PyCrPwCrackSimpleBase.cluster_conf()
+            network_conf = PyCrPwCrackSimpleBase.network_conf()
+            action_conf = PyCrPwCrackSimpleV4.actions_conf(network_conf)
+            env_config = PyCrPwCrackSimpleV4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False

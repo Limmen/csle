@@ -531,9 +531,9 @@ class MainFrame(pyglet.window.Window):
 
         :return: None
         """
-        self.c_r_label.text = str(self.state.cumulative_reward)
+        self.c_r_label.text = str(round(self.state.cumulative_reward))
         self.n_e_label.text = str(self.state.num_episodes)
-        self.r_label.text = str(self.state.episode_reward)
+        self.r_label.text = str(round(self.state.episode_reward, 1))
         self.t_label.text = str(self.state.time_step)
         self.n_d_label.text = str(self.state.num_detections)
         self.n_af_label.text = str(self.state.num_all_flags)
