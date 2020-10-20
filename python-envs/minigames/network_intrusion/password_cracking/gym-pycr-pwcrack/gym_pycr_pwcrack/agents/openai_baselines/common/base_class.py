@@ -700,7 +700,7 @@ class BaseAlgorithm(ABC):
 
         :return: ([str]) List of parameters that should be excluded from save
         """
-        return ["policy", "device", "env", "eval_env", "replay_buffer", "rollout_buffer", "_vec_normalize_env"]
+        return ["device", "env", "eval_env", "replay_buffer", "rollout_buffer", "_vec_normalize_env"]
 
     def save(
             self,

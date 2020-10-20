@@ -26,7 +26,7 @@ def default_config() -> ClientConfig:
                                eval_frequency=100, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=150, input_dim=5 * 8,
-                               output_dim=23,
+                               output_dim=54,
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
                                shared_hidden_layers=2, shared_hidden_dim=32,
@@ -43,7 +43,7 @@ def default_config() -> ClientConfig:
                                n_deterministic_eval_iter=10,
                                load_path="/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/399/1603222971.1888826_policy_network.zip"
                                )
-    env_name = "pycr-pwcrack-simple-cluster-v1"
+    env_name = "pycr-pwcrack-simple-cluster-v2"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
@@ -53,7 +53,7 @@ def default_config() -> ClientConfig:
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline v0",
+                                 title="PPO-Baseline v2",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, cluster_config=cluster_config,
                                  mode=RunnerMode.SIMULATE.value, simulation_config=simulation_config)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v1 cluster"
+    experiment_title = "PPO simple v2 cluster"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

@@ -3,6 +3,7 @@ A bot attack agent for the pycr-wcrack environment that acts greedily according 
 """
 import torch
 import traceback
+import time
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
@@ -54,8 +55,9 @@ class PPOAttackerBotAgent:
             #     action, env_config=self.env_config, env_state=s), actions))
             m_obs, p_obs = s.get_observation()
             obs_tensor = torch.as_tensor(m_obs.flatten()).to(self.device)            
-            actions, values = self.model.predict(observation=obs_tensor, deterministic = False,
+            actions, values = self.model.predict(observation=obs_tensor, deterministic = True,
                                                             state=obs_tensor)
+            time.sleep(2)
 
             action = actions[0]
         except Exception as e:

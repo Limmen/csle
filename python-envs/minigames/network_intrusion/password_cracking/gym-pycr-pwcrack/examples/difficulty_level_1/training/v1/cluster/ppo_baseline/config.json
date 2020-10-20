@@ -1,6 +1,6 @@
 {
     "agent_config": {
-        "alpha": 0.0005,
+        "alpha": 0.005,
         "ar_policy": false,
         "batch_size": 2000,
         "buffer_size": 1000000,
@@ -24,7 +24,7 @@
         "filter_illegal_actions": true,
         "gae_lambda": 0.95,
         "gamma": 0.99,
-        "gif_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/gifs",
+        "gif_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/gifs",
         "gifs": true,
         "gpu": false,
         "gpu_id": 0,
@@ -34,7 +34,7 @@
         "input_dim": 40,
         "input_dim_2": 30,
         "learning_starts": 50000,
-        "load_path": "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/399/1603222971.1888826_policy_network.zip",
+        "load_path": null,
         "logger": null,
         "lr_decay_rate": 0.999,
         "lr_exp_decay": false,
@@ -60,7 +60,7 @@
         "random_seed": 0,
         "render": false,
         "render_steps": 100,
-        "save_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/data",
+        "save_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data",
         "sde_sample_freq": 4,
         "shared_hidden_dim": 32,
         "shared_layers": 2,
@@ -70,7 +70,7 @@
         "target_update_interval": 10000,
         "tau": 1.0,
         "tensorboard": true,
-        "tensorboard_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/tensorboard",
+        "tensorboard_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/tensorboard",
         "train_freq": 4,
         "train_log_frequency": 1,
         "train_progress_deterministic_eval": true,
@@ -81,7 +81,7 @@
         "vf_hidden_layers": 1,
         "vf_hidden_layers_2": 2,
         "video": false,
-        "video_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/videos",
+        "video_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/videos",
         "video_fps": 5,
         "video_frequency": 10
     },
@@ -103,10 +103,10 @@
     },
     "env_checkpoint_dir": null,
     "env_config": null,
-    "env_name": "pycr-pwcrack-simple-cluster-v2",
+    "env_name": "pycr-pwcrack-simple-cluster-v1",
     "logger": null,
-    "mode": 1,
-    "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline",
+    "mode": 0,
+    "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/cluster/ppo_baseline",
     "py/object": "gym_pycr_pwcrack.dao.experiment.client_config.ClientConfig",
     "random_seed": 399,
     "random_seeds": [
@@ -117,19 +117,6 @@
         499
     ],
     "run_many": false,
-    "simulation_config": {
-        "gif_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/gifs",
-        "gifs": true,
-        "log_frequency": 1000,
-        "logger": null,
-        "num_episodes": 1000,
-        "py/object": "gym_pycr_pwcrack.dao.experiment.simulation_config.SimulationConfig",
-        "render": true,
-        "sleep": 0,
-        "video": true,
-        "video_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v1/cluster/ppo_baseline/results/videos",
-        "video_fps": 5,
-        "video_frequency": 1
-    },
-    "title": "PPO-Baseline v0"
+    "simulation_config": null,
+    "title": "PPO-Baseline v1"
 }
