@@ -37,7 +37,9 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
                                render_steps=20, illegal_action_logit=-100, ar_policy=True,
                                input_dim_2=30, output_dim_2=38, pi_hidden_dim_2=128, pi_hidden_layers_2=1,
-                               vf_hidden_layers_2=1, vf_hidden_dim_2=128
+                               vf_hidden_layers_2=1, vf_hidden_dim_2=128,
+                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                               n_deterministic_eval_iter=10
                                )
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",

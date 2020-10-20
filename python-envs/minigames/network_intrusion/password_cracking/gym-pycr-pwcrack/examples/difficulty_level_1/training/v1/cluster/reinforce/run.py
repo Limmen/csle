@@ -19,7 +19,7 @@ def default_config() -> ClientConfig:
                                                 eval_frequency=10000, video_frequency=11,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=1000, input_dim=180,
-                                                output_dim=17,
+                                                output_dim=23,
                                                 pi_hidden_dim=32,
                                                 pi_hidden_layers=1, batch_size=8,
                                                 gpu=True, tensorboard=True,

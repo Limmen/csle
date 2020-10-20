@@ -22,7 +22,7 @@ def default_config() -> ClientConfig:
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=100, input_dim=6 * 30,
-                                                output_dim=114,
+                                                output_dim=23,
                                                 shared_hidden_layers=2, shared_hidden_dim=128,
                                                 batch_size=32,
                                                 gpu=False, tensorboard=True,
@@ -34,7 +34,9 @@ def default_config() -> ClientConfig:
                                                 render_steps=20, illegal_action_logit=-100, buffer_size=1000000,
                                                 tau = 1.0, learning_starts = 50000, train_freq=4, gradient_steps=1,
                                                 target_update_interval=10000, exploration_fraction=0.99,
-                                                exploration_initial_eps=1.0, exploration_final_eps=0.05
+                                                exploration_initial_eps=1.0, exploration_final_eps=0.05,
+                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                                                n_deterministic_eval_iter=10
                                                 )
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",

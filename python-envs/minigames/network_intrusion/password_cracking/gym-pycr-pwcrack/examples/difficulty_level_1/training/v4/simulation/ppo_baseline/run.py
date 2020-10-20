@@ -19,7 +19,7 @@ def default_config() -> ClientConfig:
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=100, input_dim=6*30,
-                                                output_dim=181,
+                                                output_dim=155,
                                                 pi_hidden_dim=128, pi_hidden_layers=1,
                                                 vf_hidden_dim=128, vf_hidden_layers=1,
                                                 shared_hidden_layers=1, shared_hidden_dim=128,
@@ -31,7 +31,9 @@ def default_config() -> ClientConfig:
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10, mini_batch_size=64,
-                                                render_steps=20, illegal_action_logit = -100
+                                                render_steps=20, illegal_action_logit = -100,
+                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                                                n_deterministic_eval_iter=10
                                                 )
     env_name = "pycr-pwcrack-simple-sim-v4"
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
