@@ -30,3 +30,10 @@ register(
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleCluster1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
+
+# -------- Difficulty Level: Simple, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-simple-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleCluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
