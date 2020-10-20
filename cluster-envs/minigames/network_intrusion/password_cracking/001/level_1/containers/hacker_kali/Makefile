@@ -35,6 +35,7 @@ run: build net firewall
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
 
+# Start stopped containers
 start:
 	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
