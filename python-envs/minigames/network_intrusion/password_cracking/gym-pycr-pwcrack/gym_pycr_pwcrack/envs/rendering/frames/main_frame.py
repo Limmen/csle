@@ -503,7 +503,7 @@ class MainFrame(pyglet.window.Window):
                 self.env.reset()
         elif symbol == pyglet.window.key.TAB:
             if self.env is not None:
-                self.env.env_config.all_actions_conf.print_actions()
+                self.env.env_config.action_conf.print_actions()
 
     def setup_resources_path(self) -> None:
         """
