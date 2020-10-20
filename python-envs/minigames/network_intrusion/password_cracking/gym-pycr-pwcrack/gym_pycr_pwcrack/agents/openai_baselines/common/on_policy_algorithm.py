@@ -12,6 +12,7 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallba
 from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
 from gym_pycr_pwcrack.agents.openai_baselines.common.policies import ActorCriticPolicy
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.agents.openai_baselines.common.evaluation import quick_evaluate_policy
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -296,6 +297,13 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
             if self.iteration % self.agent_config.train_log_frequency == 0:
+                if self.agent_config.train_progress_deterministic_eval:
+                    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
+                        quick_evaluate_policy(model=self.policy, env=self.env,
+                                              n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
+                                              deterministic=True, agent_config=self.agent_config,
+                                              env_config=self.env.envs[0].env_config)
+
                 self.log_metrics(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
                                  episode_avg_loss=episode_loss,
@@ -305,7 +313,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
                                  progress_left = self._current_progress_remaining,
                                  n_af = self.env.envs[0].agent_state.num_all_flags,
-                                 n_d = self.env.envs[0].agent_state.num_detections)
+                                 n_d = self.env.envs[0].agent_state.num_detections,
+                                 eval_episode_rewards = eval_episode_rewards, eval_episode_steps=eval_episode_steps,
+                                 eval_episode_flags=eval_episode_flags,
+                                 eval_episode_flags_percentage=eval_episode_flags_percentage)
                 episode_rewards = []
                 episode_loss = []
                 episode_flags = []

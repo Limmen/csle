@@ -14,7 +14,12 @@ class ExperimentResult:
                  avg_episode_steps: List[int] = None, epsilon_values: List[float] = None,
                  cumulative_reward: List[int] = None, avg_episode_loss: List[float] = None,
                  lr_list : List[float] = None, avg_episode_flags : List[int] = None,
-                 avg_episode_flags_percentage: List[float] = None):
+                 avg_episode_flags_percentage: List[float] = None,
+                 eval_avg_episode_rewards : List[float] = None,
+                 eval_avg_episode_steps: List[float] = None,
+                 eval_avg_episode_flags: List[int] = None,
+                 eval_avg_episode_flags_percentage: List[float] = None
+                 ):
         """
         Constructor, initializes the DTO
 
@@ -26,6 +31,10 @@ class ExperimentResult:
         :param lr_list: learning rates
         :param avg_episode_flags: avg number of flags catched per episode
         :param avg_episode_flags_percentage: avg % of flags catched per episode
+        :param eval_avg_episode_rewards: list of episode rewards for eval deterministic
+        :param eval_avg_episode_steps: list of episode steps for eval deterministic
+        :param eval_avg_episode_flags: list of episode flags for eval deterministic
+        :param eval_avg_episode_flags_percentage: list of episode flags for eval deterministic
         """
         self.avg_episode_rewards = avg_episode_rewards
         self.avg_episode_rewards_a = avg_episode_rewards_a
@@ -36,6 +45,10 @@ class ExperimentResult:
         self.lr_list = lr_list
         self.avg_episode_flags = avg_episode_flags
         self.avg_episode_flags_percentage = avg_episode_flags_percentage
+        self.eval_avg_episode_rewards = eval_avg_episode_rewards
+        self.eval_avg_episode_steps = eval_avg_episode_steps
+        self.eval_avg_episode_flags = eval_avg_episode_flags
+        self.eval_avg_episode_flags_percentage = eval_avg_episode_flags_percentage
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -54,6 +67,14 @@ class ExperimentResult:
             self.avg_episode_flags = []
         if avg_episode_flags_percentage is None:
             self.avg_episode_flags_percentage = []
+        if eval_avg_episode_rewards is None:
+            self.eval_avg_episode_rewards = []
+        if eval_avg_episode_steps is None:
+            self.eval_avg_episode_steps = []
+        if eval_avg_episode_flags is None:
+            self.eval_avg_episode_flags = []
+        if eval_avg_episode_flags_percentage is None:
+            self.eval_avg_episode_flags_percentage = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -64,10 +85,12 @@ class ExperimentResult:
         """
         metrics = [self.avg_episode_rewards, self.avg_episode_rewards_a, self.avg_episode_steps, self.epsilon_values,
                    self.cumulative_reward, self.avg_episode_loss, self.lr_list, self.avg_episode_flags,
-                   self.avg_episode_flags_percentage]
+                   self.avg_episode_flags_percentage, self.eval_avg_episode_rewards, self.eval_avg_episode_steps,
+                   self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage]
         metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
                          "epsilon_values", "cumulative_reward", "avg_episode_loss",
-                         "lr_list", "avg_episode_flags", "avg_episode_flags_percentage"]
+                         "lr_list", "avg_episode_flags", "avg_episode_flags_percentage", "eval_avg_episode_rewards",
+                         "eval_avg_episode_steps", "eval_avg_episode_flags", "eval_avg_episode_flags_percentage"]
         filtered_metric_labels = []
         filtered_metrics = []
         for i in range(len(metrics)):

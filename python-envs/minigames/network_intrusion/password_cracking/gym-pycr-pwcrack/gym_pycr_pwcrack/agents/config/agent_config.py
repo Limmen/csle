@@ -40,7 +40,8 @@ class AgentConfig:
                  policy_delay : int = 2, target_policy_noise : float = 0.2, target_noise_clip : float = 0.5,
                  input_dim_2 : int = 30, output_dim_2 : int = 30, pi_hidden_dim_2 : int = 64,
                  pi_hidden_layers_2 : int = 2, vf_hidden_layers_2 : int = 2, vf_hidden_dim_2 : int = 64,
-                 filter_illegal_actions : bool = False
+                 filter_illegal_actions : bool = False, train_progress_deterministic_eval: bool = False,
+                 n_deterministic_eval_iter : int = 10
                  ):
         """
         Initialize environment and hyperparameters
@@ -121,6 +122,8 @@ class AgentConfig:
         :param target_policy_noise: policy noise for TD3 and similar algos
         :param target_noise_clip: target noise for TD3 and similar algos
         :param filter_illegal_actions: boolean flag whether to filter illegal actions
+        :param train_progress_deterministic_eval: boolean flag whether to use deterministic policy for eval during train
+        :param n_deterministic_eval_iter: number of iterations for determinisitic eval
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -203,6 +206,8 @@ class AgentConfig:
         self.vf_hidden_layers_2 = vf_hidden_layers_2
         self.vf_hidden_dim_2 = vf_hidden_dim_2
         self.filter_illegal_actions = filter_illegal_actions
+        self.train_progress_deterministic_eval = train_progress_deterministic_eval
+        self.n_deterministic_eval_iter = n_deterministic_eval_iter
 
 
     def to_str(self) -> str:
@@ -228,7 +233,8 @@ class AgentConfig:
                "exploration_initial_eps:{66},exploration_final_eps:{67},policy_delay:{68}," \
                "target_policy_noise:{69},target_noise_clip:{70},input_dim_2:{71}," \
                "output_dim_2:{72},pi_hidden_dim_2:{73},pi_hidden_layers_2:{74}," \
-               "vf_hidden_layers_2:{75},vf_hidden_dim_2:{76},filter_illegal_actions:{77}".format(
+               "vf_hidden_layers_2:{75},vf_hidden_dim_2:{76},filter_illegal_actions:{77}," \
+               "train_progress_deterministic_eval:{78},n_deterministic_eval_iter:{79}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -245,7 +251,8 @@ class AgentConfig:
             self.target_update_interval, self.exploration_fraction,self.exploration_initial_eps,
             self.exploration_final_eps, self.policy_delay, self.target_policy_noise, self.target_noise_clip,
             self.input_dim_2, self.output_dim_2, self.pi_hidden_dim_2, self.pi_hidden_layers_2, self.vf_hidden_layers_2,
-            self.vf_hidden_dim_2, self.filter_illegal_actions)
+            self.vf_hidden_dim_2, self.filter_illegal_actions, self.train_progress_deterministic_eval,
+            self.n_deterministic_eval_iter)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -327,6 +334,8 @@ class AgentConfig:
             writer.writerow(["vf_hidden_layers_2", str(self.vf_hidden_layers_2)])
             writer.writerow(["vf_hidden_dim_2", str(self.vf_hidden_dim_2)])
             writer.writerow(["filter_illegal_actions", str(self.filter_illegal_actions)])
+            writer.writerow(["train_progress_deterministic_eval", str(self.train_progress_deterministic_eval)])
+            writer.writerow(["n_deterministic_eval_iter", str(self.n_deterministic_eval_iter)])
 
 
     def hparams_dict(self):
@@ -390,4 +399,6 @@ class AgentConfig:
         hparams["vf_hidden_layers_2"] = self.vf_hidden_layers_2
         hparams["vf_hidden_dim_2"] = self.vf_hidden_dim_2
         hparams["filter_illegal_actions"] = self.filter_illegal_actions
+        hparams["train_progress_deterministic_eval"] = self.train_progress_deterministic_eval
+        hparams["n_deterministic_eval_iter"] = self.n_deterministic_eval_iter
         return hparams

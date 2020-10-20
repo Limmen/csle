@@ -306,6 +306,7 @@ class EvalCallback(EventCallback):
         self.render = render
         self.agent_config = agent_config
 
+
         # Convert to VecEnv for consistency
         if not isinstance(eval_env, VecEnv):
             eval_env = DummyVecEnv([lambda: eval_env])
@@ -335,6 +336,7 @@ class EvalCallback(EventCallback):
             os.makedirs(os.path.dirname(self.log_path), exist_ok=True)
 
     def _on_rollout_end(self) -> bool:
+
         if self.eval_freq > 0 and self.iteration % self.eval_freq == 0:
             # Sync training and eval env if there is VecNormalize
             sync_envs_normalization(self.training_env, self.eval_env)
