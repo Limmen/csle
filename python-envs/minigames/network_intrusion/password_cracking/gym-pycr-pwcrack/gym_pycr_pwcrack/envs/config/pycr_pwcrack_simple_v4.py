@@ -26,7 +26,7 @@ class PyCrPwCrackSimpleV4:
         actions = []
 
         # Host actions
-        for idx in range(len(network_conf.nodes)):
+        for idx in range(len(network_conf.nodes)-1):
             actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
             actions.append(NMAPActions.PING_SCAN(index=idx, subnet=False))
             actions.append(NMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))

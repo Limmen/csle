@@ -88,7 +88,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.trajectory.append(action_id)
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
-            #print("illegal action:{}".format(action_id))
+            print("illegal action:{}".format(action_id))
             done = False
             info["flags"] = self.env_state.obs_state.catched_flags
             self.agent_state.time_step += 1
@@ -203,6 +203,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 machine_discovered = True
                 target_machine = m
                 untried_credentials = target_machine.untried_credentials
+
+        if action.subnet:
+            machine_discovered = True
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):

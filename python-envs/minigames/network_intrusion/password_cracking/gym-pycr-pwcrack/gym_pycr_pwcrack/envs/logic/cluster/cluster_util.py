@@ -460,16 +460,17 @@ class ClusterUtil:
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
                         result = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
                                                                 service=service_name)
-                        if len(result) > 0:
-                            if isinstance(result[0], NmapVuln):
+                        if result is not None:
+                            if isinstance(result, list) and len(result) > 0 and isinstance(result[0], NmapVuln):
                                 vulnerabilities = result
-                            elif isinstance(result[0], NmapBruteCredentials):
+                            elif isinstance(result, list) and len(result) > 0 \
+                                    and isinstance(result[0], NmapBruteCredentials):
                                 credentials = result
-                            elif isinstance(result[0], NmapHttpEnum):
+                            elif isinstance(result, NmapHttpEnum):
                                 http_enum = result
-                            elif isinstance(result[0], NmapHttpGrep):
+                            elif isinstance(result, NmapHttpGrep):
                                 http_grep = result
-                            elif isinstance(result[0], NmapVulscan):
+                            elif isinstance(result, NmapVulscan):
                                 vulscan = result
                 if port_status == NmapPortStatus.UP:
                     port = NmapPort(port_id=port_id, protocol=protocol, status=port_status, service_name=service_name,
@@ -602,7 +603,7 @@ class ClusterUtil:
                 return ClusterUtil._parse_nmap_http_grep_xml(xml_data)
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.VULSCAN_SCRIPT:
                 return ClusterUtil._parse_nmap_http_vulscan_xml(xml_data)
-        return []
+        return None
 
     @staticmethod
     def _parse_nmap_vulners(xml_data, port: int, protocol: TransportProtocol, service: str) -> List[NmapVuln]:
@@ -763,6 +764,7 @@ class ClusterUtil:
                 break
             except Exception as e:
                 scan_result = NmapScanResult(hosts=[])
+                #print("read nmap scan exception:{}, action:{}".format(str(e), a.name))
                 # ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
                 # outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
                 #                                                            conn=env_config.cluster_config.agent_conn)

@@ -49,7 +49,7 @@
         "num_iterations": 1000,
         "optimization_iterations": 10,
         "optimizer": "Adam",
-        "output_dim": 181,
+        "output_dim": 155,
         "output_dim_2": 30,
         "pi_hidden_dim": 32,
         "pi_hidden_dim_2": 64,

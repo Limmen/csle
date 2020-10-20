@@ -24,7 +24,7 @@ class PyCrPwCrackSimpleV2:
         actions = []
 
         # Host actions
-        for idx in range(len(network_conf.nodes)):
+        for idx in range(len(network_conf.nodes)-1):
             actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))

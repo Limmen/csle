@@ -78,4 +78,5 @@ class ObservationState:
                 res = self.brute_tried(a=a, m=m2)
                 if not res:
                     brute_tried = res
+                    break
             return brute_tried
