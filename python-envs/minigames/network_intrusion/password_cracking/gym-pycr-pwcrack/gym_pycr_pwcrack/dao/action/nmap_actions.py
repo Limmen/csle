@@ -158,8 +158,7 @@ class NMAPActions:
             id = ActionId.VULSCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sV --script=vulscan/vulscan.nse " + constants.NMAP.SPEED_ARGS + " " + constants.NMAP.FILE_ARGS \
-              + " " + file_name + ip]
+        cmd = ["sudo nmap -sV --script=vulscan/vulscan.nse " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="vulscan.nse vulnerability scanner",
                cmd=cmd, type=ActionType.RECON, index=index,
                descr="Uses a vulcan.nse script to turn NMAP into a vulnerability scanner",
