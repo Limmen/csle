@@ -44,6 +44,7 @@ class StateRepresentation:
         :return: Machines obs, ports obs, obs_space, m_selection_obs_space (for AR), network_orig_shape,
                  machine_orig_shape, m_action_obs_space (for AR)
         """
+        obs_state.sort_machines()
         num_m_features = 10 + obs_state.num_ports + obs_state.num_vuln
         machines_obs = np.zeros((num_machines, num_m_features))
         ports_protocols_obs = np.zeros((num_machines, num_ports))
@@ -142,6 +143,7 @@ class StateRepresentation:
         :return: Machines obs, ports obs, obs_space, m_selection_obs_space (for AR), network_orig_shape,
                  machine_orig_shape, m_action_obs_space (for AR)
         """
+        obs_state.sort_machines()
         num_m_features = 8
         machines_obs = np.zeros((num_machines, num_m_features))
         ports_protocols_obs = np.zeros((num_machines, num_ports))

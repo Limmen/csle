@@ -41,15 +41,15 @@ def default_config() -> ClientConfig:
                                render_steps=100, illegal_action_logit=-100,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=10,
-                               load_path="/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/399/1603222971.1888826_policy_network.zip"
+                               load_path="/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/simulation/v2/cluster/ppo_baseline/models/1603222971.1888826_policy_network.zip"
                                )
     env_name = "pycr-pwcrack-simple-cluster-v2"
-    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
-    #                                agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-    #                                server_username="kim")
+    # cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False)
+    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+                                   agent_username="agent", agent_pw="agent", server_connection=True,
+                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                   server_username="kim")
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
