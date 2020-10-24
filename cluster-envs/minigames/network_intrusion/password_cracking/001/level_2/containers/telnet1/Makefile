@@ -1,7 +1,7 @@
 PROJECT=pycr
 NETWORK=pycr_pwcrack_001_level_2_net
 MINIGAME=pwcrack
-CONTAINER=telnet
+CONTAINER=telnet1
 VERSION=0.0.1
 LEVEL=2
 SUBNET=172.18.2.0

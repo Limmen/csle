@@ -1,24 +1,21 @@
 PROJECT=pycr
-NETWORK=pycr_pwcrack_001_level_1_net
+NETWORK=pycr_pwcrack_001_level_2_net
 MINIGAME=pwcrack
-CONTAINER=ftp
+CONTAINER=honeypot1
 VERSION=0.0.1
-LEVEL=1
-SUBNET=172.18.1.0
-SUBNET_MASK_1=172.18.1.0/24
+LEVEL=2
+SUBNET=172.18.2.0
+SUBNET_MASK_1=172.18.2.0/24
 SUBNET_MASK_2=255.255.255.0
-IP=172.18.1.79
+IP=172.18.2.21
 ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
-ROOT_USER_1=l_hopital
-ROOT_PW_1=l_hopital
-ROOT_USER_2=pi
-ROOT_PW_2=pi
-NON_ROOT_USER_1=euler
-NON_ROOT_PW_1=euler
-FLAG_INFO_FILE=fl_info.txt
-FLAG_PATH_1=/tmp
-FLAG_NAME_1=flag3
+ROOT_USER_1=admin
+ROOT_PW_1=admin
+ROOT_USER_2=test
+ROOT_PW_2=qwerty
+NON_ROOT_USER_1=oracle
+NON_ROOT_PW_1=abc123
 
 all: rm-image rm-network build net
 
@@ -26,11 +23,8 @@ users:
 	echo "${ROOT_USER_1}:${ROOT_PW_1} ${ROOT_USER_2}:${ROOT_PW_2}" > ./docker/${ROOT_USERS_FILE}
 	echo "${NON_ROOT_USER_1}:${NON_ROOT_PW_1}" > ./docker/${NON_ROOT_USERS_FILE}
 
-flags:
-	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
-
-build: ./docker/Dockerfile users flags
-	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
+build: ./docker/Dockerfile users
+	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
 
 net:
 	docker network create --subnet=$(SUBNET_MASK_1) $(NETWORK) || echo "network already created"
@@ -42,7 +36,6 @@ run: build net
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
 
-# Start stopped containers
 start:
 	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
@@ -51,8 +44,7 @@ stop:
 	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
 # Stop and remove running containers
-clean:
-	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+clean: stop
 	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
 # Expunge old container image

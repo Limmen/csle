@@ -30,7 +30,7 @@
       "flags": []
     },
     {
-      "name": "ssh",
+      "name": "ssh1",
       "ip": "172.18.2.2",
       "level": 3,
       "root_users" : [
@@ -58,7 +58,7 @@
       ]
     },
     {
-      "name": "telnet",
+      "name": "telnet1",
       "ip": "172.18.2.3",
       "level": 3,
       "root_users" : [
@@ -86,7 +86,7 @@
       ]
     },
     {
-      "name": "honeypot",
+      "name": "honeypot1",
       "ip": "172.18.2.21",
       "level": 3,
       "root_users" : [
@@ -108,7 +108,7 @@
       "flags": []
     },
     {
-      "name": "ftp",
+      "name": "ftp1",
       "ip": "172.18.2.79",
       "level": 3,
       "root_users" : [
@@ -134,6 +134,62 @@
           "id": "3"
         }
       ]
+    },
+    {
+      "name": "ssh2",
+      "ip": "172.18.2.54",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "vagrant",
+          "password": "vagrant"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "trent",
+          "password": "xe125@41!341"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag4",
+          "path": "/tmp",
+          "id": "4"
+        }
+      ]
+    },
+    {
+      "name": "telnet2",
+      "ip": "172.18.2.61",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "adm",
+          "password": "adm"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": [
+        {
+          "name": "flag5",
+          "path": "/root",
+          "id": "5"
+        }
+      ]
+    },
+    {
+      "name": "ssh3",
+      "ip": "172.18.2.74",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "administrator",
+          "password": "administrator"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
     },
     {
       "name": "hacker_kali",
