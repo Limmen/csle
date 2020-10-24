@@ -3,8 +3,9 @@
   "network": "pycr_net",
   "minigame": "pwcrack",
   "version": "0.0.1",
-  "subnet": "172.18.1.0",
-  "subnet_mask_1": "172.18.1.0/24",
+  "subnet": "172.18.2.0",
+  "level": "1",
+  "subnet_mask_1": "172.18.2.0/24",
   "subnet_mask_2": "255.255.255.0",
   "root_users_file": "root_users.txt",
   "non_root_users_file": "non_root_users.txt",
@@ -12,7 +13,7 @@
   "containers": [
     {
       "name": "router",
-      "ip": "172.18.1.10",
+      "ip": "172.18.2.10",
       "level": 2,
       "root_users" : [
         {
@@ -30,7 +31,7 @@
     },
     {
       "name": "ssh",
-      "ip": "172.18.1.2",
+      "ip": "172.18.2.2",
       "level": 3,
       "root_users" : [
         {
@@ -58,7 +59,7 @@
     },
     {
       "name": "telnet",
-      "ip": "172.18.1.3",
+      "ip": "172.18.2.3",
       "level": 3,
       "root_users" : [
         {
@@ -86,7 +87,7 @@
     },
     {
       "name": "honeypot",
-      "ip": "172.18.1.21",
+      "ip": "172.18.2.21",
       "level": 3,
       "root_users" : [
         {
@@ -108,7 +109,7 @@
     },
     {
       "name": "ftp",
-      "ip": "172.18.1.79",
+      "ip": "172.18.2.79",
       "level": 3,
       "root_users" : [
         {
@@ -136,7 +137,7 @@
     },
     {
       "name": "hacker_kali",
-      "ip": "172.18.1.191",
+      "ip": "172.18.2.191",
       "level": 1,
       "root_users" : [
         {

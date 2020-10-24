@@ -1,9 +1,10 @@
 {
   "project": "pycr",
-  "network": "pycr_net",
+  "network": "pycr_pwcrack_001_level_1_net",
   "minigame": "pwcrack",
   "version": "0.0.1",
   "subnet": "172.18.1.0",
+  "level": "1",
   "subnet_mask_1": "172.18.1.0/24",
   "subnet_mask_2": "255.255.255.0",
   "root_users_file": "root_users.txt",

@@ -1,5 +1,5 @@
 PROJECT=pycr
-NETWORK=pycr_net
+NETWORK=pycr_pwcrack_001_level_1_net
 MINIGAME=pwcrack
 CONTAINER=telnet
 VERSION=0.0.1

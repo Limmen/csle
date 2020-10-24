@@ -1,12 +1,13 @@
 PROJECT=pycr
-NETWORK=pycr_net
+NETWORK=pycr_pwcrack_001_level_2_net
 MINIGAME=pwcrack
 CONTAINER=router
 VERSION=0.0.1
-SUBNET=172.18.1.0
-SUBNET_MASK_1=172.18.1.0/24
+SUBNET=172.18.2.0
+SUBNET_MASK_1=172.18.2.0/24
 SUBNET_MASK_2=255.255.255.0
-IP=172.18.1.10
+IP=172.18.2.10
+LEVEL=2
 ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
 ROOT_USER_1=admin
@@ -27,7 +28,7 @@ flags:
 	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
-	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
+	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
 
 
 net:
@@ -36,26 +37,26 @@ net:
 # --publish-all exposes all ports of the container
 # route -n to list routes
 run: build net
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
 #	./setup_firewall.sh $(SUBNET) $(SUBNET_MASK_2) $(IP)
 
 shell:
-	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
+	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
 
 start:
-	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
 # Stop running containers
 stop:
-	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
 # Stop and remove running containers
 clean: stop
-	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)
+	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 
 # Expunge old container image
 rm-image:
-	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
+	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
 
 # remove network
 rm-net:

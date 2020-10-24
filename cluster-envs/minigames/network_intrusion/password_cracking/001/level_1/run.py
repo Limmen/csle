@@ -26,6 +26,7 @@ def prepare_args(config:dict) -> dict:
         cmd = cmd + " CONTAINER=" + container["name"]
         cmd = cmd + " VERSION=" + config["version"]
         cmd = cmd + " SUBNET=" + config["subnet"]
+        cmd = cmd + " LEVEL=" + config["level"]
         cmd = cmd + " SUBNET_MASK_1=" + config["subnet_mask_1"]
         cmd = cmd + " SUBNET_MASK_2=" + config["subnet_mask_2"]
         cmd = cmd + " ROOT_USERS_FILE=" + config["root_users_file"]
