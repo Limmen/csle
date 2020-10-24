@@ -3,7 +3,6 @@ NETWORK=pycr_net
 MINIGAME=pwcrack
 CONTAINER=hacker-kali
 VERSION=0.0.1
-LEVEL=1
 SUBNET=172.18.1.0
 SUBNET_MASK_1=172.18.1.0/24
 SUBNET_MASK_2=255.255.255.0
@@ -23,7 +22,7 @@ firewall:
 	echo "#!/bin/bash\nroute add -net ${SUBNET} netmask ${SUBNET_MASK_2} gw ${ROUTER_IP}" > ./docker/${SETUP_FIREWALL_SCRIPT}
 
 build: ./docker/Dockerfile users
-	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
+	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
 
 net:
 	docker network create --subnet=$(SUBNET_MASK_1) $(NETWORK) || echo "network already created"
@@ -31,26 +30,26 @@ net:
 # --publish-all exposes all ports of the container
 # -dt means detached and allocate tty
 run: build net firewall
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true --privileged=true $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER) --net $(NETWORK) --ip $(IP) --publish-all=true --privileged=true $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
 
 shell:
-	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
+	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
 
 # Start stopped containers
 start:
-	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Stop running containers
 stop:
-	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Stop and remove running containers
 clean: stop
-	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Expunge old container image
 rm-image:
-	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
 
 # remove network
 rm-net:

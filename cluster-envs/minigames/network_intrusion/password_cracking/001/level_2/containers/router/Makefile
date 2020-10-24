@@ -7,7 +7,6 @@ SUBNET=172.18.1.0
 SUBNET_MASK_1=172.18.1.0/24
 SUBNET_MASK_2=255.255.255.0
 IP=172.18.1.10
-LEVEL=1
 ROOT_USERS_FILE=root_users.txt
 NON_ROOT_USERS_FILE=non_root_users.txt
 ROOT_USER_1=admin
@@ -28,7 +27,7 @@ flags:
 	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
 
 build: ./docker/Dockerfile users flags
-	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
+	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION); cd ..
 
 
 net:
@@ -37,26 +36,26 @@ net:
 # --publish-all exposes all ports of the container
 # route -n to list routes
 run: build net
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
 #	./setup_firewall.sh $(SUBNET) $(SUBNET_MASK_2) $(IP)
 
 shell:
-	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
+	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER) /bin/bash
 
 start:
-	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Stop running containers
 stop:
-	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Stop and remove running containers
 clean: stop
-	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)
 
 # Expunge old container image
 rm-image:
-	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER):$(VERSION)
 
 # remove network
 rm-net:
