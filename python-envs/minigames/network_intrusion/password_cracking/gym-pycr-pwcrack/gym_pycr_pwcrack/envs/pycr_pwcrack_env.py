@@ -13,13 +13,14 @@ from gym_pycr_pwcrack.envs.logic.transition_operator import TransitionOperator
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action import Action
-from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
+from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v1 import PyCrPwCrackSimpleV1
-from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v2 import PyCrPwCrackSimpleV2
-from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v3 import PyCrPwCrackSimpleV3
-from gym_pycr_pwcrack.envs.config.pycr_pwcrack_simple_v4 import PyCrPwCrackSimpleV4
+from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v1 import PyCrPwCrackSimpleV1
+from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v2 import PyCrPwCrackSimpleV2
+from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v3 import PyCrPwCrackSimpleV3
+from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v4 import PyCrPwCrackSimpleV4
+from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwCrackMediumBase
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -526,5 +527,27 @@ class PyCRPwCrackSimpleCluster4Env(PyCRPwCrackEnv):
 
 
 # -------- Difficulty 2 (Medium) ------------
+
+# -------- Simulation ------------
+
+# -------- Base Version (for testing) ------------
+class PyCRPwCrackMediumSimBaseEnv(PyCRPwCrackEnv):
+    """
+    Base version with all set of actions
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackMediumBase.render_conf()
+            network_conf = PyCrPwCrackMediumBase.network_conf()
+            action_conf = PyCrPwCrackMediumBase.all_actions_conf(network_conf)
+            env_config = PyCrPwCrackMediumBase.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=None, render_conf=render_config)
+            env_config.simulate_detection = True
+            env_config.save_trajectories = False
+            # env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.SIMULATION
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
 
 # -------- Difficulty 3 (Hard) ------------

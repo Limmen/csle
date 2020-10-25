@@ -349,8 +349,8 @@ class MainFrame(pyglet.window.Window):
                 p_4_l = batch_label(service, int(x_start+75 + 4 * w), y_p + w / 3, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-            p_lbls = [p_0_l, p_1_l, p_2_l, p_3_l, p_4_l]
-            self.ports_labels.append(p_lbls)
+                p_lbls = [p_0_l, p_1_l, p_2_l, p_3_l, p_4_l]
+                self.ports_labels.append(p_lbls)
 
 
         # Draw Vulnerabilities Table
