@@ -55,7 +55,7 @@ RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker/sudoers /etc/sudoers
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
-#CMD /start.sh
+CMD /start.sh
 
 # Hack to keep container running (otherwise K8 thinks task is finished)
 #CMD ["sh", "-c", "tail -f /dev/null"]
