@@ -192,6 +192,32 @@
       "flags": []
     },
     {
+      "name": "honeypot2",
+      "ip": "172.18.2.101",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "zidane",
+          "password": "1b12ha9"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    },
+    {
+      "name": "telnet3",
+      "ip": "172.18.2.62",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "guest",
+          "password": "guest"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    },
+    {
       "name": "hacker_kali",
       "ip": "172.18.2.191",
       "level": 1,
