@@ -28,6 +28,7 @@ RUN apt-get -y install sshpass
 RUN apt-get -y install inspircd
 RUN apt-get -y install default-jdk
 RUN apt-get -y install wget
+RUN apt-get -y install iptables
 
 # Setup users
 
@@ -50,6 +51,10 @@ ADD docker/create_flag.sh /create_flag.sh
 ADD docker/fl_info.txt /fl_info.txt
 RUN chmod 777 /create_flag.sh
 RUN /create_flag.sh
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # Setup FTP
 RUN mkdir -p /var/ftp

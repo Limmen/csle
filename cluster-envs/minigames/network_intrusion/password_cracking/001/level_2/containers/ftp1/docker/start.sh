@@ -1,5 +1,6 @@
 #!/bin/bash
 
+./setup_firewall.sh
 nohup /usr/sbin/vsftpd &
 nohup /usr/bin/mongod &
 /etc/init.d/inetutils-inetd restart

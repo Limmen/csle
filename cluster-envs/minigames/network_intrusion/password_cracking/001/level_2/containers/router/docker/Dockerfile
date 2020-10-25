@@ -22,6 +22,11 @@ RUN apt-get -y install ssh
 RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
 RUN apt-get -y install sshpass
+RUN apt-get -y install iptables
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # Setup users
 

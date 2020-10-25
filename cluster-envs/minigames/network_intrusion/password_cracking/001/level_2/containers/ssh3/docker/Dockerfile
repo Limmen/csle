@@ -39,6 +39,7 @@ RUN /bin/bash -c "source /etc/lsb-release && echo 'deb https://download.rethinkd
 RUN wget -qO- https://download.rethinkdb.com/repository/raw/pubkey.gpg | sudo apt-key add -
 RUN apt-get update
 RUN apt-get -y install rethinkdb
+RUN apt-get -y install iptables
 
 # Setup users
 
@@ -55,6 +56,10 @@ RUN /make_root_users.sh
 
 # setup non-root users
 RUN /make_non_root_users.sh
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # SSH
 RUN service ssh start

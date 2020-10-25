@@ -1,5 +1,6 @@
 #!/bin/bash
 
+./setup_firewall.sh
 service named start
 /usr/sbin/sshd -D &
 /apache-cassandra-2.1.22/bin/cassandra &

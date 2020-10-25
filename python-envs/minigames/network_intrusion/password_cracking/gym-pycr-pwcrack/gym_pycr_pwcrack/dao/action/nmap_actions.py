@@ -34,7 +34,7 @@ class NMAPActions:
             id = ActionId.PING_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
-        cmd = ["sudo nmap -sP -p- " + constants.NMAP.SPEED_ARGS + " "]
+        cmd = ["sudo nmap -sP " + constants.NMAP.SPEED_ARGS + " "]
         return Action(id=id, name="Ping Scan", cmd=cmd,
                type=ActionType.RECON,
                descr="A host discovery scan, it is quick because it only checks of hosts are up with Ping, without "

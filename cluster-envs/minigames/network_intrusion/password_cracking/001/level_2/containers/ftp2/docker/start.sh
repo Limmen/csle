@@ -1,5 +1,6 @@
 #!/bin/bash
 
+./setup_firewall.sh
 nohup /usr/sbin/vsftpd &
 /etc/init.d/inetutils-inetd restart
 /cockroach-v20.1.8.linux-amd64/cockroach start-single-node --insecure --listen-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080 --background &

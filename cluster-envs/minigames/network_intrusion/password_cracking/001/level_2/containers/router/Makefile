@@ -37,7 +37,7 @@ net:
 # --publish-all exposes all ports of the container
 # route -n to list routes
 run: build net
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true --cap-add NET_ADMIN $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
 #	./setup_firewall.sh $(SUBNET) $(SUBNET_MASK_2) $(IP)
 
 shell:

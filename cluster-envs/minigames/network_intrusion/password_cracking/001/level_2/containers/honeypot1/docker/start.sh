@@ -1,5 +1,6 @@
 #!/bin/bash
 
+./setup_firewall.sh
 nohup /usr/sbin/inspircd --runasroot --debug --nopid & > irc.log
 nohup /usr/local/kafka/bin/zookeeper-server-start.sh /usr/local/kafka/config/zookeeper.properties & > zookeeper.log
 nohup /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties & > kafka.log

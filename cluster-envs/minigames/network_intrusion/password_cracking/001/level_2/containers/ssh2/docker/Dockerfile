@@ -31,6 +31,7 @@ RUN apt-get -y install swi-prolog
 RUN apt-get -y install openjdk-8-jdk
 RUN apt-get -y install sshpass
 RUN apt-get -y install ntp
+RUN apt-get -y install iptables
 
 # Setup users
 
@@ -53,6 +54,10 @@ ADD docker/create_flag.sh /create_flag.sh
 ADD docker/fl_info.txt /fl_info.txt
 RUN chmod 777 /create_flag.sh
 RUN /create_flag.sh
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # SSH
 RUN service ssh start

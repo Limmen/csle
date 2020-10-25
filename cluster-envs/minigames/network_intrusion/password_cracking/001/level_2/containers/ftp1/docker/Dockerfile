@@ -29,6 +29,7 @@ RUN apt-get -y install inetutils-inetd fingerd
 RUN apt-get -y --force-yes install mongodb-org
 RUN apt-get -y install default-jdk
 RUN apt-get -y install sshpass
+RUN apt-get -y install iptables
 
 # Setup users
 
@@ -45,6 +46,10 @@ RUN /make_root_users.sh
 
 # setup non-root users
 RUN /make_non_root_users.sh
+
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
 
 # Create flag
 ADD docker/create_flag.sh /create_flag.sh
