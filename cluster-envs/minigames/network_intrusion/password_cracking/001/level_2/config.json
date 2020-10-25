@@ -218,6 +218,34 @@
       "flags": []
     },
     {
+      "name": "ftp2",
+      "ip": "172.18.2.7",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "ec2-user",
+          "password": "ec2-user"
+        },
+        {
+          "username": "zlatan",
+          "password": "pi12195e"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "kennedy",
+          "password": "eul1145x"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag6",
+          "path": "/tmp",
+          "id": "6"
+        }
+      ]
+    },
+    {
       "name": "hacker_kali",
       "ip": "172.18.2.191",
       "level": 1,

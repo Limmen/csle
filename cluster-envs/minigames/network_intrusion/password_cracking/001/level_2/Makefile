@@ -1,6 +1,6 @@
 all: run
 
-run: router ssh1 ssh2 ssh3 telnet1 telnet2 honeypot1 honeypot2 ftp1 hacker_kali
+run: router ssh1 ssh2 ssh3 telnet1 telnet2 telnet3 honeypot1 honeypot2 ftp1 ftp2 hacker_kali
 
 router:
 	cd containers/router/ && $(MAKE) build
@@ -26,6 +26,10 @@ telnet2:
 	cd containers/telnet1/ && $(MAKE) build
 	cd containers/telnet1/ && $(MAKE) run
 
+telnet3:
+	cd containers/telnet3/ && $(MAKE) build
+	cd containers/telnet3/ && $(MAKE) run
+
 honeypot1:
 	cd containers/honeypot1/ && $(MAKE) build
 	cd containers/honeypot1/ && $(MAKE) run
@@ -37,6 +41,10 @@ honeypot2:
 ftp1:
 	cd containers/ftp1/ && $(MAKE) build
 	cd containers/ftp1/ && $(MAKE) run
+
+ftp2:
+	cd containers/ftp2/ && $(MAKE) build
+	cd containers/ftp2/ && $(MAKE) run
 
 hacker_kali:
 	cd containers/hacker_kali/ && $(MAKE) build
@@ -52,9 +60,11 @@ stop:
 	cd containers/ssh3/ && $(MAKE) stop
 	cd containers/telnet1/ && $(MAKE) stop
 	cd containers/telnet2/ && $(MAKE) stop
+	cd containers/telnet3/ && $(MAKE) stop
 	cd containers/honeypot1/ && $(MAKE) stop
 	cd containers/honeypot2/ && $(MAKE) stop
 	cd containers/ftp1/ && $(MAKE) stop
+	cd containers/ftp2/ && $(MAKE) stop
 	cd containers/hacker_kali/ && $(MAKE) stop
 
 start:
@@ -64,9 +74,11 @@ start:
 	cd containers/ssh3/ && $(MAKE) start
 	cd containers/telnet1/ && $(MAKE) start
 	cd containers/telnet2/ && $(MAKE) start
+	cd containers/telnet3/ && $(MAKE) start
 	cd containers/honeypot1/ && $(MAKE) start
 	cd containers/honeypot2/ && $(MAKE) start
 	cd containers/ftp1/ && $(MAKE) start
+	cd containers/ftp2/ && $(MAKE) start
 	cd containers/hacker_kali/ && $(MAKE) start
 
 clean:
@@ -76,9 +88,11 @@ clean:
 	cd containers/ssh3/ && $(MAKE) clean
 	cd containers/telnet1/ && $(MAKE) clean
 	cd containers/telnet2/ && $(MAKE) clean
+	cd containers/telnet3/ && $(MAKE) clean
 	cd containers/honeypot1/ && $(MAKE) clean
 	cd containers/honeypot2/ && $(MAKE) clean
 	cd containers/ftp1/ && $(MAKE) clean
+	cd containers/ftp2/ && $(MAKE) clean
 	cd containers/hacker_kali/ && $(MAKE) clean
 
 rm-image:
@@ -88,9 +102,11 @@ rm-image:
 	cd containers/ssh3/ && $(MAKE) rm-image
 	cd containers/telnet1/ && $(MAKE) rm-image
 	cd containers/telnet2/ && $(MAKE) rm-image
+	cd containers/telnet3/ && $(MAKE) rm-image
 	cd containers/honeypot1/ && $(MAKE) rm-image
 	cd containers/honeypot2/ && $(MAKE) rm-image
 	cd containers/ftp1/ && $(MAKE) rm-image
+	cd containers/ftp2/ && $(MAKE) rm-image
 	cd containers/hacker_kali/ && $(MAKE) rm-image
 
 build:
@@ -100,9 +116,11 @@ build:
 	cd containers/ssh3/ && $(MAKE) build
 	cd containers/telnet1/ && $(MAKE) build
 	cd containers/telnet2/ && $(MAKE) build
+	cd containers/telnet3/ && $(MAKE) build
 	cd containers/honeypot1/ && $(MAKE) build
 	cd containers/honeypot2/ && $(MAKE) build
 	cd containers/ftp1/ && $(MAKE) build
+	cd containers/ftp2/ && $(MAKE) build
 	cd containers/hacker_kali/ && $(MAKE) build
 
 rm-net:
