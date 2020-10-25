@@ -23,8 +23,8 @@ telnet1:
 	cd containers/telnet1/ && $(MAKE) run
 
 telnet2:
-	cd containers/telnet1/ && $(MAKE) build
-	cd containers/telnet1/ && $(MAKE) run
+	cd containers/telnet2/ && $(MAKE) build
+	cd containers/telnet2/ && $(MAKE) run
 
 telnet3:
 	cd containers/telnet3/ && $(MAKE) build
