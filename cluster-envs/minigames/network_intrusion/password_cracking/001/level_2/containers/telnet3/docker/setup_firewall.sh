@@ -1,6 +1,13 @@
 #!/bin/bash
 
-route add -net 172.18.2.0 netmask 255.255.255.0 gw 172.18.2.74 # default gw ssh3
+route add 172.18.2.2 gw 172.18.2.74 # ssh3 gw for ssh1
+route add 172.18.2.21 gw 172.18.2.74 # ssh3 gw for honeypot1
+route add 172.18.2.54 gw 172.18.2.74 # ssh3 gw for ssh2
+route add 172.18.2.79 gw 172.18.2.74 # ssh3 gw for ftp1
+route add 172.18.2.10 gw 172.18.2.74 # ssh3 gw for router
+route add 172.18.2.191 gw 172.18.2.74 # ssh3 gw for kali
+route add 172.18.2.61 gw 172.18.2.74 # ssh3 gw for telnet2
+route add 172.18.2.101 gw 172.18.2.74 # ssh3 gw for honeypot2
 
 iptables -A OUTPUT -d 172.18.2.10 -j ACCEPT #router1
 iptables -A OUTPUT -d 172.18.2.1 -j ACCEPT # docker gw
