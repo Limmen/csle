@@ -11,3 +11,4 @@ class ActionOutcome(Enum):
     INFORMATION_GATHERING = 1
     LOGIN = 2
     FLAG = 3
+    PIVOTING = 4

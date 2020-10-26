@@ -33,6 +33,7 @@ class EnvState:
         self.cached_ssh_connections = {}
         self.cached_telnet_connections = {}
         self.cached_ftp_connections = {}
+        self.cached_backdoor_credentials = {}
 
     def get_observation(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -90,6 +91,8 @@ class EnvState:
                     self.cached_telnet_connections[(m.ip, c.username, c.port)] = c
                 for c in m.ftp_connections:
                     self.cached_ftp_connections[(m.ip, c.username, c.port)] = c
+                for cr in m.backdoor_credentials:
+                    self.cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes)-1, num_ports=self.num_ports,
                                           num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
                                           catched_flags=0)

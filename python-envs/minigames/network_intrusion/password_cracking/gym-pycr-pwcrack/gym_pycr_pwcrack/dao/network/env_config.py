@@ -96,6 +96,7 @@ class EnvConfig:
         self.root_found_reward_mult = 10
         self.new_login_reward_mult = 1
         self.new_tools_installed_reward_mult = 1
+        self.new_backdoors_installed_reward_mult = 1
         self.cost_coefficient = 1
         self.detection_reward = -50
         self.all_flags_reward = 500

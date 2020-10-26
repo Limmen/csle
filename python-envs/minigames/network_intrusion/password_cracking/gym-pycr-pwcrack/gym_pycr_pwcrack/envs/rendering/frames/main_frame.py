@@ -491,8 +491,6 @@ class MainFrame(pyglet.window.Window):
             self.state.manual_action = self.state.manual_action + "0"
         elif symbol == pyglet.window.key.ENTER:
             if self.env is not None:
-                # action = int(self.state.manual_action)
-                # self.env.step(action)
                 try:
                     action = int(self.state.manual_action)
                     self.env.step(action)

@@ -59,3 +59,4 @@ class ActionId(Enum):
     FINGER_HOST = 49
     FINGER_SUBNET = 50
     INSTALL_TOOLS = 51
+    SSH_BACKDOOR = 52

@@ -203,6 +203,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         root_login = False
         uninstalled_tools = False
         machine_w_tools = False
+        uninstalled_backdoor = False
 
         for m in env_state.obs_state.machines:
             if m.logged_in:
@@ -215,6 +216,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                         uninstalled_tools = True
                     else:
                         machine_w_tools = True
+                    if not m.backdoor_installed:
+                        uninstalled_backdoor = True
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
@@ -232,6 +235,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         # If nothing new to scan, find-flag is illegal
         if action.id == ActionId.FIND_FLAG and not unscanned_filesystems:
+            return False
+
+        # If nothing new to backdoor, install backdoor is illegal
+        if action.id == ActionId.SSH_BACKDOOR and not uninstalled_backdoor:
             return False
 
         # If no new credentials, login to service is illegal
@@ -255,6 +262,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in and root
         if action.id == ActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
+            return True
+
+        # Bash action not tied to specific IP only possible when having shell access and being logged in and root
+        if action.id == ActionId.SSH_BACKDOOR and logged_in and root_login and machine_w_tools and uninstalled_backdoor:
             return True
 
         return False
