@@ -21,8 +21,15 @@ def test_env(env_name : str, num_steps : int):
     num_actions = env.env_config.action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
+    masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
     for i in range(num_steps):
         legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+
+        legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
+        if len(legal_actions) == 0:
+            env.reset()
+            print("cont")
+            continue
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         env.render()

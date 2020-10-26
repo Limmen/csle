@@ -68,17 +68,29 @@ class ClusterUtil:
 
     @staticmethod
     def write_estimated_cost(total_time, action: Action, env_config: EnvConfig, ip : str = None,
-                             user: str = None, service : str = None) -> None:
+                             user: str = None, service : str = None, conn = None, dir: str = None,
+                             machine_ip :str = None) -> None:
         """
         Caches the estimated cost of an action by writing it to a file
 
         :param total_time: the total time of executing the action
         :param action: the action
         :param env_config: the environment config
+        :param ip: ip
+        :param user: user
+        :param service: service
+        :param conn: conn
+        :param dir: dir
+        :param machine_ip: machine_ip
         :return: None
         """
-        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
-        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(action.index)
+        if conn is None:
+            conn = env_config.cluster_config.agent_conn
+        if dir is None or dir == "":
+            dir = env_config.nmap_cache_dir
+
+        sftp_client = conn.open_sftp()
+        file_name = dir + str(action.id.value) + "_" + str(action.index)
         if not action.subnet and action.ip is not None:
             file_name = file_name + "_" + action.ip
         elif ip is not None:
@@ -87,7 +99,8 @@ class ClusterUtil:
             file_name = file_name + "_" + service
         if user is not None:
             file_name = file_name + "_" + user
-
+        if machine_ip is not None:
+            file_name = file_name + "_" + machine_ip
         file_name = file_name + constants.FILE_PATTERNS.COST_FILE_SUFFIX
         remote_file = sftp_client.file(file_name, mode="w")
         try:
@@ -170,7 +183,7 @@ class ClusterUtil:
         return output_str
 
     @staticmethod
-    def check_nmap_action_cache(a: Action, env_config: EnvConfig):
+    def check_nmap_action_cache(a: Action, env_config: EnvConfig, conn = None,  dir : str = None):
         """
         Checks if an nmap action is cached or not
 
@@ -178,6 +191,11 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: None or the name of the file where the result is cached
         """
+        if conn is None:
+            conn = env_config.cluster_config.agent_conn
+        if dir is None or dir == "":
+            dir = env_config.nmap_cache_dir
+
         query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
             query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
@@ -186,8 +204,7 @@ class ClusterUtil:
         if query in env_config.nmap_cache:
             return query
 
-        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
-                                                                                  + env_config.nmap_cache_dir)
+        stdin, stdout, stderr = conn.exec_command(constants.COMMANDS.LIST_CACHE + dir)
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))
@@ -319,7 +336,7 @@ class ClusterUtil:
         return ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.cluster_config.agent_conn)
 
     @staticmethod
-    def parse_nmap_scan(file_name: str, env_config: EnvConfig) -> ET.Element:
+    def parse_nmap_scan(file_name: str, env_config: EnvConfig, conn = None, dir: str = None) -> ET.Element:
         """
         Parses an XML file containing the result of an nmap scan
 
@@ -327,8 +344,13 @@ class ClusterUtil:
         :param env_config: environment config
         :return: the parsed xml file
         """
-        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
-        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        if conn is None:
+            conn = env_config.cluster_config.agent_conn
+        if dir is None or dir == "":
+            dir = env_config.nmap_cache_dir
+
+        sftp_client = conn.open_sftp()
+        remote_file = sftp_client.open(dir + file_name)
         try:
             xml_tree = ET.parse(remote_file)
         finally:
@@ -1939,3 +1961,29 @@ class ClusterUtil:
                                                  cost=total_cost,
                                                  env_config=env_config)
         return s, reward, False
+
+    @staticmethod
+    def merge_nmap_scan_results(scan_result_1: NmapScanResult, scan_result_2: NmapScanResult)-> NmapScanResult:
+        new_hosts = []
+
+        for h in scan_result_2.hosts:
+            new_host = True
+            for h2 in scan_result_1. hosts:
+                if h.ip_addr == h2.ip_addr:
+                    new_host = False
+            if new_host:
+                new_hosts.append(h)
+
+        for h in scan_result_1.hosts:
+            for h2 in scan_result_2.hosts:
+                if h.ip_addr == h2.ip_addr:
+                    h.hostnames = list(set(h.hostnames).union(set(h2.hostnames)))
+                    h.ports = list(set(h.ports).union(h2.ports))
+                    h.vulnerabilities = list(set(h.vulnerabilities).union(h2.vulnerabilities))
+                    if h.os == None:
+                        h.os = h2.os
+                    if h.trace == None:
+                        h.trace = h2.trace
+
+        scan_result_1.hosts = scan_result_1.hosts + new_hosts
+        return scan_result_1

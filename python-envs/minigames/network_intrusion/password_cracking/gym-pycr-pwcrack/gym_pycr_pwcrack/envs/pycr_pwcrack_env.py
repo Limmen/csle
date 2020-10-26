@@ -196,6 +196,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         untried_credentials = False
         root_login = False
         uninstalled_tools = False
+        machine_w_tools = False
 
         for m in env_state.obs_state.machines:
             if m.logged_in:
@@ -206,6 +207,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                     root_login = True
                     if not m.tools_installed:
                         uninstalled_tools = True
+                    else:
+                        machine_w_tools = True
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
@@ -229,9 +232,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action.id == ActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
             return False
 
+        # Pivot recon possible if logged in on pivot machine with tools installed
+        if machine_discovered and action.type == ActionType.POST_EXPLOIT and logged_in and machine_w_tools:
+            return True
+
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
         if machine_discovered and action.type == ActionType.POST_EXPLOIT \
-                and target_machine.shell_access and len(target_machine.shell_access_credentials) > 0:
+                and ((target_machine is not None and target_machine.shell_access
+                      and len(target_machine.shell_access_credentials) > 0)
+                     or action.subnet):
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in

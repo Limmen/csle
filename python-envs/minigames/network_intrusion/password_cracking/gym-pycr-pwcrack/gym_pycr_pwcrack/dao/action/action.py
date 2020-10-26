@@ -27,10 +27,13 @@ class Action:
     def __str__(self):
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)
 
-    def nmap_cmd(self):
-        file_name = str(self.id.value) + "_" + str(self.index) + "_" + self.ip + ".xml "
+    def nmap_cmd(self, machine_ip : str = None):
+        file_name = str(self.id.value) + "_" + str(self.index) + "_" + self.ip
         if self.subnet:
-            file_name = str(self.id.value) + "_" + str(self.index) + ".xml "
+            file_name = str(self.id.value) + "_" + str(self.index)
+        if machine_ip is not None:
+            file_name = file_name + "_" + machine_ip
+        file_name = file_name + ".xml "
         return self.cmd[0] + constants.NMAP.FILE_ARGS + " " + file_name + self.ip
 
     def nikto_cmd(self):

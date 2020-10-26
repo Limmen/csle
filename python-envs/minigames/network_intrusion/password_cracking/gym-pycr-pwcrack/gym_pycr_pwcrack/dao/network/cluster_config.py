@@ -302,5 +302,6 @@ class ClusterConfig:
         print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs) +
                                                                         len(action_costs.find_costs) +
                                                                         len(action_costs.service_costs) +
-                                                                        len(action_costs.install_costs)))
+                                                                        len(action_costs.install_costs) +
+                                                                        len(action_costs.pivot_scan_costs)))
         return action_costs

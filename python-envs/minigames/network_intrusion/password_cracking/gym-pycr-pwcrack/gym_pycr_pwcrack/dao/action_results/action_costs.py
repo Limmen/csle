@@ -8,7 +8,7 @@ class ActionCosts:
         self.find_costs = {}
         self.service_costs = {}
         self.install_costs = {}
-
+        self.pivot_scan_costs = {}
 
     def add_cost(self, action_id : ActionId, ip: str, cost: float):
         key = (action_id, ip)
@@ -57,3 +57,15 @@ class ActionCosts:
     def install_exists(self, action_id: ActionId, ip: str, user: str):
         key = (action_id, ip, user)
         return key in self.install_costs
+
+    def pivot_scan_add_cost(self, action_id: ActionId, ip: str, cost: float, user: str, target_ip: str):
+        key = (action_id, ip, user, target_ip)
+        self.pivot_scan_costs[key] = cost
+
+    def pivot_scan_get_cost(self, action_id: ActionId, ip: str, user: str, target_ip: str):
+        key = (action_id, ip, user, target_ip)
+        return self.pivot_scan_costs[key]
+
+    def pivot_scan_exists(self, action_id: ActionId, ip: str, user: str, target_ip: str):
+        key = (action_id, ip, user, target_ip)
+        return key in self.pivot_scan_costs

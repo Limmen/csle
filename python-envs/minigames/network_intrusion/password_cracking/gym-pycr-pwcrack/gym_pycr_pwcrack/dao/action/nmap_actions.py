@@ -452,11 +452,11 @@ class NMAPActions:
     @staticmethod
     def PIVOT_TCP_SYN_STEALTH_SCAN(index: int, subnet=True, ip: str = "") -> Action:
         cost_noise_multiplier = 1
-        id = ActionId.TCP_SYN_STEALTH_SCAN_HOST
+        id = ActionId.PIVOT_TCP_SYN_STEALTH_SCAN
         file_name = str(id.value) + "_" + ip + ".xml "
         if subnet:
             cost_noise_multiplier = 10
-            id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
+            id = ActionId.PIVOT_TCP_SYN_STEALTH_SCAN_SUBNET
             file_name = str(id.value) + ".xml "
 
         cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " "]
