@@ -105,6 +105,12 @@ RUN conda init bash
 ADD docker/cve_prep.py /cve_prep.py
 RUN python /cve_prep.py
 
+# Setup firewall service on boot
+ADD docker/pycr-firewall /etc/init.d/pycr-firewall
+RUN chmod 777 /etc/init.d/pycr-firewall
+# enable on boot
+RUN update-rc.d pycr-firewall defaults
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

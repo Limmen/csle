@@ -33,12 +33,16 @@ class PyCrPwCrackMediumBase:
         :return: list of node configs
         """
         nodes = [Node(ip="172.18.2.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                  "172.18.2.191", "172.18.2.10"],
                       os="linux", vulnerabilities=[], credentials=[
                 Credential(username="admin", pw="admin"),
                 Credential(username="jessica", pw="water")
             ],
                       root=["admin"]),
                  Node(ip="172.18.2.2", ip_id=2, id=2, type=NodeType.SERVER,
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.54"],
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
@@ -94,6 +98,8 @@ class PyCrPwCrackMediumBase:
                       ]
                       ),
                  Node(ip="172.18.2.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.74", "172.18.2.61"],
                       flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
@@ -124,6 +130,8 @@ class PyCrPwCrackMediumBase:
                      ]
                       ),
                  Node(ip="172.18.2.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10"],
                       credentials=[
                           Credential(username="admin", pw="admin"),
                           Credential(username="test", pw="qwerty"),
@@ -143,6 +151,8 @@ class PyCrPwCrackMediumBase:
                       ],
                       vulnerabilities=[]),
                  Node(ip="172.18.2.79", ip_id=79, id=5, type=NodeType.SERVER,
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10"],
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
@@ -180,6 +190,8 @@ class PyCrPwCrackMediumBase:
                       ]
                       ),
                  Node(ip="172.18.2.54", ip_id=54, id=6, type=NodeType.SERVER,
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.54"],
                       flags=[Flag(name="flag4", path="/tmp", id=4, requires_root=False, score=1)], level=4, os="linux",
                       credentials=[
                           Credential(username="vagrant", pw="vagrant"),
@@ -231,6 +243,9 @@ class PyCrPwCrackMediumBase:
                       ),
 
                  Node(ip="172.18.2.74", ip_id=74, id=7, type=NodeType.SERVER,
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
+                                       "172.18.2.101", "172.18.2.62"],
                       flags=[], level=4, os="linux",
                       credentials=[
                           Credential(username="administrator", pw="administrator"),
@@ -257,6 +272,8 @@ class PyCrPwCrackMediumBase:
                       ),
 
                  Node(ip="172.18.2.61", ip_id=61, id=8, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74"],
                       flags=[Flag(name="flag5", path="/root", id=5, requires_root=True, score=1)], level=4,
                       credentials=[
                           Credential(username="adm", pw="adm")
@@ -278,6 +295,9 @@ class PyCrPwCrackMediumBase:
                       ),
 
                  Node(ip="172.18.2.62", ip_id=62, id=9, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
+                                       "172.18.2.101", "172.18.2.62", "172.18.2.7"],
                       flags=[], level=5,
                       credentials=[
                           Credential(username="guest", pw="guest")
@@ -301,6 +321,9 @@ class PyCrPwCrackMediumBase:
                       ),
 
                  Node(ip="172.18.2.101", ip_id=101, id=10, type=NodeType.SERVER, flags=[], level=5, os="linux",
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
+                                       "172.18.2.101", "172.18.2.62"],
                       credentials=[
                           Credential(username="zidane", pw="1b12ha9")
                       ],
@@ -315,6 +338,9 @@ class PyCrPwCrackMediumBase:
                       vulnerabilities=[]),
 
                  Node(ip="172.18.2.7", ip_id=7, id=11, type=NodeType.SERVER,
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
+                                       "172.18.2.101", "172.18.2.62", "172.18.2.7"],
                       flags=[Flag(name="flag6", path="/tmp", id=6, requires_root=False, score=1)], level=6,
                       os="linux",
                       credentials=[
@@ -350,6 +376,8 @@ class PyCrPwCrackMediumBase:
                       ),
 
                  Node(ip="172.18.2.191", ip_id=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
+                      reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
+                                       "172.18.2.191", "172.18.2.10"],
                       os="linux", vulnerabilities=[],
                       credentials=[
                           Credential(username="agent", pw="agent")

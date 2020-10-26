@@ -1,3 +1,7 @@
+"""
+Class representing a node in the network, used for simulations
+"""
+
 from typing import List
 from gym_pycr_pwcrack.dao.network.node_type import NodeType
 from gym_pycr_pwcrack.dao.network.flag import Flag
@@ -9,7 +13,8 @@ class Node:
 
     def __init__(self, ip: str, ip_id: int, id : int, type: NodeType, flags: List[Flag], level : int,
                  vulnerabilities : List[Vulnerability], services : List[NetworkService], os : str,
-                 credentials : List[Credential], root : List[str], visible : bool = True):
+                 credentials : List[Credential], root : List[str], visible : bool = True,
+                 reachable_nodes: List = None):
         self.ip = ip
         self.ip_id = ip_id
         self.id = id
@@ -22,3 +27,4 @@ class Node:
         self.credentials = credentials
         self.root = root
         self.visible = visible
+        self.reachable_nodes = reachable_nodes
