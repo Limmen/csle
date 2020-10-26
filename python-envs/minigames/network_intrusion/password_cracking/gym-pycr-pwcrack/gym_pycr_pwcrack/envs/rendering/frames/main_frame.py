@@ -27,7 +27,7 @@ class MainFrame(pyglet.window.Window):
         """
 
         # call constructor of parent class
-        super(MainFrame, self).__init__(height=700, width=1300, caption=constants.RENDERING.CAPTION)
+        super(MainFrame, self).__init__(height=800, width=1300, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
         self.env = env
         self.init_state = init_state
@@ -67,21 +67,21 @@ class MainFrame(pyglet.window.Window):
 
         # Draw hacker
         self.hacker_avatar = pyglet.resource.image(constants.RENDERING.HACKER_SPRITE_NAME)
-        self.hacker_sprite = pyglet.sprite.Sprite(self.hacker_avatar, x=self.width/2, y=self.height-50, batch=self.batch,
+        self.hacker_sprite = pyglet.sprite.Sprite(self.hacker_avatar, x=self.width/2, y=self.height-35, batch=self.batch,
                                                     group=self.background)
-        self.hacker_sprite.scale = 0.25
+        self.hacker_sprite.scale = 0.2
 
         lbl = batch_label("." + str(self.env_config.network_conf.hacker.ip_id), self.width / 2 + 60,
-                    self.height - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+                    self.height - 20, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
         self.node_ip_to_ip_lbl[self.env_config.network_conf.hacker.ip] = lbl
-        nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-50)
-        self.node_ip_to_coords[self.env_config.network_conf.hacker.ip] = (self.width / 2 + 20, self.height - 50)
+        nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-35)
+        self.node_ip_to_coords[self.env_config.network_conf.hacker.ip] = (self.width / 2 + 20, self.height - 35)
         self.node_ip_to_node[self.env_config.network_conf.hacker.ip] = self.env_config.network_conf.hacker
         self.id_to_node[self.env_config.network_conf.hacker.id] = self.env_config.network_conf.hacker
 
         # Draw subnet Mask
         batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
-                    self.height - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+                    self.height - 20, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         # Draw C_Reward label
         batch_label("C_R:", 25,
@@ -140,14 +140,15 @@ class MainFrame(pyglet.window.Window):
                     self.height - 125, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
 
         # Draw router
+        y_sep = 40
         if self.env_config.network_conf.router is not None:
-            create_circle_fill(self.width / 2 + 20, self.height - 75, 8, self.batch, self.first_foreground,
+            create_circle_fill(self.width / 2 + 20, self.height - 60, 8, self.batch, self.first_foreground,
                                constants.RENDERING.WHITE)
             lbl = batch_label("", self.width / 2 + 50,
-                        self.height - 75, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+                        self.height - 60, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
             self.node_ip_to_ip_lbl[self.env_config.network_conf.router.ip] = lbl
-            nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 75)
-            self.node_ip_to_coords[self.env_config.network_conf.router.ip] = (self.width / 2 + 20, self.height - 75)
+            nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 60)
+            self.node_ip_to_coords[self.env_config.network_conf.router.ip] = (self.width / 2 + 20, self.height - 60)
             self.node_ip_to_node[self.env_config.network_conf.router.ip] = self.env_config.network_conf.router
             self.id_to_node[self.env_config.network_conf.router.id] = self.env_config.network_conf.router
         else:
@@ -158,9 +159,9 @@ class MainFrame(pyglet.window.Window):
         # Draw nodes
         x_start = 25
         x = x_start
-        y = self.height-150
+        y = self.height-100
         x_sep = 100
-        y_sep = 75
+        y_sep = 35
         x_max = self.width-100
         max_nodes_per_level = int(x_max/x_sep+1)
         middle = self.width / 2

@@ -50,7 +50,7 @@ class SimulatorUtil:
                             if not np.random.rand() < miss_p:
                                 vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                          protocol=vuln.protocol, cvss=vuln.cvss)
-                                new_m_obs.vuln.append(vuln_obs)
+                                new_m_obs.cve_vulns.append(vuln_obs)
             new_machines_obs = s.obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
@@ -106,7 +106,7 @@ class SimulatorUtil:
                         if not np.random.rand() < miss_p:
                             vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                      protocol=vuln.protocol, cvss=vuln.cvss)
-                            m_obs.vuln.append(vuln_obs)
+                            m_obs.cve_vulns.append(vuln_obs)
 
                 new_m_obs.append(m_obs)
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -245,7 +245,7 @@ class SimulatorUtil:
                         if vuln.name == vuln_name and not np.random.rand() < miss_p:
                             vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                      protocol=vuln.protocol, cvss=vuln.cvss)
-                            new_m_obs.vuln.append(vuln_obs)
+                            new_m_obs.cve_vulns.append(vuln_obs)
                             if a.action_outcome == ActionOutcome.SHELL_ACCESS:
                                 new_m_obs.shell_access = True
                                 new_m_obs.shell_access_credentials = vuln.credentials
@@ -293,7 +293,7 @@ class SimulatorUtil:
                                                    num_new_shell_access=total_new_shell_access,
                                                    num_new_root=total_new_root,
                                                    num_new_flag_pts=total_new_flag_pts,
-                                                   num_new_osvdb_vuln=total_new_osvdb_vuln,
+                                                   num_new_osvdb_vuln_found=total_new_osvdb_vuln,
                                                    num_new_logged_in=total_new_logged_in,
                                                    cost=a.cost, env_config=env_config)
 
@@ -310,7 +310,7 @@ class SimulatorUtil:
                         if a.action_outcome == ActionOutcome.SHELL_ACCESS:
                             m_obs.shell_access = True
                             m_obs.shell_access_credentials = vuln.credentials
-                        m_obs.vuln.append(vuln_obs)
+                        m_obs.cve_vulns.append(vuln_obs)
                         vulnerable_services.append(vuln.name)
 
                 for service in node.services:

@@ -211,7 +211,6 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("nikto web scan todo")
         return s, 0, False
 
     @staticmethod
@@ -224,7 +223,6 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("masscan scan todo")
         return s, 0, False
 
     @staticmethod
@@ -237,7 +235,6 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("firewalk scan todo")
         return s, 0, False
 
     @staticmethod
@@ -250,7 +247,6 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("http enum todo")
         return s, 0, False
 
     @staticmethod
@@ -263,7 +259,6 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("http grep todo")
         return s, 0, False
 
     @staticmethod
@@ -276,5 +271,4 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("finger todo")
         return s, 0, False

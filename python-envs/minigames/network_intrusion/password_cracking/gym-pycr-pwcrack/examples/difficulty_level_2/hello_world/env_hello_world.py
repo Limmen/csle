@@ -10,9 +10,9 @@ def test_env(env_name : str, num_steps : int):
     num_actions = env.env_config.action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
-    actions = np.array([1, 2, 3, 4])
     for i in range(num_steps):
-        action = np.random.choice(actions)
+        legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+        action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         env.render()
         if done:

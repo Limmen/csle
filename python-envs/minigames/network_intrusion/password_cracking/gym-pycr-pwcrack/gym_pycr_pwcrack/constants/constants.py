@@ -145,6 +145,8 @@ class SERVICES:
     service_lookup["aairnet-2"] = 100
     service_lookup["servistaitsm"] = 101
     service_lookup["nfsrdma"] = 102
+    service_lookup["cockroachdb"] = 103
+    service_lookup["glassfish"] = 104
 
     #
     service_lookup_inv = {v: k for k, v in service_lookup.items()}
