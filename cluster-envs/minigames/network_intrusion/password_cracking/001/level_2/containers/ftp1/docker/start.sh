@@ -1,6 +1,7 @@
 #!/bin/bash
 
-./setup_firewall.sh
+#./setup_firewall.sh
+service pycr-firewall start
 nohup /usr/sbin/vsftpd &
 nohup /usr/bin/mongod &
 /etc/init.d/inetutils-inetd restart

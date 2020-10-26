@@ -56,6 +56,12 @@ RUN chmod 644 /etc/xinetd.conf
 RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz
 RUN tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
+# Setup firewall service on boot
+ADD docker/pycr-firewall /etc/init.d/pycr-firewall
+RUN chmod 777 /etc/init.d/pycr-firewall
+# enable on boot
+RUN update-rc.d pycr-firewall defaults
+
 # Add start script
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh

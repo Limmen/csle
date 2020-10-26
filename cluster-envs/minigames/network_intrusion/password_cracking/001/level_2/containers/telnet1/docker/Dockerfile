@@ -79,6 +79,12 @@ ADD docker/index.html /web/static/index.html
 RUN pip install flask
 RUN pip install waitress
 
+# Setup firewall service on boot
+ADD docker/pycr-firewall /etc/init.d/pycr-firewall
+RUN chmod 777 /etc/init.d/pycr-firewall
+# enable on boot
+RUN update-rc.d pycr-firewall defaults
+
 # Add start script
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh

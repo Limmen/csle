@@ -59,6 +59,12 @@ RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip
 RUN unzip latest-glassfish.zip
 #RUN ./*glassfish*/bin/asadmin create-domain --nopassword --adminport 4848 domain2
 
+# Setup firewall service on boot
+ADD docker/pycr-firewall /etc/init.d/pycr-firewall
+RUN chmod 777 /etc/init.d/pycr-firewall
+# enable on boot
+RUN update-rc.d pycr-firewall defaults
+
 # Add start script
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh

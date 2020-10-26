@@ -84,6 +84,12 @@ RUN touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker/sudoers /etc/sudoers
 
+# Setup firewall service on boot
+ADD docker/pycr-firewall /etc/init.d/pycr-firewall
+RUN chmod 777 /etc/init.d/pycr-firewall
+# enable on boot
+RUN update-rc.d pycr-firewall defaults
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo /setup_firewall.sh
