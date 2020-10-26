@@ -24,7 +24,12 @@ class ClusterMiddleware:
         :return: s', r, done
         """
         if a.type == ActionType.RECON:
-            s.obs_state.actions_tried.add((a.id, a.index))
+            hacker_ip = env_config.hacker_ip
+            logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+                                                            s.obs_state.machines)))
+            logged_in_ips.append(hacker_ip)
+            logged_in_ips_str = "_".join(logged_in_ips)
+            s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
             return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
             return ClusterMiddleware.exploit_action(s=s, a=a, env_config=env_config)
@@ -125,7 +130,5 @@ class ClusterMiddleware:
             return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
         if a.id == ActionId.INSTALL_TOOLS:
             return PostExploitMiddleware.execute_install_tools(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.PIVOT_TCP_SYN_STEALTH_SCAN or a.id == ActionId.PIVOT_TCP_SYN_STEALTH_SCAN_SUBNET:
-            return PostExploitMiddleware.execute_pivot_tcp_syn_stealth_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))

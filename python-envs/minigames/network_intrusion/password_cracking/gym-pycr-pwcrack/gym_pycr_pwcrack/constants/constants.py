@@ -201,7 +201,7 @@ class SECLISTS:
     TOP_USERNAMES_SHORTLIST = "/SecLists/Usernames/top-usernames-shortlist.txt"
 
 class NMAP:
-    SPEED_ARGS = "--min-rate 100000 --max-retries 1 -T5"
+    SPEED_ARGS = "--min-rate 100000 --max-retries 1 -T5 -n"
     FILE_ARGS = "-oX"
     TELNET_BRUTE_SUBNET = "-p 23 --script telnet-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
                           + ",passdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",telnet-brute.timeout=8s,brute.firstonly=true"

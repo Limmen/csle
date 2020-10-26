@@ -15,6 +15,13 @@ class NmapBruteCredentials:
         return "username:{},pw:{},state:{},port:{},protocol:{},service:{}".format(
             self.username, self.pw, self.state, self.port, self.protocol, self.service)
 
+    def __hash__(self):
+        return hash(self.username) + 31 * hash(self.pw)
+
+    def __eq__(self, other):
+        return (self.username == other.username and
+                self.pw == other.pw)
+
 
     def to_obs(self):
         return Credential(username=self.username, pw=self.pw, port=int(self.port), service=self.service,

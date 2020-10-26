@@ -15,6 +15,13 @@ class NmapVuln:
         vuln = VulnerabilityObservationState(name=self.name, port=self.port, protocol=self.protocol, cvss=self.cvss)
         return vuln
 
+    def __hash__(self):
+        return hash(self.name) + 31 * hash(self.port)
+
+    def __eq__(self, other):
+        return (self.name == other.name and
+                self.port == other.port)
+
     def __str__(self):
         return "name:{}, port:{}, protocol:{}, cvss:{}, service:{}".format(
             self.name, self.port, self.protocol, self.cvss, self.service)

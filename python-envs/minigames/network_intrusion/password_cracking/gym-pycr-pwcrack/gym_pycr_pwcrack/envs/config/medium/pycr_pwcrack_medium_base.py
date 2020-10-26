@@ -475,7 +475,6 @@ class PyCrPwCrackMediumBase:
             actions.append(NMAPActions.HTTP_GREP(index=idx, subnet=False))
             actions.append(NMAPActions.VULSCAN(index=idx, subnet=False))
             actions.append(NMAPActions.FINGER(index=idx, subnet=False))
-            actions.append(NMAPActions.PIVOT_TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
@@ -505,7 +504,6 @@ class PyCrPwCrackMediumBase:
         actions.append(NMAPActions.VULSCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.FINGER(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.INSTALL_TOOLS(index=len(network_conf.nodes)))
-        actions.append(NMAPActions.PIVOT_TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -532,7 +530,6 @@ class PyCrPwCrackMediumBase:
             ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET,
             ActionId.VULSCAN_HOST, ActionId.VULSCAN_SUBNET,
             ActionId.FINGER_HOST, ActionId.FINGER_SUBNET,
-            ActionId.PIVOT_TCP_SYN_STEALTH_SCAN, ActionId.PIVOT_TCP_SYN_STEALTH_SCAN_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS]

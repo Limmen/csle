@@ -105,6 +105,8 @@ class ClusterUtil:
         remote_file = sftp_client.file(file_name, mode="w")
         try:
             remote_file.write(str(round(total_time, 1)) + "\n")
+        except Exception as e:
+            print("exception writing cost file:{}".format(str(e)))
         finally:
             remote_file.close()
 
@@ -819,9 +821,8 @@ class ClusterUtil:
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
-                s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=cache_value, s=s, a=a,
-                                                                                env_config=env_config)
-                return s_prime, reward, False
+                return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
+                                                                 partial_result=cache_value, masscan=masscan)
 
         # Check On-disk cache
         if env_config.use_nmap_cache:
@@ -862,9 +863,8 @@ class ClusterUtil:
 
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
-        s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
-                                                                        env_config=env_config)
-        return s_prime, reward, False
+        return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
+                                                         partial_result=scan_result, masscan=masscan)
 
 
     @staticmethod
@@ -1996,15 +1996,24 @@ class ClusterUtil:
         return scan_result_1
 
     @staticmethod
-    def nmap_pivot_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, masscan: bool = False) \
+    def nmap_pivot_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, partial_result:
+    NmapScanResult, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
-        base_cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
+        hacker_ip = env_config.hacker_ip
+        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+                                                        s.obs_state.machines)))
+        logged_in_ips.append(hacker_ip)
+        logged_in_ips_str = "_".join(logged_in_ips)
+
+        base_cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
         if a.subnet:
-            base_cache_id = str(a.id.value) + "_" + str(a.index) + ".xml"
+            base_cache_id = str(a.id.value) + "_" + str(a.index)
+        base_cache_id = base_cache_id + "_" + logged_in_ips_str + ".xml"
 
         # Check in-memory cache
         if env_config.use_nmap_cache:
             scan_result = env_config.nmap_scan_cache.get(base_cache_id)
+            #scan_result = ClusterUtil.merge_nmap_scan_results(scan_result_1=scan_result, scan_result_2=partial_result)
             if scan_result is not None:
                 s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
                                                                                 env_config=env_config)
@@ -2012,11 +2021,11 @@ class ClusterUtil:
 
         new_machines_obs = []
         total_cost = 0
-        merged_scan_result = None
+        merged_scan_result = partial_result
 
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
-            cache_id = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + "_" + a.ip + ".xml"
+            cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
             if a.subnet:
                 cache_id = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
 
@@ -2033,9 +2042,10 @@ class ClusterUtil:
                             break
 
                     # Check On-disk cache
-                    cwd, _, total_time = ClusterUtil.execute_ssh_cmd(cmd="pwd", conn=c.conn)
-                    cwd = cwd.decode().replace("\n", "") + "/"
-                    total_cost += total_time
+                    # cwd, _, total_time = ClusterUtil.execute_ssh_cmd(cmd="pwd", conn=c.conn)
+                    # cwd = cwd.decode().replace("\n", "") + "/"
+                    # total_cost += total_time
+                    cwd = "/home/" + c.username + "/"
                     if env_config.use_nmap_cache:
                         cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config, conn=c.conn,
                                                                            dir=cwd, machine_ip=machine.ip)
@@ -2059,7 +2069,6 @@ class ClusterUtil:
                             scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
                             break
                         except Exception as e:
-                            print("exception: {}".format(str(e)))
                             scan_result = NmapScanResult(hosts=[])
                             break
 

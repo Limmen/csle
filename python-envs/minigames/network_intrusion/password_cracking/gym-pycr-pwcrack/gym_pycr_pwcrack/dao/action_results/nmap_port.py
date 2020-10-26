@@ -28,6 +28,12 @@ class NmapPort:
             self.port_id, self.protocol, self.status, self.service_name, self.http_enum, self.http_grep, self.vulscan,
         self.service_version, self.service_fp)
 
+    def __hash__(self):
+        return hash(self.port_id)
+
+    def __eq__(self, other):
+        return (self.port_id == other.port_id)
+
     def to_obs(self) -> PortObservationState:
         open = self.status == NmapPortStatus.UP
         if self.service_name not in constants.SERVICES.service_lookup:

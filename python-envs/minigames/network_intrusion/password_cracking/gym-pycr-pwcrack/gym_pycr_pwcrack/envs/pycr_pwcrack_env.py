@@ -182,7 +182,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = env_config.action_conf.actions[action_id]
         ip = env_state.obs_state.get_action_ip(action)
 
-        if (action.id, action.index) in env_state.obs_state.actions_tried:
+        hacker_ip = env_config.hacker_ip
+        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+                                                        env_state.obs_state.machines)))
+        logged_in_ips.append(hacker_ip)
+        logged_in_ips_str = "_".join(logged_in_ips)
+
+        if (action.id, action.index, logged_in_ips_str) in env_state.obs_state.actions_tried:
             return False
 
         # Recon on subnet is always possible
