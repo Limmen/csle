@@ -7,6 +7,7 @@ class ActionCosts:
         self.costs = {}
         self.find_costs = {}
         self.service_costs = {}
+        self.install_costs = {}
 
 
     def add_cost(self, action_id : ActionId, ip: str, cost: float):
@@ -44,3 +45,15 @@ class ActionCosts:
     def service_exists(self, action_id: ActionId, ip: str):
         key = (action_id, ip)
         return key in self.costs
+
+    def install_add_cost(self, action_id: ActionId, ip: str, cost: float, user: str):
+        key = (action_id, ip, user)
+        self.install_costs[key] = cost
+
+    def install_get_cost(self, action_id: ActionId, ip: str, user: str):
+        key = (action_id, ip, user)
+        return self.install_costs[key]
+
+    def install_exists(self, action_id: ActionId, ip: str, user: str):
+        key = (action_id, ip, user)
+        return key in self.install_costs

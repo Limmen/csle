@@ -270,5 +270,37 @@ class ClusterConfig:
                     if remote_file is not None:
                         remote_file.close()
 
-        print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs)))
+        # Load user command action costs which are user specific
+        shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
+        for a in shell_actions:
+            id = a.id
+            cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
+            stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+            file_list = []
+            for line in stdout:
+                line_str = line.replace("\n", "")
+                if "_cost" in line_str:
+                    file_list.append(line_str)
+            for file in file_list:
+                parts = file.split("_")
+                idx = parts[1]
+                ip = parts[2]
+                user = parts[3]
+                remote_file = None
+                try:
+                    remote_file = sftp_client.open(file, mode="r")
+                    cost_str = remote_file.read()
+                    cost = round(float(cost_str), 1)
+                    action_costs.install_add_cost(action_id=id, ip=ip, cost=cost, user=user)
+                    a.cost = cost
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
+
+        print("Successfully loaded {} action costs from cluster".format(len(action_costs.costs) +
+                                                                        len(action_costs.find_costs) +
+                                                                        len(action_costs.service_costs) +
+                                                                        len(action_costs.install_costs)))
         return action_costs

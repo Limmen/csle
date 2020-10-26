@@ -448,3 +448,22 @@ class NMAPActions:
                       descr="Attempts to retrieve a list of usernames using the finger service.",
                       cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
+
+    @staticmethod
+    def PIVOT_TCP_SYN_STEALTH_SCAN(index: int, subnet=True, ip: str = "") -> Action:
+        cost_noise_multiplier = 1
+        id = ActionId.TCP_SYN_STEALTH_SCAN_HOST
+        file_name = str(id.value) + "_" + ip + ".xml "
+        if subnet:
+            cost_noise_multiplier = 10
+            id = ActionId.TCP_SYN_STEALTH_SCAN_SUBNET
+            file_name = str(id.value) + ".xml "
+
+        cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " "]
+        return Action(id=id, name="Pivot TCP SYN (Stealth) Scan", cmd=cmd,
+                      type=ActionType.POST_EXPLOIT,
+                      descr="Pivot TCP SYN Scan: Use compromised host to run the TCP SYN scan from to discover "
+                            "new machines behind firewalls",
+                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
+                      ip=ip, subnet=subnet, index=index,
+                      action_outcome=ActionOutcome.INFORMATION_GATHERING)

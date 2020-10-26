@@ -194,12 +194,18 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         logged_in = False
         unscanned_filesystems = False
         untried_credentials = False
+        root_login = False
+        uninstalled_tools = False
 
         for m in env_state.obs_state.machines:
             if m.logged_in:
                 logged_in = True
                 if not m.filesystem_searched:
                     unscanned_filesystems = True
+                if m.root:
+                    root_login = True
+                    if not m.tools_installed:
+                        uninstalled_tools = True
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
@@ -230,6 +236,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in
         if action.id == ActionId.FIND_FLAG and logged_in and unscanned_filesystems:
+            return True
+
+        # Bash action not tied to specific IP only possible when having shell access and being logged in and root
+        if action.id == ActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
             return True
 
         return False

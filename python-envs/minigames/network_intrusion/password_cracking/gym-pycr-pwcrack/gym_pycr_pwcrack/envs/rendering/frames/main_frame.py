@@ -250,7 +250,7 @@ class MainFrame(pyglet.window.Window):
 
         w = 30
         h = 20
-        y = y + 40
+        y = min(y + 40, self.height-180)
         x_start = 10
         end_state_x = x_start + (self.state.machines_state.shape[1]+2)*w
         # Draw State title
@@ -491,6 +491,8 @@ class MainFrame(pyglet.window.Window):
             self.state.manual_action = self.state.manual_action + "0"
         elif symbol == pyglet.window.key.ENTER:
             if self.env is not None:
+                # action = int(self.state.manual_action)
+                # self.env.step(action)
                 try:
                     action = int(self.state.manual_action)
                     self.env.step(action)

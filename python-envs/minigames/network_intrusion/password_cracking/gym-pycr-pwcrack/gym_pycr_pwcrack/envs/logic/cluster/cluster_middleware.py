@@ -123,5 +123,9 @@ class ClusterMiddleware:
             return PostExploitMiddleware.execute_service_login(s=s, a=a, env_config=env_config)
         if a.id == ActionId.FIND_FLAG:
             return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.INSTALL_TOOLS:
+            return PostExploitMiddleware.execute_install_tools(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.PIVOT_TCP_SYN_STEALTH_SCAN:
+            return PostExploitMiddleware.execute_pivot_tcp_syn_stealth_scan(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))

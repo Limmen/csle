@@ -35,6 +35,7 @@ class MachineObservationState:
         self.mysql_brute_tried = False
         self.smtp_brute_tried = False
         self.postgres_brute_tried = False
+        self.tools_installed = False
 
 
     def __str__(self):
@@ -42,13 +43,13 @@ class MachineObservationState:
                "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{}, hostnames:{}, trace:{}, " \
                "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
                "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
-               "smtp_brute_tried:{},postgres_brute_tried:{}".format(
+               "smtp_brute_tried:{},postgres_brute_tried:{},tools_installed:{}".format(
             self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
             self.telnet_brute_tried, self.ssh_brute_tried, self.ftp_brute_tried, self.cassandra_brute_tried,
             self.irc_brute_tried, self.mongo_brute_tried, self.mysql_brute_tried, self.smtp_brute_tried,
-            self.postgres_brute_tried)
+            self.postgres_brute_tried, self.tools_installed)
 
     def sort_ports(self):
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)

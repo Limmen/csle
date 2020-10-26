@@ -35,6 +35,7 @@ RUN apt-get -y install hping3
 RUN apt-get -y install netcat
 RUN apt-get -y install masscan
 RUN apt-get -y install iptables
+RUN apt-get -y install proxychains
 
 # Setup users
 

@@ -49,7 +49,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="puppet", pw="puppet"),
                           Credential(username="user1", pw="123123")
                       ],
-                      root=["admin", "user1"],
+                      root=["puppet", "user1"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                          credentials=[
@@ -503,6 +503,7 @@ class PyCrPwCrackMediumBase:
         actions.append(NMAPActions.HTTP_GREP(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.VULSCAN(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.FINGER(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(ShellActions.INSTALL_TOOLS(index=len(network_conf.nodes)))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -528,10 +529,11 @@ class PyCrPwCrackMediumBase:
             ActionId.HTTP_ENUM_HOST, ActionId.HTTP_ENUM_SUBNET,
             ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET,
             ActionId.VULSCAN_HOST, ActionId.VULSCAN_SUBNET,
-            ActionId.FINGER_HOST, ActionId.FINGER_SUBNET
+            ActionId.FINGER_HOST, ActionId.FINGER_SUBNET,
+            ActionId.PIVOT_TCP_SYN_STEALTH_SCAN
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [ActionId.FIND_FLAG]
+        shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=len(network_conf.nodes), actions=actions, nmap_action_ids=nmap_action_ids,

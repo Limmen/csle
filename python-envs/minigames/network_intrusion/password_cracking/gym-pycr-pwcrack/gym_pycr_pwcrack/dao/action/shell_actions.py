@@ -15,3 +15,13 @@ class ShellActions:
                       descr="Searches the file system for a flag",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.FLAG, alt_cmd=alt_cmd)
+
+    @staticmethod
+    def INSTALL_TOOLS(index: int) -> Action:
+        id = ActionId.INSTALL_TOOLS
+        cmd = ["sudo apt-get -y install nmap"]
+        return Action(id=id, name="Install tools", cmd=cmd,
+                      type=ActionType.POST_EXPLOIT,
+                      descr="If taken root on remote machine, installs pentest tools, e.g. nmap",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.FLAG, alt_cmd=None)

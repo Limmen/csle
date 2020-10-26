@@ -9,6 +9,7 @@ from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystemScanCache
 from gym_pycr_pwcrack.dao.action_results.nikto_scan_cache import NiktoScanCache
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.action_results.user_command_cache import UserCommandCache
 
 class EnvConfig:
     """
@@ -81,6 +82,9 @@ class EnvConfig:
         self.use_file_system_cache = True
         self.filesystem_scan_cache = FileSystemScanCache()
         self.filesystem_file_cache = []
+        self.use_user_command_cache = True
+        self.user_command_cache = UserCommandCache()
+        self.user_command_cache_files_cache = []
 
         self.flag_found_reward_mult = 20
         self.port_found_reward_mult = 1
@@ -91,6 +95,7 @@ class EnvConfig:
         self.shell_access_found_reward_mult = 10
         self.root_found_reward_mult = 10
         self.new_login_reward_mult = 1
+        self.new_tools_installed_reward_mult = 1
         self.cost_coefficient = 1
         self.detection_reward = -50
         self.all_flags_reward = 500

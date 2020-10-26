@@ -120,6 +120,30 @@ class ClusterUtil:
             remote_file.close()
 
     @staticmethod
+    def write_user_command_cache(action: Action, env_config: EnvConfig, user: str, result: str,
+                                     ip: str) \
+            -> None:
+        """
+        Caches the result of a user command action
+
+        :param action: the action
+        :param env_config: the env config
+        :param user: the user
+        :param result: the result to cache
+        :param ip: the ip
+        :return: None
+        """
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
+            action.index) + "_" + ip + \
+                    "_" + user + ".txt"
+        remote_file = sftp_client.file(file_name, mode="w")
+        try:
+            remote_file.write(result)
+        finally:
+            remote_file.close()
+
+    @staticmethod
     def execute_cmd_interactive(a: Action, env_config: EnvConfig) -> None:
         """
         Executes an action on the cluster using an interactive shell (non synchronous)
@@ -178,7 +202,7 @@ class ClusterUtil:
     @staticmethod
     def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service : str, user: str):
         """
-        Checks if an nmap action is cached or not
+        Checks if a filesystem action is cached or not
 
         :param a: the action
         :param env_config: the environment configuration
@@ -199,6 +223,34 @@ class ClusterUtil:
 
         # Search through updated cache
         if query in env_config.filesystem_file_cache:
+            return query
+
+        return None
+
+    @staticmethod
+    def check_user_action_cache(a: Action, env_config: EnvConfig, ip: str, user: str):
+        """
+        Checks if a user-specific action is cached or not
+
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: None or the name of the file where the result is cached
+        """
+        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + user + ".txt"
+
+        # Search through cache
+        if query in env_config.user_command_cache_files_cache:
+            return query
+
+        stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
+                                                                                  + env_config.nmap_cache_dir)
+        cache_list = []
+        for line in stdout:
+            cache_list.append(line.replace("\n", ""))
+        env_config.user_command_cache_files_cache = cache_list
+
+        # Search through updated cache
+        if query in env_config.user_command_cache_files_cache:
             return query
 
         return None
@@ -690,7 +742,7 @@ class ClusterUtil:
         :return: s', reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts = 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_logged_in, total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_m_obs = []
 
         for host in scan_result.hosts:
@@ -698,7 +750,8 @@ class ClusterUtil:
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in = \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -714,6 +767,7 @@ class ClusterUtil:
                                                  num_new_flag_pts=total_new_flag_pts,
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -787,7 +841,8 @@ class ClusterUtil:
 
     @staticmethod
     def login_service_helper(s: EnvState, a: Action, alive_check, service_name : str,
-                             env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int, float, bool]:
+                             env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int,
+                                                             int, float, bool]:
         """
         Helper function for logging in to a network service in the cluster
 
@@ -798,10 +853,11 @@ class ClusterUtil:
         :param env_config: environment config
         :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn, total_new_osvdb_found,
-                   total_new_logged_in
+                   total_new_logged_in, total_new_tools_installed
         """        
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
         target_machine = None
         non_used_credentials = []
@@ -909,14 +965,14 @@ class ClusterUtil:
             if target_machine is not None:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                 total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                total_new_logged_in = \
+                total_new_logged_in, total_new_tools_installed = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
                                                            env_config=env_config)
                 s_prime.obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                   total_new_logged_in, total_cost, False
+                   total_new_logged_in, total_new_tools_installed, total_cost, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -970,7 +1026,7 @@ class ClusterUtil:
             target_machine.root = root
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-            total_new_logged_in = \
+            total_new_logged_in, total_new_tools_installed = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
         else:
@@ -978,8 +1034,8 @@ class ClusterUtil:
             target_machine.shell_access_credentials = []
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-            total_cost, True
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+               total_new_logged_in, total_new_tools_installed, total_cost, True
 
 
     @staticmethod
@@ -1500,7 +1556,8 @@ class ClusterUtil:
         :return: s', reward
         """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in = 0, 0, 0, 0, 0, 0, 0, 0, 0
+        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         m_obs = None
 
         for m in s.obs_state.machines:
@@ -1512,7 +1569,8 @@ class ClusterUtil:
             m_obs.osvdb_vulns.append(vuln_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in = \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
@@ -1528,6 +1586,7 @@ class ClusterUtil:
                                                  num_new_flag_pts=total_new_flag_pts,
                                                  num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
                                                  num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward
@@ -1711,3 +1770,172 @@ class ClusterUtil:
             output = xml_data.attrib[constants.NMAP_XML.OUTPUT]
         nmap_vulscan = NmapVulscan(output=output)
         return nmap_vulscan
+
+    @staticmethod
+    def parse_tools_installed_file(file_name: str, env_config: EnvConfig) -> List[str]:
+        """
+        Parses a file containing cached results of a install-tools action
+
+        :param file_name: name of the file to parse
+        :param env_config: environment config
+        :return: a list of files
+        """
+        sftp_client = env_config.cluster_config.agent_conn.open_sftp()
+        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        installed = False
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            installed = bool(int(data))
+        finally:
+            remote_file.close()
+        return installed
+
+    @staticmethod
+    def _parse_tools_installed_check_result(result: str) -> bool:
+        """
+        Checks the output result of a tools install action to see whether the action was successful or not.
+
+        :param result: the result to check
+        :return: True if sucessful otherwise False
+        """
+        return ("will be installed" in result or "already installed" in result or "already the newest version" in result)
+
+    @staticmethod
+    def install_tools_helper(s: EnvState, a: Action, env_config: EnvConfig) -> bool:
+        """
+        Uses compromised machines with root access to install tools
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        new_machines_obs = []
+        total_cost = 0
+        for machine in s.obs_state.machines:
+            new_m_obs = MachineObservationState(ip=machine.ip)
+            installed = False
+            if machine.logged_in and machine.root and not machine.tools_installed:
+
+                # Start with ssh connections
+                ssh_root_connections = filter(lambda x: x.root, machine.ssh_connections)
+                ssh_cost = 0
+                for c in ssh_root_connections:
+                    key = (machine.ip, c.username)
+                    if env_config.use_user_command_cache and key in env_config.user_command_cache.cache:
+                        new_m_obs, cost = env_config.user_command_cache.get(key)
+                        new_machines_obs.append(new_m_obs)
+                        total_cost += cost
+                        if new_m_obs.tools_installed:
+                            break
+                        else:
+                            continue
+
+                    cache_file = \
+                        ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                                                            user=c.username)
+                    if cache_file is not None:
+                        installed = ClusterUtil.parse_tools_installed_file(file_name=cache_file,
+                                                                           env_config=env_config)
+                        new_m_obs.tools_installed = installed
+                    else:
+                        cmd = a.cmd[0]
+                        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                        outdata = outdata.decode()
+                        ssh_cost += float(total_time)
+                        if ClusterUtil._parse_tools_installed_check_result(result=outdata):
+                            installed = True
+                            new_m_obs.tools_installed = True
+                        ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                         env_config=env_config, ip=machine.ip,
+                                                         user=c.username)
+                        env_config.action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                 cost=float(total_time))
+                        # Persist cache
+                        ClusterUtil.write_user_command_cache(action=a, env_config=env_config, user=c.username,
+                                                             result=str(int(installed)), ip=machine.ip)
+
+                    new_machines_obs.append(new_m_obs)
+                    # Update cache
+                    if env_config.use_user_command_cache:
+                        env_config.user_command_cache.add(key, (new_m_obs, total_cost))
+
+                    if installed:
+                        break
+
+                total_cost += ssh_cost
+
+                # Telnet connections
+                telnet_cost = 0
+                if installed:
+                    break
+                telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
+                for c in telnet_root_connections:
+                    key = (machine.ip, c.username)
+                    if env_config.use_user_command_cache and key in env_config.user_command_cache.cache:
+                        new_m_obs, cost = env_config.user_command_cache.get(key)
+                        new_machines_obs.append(new_m_obs)
+                        total_cost += cost
+                        if new_m_obs.tools_installed:
+                            break
+                        else:
+                            continue
+
+                    cache_file = \
+                        ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                                                            user=c.username)
+                    if cache_file is not None:
+                        installed = ClusterUtil.parse_tools_installed_file(file_name=cache_file,
+                                                                           env_config=env_config)
+                        new_m_obs.tools_installed = installed
+                    else:
+                        cmd = a.cmd[0] + "\n"
+                        start = time.time()
+                        c.conn.write(cmd.encode())
+                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        response = response.decode()
+                        end = time.time()
+                        total_time = end - start
+                        telnet_cost += float(total_time)
+                        if ClusterUtil._parse_tools_installed_check_result(result=response):
+                            installed = True
+                            new_m_obs.tools_installed = True
+                        ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                         env_config=env_config, ip=machine.ip,
+                                                         user=c.username)
+                        env_config.action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                 cost=float(total_time))
+                        # Persist cache
+                        ClusterUtil.write_user_command_cache(action=a, env_config=env_config, user=c.username,
+                                                             result=str(int(installed)), ip=machine.ip)
+
+                    new_machines_obs.append(new_m_obs)
+
+                    # Update cache
+                    if env_config.use_user_command_cache:
+                        env_config.user_command_cache.add(key, (new_m_obs, total_cost))
+
+                    if installed:
+                        break
+
+                total_cost += telnet_cost
+        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed = \
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
+                                                 cost=total_cost,
+                                                 env_config=env_config)
+        return s, reward, False
