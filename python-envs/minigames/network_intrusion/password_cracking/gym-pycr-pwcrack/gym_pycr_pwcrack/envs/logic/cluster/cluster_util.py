@@ -183,12 +183,15 @@ class ClusterUtil:
         return output_str
 
     @staticmethod
-    def check_nmap_action_cache(a: Action, env_config: EnvConfig, conn = None,  dir : str = None):
+    def check_nmap_action_cache(a: Action, env_config: EnvConfig, conn = None,  dir : str = None,
+                                machine_ip : str = None):
         """
         Checks if an nmap action is cached or not
 
         :param a: the action
         :param env_config: the environment configuration
+        :param dir: dir
+        :param machine_ip: machine_ip
         :return: None or the name of the file where the result is cached
         """
         if conn is None:
@@ -196,9 +199,12 @@ class ClusterUtil:
         if dir is None or dir == "":
             dir = env_config.nmap_cache_dir
 
-        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
         if a.subnet:
-            query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+            query = str(a.id.value) + "_" + str(a.index)
+        if machine_ip is not None:
+            query = query + "_" + machine_ip
+        query = query + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
 
         # Search through cache
         if query in env_config.nmap_cache:
