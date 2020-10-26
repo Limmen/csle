@@ -249,7 +249,7 @@ class MainFrame(pyglet.window.Window):
                 self.node_ip_to_links[node1.ip] = self.node_ip_to_links[node1.ip] + node1_links
 
         w = 30
-        h = 25
+        h = 20
         y = y + 40
         x_start = 10
         end_state_x = x_start + (self.state.machines_state.shape[1]+2)*w
@@ -288,7 +288,8 @@ class MainFrame(pyglet.window.Window):
             c_labels = []
             for c in range(self.state.machines_state.shape[1]):
                 batch_rect_border(x_start+c*w, y-(m*h), w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                y_s = y-(m*h)+w/2
+                #y_s = y-(m*h)+w/2
+                y_s = y - (m * h) + w / 3
                 state_rect_coords[(m,c)] = (x_start+c*w,y-(m*h))
                 l = batch_label(str(self.state.machines_state[m][c]), x_start+w/2 + c * (w), y_s, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
@@ -301,28 +302,28 @@ class MainFrame(pyglet.window.Window):
 
         # Draw Ports Table
 
-        y = y_s - 100
+        y = y_s - 75
         w = 30
-        h = 25
+        h = 20
 
         batch_label("Ports", 115,
-                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+                    y_s - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         labels = ["m", "p", "s_id", "udp/tcp", "service"]
         for c in range(len(labels)):
             if c == 0:
-                batch_label(labels[c], int(x_start+15 + c * w), y_s-65, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
+                batch_label(labels[c], int(x_start+15 + c * w), y_s-40, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
             elif c == 2:
-                batch_label(labels[c], int(x_start + 10 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start + 10 + (c+1) * w), y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 3:
-                batch_label(labels[c], int(x_start + 25 + (c + 1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start + 25 + (c + 1) * w), y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 1:
-                batch_label(labels[c], int(x_start +30 + c * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start +30 + c * w), y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             else:
-                batch_label(labels[c], int(x_start+45 + (c+1) * w), y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], int(x_start+45 + (c+1) * w), y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
         self.ports_labels = []
         for p in range(self.state.ports_state.shape[0]):
@@ -355,20 +356,19 @@ class MainFrame(pyglet.window.Window):
 
 
         # Draw Vulnerabilities Table
-
         batch_label("Vulnerabilities", 350,
-                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+                    y_s - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         labels = ["v", "vulnerability", "cvss"]
         for c in range(len(labels)):
             if c == 0:
-                batch_label(labels[c], 275 + 0 * w, y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 275 + 0 * w, y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 1:
-                batch_label(labels[c], 330+1*w, y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 330+1*w, y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 2:
-                batch_label(labels[c], 420 + 1 * w, y_s - 65, 10, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 420 + 1 * w, y_s - 40, 10, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
         v_n = 0
         self.vuln_labels = []
@@ -399,16 +399,16 @@ class MainFrame(pyglet.window.Window):
         # Draw OS Table
 
         batch_label("OS", 580,
-                    y_s - 40, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
+                    y_s - 25, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         labels = ["os_id", "os"]
         for c in range(len(labels)):
             if c != 1:
-                batch_label(labels[c], 495 + 0 * w, y_s - 65, 10, (0, 0, 0, 255),
+                batch_label(labels[c], 495 + 0 * w, y_s - 40, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
             else:
-                batch_label(labels[c], 555 + 1 * w, y_s - 65, 10, (0, 0, 0, 255),
+                batch_label(labels[c], 555 + 1 * w, y_s - 40, 10, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
 
@@ -440,7 +440,7 @@ class MainFrame(pyglet.window.Window):
         # Draw Log title
         #log_x = end_state_x_log + (self.width - end_state_x_log) / 2
         log_x = 1000
-        y_log = y_s - 40
+        y_log = y_s - 25
         batch_label("Log", log_x,
                     y_log, 12, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
         y_log = y_log-60

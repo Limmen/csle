@@ -22,7 +22,7 @@ from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
 
 class PyCrPwCrackMediumBase:
     """
-    Base configuration of level 12of the PyCrPwCrack environment. (Mainly used when running in simulation mode
+    Base configuration of level 2 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
     and all the config of the environment have to be hardcoded)
     """
     @staticmethod
