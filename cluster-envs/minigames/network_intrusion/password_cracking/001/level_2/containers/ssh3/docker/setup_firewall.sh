@@ -7,6 +7,7 @@ route add 172.18.2.79 gw 172.18.2.3 # telnet1 gw for ftp1
 route add 172.18.2.10 gw 172.18.2.3 # telnet1 gw for router
 route add 172.18.2.191 gw 172.18.2.3 # telnet1 gw for kali
 route add 172.18.2.61 gw 172.18.2.3 # telnet1 gw for telnet2
+route add 172.18.2.7 gw 172.18.2.62 # telnet3 gw for ftp2
 
 iptables -A OUTPUT -d 172.18.2.10 -j ACCEPT # router
 iptables -A OUTPUT -d 172.18.2.1 -j ACCEPT # docker gw

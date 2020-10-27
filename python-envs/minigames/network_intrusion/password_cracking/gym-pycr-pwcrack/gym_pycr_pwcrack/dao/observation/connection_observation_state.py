@@ -2,7 +2,7 @@
 class ConnectionObservationState:
 
     def __init__(self, conn, username : str, root: bool, service: str, port: int, tunnel_thread = None,
-                 tunnel_port : int = None, interactive_shell = None):
+                 tunnel_port : int = None, interactive_shell = None, proxy = None):
         self.conn = conn
         self.username = username
         self.root = root
@@ -11,6 +11,7 @@ class ConnectionObservationState:
         self.tunnel_thread = tunnel_thread
         self.tunnel_port = tunnel_port
         self.interactive_shell = interactive_shell
+        self.proxy = proxy
 
 
     def __str__(self):

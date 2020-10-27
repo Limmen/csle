@@ -1019,12 +1019,14 @@ class ClusterUtil:
                 proxy_connections.append(ssh_connections_sorted_by_root[0].conn)
 
         if service_name == constants.SSH.SERVICE_NAME:
-            connected, users, target_connections, ports, cost, non_failed_credentials = ClusterUtil._ssh_setup_connection(
+            connected, users, target_connections, ports, cost, non_failed_credentials, proxies = ClusterUtil._ssh_setup_connection(
                 a=a, env_config=env_config, credentials=non_used_nor_cached_credentials, proxy_connections=proxy_connections)
         elif service_name == constants.TELNET.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials, \
+            proxies = \
                 ClusterUtil._telnet_setup_connection(a=a, env_config=env_config,
-                                                     credentials=non_used_nor_cached_credentials)
+                                                     credentials=non_used_nor_cached_credentials,
+                                                     proxy_connections=proxy_connections)
         elif service_name == constants.FTP.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost, non_failed_credentials = \
                 ClusterUtil._ftp_setup_connection(a=a, env_config=env_config,
@@ -1047,12 +1049,13 @@ class ClusterUtil:
                     if service_name == constants.SSH.SERVICE_NAME:
                         c_root, cost = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
                                                                       target_connections=target_connections, i=i,
-                                                                      ports=ports)
+                                                                      ports=ports, proxies=proxies)
                     elif service_name == constants.TELNET.SERVICE_NAME:
                         c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
                                                                          target_connections=target_connections,
                                                                          i=i, tunnel_threads=tunnel_threads,
-                                                                         forward_ports=forward_ports, ports=ports)
+                                                                         forward_ports=forward_ports, ports=ports,
+                                                                               proxies=proxies)
                     elif service_name == constants.FTP.SERVICE_NAME:
                         c_root, cost = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
                                                                       target_connections=target_connections,
@@ -1094,6 +1097,7 @@ class ClusterUtil:
         connected = False
         users = []
         target_connections = []
+        proxies = []
         ports = []
         start = time.time()
         non_failed_credentials = []
@@ -1113,6 +1117,7 @@ class ClusterUtil:
                         connected = True
                         users.append(cr.username)
                         target_connections.append(target_conn)
+                        proxies.append(proxy_conn)
                         ports.append(cr.port)
                         non_failed_credentials.append(cr)
                     except Exception as e:
@@ -1123,11 +1128,12 @@ class ClusterUtil:
                 break
         end = time.time()
         total_time = end-start
-        return connected, users, target_connections, ports, total_time, non_failed_credentials
+        return connected, users, target_connections, ports, total_time, non_failed_credentials, proxies
 
     @staticmethod
     def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
-                                 target_connections: List, i : int, ports: List[int]) -> Tuple[bool, float]:
+                                 target_connections: List, i : int, ports: List[int],
+                                 proxies : List) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
@@ -1136,6 +1142,7 @@ class ClusterUtil:
         :param target_connections: list of connection handles
         :param i: current index
         :param ports: list of ports of the connections
+        :param proxies: proxy connections
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
@@ -1148,7 +1155,7 @@ class ClusterUtil:
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
                                                     root=root,
                                                     service=constants.SSH.SERVICE_NAME,
-                                                    port=ports[i])
+                                                    port=ports[i], proxy=proxies[i])
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
         total_time = end-start
@@ -1156,7 +1163,7 @@ class ClusterUtil:
 
     @staticmethod
     def _telnet_setup_connection(a: Action, env_config: EnvConfig,
-                                 credentials = List[Credential]) \
+                                 credentials : List[Credential], proxy_connections : List) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
         """
         Helper function for setting up a Telnet connection to a target machine
@@ -1164,6 +1171,7 @@ class ClusterUtil:
         :param a: the action of the connection
         :param env_config: the environment config
         :param credentials: list of credentials to try
+        :param proxies: proxy connections
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
                  list of ports, cost
         """
@@ -1175,39 +1183,46 @@ class ClusterUtil:
         ports = []
         start = time.time()
         non_failed_credentials = []
-        for cr in credentials:
-            if cr.service == constants.TELNET.SERVICE_NAME:
-                try:
-                    forward_port = env_config.get_port_forward_port()
-                    tunnel_thread = ForwardTunnelThread(local_port=forward_port,
-                                                        remote_host=a.ip, remote_port=cr.port,
-                                                        transport=env_config.cluster_config.agent_conn.get_transport())
-                    tunnel_thread.start()
-                    target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port)
-                    target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=5)
-                    target_conn.write((cr.username + "\n").encode())
-                    target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=5)
-                    target_conn.write((cr.pw + "\n").encode())
-                    response = target_conn.read_until(constants.TELNET.PROMPT, timeout=5)
-                    if not constants.TELNET.INCORRECT_LOGIN in response.decode("utf-8"):
-                        connected = True
-                        users.append(cr.username)
-                        target_connections.append(target_conn)
-                        tunnel_threads.append(tunnel_thread)
-                        forward_ports.append(forward_port)
-                        ports.append(cr.port)
+        proxies = []
+        for proxy_conn in proxy_connections:
+            for cr in credentials:
+                if cr.service == constants.TELNET.SERVICE_NAME:
+                    try:
+                        forward_port = env_config.get_port_forward_port()
+                        tunnel_thread = ForwardTunnelThread(local_port=forward_port,
+                                                            remote_host=a.ip, remote_port=cr.port,
+                                                            transport=proxy_conn.get_transport())
+                        tunnel_thread.start()
+                        target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port)
+                        target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=5)
+                        target_conn.write((cr.username + "\n").encode())
+                        target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=5)
+                        target_conn.write((cr.pw + "\n").encode())
+                        response = target_conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        if not constants.TELNET.INCORRECT_LOGIN in response.decode("utf-8"):
+                            connected = True
+                            users.append(cr.username)
+                            target_connections.append(target_conn)
+                            proxies.append(proxy_conn)
+                            tunnel_threads.append(tunnel_thread)
+                            forward_ports.append(forward_port)
+                            ports.append(cr.port)
+                        non_failed_credentials.append(cr)
+                    except Exception as e:
+                        print("telnet exception:{}".format(str(e)))
+                else:
                     non_failed_credentials.append(cr)
-                except Exception as e:
-                    print("telnet exception:{}".format(str(e)))
-            else:
-                non_failed_credentials.append(cr)
+            if connected:
+                break
         end = time.time()
         total_time = end-start
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, total_time, non_failed_credentials
+        return connected, users, target_connections, tunnel_threads, forward_ports, ports, \
+               total_time, non_failed_credentials, proxies
 
     @staticmethod
     def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
-                                    tunnel_threads: List, forward_ports : List[int], ports: List[int]) \
+                                    tunnel_threads: List, forward_ports : List[int], ports: List[int],
+                                    proxies: List) \
             -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
@@ -1219,6 +1234,7 @@ class ClusterUtil:
         :param tunnel_threads: list of tunnel threads
         :param forward_ports: list of forwarded ports
         :param ports: list of ports of the connections
+        :param proxies: proxies
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
@@ -1230,7 +1246,7 @@ class ClusterUtil:
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME, tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
-                                                    port=ports[i])
+                                                    port=ports[i], proxy=proxies[i])
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
         total_time = end-start
@@ -2243,16 +2259,17 @@ class ClusterUtil:
                         new_m_obs.shell_access_credentials.append(credential)
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
-                        connected, users, target_connections, ports, total_time, non_failed_credentials = \
+                        connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
                             ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[env_config.cluster_config.agent_conn])
+                                                              proxy_connections=[c.proxy])
                         ssh_cost += total_time
 
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
                                                                     username=credential.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
-                                                                    port=credential.port)
+                                                                    port=credential.port,
+                                                                    proxy=proxies[0])
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -2299,15 +2316,16 @@ class ClusterUtil:
                         new_m_obs.shell_access_credentials.append(credential)
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
-                        connected, users, target_connections, ports, total_time, non_failed_credentials = \
+                        connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
                             ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[env_config.cluster_config.agent_conn])
+                                                              proxy_connections=[c.proxy])
                         ssh_cost += total_time
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
                                                                     username=credential.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
-                                                                    port=credential.port)
+                                                                    port=credential.port,
+                                                                    proxy=proxies[0])
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
