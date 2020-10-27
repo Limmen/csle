@@ -2095,29 +2095,45 @@ class ClusterUtil:
         return s_prime, reward, False
 
     @staticmethod
-    def _check_if_ssh_server_is_running(conn) -> bool:
+    def _check_if_ssh_server_is_running(conn, telnet: bool = False) -> bool:
         """
         Checks if an ssh server is running on the machine
 
         :param conn: the connection to use for the command
+        :param telnet: whether the connection is a telnet connection
         :return: True if server is running, else false
         """
         cmd= "service ssh status"
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
-        return "is running" in outdata.decode() or "is running" in errdata.decode()
+        if not telnet:
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+            return "is running" in outdata.decode() or "is running" in errdata.decode()
+        else:
+            cmd = cmd + "\n"
+            conn.write(cmd.encode())
+            response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
+            return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(conn) -> bool:
+    def _list_all_users(conn, telnet : bool = False) -> bool:
         """
         List all users on a machine
 
         :param conn: the connection to user for the command
+        :param telnet: whether it is a telnet connection
         :return: list of users
         """
-        cmd = "cut -d: -f1 /etc/passwd"
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
-        outdata = outdata.decode()
-        users = outdata.split("\n")
+        cmd = constants.SHELL.LIST_ALL_USERS
+        if not telnet:
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+            outdata = outdata.decode()
+            users = outdata.split("\n")
+        else:
+            cmd = cmd + "\n"
+            conn.write(cmd.encode())
+            response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
+            response = response.decode()
+            users = response.split("\n")
+            users = list(map(lambda x: x.replace("\r", ""), users))
         return users
 
     @staticmethod
@@ -2130,8 +2146,8 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        username = "ssh_backdoor_" + str(random.randint(0, 100000))
-        pw = "pycr_pwcrack"
+        username = constants.SSH_BACKDOOR.BACKDOOR_PREFIX + "_" + str(random.randint(0, 100000))
+        pw = constants.SSH_BACKDOOR.DEFAULT_PW
         new_machines_obs = []
         total_cost = 0
         for machine in s.obs_state.machines:
@@ -2147,8 +2163,8 @@ class ClusterUtil:
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=cr.port)
-                        new_m_obs.shell_access_credentials.append(credential)
-                        new_m_obs.backdoor_credentials.append(credential)
+                        new_m_obs.shell_access_credentials.append(cr)
+                        new_m_obs.backdoor_credentials.append(cr)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -2165,7 +2181,7 @@ class ClusterUtil:
                         users = ClusterUtil._list_all_users(c.conn)
                         user_exists = False
                         for user in users:
-                            if "ssh_backdoor" in user:
+                            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
                                 user_exists = True
                                 username = user
 
@@ -2217,15 +2233,27 @@ class ClusterUtil:
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
                 for c in telnet_root_connections:
                     try:
-                        # Create user
-                        create_user_cmd = a.cmd[1].format(username, pw, username) + "\n"
-                        c.conn.write(create_user_cmd.encode())
-                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        users = ClusterUtil._list_all_users(c.conn, telnet=True)
+                        user_exists = False
+                        for user in users:
+                            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
+                                user_exists = True
+                                username = user
 
-                        # Start SSH Server
-                        start_ssh_cmd = a.cmd[0] + "\n"
-                        c.conn.write(start_ssh_cmd.encode())
-                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        credential = Credential(username=username, pw=pw, port=22, service="ssh")
+
+                        if not user_exists:
+                            # Create user
+                            create_user_cmd = a.cmd[1].format(username, pw, username) + "\n"
+                            c.conn.write(create_user_cmd.encode())
+                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+
+                        ssh_running = ClusterUtil._check_if_ssh_server_is_running(c.conn, telnet=True)
+                        if not ssh_running:
+                            # Start SSH Server
+                            start_ssh_cmd = a.cmd[0] + "\n"
+                            c.conn.write(start_ssh_cmd.encode())
+                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
 
                         # Create SSH connection
                         new_m_obs.shell_access_credentials.append(credential)
@@ -2244,8 +2272,8 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                         new_machines_obs.append(new_m_obs)
-                    except:
-                        pass
+                    except Exception as e:
+                        print("Exception: {}".format(str(e)))
                     if backdoor_created:
                         break
 

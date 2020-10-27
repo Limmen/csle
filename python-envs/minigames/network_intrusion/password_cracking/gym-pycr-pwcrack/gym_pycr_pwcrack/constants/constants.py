@@ -378,6 +378,13 @@ class MASSCAN:
     OUTPUT_ARG = "-oX "
 
 
+class SSH_BACKDOOR:
+    BACKDOOR_PREFIX = "ssh_backdoor"
+    DEFAULT_PW = "pycr_pwcrack"
+
+class SHELL:
+    LIST_ALL_USERS = "cut -d: -f1 /etc/passwd"
+
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24
 #
