@@ -2060,6 +2060,7 @@ class ClusterUtil:
                         cmd = a.nmap_cmd(machine_ip=machine.ip)
                         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                         total_cost += total_time
+                        print("writing estimated cost, mip:{}, a:{}, dir:{}".format(machine.ip, a.name, cwd))
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
                                                          conn=c.conn, dir=cwd, machine_ip=machine.ip)
                         env_config.action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,

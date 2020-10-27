@@ -69,6 +69,10 @@ RUN update-rc.d pycr-firewall defaults
 ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh
 
+# Setup root SSH
+RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+ADD docker/sshd_config /etc/ssh/sshd_config
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
 
