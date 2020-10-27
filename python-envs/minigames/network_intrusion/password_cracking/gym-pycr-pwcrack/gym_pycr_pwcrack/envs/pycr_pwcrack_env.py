@@ -21,6 +21,7 @@ from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v2 import PyCrPwCra
 from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v3 import PyCrPwCrackSimpleV3
 from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v4 import PyCrPwCrackSimpleV4
 from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwCrackMediumBase
+from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_v1 import PyCrPwCrackMediumV1
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -189,6 +190,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         logged_in_ips_str = "_".join(logged_in_ips)
 
         if (action.id, action.index, logged_in_ips_str) in env_state.obs_state.actions_tried:
+            print("illegal ips str:{}".format(logged_in_ips_str))
             return False
 
         # Recon on subnet is always possible
@@ -221,9 +223,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
-                untried_credentials = target_machine.untried_credentials
+            if m.untried_credentials:
+                untried_credentials = m.untried_credentials
 
-        if action.subnet:
+        if action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
@@ -253,7 +256,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if machine_discovered and action.type == ActionType.POST_EXPLOIT \
                 and ((target_machine is not None and target_machine.shell_access
                       and len(target_machine.shell_access_credentials) > 0)
-                     or action.subnet):
+                     or action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN):
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in
@@ -602,6 +605,27 @@ class PyCRPwCrackMediumClusterBaseEnv(PyCRPwCrackEnv):
             network_conf = PyCrPwCrackMediumBase.network_conf()
             action_conf = PyCrPwCrackMediumBase.all_actions_conf(network_conf)
             env_config = PyCrPwCrackMediumBase.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config)
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+# -------- Version 1 ------------
+
+class PyCRPwCrackMediumCluster1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackMediumBase.render_conf()
+            if cluster_config is None:
+                cluster_config = PyCrPwCrackMediumBase.cluster_conf()
+            network_conf = PyCrPwCrackMediumBase.network_conf()
+            action_conf = PyCrPwCrackMediumV1.actions_conf(network_conf)
+            env_config = PyCrPwCrackMediumV1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False

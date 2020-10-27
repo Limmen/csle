@@ -5,7 +5,6 @@ import time
 import paramiko
 import telnetlib
 import random
-import hashlib
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -1011,12 +1010,15 @@ class ClusterUtil:
         users = []
         target_connections = []
         ports = []
-        proxy_connections = [env_config.cluster_config.agent_conn]
+        proxy_connections = [ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
+                                                        username=env_config.cluster_config.agent_username,
+                                                        root=True, port=22, service=constants.SSH.SERVICE_NAME,
+                                                        proxy= None, ip=env_config.cluster_config.agent_ip)]
         for m in s.obs_state.machines:
             ssh_connections_sorted_by_root = sorted(m.ssh_connections, key=lambda x: (x.root, x.username),
                                                     reverse=True)
             if len(ssh_connections_sorted_by_root) > 0:
-                proxy_connections.append(ssh_connections_sorted_by_root[0].conn)
+                proxy_connections.append(ssh_connections_sorted_by_root[0])
 
         if service_name == constants.SSH.SERVICE_NAME:
             connected, users, target_connections, ports, cost, non_failed_credentials, proxies = ClusterUtil._ssh_setup_connection(
@@ -1101,19 +1103,19 @@ class ClusterUtil:
         ports = []
         start = time.time()
         non_failed_credentials = []
-        print("num proxies:{}".format(len(proxy_connections)))
         for proxy_conn in proxy_connections:
             for cr in credentials:
                 if cr.service == constants.SSH.SERVICE_NAME:
                     try:
-                        agent_addr = (env_config.cluster_config.agent_ip, cr.port)
+                        agent_addr = (proxy_conn.ip, cr.port)
                         target_addr = (a.ip, cr.port)
-                        agent_transport = proxy_conn.get_transport()
+                        agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
-                                                                     timeout=15)
+                                                                     timeout=3)
                         target_conn = paramiko.SSHClient()
                         target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                        target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel)
+                        target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel,
+                                            timeout=3)
                         connected = True
                         users.append(cr.username)
                         target_connections.append(target_conn)
@@ -1155,7 +1157,7 @@ class ClusterUtil:
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
                                                     root=root,
                                                     service=constants.SSH.SERVICE_NAME,
-                                                    port=ports[i], proxy=proxies[i])
+                                                    port=ports[i], proxy=proxies[i], ip=target_machine.ip)
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
         total_time = end-start
@@ -1189,17 +1191,24 @@ class ClusterUtil:
                 if cr.service == constants.TELNET.SERVICE_NAME:
                     try:
                         forward_port = env_config.get_port_forward_port()
+                        agent_addr = (proxy_conn.ip, cr.port)
+                        target_addr = (a.ip, cr.port)
+                        agent_transport = proxy_conn.conn.get_transport()
+                        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
+                                                                     agent_addr,
+                                                                     timeout=5)
                         tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                             remote_host=a.ip, remote_port=cr.port,
-                                                            transport=proxy_conn.get_transport())
+                                                            transport=agent_transport)
                         tunnel_thread.start()
-                        target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port)
+                        target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=5)
                         target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=5)
                         target_conn.write((cr.username + "\n").encode())
                         target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=5)
                         target_conn.write((cr.pw + "\n").encode())
                         response = target_conn.read_until(constants.TELNET.PROMPT, timeout=5)
-                        if not constants.TELNET.INCORRECT_LOGIN in response.decode("utf-8"):
+                        response = response.decode()
+                        if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
                             connected = True
                             users.append(cr.username)
                             target_connections.append(target_conn)
@@ -1246,7 +1255,7 @@ class ClusterUtil:
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME, tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
-                                                    port=ports[i], proxy=proxies[i])
+                                                    port=ports[i], proxy=proxies[i], ip=target_machine.ip)
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
         total_time = end-start
@@ -1336,7 +1345,7 @@ class ClusterUtil:
                                                     tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
                                                     port=ports[i],
-                                                    interactive_shell = interactive_shells[i])
+                                                    interactive_shell = interactive_shells[i], ip=target_machine.ip)
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
 
@@ -2216,7 +2225,7 @@ class ClusterUtil:
                         connection_dto = ConnectionObservationState(conn=conn, username=cr.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
-                                                                    port=cr.port)
+                                                                    port=cr.port, ip=machine.ip)
                         new_m_obs.shell_access_credentials.append(cr)
                         new_m_obs.backdoor_credentials.append(cr)
                         new_m_obs.ssh_connections.append(connection_dto)
@@ -2269,7 +2278,7 @@ class ClusterUtil:
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=credential.port,
-                                                                    proxy=proxies[0])
+                                                                    proxy=proxies[0], ip=machine.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -2325,7 +2334,7 @@ class ClusterUtil:
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=credential.port,
-                                                                    proxy=proxies[0])
+                                                                    proxy=proxies[0], ip=machine.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -2375,4 +2384,91 @@ class ClusterUtil:
             conn.write(cmd.encode())
             response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
             return "file exists" in response.decode()
+
+    @staticmethod
+    def execute_service_login_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Executes a service login on the cluster using previously found credentials
+
+        :param s: the current state
+        :param a: the action to take
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        total_cost = 0
+        total_new_ports = 0
+        total_new_os = 0
+        total_new_cve_vuln = 0
+        total_new_machines = 0
+        total_new_shell_access = 0
+        total_new_flag_pts = 0
+        total_new_root = 0
+        total_new_osvdb_vuln = 0
+        total_new_logins = 0
+        total_new_tools_installed = 0
+        total_new_backdoors_installed = 0
+        s_prime = s
+        new_conn = False
+        for machine in s.obs_state.machines:
+            a.ip = machine.ip
+            s_1, t_n_p_1, t_n_os_1, t_n_v_1, t_n_m_1, \
+            t_n_s_a_1, t_n_f_p_1, t_n_r_1, t_n_o_v_1, t_n_l_i_1, t_n_t_i_1, t_n_b_i_1, ssh_cost, \
+            new_conn_ssh = ClusterUtil.login_service_helper(
+                s=s_prime, a=a, alive_check=EnvDynamicsUtil.check_if_ssh_connection_is_alive,
+                service_name=constants.SSH.SERVICE_NAME, env_config=env_config)
+            s_2, t_n_p_2, t_n_os_2, t_n_v_2, t_n_m_2, \
+            t_n_s_a_2, t_n_f_p_2, t_n_r_2, t_n_o_v_2, t_n_l_i_2, t_n_t_i_2, t_n_b_i_2, ftp_cost, \
+            new_conn_ftp = ClusterUtil.login_service_helper(
+                s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
+                service_name=constants.FTP.SERVICE_NAME, env_config=env_config)
+            s_3, t_n_p_3, t_n_os_3, t_n_v_3, t_n_m_3, \
+            t_n_s_a_3, t_n_f_p_3, t_n_r_3, t_n_o_v_3, t_n_l_i_3, t_n_t_i_3, t_n_b_i_3, telnet_cost, \
+            new_conn_telnet = ClusterUtil.login_service_helper(
+                s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
+                service_name=constants.TELNET.SERVICE_NAME, env_config=env_config)
+            total_cost = total_cost + ssh_cost + ftp_cost + telnet_cost
+            total_new_ports = total_new_ports + t_n_p_1 + t_n_p_2 + t_n_p_3
+            total_new_os = total_new_os + t_n_os_1 + t_n_os_2 + t_n_os_3
+            total_new_cve_vuln = total_new_cve_vuln + t_n_v_1 + t_n_v_2 + t_n_v_3
+            total_new_machines = total_new_machines + t_n_m_1 + t_n_m_2 + t_n_m_3
+            total_new_shell_access = total_new_shell_access + t_n_s_a_1 + t_n_s_a_2 + t_n_s_a_3
+            total_new_flag_pts = total_new_flag_pts + t_n_f_p_1 + t_n_f_p_2 + t_n_f_p_3
+            total_new_root = total_new_root + t_n_r_1 + t_n_r_2 + t_n_r_3
+            total_new_osvdb_vuln = total_new_osvdb_vuln + t_n_o_v_1 + t_n_o_v_2 + t_n_o_v_3
+            total_new_logins = total_new_logins + t_n_l_i_1 + t_n_l_i_2 + t_n_l_i_3
+            total_new_tools_installed = total_new_tools_installed + t_n_t_i_1 + t_n_t_i_2 + t_n_t_i_3
+            total_new_backdoors_installed = total_new_backdoors_installed + t_n_b_i_1 + t_n_b_i_2 + t_n_b_i_3
+
+            s_prime = s_3
+            if new_conn_ssh or new_conn_ftp or new_conn_telnet:
+                new_conn = True
+
+        for m in s_prime.obs_state.machines:
+            if m.ip == a.ip:
+                m.untried_credentials = False
+
+        # Update cost cache
+        total_cost = round(total_cost, 1)
+        if new_conn:
+            env_config.action_costs.service_add_cost(action_id=a.id, ip=env_config.cluster_config.agent_ip,
+                                                     cost=float(total_cost))
+            # ClusterUtil.write_estimated_cost(total_time=total_cost, action=a,
+            #                                  env_config=env_config, ip=a.ip)
+
+        # Use measured cost
+        if env_config.action_costs.service_exists(action_id=a.id, ip=env_config.cluster_config.agent_ip):
+            a.cost = env_config.action_costs.service_get_cost(action_id=a.id, ip=env_config.cluster_config.agent_ip)
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_cve_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln,
+                                                 num_new_logged_in=total_new_logins,
+                                                 num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
+                                                 cost=a.cost,
+                                                 env_config=env_config)
+        return s_prime, reward, False
 

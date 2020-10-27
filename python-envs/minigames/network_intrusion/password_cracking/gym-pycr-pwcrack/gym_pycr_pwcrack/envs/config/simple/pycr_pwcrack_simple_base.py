@@ -269,7 +269,6 @@ class PyCrPwCrackSimpleBase:
             actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
             actions.append(NIKTOActions.NIKTO_WEB_HOST_SCAN(index=idx))
             actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=idx, subnet=False, host_ip = network_conf.hacker.ip))
             actions.append(NMAPActions.FIREWALK(index=idx, subnet=False))
@@ -298,6 +297,7 @@ class PyCrPwCrackSimpleBase:
         actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=len(network_conf.nodes)))
         actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=len(network_conf.nodes), subnet=True,
                                                         host_ip=network_conf.hacker.ip, ip=network_conf.subnet_mask))
         actions.append(NMAPActions.FIREWALK(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))

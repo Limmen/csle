@@ -403,8 +403,8 @@ class PyCrPwCrackMediumBase:
             [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # ssh2
             [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0], # ssh3
             [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # telnet2
-            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],  # honeypot2
             [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0],  # telnet3
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],  # honeypot2
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],  # ftp2
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #hacker
         ]
@@ -467,7 +467,6 @@ class PyCrPwCrackMediumBase:
             actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
             actions.append(NIKTOActions.NIKTO_WEB_HOST_SCAN(index=idx))
             actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=idx, subnet=False, host_ip = network_conf.hacker.ip))
             actions.append(NMAPActions.FIREWALK(index=idx, subnet=False))
@@ -495,6 +494,7 @@ class PyCrPwCrackMediumBase:
         actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=len(network_conf.nodes)))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
         actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=len(network_conf.nodes), subnet=True,
                                                         host_ip=network_conf.hacker.ip, ip=network_conf.subnet_mask))
