@@ -1011,9 +1011,16 @@ class ClusterUtil:
         users = []
         target_connections = []
         ports = []
+        proxy_connections = [env_config.cluster_config.agent_conn]
+        for m in s.obs_state.machines:
+            ssh_connections_sorted_by_root = sorted(m.ssh_connections, key=lambda x: (x.root, x.username),
+                                                    reverse=True)
+            if len(ssh_connections_sorted_by_root) > 0:
+                proxy_connections.append(ssh_connections_sorted_by_root[0].conn)
+
         if service_name == constants.SSH.SERVICE_NAME:
             connected, users, target_connections, ports, cost, non_failed_credentials = ClusterUtil._ssh_setup_connection(
-                a=a, env_config=env_config, credentials=non_used_nor_cached_credentials)
+                a=a, env_config=env_config, credentials=non_used_nor_cached_credentials, proxy_connections=proxy_connections)
         elif service_name == constants.TELNET.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials = \
                 ClusterUtil._telnet_setup_connection(a=a, env_config=env_config,
@@ -1072,7 +1079,7 @@ class ClusterUtil:
 
     @staticmethod
     def _ssh_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials = List[Credential]) \
+                              credentials : List[Credential], proxy_connections: List[ConnectionObservationState]) \
             -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
         """
         Helper function for setting up a SSH connection
@@ -1080,6 +1087,7 @@ class ClusterUtil:
         :param a: the action of the connection
         :param env_config: the environment config
         :param credentials: list of credentials to try
+        :param proxy_connections: list of proxy connections to try
         :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
                  cost, non_failed_credentials
         """
@@ -1089,25 +1097,30 @@ class ClusterUtil:
         ports = []
         start = time.time()
         non_failed_credentials = []
-        for cr in credentials:
-            if cr.service == constants.SSH.SERVICE_NAME:
-                try:
-                    agent_addr = (env_config.cluster_config.agent_ip, cr.port)
-                    target_addr = (a.ip, cr.port)
-                    agent_transport = env_config.cluster_config.agent_conn.get_transport()
-                    relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr)
-                    target_conn = paramiko.SSHClient()
-                    target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                    target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel)
-                    connected = True
-                    users.append(cr.username)
-                    target_connections.append(target_conn)
-                    ports.append(cr.port)
+        print("num proxies:{}".format(len(proxy_connections)))
+        for proxy_conn in proxy_connections:
+            for cr in credentials:
+                if cr.service == constants.SSH.SERVICE_NAME:
+                    try:
+                        agent_addr = (env_config.cluster_config.agent_ip, cr.port)
+                        target_addr = (a.ip, cr.port)
+                        agent_transport = proxy_conn.get_transport()
+                        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
+                                                                     timeout=15)
+                        target_conn = paramiko.SSHClient()
+                        target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                        target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel)
+                        connected = True
+                        users.append(cr.username)
+                        target_connections.append(target_conn)
+                        ports.append(cr.port)
+                        non_failed_credentials.append(cr)
+                    except Exception as e:
+                        print("SSH exception :{}".format(str(e)))
+                else:
                     non_failed_credentials.append(cr)
-                except Exception as e:
-                    print("SSH exception :{}".format(str(e)))
-            else:
-                non_failed_credentials.append(cr)
+            if connected:
+                break
         end = time.time()
         total_time = end-start
         return connected, users, target_connections, ports, total_time, non_failed_credentials
@@ -2231,7 +2244,8 @@ class ClusterUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials = \
-                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential])
+                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
+                                                              proxy_connections=[env_config.cluster_config.agent_conn])
                         ssh_cost += total_time
 
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
@@ -2286,7 +2300,8 @@ class ClusterUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials = \
-                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential])
+                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
+                                                              proxy_connections=[env_config.cluster_config.agent_conn])
                         ssh_cost += total_time
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
                                                                     username=credential.username,
