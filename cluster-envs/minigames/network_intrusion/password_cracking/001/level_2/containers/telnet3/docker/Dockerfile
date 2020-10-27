@@ -22,6 +22,8 @@ RUN apt-get -y install postgresql
 RUN apt-get -y install openjdk-8-jdk
 RUN apt-get -y install unzip
 RUN apt-get -y install iptables
+RUN apt-get -y install unzip
+RUN apt-get -y install nmap
 
 # Setup users
 
@@ -73,12 +75,24 @@ RUN chmod 777 /start.sh
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker/sshd_config /etc/ssh/sshd_config
 
-# CMD to run when container starts, starts the services (e.g. telnet and SSH)
-CMD /start.sh
-
 # Setup password-less sudo
 RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker/sudoers /etc/sudoers
+
+# SecLists
+RUN git clone https://github.com/danielmiessler/SecLists
+
+# NMAP vuln scan
+RUN git clone https://github.com/scipag/vulscan scipag_vulscan
+RUN ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
+
+# NMAP nmap-vulners
+RUN git clone https://github.com/vulnersCom/nmap-vulners
+RUN cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
+RUN nmap --script-updatedb
+
+# CMD to run when container starts, starts the services (e.g. telnet and SSH)
+CMD /start.sh
 
 # Hack to keep container running (otherwise K8 thinks task is finished)
 #CMD ["sh", "-c", "tail -f /dev/null"]

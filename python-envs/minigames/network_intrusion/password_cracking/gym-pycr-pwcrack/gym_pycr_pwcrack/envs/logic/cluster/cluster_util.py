@@ -5,6 +5,7 @@ import time
 import paramiko
 import telnetlib
 import random
+import hashlib
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -1849,13 +1850,12 @@ class ClusterUtil:
             new_m_obs = MachineObservationState(ip=machine.ip)
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
-
                 # Start with ssh connections
                 ssh_root_connections = filter(lambda x: x.root, machine.ssh_connections)
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     key = (machine.ip, c.username)
-                    if env_config.use_user_command_cache and key in env_config.user_command_cache.cache:
+                    if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
                         new_m_obs, cost = env_config.user_command_cache.get(key)
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
@@ -1879,6 +1879,14 @@ class ClusterUtil:
                         if ClusterUtil._parse_tools_installed_check_result(result=outdata):
                             installed = True
                             new_m_obs.tools_installed = True
+
+                        # try to download seclists
+                        seclists_installed = ClusterUtil._check_if_seclists_is_installed(conn=c.conn, telnet=False)
+                        if not seclists_installed:
+                            cmd = a.cmd[1]
+                            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                            ssh_cost += float(total_time)
+
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                          env_config=env_config, ip=machine.ip,
                                                          user=c.username)
@@ -1905,7 +1913,7 @@ class ClusterUtil:
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
                 for c in telnet_root_connections:
                     key = (machine.ip, c.username)
-                    if env_config.use_user_command_cache and key in env_config.user_command_cache.cache:
+                    if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
                         new_m_obs, cost = env_config.user_command_cache.get(key)
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
@@ -1922,6 +1930,8 @@ class ClusterUtil:
                                                                            env_config=env_config)
                         new_m_obs.tools_installed = installed
                     else:
+
+                        # Install packages
                         cmd = a.cmd[0] + "\n"
                         start = time.time()
                         c.conn.write(cmd.encode())
@@ -1933,6 +1943,19 @@ class ClusterUtil:
                         if ClusterUtil._parse_tools_installed_check_result(result=response):
                             installed = True
                             new_m_obs.tools_installed = True
+
+                        seclists_installed = ClusterUtil._check_if_seclists_is_installed(conn=c.conn, telnet=True)
+                        if not seclists_installed:
+                            # Try to download SecLists
+                            cmd = a.cmd[1] + "\n"
+                            start = time.time()
+                            c.conn.write(cmd.encode())
+                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=2000)
+                            response = response.decode()
+                            end = time.time()
+                            total_time = end - start
+                            telnet_cost += float(total_time)
+
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                          env_config=env_config, ip=machine.ip,
                                                          user=c.username)
@@ -2060,7 +2083,6 @@ class ClusterUtil:
                         cmd = a.nmap_cmd(machine_ip=machine.ip)
                         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                         total_cost += total_time
-                        print("writing estimated cost, mip:{}, a:{}, dir:{}".format(machine.ip, a.name, cwd))
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
                                                          conn=c.conn, dir=cwd, machine_ip=machine.ip)
                         env_config.action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
@@ -2297,4 +2319,23 @@ class ClusterUtil:
                                                  cost=total_cost,
                                                  env_config=env_config)
         return s, reward, False
+
+    @staticmethod
+    def _check_if_seclists_is_installed(conn, telnet: bool = False) -> bool:
+        """
+        Checks if seclists are downloaded
+
+        :param conn: the connection to use for the command
+        :param telnet: whether the connection is a telnet connection
+        :return: True if downloaded, else false
+        """
+        cmd = constants.SHELL.CHECK_FOR_SECLISTS
+        if not telnet:
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+            return "file exists" in outdata.decode() or "file exists" in errdata.decode()
+        else:
+            cmd = cmd + "\n"
+            conn.write(cmd.encode())
+            response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
+            return "file exists" in response.decode()
 

@@ -384,6 +384,7 @@ class SSH_BACKDOOR:
 
 class SHELL:
     LIST_ALL_USERS = "cut -d: -f1 /etc/passwd"
+    CHECK_FOR_SECLISTS = "test -e /SecLists && echo file exists || echo file not found"
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24

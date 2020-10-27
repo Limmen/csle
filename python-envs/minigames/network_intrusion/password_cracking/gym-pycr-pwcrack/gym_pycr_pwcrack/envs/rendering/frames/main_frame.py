@@ -491,13 +491,13 @@ class MainFrame(pyglet.window.Window):
             self.state.manual_action = self.state.manual_action + "0"
         elif symbol == pyglet.window.key.ENTER:
             if self.env is not None:
-                action = int(self.state.manual_action)
-                self.env.step(action)
-                # try:
-                #     action = int(self.state.manual_action)
-                #     self.env.step(action)
-                # except Exception as e:
-                #     print("invalid action: {}".format(str(e)))
+                # action = int(self.state.manual_action)
+                # self.env.step(action)
+                try:
+                    action = int(self.state.manual_action)
+                    self.env.step(action)
+                except Exception as e:
+                    print("invalid action: {}".format(str(e)))
             self.state.manual_action = ""
         elif symbol == pyglet.window.key.BACKSPACE:
             self.state.manual_action = self.state.manual_action[:-1]

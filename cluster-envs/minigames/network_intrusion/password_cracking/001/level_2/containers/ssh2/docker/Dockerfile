@@ -32,6 +32,8 @@ RUN apt-get -y install openjdk-8-jdk
 RUN apt-get -y install sshpass
 RUN apt-get -y install ntp
 RUN apt-get -y install iptables
+RUN apt-get -y install unzip
+RUN apt-get -y install nmap
 
 # Setup users
 
@@ -81,6 +83,18 @@ ADD docker/pycr-firewall /etc/init.d/pycr-firewall
 RUN chmod 777 /etc/init.d/pycr-firewall
 # enable on boot
 RUN update-rc.d pycr-firewall defaults
+
+# SecLists
+RUN git clone https://github.com/danielmiessler/SecLists
+
+# NMAP vuln scan
+RUN git clone https://github.com/scipag/vulscan scipag_vulscan
+RUN ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
+
+# NMAP nmap-vulners
+RUN git clone https://github.com/vulnersCom/nmap-vulners
+RUN cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
+RUN nmap --script-updatedb
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
