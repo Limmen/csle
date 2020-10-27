@@ -1324,7 +1324,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """        
         total_cost = 0
-        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: x.root, reverse=True)
+        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: (x.root, x.username), reverse=True)
         root_scan = False
         for c in ssh_connections_sorted_by_root:
             cache_file = \
@@ -1385,7 +1385,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
-        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: x.root,
+        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: (x.root, x.username),
                                                    reverse=True)
         root_scan = False
         for c in telnet_connections_sorted_by_root:
@@ -1450,7 +1450,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
-        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: x.root, reverse=True)
+        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: (x.root, x.username), reverse=True)
         root_scan = False
         for c in ftp_connections_sorted_by_root:
             cache_file = \
@@ -1852,6 +1852,7 @@ class ClusterUtil:
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
                 ssh_root_connections = filter(lambda x: x.root, machine.ssh_connections)
+                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     key = (machine.ip, c.username)
@@ -1911,6 +1912,7 @@ class ClusterUtil:
                 if installed:
                     continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
+                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     key = (machine.ip, c.username)
                     if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
@@ -2060,7 +2062,7 @@ class ClusterUtil:
             if machine.logged_in and machine.tools_installed:
 
                 # Start with ssh connections
-                ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: x.root, reverse=True)
+                ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: (x.root, x.username), reverse=True)
                 for c in ssh_connections_sorted_by_root:
 
                     # Check in-memory cache
@@ -2198,6 +2200,7 @@ class ClusterUtil:
 
                 # Try first to setup new ssh connections
                 ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
+                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     try:
@@ -2253,6 +2256,7 @@ class ClusterUtil:
                 if backdoor_created:
                     continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
+                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
                         users = ClusterUtil._list_all_users(c.conn, telnet=True)
