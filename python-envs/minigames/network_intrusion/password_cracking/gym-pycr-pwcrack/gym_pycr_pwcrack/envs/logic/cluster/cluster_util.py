@@ -1901,7 +1901,7 @@ class ClusterUtil:
                 # Telnet connections
                 telnet_cost = 0
                 if installed:
-                    break
+                    continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
                 for c in telnet_root_connections:
                     key = (machine.ip, c.username)
@@ -2171,7 +2171,7 @@ class ClusterUtil:
                         backdoor_created = True
 
                 if backdoor_created:
-                    break
+                    continue
 
                 # Try first to setup new ssh connections
                 ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
@@ -2216,7 +2216,6 @@ class ClusterUtil:
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
-
                         backdoor_created = True
                     except Exception as e:
                         print("Exception: {}".format(str(e)))
@@ -2229,7 +2228,7 @@ class ClusterUtil:
                 # Telnet connections
                 telnet_cost = 0
                 if backdoor_created:
-                    break
+                    continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
                 for c in telnet_root_connections:
                     try:
@@ -2271,7 +2270,6 @@ class ClusterUtil:
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
-                        new_machines_obs.append(new_m_obs)
                     except Exception as e:
                         print("Exception: {}".format(str(e)))
                     if backdoor_created:
