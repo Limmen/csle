@@ -561,7 +561,7 @@ class PyCrPwCrackMediumBase:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
+                               num_sh=12, render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip="172.18.2.191", state_type=StateType.BASE)
@@ -570,6 +570,6 @@ class PyCrPwCrackMediumBase:
         env_config.syn_stealth_scan_miss_p = 0.04
         env_config.os_scan_miss_p = 0.08
         env_config.vulners_miss_p = 0.09
-        env_config.num_flags = 3
+        env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.2.1"]
         return env_config

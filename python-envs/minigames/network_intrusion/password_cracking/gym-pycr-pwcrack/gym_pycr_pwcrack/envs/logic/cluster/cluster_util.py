@@ -1030,9 +1030,11 @@ class ClusterUtil:
                                                      credentials=non_used_nor_cached_credentials,
                                                      proxy_connections=proxy_connections)
         elif service_name == constants.FTP.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, cost, non_failed_credentials = \
+            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, \
+            cost, non_failed_credentials, proxies = \
                 ClusterUtil._ftp_setup_connection(a=a, env_config=env_config,
-                                                  credentials=non_used_nor_cached_credentials)
+                                                  credentials=non_used_nor_cached_credentials,
+                                                  proxy_connections=proxy_connections)
 
         s_prime = s
         if len(non_failed_credentials) > 0:
@@ -1063,7 +1065,8 @@ class ClusterUtil:
                                                                       target_connections=target_connections,
                                                                       i=i, tunnel_threads=tunnel_threads,
                                                                       forward_ports=forward_ports, ports=ports,
-                                                                      interactive_shells=i_shells)
+                                                                      interactive_shells=i_shells,
+                                                                            proxies=proxies)
                     total_cost += cost
                     if c_root:
                         root = True
@@ -1196,17 +1199,17 @@ class ClusterUtil:
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                      agent_addr,
-                                                                     timeout=5)
+                                                                     timeout=3)
                         tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                             remote_host=a.ip, remote_port=cr.port,
                                                             transport=agent_transport)
                         tunnel_thread.start()
-                        target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=5)
-                        target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=5)
+                        target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=3)
+                        target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=3)
                         target_conn.write((cr.username + "\n").encode())
-                        target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=5)
+                        target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=3)
                         target_conn.write((cr.pw + "\n").encode())
-                        response = target_conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                        response = target_conn.read_until(constants.TELNET.PROMPT, timeout=3)
                         response = response.decode()
                         if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
                             connected = True
@@ -1248,7 +1251,7 @@ class ClusterUtil:
         """
         start = time.time()
         target_connections[i].write("sudo -v\n".encode())
-        response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=5)
+        response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
         root = False
         if not "may not run sudo".format(users[i]) in response.decode("utf-8"):
             root = True
@@ -1263,7 +1266,7 @@ class ClusterUtil:
 
     @staticmethod
     def _ftp_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials = List[Credential]) \
+                              credentials : List[Credential], proxy_connections : List) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float,  List[Credential]]:
         """
         Helper function for setting up a FTP connection
@@ -1271,6 +1274,7 @@ class ClusterUtil:
         :param a: the action of the connection
         :param env_config: the environment config
         :param credentials: list of credentials to try
+        :param proxy_connections: proxy connections
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
                  list of ports, cost, non_failed_credentials
         """
@@ -1283,49 +1287,60 @@ class ClusterUtil:
         interactive_shells = []
         start = time.time()
         non_failed_credentials = []
-        for cr in credentials:
-            if cr.service == constants.FTP.SERVICE_NAME:
-                try:
-                    forward_port = env_config.get_port_forward_port()
-                    tunnel_thread = ForwardTunnelThread(local_port=forward_port,
-                                                        remote_host=a.ip, remote_port=cr.port,
-                                                        transport=env_config.cluster_config.agent_conn.get_transport())
-                    tunnel_thread.start()
-                    target_conn = FTP()
-                    target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=5)
-                    login_result = target_conn.login(cr.username, cr.pw)
-                    if constants.FTP.INCORRECT_LOGIN not in login_result:
-                        connected = True
-                        users.append(cr.username)
-                        target_connections.append(target_conn)
-                        tunnel_threads.append(tunnel_thread)
-                        forward_ports.append(forward_port)
-                        ports.append(cr.port)
-                        # Create LFTP connection too to be able to search file system
-                        shell = env_config.cluster_config.agent_conn.invoke_shell()
-                        # clear output
-                        if shell.recv_ready():
-                            shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                        shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ip + "\n")
-                        time.sleep(0.2)
-                        # clear output
-                        if shell.recv_ready():
-                            o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                        interactive_shells.append(shell)
-                        non_failed_credentials.append(cr)
-                except Exception as e:
-                    print("FTP exception: {}".format(str(e)))
-            else:
-                non_failed_credentials.append(cr)
+        proxies = []
+        for proxy_conn in proxy_connections:
+            for cr in credentials:
+                if cr.service == constants.FTP.SERVICE_NAME:
+                    try:
+                        forward_port = env_config.get_port_forward_port()
+                        agent_addr = (proxy_conn.ip, cr.port)
+                        target_addr = (a.ip, cr.port)
+                        agent_transport = proxy_conn.conn.get_transport()
+                        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
+                                                                     agent_addr,
+                                                                     timeout=3)
+                        tunnel_thread = ForwardTunnelThread(local_port=forward_port,
+                                                            remote_host=a.ip, remote_port=cr.port,
+                                                            transport=agent_transport)
+                        tunnel_thread.start()
+                        target_conn = FTP()
+                        target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=3)
+                        login_result = target_conn.login(cr.username, cr.pw)
+                        if constants.FTP.INCORRECT_LOGIN not in login_result:
+                            connected = True
+                            users.append(cr.username)
+                            target_connections.append(target_conn)
+                            proxies.append(proxy_conn)
+                            tunnel_threads.append(tunnel_thread)
+                            forward_ports.append(forward_port)
+                            ports.append(cr.port)
+                            # Create LFTP connection too to be able to search file system
+                            shell = proxy_conn.conn.invoke_shell()
+                            # clear output
+                            if shell.recv_ready():
+                                shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                            shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ip + "\n")
+                            time.sleep(0.2)
+                            # clear output
+                            if shell.recv_ready():
+                                o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                            interactive_shells.append(shell)
+                            non_failed_credentials.append(cr)
+                    except Exception as e:
+                        print("FTP exception: {}".format(str(e)))
+                else:
+                    non_failed_credentials.append(cr)
+            if connected:
+                break
         end = time.time()
         total_time = end-start
         return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time, \
-               non_failed_credentials
+               non_failed_credentials, proxies
 
     @staticmethod
     def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
                                  tunnel_threads: List, forward_ports: List[int], ports: List[int],
-                                 interactive_shells: List) -> Tuple[bool, float]:
+                                 interactive_shells: List, proxies: List) -> Tuple[bool, float]:
         """
         Helper function for creating the connection DTO for FTP
 
@@ -1345,7 +1360,8 @@ class ClusterUtil:
                                                     tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
                                                     port=ports[i],
-                                                    interactive_shell = interactive_shells[i], ip=target_machine.ip)
+                                                    interactive_shell = interactive_shells[i], ip=target_machine.ip,
+                                                    proxy=proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
 
@@ -2443,9 +2459,9 @@ class ClusterUtil:
             if new_conn_ssh or new_conn_ftp or new_conn_telnet:
                 new_conn = True
 
-        for m in s_prime.obs_state.machines:
-            if m.ip == a.ip:
-                m.untried_credentials = False
+            for m in s_prime.obs_state.machines:
+                if m.ip == a.ip:
+                    m.untried_credentials = False
 
         # Update cost cache
         total_cost = round(total_cost, 1)
@@ -2455,6 +2471,7 @@ class ClusterUtil:
             # ClusterUtil.write_estimated_cost(total_time=total_cost, action=a,
             #                                  env_config=env_config, ip=a.ip)
 
+        a.ip = ""
         # Use measured cost
         if env_config.action_costs.service_exists(action_id=a.id, ip=env_config.cluster_config.agent_ip):
             a.cost = env_config.action_costs.service_get_cost(action_id=a.id, ip=env_config.cluster_config.agent_ip)

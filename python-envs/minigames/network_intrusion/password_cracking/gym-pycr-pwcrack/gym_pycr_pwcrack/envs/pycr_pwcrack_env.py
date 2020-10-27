@@ -190,7 +190,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         logged_in_ips_str = "_".join(logged_in_ips)
 
         if (action.id, action.index, logged_in_ips_str) in env_state.obs_state.actions_tried:
-            print("illegal ips str:{}".format(logged_in_ips_str))
             return False
 
         # Recon on subnet is always possible

@@ -19,7 +19,7 @@ class ShellActions:
     @staticmethod
     def INSTALL_TOOLS(index: int) -> Action:
         id = ActionId.INSTALL_TOOLS
-        cmd = ["sudo apt-get -y install nmap ssh git unzip",
+        cmd = ["sudo apt-get -y install nmap ssh git unzip lftp",
                "cd /;sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O SecList.zip && sudo unzip -o SecList.zip && sudo rm -f SecList.zip && sudo mv SecLists-master /SecLists"]
         return Action(id=id, name="Install tools", cmd=cmd,
                       type=ActionType.POST_EXPLOIT,

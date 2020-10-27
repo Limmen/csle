@@ -28,13 +28,13 @@ class PyCrPwCrackMediumV1:
             actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(NetworkServiceActions.SERVICE_LOGIN(index=idx))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask,
                                                         subnet=True))
         actions.append(NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=len(network_conf.nodes)))
         actions.append(ShellActions.INSTALL_TOOLS(index=len(network_conf.nodes)))
         actions.append(ShellActions.SSH_BACKDOOR(index=len(network_conf.nodes)))
 

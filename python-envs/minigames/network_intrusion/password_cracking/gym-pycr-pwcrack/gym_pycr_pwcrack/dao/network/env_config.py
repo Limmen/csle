@@ -66,7 +66,7 @@ class EnvConfig:
 
         self.shell_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
         self.shell_read_wait = 0.1
-        self.shell_max_timeouts = 1500
+        self.shell_max_timeouts = 2000
         self.max_nmap_command_output_size = 10000000
         self.nmap_cache_dir = "/home/agent/"
         self.nmap_cache = []
