@@ -21,6 +21,7 @@ RUN apt-get -y install sshpass
 RUN apt-get -y install iptables
 RUN apt-get -y install unzip
 RUN apt-get -y install nmap
+RUN apt-get -y install git
 
 # Setup users
 

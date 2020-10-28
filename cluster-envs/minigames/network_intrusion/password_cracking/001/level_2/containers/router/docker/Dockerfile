@@ -24,6 +24,7 @@ RUN apt-get -y install ftp
 RUN apt-get -y install sshpass
 RUN apt-get -y install iptables
 RUN apt-get -y install unzip
+RUN apt-get -y install git
 
 # setup firewall
 ADD docker/setup_firewall.sh /setup_firewall.sh
