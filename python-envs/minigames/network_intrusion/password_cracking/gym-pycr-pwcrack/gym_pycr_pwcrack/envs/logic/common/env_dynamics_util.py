@@ -450,16 +450,6 @@ class EnvDynamicsUtil:
         for node in s.obs_state.machines:
             found_flags = found_flags.union(node.flags_found)
 
-        print("total flags:{}, found_flags:{}".format(total_flags, found_flags))
-        print("len total flags:{}, len found_flags:{}".format(len(total_flags), len(found_flags)))
-        print("all flags:{}".format(total_flags == found_flags))
-        print("total:")
-        for flag in total_flags:
-            print(flag.name)
-        print("found:")
-        for flag in found_flags:
-            print(flag.name)
-
         return total_flags == found_flags
 
 
