@@ -41,7 +41,7 @@ class AgentState:
 
         :return: None
         """
-        self.machines_state = np.zeros((self.obs_state.num_machines, 10 + self.obs_state.num_ports
+        self.machines_state = np.zeros((self.obs_state.num_machines, 12 + self.obs_state.num_ports
                                         + self.obs_state.num_vuln + self.obs_state.num_sh))
         self.ports_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_ports, 4))
         self.vuln_state = np.zeros((self.obs_state.num_machines * self.obs_state.num_vuln, 2))
@@ -127,6 +127,14 @@ class AgentState:
 
                 # Flags visualize
                 self.flags_state = self.flags_state.union(self.obs_state.machines[i].flags_found)
+
+                # Tools installed
+                self.machines_state[i][10 + self.obs_state.num_ports + self.obs_state.num_vuln
+                                       + self.obs_state.num_sh] = int(self.obs_state.machines[i].tools_installed)
+
+                # Backdoor
+                self.machines_state[i][11 + self.obs_state.num_ports + self.obs_state.num_vuln
+                                       + self.obs_state.num_sh] = int(self.obs_state.machines[i].backdoor_installed)
 
 
 

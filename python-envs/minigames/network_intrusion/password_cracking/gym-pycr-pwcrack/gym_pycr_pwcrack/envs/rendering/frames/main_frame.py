@@ -41,6 +41,7 @@ class MainFrame(pyglet.window.Window):
         self.vuln_labels = []
         self.os_labels = []
         self.flags_sprites = []
+        self.firewall_sprites = {}
         self.setup_resources_path()
         self.state = init_state
         self.node_ip_to_coords = {}
@@ -166,6 +167,7 @@ class MainFrame(pyglet.window.Window):
         max_nodes_per_level = int(x_max/x_sep+1)
         middle = self.width / 2
         self.flag_avatar = pyglet.resource.image(constants.RENDERING.FLAG_SPRITE_NAME)
+        self.firewall_avatar = pyglet.resource.image(constants.RENDERING.FIREWALL_SPRITE_NAME)
         for level in range(len(self.env_config.network_conf.levels_d)):
             if level > 1:
                 num_nodes_in_level = len(self.env_config.network_conf.levels_d[level+1])
@@ -193,6 +195,16 @@ class MainFrame(pyglet.window.Window):
                                 flag_sprite.visible = False
                                 self.flags_sprites.append((flag_sprite, flag))
 
+                            if node.firewall:
+                                # draw firewall
+                                firewall_sprite = pyglet.sprite.Sprite(self.firewall_avatar, x=x - (35 * (i + 1)),
+                                                                   y=y + 10,
+                                                                   batch=self.batch,
+                                                                   group=self.background)
+                                firewall_sprite.scale = 0.7
+                                firewall_sprite.visible = False
+                                self.firewall_sprites[node.ip] = firewall_sprite
+
                             nodes_to_coords[node.id] = (x, y)
                             self.node_ip_to_coords[node.ip] = (x, y)
                             self.node_ip_to_node[node.ip] = node
@@ -216,7 +228,8 @@ class MainFrame(pyglet.window.Window):
                     c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
 
                     l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,constants.RENDERING.LINE_WIDTH)
-                    node1_links.append((c_1, c_2, c_3, c_4))
+                    if node1.type == NodeType.HACKER or node1.type == NodeType.ROUTER:
+                        node1_links.append((c_1, c_2, c_3, c_4))
                     node2_links.append((c_1, c_2, c_3, c_4))
 
                     # draw horizontal line
@@ -226,7 +239,7 @@ class MainFrame(pyglet.window.Window):
                     c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
                     l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
                                    constants.RENDERING.LINE_WIDTH)
-                    node1_links.append((c_1, c_2, c_3, c_4))
+                    #node1_links.append((c_1, c_2, c_3, c_4))
                     node2_links.append((c_1, c_2, c_3, c_4))
 
                     # draw second straight line down
@@ -236,7 +249,8 @@ class MainFrame(pyglet.window.Window):
                     c_4 = nodes_to_coords[j+1][1]
                     l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
                                    constants.RENDERING.LINE_WIDTH)
-                    node1_links.append((c_1, c_2, c_3, c_4))
+                    if node1.type == NodeType.HACKER or node1.type == NodeType.ROUTER:
+                        node1_links.append((c_1, c_2, c_3, c_4))
                     node2_links.append((c_1, c_2, c_3, c_4))
                     if node2.ip not in self.node_ip_to_links:
                         self.node_ip_to_links[node2.ip] = node2_links
@@ -274,6 +288,9 @@ class MainFrame(pyglet.window.Window):
 
         for i in range(self.state.obs_state.num_sh):
             labels.append("sh_" + str(i))
+
+        labels.append("tools")
+        labels.append("bd")
 
         # Draw labels
         for c in range(self.state.machines_state.shape[1]):
@@ -594,6 +611,9 @@ class MainFrame(pyglet.window.Window):
                     lbl = self.node_ip_to_ip_lbl[node.ip]
                     lbl.text = ""
 
+        for fw in self.firewall_sprites.values():
+            fw.visible = False
+
         drawn_links = set()
         for m in self.state.obs_state.machines:
             node = self.node_ip_to_node[m.ip]
@@ -604,6 +624,8 @@ class MainFrame(pyglet.window.Window):
                 color = constants.RENDERING.BLUE_PURPLE
             elif node.type == NodeType.SERVER:
                 color = constants.RENDERING.BLACK
+            if m.logged_in:
+                color = constants.RENDERING.GREEN
             create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground, color)
             lbl = self.node_ip_to_ip_lbl[node.ip]
             lbl.text = "." + str(node.ip_id)
@@ -615,6 +637,9 @@ class MainFrame(pyglet.window.Window):
                                constants.RENDERING.LINE_WIDTH)
                     drawn_links.add((link[0], link[1], link[2], link[3]))
                     drawn_links.add((link[2], link[3], link[0], link[1]))
+            if m.ip in self.firewall_sprites:
+                fw_sprite = self.firewall_sprites[m.ip]
+                fw_sprite.visible = True
 
     def on_draw(self) -> None:
         """

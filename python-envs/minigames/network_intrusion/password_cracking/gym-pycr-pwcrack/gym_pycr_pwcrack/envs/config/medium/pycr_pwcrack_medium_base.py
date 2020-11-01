@@ -38,7 +38,7 @@ class PyCrPwCrackMediumBase:
                       os="linux", vulnerabilities=[], credentials=[
                 Credential(username="admin", pw="admin"),
                 Credential(username="jessica", pw="water")
-            ],
+            ], firewall=True,
                       root=["admin"]),
                  Node(ip="172.18.2.2", ip_id=2, id=2, type=NodeType.SERVER,
                       reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
@@ -49,6 +49,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="puppet", pw="puppet"),
                           Credential(username="user1", pw="123123")
                       ],
+                      firewall=True,
                       root=["puppet", "user1"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
@@ -106,6 +107,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="john", pw="doe"),
                           Credential(username="vagrant", pw="test_pw1")
                       ],
+                      firewall=True,
                       root=["admin", "john"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
@@ -259,6 +261,7 @@ class PyCrPwCrackMediumBase:
                                          ]),
                           NetworkService(protocol=TransportProtocol.TCP, port=6667, name="irc", credentials=[])
                       ],
+                      firewall=True,
                       vulnerabilities=[
                           Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
                                         credentials=[
@@ -303,6 +306,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="guest", pw="guest")
                       ],
                       root=["guest"],
+                      firewall=True,
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
                                          credentials=[
