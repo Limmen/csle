@@ -824,6 +824,8 @@ class ClusterUtil:
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
+                for m2 in cache_value.hosts:
+                    s.obs_state.agent_reachable.add(m2.ip_addr)
                 return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
                                                                  partial_result=cache_value, masscan=masscan)
 
@@ -847,6 +849,8 @@ class ClusterUtil:
             try:
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
                 scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+                for m2 in scan_result.hosts:
+                    s.obs_state.agent_reachable.add(m2.ip_addr)
                 break
             except Exception as e:
                 scan_result = NmapScanResult(hosts=[])
@@ -1022,19 +1026,21 @@ class ClusterUtil:
 
         if service_name == constants.SSH.SERVICE_NAME:
             connected, users, target_connections, ports, cost, non_failed_credentials, proxies = ClusterUtil._ssh_setup_connection(
-                a=a, env_config=env_config, credentials=non_used_nor_cached_credentials, proxy_connections=proxy_connections)
+                a=a, env_config=env_config, credentials=non_used_nor_cached_credentials,
+                proxy_connections=proxy_connections, s=s)
         elif service_name == constants.TELNET.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials, \
             proxies = \
                 ClusterUtil._telnet_setup_connection(a=a, env_config=env_config,
                                                      credentials=non_used_nor_cached_credentials,
-                                                     proxy_connections=proxy_connections)
+                                                     proxy_connections=proxy_connections, s=s)
         elif service_name == constants.FTP.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, \
             cost, non_failed_credentials, proxies = \
                 ClusterUtil._ftp_setup_connection(a=a, env_config=env_config,
                                                   credentials=non_used_nor_cached_credentials,
-                                                  proxy_connections=proxy_connections)
+                                                  proxy_connections=proxy_connections,
+                                                  s=s)
 
         s_prime = s
         if len(non_failed_credentials) > 0:
@@ -1087,7 +1093,8 @@ class ClusterUtil:
 
     @staticmethod
     def _ssh_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials : List[Credential], proxy_connections: List[ConnectionObservationState]) \
+                              credentials : List[Credential], proxy_connections: List[ConnectionObservationState],
+                              s: EnvState) \
             -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
         """
         Helper function for setting up a SSH connection
@@ -1096,6 +1103,7 @@ class ClusterUtil:
         :param env_config: the environment config
         :param credentials: list of credentials to try
         :param proxy_connections: list of proxy connections to try
+        :param s: env state
         :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
                  cost, non_failed_credentials
         """
@@ -1107,6 +1115,13 @@ class ClusterUtil:
         start = time.time()
         non_failed_credentials = []
         for proxy_conn in proxy_connections:
+            if proxy_conn.ip != env_config.hacker_ip:
+                m = s.get_machine(proxy_conn.ip)
+                if m is None or a.ip not in m.reachable:
+                    continue
+            else:
+                if not a.ip in s.obs_state.agent_reachable:
+                    continue
             for cr in credentials:
                 if cr.service == constants.SSH.SERVICE_NAME:
                     try:
@@ -1168,7 +1183,8 @@ class ClusterUtil:
 
     @staticmethod
     def _telnet_setup_connection(a: Action, env_config: EnvConfig,
-                                 credentials : List[Credential], proxy_connections : List) \
+                                 credentials : List[Credential], proxy_connections : List,
+                                 s: EnvState) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
         """
         Helper function for setting up a Telnet connection to a target machine
@@ -1177,6 +1193,7 @@ class ClusterUtil:
         :param env_config: the environment config
         :param credentials: list of credentials to try
         :param proxies: proxy connections
+        :param s: env state
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
                  list of ports, cost
         """
@@ -1190,6 +1207,13 @@ class ClusterUtil:
         non_failed_credentials = []
         proxies = []
         for proxy_conn in proxy_connections:
+            if proxy_conn.ip != env_config.hacker_ip:
+                m = s.get_machine(proxy_conn.ip)
+                if m is None or a.ip not in m.reachable:
+                    continue
+            else:
+                if not a.ip in s.obs_state.agent_reachable:
+                    continue
             for cr in credentials:
                 if cr.service == constants.TELNET.SERVICE_NAME:
                     try:
@@ -1266,7 +1290,8 @@ class ClusterUtil:
 
     @staticmethod
     def _ftp_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials : List[Credential], proxy_connections : List) \
+                              credentials : List[Credential], proxy_connections : List,
+                              s: EnvState) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float,  List[Credential]]:
         """
         Helper function for setting up a FTP connection
@@ -1275,6 +1300,7 @@ class ClusterUtil:
         :param env_config: the environment config
         :param credentials: list of credentials to try
         :param proxy_connections: proxy connections
+        :param env_state: env state
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
                  list of ports, cost, non_failed_credentials
         """
@@ -1289,6 +1315,13 @@ class ClusterUtil:
         non_failed_credentials = []
         proxies = []
         for proxy_conn in proxy_connections:
+            if proxy_conn.ip != env_config.hacker_ip:
+                m = s.get_machine(proxy_conn.ip)
+                if m is None or a.ip not in m.reachable:
+                    continue
+            else:
+                if not a.ip in s.obs_state.agent_reachable:
+                    continue
             for cr in credentials:
                 if cr.service == constants.FTP.SERVICE_NAME:
                     try:
@@ -1392,20 +1425,23 @@ class ClusterUtil:
                 cmd = a.cmd[0]
                 if c.root:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
-                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
-                ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
-                                                 env_config=env_config, ip=machine.ip,
-                                                 user=c.username,
-                                                 service=constants.SSH.SERVICE_NAME)
-                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                      service=constants.SSH.SERVICE_NAME,
-                                                      cost=float(total_time))
-                outdata_str = outdata.decode()
-                flag_paths = outdata_str.split("\n")
-                # Persist cache
-                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
-                                                         service=constants.SSH.SERVICE_NAME, user=c.username,
-                                                         files=flag_paths, ip=machine.ip)
+                for i in range(env_config.ssh_retry_find_flag):
+                    outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                    ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                     env_config=env_config, ip=machine.ip,
+                                                     user=c.username,
+                                                     service=constants.SSH.SERVICE_NAME)
+                    env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                          service=constants.SSH.SERVICE_NAME,
+                                                          cost=float(total_time))
+                    outdata_str = outdata.decode()
+                    flag_paths = outdata_str.split("\n")
+                    # Persist cache
+                    ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                             service=constants.SSH.SERVICE_NAME, user=c.username,
+                                                             files=flag_paths, ip=machine.ip)
+                    if len(flag_paths) > 0:
+                        break
 
             # Check for flags
             for fp in flag_paths:
@@ -2123,6 +2159,8 @@ class ClusterUtil:
                     if env_config.use_nmap_cache:
                         scan_result = env_config.nmap_scan_cache.get(cache_id)
                         if scan_result is not None:
+                            for m2 in scan_result.hosts:
+                                machine.reachable.add(m2.ip_addr)
                             break
 
                     # Check On-disk cache
@@ -2151,6 +2189,8 @@ class ClusterUtil:
                             xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config,
                                                                    conn=c.conn, dir=cwd)
                             scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
+                            for m2 in scan_result.hosts:
+                                machine.reachable.add(m2.ip_addr)
                             break
                         except Exception as e:
                             scan_result = NmapScanResult(hosts=[])
@@ -2286,7 +2326,7 @@ class ClusterUtil:
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
                             ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[c.proxy])
+                                                              proxy_connections=[c.proxy], s=s)
                         ssh_cost += total_time
 
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
@@ -2343,7 +2383,7 @@ class ClusterUtil:
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
                             ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[c.proxy])
+                                                              proxy_connections=[c.proxy], s=s)
                         ssh_cost += total_time
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
                                                                     username=credential.username,

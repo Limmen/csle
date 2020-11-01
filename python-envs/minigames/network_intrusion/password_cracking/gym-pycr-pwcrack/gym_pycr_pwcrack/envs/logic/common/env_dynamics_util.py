@@ -113,6 +113,7 @@ class EnvDynamicsUtil:
         n_m = EnvDynamicsUtil.merge_brute_tried(o_m, n_m)
         n_m, num_new_tools_installed = EnvDynamicsUtil.merge_tools_installed(o_m, n_m)
         n_m, num_new_backdoors_installed = EnvDynamicsUtil.merge_backdoor_installed(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_reachable(o_m=o_m, n_m=n_m)
         return n_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, new_root, \
                new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
                num_new_backdoors_installed
@@ -158,6 +159,18 @@ class EnvDynamicsUtil:
             n_m.shell_access = o_m.shell_access
             n_m.shell_access_credentials = o_m.shell_access_credentials
         return n_m, new_access
+
+    @staticmethod
+    def merge_reachable(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation reachable nodes with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated reachable nodes
+        """
+        n_m.reachable = n_m.reachable.union(o_m.reachable)
+        return n_m
 
     @staticmethod
     def merge_logged_in(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:

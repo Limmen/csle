@@ -17,6 +17,7 @@ class ObservationState:
         self.num_flags = num_flags
         self.catched_flags = catched_flags
         self.actions_tried = set()
+        self.agent_reachable = set()
 
 
     def sort_machines(self):

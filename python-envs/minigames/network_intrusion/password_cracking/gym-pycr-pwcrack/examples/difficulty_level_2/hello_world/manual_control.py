@@ -15,7 +15,8 @@ def manual_control():
     cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
 
-    env = gym.make("pycr-pwcrack-medium-cluster-base-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-medium-cluster-base-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-medium-cluster-v1", env_config=None, cluster_config=cluster_config)
 
     #env = gym.make("pycr-pwcrack-medium-sim-base-v1", env_config=None)
     ManualAttackerAgent(env=env, env_config=env.env_config)

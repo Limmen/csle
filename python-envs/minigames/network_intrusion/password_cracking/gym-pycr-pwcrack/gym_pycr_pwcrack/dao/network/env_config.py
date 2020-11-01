@@ -115,6 +115,7 @@ class EnvConfig:
         self.blacklist_ips = ["172.18.1.1"]
         self.manual_play = manual_play
         self.state_type = state_type
+        self.ssh_retry_find_flag = 2
 
 
     def get_port_forward_port(self) -> int:
