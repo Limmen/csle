@@ -2277,8 +2277,8 @@ class ClusterUtil:
                 # Check cached connections
                 for cr in s.cached_backdoor_credentials.values():
                     if (machine.ip, cr.username, cr.port) in s.cached_ssh_connections:
-                        conn = s.cached_ssh_connections[(machine.ip, cr.username, cr.port)]
-                        connection_dto = ConnectionObservationState(conn=conn, username=cr.username,
+                        conn_dto = s.cached_ssh_connections[(machine.ip, cr.username, cr.port)]
+                        connection_dto = ConnectionObservationState(conn=conn_dto.conn, username=cr.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=cr.port, ip=machine.ip)
