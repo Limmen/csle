@@ -1,7 +1,7 @@
 """
 The main frame for the pycr-pwcrack environment
 """
-import numpy as np
+import pyperclip
 import os
 import pyglet
 from gym_pycr_pwcrack.envs.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
@@ -511,8 +511,10 @@ class MainFrame(pyglet.window.Window):
                 # action = int(self.state.manual_action)
                 # self.env.step(action)
                 try:
-                    action = int(self.state.manual_action)
-                    self.env.step(action)
+                    actions = list(map(lambda x: int(x), self.state.manual_action.split(",")))
+                    #action = int(self.state.manual_action)
+                    for a in actions:
+                        self.env.step(a)
                 except Exception as e:
                     print("invalid action: {}".format(str(e)))
             self.state.manual_action = ""
@@ -524,6 +526,11 @@ class MainFrame(pyglet.window.Window):
         elif symbol == pyglet.window.key.TAB:
             if self.env is not None:
                 self.env.env_config.action_conf.print_actions()
+        elif modifiers is 18 and pyglet.window.key.MOD_CTRL and int(symbol) is pyglet.window.key.V:
+            self.state.manual_action = pyperclip.paste()
+
+        elif modifiers is 18 and pyglet.window.key.MOD_CTRL and int(symbol) is pyglet.window.key.C:
+            pyperclip.copy(self.state.manual_action)
 
     def setup_resources_path(self) -> None:
         """

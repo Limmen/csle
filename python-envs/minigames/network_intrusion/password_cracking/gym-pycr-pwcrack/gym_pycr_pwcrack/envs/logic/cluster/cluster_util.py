@@ -2282,7 +2282,8 @@ class ClusterUtil:
             else:
                 break
         if len(users) == 1:
-            raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root, c.username))
+            raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root,
+                                                                                          c.username))
         return users
 
     @staticmethod
