@@ -114,6 +114,7 @@ class EnvDynamicsUtil:
         n_m, num_new_tools_installed = EnvDynamicsUtil.merge_tools_installed(o_m, n_m)
         n_m, num_new_backdoors_installed = EnvDynamicsUtil.merge_backdoor_installed(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_reachable(o_m=o_m, n_m=n_m)
+        n_m = EnvDynamicsUtil.merge_backdoor_credentials(o_m=o_m, n_m=n_m)
         return n_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, new_root, \
                new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
                num_new_backdoors_installed
@@ -170,6 +171,18 @@ class EnvDynamicsUtil:
         :return: the merged machine observation with updated reachable nodes
         """
         n_m.reachable = n_m.reachable.union(o_m.reachable)
+        return n_m
+
+    @staticmethod
+    def merge_backdoor_credentials(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation backdoor credentials nodes with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated backdoor credentials nodes
+        """
+        n_m.backdoor_credentials = list(set(n_m.backdoor_credentials + o_m.backdoor_credentials))
         return n_m
 
     @staticmethod
@@ -261,13 +274,9 @@ class EnvDynamicsUtil:
         :param n_os: the new machine observation
         :return: the merged machine observation with updated connections
         """
-        # Stale connections are removed
-        if len(n_m.ssh_connections) == 0:
-            n_m.ssh_connections = o_m.ssh_connections
-        if len(n_m.telnet_connections) == 0:
-            n_m.telnet_connections = o_m.telnet_connections
-        if len(n_m.ftp_connections) == 0:
-            n_m.ftp_connections = o_m.ftp_connections
+        n_m.ssh_connections = list(set(n_m.ssh_connections + o_m.ssh_connections))
+        n_m.telnet_connections = list(set(n_m.telnet_connections + o_m.telnet_connections))
+        n_m.ftp_connections = list(set(n_m.ftp_connections + o_m.ftp_connections))
         return n_m
 
     @staticmethod

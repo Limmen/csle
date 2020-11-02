@@ -21,3 +21,6 @@ class Credential:
             return NotImplemented
 
         return self.username == other.username and self.pw == other.pw and self.service == other.service
+
+    def __hash__(self):
+        return hash(self.username) + 31 * hash(self.pw)+ + 31 * hash(self.service)

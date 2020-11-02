@@ -2123,6 +2123,7 @@ class ClusterUtil:
                         h.trace = h2.trace
 
         scan_result_1.hosts = scan_result_1.hosts + new_hosts
+        scan_result_1.reachable = list(set(scan_result_1.reachable + scan_result_2.reachable))
         return scan_result_1
 
     @staticmethod
@@ -2146,23 +2147,22 @@ class ClusterUtil:
         # Check in-memory cache
         if env_config.use_nmap_cache:
             scan_result = env_config.nmap_scan_cache.get(base_cache_id)
-            #scan_result = ClusterUtil.merge_nmap_scan_results(scan_result_1=scan_result, scan_result_2=partial_result)
             if scan_result is not None:
-                s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
+                merged_result, total_results = scan_result
+                s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=merged_result, s=s, a=a,
                                                                                 env_config=env_config)
-                if scan_result.ip == env_config.hacker_ip:
-                    s_prime.obs_state.agent_reachable.update(scan_result.reachable)
-                else:
-                    machine = s_prime.get_machine(scan_result.ip)
-                    if machine == None:
-                        print("machine is None")
-                        print("ip:{}".format(scan_result.ip))
-                    machine.reachable.update(scan_result.reachable)
+                for res in total_results:
+                    if res.ip == env_config.hacker_ip:
+                        s_prime.obs_state.agent_reachable.update(res.reachable)
+                    else:
+                        machine = s_prime.get_machine(res.ip)
+                        machine.reachable.update(res.reachable)
                 return s_prime, reward, False
 
         new_machines_obs = []
         total_cost = 0
         merged_scan_result = partial_result
+        total_results = []
 
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
@@ -2221,13 +2221,15 @@ class ClusterUtil:
 
                 # Update state with scan result
                 if merged_scan_result is not None and scan_result is not None:
+                    total_results.append(scan_result)
                     merged_scan_result = ClusterUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
-                                                                             scan_result_2=scan_result)
+                                                                             scan_result_2=scan_result.copy())
                 elif merged_scan_result is None:
-                    merged_scan_result = scan_result
+                    total_results.append(scan_result)
+                    merged_scan_result = scan_result.copy()
 
         if env_config.use_nmap_cache:
-            env_config.nmap_scan_cache.add(base_cache_id, merged_scan_result)
+            env_config.nmap_scan_cache.add(base_cache_id, (merged_scan_result, total_results))
         s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
         return s_prime, reward, False
@@ -2252,11 +2254,11 @@ class ClusterUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(conn, env_config: EnvConfig, telnet : bool = False) -> bool:
+    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet : bool = False) -> bool:
         """
         List all users on a machine
 
-        :param conn: the connection to user for the command
+        :param c: the connection to user for the command
         :param telnet: whether it is a telnet connection
         :param env_config: env config
         :return: list of users
@@ -2264,14 +2266,14 @@ class ClusterUtil:
         cmd = constants.SHELL.LIST_ALL_USERS
         for i in range(env_config.retry_find_users):
             if not telnet:
-                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                 outdata = outdata.decode()
                 errdata = errdata.decode()
                 users = outdata.split("\n")
             else:
                 cmd = cmd + "\n"
-                conn.write(cmd.encode())
-                response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                c.conn.write(cmd.encode())
+                response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
                 response = response.decode()
                 users = response.split("\n")
                 users = list(map(lambda x: x.replace("\r", ""), users))
@@ -2280,8 +2282,7 @@ class ClusterUtil:
             else:
                 break
         if len(users) == 1:
-            print("EXIT USERS EMPTY")
-            exit(1)
+            raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root, c.username))
         return users
 
     @staticmethod
@@ -2327,7 +2328,7 @@ class ClusterUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     try:
-                        users = ClusterUtil._list_all_users(c.conn, env_config=env_config)
+                        users = ClusterUtil._list_all_users(c, env_config=env_config)
                         users = sorted(users, key=lambda x: x)
                         user_exists = False
                         for user in users:
@@ -2336,7 +2337,6 @@ class ClusterUtil:
                                 username = user
 
                         if not user_exists:
-                            print("backdoor user does not exist, ip:{}, users:{}".format(machine.ip, users))
                             # Create user
                             create_user_cmd = a.cmd[1].format(username, pw, username)
                             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=create_user_cmd, conn=c.conn)
@@ -2371,10 +2371,8 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        print("Creating Backdoor Exception: {}".format(str(e)))
-                        print("Target: {}, Proxy:{}".format(a.ip, c.proxy.ip))
-                        m = s.get_machine(c.proxy.ip)
-                        print("reachable:{}".format(m.reachable))
+                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
+                                                                                                       c.proxy.ip))
 
                     if backdoor_created:
                         break
@@ -2389,7 +2387,7 @@ class ClusterUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
-                        users = ClusterUtil._list_all_users(c.conn, env_config=env_config, telnet=True)
+                        users = ClusterUtil._list_all_users(c, env_config=env_config, telnet=True)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
@@ -2430,8 +2428,8 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        print("Exception: {}".format(str(e)))
-                        print("Target: {}, Proxy:{}".format(a.ip, c.proxy.ip))
+                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
+                                                                                                       c.proxy.ip))
                     if backdoor_created:
                         break
 

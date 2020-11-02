@@ -18,6 +18,18 @@ class ConnectionObservationState:
     def __str__(self):
         return "username:{},root:{},service:{},port:{}".format(self.username, self.root, self.service, self.port)
 
+    def __eq__(self, other):
+        if not isinstance(other, ConnectionObservationState):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+
+        return self.username == other.username and self.root == other.root and self.service == other.service \
+               and self.port == other.port and self.ip == other.ip
+
+    def __hash__(self):
+        return hash(self.username) + 31 * hash(self.root) + 31 * hash(self.service) + 31 * hash(self.port) \
+               + 31 * hash(self.ip)
+
     def cleanup(self) -> None:
         """
         Utility function for cleaning up the connection.
