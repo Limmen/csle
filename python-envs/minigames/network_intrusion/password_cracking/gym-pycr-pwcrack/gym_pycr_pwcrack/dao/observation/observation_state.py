@@ -6,7 +6,7 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 class ObservationState:
 
     def __init__(self, num_machines : int, num_ports : int, num_vuln : int, num_sh : int,
-                 num_flags : int, catched_flags : int):
+                 num_flags : int, catched_flags : int, agent_reachable = None):
         self.num_machines = num_machines
         self.num_ports = num_ports
         self.num_vuln = num_vuln
@@ -17,7 +17,9 @@ class ObservationState:
         self.num_flags = num_flags
         self.catched_flags = catched_flags
         self.actions_tried = set()
-        self.agent_reachable = set()
+        self.agent_reachable = agent_reachable
+        if agent_reachable is None:
+            self.agent_reachable = set()
 
 
     def sort_machines(self):

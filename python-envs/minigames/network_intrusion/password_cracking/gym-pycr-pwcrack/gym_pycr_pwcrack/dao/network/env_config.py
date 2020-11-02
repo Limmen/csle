@@ -116,6 +116,7 @@ class EnvConfig:
         self.manual_play = manual_play
         self.state_type = state_type
         self.ssh_retry_find_flag = 2
+        self.retry_find_users = 4
 
 
     def get_port_forward_port(self) -> int:

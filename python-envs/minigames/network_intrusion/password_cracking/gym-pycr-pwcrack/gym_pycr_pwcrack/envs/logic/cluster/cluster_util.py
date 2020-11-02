@@ -408,11 +408,12 @@ class ClusterUtil:
 
 
     @staticmethod
-    def parse_nmap_scan_xml(xml_data) -> NmapScanResult:
+    def parse_nmap_scan_xml(xml_data, ip) -> NmapScanResult:
         """
         Parses an XML Tree into a DTO
 
         :param xml_data: the xml tree to parse
+        :param ip: ip of the source of the scan
         :return: parsed nmap scan result
         """
         hosts = []
@@ -420,7 +421,7 @@ class ClusterUtil:
             if child.tag == constants.NMAP_XML.HOST:
                 host = ClusterUtil._parse_nmap_host_xml(child)
                 hosts = ClusterUtil._merge_nmap_hosts(host, hosts)
-        result = NmapScanResult(hosts=hosts)
+        result = NmapScanResult(hosts=hosts, ip=ip)
         return result
 
     @staticmethod
@@ -809,25 +810,26 @@ class ClusterUtil:
     def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, masscan : bool = False) \
             -> Tuple[EnvState, float, bool]:
         """
-        Helpe function for executing a NMAP scan action on the cluster. Implements caching.
+        Helper function for executing a NMAP scan action on the cluster. Implements caching.
 
         :param s: the current env state
         :param a: the NMAP action to execute
         :param env_config: the env config
         :return: s', reward, done
         """
-        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
+        cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
+        cache_id = (a.id, a.index, a.ip, a.subnet)
         if a.subnet:
-            cache_id = str(a.id.value) + "_" + str(a.index) + ".xml"
+            cache_filename = str(a.id.value) + "_" + str(a.index) + ".xml"
+
 
         # Check in-memory cache
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
-                for m2 in cache_value.hosts:
-                    s.obs_state.agent_reachable.add(m2.ip_addr)
+                s.obs_state.agent_reachable.update(cache_value.reachable)
                 return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
-                                                                 partial_result=cache_value, masscan=masscan)
+                                                                 partial_result=cache_value.copy(), masscan=masscan)
 
         # Check On-disk cache
         if env_config.use_nmap_cache:
@@ -842,18 +844,17 @@ class ClusterUtil:
                                                                        conn=env_config.cluster_config.agent_conn)
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
-            cache_result = cache_id
+            cache_result = cache_filename
 
         # Read result
         for i in range(env_config.num_retries):
             try:
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
-                scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
-                for m2 in scan_result.hosts:
-                    s.obs_state.agent_reachable.add(m2.ip_addr)
+                scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=env_config.hacker_ip)
+                s.obs_state.agent_reachable.update(scan_result.reachable)
                 break
             except Exception as e:
-                scan_result = NmapScanResult(hosts=[])
+                scan_result = NmapScanResult(hosts=[], ip=env_config.hacker_ip)
                 #print("read nmap scan exception:{}, action:{}".format(str(e), a.name))
                 # ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
                 # outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
@@ -871,7 +872,7 @@ class ClusterUtil:
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(cache_id, scan_result)
         return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
-                                                         partial_result=scan_result, masscan=masscan)
+                                                         partial_result=scan_result.copy(), masscan=masscan)
 
 
     @staticmethod
@@ -1117,7 +1118,7 @@ class ClusterUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_machine(proxy_conn.ip)
-                if m is None or a.ip not in m.reachable:
+                if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
                 if not a.ip in s.obs_state.agent_reachable:
@@ -1142,6 +1143,9 @@ class ClusterUtil:
                         non_failed_credentials.append(cr)
                     except Exception as e:
                         print("SSH exception :{}".format(str(e)))
+                        print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -1209,7 +1213,7 @@ class ClusterUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_machine(proxy_conn.ip)
-                if m is None or a.ip not in m.reachable:
+                if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
                 if not a.ip in s.obs_state.agent_reachable:
@@ -1246,6 +1250,9 @@ class ClusterUtil:
                         non_failed_credentials.append(cr)
                     except Exception as e:
                         print("telnet exception:{}".format(str(e)))
+                        print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -1317,7 +1324,7 @@ class ClusterUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_machine(proxy_conn.ip)
-                if m is None or a.ip not in m.reachable:
+                if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
                 if not a.ip in s.obs_state.agent_reachable:
@@ -1361,6 +1368,9 @@ class ClusterUtil:
                             non_failed_credentials.append(cr)
                     except Exception as e:
                         print("FTP exception: {}".format(str(e)))
+                        print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -2123,12 +2133,15 @@ class ClusterUtil:
         logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
                                                         s.obs_state.machines)))
         logged_in_ips.append(hacker_ip)
+        logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
-
-        base_cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
+        base_cache_id = (a.id, a.index, a.ip, a.subnet)
+        for ip in logged_in_ips:
+            base_cache_id = base_cache_id + (ip,)
+        base_cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
         if a.subnet:
-            base_cache_id = str(a.id.value) + "_" + str(a.index)
-        base_cache_id = base_cache_id + "_" + logged_in_ips_str + ".xml"
+            base_cache_filename = str(a.id.value) + "_" + str(a.index)
+        base_cache_filename = base_cache_filename + "_" + logged_in_ips_str + ".xml"
 
         # Check in-memory cache
         if env_config.use_nmap_cache:
@@ -2137,6 +2150,14 @@ class ClusterUtil:
             if scan_result is not None:
                 s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=scan_result, s=s, a=a,
                                                                                 env_config=env_config)
+                if scan_result.ip == env_config.hacker_ip:
+                    s_prime.obs_state.agent_reachable.update(scan_result.reachable)
+                else:
+                    machine = s_prime.get_machine(scan_result.ip)
+                    if machine == None:
+                        print("machine is None")
+                        print("ip:{}".format(scan_result.ip))
+                    machine.reachable.update(scan_result.reachable)
                 return s_prime, reward, False
 
         new_machines_obs = []
@@ -2145,9 +2166,10 @@ class ClusterUtil:
 
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
-            cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
+            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
             if a.subnet:
-                cache_id = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
+                cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
+            cache_id = (a.id, a.index, a.ip, a.subnet, machine.ip)
 
             if machine.logged_in and machine.tools_installed:
 
@@ -2159,8 +2181,7 @@ class ClusterUtil:
                     if env_config.use_nmap_cache:
                         scan_result = env_config.nmap_scan_cache.get(cache_id)
                         if scan_result is not None:
-                            for m2 in scan_result.hosts:
-                                machine.reachable.add(m2.ip_addr)
+                            machine.reachable.update(scan_result.reachable)
                             break
 
                     # Check On-disk cache
@@ -2181,19 +2202,17 @@ class ClusterUtil:
                                                          conn=c.conn, dir=cwd, machine_ip=machine.ip)
                         env_config.action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
                                                                     target_ip=machine.ip, cost=round(total_time, 1))
-                        cache_result = cache_id
+                        cache_result = cache_filename
 
                     # Read result
                     for i in range(env_config.num_retries):
                         try:
                             xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config,
                                                                    conn=c.conn, dir=cwd)
-                            scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data)
-                            for m2 in scan_result.hosts:
-                                machine.reachable.add(m2.ip_addr)
-                            break
+                            scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=machine.ip)
+                            machine.reachable.update(scan_result.reachable)
                         except Exception as e:
-                            scan_result = NmapScanResult(hosts=[])
+                            scan_result = NmapScanResult(hosts=[], ip=machine.ip)
                             break
 
                     if env_config.use_nmap_cache:
@@ -2233,26 +2252,36 @@ class ClusterUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(conn, telnet : bool = False) -> bool:
+    def _list_all_users(conn, env_config: EnvConfig, telnet : bool = False) -> bool:
         """
         List all users on a machine
 
         :param conn: the connection to user for the command
         :param telnet: whether it is a telnet connection
+        :param env_config: env config
         :return: list of users
         """
         cmd = constants.SHELL.LIST_ALL_USERS
-        if not telnet:
-            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
-            outdata = outdata.decode()
-            users = outdata.split("\n")
-        else:
-            cmd = cmd + "\n"
-            conn.write(cmd.encode())
-            response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
-            response = response.decode()
-            users = response.split("\n")
-            users = list(map(lambda x: x.replace("\r", ""), users))
+        for i in range(env_config.retry_find_users):
+            if not telnet:
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+                outdata = outdata.decode()
+                errdata = errdata.decode()
+                users = outdata.split("\n")
+            else:
+                cmd = cmd + "\n"
+                conn.write(cmd.encode())
+                response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                response = response.decode()
+                users = response.split("\n")
+                users = list(map(lambda x: x.replace("\r", ""), users))
+            if len(users) == 1:
+                continue
+            else:
+                break
+        if len(users) == 1:
+            print("EXIT USERS EMPTY")
+            exit(1)
         return users
 
     @staticmethod
@@ -2298,7 +2327,8 @@ class ClusterUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     try:
-                        users = ClusterUtil._list_all_users(c.conn)
+                        users = ClusterUtil._list_all_users(c.conn, env_config=env_config)
+                        users = sorted(users, key=lambda x: x)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
@@ -2306,6 +2336,7 @@ class ClusterUtil:
                                 username = user
 
                         if not user_exists:
+                            print("backdoor user does not exist, ip:{}, users:{}".format(machine.ip, users))
                             # Create user
                             create_user_cmd = a.cmd[1].format(username, pw, username)
                             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=create_user_cmd, conn=c.conn)
@@ -2340,7 +2371,10 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        print("Exception: {}".format(str(e)))
+                        print("Creating Backdoor Exception: {}".format(str(e)))
+                        print("Target: {}, Proxy:{}".format(a.ip, c.proxy.ip))
+                        m = s.get_machine(c.proxy.ip)
+                        print("reachable:{}".format(m.reachable))
 
                     if backdoor_created:
                         break
@@ -2355,7 +2389,7 @@ class ClusterUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
-                        users = ClusterUtil._list_all_users(c.conn, telnet=True)
+                        users = ClusterUtil._list_all_users(c.conn, env_config=env_config, telnet=True)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
@@ -2384,7 +2418,7 @@ class ClusterUtil:
                         connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
                             ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
                                                               proxy_connections=[c.proxy], s=s)
-                        ssh_cost += total_time
+                        telnet_cost += total_time
                         connection_dto = ConnectionObservationState(conn=target_connections[0],
                                                                     username=credential.username,
                                                                     root=machine.root,
@@ -2397,6 +2431,7 @@ class ClusterUtil:
                         backdoor_created = True
                     except Exception as e:
                         print("Exception: {}".format(str(e)))
+                        print("Target: {}, Proxy:{}".format(a.ip, c.proxy.ip))
                     if backdoor_created:
                         break
 

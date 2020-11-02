@@ -83,7 +83,9 @@ class EnvState:
 
         :return: None
         """
+        agent_reachable = None
         if self.obs_state is not None:
+            agent_reachable = self.obs_state.agent_reachable
             for m in self.obs_state.machines:
                 for c in m.ssh_connections:
                     self.cached_ssh_connections[(m.ip, c.username, c.port)] = c
@@ -95,7 +97,7 @@ class EnvState:
                     self.cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
         self.obs_state = ObservationState(num_machines=len(self.network_config.nodes)-1, num_ports=self.num_ports,
                                           num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
-                                          catched_flags=0)
+                                          catched_flags=0, agent_reachable=agent_reachable)
 
     def merge_services_with_cluster(self, cluster_services : List[str]) -> None:
         """

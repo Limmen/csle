@@ -1,4 +1,5 @@
 from typing import List
+import copy
 from gym_pycr_pwcrack.dao.action_results.nmap_host_status import NmapHostStatus
 from gym_pycr_pwcrack.dao.action_results.nmap_port import NmapPort
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
@@ -53,3 +54,6 @@ class NmapHostResult:
         m_obs.hostnames = self.hostnames
         m_obs.trace = self.trace
         return m_obs
+
+    def copy(self):
+        return copy.deepcopy(self)
