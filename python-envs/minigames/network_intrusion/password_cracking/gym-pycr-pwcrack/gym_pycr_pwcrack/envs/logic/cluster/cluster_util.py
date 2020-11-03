@@ -2263,6 +2263,37 @@ class ClusterUtil:
         :param env_config: env config
         :return: list of users
         """
+        cache_id = ("list_users", c.ip, c.root)
+        cache_file_name = "list_users_" + c.ip + "_" + str(c.root)
+
+        # check in-memory cache
+        if env_config.filesystem_scan_cache.get(cache_id) is not None:
+            print("list all users in-mem cache hit")
+            return env_config.filesystem_scan_cache.get(cache_id)
+
+        if not telnet:
+            # check file cache
+            sftp_client = c.conn.open_sftp()
+            cwd = "/home/" + c.username + "/"
+            remote_file = None
+            try:
+                remote_file = sftp_client.open(cwd + cache_file_name, mode="r")
+                users = []
+                data = remote_file.read()
+                data = data.decode()
+                users = data.split("\n")
+                if len(users) > 1:
+                    # cache result
+                    env_config.filesystem_scan_cache.add(cache_id, users)
+                    print("list all users on-disk cache hit")
+                    return users
+            except Exception as e:
+                print("exception reading?")
+                pass
+            finally:
+                if remote_file is not None:
+                    remote_file.close()
+
         cmd = constants.SHELL.LIST_ALL_USERS
         for i in range(env_config.retry_find_users):
             if not telnet:
@@ -2284,6 +2315,22 @@ class ClusterUtil:
         if len(users) == 1:
             raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root,
                                                                                           c.username))
+        # cache result in-memory
+        env_config.filesystem_scan_cache.add(cache_id, users)
+
+        if not telnet:
+            # cache result on-disk
+            sftp_client = c.conn.open_sftp()
+            remote_file = None
+            try:
+                remote_file = sftp_client.file(cwd + cache_file_name, mode="w")
+                for user in users:
+                    remote_file.write(user + "\n")
+            except Exception as e:
+                print("Error writing list of users cache: {}, file:{}, ip:{}".format(str(e), cwd + cache_file_name, c.ip))
+            finally:
+                if remote_file is not None:
+                    remote_file.close()
         return users
 
     @staticmethod
