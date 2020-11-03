@@ -30,8 +30,8 @@ class PyCrPwCrackMediumV1:
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
 
         # Subnet actions
-        #actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask,
-        #                                                subnet=True))
+        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask,
+                                                        subnet=True))
         actions.append(NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
         actions.append(NetworkServiceActions.SERVICE_LOGIN(index=len(network_conf.nodes)))
@@ -47,7 +47,7 @@ class PyCrPwCrackMediumV1:
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
-            #ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
+            ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
             ActionId.PING_SCAN_SUBNET,
             ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
