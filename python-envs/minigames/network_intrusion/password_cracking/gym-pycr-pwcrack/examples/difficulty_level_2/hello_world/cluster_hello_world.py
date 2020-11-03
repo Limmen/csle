@@ -1,5 +1,6 @@
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackSimpleSim1Env, PyCRPwCrackSimpleCluster1Env
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
+from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np
 
@@ -27,8 +28,16 @@ def test_env(env_name : str, num_steps : int):
 
         legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
         if len(legal_actions) == 0:
-            env.reset()
             print("cont, trajectory:{}".format(trajectory))
+            print("all actions illegal, actions tried: ")
+            print(env.env_state.obs_state.actions_tried)
+            for m in env.env_state.obs_state.machines:
+                print("ip: {}, shell access:{}, ssh_brute_t:{}, ftp_brute_t:{}, telnet_brute_t:{}, fs_searched:{},untried_cred:{},logged_in:{},"
+                      "tools:{},backdoor:{}".format(
+                    m.ip, m.shell_access, m.telnet_brute_tried, m.ssh_brute_tried, m.ftp_brute_tried, m.filesystem_searched, m.untried_credentials,
+                m.logged_in, m.tools_installed, m.backdoor_installed))
+            print("all flags?:{}".format(EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config)))
+            env.reset()
             trajectory = []
             continue
         action = np.random.choice(legal_actions)

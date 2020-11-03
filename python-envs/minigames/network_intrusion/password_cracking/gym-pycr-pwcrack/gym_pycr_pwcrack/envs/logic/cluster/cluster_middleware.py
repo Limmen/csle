@@ -33,6 +33,14 @@ class ClusterMiddleware:
             s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
             return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
+            if a.subnet:
+                hacker_ip = env_config.hacker_ip
+                logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+                                                                s.obs_state.machines)))
+                logged_in_ips.append(hacker_ip)
+                logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
+                logged_in_ips_str = "_".join(logged_in_ips)
+                s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
             return ClusterMiddleware.exploit_action(s=s, a=a, env_config=env_config)
         elif a.type == ActionType.POST_EXPLOIT:
             return ClusterMiddleware.post_exploit_action(s=s, a=a, env_config=env_config)

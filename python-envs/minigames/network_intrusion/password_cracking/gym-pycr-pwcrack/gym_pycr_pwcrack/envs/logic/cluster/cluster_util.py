@@ -2165,6 +2165,7 @@ class ClusterUtil:
         total_results = []
 
         for machine in s.obs_state.machines:
+            scan_result = None
             new_m_obs = MachineObservationState(ip=machine.ip)
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
             if a.subnet:
@@ -2215,7 +2216,7 @@ class ClusterUtil:
                             scan_result = NmapScanResult(hosts=[], ip=machine.ip)
                             break
 
-                    if env_config.use_nmap_cache:
+                    if env_config.use_nmap_cache and scan_result is not None:
                         env_config.nmap_scan_cache.add(cache_id, scan_result)
                     break
 
@@ -2268,7 +2269,6 @@ class ClusterUtil:
 
         # check in-memory cache
         if env_config.filesystem_scan_cache.get(cache_id) is not None:
-            print("list all users in-mem cache hit")
             return env_config.filesystem_scan_cache.get(cache_id)
 
         if not telnet:
@@ -2285,7 +2285,6 @@ class ClusterUtil:
                 if len(users) > 1:
                     # cache result
                     env_config.filesystem_scan_cache.add(cache_id, users)
-                    print("list all users on-disk cache hit")
                     return users
             except Exception as e:
                 print("exception reading?")

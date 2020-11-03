@@ -223,6 +223,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
+            # if m.shell_access and not m.logged_in:
+            #     untried_credentials = True
             if m.untried_credentials:
                 untried_credentials = m.untried_credentials
 
@@ -231,6 +233,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
+            if action.subnet and target_machine is None:
+                return True
             brute_tried = env_state.obs_state.brute_tried(a=action, m=target_machine)
             if brute_tried:
                 return False
