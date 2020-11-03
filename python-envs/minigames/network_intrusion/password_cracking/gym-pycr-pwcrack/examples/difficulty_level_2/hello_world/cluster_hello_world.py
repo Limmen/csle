@@ -42,6 +42,8 @@ def test_env(env_name : str, num_steps : int):
             continue
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
+        if not done and EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config):
+            print("not done but got all flags???")
         trajectory.append(action)
         env.render()
         if done:

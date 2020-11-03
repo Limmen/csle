@@ -25,7 +25,8 @@ class ClusterMiddleware:
         """
         if a.type == ActionType.RECON:
             hacker_ip = env_config.hacker_ip
-            logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+            logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
+                                                                      and x.backdoor_installed,
                                                             s.obs_state.machines)))
             logged_in_ips.append(hacker_ip)
             logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
@@ -35,7 +36,8 @@ class ClusterMiddleware:
         elif a.type == ActionType.EXPLOIT:
             if a.subnet:
                 hacker_ip = env_config.hacker_ip
-                logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+                logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed
+                                                                          and x.backdoor_installed,
                                                                 s.obs_state.machines)))
                 logged_in_ips.append(hacker_ip)
                 logged_in_ips = sorted(logged_in_ips, key=lambda x: x)

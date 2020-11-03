@@ -31,6 +31,7 @@ from gym_pycr_pwcrack.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_pwcrack.dao.action_results.nmap_http_enum import NmapHttpEnum
 from gym_pycr_pwcrack.dao.action_results.nmap_http_grep import NmapHttpGrep
 from gym_pycr_pwcrack.dao.action_results.nmap_vulscan import NmapVulscan
+from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class ClusterUtil:
     """
@@ -780,6 +781,33 @@ class ClusterUtil:
 
         for host in scan_result.hosts:
             m_obs = host.to_obs()
+            if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.ftp_brute_tried = True
+            elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.ssh_brute_tried = True
+            elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.telnet_brute_tried = True
+            elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+                m_obs.irc_brute_tried = True
+            elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.postgres_brute_tried = True
+            elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.smtp_brute_tried = True
+            elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.mysql_brute_tried = True
+            elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.mongo_brute_tried = True
+            elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                    or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+                m_obs.cassandra_brute_tried = True
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -1437,6 +1465,7 @@ class ClusterUtil:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
                 for i in range(env_config.ssh_retry_find_flag):
                     outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                    new_m_obs.filesystem_searched = True
                     ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                      env_config=env_config, ip=machine.ip,
                                                      user=c.username,
@@ -1469,7 +1498,6 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1503,6 +1531,7 @@ class ClusterUtil:
                 start = time.time()
                 c.conn.write(cmd.encode())
                 response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                new_m_obs.filesystem_searched = True
                 end = time.time()
                 total_time = end - start
                 ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
@@ -1534,7 +1563,6 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1601,6 +1629,7 @@ class ClusterUtil:
                 output_list = output_str.split('\r\n')
                 output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
                 flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x, output_list))
+                new_m_obs.filesystem_searched = True
 
                 # Persist cache
                 ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
@@ -1622,7 +1651,6 @@ class ClusterUtil:
             if c.root:
                 root_scan = True
                 break
-        new_m_obs.filesystem_searched = True
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
@@ -1957,7 +1985,8 @@ class ClusterUtil:
                 for c in ssh_root_connections:
                     key = (machine.ip, c.username)
                     if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
-                        new_m_obs, cost = env_config.user_command_cache.get(key)
+                        cache_m_obs, cost = env_config.user_command_cache.get(key)
+                        new_m_obs.tools_installed = cache_m_obs.tools_installed
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
                         if new_m_obs.tools_installed:
@@ -2016,7 +2045,8 @@ class ClusterUtil:
                 for c in telnet_root_connections:
                     key = (machine.ip, c.username)
                     if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
-                        new_m_obs, cost = env_config.user_command_cache.get(key)
+                        cache_m_obs, cost = env_config.user_command_cache.get(key)
+                        new_m_obs.tools_installed = cache_m_obs.tools_installed
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
                         if new_m_obs.tools_installed:
@@ -2131,7 +2161,8 @@ class ClusterUtil:
     NmapScanResult, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
         hacker_ip = env_config.hacker_ip
-        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed,
+        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
+                                                                  and x.backdoor_installed,
                                                         s.obs_state.machines)))
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
@@ -2156,6 +2187,12 @@ class ClusterUtil:
                         s_prime.obs_state.agent_reachable.update(res.reachable)
                     else:
                         machine = s_prime.get_machine(res.ip)
+                        if machine is None:
+                            print("None m")
+                            print("ip: {}".format(res.ip))
+                            print("merged result machines: {}".format(list(map(lambda x: x.ip_addr, merged_result.hosts))))
+                            for tm in total_results:
+                                print("total_results machines: {}".format(list(map(lambda x: x.ip_addr, tm.hosts))))
                         machine.reachable.update(res.reachable)
                 return s_prime, reward, False
 
@@ -2608,4 +2645,5 @@ class ClusterUtil:
                                                  cost=a.cost,
                                                  env_config=env_config)
         return s_prime, reward, False
+
 
