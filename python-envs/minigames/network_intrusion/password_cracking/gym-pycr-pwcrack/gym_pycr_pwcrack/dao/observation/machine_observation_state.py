@@ -60,12 +60,19 @@ class MachineObservationState:
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
 
     def sort_cve_vuln(self, vuln_lookup):
-        self.cve_vulns = sorted(self.cve_vulns, key=lambda x: vuln_lookup[x.name], reverse=False)
+        self.cve_vulns = sorted(self.cve_vulns, key=lambda x: self._vuln_lookup(name=x.name, lookup_table=vuln_lookup),
+                                reverse=False)
 
     def sort_shell_access(self, service_lookup):
         self.shell_access_credentials = sorted(self.shell_access_credentials,
                                                key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
                                                reverse=False)
+
+    def _vuln_lookup(self, name, lookup_table):
+        if name in lookup_table:
+            return lookup_table[name]
+        else:
+            return lookup_table["unknown"]
 
     def sort_osvdb_vuln(self):
         self.osvdb_vulns = sorted(self.osvdb_vulns, key=lambda x: x.osvdb_id, reverse=False)

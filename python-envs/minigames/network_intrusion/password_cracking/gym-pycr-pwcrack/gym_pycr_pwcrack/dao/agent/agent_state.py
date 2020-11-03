@@ -83,7 +83,7 @@ class AgentState:
 
                 # Vulnerabilities
                 for j, sh_c in enumerate(self.obs_state.machines[i].cve_vulns):
-                    v_id = self.vuln_lookup[sh_c.name]
+                    v_id = self.obs_state.machines[i]._vuln_lookup(name=sh_c.name, lookup_table=self.vuln_lookup)
                     if j < self.obs_state.num_vuln:
                         self.machines_state[i][j + 3 + self.obs_state.num_ports] = v_id
                         if float(v_id) not in self.vuln_state[:,0]:
