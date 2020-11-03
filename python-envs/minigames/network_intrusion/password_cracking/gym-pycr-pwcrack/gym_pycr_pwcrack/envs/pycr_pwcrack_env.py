@@ -451,9 +451,8 @@ class PyCRPwCrackSimpleSim1Env(PyCRPwCrackEnv):
             action_conf = PyCrPwCrackSimpleV1.actions_conf(network_conf)
             env_config = PyCrPwCrackSimpleV1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
-            env_config.simulate_detection = True
             env_config.save_trajectories = False
-            # env_config.simulate_detection = False
+            env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000

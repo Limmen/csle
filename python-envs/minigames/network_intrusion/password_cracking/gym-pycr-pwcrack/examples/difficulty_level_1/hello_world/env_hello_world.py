@@ -22,8 +22,8 @@ def test_env(env_name : str, num_steps : int):
     env.close()
 
 def test_all():
-    #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
-    test_env("pycr-pwcrack-simple-sim-base-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-simple-sim-base-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()
