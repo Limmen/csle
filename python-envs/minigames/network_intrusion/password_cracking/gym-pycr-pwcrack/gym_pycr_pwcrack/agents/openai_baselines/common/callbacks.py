@@ -337,7 +337,7 @@ class EvalCallback(EventCallback):
 
     def _on_rollout_end(self) -> bool:
 
-        if self.eval_freq > 0 and self.iteration % self.eval_freq == 0:
+        if self.eval_freq > 0 and self.iteration % self.eval_freq == 0 and self.n_eval_episodes > 0:
             # Sync training and eval env if there is VecNormalize
             sync_envs_normalization(self.training_env, self.eval_env)
 
