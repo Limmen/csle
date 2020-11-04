@@ -22,6 +22,7 @@ from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v3 import PyCrPwCra
 from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_v4 import PyCrPwCrackSimpleV4
 from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwCrackMediumBase
 from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_v1 import PyCrPwCrackMediumV1
+from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -183,14 +184,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = env_config.action_conf.actions[action_id]
         ip = env_state.obs_state.get_action_ip(action)
 
-        hacker_ip = env_config.hacker_ip
-        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
-                                                                  and x.backdoor_installed,
-                                                        env_state.obs_state.machines)))
-        logged_in_ips.append(hacker_ip)
-        logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
-        logged_in_ips_str = "_".join(logged_in_ips)
-
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=action, s=env_state)
         if (action.id, action.index, logged_in_ips_str) in env_state.obs_state.actions_tried:
             return False
 

@@ -119,7 +119,7 @@ class StateRepresentation:
         :param obs_state: the observation state
         :return: m_selection_obs_space (for AR), network_orig_shape, machine_orig_shape, m_action_obs_space (for AR)
         """
-        num_m_features = 8
+        num_m_features = 3
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
@@ -144,7 +144,7 @@ class StateRepresentation:
                  machine_orig_shape, m_action_obs_space (for AR)
         """
         obs_state.sort_machines()
-        num_m_features = 8
+        num_m_features = 3
         machines_obs = np.zeros((num_machines, num_m_features))
         ports_protocols_obs = np.zeros((num_machines, num_ports))
         for i in range(num_machines):
@@ -157,19 +157,19 @@ class StateRepresentation:
                 # Logged in
                 machines_obs[i][2] = int(obs_state.machines[i].logged_in)
 
-                # Filesystem searched
-                machines_obs[i][3] = int(obs_state.machines[i].filesystem_searched)
-
-                # Untried credentials
-                machines_obs[i][4] = int(obs_state.machines[i].untried_credentials)
-
-                # SSH brute tried
-                machines_obs[i][5] = int(obs_state.machines[i].untried_credentials)
-
-                # Telnet brute tried
-                machines_obs[i][6] = int(obs_state.machines[i].untried_credentials)
-
-                # FTP brute tried
-                machines_obs[i][7] = int(obs_state.machines[i].untried_credentials)
+                # # Filesystem searched
+                # machines_obs[i][3] = int(obs_state.machines[i].filesystem_searched)
+                #
+                # # Untried credentials
+                # machines_obs[i][4] = int(obs_state.machines[i].untried_credentials)
+                #
+                # # SSH brute tried
+                # machines_obs[i][5] = int(obs_state.machines[i].ssh_brute_tried)
+                #
+                # # Telnet brute tried
+                # machines_obs[i][6] = int(obs_state.machines[i].telnet_brute_tried)
+                #
+                # # FTP brute tried
+                # machines_obs[i][7] = int(obs_state.machines[i].ftp_brute_tried)
 
         return machines_obs, ports_protocols_obs

@@ -10,17 +10,17 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.99, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
-                               min_epsilon=0.01, eval_episodes=2, train_log_frequency=1,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.005, epsilon=1, render=False, eval_sleep=0.0,
+                               min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                num_iterations=200,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
-                               eval_frequency=100, video_frequency=10,
+                               eval_frequency=25, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=150, input_dim=5 * 8,
-                               output_dim=19,
+                               checkpoint_freq=150, input_dim=5 * 3,
+                               output_dim=7,
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
                                shared_hidden_layers=2, shared_hidden_dim=32,

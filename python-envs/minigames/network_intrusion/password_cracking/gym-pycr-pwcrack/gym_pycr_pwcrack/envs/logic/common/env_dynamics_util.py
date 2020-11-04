@@ -543,6 +543,11 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def cache_action(env_config: EnvConfig, a: Action, s: EnvState):
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=a, s=s)
+        s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+
+    @staticmethod
+    def logged_in_ips_str(env_config: EnvConfig, a: Action, s: EnvState):
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
                                                                   and x.backdoor_installed,
@@ -550,5 +555,5 @@ class EnvDynamicsUtil:
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
-        s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+        return logged_in_ips_str
 
