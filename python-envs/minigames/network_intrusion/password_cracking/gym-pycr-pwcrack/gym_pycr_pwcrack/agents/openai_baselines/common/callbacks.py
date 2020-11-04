@@ -287,6 +287,7 @@ class EvalCallback(EventCallback):
     def __init__(
         self,
         eval_env: Union[gym.Env, VecEnv],
+        eval_env_2: Union[gym.Env, VecEnv],
         callback_on_new_best: Optional[BaseCallback] = None,
         n_eval_episodes: int = 5,
         eval_freq: int = 10000,
@@ -310,11 +311,14 @@ class EvalCallback(EventCallback):
         # Convert to VecEnv for consistency
         if not isinstance(eval_env, VecEnv):
             eval_env = DummyVecEnv([lambda: eval_env])
+        if not isinstance(eval_env_2, VecEnv):
+            eval_env_2 = DummyVecEnv([lambda: eval_env_2])
 
         if isinstance(eval_env, VecEnv):
             assert eval_env.num_envs == 1, "You must pass only one environment for evaluation"
 
         self.eval_env = eval_env
+        self.eval_env_2 = eval_env_2
         self.best_model_save_path = best_model_save_path
         # Logs will be written in ``evaluations.npz``
         if log_path is not None:
@@ -340,10 +344,12 @@ class EvalCallback(EventCallback):
         if self.eval_freq > 0 and self.iteration % self.eval_freq == 0 and self.n_eval_episodes > 0:
             # Sync training and eval env if there is VecNormalize
             sync_envs_normalization(self.training_env, self.eval_env)
+            sync_envs_normalization(self.training_env, self.eval_env_2)
 
-            episode_rewards, episode_lengths = evaluate_policy(
+            episode_rewards, episode_lengths, episode_rewards_2, episode_lengths_2 = evaluate_policy(
                 self.model,
                 self.eval_env,
+                self.eval_env_2,
                 n_eval_episodes=self.n_eval_episodes,
                 render=self.render,
                 deterministic=self.deterministic,

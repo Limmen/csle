@@ -98,7 +98,8 @@ class BaseAlgorithm(ABC):
             seed: Optional[int] = None,
             use_sde: bool = False,
             sde_sample_freq: int = -1,
-            agent_config: AgentConfig = None
+            agent_config: AgentConfig = None,
+            env_2: Union[GymEnv, str, None] = None
     ):
         self.agent_config = agent_config
         self.train_result = ExperimentResult()
@@ -120,6 +121,7 @@ class BaseAlgorithm(ABC):
             print(f"Using {self.device} device")
 
         self.env = None  # type: Optional[GymEnv]
+        self.env_2 = None  # type: Optional[GymEnv]
         # get VecNormalize object if needed
         self._vec_normalize_env = unwrap_vec_normalize(env)
         self.verbose = verbose
@@ -176,6 +178,14 @@ class BaseAlgorithm(ABC):
             self.n_envs = env.num_envs
             self.env = env
 
+        if env_2 is not None:
+            env_2 = maybe_make_env(env_2, monitor_wrapper, self.verbose)
+            env_2 = self._wrap_env(env_2)
+            # self.observation_space = env_2.observation_space
+            # self.action_space = env_2.action_space
+            # self.n_envs = env_2.num_envs
+            self.env_2 = env_2
+
             if not support_multi_env and self.n_envs > 1:
                 raise ValueError(
                     "Error: the model does not support multiple envs; it requires " "a single vectorized environment."
@@ -203,7 +213,9 @@ class BaseAlgorithm(ABC):
                     eps: float = None, progress_left : float = 1.0,
                     n_af: int = 0, n_d : int = 0, eval_episode_rewards: list = None,
                     eval_episode_steps :list = None, eval_episode_flags_percentage :list = None,
-                    eval_episode_flags : list = None) -> None:
+                    eval_episode_flags : list = None, eval_2_episode_rewards: list = None,
+                    eval_2_episode_steps :list = None, eval_2_episode_flags_percentage :list = None,
+                    eval_2_episode_flags : list = None) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -222,6 +234,10 @@ class BaseAlgorithm(ABC):
         :param eval_episode_steps: deterministic policy eval steps
         :param eval_episode_flags: deterministic policy eval flags
         :param eval_episode_flags_percentage: deterministic policy eval flag percentage
+        :param eval_2_episode_rewards: deterministic policy eval rewards
+        :param eval_2_episode_steps: deterministic policy eval steps
+        :param eval_2_episode_flags: deterministic policy eval flags
+        :param eval_2_episode_flags_percentage: deterministic policy eval flag percentage
         :return: None
         """
         if eps is None:
@@ -254,6 +270,23 @@ class BaseAlgorithm(ABC):
         else:
             eval_avg_episode_steps = 0.0
 
+        if not eval and eval_2_episode_rewards is not None:
+            eval_2_avg_episode_rewards = np.mean(eval_2_episode_rewards)
+        else:
+            eval_2_avg_episode_rewards = 0.0
+        if not eval and eval_2_episode_flags is not None:
+            eval_2_avg_episode_flags = np.mean(eval_2_episode_flags)
+        else:
+            eval_2_avg_episode_flags = 0.0
+        if not eval and eval_2_episode_flags_percentage is not None:
+            eval_2_avg_episode_flags_percentage = np.mean(eval_2_episode_flags_percentage)
+        else:
+            eval_2_avg_episode_flags_percentage = 0.0
+        if not eval and eval_2_episode_steps is not None:
+            eval_2_avg_episode_steps = np.mean(eval_2_episode_steps)
+        else:
+            eval_2_avg_episode_steps = 0.0
+
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}".format(
@@ -262,11 +295,13 @@ class BaseAlgorithm(ABC):
         else:
             log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R_T:{:.2f},avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
-                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}".format(
+                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
+                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f}".format(
                 iteration, self.agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
                 lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps, n_af, n_d,
                 eval_avg_episode_rewards, eval_avg_episode_steps, eval_avg_episode_flags,
-                eval_avg_episode_flags_percentage)
+                eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, eval_2_avg_episode_steps,
+                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage)
         self.agent_config.logger.info(log_str)
         print(log_str)
         if self.agent_config.tensorboard:
@@ -277,7 +312,12 @@ class BaseAlgorithm(ABC):
                                  eval_avg_episode_rewards=eval_avg_episode_rewards,
                                  eval_avg_episode_steps=eval_avg_episode_steps,
                                  eval_avg_episode_flags=eval_avg_episode_flags,
-                                 eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage)
+                                 eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage,
+                                 eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
+                                 eval_2_avg_episode_steps=eval_2_avg_episode_steps,
+                                 eval_2_avg_episode_flags=eval_2_avg_episode_flags,
+                                 eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage
+                                 )
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.avg_episode_rewards.append(avg_episode_rewards)
@@ -289,6 +329,10 @@ class BaseAlgorithm(ABC):
         result.eval_avg_episode_steps.append(eval_avg_episode_steps)
         result.eval_avg_episode_flags.append(eval_avg_episode_flags)
         result.eval_avg_episode_flags_percentage.append(eval_avg_episode_flags_percentage)
+        result.eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
+        result.eval_2_avg_episode_steps.append(eval_2_avg_episode_steps)
+        result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
+        result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
         result.lr_list.append(lr)
 
     def log_tensorboard(self, episode: int, avg_episode_rewards: float,
@@ -298,7 +342,12 @@ class BaseAlgorithm(ABC):
                         eval_avg_episode_rewards: float = 0.0,
                         eval_avg_episode_steps: float = 0.0,
                         eval_avg_episode_flags: float = 0.0,
-                        eval_avg_episode_flags_percentage: float = 0.0) -> None:
+                        eval_avg_episode_flags_percentage: float = 0.0,
+                        eval_2_avg_episode_rewards: float = 0.0,
+                        eval_2_avg_episode_steps: float = 0.0,
+                        eval_2_avg_episode_flags: float = 0.0,
+                        eval_2_avg_episode_flags_percentage: float = 0.0
+                        ) -> None:
         """
         Log metrics to tensorboard
 
@@ -315,6 +364,10 @@ class BaseAlgorithm(ABC):
         :param eval_avg_episode_steps: average steps eval deterministic policy
         :param eval_avg_episode_flags: average flags eval deterministic policy
         :param eval_avg_episode_flags_percentage: average flags_percentage eval deterministic policy
+        :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
+        :param eval_avg_episode_steps: average steps 2nd eval deterministic policy
+        :param eval_avg_episode_flags: average flags 2nd eval deterministic policy
+        :param eval_avg_episode_flags_percentage: average flags_percentage 2nd eval deterministic policy
         :return: None
         """
         train_or_eval = "eval" if eval else "train"
@@ -332,6 +385,13 @@ class BaseAlgorithm(ABC):
         self.tensorboard_writer.add_scalar('eval_avg_episode_flags/' + train_or_eval, eval_avg_episode_flags, episode)
         self.tensorboard_writer.add_scalar('eval_avg_episode_flags_percentage/' + train_or_eval,
                                            eval_avg_episode_flags_percentage, episode)
+
+        self.tensorboard_writer.add_scalar('eval_2_avg_episode_rewards/' + train_or_eval,
+                                           eval_2_avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('eval_2_avg_episode_steps/' + train_or_eval, eval_2_avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('eval_2_avg_episode_flags/' + train_or_eval, eval_2_avg_episode_flags, episode)
+        self.tensorboard_writer.add_scalar('eval_2_avg_episode_flags_percentage/' + train_or_eval,
+                                           eval_2_avg_episode_flags_percentage, episode)
         if not eval:
             self.tensorboard_writer.add_scalar('lr', lr, episode)
 
@@ -582,6 +642,7 @@ class BaseAlgorithm(ABC):
             self,
             callback: MaybeCallback,
             eval_env: Optional[VecEnv] = None,
+            eval_env_2: Optional[VecEnv] = None,
             eval_freq: int = 10000,
             n_eval_episodes: int = 5,
             log_path: Optional[str] = None,
@@ -606,6 +667,7 @@ class BaseAlgorithm(ABC):
         if eval_env is not None:
             eval_callback = EvalCallback(
                 eval_env,
+                eval_env_2,
                 best_model_save_path=log_path,
                 log_path=log_path,
                 eval_freq=eval_freq,
@@ -621,6 +683,7 @@ class BaseAlgorithm(ABC):
             self,
             total_timesteps: int,
             eval_env: Optional[GymEnv],
+            eval_env_2: Optional[GymEnv],
             callback: MaybeCallback = None,
             eval_freq: int = 10000,
             n_eval_episodes: int = 5,
@@ -633,6 +696,7 @@ class BaseAlgorithm(ABC):
 
         :param total_timesteps: (int) The total number of samples (env steps) to train on
         :param eval_env: (Optional[VecEnv]) Environment to use for evaluation.
+        :param eval_env_2: (Optional[VecEnv]) Second Environment to use for evaluation.
         :param callback: (MaybeCallback) Callback(s) called at every step with state of the algorithm.
         :param eval_freq: (int) How many steps between evaluations
         :param n_eval_episodes: (int) How many episodes to play per evaluation
@@ -669,10 +733,14 @@ class BaseAlgorithm(ABC):
         if eval_env is not None and self.seed is not None:
             eval_env.seed(self.seed)
 
+        if eval_env_2 is not None and self.seed is not None:
+            eval_env_2.seed(self.seed)
+
         eval_env = self._get_eval_env(eval_env)
+        eval_env_2 = self._get_eval_env(eval_env_2)
 
         # Create eval callback if needed
-        callback = self._init_callback(callback, eval_env, eval_freq, n_eval_episodes, log_path)
+        callback = self._init_callback(callback, eval_env, eval_env_2, eval_freq, n_eval_episodes, log_path)
 
         return total_timesteps, callback
 

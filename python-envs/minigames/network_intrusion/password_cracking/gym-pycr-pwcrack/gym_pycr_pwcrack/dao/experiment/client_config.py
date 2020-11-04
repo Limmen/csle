@@ -17,7 +17,10 @@ class ClientConfig:
                  random_seeds : list = None, random_seed = 0, agent_type : int = 0,
                  cluster_config = None, env_checkpoint_dir : str = None,
                  mode: RunnerMode = RunnerMode.TRAIN_ATTACKER,
-                 simulation_config: SimulationConfig = None):
+                 simulation_config: SimulationConfig = None,
+                 eval_env: bool = None,
+                 eval_env_name: str = None,
+                 eval_cluster_config = None):
         """
         Class constructor, initializes the DTO
 
@@ -32,9 +35,13 @@ class ClientConfig:
         :param agent_config: policy gradient agent config
         :param agent_type: agent_type
         :param cluster_config: cluster_config
+        :param eval_cluster_config: eval_cluster_config
         :param env_checkpoint_dir: checkpoint dir for env data
         :param mode: the mode for the experiment
         :param simulation_config: the simulation config
+        :param eval_env: separate eval env
+        :param eval_env_name: separate eval env name
+        :parma eval_cluster_config: cluster config for eval env
         """
         self.env_name = env_name
         self.logger = None
@@ -50,3 +57,6 @@ class ClientConfig:
         self.env_checkpoint_dir = env_checkpoint_dir
         self.mode = mode
         self.simulation_config = simulation_config
+        self.eval_env = eval_env
+        self.eval_env_name = eval_env_name
+        self.eval_cluster_config = eval_cluster_config

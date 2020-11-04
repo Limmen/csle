@@ -66,7 +66,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        agent_config: AgentConfig = None
+        agent_config: AgentConfig = None,
+        env_2: Union[GymEnv, str] = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -82,7 +83,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             create_eval_env=create_eval_env,
             support_multi_env=True,
             seed=seed,
-            agent_config = agent_config
+            agent_config = agent_config,
+            env_2=env_2
         )
 
         self.n_steps = n_steps
@@ -252,6 +254,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback: MaybeCallback = None,
         log_interval: int = 1,
         eval_env: Optional[GymEnv] = None,
+        eval_env_2: Optional[GymEnv] = None,
         eval_freq: int = -1,
         n_eval_episodes: int = 5,
         tb_log_name: str = "OnPolicyAlgorithm",
@@ -264,8 +267,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         self.iteration = 0
         total_timesteps, callback = self._setup_learn(
-            total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps,
-            tb_log_name
+            total_timesteps, eval_env, eval_env_2, callback, eval_freq, n_eval_episodes, eval_log_path,
+            reset_num_timesteps, tb_log_name
         )
 
         callback.on_training_start(locals(), globals())
@@ -298,11 +301,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
             if self.iteration % self.agent_config.train_log_frequency == 0:
                 if self.agent_config.train_progress_deterministic_eval:
+                    episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=True, agent_config=self.agent_config,
-                                              env_config=self.env.envs[0].env_config)
+                                              env_config=self.env.envs[0].env_config, env_2=self.env_2)
 
                 self.log_metrics(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
@@ -314,9 +318,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  progress_left = self._current_progress_remaining,
                                  n_af = self.env.envs[0].agent_state.num_all_flags,
                                  n_d = self.env.envs[0].agent_state.num_detections,
-                                 eval_episode_rewards = eval_episode_rewards, eval_episode_steps=eval_episode_steps,
-                                 eval_episode_flags=eval_episode_flags,
-                                 eval_episode_flags_percentage=eval_episode_flags_percentage)
+                                 eval_episode_rewards = episode_rewards, eval_episode_steps=episode_steps,
+                                 eval_episode_flags=episode_flags,
+                                 eval_episode_flags_percentage=episode_flags_percentage,
+                                 eval_2_episode_rewards=eval_episode_rewards,
+                                 eval_2_episode_steps=eval_episode_steps,
+                                 eval_2_episode_flags=eval_episode_flags,
+                                 eval_2_episode_flags_percentage=eval_episode_flags_percentage
+                                 )
                 episode_rewards = []
                 episode_loss = []
                 episode_flags = []

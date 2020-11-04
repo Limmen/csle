@@ -51,13 +51,18 @@ class Runner:
         :return: trainresult, evalresult
         """
         env: PyCRPwCrackEnv = None
+        eval_env: PyCRPwCrackEnv = None
         env = gym.make(config.env_name, env_config = config.env_config, cluster_config = config.cluster_config,
                        checkpoint_dir = config.env_checkpoint_dir)
+        if config.eval_env is not None:
+            eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
+                                cluster_config = config.eval_cluster_config,
+                                checkpoint_dir = config.env_checkpoint_dir)
         agent: TrainAgent = None
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env, config.agent_config)
         elif config.agent_type == AgentType.PPO_BASELINE.value:
-            agent = PPOBaselineAgent(env, config.agent_config)
+            agent = PPOBaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.DQN_BASELINE.value:
             agent = DQNBaselineAgent(env, config.agent_config)
         elif config.agent_type == AgentType.A2C_BASELINE.value:

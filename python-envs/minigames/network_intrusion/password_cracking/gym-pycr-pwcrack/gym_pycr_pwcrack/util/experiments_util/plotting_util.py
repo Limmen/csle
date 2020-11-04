@@ -135,11 +135,11 @@ def plot_rewards_flags_steps(rewards_data, rewards_means, rewards_stds,
     # ax[2].set_ylim(0, 1)
 
     fig.tight_layout()
-    plt.show()
+    #plt.show()
     # plt.subplots_adjust(wspace=0, hspace=0)
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
-    # plt.close(fig)
+    plt.close(fig)
 
 
 def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
@@ -148,7 +148,9 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
                                rewards_data_2, rewards_means_2, rewards_stds_2,
                                flags_data_2, flags_means_2, flags_stds_2,
                                steps_data_2, steps_means_2, steps_stds_2,
-                               file_name, markevery=10):
+                               file_name, markevery=10, label_1="PPO 128",
+                               label_2="PPO 64", ylim_rew = None, ylim_step = None,
+                               ylim_flags = None):
     """
     Plots rewards, flags % and steps of two different configurations
 
@@ -183,14 +185,14 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
 
     # Plot Rewards
     ax[0].plot(np.array(list(range(len(rewards_means_1)))),
-               rewards_means_1, label="PPO 128", marker="s", ls='-', color="#599ad3",
+               rewards_means_1, label=label_1, marker="s", ls='-', color="#599ad3",
                markevery=markevery)
     ax[0].fill_between(np.array(list(range(len(rewards_means_1)))),
                        rewards_means_1 - rewards_stds_1, rewards_means_1 + rewards_stds_1,
                        alpha=0.35, color="#599ad3")
 
     ax[0].plot(np.array(list(range(len(rewards_means_2)))),
-               rewards_means_2, label="PPO 64", marker="o", ls='-', color="r",
+               rewards_means_2, label=label_2, marker="o", ls='-', color="r",
                markevery=markevery)
     ax[0].fill_between(np.array(list(range(len(rewards_means_2)))),
                        rewards_means_2 - rewards_stds_2, rewards_means_2 + rewards_stds_2,
@@ -200,6 +202,8 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[0].set_xlabel("\# Iteration", fontsize=20)
     ax[0].set_ylabel("Avg Episode Reward", fontsize=20)
     ax[0].set_xlim(0, len(rewards_means_1))
+    if ylim_rew is not None:
+        ax[0].set_ylim(ylim_rew)
     # ax[0].set_ylim(0, 0.75)
 
     # set the grid on
@@ -220,14 +224,14 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
 
     # Plot Flags %
     ax[1].plot(np.array(list(range(len(flags_means_1)))),
-               flags_means_1, label="PPO 128", marker="s", ls='-', color="#599ad3",
+               flags_means_1, label=label_1, marker="s", ls='-', color="#599ad3",
                markevery=markevery)
     ax[1].fill_between(np.array(list(range(len(flags_means_1)))),
                        flags_means_1 - flags_stds_1, flags_means_1 + flags_stds_1,
                        alpha=0.35, color="#599ad3")
 
     ax[1].plot(np.array(list(range(len(flags_means_2)))),
-               flags_means_2, label="PPO 64", marker="o", ls='-', color="r",
+               flags_means_2, label=label_2, marker="o", ls='-', color="r",
                markevery=markevery)
     ax[1].fill_between(np.array(list(range(len(flags_means_2)))),
                        flags_means_2 - flags_stds_2, flags_means_2 + flags_stds_2,
@@ -237,6 +241,8 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[1].set_xlabel("\# Iteration")
     ax[1].set_ylabel("Flags Captured (\%)")
     ax[1].set_xlim(0, len(flags_means_1))
+    if ylim_flags is not None:
+        ax[1].set_ylim(ylim_flags)
 
     # set the grid on
     ax[1].grid('on')
@@ -256,14 +262,14 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
 
     # Plot Steps
     ax[2].plot(np.array(list(range(len(steps_means_1)))),
-               steps_means_1, label="PPO 128", marker="s", ls='-', color="#599ad3",
+               steps_means_1, label=label_1, marker="s", ls='-', color="#599ad3",
                markevery=markevery)
     ax[2].fill_between(np.array(list(range(len(steps_means_1)))),
                        steps_means_1 - steps_stds_1, steps_means_1 + steps_stds_1,
                        alpha=0.35, color="#599ad3")
 
     ax[2].plot(np.array(list(range(len(steps_means_2)))),
-               steps_means_2, label="PPO 64", marker="o", ls='-', color="r",
+               steps_means_2, label=label_2, marker="o", ls='-', color="r",
                markevery=markevery)
     ax[2].fill_between(np.array(list(range(len(steps_means_2)))),
                        steps_means_2 - steps_stds_2, steps_means_2 + steps_stds_2,
@@ -273,6 +279,8 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[2].set_xlabel("\# Iteration")
     ax[2].set_ylabel("\# Steps")
     ax[2].set_xlim(0, len(steps_means_1))
+    if ylim_step is not None:
+        ax[2].set_ylim(ylim_step)
     # ax[2].set_ylim(0, 0.75)
 
     # set the grid on
@@ -289,7 +297,7 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[2].spines['right'].set_color((.8, .8, .8))
     ax[2].spines['top'].set_color((.8, .8, .8))
 
-    ax[2].legend(loc="lower left")
+    ax[2].legend(loc="upper right")
 
     ax[2].xaxis.label.set_size(13.5)
     ax[2].yaxis.label.set_size(13.5)
@@ -307,31 +315,55 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     # plt.subplots_adjust(wspace=0, hspace=0)
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
-    # plt.close(fig)
+    plt.close(fig)
 
 
-def plot_csv_files(csv_files, output_dir : str):
+def plot_csv_files(csv_files, output_dir : str, plot_eval_env_res : bool = False):
     dfs = []
     for i, csv_file in enumerate(csv_files):
         df = pd.read_csv(csv_file)
         dfs.append(df)
 
-    rewards_data = list(map(lambda df: df["avg_episode_rewards"].values, dfs))
-    rewards_means = np.mean(tuple(rewards_data), axis=0)
-    rewards_stds = np.std(tuple(rewards_data), axis=0, ddof=1)
+    rewards_data_1 = list(map(lambda df: df["avg_episode_rewards"].values, dfs))
+    rewards_means_1 = np.mean(tuple(rewards_data_1), axis=0)
+    rewards_stds_1 = np.std(tuple(rewards_data_1), axis=0, ddof=1)
 
-    flags_data = list(map(lambda df: df["avg_episode_flags_percentage"].values, dfs))
-    flags_means = np.mean(tuple(flags_data), axis=0)
-    flags_stds = np.std(tuple(flags_data), axis=0, ddof=1)
+    flags_data_1 = list(map(lambda df: df["avg_episode_flags_percentage"].values, dfs))
+    flags_means_1 = np.mean(tuple(flags_data_1), axis=0)
+    flags_stds_1 = np.std(tuple(flags_data_1), axis=0, ddof=1)
 
-    steps_data = list(map(lambda df: df["avg_episode_steps"].values, dfs))
-    steps_means = np.mean(tuple(steps_data), axis=0)
-    steps_stds = np.std(tuple(steps_data), axis=0, ddof=1)
+    steps_data_1 = list(map(lambda df: df["avg_episode_steps"].values, dfs))
+    steps_means_1 = np.mean(tuple(steps_data_1), axis=0)
+    steps_stds_1 = np.std(tuple(steps_data_1), axis=0, ddof=1)
 
-    plot_rewards_flags_steps(rewards_data, rewards_means, rewards_stds,
-                             flags_data, flags_means, flags_stds,
-                             steps_data, steps_means, steps_stds,
+    plot_rewards_flags_steps(rewards_data_1, rewards_means_1, rewards_stds_1,
+                             flags_data_1, flags_means_1, flags_stds_1,
+                             steps_data_1, steps_means_1, steps_stds_1,
                              output_dir + "rewards_flags_steps_" + str(i), markevery=25)
+
+    if plot_eval_env_res:
+        rewards_data_2 = list(map(lambda df: df["eval_2_avg_episode_rewards"].values, dfs))
+        rewards_means_2 = np.mean(tuple(rewards_data_2), axis=0)
+        rewards_stds_2 = np.std(tuple(rewards_data_2), axis=0, ddof=1)
+
+        flags_data_2 = list(map(lambda df: df["eval_2_avg_episode_flags_percentage"].values, dfs))
+        flags_means_2 = np.mean(tuple(flags_data_2), axis=0)
+        flags_stds_2 = np.std(tuple(flags_data_2), axis=0, ddof=1)
+
+        steps_data_2 = list(map(lambda df: df["eval_2_avg_episode_steps"].values, dfs))
+        steps_means_2 = np.mean(tuple(steps_data_2), axis=0)
+        steps_stds_2 = np.std(tuple(steps_data_2), axis=0, ddof=1)
+
+        plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
+                                   flags_data_1, flags_means_1, flags_stds_1,
+                                   steps_data_1, steps_means_1, steps_stds_1,
+                                   rewards_data_2, rewards_means_2, rewards_stds_2,
+                                   flags_data_2, flags_means_2, flags_stds_2,
+                                   steps_data_2, steps_means_2, steps_stds_2,
+                                   output_dir + "eval_rewards_flags_steps_" + str(i), markevery=25,
+                                   label_1="Simulation", label_2="Cyber range",
+                                   ylim_rew=(-50, 50), ylim_step=(0, 15),
+                                   ylim_flags=None)
 
 
 def plot_two_csv_files(csv_files, output_dir : str):

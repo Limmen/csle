@@ -18,13 +18,13 @@ class PPOBaselineAgent(TrainAgent):
     An agent for the pycr-pwcrack env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
     """
 
-    def __init__(self, env: PyCRPwCrackEnv, config: AgentConfig):
+    def __init__(self, env: PyCRPwCrackEnv, config: AgentConfig, eval_env: PyCRPwCrackEnv):
         """
         Initialize environment and hyperparameters
 
         :param config: the configuration
         """
-        super(PPOBaselineAgent, self).__init__(env, config)
+        super(PPOBaselineAgent, self).__init__(env, config, eval_env)
 
     def train(self) -> ExperimentResult:
         """
@@ -74,26 +74,33 @@ class PPOBaselineAgent(TrainAgent):
                     vf_coef=self.config.vf_coef,
                     ent_coef=self.config.ent_coef,
                     use_sde=self.config.use_sde,
-                    sde_sample_freq=self.config.sde_sample_freq)
+                    sde_sample_freq=self.config.sde_sample_freq,
+                    env_2=self.eval_env
+                    )
 
         if self.config.load_path is not None:
             PPO.load(self.config.load_path, policy, agent_config=self.config)
-
 
         # Eval config
         time_str = str(time.time())
         if self.config.video_dir is None:
             raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                  "the video_dir argument")
-        eval_env = PycrPwCrackMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
+        train_eval_env = PycrPwCrackMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
                                   video_frequency=self.config.video_frequency, openai_baseline=True)
+        train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+
+        eval_env = PycrPwCrackMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
+                                            video_frequency=self.config.video_frequency, openai_baseline=True)
         eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 
         model.learn(total_timesteps=self.config.num_episodes,
                     log_interval=self.config.train_log_frequency,
                     eval_freq=self.config.eval_frequency,
                     n_eval_episodes=self.config.eval_episodes,
-                    eval_env=eval_env)
+                    eval_env=train_eval_env,
+                    eval_env_2=eval_env
+                    )
 
         self.config.logger.info("Training Complete")
 

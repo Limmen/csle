@@ -46,7 +46,7 @@
         "multi_input_channel": false,
         "n_deterministic_eval_iter": 10,
         "num_episodes": 5000,
-        "num_iterations": 500,
+        "num_iterations": 150,
         "optimization_iterations": 10,
         "optimizer": "Adam",
         "output_dim": 22,
@@ -90,6 +90,23 @@
     "env_checkpoint_dir": null,
     "env_config": null,
     "env_name": "pycr-pwcrack-simple-sim-v1",
+    "eval_cluster_config": {
+        "agent_conn": null,
+        "agent_ip": "172.18.1.191",
+        "agent_pw": "agent",
+        "agent_username": "agent",
+        "cluster_cves": [],
+        "cluster_services": [],
+        "py/object": "gym_pycr_pwcrack.dao.network.cluster_config.ClusterConfig",
+        "relay_channel": null,
+        "server_conn": null,
+        "server_connection": true,
+        "server_ip": "172.31.212.91",
+        "server_private_key_file": "/Users/kimham/.ssh/pycr_id_rsa",
+        "server_username": "kim"
+    },
+    "eval_env": true,
+    "eval_env_name": "pycr-pwcrack-simple-cluster-v1",
     "logger": null,
     "mode": 0,
     "output_dir": "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v1/simulation/ppo_baseline",
@@ -102,7 +119,7 @@
         399,
         499
     ],
-    "run_many": false,
+    "run_many": true,
     "simulation_config": null,
     "title": "PPO-Baseline v1"
 }

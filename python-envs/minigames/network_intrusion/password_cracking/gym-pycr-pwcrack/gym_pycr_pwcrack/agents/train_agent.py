@@ -15,13 +15,16 @@ class TrainAgent(ABC):
     """
     Abstract Train Agent
     """
-    def __init__(self, env:PyCRPwCrackEnv, config: AgentConfig):
+    def __init__(self, env:PyCRPwCrackEnv, config: AgentConfig, eval_env: PyCRPwCrackEnv):
         """
         Initialize environment and hyperparameters
 
+        :param env: the training env
         :param config: the configuration
+        :param eval_env: the eval env
         """
         self.env = env
+        self.eval_env = eval_env
         self.config = config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()

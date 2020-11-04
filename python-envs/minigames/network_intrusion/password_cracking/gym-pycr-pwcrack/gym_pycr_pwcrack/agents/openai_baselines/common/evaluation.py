@@ -11,7 +11,8 @@ if typing.TYPE_CHECKING:
     from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 
-def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_episodes : int=10,
+def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
+                    n_eval_episodes : int=10,
                     deterministic : bool= True,
                     render : bool =False, callback: Optional[Callable] = None,
                     reward_threshold: Optional[float] = None,
@@ -23,6 +24,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
 
     :param model: (BaseRLModel) The RL agent you want to evaluate.
     :param env: (gym.Env or VecEnv) The gym environment. In the case of a ``VecEnv``
+        this must contain only one environment.
+    :param env_2: (gym.Env or VecEnv) The second gym environment. In the case of a ``VecEnv``
         this must contain only one environment.
     :param n_eval_episodes: (int) Number of episode to evaluate the agent
     :param deterministic: (bool) Whether to use deterministic or stochastic actions
@@ -36,6 +39,21 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
     :return: (float, float) Mean reward per episode, std of reward per episode
         returns ([float], [int]) when ``return_episode_rewards`` is True
     """
+    eval_mean_reward, eval_std_reward = -1, -1
+    train_eval_mean_reward, train_eval_std_reward = _eval_helper(env=env, agent_config=agent_config,
+                                                                 n_eval_episodes=n_eval_episodes,
+                                                                 deterministic=deterministic,
+                                                                 callback=callback, train_episode=train_episode,
+                                                                 model=model)
+    if env_2 is not None:
+        eval_mean_reward, eval_std_reward = _eval_helper(
+            env=env_2, agent_config=agent_config, n_eval_episodes=n_eval_episodes,  deterministic=deterministic,
+            callback=callback, train_episode=train_episode, model=model)
+    return train_eval_mean_reward, train_eval_std_reward, eval_mean_reward, eval_std_reward
+
+
+def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, deterministic,
+                 callback, train_episode):
     if isinstance(env, VecEnv):
         assert env.num_envs == 1, "You must pass only one environment when using this function"
 
@@ -67,7 +85,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         for i in range(agent_config.render_steps):
             if agent_config.eval_render:
                 env.render()
-                #time.sleep(agent_config.eval_sleep)
+                # time.sleep(agent_config.eval_sleep)
 
             action, state = model.predict(obs, state=state, deterministic=deterministic)
             obs, reward, done, _info = env.step(action)
@@ -88,7 +106,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         episode_rewards.append(episode_reward)
         episode_steps.append(episode_length)
         episode_flags.append(_info[0]["flags"])
-        episode_flags_percentage.append(_info[0]["flags"]/env.envs[0].env_config.num_flags)
+        episode_flags_percentage.append(_info[0]["flags"] / env.envs[0].env_config.num_flags)
 
         # Update eval stats
         model.num_eval_episodes += 1
@@ -97,7 +115,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
         # Log average metrics every <self.config.eval_log_frequency> episodes
         if episode % agent_config.eval_log_frequency == 0:
             model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
-                              episode_steps=episode_steps, eval=True, episode_flags = episode_flags,
+                              episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
                               episode_flags_percentage=episode_flags_percentage)
 
         # Save gifs
@@ -126,7 +144,8 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_
     env.reset()
     return mean_reward, std_reward
 
-def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n_eval_episodes : int=10,
+def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
+                          n_eval_episodes : int=10,
                           deterministic : bool= True, agent_config : AgentConfig = None,
                           env_config: EnvConfig = None):
     """
@@ -141,6 +160,17 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n
     :param agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
+    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
+    episode_rewards, episode_steps, episode_flags_percentage, episode_flags = _quick_eval_helper(
+        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config)
+
+    if env_2 is not None:
+        eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = _quick_eval_helper(
+            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config)
+    return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags
+
+def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config):
     if isinstance(env, VecEnv):
         assert env.num_envs == 1, "You must pass only one environment when using this function"
 
@@ -169,7 +199,7 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], n
         episode_rewards.append(episode_reward)
         episode_steps.append(episode_length)
         episode_flags.append(_info[0]["flags"])
-        episode_flags_percentage.append(_info[0]["flags"]/env.envs[0].env_config.num_flags)
+        episode_flags_percentage.append(_info[0]["flags"] / env.envs[0].env_config.num_flags)
 
     env.reset()
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags
