@@ -80,15 +80,14 @@ class PPOBaselineAgent(TrainAgent):
             PPO.load(self.config.load_path, policy, agent_config=self.config)
 
 
-        # Video config
-        if self.config.video or self.config.gifs:
-            time_str = str(time.time())
-            if self.config.video_dir is None:
-                raise AssertionError("Video is set to True but no video_dir is provided, please specify "
-                                     "the video_dir argument")
-            eval_env = PycrPwCrackMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
-                                      video_frequency=self.config.video_frequency, openai_baseline=True)
-            eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+        # Eval config
+        time_str = str(time.time())
+        if self.config.video_dir is None:
+            raise AssertionError("Video is set to True but no video_dir is provided, please specify "
+                                 "the video_dir argument")
+        eval_env = PycrPwCrackMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
+                                  video_frequency=self.config.video_frequency, openai_baseline=True)
+        eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 
         model.learn(total_timesteps=self.config.num_episodes,
                     log_interval=self.config.train_log_frequency,

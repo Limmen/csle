@@ -7,6 +7,7 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.simulation.recon_simulator import ReconSimulator
 from gym_pycr_pwcrack.envs.logic.simulation.exploit_simulator import ExploitSimulator
 from gym_pycr_pwcrack.envs.logic.simulation.post_exploit_simulator import PostExploitSimulator
+from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 class Simulator:
     """
@@ -24,8 +25,11 @@ class Simulator:
         :return: s_prime, reward, done
         """
         if a.type == ActionType.RECON:
+            EnvDynamicsUtil.cache_action(env_config=env_config,a=a, s=s)
             return Simulator.recon_action(s=s, a=a, env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
+            if a.subnet:
+                EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
             return Simulator.exploit_action(s=s, a=a, env_config=env_config)
         elif a.type == ActionType.POST_EXPLOIT:
             return Simulator.post_exploit_action(s=s, a=a, env_config=env_config)

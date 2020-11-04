@@ -7,6 +7,7 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.logic.cluster.recon_middleware import ReconMiddleware
 from gym_pycr_pwcrack.envs.logic.cluster.exploit_middleware import ExploitMiddleware
 from gym_pycr_pwcrack.envs.logic.cluster.post_exploit_middleware import PostExploitMiddleware
+from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 class ClusterMiddleware:
     """
@@ -24,25 +25,11 @@ class ClusterMiddleware:
         :return: s', r, done
         """
         if a.type == ActionType.RECON:
-            hacker_ip = env_config.hacker_ip
-            logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
-                                                                      and x.backdoor_installed,
-                                                            s.obs_state.machines)))
-            logged_in_ips.append(hacker_ip)
-            logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
-            logged_in_ips_str = "_".join(logged_in_ips)
-            s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+            EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
             return ClusterMiddleware.recon_action(s=s,a=a,env_config=env_config)
         elif a.type == ActionType.EXPLOIT:
             if a.subnet:
-                hacker_ip = env_config.hacker_ip
-                logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed
-                                                                          and x.backdoor_installed,
-                                                                s.obs_state.machines)))
-                logged_in_ips.append(hacker_ip)
-                logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
-                logged_in_ips_str = "_".join(logged_in_ips)
-                s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+                EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
             return ClusterMiddleware.exploit_action(s=s, a=a, env_config=env_config)
         elif a.type == ActionType.POST_EXPLOIT:
             return ClusterMiddleware.post_exploit_action(s=s, a=a, env_config=env_config)

@@ -4,6 +4,8 @@ from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservat
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
+from gym_pycr_pwcrack.dao.action.action import Action
+from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class EnvDynamicsUtil:
     """
@@ -506,4 +508,47 @@ class EnvDynamicsUtil:
         :return: true or false
         """
         return True
+
+    @staticmethod
+    def brute_tried_flags(a: Action, m_obs: MachineObservationState):
+        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.ftp_brute_tried = True
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.ssh_brute_tried = True
+        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.telnet_brute_tried = True
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+            m_obs.irc_brute_tried = True
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.postgres_brute_tried = True
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.smtp_brute_tried = True
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.mysql_brute_tried = True
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.mongo_brute_tried = True
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+            m_obs.cassandra_brute_tried = True
+        return m_obs
+
+
+    @staticmethod
+    def cache_action(env_config: EnvConfig, a: Action, s: EnvState):
+        hacker_ip = env_config.hacker_ip
+        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
+                                                                  and x.backdoor_installed,
+                                                        s.obs_state.machines)))
+        logged_in_ips.append(hacker_ip)
+        logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
+        logged_in_ips_str = "_".join(logged_in_ips)
+        s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
