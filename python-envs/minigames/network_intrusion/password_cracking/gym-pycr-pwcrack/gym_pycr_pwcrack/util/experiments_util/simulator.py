@@ -1,7 +1,7 @@
 """
 A utility class for running simulations of pre-defined policies against each other (No training involved)
 """
-import tqdm
+#import tqdm
 import logging
 import time
 import numpy as np
@@ -27,7 +27,7 @@ class Simulator:
         self.config = config
         self.env = env
         self.experiment_result = ExperimentResult()
-        self.outer = tqdm.tqdm(total=self.config.num_episodes, desc='Episode', position=0)
+        #self.outer = tqdm.tqdm(total=self.config.num_episodes, desc='Episode', position=0)
         if self.config.logger is None:
             self.config.logger = logging.getLogger('Simulation')
         self.attacker = attacker

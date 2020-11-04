@@ -2,7 +2,7 @@
 Abstract Train Agent
 """
 import numpy as np
-import tqdm
+#import tqdm
 import logging
 import random
 import torch
@@ -25,7 +25,7 @@ class TrainAgent(ABC):
         self.config = config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
-        self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
+        #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
         if self.config.logger is None:
             self.config.logger = logging.getLogger('Train Agent')
         random.seed(self.config.random_seed)
