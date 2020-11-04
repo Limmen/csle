@@ -150,7 +150,9 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
                                steps_data_2, steps_means_2, steps_stds_2,
                                file_name, markevery=10, label_1="PPO 128",
                                label_2="PPO 64", ylim_rew = None, ylim_step = None,
-                               ylim_flags = None):
+                               ylim_flags = None,
+                               optimal_reward = 19, optimal_flags = 1, optimal_steps = 5
+                               ):
     """
     Plots rewards, flags % and steps of two different configurations
 
@@ -198,6 +200,11 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
                        rewards_means_2 - rewards_stds_2, rewards_means_2 + rewards_stds_2,
                        alpha=0.35, color="r")
 
+    ax[0].plot(np.array(list(range(len(rewards_means_1)))),
+               [optimal_reward] * len(rewards_means_1), label=r"$\pi^{*}$",
+               color="black",
+               linestyle="dashed")
+
     ax[0].set_title("Episodic Rewards")
     ax[0].set_xlabel("\# Iteration", fontsize=20)
     ax[0].set_ylabel("Avg Episode Reward", fontsize=20)
@@ -236,6 +243,10 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[1].fill_between(np.array(list(range(len(flags_means_2)))),
                        flags_means_2 - flags_stds_2, flags_means_2 + flags_stds_2,
                        alpha=0.35, color="r")
+    ax[1].plot(np.array(list(range(len(flags_means_1)))),
+               [optimal_flags] * len(flags_means_1), label=r"$\pi^{*}$",
+               color="black",
+               linestyle="dashed")
 
     ax[1].set_title("Flags Captured (\%) per episode")
     ax[1].set_xlabel("\# Iteration")
@@ -274,6 +285,10 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
     ax[2].fill_between(np.array(list(range(len(steps_means_2)))),
                        steps_means_2 - steps_stds_2, steps_means_2 + steps_stds_2,
                        alpha=0.35, color="r")
+    ax[2].plot(np.array(list(range(len(steps_means_1)))),
+               [optimal_steps] * len(steps_means_2), label=r"$\pi^{*}$",
+               color="black",
+               linestyle="dashed")
 
     ax[2].set_title("\# Steps per episode")
     ax[2].set_xlabel("\# Iteration")
@@ -363,7 +378,7 @@ def plot_csv_files(csv_files, output_dir : str, plot_eval_env_res : bool = False
                                    output_dir + "eval_rewards_flags_steps_" + str(i), markevery=25,
                                    label_1="Simulation", label_2="Cyber range",
                                    ylim_rew=(-50, 50), ylim_step=(0, 15),
-                                   ylim_flags=None)
+                                   ylim_flags=None, optimal_reward = 19, optimal_flags = 1, optimal_steps = 5)
 
 
 def plot_two_csv_files(csv_files, output_dir : str):

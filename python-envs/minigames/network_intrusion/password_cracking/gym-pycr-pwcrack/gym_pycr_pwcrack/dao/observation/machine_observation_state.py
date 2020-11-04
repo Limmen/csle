@@ -1,4 +1,5 @@
 from typing import List
+import copy
 from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_pwcrack.dao.network.credential import Credential
@@ -90,3 +91,41 @@ class MachineObservationState:
             c.cleanup()
         for c in self.telnet_connections:
             c.cleanup()
+
+
+    def copy(self):
+        m_copy = MachineObservationState(ip=self.ip)
+        m_copy.os = self.os
+        m_copy.ports = copy.deepcopy(self.ports)
+        m_copy.cve_vulns = copy.deepcopy(self.cve_vulns)
+        m_copy.osvdb_vulns = copy.deepcopy(self.osvdb_vulns)
+        m_copy.shell_access = self.shell_access
+        m_copy.shell_access_credentials = self.shell_access_credentials
+        m_copy.backdoor_credentials = self.backdoor_credentials
+        m_copy.logged_in = self.logged_in
+        m_copy.root = self.root
+        m_copy.flags_found = self.flags_found
+        m_copy.filesystem_searched = self.filesystem_searched
+        m_copy.untried_credentials = self.untried_credentials
+        m_copy.ssh_connections = self.ssh_connections
+        m_copy.ftp_connections = self.ftp_connections
+        m_copy.telnet_connections = self.telnet_connections
+        m_copy.logged_in_services = self.logged_in_services
+        m_copy.root_services = self.root_services
+        m_copy.hostnames = self.hostnames
+        m_copy.trace = self.trace
+        m_copy.telnet_brute_tried = self.telnet_brute_tried
+        m_copy.ssh_brute_tried = self.ssh_brute_tried
+        m_copy.ftp_brute_tried = self.ftp_brute_tried
+        m_copy.cassandra_brute_tried = self.cassandra_brute_tried
+        m_copy.irc_brute_tried = self.irc_brute_tried
+        m_copy.mongo_brute_tried = self.mongo_brute_tried
+        m_copy.mysql_brute_tried = self.mysql_brute_tried
+        m_copy.smtp_brute_tried = self.smtp_brute_tried
+        m_copy.postgres_brute_tried = self.postgres_brute_tried
+        m_copy.tools_installed = self.tools_installed
+        m_copy.backdoor_installed = self.backdoor_installed
+        m_copy.reachable = self.reachable
+        return m_copy
+
+

@@ -46,7 +46,7 @@
         "multi_input_channel": false,
         "n_deterministic_eval_iter": 10,
         "num_episodes": 5000,
-        "num_iterations": 150,
+        "num_iterations": 100,
         "optimization_iterations": 10,
         "optimizer": "Adam",
         "output_dim": 22,

@@ -311,8 +311,9 @@ class EvalCallback(EventCallback):
         # Convert to VecEnv for consistency
         if not isinstance(eval_env, VecEnv):
             eval_env = DummyVecEnv([lambda: eval_env])
-        if not isinstance(eval_env_2, VecEnv):
-            eval_env_2 = DummyVecEnv([lambda: eval_env_2])
+        if eval_env_2 is not None:
+            if not isinstance(eval_env_2, VecEnv):
+                eval_env_2 = DummyVecEnv([lambda: eval_env_2])
 
         if isinstance(eval_env, VecEnv):
             assert eval_env.num_envs == 1, "You must pass only one environment for evaluation"

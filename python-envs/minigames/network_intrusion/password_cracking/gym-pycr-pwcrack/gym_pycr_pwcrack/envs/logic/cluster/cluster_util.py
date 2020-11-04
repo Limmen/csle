@@ -5,6 +5,7 @@ import time
 import paramiko
 import telnetlib
 import random
+import copy
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -903,6 +904,7 @@ class ClusterUtil:
         for m in s.obs_state.machines:
             if m.ip == a.ip:
                 target_machine = m
+                target_machine = target_machine.copy()
                 break
 
         # Check if already logged in
@@ -1080,9 +1082,9 @@ class ClusterUtil:
                     if c_root:
                         root = True
             target_machine.root = root
-            new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-            total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
+            new_machines_obs, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
+               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+               total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
             s_prime.obs_state.machines = new_machines_obs
         else:
