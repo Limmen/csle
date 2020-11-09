@@ -42,10 +42,12 @@ def default_config() -> ClientConfig:
     env_name = "pycr-pwcrack-simple-sim-v1"
     eval_env_name = "pycr-pwcrack-simple-cluster-v1"
 
-    eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                   server_username="kim")
+    # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                server_username="kim")
+    eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
@@ -84,7 +86,7 @@ if __name__ == '__main__':
     else:
         config = default_config()
 
-    args.plotonly = True
+    # args.plotonly = True
     # args.resultdirs = "results,results2"
     # Plot
     if args.plotonly:

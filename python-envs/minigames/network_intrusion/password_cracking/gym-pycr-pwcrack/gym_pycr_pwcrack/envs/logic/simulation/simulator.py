@@ -126,7 +126,9 @@ class Simulator:
             s_1, r_1, _ = PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
             s_2, r_2, _ = PostExploitSimulator.simulate_ftp_login(s=s_1, a=a, env_config=env_config)
             s_3, r_3, done = PostExploitSimulator.simulate_telnet_login(s=s_2, a=a, env_config=env_config)
-            reward = r_3 + r_2 + r_1
+            r_4 = max(r_1, r_2, r_3)
+            #reward = r_3 + r_2 + r_1
+            reward = r_4
             return s_3, reward, done
         if a.id == ActionId.FIND_FLAG:
             return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)

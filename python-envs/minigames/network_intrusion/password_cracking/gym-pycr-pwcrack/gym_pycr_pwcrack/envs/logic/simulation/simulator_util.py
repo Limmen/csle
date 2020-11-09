@@ -416,7 +416,6 @@ class SimulatorUtil:
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_obs_machines, env_config=env_config)
         s_prime = s
         s_prime.obs_state.machines = new_obs_machines
-
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports,
                                                num_new_os_found=total_new_os,
                                                num_new_cve_vuln_found=total_new_vuln,
