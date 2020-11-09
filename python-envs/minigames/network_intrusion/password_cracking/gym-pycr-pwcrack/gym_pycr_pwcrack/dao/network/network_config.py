@@ -5,7 +5,7 @@ import numpy as np
 
 class NetworkConfig:
 
-    def __init__(self, subnet_mask: str, nodes: List[Node], adj_matrix: np.ndarray):
+    def __init__(self, subnet_mask: str, nodes: List[Node], adj_matrix: np.ndarray, flags_lookup: dict):
         self.subnet_mask = subnet_mask
         self.nodes = nodes
         self.adj_matrix = adj_matrix
@@ -14,6 +14,7 @@ class NetworkConfig:
         self.hacker = hacker
         self.router = router
         self.levels_d = levels_d
+        self.flags_lookup = flags_lookup
 
     def create_lookup_dicts(self) -> Union[dict, Node, Node, dict]:
         levels_d = {}

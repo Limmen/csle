@@ -10,6 +10,7 @@ import gym_pycr_pwcrack.constants.constants as constants
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
 from gym_pycr_pwcrack.dao.network.node_type import NodeType
+from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.envs import PyCRPwCrackEnv
 
 class MainFrame(pyglet.window.Window):
@@ -72,13 +73,14 @@ class MainFrame(pyglet.window.Window):
                                                     group=self.background)
         self.hacker_sprite.scale = 0.2
 
-        lbl = batch_label("." + str(self.env_config.network_conf.hacker.ip_id), self.width / 2 + 60,
+        lbl = batch_label("." + self.env_config.hacker_ip.rsplit(".", 1)[-1], self.width / 2 + 60,
                     self.height - 20, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
-        self.node_ip_to_ip_lbl[self.env_config.network_conf.hacker.ip] = lbl
-        nodes_to_coords[self.env_config.network_conf.hacker.id] = (self.width/2+20,self.height-35)
-        self.node_ip_to_coords[self.env_config.network_conf.hacker.ip] = (self.width / 2 + 20, self.height - 35)
-        self.node_ip_to_node[self.env_config.network_conf.hacker.ip] = self.env_config.network_conf.hacker
-        self.id_to_node[self.env_config.network_conf.hacker.id] = self.env_config.network_conf.hacker
+        self.node_ip_to_ip_lbl[self.env_config.hacker_ip] = lbl
+        nodes_to_coords[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = (self.width/2+20,self.height-35)
+        self.node_ip_to_coords[self.env_config.hacker_ip] = (self.width / 2 + 20, self.height - 35)
+        hacker_m = MachineObservationState(ip=self.env_config.hacker_ip)
+        self.node_ip_to_node[self.env_config.hacker_ip] = hacker_m
+        self.id_to_node[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = hacker_m
 
         # Draw subnet Mask
         batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
@@ -142,18 +144,16 @@ class MainFrame(pyglet.window.Window):
 
         # Draw router
         y_sep = 40
-        if self.env_config.network_conf.router is not None:
-            create_circle_fill(self.width / 2 + 20, self.height - 60, 8, self.batch, self.first_foreground,
-                               constants.RENDERING.WHITE)
-            lbl = batch_label("", self.width / 2 + 50,
-                        self.height - 60, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
-            self.node_ip_to_ip_lbl[self.env_config.network_conf.router.ip] = lbl
-            nodes_to_coords[self.env_config.network_conf.router.id] = (self.width / 2 + 20, self.height - 60)
-            self.node_ip_to_coords[self.env_config.network_conf.router.ip] = (self.width / 2 + 20, self.height - 60)
-            self.node_ip_to_node[self.env_config.network_conf.router.ip] = self.env_config.network_conf.router
-            self.id_to_node[self.env_config.network_conf.router.id] = self.env_config.network_conf.router
-        else:
-            raise ValueError("Router is not defined in network config")
+        create_circle_fill(self.width / 2 + 20, self.height - 60, 8, self.batch, self.first_foreground,
+                           constants.RENDERING.WHITE)
+        lbl = batch_label("", self.width / 2 + 50,
+                    self.height - 60, 12, (0, 0, 0, 255), self.batch, self.second_foreground)
+        self.node_ip_to_ip_lbl[self.env_config.router_ip] = lbl
+        nodes_to_coords[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = (self.width / 2 + 20, self.height - 60)
+        self.node_ip_to_coords[self.env_config.router_ip] = (self.width / 2 + 20, self.height - 60)
+        machine = MachineObservationState(ip=self.env_config.router_ip)
+        self.node_ip_to_node[self.env_config.router_ip] = machine
+        self.id_to_node[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = machine
 
         # --- Draw Topology --
 
@@ -168,99 +168,112 @@ class MainFrame(pyglet.window.Window):
         middle = self.width / 2
         self.flag_avatar = pyglet.resource.image(constants.RENDERING.FLAG_SPRITE_NAME)
         self.firewall_avatar = pyglet.resource.image(constants.RENDERING.FIREWALL_SPRITE_NAME)
-        for level in range(len(self.env_config.network_conf.levels_d)):
+        for level in range(self.env_config.render_config.num_levels):
             if level > 1:
-                num_nodes_in_level = len(self.env_config.network_conf.levels_d[level+1])
+                num_nodes_in_level = self.env_config.render_config.num_nodes_per_level
                 x_start = middle-(((num_nodes_in_level-1)/2)*x_sep)
                 x = x_start
-                if len(self.env_config.network_conf.levels_d[level+1]) > max_nodes_per_level:
-                    raise ValueError("Invalid network config. Too many nodes in a single level. "
-                                     "Max level for this width of the GUI is: {}".format(max_nodes_per_level))
-                else:
-                    for node in self.env_config.network_conf.levels_d[level+1]:
-                        if node.type == NodeType.SERVER:
-                            if x > x_max:
-                                x = x_start
-                            create_circle_fill(x, y, 8, self.batch, self.first_foreground, constants.RENDERING.WHITE)
-                            lbl = batch_label("", x - 30, y, 12, (0, 0, 0, 255), self.batch,
-                                        self.second_foreground)
-                            self.node_ip_to_ip_lbl[node.ip] = lbl
-                            for i, flag in enumerate(node.flags):
-                                # Draw flag
-                                flag_sprite = pyglet.sprite.Sprite(self.flag_avatar, x=x-(20*(i+1)),
-                                                                        y=y+10,
-                                                                        batch=self.batch,
-                                                                        group=self.background)
-                                flag_sprite.scale = 0.05
-                                flag_sprite.visible = False
-                                self.flags_sprites.append((flag_sprite, flag))
+                for machine in self.state.obs_state.machines:
+                    if machine.ip == self.env_config.hacker_ip or machine.ip == self.env_config.router_ip:
+                        continue
+                    if x > x_max:
+                        x = x_start
+                    create_circle_fill(x, y, 8, self.batch, self.first_foreground, constants.RENDERING.WHITE)
+                    lbl = batch_label("", x - 30, y, 12, (0, 0, 0, 255), self.batch,
+                                self.second_foreground)
+                    self.node_ip_to_ip_lbl[machine.ip] = lbl
+                    #for i, flag in enumerate(machine.flags_found):
+                    # Draw flag
+                    i=0
+                    flag_sprite = pyglet.sprite.Sprite(self.flag_avatar, x=x-(20*(i+1)),
+                                                            y=y+10,
+                                                            batch=self.batch,
+                                                            group=self.background)
+                    flag_sprite.scale = 0.05
+                    flag_sprite.visible = False
+                    self.flags_sprites.append((flag_sprite, machine.ip))
 
-                            if node.firewall:
-                                # draw firewall
-                                firewall_sprite = pyglet.sprite.Sprite(self.firewall_avatar, x=x - (35 * (i + 1)),
-                                                                   y=y + 10,
-                                                                   batch=self.batch,
-                                                                   group=self.background)
-                                firewall_sprite.scale = 0.7
-                                firewall_sprite.visible = False
-                                self.firewall_sprites[node.ip] = firewall_sprite
-
-                            nodes_to_coords[node.id] = (x, y)
-                            self.node_ip_to_coords[node.ip] = (x, y)
-                            self.node_ip_to_node[node.ip] = node
-                            self.id_to_node[node.id] = node
-                            x = x + x_sep
+                        # if machine.firewall:
+                        #     # draw firewall
+                        #     firewall_sprite = pyglet.sprite.Sprite(self.firewall_avatar, x=x - (35 * (i + 1)),
+                        #                                        y=y + 10,
+                        #                                        batch=self.batch,
+                        #                                        group=self.background)
+                        #     firewall_sprite.scale = 0.7
+                        #     firewall_sprite.visible = False
+                        #     self.firewall_sprites[machine.ip] = firewall_sprite
+                        #
+                    nodes_to_coords[int(machine.ip.rsplit(".", 1)[-1])] = (x, y)
+                    self.node_ip_to_coords[machine.ip] = (x, y)
+                    self.node_ip_to_node[machine.ip] = machine
+                    self.id_to_node[int(machine.ip.rsplit(".", 1)[-1])] = machine
+                    x = x + x_sep
                 y = y - y_sep
 
+        if self.env_config.network_conf.nodes is not None and len(self.env_config.network_conf.nodes) > 0 \
+            and self.env_config.network_conf.adj_matrix is not None and len(self.env_config.network_conf.adj_matrix) > 0:
+            for n1 in self.env_config.network_conf.nodes:
+                machine = self.state.get_machine(n1.ip)
+                if machine is not None:
+                    for n2 in self.env_config.network_conf.nodes:
+                        if self.env_config.network_conf.adj_matrix[n1.id-1][n2.id-1] == 1:
+                            machine.reachable.add(n2.ip)
+                    if machine.ip == self.env_config.router_ip:
+                        machine.reachable.add(self.env_config.hacker_ip)
+                        machine.reachable.add(self.env_config.router_ip)
+
         # Draw links
-        for i in range(len(self.env_config.network_conf.adj_matrix)):
-            node1 = self.id_to_node[i+1]
-            node1_links = []
-            for j in range(i+1, len(self.env_config.network_conf.adj_matrix[i])):
-                if self.env_config.network_conf.adj_matrix[i][j] == 1:
-                    color = constants.RENDERING.WHITE
-                    node2 = self.id_to_node[j + 1]
-                    node2_links = []
-                    # draw first straight line down
-                    c_1 = nodes_to_coords[i + 1][0]
-                    c_2 = nodes_to_coords[i + 1][1]
-                    c_3 = nodes_to_coords[i + 1][0]
-                    c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
+        for machine in self.state.obs_state.machines:
+            machine1_links = []
+            if machine.ip == self.env_config.router_ip:
+                machine.reachable = machine.reachable.union(self.state.obs_state.agent_reachable)
+            for machine2 in machine.reachable:
+                if machine2 not in self.node_ip_to_node:
+                    continue
+                machine2 = self.node_ip_to_node[machine2]
+                color = constants.RENDERING.WHITE
+                node2_links = []
+                # draw first straight line down
+                c_1 = self.node_ip_to_coords[machine.ip][0]
+                c_2 = self.node_ip_to_coords[machine.ip][1]
+                c_3 = self.node_ip_to_coords[machine.ip][0]
+                c_4 = self.node_ip_to_coords[machine.ip][1] - (self.node_ip_to_coords[machine.ip][1] - self.node_ip_to_coords[machine2.ip][1]) / 2
 
-                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,constants.RENDERING.LINE_WIDTH)
-                    if node1.type == NodeType.HACKER or node1.type == NodeType.ROUTER:
-                        node1_links.append((c_1, c_2, c_3, c_4))
-                    node2_links.append((c_1, c_2, c_3, c_4))
+                l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,constants.RENDERING.LINE_WIDTH)
+                if machine.ip == self.env_config.hacker_ip or machine.ip == self.env_config.router_ip:
+                    machine1_links.append((c_1, c_2, c_3, c_4))
+                node2_links.append((c_1, c_2, c_3, c_4))
 
-                    # draw horizontal line
-                    c_1 = nodes_to_coords[i + 1][0]
-                    c_2 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
-                    c_3 = nodes_to_coords[j + 1][0]
-                    c_4 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
-                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
-                                   constants.RENDERING.LINE_WIDTH)
-                    #node1_links.append((c_1, c_2, c_3, c_4))
-                    node2_links.append((c_1, c_2, c_3, c_4))
+                # draw horizontal line
+                c_1 = self.node_ip_to_coords[machine.ip][0]
+                c_2 = self.node_ip_to_coords[machine.ip][1] - (self.node_ip_to_coords[machine.ip][1] - self.node_ip_to_coords[machine2.ip][1]) / 2
+                c_3 = self.node_ip_to_coords[machine2.ip][0]
+                c_4 = self.node_ip_to_coords[machine.ip][1] - (self.node_ip_to_coords[machine.ip][1] - self.node_ip_to_coords[machine2.ip][1]) / 2
+                l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
+                               constants.RENDERING.LINE_WIDTH)
+                #node1_links.append((c_1, c_2, c_3, c_4))
+                node2_links.append((c_1, c_2, c_3, c_4))
 
-                    # draw second straight line down
-                    c_1 = nodes_to_coords[j + 1][0]
-                    c_2 = nodes_to_coords[i + 1][1] - (nodes_to_coords[i + 1][1] - nodes_to_coords[j + 1][1]) / 2
-                    c_3 = nodes_to_coords[j + 1][0]
-                    c_4 = nodes_to_coords[j+1][1]
-                    l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
-                                   constants.RENDERING.LINE_WIDTH)
-                    if node1.type == NodeType.HACKER or node1.type == NodeType.ROUTER:
-                        node1_links.append((c_1, c_2, c_3, c_4))
-                    node2_links.append((c_1, c_2, c_3, c_4))
-                    if node2.ip not in self.node_ip_to_links:
-                        self.node_ip_to_links[node2.ip] = node2_links
-                    else:
-                        self.node_ip_to_links[node2.ip] = self.node_ip_to_links[node2.ip] + node2_links
+                # # draw second straight line down
+                c_1 = self.node_ip_to_coords[machine2.ip][0]
+                c_2 = self.node_ip_to_coords[machine.ip][1] - (self.node_ip_to_coords[machine.ip][1] - self.node_ip_to_coords[machine2.ip][1]) / 2
+                c_3 = self.node_ip_to_coords[machine2.ip][0]
+                c_4 = self.node_ip_to_coords[machine2.ip][1]
+                l = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
+                               constants.RENDERING.LINE_WIDTH)
+                if machine.ip == self.env_config.hacker_ip or machine.ip == self.env_config.router_ip:
+                    machine1_links.append((c_1, c_2, c_3, c_4))
+                node2_links.append((c_1, c_2, c_3, c_4))
 
-            if node1.ip not in self.node_ip_to_links:
-                self.node_ip_to_links[node1.ip] = node1_links
+                if machine2.ip not in self.node_ip_to_links:
+                    self.node_ip_to_links[machine2.ip] = node2_links
+                else:
+                    self.node_ip_to_links[machine2.ip] = self.node_ip_to_links[machine2.ip] + node2_links
+
+            if machine.ip not in self.node_ip_to_links:
+                self.node_ip_to_links[machine.ip] = machine1_links
             else:
-                self.node_ip_to_links[node1.ip] = self.node_ip_to_links[node1.ip] + node1_links
+                self.node_ip_to_links[machine.ip] = self.node_ip_to_links[machine.ip] + machine1_links
 
         w = 30
         h = 20
@@ -547,10 +560,11 @@ class MainFrame(pyglet.window.Window):
 
     def update_flags(self):
         for sp_fl in self.flags_sprites:
-            if sp_fl[1] in self.state.flags_state:
-                sp_fl[0].visible = True
-            else:
-                sp_fl[0].visible = False
+            match = False
+            for machine in self.state.obs_state.machines:
+                if sp_fl[1] == machine.ip and len(machine.flags_found) > 0:
+                    match = True
+            sp_fl[0].visible = match
 
     def update_labels(self) -> None:
         """
@@ -605,17 +619,20 @@ class MainFrame(pyglet.window.Window):
                 self.os_labels[o][1].text = os_name
 
     def update_topology(self):
-        for node in self.env_config.network_conf.nodes:
-            if node.type != NodeType.HACKER:
-                coords = self.node_ip_to_coords[node.ip]
+        for machine in self.state.obs_state.machines:
+            if machine.ip not in self.node_ip_to_coords:
+                self.clear()
+                self.create_batch()
+            if machine.ip != self.env_config.hacker_ip:
+                coords = self.node_ip_to_coords[machine.ip]
                 create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground,
                                    constants.RENDERING.WHITE)
-                if node.ip in self.node_ip_to_links:
-                    for link in self.node_ip_to_links[node.ip]:
+                if machine.ip in self.node_ip_to_links:
+                    for link in self.node_ip_to_links[machine.ip]:
                         batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
                                        constants.RENDERING.LINE_WIDTH)
-                if node.ip in self.node_ip_to_ip_lbl:
-                    lbl = self.node_ip_to_ip_lbl[node.ip]
+                if machine.ip in self.node_ip_to_ip_lbl:
+                    lbl = self.node_ip_to_ip_lbl[machine.ip]
                     lbl.text = ""
 
         for fw in self.firewall_sprites.values():
@@ -623,30 +640,34 @@ class MainFrame(pyglet.window.Window):
 
         drawn_links = set()
         for m in self.state.obs_state.machines:
-            node = self.node_ip_to_node[m.ip]
-            if node.type == NodeType.HACKER:
+            machine = self.node_ip_to_node[m.ip]
+            if machine.ip == self.env_config.hacker_ip:
                 continue
-            coords = self.node_ip_to_coords[node.ip]
-            if node.type == NodeType.ROUTER:
+            coords = self.node_ip_to_coords[machine.ip]
+            if machine.ip == self.env_config.router_ip:
                 color = constants.RENDERING.BLUE_PURPLE
-            elif node.type == NodeType.SERVER:
+            else:
                 color = constants.RENDERING.BLACK
             if m.logged_in:
                 color = constants.RENDERING.GREEN
             create_circle_fill(coords[0], coords[1], 8, self.batch, self.first_foreground, color)
-            lbl = self.node_ip_to_ip_lbl[node.ip]
-            lbl.text = "." + str(node.ip_id)
-            for link in self.node_ip_to_links[node.ip]:
-                if (link[0], link[1], link[2], link[3]) not in drawn_links and (link[2], link[3], link[0], link[1]) \
-                        not in drawn_links:
-                    batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
-                               self.background,
-                               constants.RENDERING.LINE_WIDTH)
-                    drawn_links.add((link[0], link[1], link[2], link[3]))
-                    drawn_links.add((link[2], link[3], link[0], link[1]))
-            if m.ip in self.firewall_sprites:
-                fw_sprite = self.firewall_sprites[m.ip]
-                fw_sprite.visible = True
+            lbl = self.node_ip_to_ip_lbl[machine.ip]
+            lbl.text = "." + str(machine.ip.rsplit(".", 1)[-1])
+            if machine.ip not in self.node_ip_to_links:
+                self.clear()
+                self.create_batch()
+            if machine.ip in self.node_ip_to_links:
+                for link in self.node_ip_to_links[machine.ip]:
+                    if (link[0], link[1], link[2], link[3]) not in drawn_links and (link[2], link[3], link[0], link[1]) \
+                            not in drawn_links:
+                        batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
+                                   self.background,
+                                   constants.RENDERING.LINE_WIDTH)
+                        drawn_links.add((link[0], link[1], link[2], link[3]))
+                        drawn_links.add((link[2], link[3], link[0], link[1]))
+            # if m.ip in self.firewall_sprites:
+            #     fw_sprite = self.firewall_sprites[m.ip]
+            #     fw_sprite.visible = True
 
     def on_draw(self) -> None:
         """
@@ -674,6 +695,8 @@ class MainFrame(pyglet.window.Window):
         :param state: the new state
         :return: None
         """
+        num_nodes = len(state.obs_state.machines)
+        num_nodes_prev = len(self.state.obs_state.machines)
         self.state = state
         self.state.initialize_render_state()
 
@@ -700,3 +723,8 @@ class MainFrame(pyglet.window.Window):
         else:
             self.set_state(self.state)
         self.on_draw()
+
+    # def generate_adjacency_matrix(self):
+    #     sorted_machines = sorted(self.state.obs_state.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]),
+    #                              reverse=False)
+

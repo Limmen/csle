@@ -9,6 +9,7 @@ from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwCrackMediumBase
 
 class PyCrPwCrackMediumV1:
     """
@@ -16,35 +17,37 @@ class PyCrPwCrackMediumV1:
     """
 
     @staticmethod
-    def actions_conf(network_conf : NetworkConfig) -> ActionConfig:
+    def actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> ActionConfig:
         """
         Generates the action config
 
-        :param network_conf: the network config
+        :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
+        :param subnet_mask: subnet mask of the network
+        :param hacker_ip: ip of the agent
         :return: the action config
         """
         actions = []
 
         # Host actions
-        for idx in range(len(network_conf.nodes)-1):
+        for idx in range(num_nodes):
             actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
 
         # Subnet actions
-        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask,
+        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
                                                         subnet=True))
-        actions.append(NMAPActions.PING_SCAN(index=len(network_conf.nodes), ip=network_conf.subnet_mask, subnet=True))
-        actions.append(ShellActions.FIND_FLAG(index=len(network_conf.nodes)))
-        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=len(network_conf.nodes)))
-        actions.append(ShellActions.INSTALL_TOOLS(index=len(network_conf.nodes)))
-        actions.append(ShellActions.SSH_BACKDOOR(index=len(network_conf.nodes)))
+        actions.append(NMAPActions.PING_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(ShellActions.FIND_FLAG(index=num_nodes+1))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes+1))
+        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes+1))
+        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes+1))
         actions.append(
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask,
+            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                          subnet=True))
-        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask,
+        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
-        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(len(network_conf.nodes), ip=network_conf.subnet_mask,
+        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
@@ -59,7 +62,7 @@ class PyCrPwCrackMediumV1:
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        action_config = ActionConfig(num_indices=len(network_conf.nodes), actions=actions, nmap_action_ids=nmap_action_ids,
+        action_config = ActionConfig(num_indices=num_nodes, actions=actions, nmap_action_ids=nmap_action_ids,
                                      network_service_action_ids=network_service_action_ids,
                                      shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
                                      masscan_action_ids=masscan_action_ids)
@@ -78,10 +81,11 @@ class PyCrPwCrackMediumV1:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, render_config=render_conf, env_mode=EnvMode.CLUSTER,
+                               num_sh=3, num_nodes = PyCrPwCrackMediumBase.num_nodes(),
+                               render_config=render_conf, env_mode=EnvMode.CLUSTER,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip="172.18.2.191", state_type=StateType.COMPACT)
+                               hacker_ip=PyCrPwCrackMediumBase.hacker_ip(), state_type=StateType.COMPACT)
         env_config.ping_scan_miss_p = 0.02
         env_config.udp_port_scan_miss_p = 0.07
         env_config.syn_stealth_scan_miss_p = 0.04

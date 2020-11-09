@@ -62,7 +62,7 @@ class SimulatorUtil:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
                         new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
                         num_new_backdoors_installed \
-                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs, action=a)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_ports += num_new_ports_found
@@ -170,7 +170,7 @@ class SimulatorUtil:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
                         new_root, new_flag_pts, num_new_osvdb_vuln, num_new_logged_in, num_new_tools_installed, \
                         num_new_backdoors_installed \
-                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs, action=a)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_ports += num_new_ports_found

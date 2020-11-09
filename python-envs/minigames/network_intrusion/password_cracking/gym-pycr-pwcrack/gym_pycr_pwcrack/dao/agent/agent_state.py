@@ -34,6 +34,12 @@ class AgentState:
         self.initialize_render_state()
         self.manual_action = ""
 
+    def get_machine(self, ip: str):
+        for m in self.obs_state.machines:
+            if m.ip == ip:
+                return m
+        return None
+
 
     def initialize_render_state(self):
         """

@@ -474,13 +474,11 @@ class EnvDynamicsUtil:
         :return: True if all flags are collected otherwise false
         """
         total_flags = set()
-        for node in env_config.network_conf.nodes:
-            for flag in node.flags:
-                total_flags.add(flag)
+        for key, flag in env_config.network_conf.flags_lookup.items():
+            total_flags.add(flag)
         found_flags = set()
         for node in s.obs_state.machines:
             found_flags = found_flags.union(node.flags_found)
-
         return total_flags == found_flags
 
 

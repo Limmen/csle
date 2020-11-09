@@ -11,13 +11,14 @@ class EnvState:
     """
 
     def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int, num_sh : int,
-                 num_flags : int,
+                 num_flags : int, num_nodes : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None,
                  state_type: StateType = StateType.BASE):
         self.network_config = network_config
         self.state_type = state_type
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
+        self.num_nodes = num_nodes
         self.num_vuln = num_vuln
         self.num_sh = num_sh
         self.num_flags = num_flags
@@ -95,7 +96,7 @@ class EnvState:
                     self.cached_ftp_connections[(m.ip, c.username, c.port)] = c
                 for cr in m.backdoor_credentials:
                     self.cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
-        self.obs_state = ObservationState(num_machines=len(self.network_config.nodes)-1, num_ports=self.num_ports,
+        self.obs_state = ObservationState(num_machines=self.num_nodes, num_ports=self.num_ports,
                                           num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
                                           catched_flags=0, agent_reachable=agent_reachable)
 

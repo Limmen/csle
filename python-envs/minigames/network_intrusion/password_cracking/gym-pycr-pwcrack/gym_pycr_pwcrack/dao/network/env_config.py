@@ -17,7 +17,7 @@ class EnvConfig:
     """
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
-                 num_sh : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
+                 num_sh : int, num_nodes : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01, manual_play : bool = False, state_type: StateType = StateType.BASE):
         """
@@ -28,6 +28,7 @@ class EnvConfig:
         :param num_ports: number of ports per machine in the state
         :param num_vuln: number of vuln per machine to keep in state
         :param num_sh: number of shell connections per machine to keep in state
+        :param num_nodes: number of nodes
         :param hacker_ip: ip of the hacker
         :param render_config: the render config
         :param env_mode: the env mode (e.g. cluster or sim)
@@ -39,10 +40,10 @@ class EnvConfig:
         """
         self.network_conf = network_conf
         self.action_conf = action_conf
-        self.num_nodes = len(network_conf.nodes)
         self.num_ports = num_ports
         self.num_vuln = num_vuln
         self.num_sh = num_sh
+        self.num_nodes = num_nodes
         self.env_mode = env_mode
         self.cluster_config = cluster_config
         self.render_config = render_config
@@ -50,6 +51,7 @@ class EnvConfig:
         self.detection_reward = detection_reward
         self.base_detection_p = base_detection_p
         self.hacker_ip = hacker_ip
+        self.router_ip = "172.18.1.10"
 
         self.ping_scan_miss_p = 0.00
         self.udp_port_scan_miss_p = 0.00
@@ -134,11 +136,7 @@ class EnvConfig:
 
         :return: returns dict of (flagpath -> FlagDTO)
         """
-        flags_lookup = {}
-        for node in self.network_conf.nodes:
-            for flag in node.flags:
-                flags_lookup[(node.ip, flag.path + "/" + flag.name)] = flag
-        return flags_lookup
+        return self.network_conf.flags_lookup
 
     def scale_rewards_prep(self):
         sum_costs = sum(list(map(lambda x: x.cost, self.action_conf.actions)))
