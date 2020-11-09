@@ -6,6 +6,7 @@ import paramiko
 import telnetlib
 import random
 import copy
+import sys
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -788,7 +789,8 @@ class ClusterUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                                                   action=a)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 
@@ -1007,7 +1009,7 @@ class ClusterUtil:
                 total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
                 total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
                     EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
-                                                           env_config=env_config)
+                                                           env_config=env_config, action=a)
                 s_prime.obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -1085,7 +1087,8 @@ class ClusterUtil:
             new_machines_obs, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
                total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config)
+                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config,
+                                                       action=a)
             s_prime.obs_state.machines = new_machines_obs
         else:
             target_machine.shell_access = False
@@ -1452,12 +1455,14 @@ class ClusterUtil:
                                                           cost=float(total_time))
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
-                    # Persist cache
-                    ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
-                                                             service=constants.SSH.SERVICE_NAME, user=c.username,
-                                                             files=flag_paths, ip=machine.ip)
                     if len(flag_paths) > 0:
+                        # Persist cache
+                        ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                                 service=constants.SSH.SERVICE_NAME, user=c.username,
+                                                                 files=flag_paths, ip=machine.ip)
                         break
+                    else:
+                        time.sleep(0.5)
 
             # Check for flags
             for fp in flag_paths:
@@ -1708,7 +1713,8 @@ class ClusterUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config,
+                                                   action=a)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 
@@ -2087,7 +2093,8 @@ class ClusterUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config,
+                                                   action=a)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 
@@ -2269,7 +2276,8 @@ class ClusterUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet : bool = False) -> bool:
+    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet : bool = False) \
+            -> List:
         """
         List all users on a machine
 
@@ -2301,7 +2309,6 @@ class ClusterUtil:
                     env_config.filesystem_scan_cache.add(cache_id, users)
                     return users
             except Exception as e:
-                print("exception reading?")
                 pass
             finally:
                 if remote_file is not None:
@@ -2328,10 +2335,17 @@ class ClusterUtil:
         if len(users) == 1:
             raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root,
                                                                                           c.username))
-        # cache result in-memory
-        env_config.filesystem_scan_cache.add(cache_id, users)
 
-        if not telnet:
+        backdoor_exists = False
+        for user in users:
+            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
+                backdoor_exists = True
+
+        if backdoor_exists:
+            # cache result in-memory
+            env_config.filesystem_scan_cache.add(cache_id, users)
+
+        if not telnet and backdoor_exists:
             # cache result on-disk
             sftp_client = c.conn.open_sftp()
             remote_file = None
@@ -2498,7 +2512,8 @@ class ClusterUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config,
+                                                   action=a)
         s_prime = s
         s_prime.obs_state.machines = new_machines_obs
 

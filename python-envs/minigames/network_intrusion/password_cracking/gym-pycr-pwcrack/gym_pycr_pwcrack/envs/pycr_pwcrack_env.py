@@ -230,10 +230,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
-            if m.shell_access and not m.logged_in:
-                untried_credentials = True
-            # if m.untried_credentials:
-            #     untried_credentials = m.untried_credentials
+            # if m.shell_access and not m.logged_in:
+            #     untried_credentials = True
+            if m.untried_credentials:
+                untried_credentials = m.untried_credentials
 
         if action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True

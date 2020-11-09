@@ -33,9 +33,9 @@ def test_env(env_name : str, num_steps : int):
             print(env.env_state.obs_state.actions_tried)
             for m in env.env_state.obs_state.machines:
                 print("ip: {}, shell access:{}, ssh_brute_t:{}, ftp_brute_t:{}, telnet_brute_t:{}, fs_searched:{},untried_cred:{},logged_in:{},"
-                      "tools:{},backdoor:{}".format(
+                      "tools:{},backdoor:{}, flags found:{}".format(
                     m.ip, m.shell_access, m.telnet_brute_tried, m.ssh_brute_tried, m.ftp_brute_tried, m.filesystem_searched, m.untried_credentials,
-                m.logged_in, m.tools_installed, m.backdoor_installed))
+                m.logged_in, m.tools_installed, m.backdoor_installed, m.flags_found))
             print("all flags?:{}".format(EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config)))
             env.reset()
             trajectory = []

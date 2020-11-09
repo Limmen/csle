@@ -118,7 +118,8 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed \
-                = EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
+                = EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                                                         action=a)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
@@ -215,7 +216,8 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
+                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                                                       action=a)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
 
@@ -287,7 +289,7 @@ class SimulatorUtil:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
                         new_root, new_flag_pts, num_new_osvdb_vuln, num_new_logged_in, num_new_tools_installed, \
                         num_new_backdoors_installed = \
-                            EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs)
+                            EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs, action=a)
                         new_machines_obs.append(merged_machine_obs)
                         merged = True
                         total_new_vuln += num_new_cve_vuln_found
@@ -333,6 +335,7 @@ class SimulatorUtil:
                                                                  protocol=vuln.protocol, cvss=vuln.cvss)
                         if a.action_outcome == ActionOutcome.SHELL_ACCESS:
                             m_obs.shell_access = True
+                            m_obs.untried_credentials = True
                             m_obs.shell_access_credentials = vuln.credentials
                         m_obs.cve_vulns.append(vuln_obs)
                         vulnerable_services.append(vuln.name)
@@ -352,7 +355,8 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config)
+                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                                                       action=a)
             s_prime = s
             s_prime.obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
@@ -413,7 +417,8 @@ class SimulatorUtil:
         new_obs_machines, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
         total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_obs_machines, env_config=env_config)
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_obs_machines, env_config=env_config,
+                                                   action=a)
         s_prime = s
         s_prime.obs_state.machines = new_obs_machines
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports,

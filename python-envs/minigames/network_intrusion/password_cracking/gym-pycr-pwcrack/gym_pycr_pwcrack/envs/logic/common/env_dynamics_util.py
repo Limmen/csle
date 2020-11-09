@@ -14,7 +14,8 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
-                               new_machines_obs: List[MachineObservationState], env_config: EnvConfig) -> \
+                               new_machines_obs: List[MachineObservationState], env_config: EnvConfig,
+                               action : Action) -> \
             Tuple[List[MachineObservationState], int, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
@@ -41,7 +42,7 @@ class EnvDynamicsUtil:
                     merged_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
                     new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
                     num_new_backdoors_installed = \
-                        EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m)
+                        EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m, action)
                     total_new_ports_found += num_new_ports_found
                     total_new_os_found += num_new_os_found
                     total_new_cve_vuln_found += num_new_cve_vuln_found
@@ -82,7 +83,8 @@ class EnvDynamicsUtil:
                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
 
     @staticmethod
-    def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState) \
+    def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState,
+                                                   action: Action) \
             -> Tuple[MachineObservationState, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
@@ -110,7 +112,7 @@ class EnvDynamicsUtil:
         n_m, new_flag_pts = EnvDynamicsUtil.merge_flags(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_connections(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_filesystem_scanned(o_m, n_m)
-        n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m, action)
         n_m = EnvDynamicsUtil.merge_trace(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_brute_tried(o_m, n_m)
         n_m, num_new_tools_installed = EnvDynamicsUtil.merge_tools_installed(o_m, n_m)
@@ -295,16 +297,21 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_untried_credentials(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_untried_credentials(o_m: MachineObservationState, n_m: MachineObservationState, action: Action) \
+            -> MachineObservationState:
         """
         Helper function for merging an old machine observation untried-credentials-flag with new information collected
 
-        :param o_os: the old machine observation
-        :param n_os: the new machine observation
+        :param o_m: the old machine observation
+        :param n_m: the new machine observation
+        :param action: the action that was done to get n_m
         :return: the merged machine observation with updated untried-credentials flag
         """
-        if not n_m.untried_credentials:
-            n_m.untried_credentials = o_m.untried_credentials
+        if action.id == ActionId.NETWORK_SERVICE_LOGIN and n_m.shell_access:
+            return n_m
+        else:
+            if not n_m.untried_credentials:
+                n_m.untried_credentials = o_m.untried_credentials
         return n_m
 
     @staticmethod
