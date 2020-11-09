@@ -103,6 +103,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         action = self.env_config.action_conf.actions[action_id]
         action.ip = self.env_state.obs_state.get_action_ip(action)
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
+        if done:
+            reward = reward - self.env_config.final_steps_reward_coefficient*self.agent_state.time_step
         if self.agent_state.time_step > self.env_config.max_episode_length:
             done = True
         self.env_state = s_prime

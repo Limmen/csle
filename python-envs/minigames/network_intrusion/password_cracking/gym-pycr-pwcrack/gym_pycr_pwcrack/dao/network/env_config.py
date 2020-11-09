@@ -104,6 +104,7 @@ class EnvConfig:
         self.max_episode_length = 100
         self.base_step_reward = -1
         self.illegal_reward_action = 0
+        self.final_steps_reward_coefficient = 1
 
         self.filter_illegal_actions = True
         self.checkpoint_dir = None

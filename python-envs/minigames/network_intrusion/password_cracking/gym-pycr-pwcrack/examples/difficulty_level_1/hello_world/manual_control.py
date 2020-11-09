@@ -16,8 +16,8 @@ def manual_control():
                                    server_connection=False)
 
     #env = gym.make("pycr-pwcrack-simple-cluster-v4", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-sim-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-pwcrack-simple-cluster-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-simple-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-simple-cluster-v1", env_config=None, cluster_config=cluster_config)
 
     ManualAttackerAgent(env=env, env_config=env.env_config)
 

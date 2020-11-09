@@ -101,4 +101,5 @@ class PyCrPwCrackSimpleV1:
         env_config.cost_coefficient = 0
         env_config.base_step_reward = -10
         env_config.illegal_reward_action = -10
+        env_config.final_steps_reward_coefficient = 1
         return env_config
