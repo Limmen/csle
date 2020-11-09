@@ -3,11 +3,24 @@ import gym
 from gym_pycr_pwcrack.dao.action.action import Action
 
 class ActionConfig:
-
+    """
+    Configuration of the action space
+    """
     def __init__(self, num_indices : int, actions: List[Action] = None, nmap_action_ids : List[int] = None,
                  network_service_action_ids: List[int] = None,
                  shell_action_ids : List[int] = None, nikto_action_ids : List[int] = None,
                  masscan_action_ids : List[int] = None):
+        """
+        Class constructor
+
+        :param num_indices: max num machine indexes allowed
+        :param actions: list of actions in the action space
+        :param nmap_action_ids: list of ids of the actions that are NMAP actions
+        :param network_service_action_ids: list of ids of the actions that are network service actions
+        :param shell_action_ids: list of ids of the actions that are shell actions
+        :param nikto_action_ids: list of ids of the actions that are Nikto actions
+        :param masscan_action_ids: list of ids of the actions that are Masscan actions
+        """
         self.actions = actions
         self.num_actions = len(self.actions)
         self.num_indices = num_indices

@@ -5,9 +5,19 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action.action import ActionOutcome
 
 class NIKTOActions:
+    """
+    Class implementing NIKTO scan actions
+    """
 
     @staticmethod
     def NIKTO_WEB_HOST_SCAN(index: int, ip: str = "") -> Action:
+        """
+        Action for running a nikto web scan on a given host
+
+        :param index: index of the machine to apply the action to
+        :param ip: ip of the machine to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.NIKTO_WEB_HOST_SCAN
         file_name = str(id.value) + "_" + ip + ".xml "

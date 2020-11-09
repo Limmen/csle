@@ -18,6 +18,8 @@ class PyCrPwCrackMediumV1:
     @staticmethod
     def actions_conf(network_conf : NetworkConfig) -> ActionConfig:
         """
+        Generates the action config
+
         :param network_conf: the network config
         :return: the action config
         """
@@ -67,6 +69,8 @@ class PyCrPwCrackMediumV1:
     def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
                    render_conf: RenderConfig) -> EnvConfig:
         """
+        Generates the environment configuration
+
         :param network_conf: the network config
         :param action_conf: the action config
         :param cluster_conf: the cluster config

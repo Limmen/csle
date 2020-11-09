@@ -167,7 +167,17 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     @staticmethod
     def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
                         m_action: bool = False, m_index : int = None) -> bool:
+        """
+        Checks if a given action is legal in the current state of the environment
 
+        :param action_id: the id of the action to check
+        :param env_config: the environment config
+        :param env_state: the environment state
+        :param m_selection: boolean flag whether using AR policy m_selection or not
+        :param m_action: boolean flag whether using AR policy m_action or not
+        :param m_index: index of machine in case using AR policy
+        :return: True if legal, else false
+        """
         # If using AR policy
         if m_selection:
             return PyCRPwCrackEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,
@@ -296,12 +306,25 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.env_state.cleanup()
 
     def convert_ar_action(self, machine_idx, action_idx):
+        """
+        Converts an AR action id into a global action id
+
+        :param machine_idx: the machine id
+        :param action_idx: the action id
+        :return: the global action id
+        """
         key = (machine_idx, action_idx)
         return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
 
     def __update_log(self, action : Action) -> None:
+        """
+        Updates the log for rendering with a new action
+
+        :param action: the new action to add to the log
+        :return: None
+        """
         tag = "-"
         if not action.subnet:
             if action.ip is not None:
@@ -313,6 +336,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     def __setup_viewer(self):
         """
         Setup for the viewer to use for rendering
+
         :return: None
         """
         from gym_pycr_pwcrack.envs.rendering.viewer import Viewer
@@ -349,7 +373,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 self.trajectories = []
 
     @staticmethod
-    def _is_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState):
+    def _is_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
+        """
+        Utility method to check if a m_selection action is legal for AR policies
+
+        :param action_id: the action id of the m_selection to  check
+        :param env_config: the environment config
+        :param env_state: the environment state
+        :return: True if legal else False
+        """
         # Subnet actions are always legal
         if action_id == env_config.num_nodes:
             return True
@@ -363,7 +395,17 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         return False
 
     @staticmethod
-    def _is_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int):
+    def _is_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int) \
+            -> bool:
+        """
+        Utility method to check if a machine-specific action is legal or not for AR-policies
+
+        :param action_id: the machine-specific-action-id
+        :param env_config: the environment config
+        :param env_state: the environment state
+        :param machine_index: index of the machine to apply the action to
+        :return: True if legal else False
+        """
         action_id_id = env_config.action_conf.action_ids[action_id]
         key = (action_id_id, machine_index)
         if key not in env_config.action_conf.action_lookup_d:

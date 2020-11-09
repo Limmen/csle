@@ -5,9 +5,20 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action.action import ActionOutcome
 
 class NMAPActions:
+    """
+    Class containing NMAP actions
+    """
 
     @staticmethod
     def TCP_SYN_STEALTH_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a TCP SYN scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.TCP_SYN_STEALTH_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -26,6 +37,14 @@ class NMAPActions:
 
     @staticmethod
     def PING_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a Ping scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.PING_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -45,6 +64,14 @@ class NMAPActions:
 
     @staticmethod
     def UDP_PORT_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a UDP port scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.UDP_PORT_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -62,6 +89,14 @@ class NMAPActions:
 
     @staticmethod
     def TCP_CON_NON_STEALTH_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a TCP CON (non-stealthy) scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.TCP_CON_NON_STEALTH_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -79,6 +114,14 @@ class NMAPActions:
 
     @staticmethod
     def TCP_FIN_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a TCP FIN scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.TCP_FIN_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -97,6 +140,14 @@ class NMAPActions:
 
     @staticmethod
     def TCP_NULL_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a TCP Null scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.TCP_NULL_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -115,6 +166,14 @@ class NMAPActions:
 
     @staticmethod
     def TCP_XMAS_TREE_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a TCP XMAS TREE scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.TCP_XMAS_TREE_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -133,6 +192,14 @@ class NMAPActions:
 
     @staticmethod
     def OS_DETECTION_SCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a OS detection scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.OS_DETECTION_SCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -150,6 +217,14 @@ class NMAPActions:
 
     @staticmethod
     def VULSCAN(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a vulnerability scan using the VULSCAN script
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.VULSCAN_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -167,6 +242,14 @@ class NMAPActions:
 
     @staticmethod
     def NMAP_VULNERS(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a vulnerability scan using the Vulners script
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         id = ActionId.NMAP_VULNERS_HOST
         file_name = str(id.value) + "_" + ip + ".xml "
@@ -184,6 +267,14 @@ class NMAPActions:
 
     @staticmethod
     def TELNET_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against telnet
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         telnet_args = constants.NMAP.TELNET_BRUTE_HOST
         id = ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST
@@ -205,6 +296,14 @@ class NMAPActions:
 
     @staticmethod
     def SSH_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against ssh
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         ssh_args = constants.NMAP.SSH_BRUTE_HOST
         id = ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST
@@ -226,6 +325,14 @@ class NMAPActions:
 
     @staticmethod
     def FTP_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against ftp
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         ftp_args = constants.NMAP.FTP_BRUTE_HOST
         id = ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST
@@ -247,6 +354,14 @@ class NMAPActions:
 
     @staticmethod
     def CASSANDRA_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against cassandra
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         cassandra_args = constants.NMAP.CASSANDRA_BRUTE_HOST
         id = ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST
@@ -269,6 +384,14 @@ class NMAPActions:
 
     @staticmethod
     def IRC_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against irc
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         irc_args = constants.NMAP.IRC_BRUTE_HOST
         id = ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST
@@ -290,6 +413,14 @@ class NMAPActions:
 
     @staticmethod
     def MONGO_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against mongo
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         mongo_args = constants.NMAP.MONGO_BRUTE_HOST
         id = ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST
@@ -312,6 +443,14 @@ class NMAPActions:
 
     @staticmethod
     def MYSQL_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against mysql
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         mysql_args = constants.NMAP.MYSQL_BRUTE_HOST
         id = ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST
@@ -332,6 +471,14 @@ class NMAPActions:
 
     @staticmethod
     def SMTP_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against smtp
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         smtp_args = constants.NMAP.SMTP_BRUTE_HOST
         id = ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST
@@ -353,6 +500,14 @@ class NMAPActions:
 
     @staticmethod
     def POSTGRES_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> Action:
+        """
+        Runs a dictionary attack trying combinations with same user+pw against postgres
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         postgres_args = constants.NMAP.POSTGRES_BRUTE_HOST
         id = ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST
@@ -374,6 +529,14 @@ class NMAPActions:
 
     @staticmethod
     def FIREWALK(index: int, subnet=True, ip: str = "") -> Action:
+        """
+        Runs a firewalk scan to try to identify and bypass firewalls
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         firewalk_args = constants.NMAP.FIREWALK_HOST
         id = ActionId.FIREWALK_HOST
@@ -394,6 +557,14 @@ class NMAPActions:
 
     @staticmethod
     def HTTP_ENUM(index: int, subnet=True, ip: str = "") -> Action:
+        """
+        Runs a HTTP enumeration scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         http_enum_args = constants.NMAP.HTTP_ENUM
         id = ActionId.HTTP_ENUM_HOST
@@ -413,6 +584,14 @@ class NMAPActions:
 
     @staticmethod
     def HTTP_GREP(index: int, subnet=True, ip: str = "") -> Action:
+        """
+        Runs a HTTP grep scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         http_grep_args = constants.NMAP.HTTP_GREP
         id = ActionId.HTTP_GREP_HOST
@@ -432,6 +611,14 @@ class NMAPActions:
 
     @staticmethod
     def FINGER(index: int, subnet=True, ip: str = "") -> Action:
+        """
+        Runs a fingerprint scan
+
+        :param index: index of the machine to apply the action to
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :return: the action
+        """
         cost_noise_multiplier = 1
         finger_args = constants.NMAP.FINGER
         id = ActionId.FINGER_HOST
@@ -448,22 +635,3 @@ class NMAPActions:
                       descr="Attempts to retrieve a list of usernames using the finger service.",
                       cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                       ip=ip, subnet=subnet, action_outcome=ActionOutcome.INFORMATION_GATHERING)
-
-    @staticmethod
-    def PIVOT_TCP_SYN_STEALTH_SCAN(index: int, subnet=True, ip: str = "") -> Action:
-        cost_noise_multiplier = 1
-        id = ActionId.PIVOT_TCP_SYN_STEALTH_SCAN
-        file_name = str(id.value) + "_" + ip + ".xml "
-        if subnet:
-            cost_noise_multiplier = 10
-            id = ActionId.PIVOT_TCP_SYN_STEALTH_SCAN_SUBNET
-            file_name = str(id.value) + ".xml "
-
-        cmd = ["sudo nmap -sS -p- " + constants.NMAP.SPEED_ARGS + " "]
-        return Action(id=id, name="Pivot TCP SYN (Stealth) Scan", cmd=cmd,
-                      type=ActionType.POST_EXPLOIT,
-                      descr="Pivot TCP SYN Scan: Use compromised host to run the TCP SYN scan from to discover "
-                            "new machines behind firewalls",
-                      cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                      ip=ip, subnet=subnet, index=index,
-                      action_outcome=ActionOutcome.INFORMATION_GATHERING)

