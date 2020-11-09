@@ -11,7 +11,7 @@
         "eps_clip": 0.2,
         "epsilon": 1,
         "epsilon_decay": 0.9999,
-        "eval_episodes": 0,
+        "eval_episodes": 10,
         "eval_epsilon": 0.0,
         "eval_frequency": 500,
         "eval_log_frequency": 1,

@@ -538,11 +538,13 @@ class BaseAlgorithm(ABC):
             (used in recurrent policies)
         """
         if not self.agent_config.ar_policy:
-            return self.policy.predict(observation, state, mask, deterministic, env_config=self.env.envs[0].env_config,
-                                       env_state=self.env.envs[0].env_state)
+            return self.policy.predict(observation, state, mask, deterministic,
+                                       env_config=env_config,
+                                       env_state=env_state)
         else:
-            m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic, env_config=self.env.envs[0].env_config,
-                                       env_state=self.env.envs[0].env_state)
+            m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic,
+                                                                          env_config=env_config,
+                                                                          env_state=env_state)
             obs_2 = observation.reshape((observation.shape[0],) + self.env.envs[0].network_orig_shape)
             idx = m_selection_actions[0]
             if m_selection_actions[0] > 5:
@@ -550,8 +552,8 @@ class BaseAlgorithm(ABC):
             machine_obs = obs_2[:, idx].reshape((observation.shape[0],) + self.env.envs[0].machine_orig_shape)
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
             m_actions, state2 = self.m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
-                                                    env_config=self.env.envs[0].env_config,
-                                                    env_state=self.env.envs[0].env_state, m_index = m_selection_actions[0])
+                                                    env_config=env_config,
+                                                    env_state=env_state)
             actions = self.env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
             return actions, state2
@@ -834,7 +836,7 @@ class BaseAlgorithm(ABC):
         if self.agent_config.save_dir is not None:
             path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
             self.agent_config.logger.info("Saving policy-network to: {}".format(path))
-            self.save(path, exclude=["tensorboard_writer"])
+            self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env"])
         else:
             self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
             print("Save path not defined, not saving policy-networks to disk")

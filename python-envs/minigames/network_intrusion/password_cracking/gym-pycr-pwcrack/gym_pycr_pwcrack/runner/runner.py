@@ -77,6 +77,10 @@ class Runner:
         train_result = agent.train_result
         eval_result = agent.eval_result
         env.cleanup()
+        env.close()
+        if eval_env is not None:
+            eval_env.cleanup()
+            eval_env.close()
         return train_result, eval_result
 
     @staticmethod

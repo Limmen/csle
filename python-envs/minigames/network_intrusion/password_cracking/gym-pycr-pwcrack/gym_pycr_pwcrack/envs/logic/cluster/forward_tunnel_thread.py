@@ -1,4 +1,5 @@
 import threading
+import time
 from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_server import ForwardSSHServer
 from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_handler import ForwardSSHHandler
 
@@ -24,3 +25,4 @@ class ForwardTunnelThread(threading.Thread):
 
     def shutdown(self):
         self.forward_server.shutdown()
+        time.sleep(0.5) # wait for server to shutdown

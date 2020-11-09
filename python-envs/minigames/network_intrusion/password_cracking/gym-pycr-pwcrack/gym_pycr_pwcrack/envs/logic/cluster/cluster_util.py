@@ -1371,10 +1371,11 @@ class ClusterUtil:
                             interactive_shells.append(shell)
                             non_failed_credentials.append(cr)
                     except Exception as e:
-                        print("FTP exception: {}".format(str(e)))
-                        print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
-                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        pass
+                        # print("FTP exception: {}".format(str(e)))
+                        # print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
+                        # print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
+                        # print("Agent reachable:{}".format(s.obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:

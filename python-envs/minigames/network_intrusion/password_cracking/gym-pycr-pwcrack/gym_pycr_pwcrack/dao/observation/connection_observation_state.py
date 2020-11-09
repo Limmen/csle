@@ -42,3 +42,5 @@ class ConnectionObservationState:
             self.interactive_shell.close()
         if self.conn is not None:
             self.conn.close()
+        if self.proxy is not None:
+            self.proxy.cleanup()

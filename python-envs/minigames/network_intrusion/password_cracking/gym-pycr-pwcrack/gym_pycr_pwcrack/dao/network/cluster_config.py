@@ -165,9 +165,12 @@ class ClusterConfig:
 
         :return: None
         """
-        self.agent_conn.close()
-        self.relay_channel.close()
-        self.server_conn.close()
+        if self.agent_conn is not None:
+            self.agent_conn.close()
+        if self.relay_channel is not None:
+            self.relay_channel.close()
+        if self.server_conn is not None:
+            self.server_conn.close()
 
 
     def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],

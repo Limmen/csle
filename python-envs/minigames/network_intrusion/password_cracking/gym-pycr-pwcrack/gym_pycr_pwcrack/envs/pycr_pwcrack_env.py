@@ -306,6 +306,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             return
         else:
             self.env_state.cleanup()
+            if self.env_config.cluster_config is not None:
+                self.env_config.cluster_config.close()
 
     def convert_ar_action(self, machine_idx, action_idx):
         """

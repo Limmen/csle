@@ -87,7 +87,10 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                 env.render()
                 # time.sleep(agent_config.eval_sleep)
 
-            action, state = model.predict(obs, state=state, deterministic=deterministic)
+            action, state = model.predict(obs, state=state, deterministic=deterministic,
+                                          env_config=env.envs[0].env_config,
+                                          env_state=env.envs[0].env_state
+                                          )
             obs, reward, done, _info = env.step(action)
             episode_reward += reward
 
@@ -95,6 +98,8 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                 callback(locals(), globals())
 
             episode_length += 1
+            if done:
+                break
 
         # Render final frame when game completed
         if agent_config.eval_render:
@@ -114,7 +119,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
         # Log average metrics every <self.config.eval_log_frequency> episodes
         if episode % agent_config.eval_log_frequency == 0:
-            model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
+            model.log_metrics(iteration=episode, result=model.eval_result, episode_rewards=episode_rewards,
                               episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
                               episode_flags_percentage=episode_flags_percentage)
 
