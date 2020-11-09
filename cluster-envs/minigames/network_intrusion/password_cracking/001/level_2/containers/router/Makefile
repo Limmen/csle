@@ -14,9 +14,6 @@ ROOT_USER_1=admin
 ROOT_PW_1=admin
 NON_ROOT_USER_1=jessica
 NON_ROOT_PW_1=water
-FLAG_INFO_FILE=fl_info.txt
-FLAG_PATH_1=/home/admin
-FLAG_NAME_1=flag0
 
 all: clean rm-image rm-net build net run
 
@@ -24,10 +21,7 @@ users:
 	echo "${ROOT_USER_1}:${ROOT_PW_1}" > ./docker/${ROOT_USERS_FILE}
 	echo "${NON_ROOT_USER_1}:${NON_ROOT_PW_1}" > ./docker/${NON_ROOT_USERS_FILE}
 
-flags:
-	echo "${FLAG_PATH_1}:${FLAG_NAME_1}" > ./docker/${FLAG_INFO_FILE}
-
-build: ./docker/Dockerfile users flags
+build: ./docker/Dockerfile users
 	docker build . --no-cache -f ./docker/Dockerfile -t $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION); cd ..
 
 
@@ -38,7 +32,6 @@ net:
 # route -n to list routes
 run: build net
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true --cap-add NET_ADMIN $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
-#	./setup_firewall.sh $(SUBNET) $(SUBNET_MASK_2) $(IP)
 
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
