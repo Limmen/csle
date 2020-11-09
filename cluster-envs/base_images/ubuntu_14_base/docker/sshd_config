@@ -34,7 +34,7 @@ Include /etc/ssh/sshd_config.d/*.conf
 PermitRootLogin yes
 #StrictModes yes
 #MaxAuthTries 6
-#MaxSessions 10
+MaxSessions 1000
 
 #PubkeyAuthentication yes
 
@@ -83,7 +83,7 @@ ChallengeResponseAuthentication no
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-UsePAM yes
+UsePAM no
 
 #AllowAgentForwarding yes
 #AllowTcpForwarding yes

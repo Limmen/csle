@@ -1,0 +1,1 @@
+puppet:puppet user1:123123

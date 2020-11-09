@@ -2,6 +2,10 @@
 FROM pycr/ubuntu_20_base:0.0.1
 USER root
 
+# Add start script
+ADD docker/start.sh /start.sh
+RUN chmod 777 /start.sh
+
 # Setup users
 
 # Add users script
@@ -18,6 +22,10 @@ RUN /make_root_users.sh
 # setup non-root users
 RUN /make_non_root_users.sh
 
+# setup firewall
+ADD docker/setup_firewall.sh /setup_firewall.sh
+RUN chmod 777 /setup_firewall.sh
+
 # Create flag
 ADD docker/create_flag.sh /create_flag.sh
 ADD docker/fl_info.txt /fl_info.txt
@@ -27,9 +35,11 @@ RUN /create_flag.sh
 # SSH
 RUN service ssh start
 
-# Add start script
-ADD docker/start.sh /start.sh
-RUN chmod 777 /start.sh
+# DNS
+RUN service named start
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh
+
+# Hack to keep container running (otherwise K8 thinks task is finished)
+#CMD ["sh", "-c", "tail -f /dev/null"]
