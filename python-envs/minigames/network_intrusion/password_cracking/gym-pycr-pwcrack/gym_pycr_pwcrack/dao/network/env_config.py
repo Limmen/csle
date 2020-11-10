@@ -123,6 +123,10 @@ class EnvConfig:
         self.ssh_retry_find_flag = 7
         self.retry_find_users = 7
 
+        self.exploration_policy = None
+        self.max_exploration_steps = 100
+        self.max_exploration_trajectories = 10
+
 
     def get_port_forward_port(self) -> int:
         """

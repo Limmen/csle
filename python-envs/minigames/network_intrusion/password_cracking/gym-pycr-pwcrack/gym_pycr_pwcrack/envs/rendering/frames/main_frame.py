@@ -792,7 +792,7 @@ class MainFrame(pyglet.window.Window):
         self.node_ip_to_links = {}
         if self.env_config.env_mode == EnvMode.SIMULATION or \
             self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
-            
+
             if self.env_config.network_conf.nodes is not None and len(self.env_config.network_conf.nodes) > 0 \
                     and self.env_config.network_conf.adj_matrix is not None and len(
                 self.env_config.network_conf.adj_matrix) > 0:

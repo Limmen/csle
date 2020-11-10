@@ -4,6 +4,9 @@ from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservat
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.observation.connection_observation_state import ConnectionObservationState
+from gym_pycr_pwcrack.dao.network.node import Node
+from gym_pycr_pwcrack.dao.network.node_type import NodeType
+from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 
 class MachineObservationState:
 
@@ -127,5 +130,17 @@ class MachineObservationState:
         m_copy.backdoor_installed = self.backdoor_installed
         m_copy.reachable = self.reachable
         return m_copy
+
+    def to_node(self) -> Node:
+        vulnerabilities = list(map(lambda x: x.to_vulnerability(), self.cve_vulns))
+        services = []
+        for service in self.logged_in_services:
+            services.append(NetworkService(name=service, protocol=None, port=1, credentials=None))
+        node = Node(ip=self.ip, ip_id=int(self.ip.rsplit(".", 1)[-1]), id=int(self.ip.rsplit(".", 1)[-1]),
+                    type = NodeType.SERVER, os="",
+                    flags=self.flags_found, level=3, vulnerabilities=vulnerabilities, services=services,
+                    credentials=self.shell_access_credentials, root=None, visible=False,
+                    reachable_nodes=self.reachable, firewall=False)
+        return node
 
 

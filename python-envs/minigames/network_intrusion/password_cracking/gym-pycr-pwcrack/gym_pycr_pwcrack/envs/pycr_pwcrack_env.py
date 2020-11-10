@@ -24,6 +24,8 @@ from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwC
 from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_v1 import PyCrPwCrackMediumV1
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_pwcrack.envs.logic.common.util as util
+from gym_pycr_pwcrack.envs.logic.cluster.simulation_generator import SimulationGenerator
+from gym_pycr_pwcrack.envs.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -32,9 +34,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
     def __init__(self, env_config : EnvConfig):
         self.env_config = env_config
-        if util.is_network_conf_incomplete(env_config):
-            if self.env_config.env_mode == EnvMode.SIMULATION:
-                raise ValueError("Must provide a simulation model to run in simulation mode")
+        if util.is_network_conf_incomplete(env_config) and self.env_config.env_mode == EnvMode.SIMULATION:
+            raise ValueError("Must provide a simulation model to run in simulation mode")
 
         self.env_state = EnvState(network_config=self.env_config.network_conf, num_ports=self.env_config.num_ports,
                                   num_vuln=self.env_config.num_vuln, num_sh=self.env_config.num_sh,
@@ -61,7 +62,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             'video.frames_per_second': 50  # Video rendering speed
         }
         self.step_outcome = None
-        if self.env_config.env_mode == EnvMode.CLUSTER:
+        if self.env_config.env_mode == EnvMode.CLUSTER or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             self.env_config.cluster_config.connect_agent()
             self.env_config.cluster_config.download_cluster_services()
             self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
@@ -83,6 +84,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.last_obs = self.env_state.get_observation()
         self.trajectory = []
         self.trajectories = []
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+            self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
+                                                           env_config=self.env_config, env=self)
+            self.env_state.obs_state = obs_state
+            self.env_config.env_mode = EnvMode.SIMULATION
+            self.reset()
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
@@ -536,6 +543,11 @@ class PyCRPwCrackSimpleGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.max_exploration_steps = 100
+            env_config.max_exploration_trajectories = 10
+
         super().__init__(env_config=env_config)
 
 # -------- Cluster ------------

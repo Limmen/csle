@@ -26,7 +26,7 @@ class TransitionOperator:
         """
         if env_config.env_mode == EnvMode.SIMULATION:
             return Simulator.transition(s=s,a=a,env_config=env_config)
-        elif env_config.env_mode == EnvMode.CLUSTER:
+        elif env_config.env_mode == EnvMode.CLUSTER or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             return ClusterMiddleware.transition(s=s, a=a, env_config=env_config)
             # try:
             #     return ClusterMiddleware.transition(s=s,a=a,env_config=env_config)

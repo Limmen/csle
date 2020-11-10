@@ -6,11 +6,29 @@ from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
+from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
 
 class EnvDynamicsUtil:
     """
     Class containing common utilities that are used both in simulation-mode and in cluster-mode.
     """
+
+    @staticmethod
+    def merge_complete_obs_state(old_obs_state: ObservationState, new_obs_state : ObservationState,
+                                 env_config: EnvConfig):
+        merged_obs_state = old_obs_state.copy()
+        merged_obs_state.num_machines = max(old_obs_state.num_machines, new_obs_state.num_machines)
+        merged_obs_state.num_ports = max(old_obs_state.num_ports, new_obs_state.num_ports)
+        merged_obs_state.num_vuln = max(old_obs_state.num_vuln, new_obs_state.num_vuln)
+        merged_obs_state.num_flags = max(old_obs_state.num_flags, new_obs_state.num_flags)
+        merged_obs_state.catched_flags = max(old_obs_state.catched_flags, new_obs_state.catched_flags)
+        merged_machines, _, _, _, _, _, _, _, _, _, _, _ = \
+            EnvDynamicsUtil.merge_new_obs_with_old(old_obs_state.machines, new_obs_state.machines,
+                                                                           env_config=env_config, action=None)
+        merged_obs_state.machines = merged_machines
+        merged_obs_state.num_sh = max(old_obs_state.num_sh, new_obs_state.num_sh)
+        merged_obs_state.agent_reachable = old_obs_state.agent_reachable.union(new_obs_state.agent_reachable)
+        return merged_obs_state
 
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
@@ -307,7 +325,7 @@ class EnvDynamicsUtil:
         :param action: the action that was done to get n_m
         :return: the merged machine observation with updated untried-credentials flag
         """
-        if action.id == ActionId.NETWORK_SERVICE_LOGIN and n_m.shell_access:
+        if action is not None and action.id == ActionId.NETWORK_SERVICE_LOGIN and n_m.shell_access:
             return n_m
         else:
             if not n_m.untried_credentials:
