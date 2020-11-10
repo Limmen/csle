@@ -1462,7 +1462,7 @@ class ClusterUtil:
                                                                  files=flag_paths, ip=machine.ip)
                         break
                     else:
-                        time.sleep(0.5)
+                        time.sleep(1)
 
             # Check for flags
             for fp in flag_paths:
@@ -2174,7 +2174,8 @@ class ClusterUtil:
                         if machine is None:
                             print("None m")
                             print("ip: {}".format(res.ip))
-                            print("merged result machines: {}".format(list(map(lambda x: x.ip_addr, merged_result.hosts))))
+                            print("merged result machines: {}".format(
+                                list(map(lambda x: x.ip_addr, merged_result.hosts))))
                             for tm in total_results:
                                 print("total_results machines: {}".format(list(map(lambda x: x.ip_addr, tm.hosts))))
                         machine.reachable.update(res.reachable)

@@ -110,7 +110,8 @@ class PyCrPwCrackSimpleV3:
                                render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.COMPACT)
+                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.COMPACT,
+                               router_ip=PyCrPwCrackSimpleBase.router_ip())
         env_config.ping_scan_miss_p = 0.02
         env_config.udp_port_scan_miss_p = 0.07
         env_config.syn_stealth_scan_miss_p = 0.04

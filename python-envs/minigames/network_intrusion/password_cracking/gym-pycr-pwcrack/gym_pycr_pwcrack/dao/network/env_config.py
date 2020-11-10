@@ -17,7 +17,8 @@ class EnvConfig:
     """
 
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
-                 num_sh : int, num_nodes : int, hacker_ip : str, render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
+                 num_sh : int, num_nodes : int, hacker_ip : str, router_ip : str,
+                 render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01, manual_play : bool = False, state_type: StateType = StateType.BASE):
         """
@@ -30,6 +31,7 @@ class EnvConfig:
         :param num_sh: number of shell connections per machine to keep in state
         :param num_nodes: number of nodes
         :param hacker_ip: ip of the hacker
+        :param router_ip: ip of the default gw for the hacker
         :param render_config: the render config
         :param env_mode: the env mode (e.g. cluster or sim)
         :param cluster_config: the cluster config
@@ -51,7 +53,7 @@ class EnvConfig:
         self.detection_reward = detection_reward
         self.base_detection_p = base_detection_p
         self.hacker_ip = hacker_ip
-        self.router_ip = "172.18.1.10"
+        self.router_ip = router_ip
 
         self.ping_scan_miss_p = 0.00
         self.udp_port_scan_miss_p = 0.00
@@ -103,7 +105,7 @@ class EnvConfig:
         self.detection_reward = -50
         self.all_flags_reward = 500
         self.sum_costs = 1
-        self.max_episode_length = 100
+        self.max_episode_length = 500
         self.base_step_reward = -1
         self.illegal_reward_action = 0
         self.final_steps_reward_coefficient = 1
@@ -118,8 +120,8 @@ class EnvConfig:
         self.blacklist_ips = ["172.18.1.1"]
         self.manual_play = manual_play
         self.state_type = state_type
-        self.ssh_retry_find_flag = 5
-        self.retry_find_users = 5
+        self.ssh_retry_find_flag = 7
+        self.retry_find_users = 7
 
 
     def get_port_forward_port(self) -> int:

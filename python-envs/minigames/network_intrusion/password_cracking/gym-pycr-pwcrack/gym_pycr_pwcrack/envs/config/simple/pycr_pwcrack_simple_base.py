@@ -236,6 +236,14 @@ class PyCrPwCrackSimpleBase:
         return hacker_ip
 
     @staticmethod
+    def router_ip() -> str:
+        """
+        :return: the agent's default gw
+        """
+        router_ip = "172.18.1.10"
+        return router_ip
+
+    @staticmethod
     def flags_lookup() -> str:
         """
         :return: dict with the flags
@@ -381,7 +389,7 @@ class PyCrPwCrackSimpleBase:
         """
         :return: the render config
         """
-        render_config = RenderConfig()
+        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 4)
         return render_config
 
     @staticmethod
@@ -398,7 +406,8 @@ class PyCrPwCrackSimpleBase:
                                num_nodes = PyCrPwCrackSimpleBase.num_nodes(), num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.BASE)
+                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.BASE,
+                               router_ip=PyCrPwCrackSimpleBase.router_ip())
         env_config.ping_scan_miss_p = 0.02
         env_config.udp_port_scan_miss_p = 0.07
         env_config.syn_stealth_scan_miss_p = 0.04

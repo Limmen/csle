@@ -120,7 +120,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.last_obs = m_obs
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
-        self.agent_state.obs_state = self.env_state.obs_state
         self.__update_log(action)
         self.trajectory.append(m_obs)
         self.trajectory.append(reward)
@@ -150,6 +149,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.agent_state.episode_reward = 0
         self.agent_state.env_log.reset()
         self.agent_state.obs_state = self.env_state.obs_state
+        #self.viewer.mainframe.set_state(self.agent_state)
+        if self.viewer is not None and self.viewer.mainframe is not None:
+            self.viewer.mainframe.reset_state()
         return m_obs
 
     def render(self, mode: str = 'human'):
@@ -164,6 +166,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
+        #self.agent_state.obs_state = self.env_state.obs_state.copy()
+        self.agent_state.obs_state = self.env_state.obs_state
         if mode not in self.metadata["render.modes"]:
             raise NotImplemented("mode: {} is not supported".format(mode))
         if self.viewer is None:
@@ -571,12 +575,6 @@ class PyCRPwCrackSimpleCluster1Env(PyCRPwCrackEnv):
             if cluster_config is None:
                 cluster_config = PyCrPwCrackSimpleBase.cluster_conf()
             network_conf = PyCrPwCrackSimpleBase.network_conf()
-            network_conf.nodes = []
-            network_conf.adj_matrix = []
-            network_conf.node_d = {}
-            network_conf.levels_d = {}
-            network_conf.hacker = None
-            network_conf.router = None
             action_conf = PyCrPwCrackSimpleV1.actions_conf(num_nodes=PyCrPwCrackSimpleBase.num_nodes(),
                                                                  subnet_mask=PyCrPwCrackSimpleBase.subnet_mask(),
                                                                  hacker_ip=PyCrPwCrackSimpleBase.hacker_ip())

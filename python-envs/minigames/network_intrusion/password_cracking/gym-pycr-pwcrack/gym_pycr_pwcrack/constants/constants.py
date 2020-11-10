@@ -22,7 +22,7 @@ class RENDERING:
     WHITE = (255, 255, 255)
     GREY = (220, 220, 220)
     RESOURCES_DIR = "resources"
-    LINE_WIDTH = 2
+    LINE_WIDTH = 1
     CAPTION = "PyCr-PwCrack"
     DEFAULT_WIDTH = 950
     DEFAULT_HEIGHT = 900

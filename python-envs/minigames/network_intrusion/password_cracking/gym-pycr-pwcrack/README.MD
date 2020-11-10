@@ -31,6 +31,7 @@ docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
 docker container prune # remove stopped containers   
+sudo route add -net 172.18.1.0 netmask 255.255.255.0 gw 172.18.1.1
 ```
 
 ## Author & Maintainer

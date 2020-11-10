@@ -83,3 +83,14 @@ class ObservationState:
                     brute_tried = res
                     break
             return brute_tried
+
+    def copy(self):
+        c = ObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,
+                                    num_flags = self.num_flags, catched_flags = self.catched_flags,
+                                    agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
+        c.detected = self.detected
+        c.all_flags = self.all_flags
+        c.actions_tried = self.actions_tried.copy()
+        for m in self.machines:
+            c.machines.append(m.copy())
+        return c
