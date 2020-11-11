@@ -38,9 +38,13 @@ class ConnectionObservationState:
         """
         if self.tunnel_thread is not None:
             self.tunnel_thread.shutdown()
+            self.tunnel_thread = None
         if self.interactive_shell is not None:
             self.interactive_shell.close()
+            self.interactive_shell = None
         if self.conn is not None:
             self.conn.close()
+            self.conn = None
         if self.proxy is not None:
             self.proxy.cleanup()
+            self.proxy = None

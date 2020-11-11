@@ -151,7 +151,7 @@ def plot_rewards_flags_steps_2(rewards_data_1, rewards_means_1, rewards_stds_1,
                                file_name, markevery=10, label_1="PPO 128",
                                label_2="PPO 64", ylim_rew = None, ylim_step = None,
                                ylim_flags = None,
-                               optimal_reward = 19, optimal_flags = 1, optimal_steps = 5
+                               optimal_reward = 15, optimal_flags = 1, optimal_steps = 5
                                ):
     """
     Plots rewards, flags % and steps of two different configurations
@@ -378,7 +378,7 @@ def plot_csv_files(csv_files, output_dir : str, plot_eval_env_res : bool = False
                                    output_dir + "eval_rewards_flags_steps_" + str(i), markevery=25,
                                    label_1="Simulation", label_2="Cyber range",
                                    ylim_rew=(-50, 50), ylim_step=(0, 15),
-                                   ylim_flags=None, optimal_reward = 19, optimal_flags = 1, optimal_steps = 5)
+                                   ylim_flags=None, optimal_reward = 15, optimal_flags = 1, optimal_steps = 5)
 
 
 def plot_two_csv_files(csv_files, output_dir : str):

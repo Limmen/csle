@@ -3,6 +3,7 @@ Generic runner for running experiments with pycr environments
 """
 from typing import Tuple
 import gym
+import time
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
@@ -81,6 +82,7 @@ class Runner:
         if eval_env is not None:
             eval_env.cleanup()
             eval_env.close()
+        time.sleep(2)
         return train_result, eval_result
 
     @staticmethod

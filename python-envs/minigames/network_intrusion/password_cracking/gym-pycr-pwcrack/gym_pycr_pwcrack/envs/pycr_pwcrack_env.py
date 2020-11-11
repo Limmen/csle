@@ -319,12 +319,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: None
         """
-        if self.env_config.env_mode == EnvMode.SIMULATION:
-            return
-        else:
-            self.env_state.cleanup()
-            if self.env_config.cluster_config is not None:
-                self.env_config.cluster_config.close()
+        self.env_state.cleanup()
+        if self.env_config.cluster_config is not None:
+            self.env_config.cluster_config.close()
+        # if self.env_config.env_mode == EnvMode.SIMULATION:
+        #     return
+        # else:
+        #     self.env_state.cleanup()
+        #     if self.env_config.cluster_config is not None:
+        #         self.env_config.cluster_config.close()
 
     def convert_ar_action(self, machine_idx, action_idx):
         """
