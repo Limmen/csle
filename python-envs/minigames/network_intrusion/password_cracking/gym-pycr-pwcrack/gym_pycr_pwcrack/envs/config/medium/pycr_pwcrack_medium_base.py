@@ -19,6 +19,7 @@ from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+import gym_pycr_pwcrack.constants.constants as constants
 
 class PyCrPwCrackMediumBase:
     """
@@ -39,7 +40,7 @@ class PyCrPwCrackMediumBase:
                 Credential(username="admin", pw="admin"),
                 Credential(username="jessica", pw="water")
             ], firewall=True,
-                      root=["admin"]),
+                      root_usernames=["admin"]),
                  Node(ip="172.18.2.2", ip_id=2, id=2, type=NodeType.SERVER,
                       reachable_nodes=["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                        "172.18.2.191", "172.18.2.10", "172.18.2.54"],
@@ -50,7 +51,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="user1", pw="123123")
                       ],
                       firewall=True,
-                      root=["puppet", "user1"],
+                      root_usernames=["puppet", "user1"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                          credentials=[
@@ -68,10 +69,13 @@ class PyCrPwCrackMediumBase:
                           NetworkService(protocol=TransportProtocol.UDP, port=53, name="domain", credentials=[]),
                       ],
                       vulnerabilities=[
-                          Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        service=constants.SSH.SERVICE_NAME,
                                         credentials=[
                                             Credential(username="puppet", pw="puppet",
-                                                       protocol=TransportProtocol.TCP, service="ssh")
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
                                         ],
                                         port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
@@ -108,7 +112,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="vagrant", pw="test_pw1")
                       ],
                       firewall=True,
-                      root=["admin", "john"],
+                      root_usernames=["admin", "john"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
                                          credentials=[
@@ -125,10 +129,11 @@ class PyCrPwCrackMediumBase:
                                        protocol=TransportProtocol.TCP),
                          Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
                                        protocol=TransportProtocol.TCP),
-                         Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[
-                             Credential(username="admin", pw="admin")
+                         Vulnerability(name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS, cve=None,
+                                       cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
+                             Credential(username="admin", pw="admin", service=constants.TELNET.SERVICE_NAME)
                          ],
-                                       port=23, protocol=TransportProtocol.TCP, service="telnet")
+                                       port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME)
                      ]
                       ),
                  Node(ip="172.18.2.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
@@ -139,7 +144,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="test", pw="qwerty"),
                           Credential(username="oracle", pw="abc123")
                       ],
-                      root=["admin", "test"],
+                      root_usernames=["admin", "test"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka", credentials=[]),
@@ -162,7 +167,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="euler", pw="euler"),
                           Credential(username="pi", pw="pi")
                       ],
-                      root=["l_hopital", "pi"],
+                      root_usernames=["l_hopital", "pi"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp",
                                          credentials=[
@@ -185,10 +190,11 @@ class PyCrPwCrackMediumBase:
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                         port=22,
                                         protocol=TransportProtocol.TCP),
-                          Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=[
-                              Credential(username="pi", pw="pi")
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
+                              Credential(username="pi", pw="pi", service=constants.FTP.SERVICE_NAME)
                           ],
-                                        port=21, protocol=TransportProtocol.TCP, service="ftp")
+                                        port=21, protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
                       ]
                       ),
                  Node(ip="172.18.2.54", ip_id=54, id=6, type=NodeType.SERVER,
@@ -199,7 +205,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="vagrant", pw="vagrant"),
                           Credential(username="trent", pw="xe125@41!341")
                       ],
-                      root=["vagrant"],
+                      root_usernames=["vagrant"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                          credentials=[
@@ -213,10 +219,13 @@ class PyCrPwCrackMediumBase:
                           NetworkService(protocol=TransportProtocol.UDP, port=53, name="domain", credentials=[]),
                       ],
                       vulnerabilities=[
-                          Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+                                        cve=None, cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        service=constants.SSH.SERVICE_NAME,
                                         credentials=[
                                             Credential(username="vagrant", pw="vagrant",
-                                                       protocol=TransportProtocol.TCP, service="ssh")
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
                                         ],
                                         port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
@@ -252,7 +261,7 @@ class PyCrPwCrackMediumBase:
                       credentials=[
                           Credential(username="administrator", pw="administrator"),
                       ],
-                      root=["administrator"],
+                      root_usernames=["administrator"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                          credentials=[
@@ -263,10 +272,13 @@ class PyCrPwCrackMediumBase:
                       ],
                       firewall=True,
                       vulnerabilities=[
-                          Vulnerability(name="ssh-weak-password", cve=None, cvss=10.0, service="ssh",
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        service=constants.SSH.SERVICE_NAME,
                                         credentials=[
                                             Credential(username="administrator", pw="administrator",
-                                                       protocol=TransportProtocol.TCP, service="ssh")
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
                                         ],
                                         port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
@@ -281,7 +293,7 @@ class PyCrPwCrackMediumBase:
                       credentials=[
                           Credential(username="adm", pw="adm")
                       ],
-                      root=["adm"],
+                      root_usernames=["adm"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
                                          credentials=[
@@ -291,9 +303,10 @@ class PyCrPwCrackMediumBase:
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=26257, name="cockroachdb", credentials=[])
                       ], vulnerabilities=[
-                         Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[
-                             Credential(username="adm", pw="adm")
-                         ], port=23, protocol=TransportProtocol.TCP, service="telnet")
+                         Vulnerability(name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS, cve=None,
+                                       cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
+                             Credential(username="adm", pw="adm", service=constants.TELNET.SERVICE_NAME)
+                         ], port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME)
                      ]
                       ),
 
@@ -305,7 +318,7 @@ class PyCrPwCrackMediumBase:
                       credentials=[
                           Credential(username="guest", pw="guest")
                       ],
-                      root=["guest"],
+                      root_usernames=["guest"],
                       firewall=True,
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet",
@@ -318,9 +331,10 @@ class PyCrPwCrackMediumBase:
                           NetworkService(protocol=TransportProtocol.TCP, port=8080, name="http", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=4848, name="glassfish", credentials=[])
                       ], vulnerabilities=[
-                         Vulnerability(name="telnet-weak-password", cve=None, cvss=10.0, credentials=[
-                             Credential(username="guest", pw="guest")
-                         ], port=23, protocol=TransportProtocol.TCP, service="telnet")
+                         Vulnerability(name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS, cve=None,
+                                       cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
+                             Credential(username="guest", pw="guest", service=constants.TELNET.SERVICE_NAME)
+                         ], port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME)
                      ]
                       ),
 
@@ -331,7 +345,7 @@ class PyCrPwCrackMediumBase:
                       credentials=[
                           Credential(username="zidane", pw="1b12ha9")
                       ],
-                      root=["zidane"],
+                      root_usernames=["zidane"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=5432, name="postgresql", credentials=[]),
@@ -352,7 +366,7 @@ class PyCrPwCrackMediumBase:
                           Credential(username="zlatan", pw="pi12195e"),
                           Credential(username="kennedy", pw="eul1145x")
                       ],
-                      root=["ec2-user", "zlatan"],
+                      root_usernames=["ec2-user", "zlatan"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp",
                                          credentials=[
@@ -372,10 +386,12 @@ class PyCrPwCrackMediumBase:
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                                         port=22,
                                         protocol=TransportProtocol.TCP),
-                          Vulnerability(name="ftp-weak-password", cve=None, cvss=10.0, credentials=[
-                              Credential(username="ec2-user", pw="ec2-user")
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        credentials=[
+                              Credential(username="ec2-user", pw="ec2-user", service=constants.FTP.SERVICE_NAME)
                           ],
-                                        port=21, protocol=TransportProtocol.TCP, service="ftp")
+                                        port=21, protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
                       ]
                       ),
 
@@ -386,7 +402,7 @@ class PyCrPwCrackMediumBase:
                       credentials=[
                           Credential(username="agent", pw="agent")
                       ],
-                      root=["agent"]),
+                      root_usernames=["agent"]),
 
                  ]
         return nodes

@@ -335,6 +335,24 @@ class FTP:
     LFTP_PREFIX = "lftp ftp://"
     ACCESS_FAILED = "Access failed"
 
+class IRC:
+    SERVICE_NAME = "irc"
+
+class POSTGRES:
+    SERVICE_NAME = "postgres"
+
+class SMTP:
+    SERVICE_NAME = "smtp"
+
+class MYSQL:
+    SERVICE_NAME = "mysql"
+
+class MONGO:
+    SERVICE_NAME = "mongo"
+
+class CASSANDRA:
+    SERVICE_NAME = "cassandra"
+
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"
@@ -387,6 +405,19 @@ class SSH_BACKDOOR:
 class SHELL:
     LIST_ALL_USERS = "cut -d: -f1 /etc/passwd"
     CHECK_FOR_SECLISTS = "test -e /SecLists && echo file exists || echo file not found"
+
+class EXPLOIT_VULNERABILITES:
+    SSH_DICT_SAME_USER_PASS = "ssh-weak-password"
+    FTP_DICT_SAME_USER_PASS = "ftp-weak-password"
+    TELNET_DICTS_SAME_USER_PASS = "telnet-weak-password"
+    IRC_DICTS_SAME_USER_PASS = "irc-weak-password"
+    POSTGRES_DICTS_SAME_USER_PASS = "postgres-weak-password"
+    SMTP_DICTS_SAME_USER_PASS = "smtp-weak-password"
+    MYSQL_DICTS_SAME_USER_PASS = "mysql-weak-password"
+    MONGO_DICTS_SAME_USER_PASS = "mongo-weak-password"
+    CASSANDRA_DICTS_SAME_USER_PASS = "cassandra-weak-password"
+    UNKNOWN = "unknown"
+    WEAK_PASSWORD_CVSS = 10.0
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24

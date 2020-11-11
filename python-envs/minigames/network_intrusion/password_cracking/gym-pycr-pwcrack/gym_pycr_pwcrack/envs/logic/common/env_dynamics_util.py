@@ -7,6 +7,8 @@ from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
+import gym_pycr_pwcrack.constants.constants as constants
+from gym_pycr_pwcrack.dao.action.action_config import ActionConfig
 
 class EnvDynamicsUtil:
     """
@@ -579,4 +581,73 @@ class EnvDynamicsUtil:
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
         return logged_in_ips_str
+
+
+    @staticmethod
+    def exploit_get_vuln_name(a: Action):
+        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS
+        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return constants.EXPLOIT_VULNERABILITES.IRC_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.POSTGRES_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.SMTP_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.MYSQL_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.MONGO_DICTS_SAME_USER_PASS
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.EXPLOIT_VULNERABILITES.CASSANDRA_DICTS_SAME_USER_PASS
+        return constants.EXPLOIT_VULNERABILITES.UNKNOWN
+
+    @staticmethod
+    def exploit_get_vuln_cvss(a: Action) -> float:
+        if a.id in ActionConfig.dict_brute_same_user_ids():
+            return constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS
+        return 0.0
+
+    @staticmethod
+    def exploit_get_service_name(a: Action):
+        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.FTP.SERVICE_NAME
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.SSH.SERVICE_NAME
+        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.TELNET.SERVICE_NAME
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+            return constants.IRC.SERVICE_NAME
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.POSTGRES.SERVICE_NAME
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.SMTP.SERVICE_NAME
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.MYSQL.SERVICE_NAME
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.MONGO.SERVICE_NAME
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+            return constants.CASSANDRA.SERVICE_NAME
+        return constants.EXPLOIT_VULNERABILITES.UNKNOWN
 

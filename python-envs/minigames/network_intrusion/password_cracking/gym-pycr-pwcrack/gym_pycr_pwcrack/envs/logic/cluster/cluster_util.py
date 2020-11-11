@@ -411,28 +411,30 @@ class ClusterUtil:
 
 
     @staticmethod
-    def parse_nmap_scan_xml(xml_data, ip) -> NmapScanResult:
+    def parse_nmap_scan_xml(xml_data, ip, action: Action) -> NmapScanResult:
         """
         Parses an XML Tree into a DTO
 
         :param xml_data: the xml tree to parse
         :param ip: ip of the source of the scan
+        :param action: the action of the scan
         :return: parsed nmap scan result
         """
         hosts = []
         for child in xml_data:
             if child.tag == constants.NMAP_XML.HOST:
-                host = ClusterUtil._parse_nmap_host_xml(child)
-                hosts = ClusterUtil._merge_nmap_hosts(host, hosts)
+                host = ClusterUtil._parse_nmap_host_xml(child, action=action)
+                hosts = ClusterUtil._merge_nmap_hosts(host, hosts, action=action)
         result = NmapScanResult(hosts=hosts, ip=ip)
         return result
 
     @staticmethod
-    def _parse_nmap_host_xml(xml_data) -> NmapHostResult:
+    def _parse_nmap_host_xml(xml_data, action: Action) -> NmapHostResult:
         """
         Parses a host-element in the XML tree
 
         :param xml_data: the host element
+        :param action: action of the scan
         :return: parsed nmap host result
         """
         ip_addr = None
@@ -457,7 +459,7 @@ class ClusterUtil:
             elif child.tag == constants.NMAP_XML.HOSTNAMES:
                 hostnames = ClusterUtil._parse_nmap_hostnames_xml(child)
             elif child.tag == constants.NMAP_XML.PORTS:
-                ports, vulnerabilities, credentials = ClusterUtil._parse_nmap_ports_xml(child)
+                ports, vulnerabilities, credentials = ClusterUtil._parse_nmap_ports_xml(child, action=action)
             elif child.tag == constants.NMAP_XML.OS:
                 os_matches = ClusterUtil._parse_nmap_os_xml(child)
                 os = NmapOs.get_best_match(os_matches)
@@ -516,11 +518,12 @@ class ClusterUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data) -> Tuple[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
+    def _parse_nmap_ports_xml(xml_data, action: Action) -> Tuple[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
         :param xml_data: the ports XML element
+        :param action: action of the scan
         :return: (List NmapPort, List NmapVuln, ListNmapBruteCredentials)
         """
         ports = []
@@ -545,14 +548,16 @@ class ClusterUtil:
                         service_version = ClusterUtil._parse_nmap_service_version_xml(child_2)
                         service_fp = ClusterUtil._parse_nmap_service_fp_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
-                        result = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
-                                                                service=service_name)
+                        result, brute_vuln = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
+                                                                service=service_name, action=action)
                         if result is not None:
                             if isinstance(result, list) and len(result) > 0 and isinstance(result[0], NmapVuln):
                                 vulnerabilities = result
                             elif isinstance(result, list) and len(result) > 0 \
                                     and isinstance(result[0], NmapBruteCredentials):
                                 credentials = result
+                                if brute_vuln is not None:
+                                    vulnerabilities.append(brute_vuln)
                             elif isinstance(result, NmapHttpEnum):
                                 http_enum = result
                             elif isinstance(result, NmapHttpGrep):
@@ -668,8 +673,9 @@ class ClusterUtil:
         return vuln
 
     @staticmethod
-    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str) \
-            -> Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan]:
+    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str, action: Action) \
+            -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan],
+                     NmapVuln]:
         """
         Parses a XML script element
 
@@ -677,20 +683,22 @@ class ClusterUtil:
         :param port: the port of the parent element
         :param protocol: the protocol of the parent element
         :param service: the service running on the port
-        :return: a list of parsed nmap vulnerabilities or a list of parsed credentials
+        :param action: action of the scan
+        :return: a list of parsed nmap vulnerabilities or a list of parsed credentials and maybe a vuln
         """
         if constants.NMAP_XML.ID in xml_data.keys():
             if xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.VULNERS_SCRIPT_ID:
-                return ClusterUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service)
+                return ClusterUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service), None
             elif xml_data.attrib[constants.NMAP_XML.ID] in constants.NMAP_XML.BRUTE_SCRIPTS:
-                return ClusterUtil._parse_nmap_telnet_brute(xml_data, port=port, protocol=protocol, service=service)
+                return ClusterUtil._parse_nmap_brute(xml_data, port=port, protocol=protocol, service=service,
+                                                     action=action)
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_ENUM_SCRIPT:
-                return ClusterUtil._parse_nmap_http_enum_xml(xml_data)
+                return ClusterUtil._parse_nmap_http_enum_xml(xml_data), None
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_GREP_SCRIPT:
-                return ClusterUtil._parse_nmap_http_grep_xml(xml_data)
+                return ClusterUtil._parse_nmap_http_grep_xml(xml_data), None
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.VULSCAN_SCRIPT:
-                return ClusterUtil._parse_nmap_http_vulscan_xml(xml_data)
-        return None
+                return ClusterUtil._parse_nmap_http_vulscan_xml(xml_data), None
+        return None, None
 
     @staticmethod
     def _parse_nmap_vulners(xml_data, port: int, protocol: TransportProtocol, service: str) -> List[NmapVuln]:
@@ -714,16 +722,16 @@ class ClusterUtil:
         return vulnerabilities
 
     @staticmethod
-    def _parse_nmap_telnet_brute(xml_data, port: int, protocol: TransportProtocol, service: str) \
-            -> List[NmapBruteCredentials]:
+    def _parse_nmap_brute(xml_data, port: int, protocol: TransportProtocol, service: str, action: Action) \
+            -> Tuple[List[NmapBruteCredentials], NmapVuln]:
         """
-        Parses a XML result from a telnet brute force dictionary scan
+        Parses a XML result from a brute force dictionary scan
 
         :param xml_data: the XML script element
         :param port: the port of the parent element
         :param protocol: the protocol of the parent element
         :param service: the service running on the port
-        :return: a list of found credentials
+        :return: a list of found credentials, vulnerability
         """
         credentials = []
         for child in list(xml_data.iter())[1:]:
@@ -735,7 +743,15 @@ class ClusterUtil:
                                 cred = ClusterUtil._parse_nmap_table_cred(c_2, port=port, protocol=protocol, service=service)
                                 credentials.append(cred)
                         break
-        return credentials
+        vulnerability = None
+        if len(credentials) > 0:
+            vuln_name = EnvDynamicsUtil.exploit_get_vuln_name(a=action)
+            service_name = EnvDynamicsUtil.exploit_get_service_name(a=action)
+            credentials_1 = list(map(lambda x: x.to_obs(), credentials))
+            vulnerability = NmapVuln(name=vuln_name, port=port, protocol=protocol,
+                                     cvss=EnvDynamicsUtil.exploit_get_vuln_cvss(a=action),
+                                     service=service_name, credentials=credentials_1)
+        return credentials, vulnerability
 
     @staticmethod
     def _parse_nmap_table_cred(xml_data, port: int, protocol: TransportProtocol, service: str) -> NmapBruteCredentials:
@@ -855,7 +871,7 @@ class ClusterUtil:
         for i in range(env_config.num_retries):
             try:
                 xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
-                scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=env_config.hacker_ip)
+                scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=env_config.hacker_ip, action=a)
                 s.obs_state.agent_reachable.update(scan_result.reachable)
                 break
             except Exception as e:
@@ -1455,7 +1471,7 @@ class ClusterUtil:
                                                           cost=float(total_time))
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
-                    if len(flag_paths) > 0:
+                    if len(flag_paths) > 0 and "flag" in flag_paths:
                         # Persist cache
                         ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                                  service=constants.SSH.SERVICE_NAME, user=c.username,
@@ -1820,7 +1836,7 @@ class ClusterUtil:
 
 
     @staticmethod
-    def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult]) -> List[NmapHostResult]:
+    def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult], action: Action) -> List[NmapHostResult]:
         found = False
         for h in hosts:
             if h.ip_addr == host.ip_addr:
@@ -2232,7 +2248,7 @@ class ClusterUtil:
                         try:
                             xml_data = ClusterUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config,
                                                                    conn=c.conn, dir=cwd)
-                            scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=machine.ip)
+                            scan_result = ClusterUtil.parse_nmap_scan_xml(xml_data, ip=machine.ip, action=a)
                             machine.reachable.update(scan_result.reachable)
                         except Exception as e:
                             scan_result = NmapScanResult(hosts=[], ip=machine.ip)

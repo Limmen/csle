@@ -1,4 +1,5 @@
 from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
+from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 
 class PortObservationState:
 
@@ -19,3 +20,8 @@ class PortObservationState:
                "fingerprint:{}".format(
             self.port, self.open,  self.service, self.protocol, self.http_enum, self.http_grep, self.vulscan,
             self.version, self.fingerprint)
+
+
+    def to_network_service(self) -> NetworkService:
+        service = NetworkService(protocol=self.protocol, port=self.port, name=self.service, credentials=[])
+        return service
