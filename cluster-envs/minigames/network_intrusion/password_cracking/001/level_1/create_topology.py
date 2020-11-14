@@ -15,11 +15,11 @@ def disconnect_admin(cluster_config: ClusterConfig):
 def default_topology() -> Topology:
     node_1 = NodeFirewallConfig(ip="172.18.1.10",
                            output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79",
-                                                "172.18.1.191", "172.18.1.10"]),
+                                                "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                            input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79",
-                                             "172.18.1.191", "172.18.1.10"]),
+                                             "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                            forward_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79",
-                                             "172.18.1.191", "172.18.1.10"]),
+                                             "172.18.1.191", "172.18.1.1"]),
                            output_drop = set(),
                            input_drop = set(),
                            forward_drop = set(),
@@ -30,9 +30,9 @@ def default_topology() -> Topology:
                            )
     node_2 = NodeFirewallConfig(ip="172.18.1.2",
                        output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                          "172.18.1.10"]),
+                                          "172.18.1.10", "172.18.1.1"]),
                        input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                         "172.18.1.10"]),
+                                         "172.18.1.10", "172.18.1.1"]),
                        forward_accept=set(),
                        output_drop=set(),
                        input_drop=set(),
@@ -44,9 +44,9 @@ def default_topology() -> Topology:
                        )
     node_3 = NodeFirewallConfig(ip="172.18.1.3",
                            output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                         "172.18.1.10"]),
+                                         "172.18.1.10", "172.18.1.1"]),
                            input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                             "172.18.1.10"]),
+                                             "172.18.1.10", "172.18.1.1"]),
                            forward_accept=set(),
                            output_drop=set(),
                            input_drop=set(),
@@ -58,9 +58,9 @@ def default_topology() -> Topology:
                            )
     node_4 = NodeFirewallConfig(ip="172.18.1.21",
                            output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                                "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
+                                                "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                            input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                             "172.18.1.10"]),
+                                             "172.18.1.10", "172.18.1.1"]),
                            forward_accept=set(),
                            output_drop=set(),
                            input_drop=set(),
@@ -73,9 +73,9 @@ def default_topology() -> Topology:
     node_4 = NodeFirewallConfig(ip="172.18.1.79",
                            output_accept=set(
                                ["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                "172.18.1.10"]),
+                                "172.18.1.10", "172.18.1.1"]),
                            input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                             "172.18.1.10"]),
+                                             "172.18.1.10", "172.18.1.1"]),
                            forward_accept=set(),
                            output_drop=set(),
                            input_drop=set(),
@@ -87,9 +87,9 @@ def default_topology() -> Topology:
                            )
     node_5 = NodeFirewallConfig(ip="172.18.1.191",
                        output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                          "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
+                                          "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                        input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                         "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
+                                         "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                        forward_accept=set(),
                        output_drop=set(),
                        input_drop=set(),
@@ -117,6 +117,7 @@ def write_default_topology(path:str = None) -> None:
 
 def create_topology(topology: Topology, cluster_config: ClusterConfig):
     for node in topology.node_configs:
+        print("node:{}".format(node.ip))
         connect_admin(cluster_config=cluster_config, ip=node.ip)
 
         cmd="sudo iptables -F"

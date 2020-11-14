@@ -1,33 +1,12 @@
-all: run
+all: run users topology flags
 
-run: router ssh telnet honeypot ftp hacker_kali
-
-router:
-	cd containers/router/ && $(MAKE) build
+run:
 	cd containers/router/ && $(MAKE) run
-
-ssh:
-	cd containers/ssh/ && $(MAKE) build
 	cd containers/ssh/ && $(MAKE) run
-
-telnet:
-	cd containers/telnet/ && $(MAKE) build
 	cd containers/telnet/ && $(MAKE) run
-
-honeypot:
-	cd containers/honeypot/ && $(MAKE) build
 	cd containers/honeypot/ && $(MAKE) run
-
-ftp:
-	cd containers/ftp/ && $(MAKE) build
 	cd containers/ftp/ && $(MAKE) run
-
-hacker_kali:
-	cd containers/hacker_kali/ && $(MAKE) build
 	cd containers/hacker_kali/ && $(MAKE) run
-
-net:
-	cd containers/router/ && $(MAKE) net
 
 stop:
 	cd containers/router/ && $(MAKE) stop
@@ -53,21 +32,11 @@ clean:
 	cd containers/ftp/ && $(MAKE) clean
 	cd containers/hacker_kali/ && $(MAKE) clean
 
-rm-image:
-	cd containers/router/ && $(MAKE) rm-image
-	cd containers/ssh/ && $(MAKE) rm-image
-	cd containers/telnet/ && $(MAKE) rm-image
-	cd containers/honeypot/ && $(MAKE) rm-image
-	cd containers/ftp/ && $(MAKE) rm-image
-	cd containers/hacker_kali/ && $(MAKE) rm-image
+topology: ./create_topology.py
+	python create_topology.py
 
-build:
-	cd containers/router/&& $(MAKE) build
-	cd containers/ssh/ && $(MAKE) build
-	cd containers/telnet/ && $(MAKE) build
-	cd containers/honeypot/ && $(MAKE) build
-	cd containers/ftp/ && $(MAKE) build
-	cd containers/hacker_kali/ && $(MAKE) build
+users: ./create_users.py
+	python create_users.py
 
-rm-net:
-	cd containers/router/ && $(MAKE) rm-net
+flags: ./create_flags.py
+	python create_flags.py

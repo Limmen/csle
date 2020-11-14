@@ -42,6 +42,11 @@ RUN apt-get -y install git
 RUN apt-get -y install telnet
 RUN apt-get -y install xinetd telnetd
 
+# Add users script
+ADD docker/make_root_users.sh /make_root_users.sh
+ADD docker/root_users.txt /root_users.txt
+RUN chmod 777 /make_root_users.sh
+
 # setup root users
 RUN /make_root_users.sh
 

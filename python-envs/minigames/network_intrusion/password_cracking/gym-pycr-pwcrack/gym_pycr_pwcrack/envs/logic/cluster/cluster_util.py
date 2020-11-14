@@ -135,6 +135,8 @@ class ClusterUtil:
         try:
             for file in files:
                 remote_file.write(file + "\n")
+        except Exception as e:
+            print("exception writing cache:{}".format(str(e)))
         finally:
             remote_file.close()
 
@@ -1472,7 +1474,7 @@ class ClusterUtil:
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
                     flag_paths = list(filter(lambda x: x != '', flag_paths))
-                    if len(flag_paths) > 0 and "flag" in flag_paths:
+                    if len(flag_paths) > 0:
                         # Persist cache
                         ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                                  service=constants.SSH.SERVICE_NAME, user=c.username,

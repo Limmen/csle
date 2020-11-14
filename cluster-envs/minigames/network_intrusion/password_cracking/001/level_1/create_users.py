@@ -23,18 +23,13 @@ def default_users() -> UsersConfig:
             ("agent", "agent", True)
         ]),
         NodeUsersConfig(ip="172.18.1.21", users=[
-            ("admin", "admin", True),
+            ("admin", "admin31151x", True),
             ("test", "qwerty", True),
             ("oracle", "abc123", False)
         ]),
         NodeUsersConfig(ip="172.18.1.10", users=[
-            ("admin", "admin", True),
+            ("admin", "admin1235912", True),
             ("jessica", "water", False)
-        ]),
-        NodeUsersConfig(ip="172.18.1.2", users=[
-            ("admin", "test32121", True),
-            ("user1", "123123", True),
-            ("puppet", "puppet", False)
         ]),
         NodeUsersConfig(ip="172.18.1.2", users=[
             ("admin", "test32121", True),
@@ -81,10 +76,10 @@ def create_users(users_config: UsersConfig, cluster_config: ClusterConfig):
         for user in users_conf.users:
             username, pw, root = user
             if root:
-                cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p '$(openssl passwd -1 \"{}\")' {}".format(username, pw, username)
+                cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}".format(username, pw, username)
             else:
-                cmd = "useradd -rm -d /home/{} -s /bin/bash -p '$(openssl passwd -1 \"{}\")' {}".format(username,pw,username)
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(username,pw,username)
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
         disconnect_admin(cluster_config=cluster_config)
 

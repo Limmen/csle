@@ -48,7 +48,7 @@
                 {
                     "py/tuple": [
                         "admin",
-                        "admin",
+                        "admin31151x",
                         true
                     ]
                 },
@@ -75,7 +75,7 @@
                 {
                     "py/tuple": [
                         "admin",
-                        "admin",
+                        "admin1235912",
                         true
                     ]
                 },
@@ -83,33 +83,6 @@
                     "py/tuple": [
                         "jessica",
                         "water",
-                        false
-                    ]
-                }
-            ]
-        },
-        {
-            "ip": "172.18.1.2",
-            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
-            "users": [
-                {
-                    "py/tuple": [
-                        "admin",
-                        "test32121",
-                        true
-                    ]
-                },
-                {
-                    "py/tuple": [
-                        "user1",
-                        "123123",
-                        true
-                    ]
-                },
-                {
-                    "py/tuple": [
-                        "puppet",
-                        "puppet",
                         false
                     ]
                 }
