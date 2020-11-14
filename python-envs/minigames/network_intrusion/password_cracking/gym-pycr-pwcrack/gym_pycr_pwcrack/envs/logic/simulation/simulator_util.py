@@ -1,4 +1,5 @@
 from typing import Tuple
+from typing import List
 import numpy as np
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
@@ -9,6 +10,7 @@ from gym_pycr_pwcrack.dao.observation.port_observation_state import PortObservat
 from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_pwcrack.dao.action.action_outcome import ActionOutcome
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_pwcrack.dao.network.node import Node
 
 class SimulatorUtil:
     """
@@ -32,13 +34,15 @@ class SimulatorUtil:
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, total_new_root, \
         total_new_flag_pts, total_new_osvb_vuln, total_new_logged_in, total_new_tools_installed, \
         total_new_backdoors_installed = 0,0,0,0,0,0,0,0,0,0,0
+        reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
 
         # Scan action on a single host
         if not a.subnet:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
-                if node.ip == a.ip:
+                if node.ip == a.ip and node.ip in reachable_nodes:
                     new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs.reachable = node.reachable_nodes
                     for service in node.services:
                         if service.protocol == protocol and \
                                 not np.random.rand() < miss_p:
@@ -99,7 +103,10 @@ class SimulatorUtil:
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
+                if not node.ip in reachable_nodes:
+                    continue
                 m_obs = MachineObservationState(ip=node.ip)
+                m_obs.reachable = node.reachable_nodes
                 for service in node.services:
                     if service.protocol == protocol and \
                             not np.random.rand() < miss_p:
@@ -151,14 +158,18 @@ class SimulatorUtil:
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = 0,0,0,0,0,0,0,0,0,0,0
+        reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
         # Scan a a single host
         if not a.subnet:
             new_m_obs = None
+
             for node in env_config.network_conf.nodes:
-                if node.ip == a.ip and not np.random.rand() < miss_p:
+                if node.ip == a.ip and node.ip in reachable_nodes and not np.random.rand() < miss_p:
                     new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs.reachable = node.reachable_nodes
                     if os:
                         new_m_obs.os = node.os
+
             new_machines_obs = s.obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
@@ -208,8 +219,9 @@ class SimulatorUtil:
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
-                if not np.random.rand() < miss_p:
+                if node.ip in reachable_nodes and not np.random.rand() < miss_p:
                     m_obs = MachineObservationState(ip=node.ip)
+                    m_obs.reachable = node.reachable_nodes
                     if os:
                         m_obs.os = node.os
                     new_m_obs.append(m_obs)
@@ -251,13 +263,15 @@ class SimulatorUtil:
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
 
         # Exploit on a single host
         if not a.subnet:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
-                if node.ip == a.ip:
+                if node.ip == a.ip and node.ip in reachable_nodes:
                     new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs.reachable = node.reachable_nodes
                     vuln_match = False
                     vuln_service = None
                     for vuln in node.vulnerabilities:
@@ -327,7 +341,10 @@ class SimulatorUtil:
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
+                if not node.ip in reachable_nodes:
+                    continue
                 m_obs = MachineObservationState(ip=node.ip)
+                m_obs.reachable = node.reachable_nodes
                 vulnerable_services = []
                 for vuln in node.vulnerabilities:
                     if vuln.name == vuln_name and not np.random.rand() < miss_p:
@@ -390,8 +407,12 @@ class SimulatorUtil:
         total_new_root, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_obs_machines = []
+        reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
         for node in env_config.network_conf.nodes:
+            if node.ip not in reachable_nodes:
+                continue
             new_m_obs = MachineObservationState(ip=node.ip)
+            new_m_obs.reachable = node.reachable_nodes
             credentials = None
             access = False
             for o_m in s.obs_state.machines:
@@ -437,7 +458,7 @@ class SimulatorUtil:
 
 
     @staticmethod
-    def simulate_detection(a: Action, env_config: EnvConfig) -> Tuple[bool, int]:
+    def simulate_detection(a: Action, env_config: EnvConfig) -> List[str]:
         """
         Simulates probability that an attack is detected by a defender
 
@@ -453,3 +474,25 @@ class SimulatorUtil:
             return detected, r
         else:
             return False, 0
+
+
+
+    @staticmethod
+    def reachable_nodes(state: EnvState, env_config :EnvConfig) -> bool:
+        """
+        Checks whether a give node in the network is reachable
+
+        :param state: the current state
+        :param env_config: env_config
+        :return: True or False
+        """
+        reachable_nodes = set()
+        logged_in_machines = list(filter(lambda x: x.logged_in and x.tools_installed, state.obs_state.machines))
+        for node in env_config.network_conf.nodes:
+            if node.ip in env_config.network_conf.agent_reachable:
+                reachable_nodes.add(node.ip)
+            for machine in logged_in_machines:
+                if node.ip in machine.reachable:
+                    reachable_nodes.add(node.ip)
+        return reachable_nodes
+

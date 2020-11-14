@@ -778,4 +778,27 @@ class PyCRPwCrackMediumCluster1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
 
+# -------- Simulations ------------
+
+# -------- Version 1 ------------
+class PyCRPwCrackMediumSim1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackMediumBase.render_conf()
+            network_conf = PyCrPwCrackMediumBase.network_conf()
+            action_conf = PyCrPwCrackMediumV1.actions_conf(num_nodes=PyCrPwCrackMediumBase.num_nodes(),
+                                                                 subnet_mask=PyCrPwCrackMediumBase.subnet_mask(),
+                                                                 hacker_ip=PyCrPwCrackMediumBase.hacker_ip())
+            env_config = PyCrPwCrackMediumV1.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=None, render_conf=render_config)
+            env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.SIMULATION
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
 # -------- Difficulty 3 (Hard) ------------

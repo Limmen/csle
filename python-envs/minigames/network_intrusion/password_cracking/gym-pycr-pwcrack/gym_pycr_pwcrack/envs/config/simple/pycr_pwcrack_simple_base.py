@@ -37,11 +37,11 @@ class PyCrPwCrackSimpleBase:
                       os="linux", vulnerabilities=[], credentials=[
                 Credential(username="admin", pw="admin"),
                 Credential(username="jessica", pw="water")
-            ], reachable_nodes = ["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79",
-                                  "172.18.1.191", "172.18.1.10"],
+            ], reachable_nodes = set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79",
+                                  "172.18.1.191", "172.18.1.10"]),
                       root_usernames=["admin"]),
                  Node(ip="172.18.1.2", ip_id=2, id=2, type=NodeType.SERVER, reachable_nodes =
-                 ["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191", "172.18.1.10"],
+                 set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
@@ -99,8 +99,8 @@ class PyCrPwCrackSimpleBase:
                       ]
                       ),
                  Node(ip="172.18.1.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
-                      reachable_nodes = ["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                         "172.18.1.10"],
+                      reachable_nodes = set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
+                                         "172.18.1.10"]),
                       flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
@@ -137,8 +137,8 @@ class PyCrPwCrackSimpleBase:
                           Credential(username="test", pw="qwerty"),
                           Credential(username="oracle", pw="abc123")
                       ],
-                      root_usernames=["admin", "test"], reachable_nodes = ["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                                                 "172.18.1.79", "172.18.1.191", "172.18.1.10"],
+                      root_usernames=["admin", "test"], reachable_nodes = set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
+                                                                 "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
                           NetworkService(protocol=TransportProtocol.TCP, port=2181, name="kafka", credentials=[]),
@@ -152,8 +152,8 @@ class PyCrPwCrackSimpleBase:
                       ],
                       vulnerabilities=[]),
                  Node(ip="172.18.1.79", ip_id=79, id=5, type=NodeType.SERVER,
-                      reachable_nodes = ["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
-                                         "172.18.1.10"],
+                      reachable_nodes = set(["172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79", "172.18.1.191",
+                                         "172.18.1.10"]),
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
@@ -192,8 +192,8 @@ class PyCrPwCrackSimpleBase:
                       ]
                       ),
                  Node(ip="172.18.1.191", ip_id=191, id=6, type=NodeType.HACKER, flags=[], level=1, services=[],
-                      os="linux", vulnerabilities=[], reachable_nodes = ["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                                                         "172.18.1.79", "172.18.1.191", "172.18.1.10"],
+                      os="linux", vulnerabilities=[], reachable_nodes =set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
+                                                                         "172.18.1.79", "172.18.1.191", "172.18.1.10"]),
                       credentials=[
                           Credential(username="agent", pw="agent")
                       ],
@@ -266,14 +266,22 @@ class PyCrPwCrackSimpleBase:
         """
         nodes = []
         adj_matrix = []
+        reachable = set()
         if not generate:
             nodes = PyCrPwCrackSimpleBase.nodes()
             adj_matrix = PyCrPwCrackSimpleBase.adj_matrix()
+            reachable = PyCrPwCrackSimpleBase.agent_reachable()
         network_conf = NetworkConfig(subnet_mask=PyCrPwCrackSimpleBase.subnet_mask(),
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
-                                     flags_lookup = PyCrPwCrackSimpleBase.flags_lookup())
+                                     flags_lookup = PyCrPwCrackSimpleBase.flags_lookup(),
+                                     agent_reachable=reachable)
         return network_conf
+
+    @staticmethod
+    def agent_reachable() -> set():
+        reachable = set(["172.18.1.10", "172.18.1.2", "172.18.1.3", "172.18.1.21", "172.18.1.79"])
+        return reachable
 
     @staticmethod
     def cluster_conf() -> ClusterConfig:

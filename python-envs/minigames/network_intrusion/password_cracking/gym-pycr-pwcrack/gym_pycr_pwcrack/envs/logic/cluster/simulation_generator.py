@@ -44,6 +44,6 @@ class SimulationGenerator:
             num_machines, num_vulnerabilities, num_credentials))
         nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
         env_config.network_conf.nodes = nodes
-        env.env_state
+        env_config.network_conf.agent_reachable = aggregated_observation.agent_reachable
         env.cleanup()
         return env_config.network_conf, aggregated_observation

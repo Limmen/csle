@@ -86,3 +86,10 @@ register(
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSim1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
+
+# -------- Difficulty Level: Medium, Mode: Simulation, Version: 1 ------------
+register(
+    id='pycr-pwcrack-medium-sim-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
