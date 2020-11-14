@@ -42,6 +42,9 @@ RUN apt-get -y install git
 RUN apt-get -y install telnet
 RUN apt-get -y install xinetd telnetd
 
+# setup root users
+RUN /make_root_users.sh
+
 # Setup FTP
 RUN mkdir -p /var/ftp
 RUN mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
@@ -59,6 +62,7 @@ ADD docker/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker/sshd_config /etc/ssh/sshd_config
+RUN service ssh start
 
 # Setup password-less sudo
 RUN mv /etc/sudoers /etc/sudoers.bak

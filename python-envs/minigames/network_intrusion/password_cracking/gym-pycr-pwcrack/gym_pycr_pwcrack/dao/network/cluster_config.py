@@ -11,7 +11,7 @@ class ClusterConfig:
     DTO with data for connecting to the cluster and executing commands
     """
 
-    def __init__(self, agent_ip : str, agent_username: str, agent_pw : str,
+    def __init__(self, agent_ip : str,  agent_username: str, agent_pw : str,
                  server_ip: str = None,
                  server_connection : bool = False,
                  server_private_key_file : str = None, server_username : str = None):
@@ -83,9 +83,9 @@ class ClusterConfig:
 
         print("Agent host connected successfully")
 
-        self._su_root()
-
-        print("Root access")
+        # self._su_root()
+        #
+        # print("Root access")
 
 
     def _su_root(self) -> None:
@@ -167,10 +167,13 @@ class ClusterConfig:
         """
         if self.agent_conn is not None:
             self.agent_conn.close()
+            self.agent_conn = None
         if self.relay_channel is not None:
             self.relay_channel.close()
+            self.relay_channel = None
         if self.server_conn is not None:
             self.server_conn.close()
+            self.server_conn = None
 
 
     def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],

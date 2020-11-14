@@ -10,7 +10,7 @@
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
-Include /etc/ssh/sshd_config.d/*.conf
+#Include /etc/ssh/sshd_config.d/*.conf
 
 #Port 22
 #AddressFamily any

@@ -13,6 +13,9 @@ import sys
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_pwcrack.dao.container_config.topology import Topology
+from gym_pycr_pwcrack.dao.container_config.users_config import UsersConfig
+from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
@@ -130,6 +133,43 @@ def write_config_file(config: ClientConfig, path: str) -> None:
         f.write(json_str)
 
 
+def write_topology_file(topology: Topology, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param topology: the topology to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(topology)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+def write_users_config_file(users_config: UsersConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param users_config: the users_config obj to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(users_config)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+def write_flags_config_file(flags_config: FlagsConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param flags_config: the flags_config obj to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(flags_config)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
 def read_config(config_path) -> ClientConfig:
     """
     Reads configuration of the experiment from a json file
@@ -141,6 +181,43 @@ def read_config(config_path) -> ClientConfig:
         json_str = f.read()
     client_config: ClientConfig = jsonpickle.decode(json_str)
     return client_config
+
+def read_topology(topology_path) -> Topology:
+    """
+    Reads topology of the experiment from a json file
+
+    :param topology_path: the path to the topology file
+    :return: the configuration
+    """
+    with io.open(topology_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    topology: Topology = jsonpickle.decode(json_str)
+    return topology
+
+
+def read_users_config(users_config_path) -> UsersConfig:
+    """
+    Reads users_config of the experiment from a json file
+
+    :param users_config_path: the path to the users_config file
+    :return: the configuration
+    """
+    with io.open(users_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    users_config: UsersConfig = jsonpickle.decode(json_str)
+    return users_config
+
+def read_flags_config(flags_config_path) -> FlagsConfig:
+    """
+    Reads users_config of the experiment from a json file
+
+    :param users_config_path: the path to the users_config file
+    :return: the configuration
+    """
+    with io.open(flags_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    flags_config: FlagsConfig = jsonpickle.decode(json_str)
+    return flags_config
 
 
 def parse_args(default_config_path):
@@ -182,4 +259,25 @@ def default_config_path() -> str:
     :return: the default path to configuration file
     """
     config_path = os.path.join(default_output_dir(), './config.json')
+    return config_path
+
+def default_topology_path() -> str:
+    """
+    :return: the default path to topology file
+    """
+    config_path = os.path.join(default_output_dir(), './topology.json')
+    return config_path
+
+def default_users_path() -> str:
+    """
+    :return: the default path to users file
+    """
+    config_path = os.path.join(default_output_dir(), './users.json')
+    return config_path
+
+def default_flags_path() -> str:
+    """
+    :return: the default path to flags file
+    """
+    config_path = os.path.join(default_output_dir(), './flags.json')
     return config_path
