@@ -52,6 +52,10 @@ class EnvState:
             machines_obs, ports_protocols_obs = \
                 StateRepresentation.compact_representation(num_machines=self.obs_state.num_machines,
                                                         num_ports=self.obs_state.num_ports, obs_state=self.obs_state)
+        elif self.state_type == StateType.ESSENTIAL:
+            machines_obs, ports_protocols_obs = \
+                StateRepresentation.essential_representation(num_machines=self.obs_state.num_machines,
+                                                           num_ports=self.obs_state.num_ports, obs_state=self.obs_state)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, ports_protocols_obs
@@ -70,6 +74,10 @@ class EnvState:
             observation_space, m_selection_observation_space, network_orig_shape, \
             machine_orig_shape, m_action_observation_space = \
                 StateRepresentation.compact_representation_spaces(obs_state=self.obs_state)
+        elif self.state_type == StateType.ESSENTIAL:
+            observation_space, m_selection_observation_space, network_orig_shape, \
+            machine_orig_shape, m_action_observation_space = \
+                StateRepresentation.essential_representation_spaces(obs_state=self.obs_state)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type.BASE))
         self.observation_space = observation_space

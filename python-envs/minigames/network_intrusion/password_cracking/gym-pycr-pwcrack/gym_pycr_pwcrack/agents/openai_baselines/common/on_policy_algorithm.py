@@ -301,7 +301,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
             if self.iteration % self.agent_config.train_log_frequency == 0:
                 if self.agent_config.train_progress_deterministic_eval:
-                    episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+                    episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
@@ -318,9 +318,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  progress_left = self._current_progress_remaining,
                                  n_af = self.env.envs[0].agent_state.num_all_flags,
                                  n_d = self.env.envs[0].agent_state.num_detections,
-                                 eval_episode_rewards = episode_rewards, eval_episode_steps=episode_steps,
-                                 eval_episode_flags=episode_flags,
-                                 eval_episode_flags_percentage=episode_flags_percentage,
+                                 eval_episode_rewards = episode_rewards_1, eval_episode_steps=episode_steps_1,
+                                 eval_episode_flags=episode_flags_1,
+                                 eval_episode_flags_percentage=episode_flags_percentage_1,
                                  eval_2_episode_rewards=eval_episode_rewards,
                                  eval_2_episode_steps=eval_episode_steps,
                                  eval_2_episode_flags=eval_episode_flags,

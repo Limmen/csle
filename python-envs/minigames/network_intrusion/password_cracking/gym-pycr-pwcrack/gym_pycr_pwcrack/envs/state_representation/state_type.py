@@ -9,3 +9,4 @@ class StateType(Enum):
     """
     BASE = 0
     COMPACT = 1
+    ESSENTIAL = 2

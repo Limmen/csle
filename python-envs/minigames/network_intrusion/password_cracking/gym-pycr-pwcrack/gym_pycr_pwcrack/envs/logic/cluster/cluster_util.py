@@ -131,7 +131,7 @@ class ClusterUtil:
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
         file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(action.index) + "_" + ip + "_" + service \
                     + "_" + user + ".txt"
-        remote_file = sftp_client.file(file_name, mode="w")
+        remote_file = sftp_client.file(file_name, mode="a")
         try:
             for file in files:
                 remote_file.write(file + "\n")
@@ -2323,6 +2323,7 @@ class ClusterUtil:
                 data = remote_file.read()
                 data = data.decode()
                 users = data.split("\n")
+                users = list(filter(lambda x: x != '', users))
                 if len(users) > 1:
                     # cache result
                     env_config.filesystem_scan_cache.add(cache_id, users)
@@ -2369,7 +2370,7 @@ class ClusterUtil:
             sftp_client = c.conn.open_sftp()
             remote_file = None
             try:
-                remote_file = sftp_client.file(cwd + cache_file_name, mode="w")
+                remote_file = sftp_client.file(cwd + cache_file_name, mode="a")
                 for user in users:
                     remote_file.write(user + "\n")
             except Exception as e:

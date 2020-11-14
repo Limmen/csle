@@ -21,11 +21,17 @@ def test_env(env_name : str, num_steps : int):
     env.env_config.manual_play = True
 
     env.reset()
-    cmd = "sudo find / -name 'flag*.txt'  2>&1 | grep -v 'Permission denied'"
-    for i in range(100):
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
-        flags = outdata.decode().split("\n")
-        print("outdata:{}".format(flags))
+    sftp_client = cluster_config.agent_conn.open_sftp()
+    remote_file = sftp_client.file("/home/agent/test", mode="a")
+    remote_file.write("test!\n")
+    remote_file.write("test2!\n")
+    remote_file.close()
+
+    # cmd = "sudo find / -name 'flag*.txt'  2>&1 | grep -v 'Permission denied'"
+    # for i in range(100):
+    #     outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+    #     flags = outdata.decode().split("\n")
+    #     print("outdata:{}".format(flags))
         # if "flag191.txt" not in outdata:
         #     print("error: {}".format(outdata))
 
