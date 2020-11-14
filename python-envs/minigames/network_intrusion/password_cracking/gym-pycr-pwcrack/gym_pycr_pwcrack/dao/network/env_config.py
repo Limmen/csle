@@ -70,7 +70,7 @@ class EnvConfig:
 
         self.shell_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
         self.shell_read_wait = 0.1
-        self.shell_max_timeouts = 2000
+        self.shell_max_timeouts = 8000
         self.max_nmap_command_output_size = 10000000
         self.nmap_cache_dir = "/home/agent/"
         self.nmap_cache = []
@@ -120,8 +120,9 @@ class EnvConfig:
         self.blacklist_ips = ["172.18.1.1"]
         self.manual_play = manual_play
         self.state_type = state_type
-        self.ssh_retry_find_flag = 7
-        self.retry_find_users = 7
+        self.ssh_retry_find_flag = 5
+        self.retry_find_users = 5
+        self.ftp_retry_find_flag = 2
 
         self.exploration_policy = None
         self.max_exploration_steps = 100

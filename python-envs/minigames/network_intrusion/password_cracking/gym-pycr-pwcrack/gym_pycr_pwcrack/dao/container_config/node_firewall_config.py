@@ -4,7 +4,8 @@ class NodeFirewallConfig:
 
     def __init__(self, ip: str, default_gw: str, output_accept: Set[str], input_accept: Set[str],
                  forward_accept: Set[str], output_drop: Set[str], input_drop: Set[str],
-                 forward_drop: Set[str], default_output, default_input, default_forward
+                 forward_drop: Set[str], default_output, default_input, default_forward,
+                 routes: Set[str]
                  ):
         self.ip = ip
         self.default_gw = default_gw
@@ -17,3 +18,4 @@ class NodeFirewallConfig:
         self.default_output = default_output
         self.default_input = default_input
         self.default_forward = default_forward
+        self.routes = routes

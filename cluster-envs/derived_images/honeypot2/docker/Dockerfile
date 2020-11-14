@@ -15,5 +15,8 @@ RUN service ntp restart
 # setup Postgres
 RUN service postgresql restart
 
+# SSH
+RUN service ssh start
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD /start.sh

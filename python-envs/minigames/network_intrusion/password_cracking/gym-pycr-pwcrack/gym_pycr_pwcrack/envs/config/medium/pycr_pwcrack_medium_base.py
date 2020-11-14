@@ -37,7 +37,7 @@ class PyCrPwCrackMediumBase:
                       reachable_nodes=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                   "172.18.2.191", "172.18.2.10"]),
                       os="linux", vulnerabilities=[], credentials=[
-                Credential(username="admin", pw="admin"),
+                Credential(username="admin", pw="admin1235912"),
                 Credential(username="jessica", pw="water")
             ], firewall=True,
                       root_usernames=["admin"]),
@@ -140,7 +140,7 @@ class PyCrPwCrackMediumBase:
                       reachable_nodes=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                        "172.18.2.191", "172.18.2.10"]),
                       credentials=[
-                          Credential(username="admin", pw="admin"),
+                          Credential(username="admin", pw="admin31151x"),
                           Credential(username="test", pw="qwerty"),
                           Credential(username="oracle", pw="abc123")
                       ],

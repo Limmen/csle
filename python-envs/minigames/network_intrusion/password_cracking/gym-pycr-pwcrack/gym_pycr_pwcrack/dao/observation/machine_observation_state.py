@@ -6,7 +6,6 @@ from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.observation.connection_observation_state import ConnectionObservationState
 from gym_pycr_pwcrack.dao.network.node import Node
 from gym_pycr_pwcrack.dao.network.node_type import NodeType
-from gym_pycr_pwcrack.dao.network.network_service import NetworkService
 
 class MachineObservationState:
 

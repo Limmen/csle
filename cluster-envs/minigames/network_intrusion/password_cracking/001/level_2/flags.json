@@ -1,0 +1,77 @@
+{
+    "flags": [
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag3.txt",
+                        "flag3"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.79",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag2.txt",
+                        "flag2"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.2",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag1.txt",
+                        "flag1"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.3",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag4.txt",
+                        "flag4"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.54",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag5.txt",
+                        "flag5"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.61",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag6.txt",
+                        "flag6"
+                    ]
+                }
+            ],
+            "ip": "172.18.2.7",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        }
+    ],
+    "py/object": "gym_pycr_pwcrack.dao.container_config.flags_config.FlagsConfig"
+}

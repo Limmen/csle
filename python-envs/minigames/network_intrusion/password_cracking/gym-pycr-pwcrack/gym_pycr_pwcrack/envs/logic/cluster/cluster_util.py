@@ -5,8 +5,6 @@ import time
 import paramiko
 import telnetlib
 import random
-import copy
-import sys
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -1590,57 +1588,66 @@ class ClusterUtil:
                 flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
                                                               env_config=env_config)
             else:
-                cmd = a.alt_cmd[0] + "\n"
-                if c.root:
-                    cmd = constants.COMMANDS.SUDO + " " + cmd
-                start = time.time()
-                c.interactive_shell.send(cmd)
-                output = b""
-                # clear output
-                if c.interactive_shell.recv_ready():
-                    c.interactive_shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                command_complete = False
-                timeouts = 0
-                while not command_complete:
-                    while not c.interactive_shell.recv_ready():
-                        if timeouts > env_config.shell_max_timeouts:
-                            break
-                        time.sleep(env_config.shell_read_wait)
-                        timeouts += 1
+                for i in range(env_config.ftp_retry_find_flag):
+                    cmd = a.alt_cmd[0] + "\n"
+                    if c.root:
+                        cmd = constants.COMMANDS.SUDO + " " + cmd
+                    start = time.time()
+                    c.interactive_shell.send(cmd)
+                    output = b""
+                    # clear output
                     if c.interactive_shell.recv_ready():
-                        output += c.interactive_shell.recv(constants.COMMON.LARGE_RECV_SIZE)
-                        timeouts = 0
-                        if constants.FTP.LFTP_PROMPT in output.decode() \
-                                or constants.FTP.LFTP_PROMPT_2 in output.decode():
-                            command_complete = True
-                            end = time.time()
-                            total_time = end - start
-                            ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
-                                                             env_config=env_config, ip=machine.ip,
-                                                             user=c.username,
-                                                             service=constants.FTP.SERVICE_NAME)
-                            env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                  service=constants.FTP.SERVICE_NAME,
-                                                                  cost=float(total_time))
+                        c.interactive_shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                    command_complete = False
+                    timeouts = 0
+                    while not command_complete:
+                        while not c.interactive_shell.recv_ready():
+                            if timeouts > env_config.shell_max_timeouts:
+                                print("max timeouts")
+                                break
+                            time.sleep(env_config.shell_read_wait)
+                            timeouts += 1
+                            print(timeouts)
+                        if c.interactive_shell.recv_ready():
+                            output += c.interactive_shell.recv(constants.COMMON.LARGE_RECV_SIZE)
+                            timeouts = 0
+                            if constants.FTP.LFTP_PROMPT in output.decode() \
+                                    or constants.FTP.LFTP_PROMPT_2 in output.decode():
+                                command_complete = True
+                                end = time.time()
+                                total_time = end - start
+                                ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
+                                                                 env_config=env_config, ip=machine.ip,
+                                                                 user=c.username,
+                                                                 service=constants.FTP.SERVICE_NAME)
+                                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                      service=constants.FTP.SERVICE_NAME,
+                                                                      cost=float(total_time))
+                        else:
+                            break
+
+                    output_str = output.decode("utf-8")
+                    output_str = env_config.shell_escape.sub("", output_str)
+                    output_list = output_str.split('\r\n')
+                    output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
+                    flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x and x!= "", output_list))
+                    print("found ftp flags:{}".format(flag_paths))
+                    ff = False
+                    # Check for flags
+                    for fp in flag_paths:
+                        fp = fp.replace(".txt", "")
+                        if (machine.ip, fp) in env_config.flag_lookup:
+                            new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+                            ff=True
+                    if not ff:
+                        continue
                     else:
                         break
-
-                output_str = output.decode("utf-8")
-                output_str = env_config.shell_escape.sub("", output_str)
-                output_list = output_str.split('\r\n')
-                output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
-                flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x, output_list))
-                new_m_obs.filesystem_searched = True
-
-                # Persist cache
-                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
-                                                         service=constants.FTP.SERVICE_NAME, user=c.username,
-                                                         files=flag_paths, ip=machine.ip)
-            # Check for flags
-            for fp in flag_paths:
-                fp = fp.replace(".txt", "")
-                if (machine.ip, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+            # Persist cache
+            ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                     service=constants.FTP.SERVICE_NAME, user=c.username,
+                                                     files=flag_paths, ip=machine.ip)
+            new_m_obs.filesystem_searched = True
 
             # Update cost
             if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,

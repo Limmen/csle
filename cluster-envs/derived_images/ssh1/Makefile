@@ -8,4 +8,4 @@ build: ./docker/Dockerfile
 	docker build . -f ./docker/Dockerfile -t $(PROJECT)/$(CONTAINER):$(VERSION); cd ..
 
 rm-image:
-	-docker rmi $(PROJECT)/$(MINIGAME)-$(CONTAINER)-level$(LEVEL):$(VERSION)
+	-docker rmi $(PROJECT)/$(CONTAINER):$(VERSION)

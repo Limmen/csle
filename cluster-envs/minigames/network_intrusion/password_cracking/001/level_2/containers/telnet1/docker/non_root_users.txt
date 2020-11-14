@@ -1,1 +1,0 @@
-vagrant:test_pw1
