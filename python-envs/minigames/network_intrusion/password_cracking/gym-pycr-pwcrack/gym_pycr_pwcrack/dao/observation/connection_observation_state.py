@@ -36,15 +36,28 @@ class ConnectionObservationState:
 
         :return: None
         """
+
         if self.tunnel_thread is not None:
-            self.tunnel_thread.shutdown()
+            try:
+                self.tunnel_thread.shutdown()
+            except Exception:
+                pass
             self.tunnel_thread = None
         if self.interactive_shell is not None:
-            self.interactive_shell.close()
+            try:
+                self.interactive_shell.close()
+            except Exception:
+                pass
             self.interactive_shell = None
         if self.conn is not None:
-            self.conn.close()
+            try:
+                self.conn.close()
+            except Exception:
+                pass
             self.conn = None
         if self.proxy is not None:
-            self.proxy.cleanup()
+            try:
+                self.proxy.cleanup()
+            except Exception:
+                pass
             self.proxy = None

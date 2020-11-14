@@ -481,13 +481,18 @@ class PyCrPwCrackMediumBase:
         return flags_lookup
 
     @staticmethod
-    def network_conf() -> NetworkConfig:
+    def network_conf(generate: bool = False) -> NetworkConfig:
         """
         :return: The network configuration
         """
+        nodes = []
+        adj_matrix = []
+        if not generate:
+            nodes = PyCrPwCrackMediumBase.nodes()
+            adj_matrix = PyCrPwCrackMediumBase.adj_matrix()
         network_conf = NetworkConfig(subnet_mask=PyCrPwCrackMediumBase.subnet_mask(),
-                                     nodes=PyCrPwCrackMediumBase.nodes(),
-                                     adj_matrix=PyCrPwCrackMediumBase.adj_matrix(),
+                                     nodes=nodes,
+                                     adj_matrix=adj_matrix,
                                      flags_lookup = PyCrPwCrackMediumBase.flags_lookup())
         return network_conf
 

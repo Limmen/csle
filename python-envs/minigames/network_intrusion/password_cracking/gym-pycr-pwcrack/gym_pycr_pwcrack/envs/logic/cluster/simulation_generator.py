@@ -31,6 +31,7 @@ class SimulationGenerator:
         print("Starting Exploration Phase to Gather Data to Create Simulation")
         aggregated_observation = env.env_state.obs_state.copy()
         for i in range(env_config.max_exploration_trajectories):
+            print("Collecting trajectory {}/{}".format(i, env_config.max_exploration_trajectories))
             SimulationGenerator.explore(exp_policy = exp_policy, env_config=env_config, env=env)
             observation = env.env_state.obs_state
             aggregated_observation = EnvDynamicsUtil.merge_complete_obs_state(old_obs_state=aggregated_observation,

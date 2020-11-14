@@ -1471,6 +1471,7 @@ class ClusterUtil:
                                                           cost=float(total_time))
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
+                    flag_paths = list(filter(lambda x: x != '', flag_paths))
                     if len(flag_paths) > 0 and "flag" in flag_paths:
                         # Persist cache
                         ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,

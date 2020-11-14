@@ -134,6 +134,10 @@ class Simulator:
             return s_3, reward, done
         if a.id == ActionId.FIND_FLAG:
             return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.INSTALL_TOOLS:
+            return PostExploitSimulator.execute_install_tools(s=s, a=a, env_config=env_config)
+        if a.id == ActionId.SSH_BACKDOOR:
+            return PostExploitSimulator.execute_ssh_backdoor(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 
