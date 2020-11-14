@@ -2190,6 +2190,7 @@ class ClusterUtil:
                         machine = s_prime.get_machine(res.ip)
                         if machine is None:
                             print("None m")
+                            print("action:{}".format(a.name))
                             print("ip: {}".format(res.ip))
                             print("merged result machines: {}".format(
                                 list(map(lambda x: x.ip_addr, merged_result.hosts))))

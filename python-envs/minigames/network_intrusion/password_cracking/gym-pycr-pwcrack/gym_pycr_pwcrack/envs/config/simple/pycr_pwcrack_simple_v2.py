@@ -91,11 +91,11 @@ class PyCrPwCrackSimpleV2:
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.COMPACT,
                                router_ip=PyCrPwCrackSimpleBase.router_ip())
-        env_config.ping_scan_miss_p = 0.02
-        env_config.udp_port_scan_miss_p = 0.07
-        env_config.syn_stealth_scan_miss_p = 0.04
-        env_config.os_scan_miss_p = 0.08
-        env_config.vulners_miss_p = 0.09
+        env_config.ping_scan_miss_p = 0.0
+        env_config.udp_port_scan_miss_p = 0.0
+        env_config.syn_stealth_scan_miss_p = 0.0
+        env_config.os_scan_miss_p = 0.0
+        env_config.vulners_miss_p = 0.0
         env_config.num_flags = 3
         env_config.blacklist_ips = ["172.18.1.1"]
 

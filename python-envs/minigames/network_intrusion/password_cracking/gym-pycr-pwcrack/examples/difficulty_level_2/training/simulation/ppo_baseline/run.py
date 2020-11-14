@@ -14,16 +14,16 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     agent_config = AgentConfig(gamma=0.995, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
-                               min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
+                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=100,
+                               num_iterations=150,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=150, input_dim=5 * 3,
-                               output_dim=22,
+                               checkpoint_freq=150, input_dim=11 * 3,
+                               output_dim=42,
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
                                shared_hidden_layers=2, shared_hidden_dim=32,
@@ -37,27 +37,26 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-100,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=10
+                               n_deterministic_eval_iter=1
                                )
-    env_name = "pycr-pwcrack-simple-generated-sim-v1"
-    eval_env_name = "pycr-pwcrack-simple-cluster-v1"
+    env_name = "pycr-pwcrack-medium-sim-v1"
+    eval_env_name = "pycr-pwcrack-medium-cluster-v1"
 
-    eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                   server_username="kim")
-    # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-    #                                server_connection=False)
+    # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.21.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                server_username="kim")
+    eval_cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v1",
-                                 run_many=True, random_seeds=[0, 999, 299, 399, 499],
+                                 run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
-                                 eval_cluster_config=eval_cluster_config,
-                                 cluster_config=eval_cluster_config)
+                                 eval_cluster_config=eval_cluster_config)
     return client_config
 
 
@@ -79,7 +78,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v1 generated simulation"
+    experiment_title = "PPO medium v1 simulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

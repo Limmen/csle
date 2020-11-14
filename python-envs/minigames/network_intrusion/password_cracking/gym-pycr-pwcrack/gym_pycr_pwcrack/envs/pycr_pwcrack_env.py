@@ -105,6 +105,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         info = {}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action:{}".format(action_id))
+            print("illegal action env mode:{}".format(self.env_config.env_mode))
             done = False
             info["flags"] = self.env_state.obs_state.catched_flags
             self.agent_state.time_step += 1
@@ -159,6 +160,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         #self.viewer.mainframe.set_state(self.agent_state)
         if self.viewer is not None and self.viewer.mainframe is not None:
             self.viewer.mainframe.reset_state()
+        if self.env_config.env_mode == EnvMode.SIMULATION:
+            self.env_state.obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         return m_obs
 
     def render(self, mode: str = 'human'):
