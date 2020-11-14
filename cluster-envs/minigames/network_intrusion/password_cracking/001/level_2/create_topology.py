@@ -69,7 +69,7 @@ def default_topology() -> Topology:
                                 default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                 )
 
-    node_4 = NodeFirewallConfig(ip="172.18.2.79",
+    node_5 = NodeFirewallConfig(ip="172.18.2.79",
                                 output_accept=set(
                                     ["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79", "172.18.2.191",
                                      "172.18.2.10", "172.18.2.1"]),
@@ -84,7 +84,7 @@ def default_topology() -> Topology:
                                 ),
                                 default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
 
-    node_5 = NodeFirewallConfig(ip="172.18.2.191",
+    node_6 = NodeFirewallConfig(ip="172.18.2.191",
                                 output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21",
                                                    "172.18.2.79", "172.18.2.191", "172.18.2.10", "172.18.2.1"]),
                                 input_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21",
@@ -94,7 +94,7 @@ def default_topology() -> Topology:
                                 default_input="DROP", default_output="DROP", default_forward="DROP",
                                 default_gw="172.18.2.10")
 
-    node_6 = NodeFirewallConfig(ip="172.18.2.54",
+    node_7 = NodeFirewallConfig(ip="172.18.2.54",
                                 output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                    "172.18.2.191", "172.18.2.10", "172.18.2.54", "172.18.2.1"]),
                                 input_accept=set(["172.18.2.2", "172.18.2.1"]),
@@ -103,7 +103,7 @@ def default_topology() -> Topology:
                                 default_gw="172.18.2.2"
                                 )
 
-    node_7 = NodeFirewallConfig(ip="172.18.2.74",
+    node_8 = NodeFirewallConfig(ip="172.18.2.74",
                                 output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                    "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
                                                    "172.18.2.101", "172.18.2.62", "172.18.2.1"]),
@@ -121,7 +121,7 @@ def default_topology() -> Topology:
                                 default_input="DROP", default_output="DROP", default_forward="ACCEPT",
                                 default_gw=None)
 
-    node_8 = NodeFirewallConfig(ip="172.18.2.61",
+    node_9 = NodeFirewallConfig(ip="172.18.2.61",
                                 output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                    "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
                                                    "172.18.2.1"]),
@@ -131,7 +131,7 @@ def default_topology() -> Topology:
                                 routes=set(), default_input="DROP", default_output="DROP", default_forward="DROP",
                                 default_gw="172.18.2.3")
 
-    node_9 = NodeFirewallConfig(ip="172.18.2.62",
+    node_10 = NodeFirewallConfig(ip="172.18.2.62",
                                 output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                    "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
                                                    "172.18.2.1",
@@ -145,7 +145,7 @@ def default_topology() -> Topology:
                                 forward_drop=set(["172.18.2.7"]), default_input="DROP", default_output="DROP",
                                 default_forward="ACCEPT", default_gw=None)
 
-    node_10 = NodeFirewallConfig(ip="172.18.2.101",
+    node_11 = NodeFirewallConfig(ip="172.18.2.101",
                                  output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                     "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
                                                     "172.18.2.101", "172.18.2.62", "172.18.2.1"]),
@@ -154,7 +154,7 @@ def default_topology() -> Topology:
                                  routes=set(), default_input="DROP", default_output="DROP", default_forward="DROP",
                                  default_gw="172.18.2.74")
 
-    node_11 = NodeFirewallConfig(ip="172.18.2.7",
+    node_12 = NodeFirewallConfig(ip="172.18.2.7",
                                  output_accept=set(["172.18.2.2", "172.18.2.3", "172.18.2.21", "172.18.2.79",
                                                     "172.18.2.191", "172.18.2.10", "172.18.2.61", "172.18.2.74",
                                                     "172.18.2.101", "172.18.2.62", "172.18.2.7", "172.18.2.1"]),
@@ -163,7 +163,7 @@ def default_topology() -> Topology:
                                  routes=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP",
                                  default_gw="172.18.2.62")
-    node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11]
+    node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11, node_12]
     topology = Topology(node_configs=node_configs, subnetwork="172.18.2.0/24")
     return topology
 
@@ -226,7 +226,7 @@ def create_topology(topology: Topology, cluster_config: ClusterConfig):
         cmd = "sudo iptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
         o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
-        cmd = "sudo iptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
+        cmd = "sudo iptables -A INPUT -s {} -j {}".format(topology.subnetwork, node.default_input)
         ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
         cmd = "sudo iptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)

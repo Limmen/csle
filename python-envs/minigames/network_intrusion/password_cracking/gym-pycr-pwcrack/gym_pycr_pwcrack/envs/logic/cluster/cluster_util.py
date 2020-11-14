@@ -1367,7 +1367,7 @@ class ClusterUtil:
                                                             transport=agent_transport)
                         tunnel_thread.start()
                         target_conn = FTP()
-                        target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=3)
+                        target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=5)
                         login_result = target_conn.login(cr.username, cr.pw)
                         if constants.FTP.INCORRECT_LOGIN not in login_result:
                             connected = True
@@ -1383,18 +1383,17 @@ class ClusterUtil:
                             if shell.recv_ready():
                                 shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                             shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ip + "\n")
-                            time.sleep(0.2)
+                            time.sleep(0.5)
                             # clear output
                             if shell.recv_ready():
                                 o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                             interactive_shells.append(shell)
                             non_failed_credentials.append(cr)
                     except Exception as e:
-                        pass
-                        # print("FTP exception: {}".format(str(e)))
-                        # print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        # print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
-                        # print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        print("FTP exception: {}".format(str(e)))
+                        print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -1603,11 +1602,10 @@ class ClusterUtil:
                     while not command_complete:
                         while not c.interactive_shell.recv_ready():
                             if timeouts > env_config.shell_max_timeouts:
-                                print("max timeouts")
+                                print("max timeouts FTP")
                                 break
                             time.sleep(env_config.shell_read_wait)
                             timeouts += 1
-                            print(timeouts)
                         if c.interactive_shell.recv_ready():
                             output += c.interactive_shell.recv(constants.COMMON.LARGE_RECV_SIZE)
                             timeouts = 0
@@ -1631,7 +1629,6 @@ class ClusterUtil:
                     output_list = output_str.split('\r\n')
                     output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
                     flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x and x!= "", output_list))
-                    print("found ftp flags:{}".format(flag_paths))
                     ff = False
                     # Check for flags
                     for fp in flag_paths:
