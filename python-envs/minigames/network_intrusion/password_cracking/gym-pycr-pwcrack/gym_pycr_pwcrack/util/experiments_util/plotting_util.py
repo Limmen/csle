@@ -452,14 +452,14 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
                          steps_data_4, steps_means_4, steps_stds_4,
 
                          label_1, label_2, label_3, label_4, ylim_rew, ylim_step,
-                         file_name, markevery=10):
+                         file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
     """
     Plots rewards, flags % and steps of two different configurations
     """
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 5))
-    plt.rcParams.update({'font.size': 12})
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(14, 4))
+    plt.rcParams.update({'font.size': 17})
 
     # ylims = (0, 920)
 
@@ -471,38 +471,38 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
                        rewards_means_1 - rewards_stds_1, rewards_means_1 + rewards_stds_1,
                        alpha=0.35, color="#599ad3")
 
-    ax[0].plot(np.array(list(range(len(rewards_means_2)))),
-               rewards_means_2, label=label_2, marker="o", ls='-', color="r",
-               markevery=markevery)
-    ax[0].fill_between(np.array(list(range(len(rewards_means_2)))),
-                       rewards_means_2 - rewards_stds_2, rewards_means_2 + rewards_stds_2,
-                       alpha=0.35, color="r")
+    # ax[0].plot(np.array(list(range(len(rewards_means_2)))),
+    #            rewards_means_2, label=label_2, marker="o", ls='-', color="r",
+    #            markevery=markevery)
+    # ax[0].fill_between(np.array(list(range(len(rewards_means_2)))),
+    #                    rewards_means_2 - rewards_stds_2, rewards_means_2 + rewards_stds_2,
+    #                    alpha=0.35, color="r")
+    #
+    # ax[0].plot(np.array(list(range(len(rewards_means_3)))),
+    #            rewards_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
+    #            markevery=markevery)
+    # ax[0].fill_between(np.array(list(range(len(rewards_means_3)))),
+    #                    rewards_means_3 - rewards_stds_3, rewards_means_3 + rewards_stds_3,
+    #                    alpha=0.35, color="#f9a65a")
 
-    ax[0].plot(np.array(list(range(len(rewards_means_3)))),
-               rewards_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
-               markevery=markevery)
-    ax[0].fill_between(np.array(list(range(len(rewards_means_3)))),
-                       rewards_means_3 - rewards_stds_3, rewards_means_3 + rewards_stds_3,
-                       alpha=0.35, color="#f9a65a")
+    # ax[0].plot(np.array(list(range(len(rewards_means_4)))),
+    #            rewards_means_4, label=label_4, marker="^", ls='-', color="#661D98",
+    #            markevery=markevery)
+    # ax[0].fill_between(np.array(list(range(len(rewards_means_4)))),
+    #                    rewards_means_4 - rewards_stds_4, rewards_means_4 + rewards_stds_4,
+    #                    alpha=0.35, color="#661D98")
 
-    ax[0].plot(np.array(list(range(len(rewards_means_4)))),
-               rewards_means_4, label=label_4, marker="^", ls='-', color="#661D98",
-               markevery=markevery)
-    ax[0].fill_between(np.array(list(range(len(rewards_means_4)))),
-                       rewards_means_4 - rewards_stds_4, rewards_means_4 + rewards_stds_4,
-                       alpha=0.35, color="#661D98")
+    # ax[0].plot(np.array(list(range(len(rewards_means_1)))),
+    #            [optimal_reward] * len(rewards_means_1), label="Optimal",
+    #            color="black",
+    #            linestyle="dashed")
 
-    ax[0].plot(np.array(list(range(len(rewards_means_1)))),
-               [95] * len(rewards_means_1), label="Optimal",
-               color="black",
-               linestyle="dashed")
-
-    ax[0].set_title("Episodic Rewards")
-    ax[0].set_xlabel("\# Iteration", fontsize=20)
-    ax[0].set_ylabel("Avg Episode Reward", fontsize=20)
+    ax[0].set_title(r"Episodic Rewards $\upsilon_2$")
+    ax[0].set_xlabel("\# Iteration", fontsize=80)
+    ax[0].set_ylabel("Avg Episode Reward", fontsize=80)
     ax[0].set_xlim(0, len(rewards_means_1))
     # ax[0].set_ylim(-80, 100)
-    ax[0].set_ylim(ylim_rew)
+    #ax[0].set_ylim(ylim_rew)
 
     # set the grid on
     ax[0].grid('on')
@@ -528,37 +528,37 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
                        steps_means_1 - steps_stds_1, steps_means_1 + steps_stds_1,
                        alpha=0.35, color="#599ad3")
 
-    ax[1].plot(np.array(list(range(len(steps_means_2)))),
-               steps_means_2, label=label_2, marker="o", ls='-', color="r",
-               markevery=markevery)
-    ax[1].fill_between(np.array(list(range(len(steps_means_2)))),
-                       steps_means_2 - steps_stds_2, steps_means_2 + steps_stds_2,
-                       alpha=0.35, color="r")
+    # ax[1].plot(np.array(list(range(len(steps_means_2)))),
+    #            steps_means_2, label=label_2, marker="o", ls='-', color="r",
+    #            markevery=markevery)
+    # ax[1].fill_between(np.array(list(range(len(steps_means_2)))),
+    #                    steps_means_2 - steps_stds_2, steps_means_2 + steps_stds_2,
+    #                    alpha=0.35, color="r")
+    #
+    # ax[1].plot(np.array(list(range(len(steps_means_3)))),
+    #            steps_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
+    #            markevery=markevery)
+    # ax[1].fill_between(np.array(list(range(len(steps_means_3)))),
+    #                    steps_means_3 - steps_stds_3, steps_means_3 + steps_stds_3,
+    #                    alpha=0.35, color="#f9a65a")
 
-    ax[1].plot(np.array(list(range(len(steps_means_3)))),
-               steps_means_3, label=label_3, marker="p", ls='-', color="#f9a65a",
-               markevery=markevery)
-    ax[1].fill_between(np.array(list(range(len(steps_means_3)))),
-                       steps_means_3 - steps_stds_3, steps_means_3 + steps_stds_3,
-                       alpha=0.35, color="#f9a65a")
+    # ax[1].plot(np.array(list(range(len(steps_means_4)))),
+    #            steps_means_4, label=label_4, marker="^", ls='-', color="#661D98",
+    #            markevery=markevery)
+    # ax[1].fill_between(np.array(list(range(len(steps_means_4)))),
+    #                    steps_means_4 - steps_stds_4, steps_means_4 + steps_stds_4,
+    #                    alpha=0.35, color="#661D98")
 
-    ax[1].plot(np.array(list(range(len(steps_means_4)))),
-               steps_means_4, label=label_4, marker="^", ls='-', color="#661D98",
-               markevery=markevery)
-    ax[1].fill_between(np.array(list(range(len(steps_means_4)))),
-                       steps_means_4 - steps_stds_4, steps_means_4 + steps_stds_4,
-                       alpha=0.35, color="#661D98")
+    # ax[1].plot(np.array(list(range(len(steps_means_1)))),
+    #            [optimal_steps] * len(steps_means_1), label="Optimal",
+    #            color="black",
+    #            linestyle="dashed")
 
-    ax[1].plot(np.array(list(range(len(steps_means_1)))),
-               [10] * len(steps_means_1), label="Optimal",
-               color="black",
-               linestyle="dashed")
-
-    ax[1].set_title("\# Steps per episode")
+    ax[1].set_title(r"\# Steps per episode $\upsilon_2$")
     ax[1].set_xlabel("\# Iteration")
     ax[1].set_ylabel("\# Steps")
     ax[1].set_xlim(0, len(steps_means_1))
-    ax[1].set_ylim(ylim_step)
+    #ax[1].set_ylim(ylim_step)
 
     # set the grid on
     ax[1].grid('on')

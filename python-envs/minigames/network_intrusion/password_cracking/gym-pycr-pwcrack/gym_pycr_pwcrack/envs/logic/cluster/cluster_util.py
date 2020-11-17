@@ -2206,7 +2206,8 @@ class ClusterUtil:
                                 list(map(lambda x: x.ip_addr, merged_result.hosts))))
                             for tm in total_results:
                                 print("total_results machines: {}".format(list(map(lambda x: x.ip_addr, tm.hosts))))
-                        machine.reachable.update(res.reachable)
+                        else:
+                            machine.reachable.update(res.reachable)
                 return s_prime, reward, False
 
         new_machines_obs = []

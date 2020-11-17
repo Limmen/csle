@@ -92,6 +92,8 @@ class PyCrPwCrackIntermediateV4:
                                                            subnet=True))
         actions.append(ShellActions.FIND_FLAG(index=num_nodes + 1))
         actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
+        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes + 1))
         actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=num_nodes + 1, subnet=True,
                                                         host_ip=hacker_ip, ip=subnet_mask))
         actions.append(NMAPActions.FIREWALK(num_nodes + 1, ip=subnet_mask, subnet=True))
@@ -127,7 +129,7 @@ class PyCrPwCrackIntermediateV4:
             ActionId.FINGER_HOST, ActionId.FINGER_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [ActionId.FIND_FLAG]
+        shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes, actions=actions,
