@@ -104,6 +104,7 @@ start:
 	cd containers/ftp1/ && $(MAKE) start
 	cd containers/ftp2/ && $(MAKE) start
 	cd containers/hacker_kali1/ && $(MAKE) start
+	python create_topology.py
 
 clean:
 	cd containers/router1/ && $(MAKE) clean

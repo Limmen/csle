@@ -24,7 +24,6 @@ def test_env(env_name : str, num_steps : int):
     masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
     trajectory = []
     for i in range(num_steps):
-        print(i)
         legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
 
         legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
@@ -46,7 +45,7 @@ def test_env(env_name : str, num_steps : int):
         if not done and EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config):
             print("not done but got all flags???")
         trajectory.append(action)
-        #env.render()
+        env.render()
         if done:
             env.reset()
             trajectory = []
@@ -57,6 +56,7 @@ def test_env(env_name : str, num_steps : int):
 
 def test_all():
     test_env("pycr-pwcrack-medium-cluster-v2", num_steps=1000000000)
+    #test_env("pycr-pwcrack-medium-cluster-v3", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-cluster-v1", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-generated-sim-v1", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-cluster-base-v1", num_steps=1000000000)
