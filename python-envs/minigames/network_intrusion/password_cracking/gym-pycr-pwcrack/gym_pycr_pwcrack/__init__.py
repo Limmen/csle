@@ -80,6 +80,27 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-medium-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumCluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-pwcrack-medium-cluster-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumCluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-pwcrack-medium-cluster-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumCluster4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Medium, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-pwcrack-medium-generated-sim-v1',
@@ -91,5 +112,40 @@ register(
 register(
     id='pycr-pwcrack-medium-sim-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Intermediate, Mode: Cluster, Version: Base ------------
+register(
+    id='pycr-pwcrack-intermediate-cluster-base-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateClusterBaseEnv',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Intermediate, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-pwcrack-intermediate-cluster-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateCluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-intermediate-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateCluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-pwcrack-intermediate-cluster-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateCluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-pwcrack-intermediate-cluster-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateCluster4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )

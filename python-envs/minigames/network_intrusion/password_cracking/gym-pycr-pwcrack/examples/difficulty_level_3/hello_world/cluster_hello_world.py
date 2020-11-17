@@ -5,15 +5,15 @@ import gym
 import numpy as np
 
 def test_env(env_name : str, num_steps : int):
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.3.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.3.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+    cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
     env.env_config.max_episode_length = 1000000000
@@ -56,10 +56,9 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    test_env("pycr-pwcrack-medium-cluster-v2", num_steps=1000000000)
-    #test_env("pycr-pwcrack-medium-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-medium-generated-sim-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-medium-cluster-base-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-intermediate-cluster-v2", num_steps=1000000000)
+    #test_env("pycr-pwcrack-intermediate-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-intermediate-cluster-base-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

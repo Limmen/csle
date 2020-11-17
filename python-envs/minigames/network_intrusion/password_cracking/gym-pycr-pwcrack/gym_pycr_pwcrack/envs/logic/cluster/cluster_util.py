@@ -1634,17 +1634,21 @@ class ClusterUtil:
                     for fp in flag_paths:
                         fp = fp.replace(".txt", "")
                         if (machine.ip, fp) in env_config.flag_lookup:
-                            new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
                             ff=True
                     if not ff:
                         continue
                     else:
                         break
-            # Persist cache
-            ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
-                                                     service=constants.FTP.SERVICE_NAME, user=c.username,
-                                                     files=flag_paths, ip=machine.ip)
+                # Persist cache
+                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                         service=constants.FTP.SERVICE_NAME, user=c.username,
+                                                         files=flag_paths, ip=machine.ip)
             new_m_obs.filesystem_searched = True
+            # Check for flags
+            for fp in flag_paths:
+                fp = fp.replace(".txt", "")
+                if (machine.ip, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
 
             # Update cost
             if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,

@@ -1,8 +1,5 @@
-from typing import List
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
-from gym_pycr_pwcrack.dao.network.node import Node
 from gym_pycr_pwcrack.dao.network.flag import Flag
-from gym_pycr_pwcrack.dao.network.node_type import NodeType
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.render.render_config import RenderConfig
 from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
@@ -13,15 +10,10 @@ from gym_pycr_pwcrack.dao.action.masscan_actions import MasscanActions
 from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.dao.network.network_service import NetworkService
-from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
-from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
-import gym_pycr_pwcrack.constants.constants as constants
 
-class PyCrPwCrackMediumBase:
+class PyCrPwCrackIntermediateBase:
     """
     Base configuration of level 2 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
     and all the config of the environment have to be hardcoded)
@@ -85,13 +77,13 @@ class PyCrPwCrackMediumBase:
         adj_matrix = []
         agent_reachable = set()
         if not generate:
-            nodes = PyCrPwCrackMediumBase.nodes()
-            adj_matrix = PyCrPwCrackMediumBase.adj_matrix()
-            agent_reachable = PyCrPwCrackMediumBase.agent_reachable()
-        network_conf = NetworkConfig(subnet_mask=PyCrPwCrackMediumBase.subnet_mask(),
+            nodes = PyCrPwCrackIntermediateBase.nodes()
+            adj_matrix = PyCrPwCrackIntermediateBase.adj_matrix()
+            agent_reachable = PyCrPwCrackIntermediateBase.agent_reachable()
+        network_conf = NetworkConfig(subnet_mask=PyCrPwCrackIntermediateBase.subnet_mask(),
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
-                                     flags_lookup = PyCrPwCrackMediumBase.flags_lookup(),
+                                     flags_lookup = PyCrPwCrackIntermediateBase.flags_lookup(),
                                      agent_reachable=agent_reachable)
         return network_conf
 
@@ -235,12 +227,12 @@ class PyCrPwCrackMediumBase:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrPwCrackMediumBase.num_nodes(), render_config=render_conf,
+                               num_sh=3, num_nodes = PyCrPwCrackIntermediateBase.num_nodes(), render_config=render_conf,
                                env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackMediumBase.hacker_ip(), state_type=StateType.BASE,
-                               router_ip=PyCrPwCrackMediumBase.router_ip())
+                               hacker_ip=PyCrPwCrackIntermediateBase.hacker_ip(), state_type=StateType.BASE,
+                               router_ip=PyCrPwCrackIntermediateBase.router_ip())
         env_config.ping_scan_miss_p = 0.0
         env_config.udp_port_scan_miss_p = 0.0
         env_config.syn_stealth_scan_miss_p = 0.0
