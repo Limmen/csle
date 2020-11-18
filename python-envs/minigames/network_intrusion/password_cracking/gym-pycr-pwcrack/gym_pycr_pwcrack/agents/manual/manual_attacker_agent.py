@@ -1,7 +1,10 @@
 """
 Manual attacker agent
 """
-from gym_pycr_pwcrack.envs.rendering.viewer import Viewer
+try:
+    from gym_pycr_pwcrack.envs.rendering.viewer import Viewer
+except:
+    pass
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.envs import PyCRPwCrackEnv
 
