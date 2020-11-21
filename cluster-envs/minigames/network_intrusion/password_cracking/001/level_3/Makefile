@@ -106,7 +106,7 @@ start:
 	cd containers/hacker_kali1/ && $(MAKE) start
 	python create_topology.py
 
-clean:
+clean: stop
 	cd containers/router1/ && $(MAKE) clean
 	cd containers/ssh1/ && $(MAKE) clean
 	cd containers/ssh2/ && $(MAKE) clean

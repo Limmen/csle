@@ -136,6 +136,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
         action.ip = self.env_state.obs_state.get_action_ip(action)
+        if self.agent_state.time_step > 1000:
+            print("ts:{}, action:{}, ip:{}, idx:{}, id:{}".format(self.agent_state.time_step, action.name, action.ip, action.index, action.id))
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         if done:
             reward = reward - self.env_config.final_steps_reward_coefficient*self.agent_state.time_step
@@ -269,11 +271,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                     unscanned_filesystems = True
                 if m.root:
                     root_login = True
-                    if not m.tools_installed:
+                    if not m.tools_installed and not m.install_tools_tried:
                         uninstalled_tools = True
                     else:
                         machine_w_tools = True
-                    if not m.backdoor_installed:
+                    if m.tools_installed and not m.backdoor_installed and not m.backdoor_tried:
                         uninstalled_backdoor = True
             if m.ip == ip:
                 machine_discovered = True

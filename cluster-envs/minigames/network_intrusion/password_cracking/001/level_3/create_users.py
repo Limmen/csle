@@ -71,13 +71,13 @@ def default_users() -> UsersConfig:
         NodeUsersConfig(ip="172.18.3.6", users=[
             ("user3", "1bsae235121", True)
         ]),
-        NodeUsersConfig(ip="172.18.3.7", users=[
+        NodeUsersConfig(ip="172.18.3.8", users=[
             ("user4", "1bsae235121", True)
         ]),
-        NodeUsersConfig(ip="172.18.3.8", users=[
+        NodeUsersConfig(ip="172.18.3.9", users=[
             ("user5", "1gxq2", True)
         ]),
-        NodeUsersConfig(ip="172.18.3.9", users=[
+        NodeUsersConfig(ip="172.18.3.178", users=[
             ("user6", "1gxq2", True)
         ]),
         NodeUsersConfig(ip="172.18.3.11", users=[

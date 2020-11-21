@@ -802,7 +802,6 @@ class ClusterUtil:
         total_new_root, total_new_flag_pts, total_new_logged_in, total_new_tools_installed, \
         total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_m_obs = []
-
         for host in scan_result.hosts:
             m_obs = host.to_obs()
             m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
@@ -813,8 +812,25 @@ class ClusterUtil:
         total_new_tools_installed, total_new_backdoors_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
                                                    action=a)
+        new_machines_obs_1 = []
+        reachable = s.obs_state.agent_reachable
+        reachable.add(env_config.router_ip)
+
+        for machine in new_machines_obs:
+            if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
+                reachable = reachable.union(machine.reachable)
+
+        for machine in new_machines_obs:
+            if machine.logged_in and machine.tools_installed:
+                machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
+
+            if machine.ip in reachable:
+                machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
+            new_machines_obs_1.append(machine)
+
+
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs
+        s_prime.obs_state.machines = new_machines_obs_1
 
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
@@ -2123,6 +2139,8 @@ class ClusterUtil:
                     if installed:
                         break
 
+                new_m_obs.install_tools_tried = True
+
                 total_cost += telnet_cost
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
@@ -2417,7 +2435,7 @@ class ClusterUtil:
             new_m_obs = MachineObservationState(ip=machine.ip)
             backdoor_created = False
             if machine.logged_in and machine.root and machine.tools_installed and not machine.backdoor_installed:
-
+                new_m_obs.backdoor_tried = True
                 # Check cached connections
                 for cr in s.cached_backdoor_credentials.values():
                     if (machine.ip, cr.username, cr.port) in s.cached_ssh_connections:
@@ -2581,7 +2599,11 @@ class ClusterUtil:
         """
         cmd = constants.SHELL.CHECK_FOR_SECLISTS
         if not telnet:
-            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+            for i in range(2):
+                outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
+                checklists_installed = "file exists" in outdata.decode() or "file exists" in errdata.decode()
+                if checklists_installed:
+                    break
             return "file exists" in outdata.decode() or "file exists" in errdata.decode()
         else:
             cmd = cmd + "\n"

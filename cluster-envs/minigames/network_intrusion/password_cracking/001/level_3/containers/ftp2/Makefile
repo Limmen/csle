@@ -3,7 +3,7 @@ NETWORK=pycr_net_3
 MINIGAME=pwcrack
 CONTAINER=ftp2
 VERSION=0.0.1
-LEVEL=2
+LEVEL=3
 IP=172.18.3.7
 
 all: run

@@ -135,6 +135,8 @@ class EnvDynamicsUtil:
         n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m, action)
         n_m = EnvDynamicsUtil.merge_trace(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_brute_tried(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_backdoor_tried(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_tools_tried(o_m, n_m)
         n_m, num_new_tools_installed = EnvDynamicsUtil.merge_tools_installed(o_m, n_m)
         n_m, num_new_backdoors_installed = EnvDynamicsUtil.merge_backdoor_installed(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_reachable(o_m=o_m, n_m=n_m)
@@ -256,6 +258,32 @@ class EnvDynamicsUtil:
         if not n_m.backdoor_installed:
             n_m.backdoor_installed = o_m.backdoor_installed
         return n_m, num_new_backdoor_installed
+
+    @staticmethod
+    def merge_backdoor_tried(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation "backdoor tried" flag with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated backdoor-tried flag
+        """
+        if not n_m.backdoor_tried:
+            n_m.backdoor_tried = o_m.backdoor_tried
+        return n_m
+
+    @staticmethod
+    def merge_tools_tried(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+        """
+        Helper function for merging an old machine observation "tools tried" flag with new information collected
+
+        :param o_os: the old machine observation
+        :param n_os: the new machine observation
+        :return: the merged machine observation with updated tools-installed-tried flag
+        """
+        if not n_m.install_tools_tried:
+            n_m.install_tools_tried = o_m.install_tools_tried
+        return n_m
 
     @staticmethod
     def merge_root(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
@@ -566,6 +594,17 @@ class EnvDynamicsUtil:
             m_obs.cassandra_brute_tried = True
         return m_obs
 
+    @staticmethod
+    def ssh_backdoor_tried_flags(a: Action, m_obs: MachineObservationState):
+        if a.id == ActionId.SSH_BACKDOOR:
+            m_obs.backdoor_tried = True
+        return m_obs
+
+    @staticmethod
+    def install_tools_tried(a: Action, m_obs: MachineObservationState):
+        if a.id == ActionId.INSTALL_TOOLS:
+            m_obs.install_tools_tried = True
+        return m_obs
 
     @staticmethod
     def cache_action(env_config: EnvConfig, a: Action, s: EnvState):

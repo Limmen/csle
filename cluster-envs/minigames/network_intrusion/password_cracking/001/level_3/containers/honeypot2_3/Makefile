@@ -1,10 +1,10 @@
 PROJECT=pycr
-NETWORK=pycr_net_2
+NETWORK=pycr_net_3
 MINIGAME=pwcrack
 CONTAINER=honeypot2
 VERSION=0.0.1
-LEVEL=2
-IP=172.18.2.12
+LEVEL=3
+IP=172.18.3.12
 SUFFIX=_3
 
 all: run

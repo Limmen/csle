@@ -183,6 +183,6 @@ class PyCrPwCrackSimpleV4:
         env_config.cost_coefficient = 0
         env_config.detection_reward = 0
 
-        env_config.max_episode_length = 500
+        env_config.max_episode_length = 5000
 
         return env_config

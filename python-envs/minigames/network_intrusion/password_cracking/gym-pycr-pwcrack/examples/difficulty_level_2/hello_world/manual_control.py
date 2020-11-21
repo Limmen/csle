@@ -13,7 +13,7 @@ def manual_control():
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+                                   server_connection=False, port_forward_next_port=8000)
 
     #env = gym.make("pycr-pwcrack-medium-cluster-base-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-medium-cluster-v1", env_config=None, cluster_config=cluster_config)

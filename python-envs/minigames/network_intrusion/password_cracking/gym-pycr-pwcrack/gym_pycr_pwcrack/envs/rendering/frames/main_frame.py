@@ -27,7 +27,7 @@ class MainFrame(pyglet.window.Window):
         """
 
         # call constructor of parent class
-        super(MainFrame, self).__init__(height=800, width=1300, caption=constants.RENDERING.CAPTION)
+        super(MainFrame, self).__init__(height=900, width=1400, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
         self.env = env
         self.init_state = init_state
@@ -157,7 +157,7 @@ class MainFrame(pyglet.window.Window):
 
         # Draw router
         y_sep = 40
-        create_circle_fill(self.width / 2 + 20, self.height - 60, 7, self.batch, self.first_foreground,
+        create_circle_fill(self.width / 2 + 20, self.height - 60, 3, self.batch, self.first_foreground,
                            constants.RENDERING.WHITE)
         lbl = batch_label("", self.width / 2 + 40,
                     self.height - 60, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
@@ -173,52 +173,56 @@ class MainFrame(pyglet.window.Window):
         self.gui_queue_reset.append((lbl, None, (self.width / 2 + 20, self.height - 60)))
 
         # --- Draw adjacency matrix
-        adj_matrix_x_start = 150
-        adj_matrix_y_start = self.height - 45
-        h = 15
-        w = 15
+        if self.env_config.render_config.render_adj_matrix:
+            adj_matrix_x_start = 150
+            adj_matrix_y_start = self.height - 45
+            h = 15
+            w = 15
 
-        # Draw Adjacency Matrix label
-        batch_label("Adjacency Matrix:", adj_matrix_x_start + ((self.env_config.num_nodes+1)*w)/2,
-                    self.height - 10, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
+            # Draw Adjacency Matrix label
+            batch_label("Adjacency Matrix:", adj_matrix_x_start + ((self.env_config.num_nodes+1)*w)/2,
+                        self.height - 10, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
 
-        self.adj_matrix_labels = []
-        self.adj_matrix_columns = []
-        self.adj_matrix_rows = []
-        y_adj = adj_matrix_y_start
-        for m in range(self.env_config.num_nodes+1):
-            row = batch_label(".xxx", adj_matrix_x_start -10, y_adj - m*h + w/3, 5,
-                            (0, 0, 0, 255), self.batch,
-                            self.second_foreground)
-            self.adj_matrix_rows.append(row)
-            col = batch_label(".xxx", adj_matrix_x_start + m * w + w/2, y_adj+20, 5,
-                              (0, 0, 0, 255), self.batch,
-                              self.second_foreground)
-            self.adj_matrix_columns.append(col)
-
-        for m in range(self.env_config.num_nodes+1):
-            row_labels = []
-            #y_adj = y_adj - (m * h) + w / 3
-            y_temp = y_adj - (m * h) + w / 3
-            for c in range(self.env_config.num_nodes+1):
-                batch_rect_border(adj_matrix_x_start + c * w, adj_matrix_y_start - (m * h), w, h, constants.RENDERING.BLACK, self.batch,
-                                  self.background)
-                l = batch_label("0", adj_matrix_x_start + w / 2 + c * (w), y_temp, 8,
+            self.adj_matrix_labels = []
+            self.adj_matrix_columns = []
+            self.adj_matrix_rows = []
+            y_adj = adj_matrix_y_start
+            for m in range(self.env_config.num_nodes+1):
+                row = batch_label(".xxx", adj_matrix_x_start -10, y_adj - m*h + w/3, 5,
                                 (0, 0, 0, 255), self.batch,
                                 self.second_foreground)
-                row_labels.append(l)
-            self.adj_matrix_labels.append(row_labels)
+                self.adj_matrix_rows.append(row)
+                col = batch_label(".xxx", adj_matrix_x_start + m * w + w/2, y_adj+20, 5,
+                                  (0, 0, 0, 255), self.batch,
+                                  self.second_foreground)
+                self.adj_matrix_columns.append(col)
 
-        adj_matrix_max_x = adj_matrix_x_start + (self.env_config.num_nodes+2) * w
-        adj_matrix_min_y = adj_matrix_y_start - (self.env_config.num_nodes + 2) * h
+            for m in range(self.env_config.num_nodes+1):
+                row_labels = []
+                #y_adj = y_adj - (m * h) + w / 3
+                y_temp = y_adj - (m * h) + w / 3
+                for c in range(self.env_config.num_nodes+1):
+                    batch_rect_border(adj_matrix_x_start + c * w, adj_matrix_y_start - (m * h), w, h, constants.RENDERING.BLACK, self.batch,
+                                      self.background)
+                    l = batch_label("0", adj_matrix_x_start + w / 2 + c * (w), y_temp, 8,
+                                    (0, 0, 0, 255), self.batch,
+                                    self.second_foreground)
+                    row_labels.append(l)
+                self.adj_matrix_labels.append(row_labels)
+
+            adj_matrix_max_x = adj_matrix_x_start + (self.env_config.num_nodes+2) * w
+            adj_matrix_min_y = adj_matrix_y_start - (self.env_config.num_nodes + 2) * h
+        else:
+            adj_matrix_max_x = 150
+            adj_matrix_min_y = self.height - 45
 
         # --- Draw Topology --
 
         # Draw nodes
         x_max = self.width - 100
         num_nodes_in_level = self.env_config.render_config.num_nodes_per_level
-        x_sep = 100
-        y_sep = 35
+        x_sep = 50
+        y_sep = 25
         max_nodes_per_level = int(x_max / x_sep + 1)
         middle = self.width / 2
         x_start = middle - (((num_nodes_in_level - 1) / 2) * x_sep)
@@ -233,7 +237,7 @@ class MainFrame(pyglet.window.Window):
                 for n in range(num_nodes_in_level):
                     # if x > x_max:
                     #     x = x_start
-                    create_circle_fill(x, y, 7, self.batch, self.first_foreground, constants.RENDERING.WHITE)
+                    create_circle_fill(x, y, 3, self.batch, self.first_foreground, constants.RENDERING.WHITE)
                     lbl = batch_label("", x -20, y-6, 10, (0, 0, 0, 255), self.batch,
                                 self.second_foreground)
                     i=0
@@ -644,7 +648,7 @@ class MainFrame(pyglet.window.Window):
         for i in range(len(self.gui_queue_reset)):
             lbl, flag_sprite, (x, y) = self.gui_queue_reset[i]
             if flag_sprite != self.env_config.hacker_ip:
-                create_circle_fill(x, y, 7, self.batch, self.first_foreground,
+                create_circle_fill(x, y, 3, self.batch, self.first_foreground,
                                    constants.RENDERING.WHITE)
                 lbl.text = ""
             for _,links in self.node_ip_to_links.items():
@@ -658,11 +662,12 @@ class MainFrame(pyglet.window.Window):
                     batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
                                    constants.RENDERING.LINE_WIDTH)
 
-        for i in range(len(self.adj_matrix_labels)):
-            self.adj_matrix_rows[i].text = ".xxx"
-            self.adj_matrix_columns[i].text = ".xxx"
-            for lbl in self.adj_matrix_labels[i]:
-                lbl.text = "0"
+        if self.env_config.render_config.render_adj_matrix:
+            for i in range(len(self.adj_matrix_labels)):
+                self.adj_matrix_rows[i].text = ".xxx"
+                self.adj_matrix_columns[i].text = ".xxx"
+                for lbl in self.adj_matrix_labels[i]:
+                    lbl.text = "0"
 
         self.node_ip_to_links = {}
 
@@ -691,7 +696,7 @@ class MainFrame(pyglet.window.Window):
                 color = constants.RENDERING.BLACK
             if x.logged_in:
                 color = constants.RENDERING.GREEN
-            create_circle_fill(coords[0], coords[1], 7, self.batch, self.first_foreground, color)
+            create_circle_fill(coords[0], coords[1], 3, self.batch, self.first_foreground, color)
             lbl = self.node_ip_to_ip_lbl[machine.ip]
             lbl.text = "." + str(machine.ip.rsplit(".", 1)[-1])
             if machine.ip in self.node_ip_to_links:
@@ -703,14 +708,15 @@ class MainFrame(pyglet.window.Window):
                                    constants.RENDERING.LINE_WIDTH)
                         drawn_links.add((link[0], link[1], link[2], link[3]))
                         drawn_links.add((link[2], link[3], link[0], link[1]))
-            self.adj_matrix_columns[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
-            self.adj_matrix_rows[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
-            reachable = machine.reachable.copy()
-            if machine.ip == self.env_config.router_ip:
-                reachable = machine.reachable.union(self.state.obs_state.agent_reachable)
-            for machine2 in reachable:
-                if machine.ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
-                    self.adj_matrix_labels[self.node_ip_to_idx[machine.ip]][self.node_ip_to_idx[machine2]].text = "1"
+            if self.env_config.render_config.render_adj_matrix:
+                self.adj_matrix_columns[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
+                self.adj_matrix_rows[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
+                reachable = machine.reachable.copy()
+                if machine.ip == self.env_config.router_ip:
+                    reachable = machine.reachable.union(self.state.obs_state.agent_reachable)
+                for machine2 in reachable:
+                    if machine.ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
+                        self.adj_matrix_labels[self.node_ip_to_idx[machine.ip]][self.node_ip_to_idx[machine2]].text = "1"
             # if m.ip in self.firewall_sprites:
             #     fw_sprite = self.firewall_sprites[m.ip]
             #     fw_sprite.visible = True

@@ -4,7 +4,7 @@ MINIGAME=pwcrack
 CONTAINER=honeypot1
 VERSION=0.0.1
 LEVEL=3
-IP=172.18.3.8
+IP=172.18.3.9
 SUFFIX=_6
 
 all: run

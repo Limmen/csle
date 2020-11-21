@@ -1,3 +1,4 @@
+from typing import List
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.flag import Flag
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
@@ -12,12 +13,22 @@ from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.network.node import Node
 
 class PyCrPwCrackIntermediateBase:
     """
     Base configuration of level 2 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
     and all the config of the environment have to be hardcoded)
     """
+
+    @staticmethod
+    def nodes() -> List[Node]:
+        return []
+
+    @staticmethod
+    def adj_matrix() -> List:
+        return []
+
     @staticmethod
     def subnet_mask() -> str:
         """
@@ -31,7 +42,7 @@ class PyCrPwCrackIntermediateBase:
         """
         :return: num nodes
         """
-        return 11
+        return 33
 
     @staticmethod
     def hacker_ip() -> str:
@@ -213,7 +224,7 @@ class PyCrPwCrackIntermediateBase:
         """
         :return: the render config
         """
-        render_config = RenderConfig(num_levels=6, num_nodes_per_level=4)
+        render_config = RenderConfig(num_levels=6, num_nodes_per_level=10)
         return render_config
 
     @staticmethod
