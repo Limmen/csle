@@ -39,7 +39,8 @@ def default_config() -> ClientConfig:
                                                 n_deterministic_eval_iter=10)
     env_name = "pycr-pwcrack-simple-cluster-v4"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+                                   server_connection=False, warmup=True, warmup_iterations=500,
+                                   port_forward_next_port = 4000)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",

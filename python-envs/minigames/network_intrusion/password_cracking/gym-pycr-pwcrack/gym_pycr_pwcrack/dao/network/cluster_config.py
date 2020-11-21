@@ -15,7 +15,7 @@ class ClusterConfig:
                  server_ip: str = None,
                  server_connection : bool = False,
                  server_private_key_file : str = None, server_username : str = None,
-                 warmup = False, warmup_iterations :int = 500):
+                 warmup = False, warmup_iterations :int = 500, port_forward_next_port : int = 4000):
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -30,6 +30,7 @@ class ClusterConfig:
         self.cluster_cves = []
         self.warmup = warmup
         self.warmup_iterations = warmup_iterations
+        self.port_forward_next_port = port_forward_next_port
 
     def connect_server(self):
         """

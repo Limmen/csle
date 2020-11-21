@@ -81,7 +81,6 @@ class EnvConfig:
         self.use_nikto_cache = True
         self.nikto_scan_cache = NiktoScanCache()
         self.action_costs = ActionCosts()
-        self.port_forward_next_port = 4000
         self.flag_lookup = self._create_flags_lookup()
         self.use_file_system_cache = True
         self.filesystem_scan_cache = FileSystemScanCache()
@@ -137,8 +136,8 @@ class EnvConfig:
         """
         :return: Gets the next port to forward
         """
-        p = self.port_forward_next_port
-        self.port_forward_next_port +=1
+        p = self.cluster_config.port_forward_next_port
+        self.cluster_config.port_forward_next_port +=1
         return p
 
     def _create_flags_lookup(self) -> dict:
