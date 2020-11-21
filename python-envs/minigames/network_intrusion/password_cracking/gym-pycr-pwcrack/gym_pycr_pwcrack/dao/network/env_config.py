@@ -127,8 +127,8 @@ class EnvConfig:
         self.exploration_policy = None
         self.max_exploration_steps = 100
         self.max_exploration_trajectories = 10
-        self.load_cves_from_server = False
-        self.load_services_from_server = False
+        self.load_cves_from_server = True
+        self.load_services_from_server = True
         self.cache_misses = 0
 
 

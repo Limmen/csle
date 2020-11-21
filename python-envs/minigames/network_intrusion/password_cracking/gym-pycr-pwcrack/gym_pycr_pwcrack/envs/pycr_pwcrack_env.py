@@ -145,13 +145,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if self.env_config.save_trajectories:
             self.trajectories.append(self.trajectory)
 
-        if self.agent_state.time_step % 20 == 0:
-            #print(h.heap()[0].byvia)
-            print("cache sizes: {}, {}, {}, {}, {}".format(len(self.env_config.nmap_scan_cache.cache),
-                  len(self.env_config.filesystem_scan_cache.cache),
-                  len(self.env_config.nikto_scan_cache.cache),
-                  len(self.env_config.user_command_cache_files_cache), len(self.env_state.obs_state.actions_tried)))
-
         return m_obs, reward, done, info
 
     def reset(self) -> np.ndarray:
@@ -162,10 +155,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         """
         print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
               "cache_misses:{}".format(
-            len(self.env_config.nmap_scan_cache)), len(self.env_config.filesystem_scan_cache),
-            len(self.env_config.use_user_command_cache), len(self.env_config.nikto_scan_cache),
-            len(self.env_config.cache_misses)
-              )
+            len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
+            len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
+            self.env_config.cache_misses))
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:
