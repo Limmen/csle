@@ -5,16 +5,16 @@ import gym
 import numpy as np
 
 def test_env(env_name : str, num_steps : int):
-    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                   server_username="kim")
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                server_username="kim")
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-    #                                server_connection=False)
+    cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
     env.env_config.max_episode_length = 1000000000
     env.reset()
@@ -24,7 +24,7 @@ def test_env(env_name : str, num_steps : int):
     masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
     trajectory = []
     for i in range(num_steps):
-        print(i)
+        #print(i)
         legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
 
         legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
@@ -46,7 +46,7 @@ def test_env(env_name : str, num_steps : int):
         if not done and EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config):
             print("not done but got all flags???")
         trajectory.append(action)
-        #env.render()
+        env.render()
         if done:
             env.reset()
             trajectory = []
@@ -59,7 +59,7 @@ def test_all():
     #test_env("pycr-pwcrack-medium-cluster-v2", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-cluster-v3", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-cluster-v4", num_steps=1000000000)
-    test_env("pycr-pwcrack-medium-cluster-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-medium-cluster-v2", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-generated-sim-v1", num_steps=1000000000)
     #test_env("pycr-pwcrack-medium-cluster-base-v1", num_steps=1000000000)
 
