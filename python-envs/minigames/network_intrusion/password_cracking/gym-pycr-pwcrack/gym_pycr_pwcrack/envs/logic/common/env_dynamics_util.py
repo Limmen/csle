@@ -481,7 +481,7 @@ class EnvDynamicsUtil:
         if reward == 0:
             reward = env_config.base_step_reward - cost
         else:
-            reward = reward
+            reward = (-env_config.base_step_reward)*reward
             #reward = reward - cost
         return reward
 

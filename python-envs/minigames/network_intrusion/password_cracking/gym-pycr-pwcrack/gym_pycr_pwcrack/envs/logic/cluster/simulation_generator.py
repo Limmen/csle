@@ -1,9 +1,7 @@
-import sys
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.envs.logic.exploration.exploration_policy import ExplorationPolicy
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_pycr_pwcrack.dao.network.env_mode import EnvMode
 
 class SimulationGenerator:
     """

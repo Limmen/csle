@@ -105,7 +105,7 @@ class EnvConfig:
         self.detection_reward = -50
         self.all_flags_reward = 500
         self.sum_costs = 1
-        self.max_episode_length = 100
+        self.max_episode_length = 10000
         self.base_step_reward = -1
         self.illegal_reward_action = 0
         self.final_steps_reward_coefficient = 1
@@ -130,6 +130,7 @@ class EnvConfig:
         self.load_cves_from_server = True
         self.load_services_from_server = True
         self.cache_misses = 0
+        self.print_cache_details_freq = 500
 
 
     def get_port_forward_port(self) -> int:

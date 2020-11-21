@@ -34,6 +34,7 @@ from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_pwcrack.envs.logic.common.util as util
 from gym_pycr_pwcrack.envs.logic.cluster.simulation_generator import SimulationGenerator
 from gym_pycr_pwcrack.envs.logic.exploration.random_exploration_policy import RandomExplorationPolicy
+from gym_pycr_pwcrack.envs.logic.cluster.cluster_warmup import ClusterWarmup
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -94,6 +95,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.last_obs = self.env_state.get_observation()
         self.trajectory = []
         self.trajectories = []
+        if self.env_config.cluster_config.warmup and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.CLUSTER):
+            ClusterWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions),
+                                 num_warmup_steps=env_config.cluster_config.warmup_iterations,
+                                 env=self, render = False)
+            print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
+                  "cache_misses:{}".format(
+                len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
+                len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
+                self.env_config.cache_misses))
         if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
                                                            env_config=self.env_config, env=self)
@@ -153,11 +163,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
-        print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
-              "cache_misses:{}".format(
-            len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
-            len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
-            self.env_config.cache_misses))
+        if self.agent_state.num_episodes % self.env_config.print_cache_details_freq == 0:
+            print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
+                  "cache_misses:{}".format(
+                len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
+                len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
+                self.env_config.cache_misses))
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:

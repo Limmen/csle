@@ -166,18 +166,18 @@ class PyCrPwCrackMediumV4:
         env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.2.1"]
 
-        env_config.flag_found_reward_mult = 1
-        env_config.shell_access_found_reward_mult = 1
-        env_config.new_tools_installed_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
+        env_config.flag_found_reward_mult = 2
+        env_config.shell_access_found_reward_mult = 2
+        env_config.new_tools_installed_reward_mult = 2
+        env_config.new_backdoors_installed_reward_mult = 2
         env_config.all_flags_reward = 20
         env_config.base_step_reward = -10
-        env_config.final_steps_reward_coefficient = 1
+        env_config.final_steps_reward_coefficient = 2
         env_config.illegal_reward_action = -10
-        env_config.new_login_reward_mult = 1
-        env_config.machine_found_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
-        env_config.new_tools_installed_reward_mult  =1
+        env_config.new_login_reward_mult = 2
+        env_config.machine_found_reward_mult = 0
+        env_config.new_backdoors_installed_reward_mult = 2
+        env_config.new_tools_installed_reward_mult = 2
 
         env_config.port_found_reward_mult = 0
         env_config.os_found_reward_mult = 0
@@ -186,4 +186,6 @@ class PyCrPwCrackMediumV4:
         env_config.root_found_reward_mult = 0
         env_config.cost_coefficient = 0
         env_config.detection_reward = 0
+
+        env_config.max_episode_length = 10000
         return env_config

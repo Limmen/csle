@@ -14,7 +14,8 @@ class ClusterConfig:
     def __init__(self, agent_ip : str,  agent_username: str, agent_pw : str,
                  server_ip: str = None,
                  server_connection : bool = False,
-                 server_private_key_file : str = None, server_username : str = None):
+                 server_private_key_file : str = None, server_username : str = None,
+                 warmup = False, warmup_iterations :int = 500):
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -27,6 +28,8 @@ class ClusterConfig:
         self.relay_channel = None
         self.cluster_services = []
         self.cluster_cves = []
+        self.warmup = warmup
+        self.warmup_iterations = warmup_iterations
 
     def connect_server(self):
         """
