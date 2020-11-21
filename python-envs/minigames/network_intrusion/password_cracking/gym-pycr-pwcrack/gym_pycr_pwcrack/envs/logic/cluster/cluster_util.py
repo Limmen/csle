@@ -48,6 +48,7 @@ class ClusterUtil:
         :param conn: the ssh connection
         :return: outdata, errdata, total_time
         """
+        print("cache miss cmd:{}".format(cmd))
         transport_conn = conn.get_transport()
         session = transport_conn.open_session()
         start = time.time()
@@ -226,6 +227,8 @@ class ClusterUtil:
         if query in env_config.nmap_cache:
             return query
 
+        print("cache disk miss:{}, ip:{}, machine_ip:{}, cache_list:{}, dir:{}".format(query, a.ip, machine_ip, cache_list, dir))
+
         return None
 
     @staticmethod
@@ -253,6 +256,8 @@ class ClusterUtil:
         # Search through updated cache
         if query in env_config.filesystem_file_cache:
             return query
+
+        print("file system action cache miss:{}, {}, {}".format(a.name, ip, query))
 
         return None
 
@@ -858,6 +863,7 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
+            print("cache miss:{}".format(cache_result))
             cmd = a.nmap_cmd()
             if masscan:
                 cmd = a.masscan_cmd()
@@ -1042,7 +1048,7 @@ class ClusterUtil:
                                                         root=True, port=22, service=constants.SSH.SERVICE_NAME,
                                                         proxy= None, ip=env_config.cluster_config.agent_ip)]
         for m in s.obs_state.machines:
-            ssh_connections_sorted_by_root = sorted(m.ssh_connections, key=lambda x: (x.root, x.username),
+            ssh_connections_sorted_by_root = sorted(m.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username),
                                                     reverse=True)
             if len(ssh_connections_sorted_by_root) > 0:
                 proxy_connections.append(ssh_connections_sorted_by_root[0])
@@ -1444,7 +1450,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """        
         total_cost = 0
-        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: (x.root, x.username), reverse=True)
+        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
         root_scan = False
         for c in ssh_connections_sorted_by_root:
             cache_file = \
@@ -1472,13 +1478,14 @@ class ClusterUtil:
                     flag_paths = outdata_str.split("\n")
                     flag_paths = list(filter(lambda x: x != '', flag_paths))
                     if len(flag_paths) > 0:
-                        # Persist cache
-                        ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
-                                                                 service=constants.SSH.SERVICE_NAME, user=c.username,
-                                                                 files=flag_paths, ip=machine.ip)
                         break
                     else:
                         time.sleep(1)
+
+                # Persist cache
+                ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
+                                                         service=constants.SSH.SERVICE_NAME, user=c.username,
+                                                         files=flag_paths, ip=machine.ip)
 
             # Check for flags
             for fp in flag_paths:
@@ -1511,7 +1518,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
-        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: (x.root, x.username),
+        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username),
                                                    reverse=True)
         root_scan = False
         for c in telnet_connections_sorted_by_root:
@@ -1576,7 +1583,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
-        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: (x.root, x.username), reverse=True)
+        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
         root_scan = False
         for c in ftp_connections_sorted_by_root:
             cache_file = \
@@ -2224,10 +2231,10 @@ class ClusterUtil:
                 cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
             cache_id = (a.id, a.index, a.ip, a.subnet, machine.ip)
 
-            if machine.logged_in and machine.tools_installed:
+            if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
 
                 # Start with ssh connections
-                ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: (x.root, x.username), reverse=True)
+                ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
                 for c in ssh_connections_sorted_by_root:
 
                     # Check in-memory cache

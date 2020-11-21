@@ -37,7 +37,6 @@ class NmapPort:
     def to_obs(self) -> PortObservationState:
         open = self.status == NmapPortStatus.UP
         if self.service_name not in constants.SERVICES.service_lookup:
-            print("unknown service:{}".format(self.service_name))
             self.service_name = "unknown"
         hp_enum = ""
         if self.http_enum is not None:

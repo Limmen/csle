@@ -142,6 +142,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         info["flags"] = self.env_state.obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.trajectories.append(self.trajectory)
+
+        if self.agent_state.time_step % 100 == 0:
+            print("cache sizes: {}, {}, {}, {}, {}".format(len(self.env_config.nmap_scan_cache.cache),
+                  len(self.env_config.filesystem_scan_cache.cache),
+                  len(self.env_config.nikto_scan_cache.cache),
+                  len(self.env_config.user_command_cache_files_cache), len(self.env_state.obs_state.actions_tried)))
+
         return m_obs, reward, done, info
 
     def reset(self) -> np.ndarray:
