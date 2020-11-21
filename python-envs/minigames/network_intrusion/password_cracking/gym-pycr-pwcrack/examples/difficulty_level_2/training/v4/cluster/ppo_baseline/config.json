@@ -93,6 +93,7 @@
         "agent_username": "agent",
         "cluster_cves": [],
         "cluster_services": [],
+        "port_forward_next_port": 4000,
         "py/object": "gym_pycr_pwcrack.dao.network.cluster_config.ClusterConfig",
         "relay_channel": null,
         "server_conn": null,
