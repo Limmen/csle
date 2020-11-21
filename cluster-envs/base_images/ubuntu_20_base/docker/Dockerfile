@@ -42,6 +42,7 @@ RUN apt-get -y install git
 RUN apt-get -y install telnet
 RUN apt-get -y install xinetd telnetd
 RUN apt-get -y install lftp
+RUN apt-get -y install zip
 
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh

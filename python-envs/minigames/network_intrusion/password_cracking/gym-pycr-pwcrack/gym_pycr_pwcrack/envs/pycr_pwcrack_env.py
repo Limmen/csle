@@ -72,9 +72,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.step_outcome = None
         if self.env_config.env_mode == EnvMode.CLUSTER or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             self.env_config.cluster_config.connect_agent()
-            self.env_config.cluster_config.download_cluster_services()
+            if self.env_config.load_services_from_server:
+                self.env_config.cluster_config.download_cluster_services()
             self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
-            self.env_config.cluster_config.download_cves()
+            if self.env_config.load_cves_from_server:
+                self.env_config.cluster_config.download_cves()
             self.env_state.merge_cves_with_cluster(self.env_config.cluster_config.cluster_cves)
             self.env_config.action_costs = self.env_config.cluster_config.load_action_costs(
                 actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
@@ -143,7 +145,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if self.env_config.save_trajectories:
             self.trajectories.append(self.trajectory)
 
-        if self.agent_state.time_step % 100 == 0:
+        if self.agent_state.time_step % 20 == 0:
+            #print(h.heap()[0].byvia)
             print("cache sizes: {}, {}, {}, {}, {}".format(len(self.env_config.nmap_scan_cache.cache),
                   len(self.env_config.filesystem_scan_cache.cache),
                   len(self.env_config.nikto_scan_cache.cache),
@@ -157,6 +160,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
+        print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
+              "cache_misses:{}".format(
+            len(self.env_config.nmap_scan_cache)), len(self.env_config.filesystem_scan_cache),
+            len(self.env_config.use_user_command_cache), len(self.env_config.nikto_scan_cache),
+            len(self.env_config.cache_misses)
+              )
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:
@@ -177,6 +186,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.viewer.mainframe.reset_state()
         if self.env_config.env_mode == EnvMode.SIMULATION:
             self.env_state.obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
+        self.env_config.cache_misses = 0
         return m_obs
 
     def render(self, mode: str = 'human'):

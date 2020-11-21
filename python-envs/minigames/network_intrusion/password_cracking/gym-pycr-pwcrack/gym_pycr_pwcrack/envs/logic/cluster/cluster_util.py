@@ -48,7 +48,6 @@ class ClusterUtil:
         :param conn: the ssh connection
         :return: outdata, errdata, total_time
         """
-        print("cache miss cmd:{}".format(cmd))
         transport_conn = conn.get_transport()
         session = transport_conn.open_session()
         start = time.time()
@@ -227,7 +226,7 @@ class ClusterUtil:
         if query in env_config.nmap_cache:
             return query
 
-        print("cache disk miss:{}, ip:{}, machine_ip:{}, cache_list:{}, dir:{}".format(query, a.ip, machine_ip, cache_list, dir))
+        env_config.cache_misses += 1
 
         return None
 
@@ -257,7 +256,7 @@ class ClusterUtil:
         if query in env_config.filesystem_file_cache:
             return query
 
-        print("file system action cache miss:{}, {}, {}".format(a.name, ip, query))
+        env_config.cache_misses += 1
 
         return None
 
@@ -286,6 +285,8 @@ class ClusterUtil:
         # Search through updated cache
         if query in env_config.user_command_cache_files_cache:
             return query
+
+        env_config.cache_misses += 1
 
         return None
 
@@ -863,7 +864,6 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
-            print("cache miss:{}".format(cache_result))
             cmd = a.nmap_cmd()
             if masscan:
                 cmd = a.masscan_cmd()
