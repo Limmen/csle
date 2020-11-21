@@ -115,4 +115,6 @@ class PyCrPwCrackIntermediateV1:
         env_config.root_found_reward_mult = 0
         env_config.cost_coefficient = 0
         env_config.detection_reward = 0
+
+        env_config.max_episode_length = 10000
         return env_config

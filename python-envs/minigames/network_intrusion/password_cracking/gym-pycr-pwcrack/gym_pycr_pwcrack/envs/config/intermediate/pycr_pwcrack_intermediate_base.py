@@ -251,4 +251,6 @@ class PyCrPwCrackIntermediateBase:
         env_config.vulners_miss_p = 0.0
         env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.3.1"]
+
+        env_config.max_episode_length = 10000
         return env_config

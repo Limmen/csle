@@ -5,6 +5,7 @@ from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np
 import random
+import time
 
 class ExploreThread(threading.Thread):
 
@@ -69,7 +70,7 @@ class ExploreThread(threading.Thread):
         env.close()
 
 
-def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 100000):
+def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10000000):
     threads = []
     for thread_id in range(num_threads):
         # Seed python RNG
@@ -78,9 +79,11 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         np.random.seed(thread_id*67)
         thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=5000 + thread_id*100)
         thread.start()
+        time.sleep(120)
         threads.append(thread)
     for t in threads:
         t.join()
 
 if __name__ == '__main__':
-    start_explore_threads(num_threads=10, env_name="pycr-pwcrack-intermediate-cluster-v1")
+    start_explore_threads(num_threads=20, env_name="pycr-pwcrack-intermediate-cluster-v4",
+                          num_steps=10000000)
