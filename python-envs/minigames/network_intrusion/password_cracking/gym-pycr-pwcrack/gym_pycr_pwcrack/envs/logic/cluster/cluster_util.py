@@ -2619,12 +2619,14 @@ class ClusterUtil:
         """
         cmd = constants.SHELL.CHECK_FOR_SECLISTS
         if not telnet:
-            for i in range(2):
+            for i in range(5):
                 outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
                 checklists_installed = "file exists" in outdata.decode() or "file exists" in errdata.decode()
                 if checklists_installed:
                     break
-            return "file exists" in outdata.decode() or "file exists" in errdata.decode()
+                else:
+                    print("checklists not installed:{}, {}".format(outdata.decode(), errdata.decode()))
+            return checklists_installed
         else:
             cmd = cmd + "\n"
             conn.write(cmd.encode())
