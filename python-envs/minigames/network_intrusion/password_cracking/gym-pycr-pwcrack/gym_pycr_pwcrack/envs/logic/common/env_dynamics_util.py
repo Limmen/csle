@@ -575,7 +575,7 @@ class EnvDynamicsUtil:
                 or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.telnet_brute_tried = True
         elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.irc_brute_tried = True
         elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:

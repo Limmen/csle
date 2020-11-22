@@ -804,7 +804,7 @@ class ClusterUtil:
         new_m_obs = []
         for host in scan_result.hosts:
             m_obs = host.to_obs()
-            m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
+            #m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -812,25 +812,9 @@ class ClusterUtil:
         total_new_tools_installed, total_new_backdoors_installed = \
             EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
                                                    action=a)
-        new_machines_obs_1 = []
-        reachable = s.obs_state.agent_reachable
-        reachable.add(env_config.router_ip)
-
-        for machine in new_machines_obs:
-            if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
-                reachable = reachable.union(machine.reachable)
-
-        for machine in new_machines_obs:
-            if machine.logged_in and machine.tools_installed:
-                machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
-
-            if machine.ip in reachable:
-                machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
-            new_machines_obs_1.append(machine)
-
 
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs_1
+        s_prime.obs_state.machines = new_machines_obs
 
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
@@ -2234,6 +2218,23 @@ class ClusterUtil:
                         #         print("total_results machines: {}".format(list(map(lambda x: x.ip_addr, tm.hosts))))
                         else:
                             machine.reachable.update(res.reachable)
+                new_machines_obs_1 = []
+                reachable = s.obs_state.agent_reachable
+                reachable.add(env_config.router_ip)
+
+                for machine in s_prime.obs_state.machines:
+                    if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
+                        reachable = reachable.union(machine.reachable)
+
+                for machine in s_prime.obs_state.machines:
+                    if machine.logged_in and machine.tools_installed:
+                        machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
+
+                    if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
+                        machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
+                    new_machines_obs_1.append(machine)
+                s_prime.obs_state.machines = new_machines_obs_1
+
                 return s_prime, reward, False
 
         new_machines_obs = []
@@ -2310,6 +2311,23 @@ class ClusterUtil:
             env_config.nmap_scan_cache.add(base_cache_id, (merged_scan_result, total_results))
         s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
+        new_machines_obs_1 = []
+        reachable = s.obs_state.agent_reachable
+        reachable.add(env_config.router_ip)
+
+        for machine in s_prime.obs_state.machines:
+            if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
+                reachable = reachable.union(machine.reachable)
+
+        for machine in s_prime.obs_state.machines:
+            if machine.logged_in and machine.tools_installed:
+                machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
+
+            if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
+                machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
+            new_machines_obs_1.append(machine)
+        s_prime.obs_state.machines = new_machines_obs_1
+
         return s_prime, reward, False
 
     @staticmethod

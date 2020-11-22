@@ -20,7 +20,7 @@ def manual_control():
     #                                server_username="kim")
 
     #env = gym.make("pycr-pwcrack-medium-cluster-base-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-pwcrack-intermediate-cluster-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-intermediate-cluster-v4", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-medium-sim-v1", env_config=None, cluster_config=cluster_config)
 
     #env = gym.make("pycr-pwcrack-medium-sim-base-v1", env_config=None)
