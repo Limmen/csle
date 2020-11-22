@@ -16,3 +16,6 @@ class Flag:
             return NotImplemented
 
         return self.id == other.id and self.name == other.name and self.path == other.path
+
+    def __hash__(self):
+        return hash(self.id) + 31 * hash(self.name) + 31 * hash(self.path)

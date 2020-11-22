@@ -110,7 +110,7 @@ class PyCrPwCrackMediumV2:
         env_config.new_backdoors_installed_reward_mult = 2
         env_config.all_flags_reward = 20
         env_config.base_step_reward = -10
-        env_config.final_steps_reward_coefficient = 2
+        env_config.final_steps_reward_coefficient = 0
         env_config.illegal_reward_action = -10
         env_config.new_login_reward_mult = 2
         env_config.machine_found_reward_mult = 0

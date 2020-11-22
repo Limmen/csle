@@ -12,7 +12,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.995, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.995, alpha=0.005, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -23,8 +23,8 @@ def default_config() -> ClientConfig:
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=150, input_dim=11 * 40,
                                                 output_dim=42,
-                                                pi_hidden_dim=32, pi_hidden_layers=1,
-                                                vf_hidden_dim=32, vf_hidden_layers=1,
+                                                pi_hidden_dim=64, pi_hidden_layers=1,
+                                                vf_hidden_dim=64, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=64,
                                                 batch_size=200,
                                                 gpu=False, tensorboard=True,
@@ -33,7 +33,7 @@ def default_config() -> ClientConfig:
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=20,
+                                                eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1

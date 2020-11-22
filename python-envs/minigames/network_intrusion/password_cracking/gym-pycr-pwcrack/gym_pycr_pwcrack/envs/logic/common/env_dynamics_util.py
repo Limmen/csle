@@ -51,6 +51,14 @@ class EnvDynamicsUtil:
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, total_new_tools_installed, \
         total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
+        new_machines_obs = EnvDynamicsUtil.merge_duplicate_machines(machines=new_machines_obs, action=action)
+
+        ips = set(list(map(lambda x: x.ip, new_machines_obs)))
+        if len(ips) != len(new_machines_obs):
+            print("len ips:{}, ips {}".format(len(ips), ips))
+            print("len new machines:{}".format(len(new_machines_obs)))
+
+
         # Add updated machines to merged state
         for n_m in new_machines_obs:
             if n_m.ip == env_config.hacker_ip or n_m.ip in env_config.blacklist_ips:
@@ -311,9 +319,12 @@ class EnvDynamicsUtil:
         :return: the merged machine observation with updated flags, number of new flag points
         """
         new_flag_points = 0
+        #print("len flags found:{}".format(len(n_m.flags_found)))
         for flag in n_m.flags_found:
             if flag not in o_m.flags_found:
+                #print("new flag:{}, {}, {}".format(flag.name, flag.id, flag.path))
                 new_flag_points += flag.score
+        #print("done".format(len(n_m.flags_found)))
         n_m.flags_found = n_m.flags_found.union(o_m.flags_found)
         return n_m, new_flag_points
 
@@ -690,4 +701,20 @@ class EnvDynamicsUtil:
                 or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.CASSANDRA.SERVICE_NAME
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN
+
+
+    @staticmethod
+    def merge_duplicate_machines(machines : List[MachineObservationState], action: Action):
+        merged_machines = []
+        ips = set()
+        for m in machines:
+            if m.ip not in ips:
+                merged_m = m
+                for m2 in machines:
+                    if m2.ip == merged_m.ip:
+                        merged_m, _, _, _, _, _, _, _, _, _, _ = \
+                            EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(merged_m, m2, action)
+                merged_machines.append(merged_m)
+                ips.add(m.ip)
+        return merged_machines
 
