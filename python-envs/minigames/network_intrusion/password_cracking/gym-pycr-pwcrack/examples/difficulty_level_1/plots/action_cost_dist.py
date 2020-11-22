@@ -14,8 +14,11 @@ def read_action_costs(zip_file: str, num_bins = 100):
     costs  = []
     for cf in cost_files:
         cost_txt = archive.read(cf)
-        cost=float(cost_txt.decode().replace("\n",""))
-        costs.append(cost)
+        try:
+            cost=float(cost_txt.decode().replace("\n",""))
+            costs.append(cost)
+        except:
+            pass
     bins = np.linspace(min(costs), max(costs), num_bins)
     digitized = np.digitize(costs, bins)
     return digitized
@@ -46,23 +49,23 @@ def plot_freq_dist(d1, d2, num_bins):
     #(mu, sigma) = norm.fit(data)
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 3))
-    plt.rcParams.update({'font.size': 17})
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 4.5))
+    plt.rcParams.update({'font.size': 12})
     # Plot histogram of average episode lengths
 
     weights_1 = np.ones_like(d1) / float(len(d1))
     ax.hist(d1, bins=num_bins, weights=weights_1, color='cornflowerblue', alpha=0.75,
             label=r"$\upsilon_1$", stacked=True, log=True)
 
-    weights_2 = np.ones_like(d2) / float(len(d2))
-    ax.hist(d2, bins=num_bins, weights=weights_2, color='r', alpha=0.5,
-            label=r"$\upsilon_2$", stacked=True, log=True)
+    # weights_2 = np.ones_like(d2) / float(len(d2))
+    # ax.hist(d2, bins=num_bins, weights=weights_2, color='r', alpha=0.5,
+    #         label=r"$\upsilon_2$", stacked=True, log=True)
 
     ax.set_title("Action Costs")
-    ax.set_xlabel("Time Cost (s)")
-    ax.set_ylabel("Normalized Frequency")
+    ax.set_xlabel("Time Cost (s)", fontsize=20)
+    ax.set_ylabel("Normalized Frequency", fontsize=20)
     #ax.set_xscale('log')
-    ax.legend()
+    #ax.legend()
 
     # set the grid on
     ax.grid('on')
@@ -95,6 +98,58 @@ if __name__ == '__main__':
     #     subnet_mask=PyCrPwCrackSimpleBase.subnet_mask(),
     #     hacker_ip=PyCrPwCrackSimpleBase.hacker_ip()
     # ))
-    d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/agent_cache.zip", num_bins=100)
-    d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/agent_cache.zip", num_bins=100)
-    plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
+    # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/agent_cache.zip", num_bins=100)
+    # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/agent_cache.zip", num_bins=100)
+    #plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
+    d_1 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/agent_cache.zip",
+        num_bins=100)
+    d_2 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/ssh1_cache.zip",
+        num_bins=100)
+    d_3 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/ssh2_cache.zip",
+        num_bins=100)
+    d_4 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/ssh3_cache.zip",
+        num_bins=100)
+    d_5 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/telnet1_cache.zip",
+        num_bins=100)
+    d_6 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/telnet2_cache.zip",
+        num_bins=100)
+    d_7 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/telnet3_cache.zip",
+        num_bins=100)
+
+    # d_8 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/agent_cache.zip",
+    #     num_bins=100)
+    # d_9 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/ssh1_cache.zip",
+    #     num_bins=100)
+    # d_10 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/ssh2_cache.zip",
+    #     num_bins=100)
+    # d_11 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/ssh3_cache.zip",
+    #     num_bins=100)
+    # d_12 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/telnet1_cache.zip",
+    #     num_bins=100)
+    # d_13 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/telnet2_cache.zip",
+    #     num_bins=100)
+    # d_14 = read_action_costs(
+    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_3/telnet3_cache.zip",
+    #     num_bins=100)
+
+    d_15 = read_action_costs(
+        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/agent_cache.zip",
+        num_bins=100)
+    #print(d_1.shape)
+    total = list(d_1) + list(d_2) + list(d_3) + list(d_4) + list(d_5) + list(d_6) + list(d_7) + list(d_15)
+    plot_freq_dist(d1=total, d2=None, num_bins=100)
+    #print(len(total))
+

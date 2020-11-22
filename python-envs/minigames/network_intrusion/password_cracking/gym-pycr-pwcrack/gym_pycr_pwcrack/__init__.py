@@ -31,6 +31,13 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Simple, Mode: Cluster, No Cache Version: 1 ------------
+register(
+    id='pycr-pwcrack-simple-cluster-nocache-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleClusterNoCache1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Simple, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-pwcrack-simple-generated-sim-v1',

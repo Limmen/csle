@@ -5,4 +5,4 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCrPwCrackSi
     PyCRPwCrackSimpleGeneratedSim1Env, PyCRPwCrackMediumGeneratedSim1Env, PyCRPwCrackMediumSim1Env, \
     PyCRPwCrackMediumCluster2Env, PyCRPwCrackMediumCluster3Env, PyCRPwCrackMediumCluster4Env, \
     PyCRPwCrackIntermediateClusterBaseEnv, PyCRPwCrackIntermediateCluster1Env, PyCRPwCrackIntermediateCluster2Env, \
-    PyCRPwCrackIntermediateCluster3Env, PyCRPwCrackIntermediateCluster4Env
+    PyCRPwCrackIntermediateCluster3Env, PyCRPwCrackIntermediateCluster4Env, PyCRPwCrackSimpleClusterNoCache1Env

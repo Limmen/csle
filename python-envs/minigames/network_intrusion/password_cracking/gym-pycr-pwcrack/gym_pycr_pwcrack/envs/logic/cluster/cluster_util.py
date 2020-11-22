@@ -859,6 +859,7 @@ class ClusterUtil:
                                                                  partial_result=cache_value.copy(), masscan=masscan)
 
         # Check On-disk cache
+        cache_result = None
         if env_config.use_nmap_cache:
             cache_result = ClusterUtil.check_nmap_action_cache(a=a, env_config=env_config)
 

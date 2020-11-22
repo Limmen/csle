@@ -4,6 +4,7 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np
+import time
 
 class ExploreThread(threading.Thread):
 
@@ -72,6 +73,7 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
     for thread_id in range(num_threads):
         thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=5000 + thread_id*100)
         thread.start()
+        time.sleep(120)
         threads.append(thread)
     for t in threads:
         t.join()

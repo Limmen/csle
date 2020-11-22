@@ -19,7 +19,7 @@ def default_config() -> ClientConfig:
                                                 num_iterations=4000,
                                                 eval_render=True, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=200, video_frequency=10,
+                                                eval_frequency=50, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500, input_dim=5 * 8,
                                                 output_dim=22,
@@ -55,7 +55,7 @@ def default_config() -> ClientConfig:
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v1",
                                  run_many=True, random_seeds=[0, 999, 299],
-                                 random_seed=299, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
+                                 random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     #random_seeds = [0, 999, 299, 399, 499],
     return client_config
 
