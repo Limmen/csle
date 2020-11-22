@@ -124,18 +124,18 @@ class PyCrPwCrackIntermediateV3:
         env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.3.1"]
 
-        env_config.flag_found_reward_mult = 1
-        env_config.shell_access_found_reward_mult = 1
-        env_config.new_tools_installed_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
-        env_config.all_flags_reward = 20
+        env_config.shell_access_found_reward_mult = 0
+        env_config.new_tools_installed_reward_mult = 0
+        env_config.new_backdoors_installed_reward_mult = 0
+        env_config.new_login_reward_mult = 0
+        env_config.machine_found_reward_mult = 0
+
+        env_config.final_steps_reward_coefficient = 0
+
+        env_config.flag_found_reward_mult = 3
+        env_config.all_flags_reward = 0
         env_config.base_step_reward = -10
-        env_config.final_steps_reward_coefficient = 1
         env_config.illegal_reward_action = -10
-        env_config.new_login_reward_mult = 1
-        env_config.machine_found_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
-        env_config.new_tools_installed_reward_mult  =1
 
         env_config.port_found_reward_mult = 0
         env_config.os_found_reward_mult = 0

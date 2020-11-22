@@ -1,6 +1,6 @@
 {
     "agent_config": {
-        "alpha": 0.005,
+        "alpha": 0.0005,
         "ar_policy": false,
         "batch_size": 200,
         "buffer_size": 1000000,
@@ -11,11 +11,11 @@
         "eps_clip": 0.2,
         "epsilon": 1,
         "epsilon_decay": 0.9999,
-        "eval_episodes": 0,
+        "eval_episodes": 1,
         "eval_epsilon": 0.0,
         "eval_frequency": 100,
         "eval_log_frequency": 1,
-        "eval_render": false,
+        "eval_render": true,
         "eval_sleep": 0.0,
         "exploration_final_eps": 0.05,
         "exploration_fraction": 0.1,

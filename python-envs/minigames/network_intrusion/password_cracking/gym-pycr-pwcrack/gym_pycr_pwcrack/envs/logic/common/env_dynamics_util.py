@@ -53,12 +53,6 @@ class EnvDynamicsUtil:
 
         new_machines_obs = EnvDynamicsUtil.merge_duplicate_machines(machines=new_machines_obs, action=action)
 
-        ips = set(list(map(lambda x: x.ip, new_machines_obs)))
-        if len(ips) != len(new_machines_obs):
-            print("len ips:{}, ips {}".format(len(ips), ips))
-            print("len new machines:{}".format(len(new_machines_obs)))
-
-
         # Add updated machines to merged state
         for n_m in new_machines_obs:
             if n_m.ip == env_config.hacker_ip or n_m.ip in env_config.blacklist_ips:
@@ -518,7 +512,11 @@ class EnvDynamicsUtil:
                  env_config.new_backdoors_installed_reward_mult * num_new_backdoors_installed
         cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
         if reward == 0:
-            reward = env_config.base_step_reward - cost
+            if num_new_logged_in > 0 or num_new_backdoors_installed > 0 or num_new_shell_access > 0 \
+                    or num_new_tools_installed > 0:
+                reward = 0
+            else:
+                reward = env_config.base_step_reward - cost
         else:
             reward = (-env_config.base_step_reward)*reward
             #reward = reward - cost

@@ -81,6 +81,7 @@ class PyCrPwCrackSimpleV1:
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.COMPACT,
                                router_ip=PyCrPwCrackSimpleBase.router_ip())
+
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00
@@ -89,18 +90,18 @@ class PyCrPwCrackSimpleV1:
         env_config.num_flags = 3
         env_config.blacklist_ips = ["172.18.1.1"]
 
-        env_config.flag_found_reward_mult = 1
-        env_config.shell_access_found_reward_mult = 1
-        env_config.new_tools_installed_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
-        env_config.all_flags_reward = 20
+        env_config.shell_access_found_reward_mult = 0
+        env_config.new_tools_installed_reward_mult = 0
+        env_config.new_backdoors_installed_reward_mult = 0
+        env_config.new_login_reward_mult = 0
+        env_config.machine_found_reward_mult = 0
+
+        env_config.final_steps_reward_coefficient = 0
+
+        env_config.flag_found_reward_mult = 3
+        env_config.all_flags_reward = 0
         env_config.base_step_reward = -10
-        env_config.final_steps_reward_coefficient = 1
         env_config.illegal_reward_action = -10
-        env_config.new_login_reward_mult = 1
-        env_config.machine_found_reward_mult = 1
-        env_config.new_backdoors_installed_reward_mult = 1
-        env_config.new_tools_installed_reward_mult = 1
 
         env_config.port_found_reward_mult = 0
         env_config.os_found_reward_mult = 0
@@ -109,5 +110,7 @@ class PyCrPwCrackSimpleV1:
         env_config.root_found_reward_mult = 0
         env_config.cost_coefficient = 0
         env_config.detection_reward = 0
+
+        env_config.max_episode_length = 10000
 
         return env_config

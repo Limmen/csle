@@ -84,6 +84,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
         episode_length = 0
         for i in range(agent_config.render_steps):
             if agent_config.eval_render:
+                time.sleep(1)
                 env.render()
                 # time.sleep(agent_config.eval_sleep)
 
