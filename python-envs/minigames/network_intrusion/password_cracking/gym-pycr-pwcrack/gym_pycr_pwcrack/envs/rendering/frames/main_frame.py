@@ -27,7 +27,7 @@ class MainFrame(pyglet.window.Window):
         """
 
         # call constructor of parent class
-        super(MainFrame, self).__init__(height=900, width=1400, caption=constants.RENDERING.CAPTION)
+        super(MainFrame, self).__init__(height=850, width=1400, caption=constants.RENDERING.CAPTION)
         self.env_config = env_config
         self.env = env
         self.init_state = init_state

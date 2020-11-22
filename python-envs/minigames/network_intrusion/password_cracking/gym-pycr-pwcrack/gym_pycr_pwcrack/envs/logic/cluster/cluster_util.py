@@ -2361,7 +2361,7 @@ class ClusterUtil:
                 data = data.decode()
                 users = data.split("\n")
                 users = list(filter(lambda x: x != '', users))
-                if len(users) > 1:
+                if len(users) > 0:
                     # cache result
                     env_config.filesystem_scan_cache.add(cache_id, users)
                     return users
@@ -2378,6 +2378,7 @@ class ClusterUtil:
                 outdata = outdata.decode()
                 errdata = errdata.decode()
                 users = outdata.split("\n")
+                users = list(filter(lambda x: x != '', users))
             else:
                 cmd = cmd + "\n"
                 c.conn.write(cmd.encode())
@@ -2385,11 +2386,12 @@ class ClusterUtil:
                 response = response.decode()
                 users = response.split("\n")
                 users = list(map(lambda x: x.replace("\r", ""), users))
-            if len(users) == 1:
+                users = list(filter(lambda x: x != '', users))
+            if len(users) == 0:
                 continue
             else:
                 break
-        if len(users) == 1:
+        if len(users) == 0:
             raise ValueError("users empty, ip:{}, telnet:{}, root:{}, username:{}".format(c.ip, telnet, c.root,
                                                                                           c.username))
 

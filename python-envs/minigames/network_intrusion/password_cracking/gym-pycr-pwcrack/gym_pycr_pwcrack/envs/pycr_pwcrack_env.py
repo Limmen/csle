@@ -964,7 +964,7 @@ class PyCRPwCrackIntermediateCluster2Env(PyCRPwCrackEnv):
             render_config = PyCrPwCrackIntermediateBase.render_conf()
             if cluster_config is None:
                 cluster_config = PyCrPwCrackIntermediateBase.cluster_conf()
-            network_conf = PyCrPwCrackMediumBase.network_conf()
+            network_conf = PyCrPwCrackIntermediateBase.network_conf()
             action_conf = PyCrPwCrackIntermediateV2.actions_conf(num_nodes=PyCrPwCrackIntermediateBase.num_nodes(),
                                                                  subnet_mask=PyCrPwCrackIntermediateBase.subnet_mask(),
                                                                  hacker_ip=PyCrPwCrackIntermediateBase.hacker_ip())
@@ -1014,7 +1014,7 @@ class PyCRPwCrackIntermediateCluster4Env(PyCRPwCrackEnv):
                 cluster_config = PyCrPwCrackIntermediateBase.cluster_conf()
             network_conf = PyCrPwCrackIntermediateBase.network_conf()
             action_conf = PyCrPwCrackIntermediateV4.actions_conf(num_nodes=PyCrPwCrackIntermediateBase.num_nodes(),
-                                                                 subnet_mask=PyCrPwCrackMediumBase.subnet_mask(),
+                                                                 subnet_mask=PyCrPwCrackIntermediateBase.subnet_mask(),
                                                                  hacker_ip=PyCrPwCrackIntermediateBase.hacker_ip())
             env_config = PyCrPwCrackIntermediateV4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)

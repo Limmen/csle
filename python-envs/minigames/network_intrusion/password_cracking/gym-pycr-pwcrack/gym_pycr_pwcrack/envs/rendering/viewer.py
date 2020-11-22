@@ -61,7 +61,7 @@ class Viewer():
         self.mainframe = MainFrame(env_config=self.env_config, init_state=self.init_state, env=env)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
-        pyglet.clock.schedule_interval(self.mainframe.update, 1 / 60.)
+        pyglet.clock.schedule_interval(self.mainframe.update, 1 / 10.)
         pyglet.app.run()
 
     def window_closed_by_user(self) -> None:
