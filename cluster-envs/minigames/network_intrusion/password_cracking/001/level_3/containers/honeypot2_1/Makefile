@@ -16,7 +16,7 @@ shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash
 
 start:
-	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
+	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
 
 # Stop running containers
 stop:

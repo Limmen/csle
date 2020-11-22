@@ -213,15 +213,15 @@ class ClusterConfig:
         nikto_id_values = list(map(lambda x: x.value, nikto_ids))
         nmap_id_values = nmap_id_values+masscan_id_values+nikto_ids
         network_service_actions_id_values = list(map(lambda x: x.value, network_service_ids))
+        remote_file = None
         for file in file_list:
             parts = file.split("_")
             id = int(parts[0])
             if id in nmap_id_values:
-                idx = parts[1]
-                a = action_lookup_d_val[(int(id), int(idx))]
-                ip = parts[2]
-                remote_file = None
                 try:
+                    idx = parts[1]
+                    a = action_lookup_d_val[(int(id), int(idx))]
+                    ip = parts[2]
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
                     cost = round(float(cost_str), 1)
@@ -262,13 +262,13 @@ class ClusterConfig:
                 if "_cost" in line_str:
                     file_list.append(line_str)
             for file in file_list:
-                parts = file.split("_")
-                idx = parts[1]
-                ip = parts[2]
-                service = parts[3]
-                user = parts[4]
-                remote_file = None
                 try:
+                    parts = file.split("_")
+                    idx = parts[1]
+                    ip = parts[2]
+                    service = parts[3]
+                    user = parts[4]
+                    remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
                     cost = round(float(cost_str), 1)
@@ -292,12 +292,12 @@ class ClusterConfig:
                 if "_cost" in line_str:
                     file_list.append(line_str)
             for file in file_list:
-                parts = file.split("_")
-                idx = parts[1]
-                ip = parts[2]
-                user = parts[3]
-                remote_file = None
                 try:
+                    parts = file.split("_")
+                    idx = parts[1]
+                    ip = parts[2]
+                    user = parts[3]
+                    remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
                     cost = round(float(cost_str), 1)
