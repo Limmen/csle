@@ -26,8 +26,8 @@ def default_config() -> ClientConfig:
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
-                                                batch_size=2000,
-                                                gpu=False, tensorboard=True,
+                                                batch_size=500,
+                                                gpu=True, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
@@ -41,7 +41,7 @@ def default_config() -> ClientConfig:
     env_name = "pycr-pwcrack-medium-cluster-v4"
     cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, warmup=True, warmup_iterations=1000,
-                                   port_forward_next_port = 5000)
+                                   port_forward_next_port = 5100)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
@@ -54,8 +54,8 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v4",
-                                 run_many=True, random_seeds=[0, 999, 299],
-                                 random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
+                                 run_many=False, #random_seeds=[0, 999, 299],
+                                 random_seed=299, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     #random_seeds=[0, 999, 299, 399, 499],
     return client_config
 

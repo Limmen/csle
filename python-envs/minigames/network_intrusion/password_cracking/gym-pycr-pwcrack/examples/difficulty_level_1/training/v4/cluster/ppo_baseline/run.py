@@ -25,7 +25,7 @@ def default_config() -> ClientConfig:
                                                 output_dim=151,
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=512,
+                                                shared_hidden_layers=2, shared_hidden_dim=32,
                                                 batch_size=2000,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
