@@ -372,6 +372,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         :return: the global action id
         """
         key = (machine_idx, action_idx)
+        print(self.env_config.action_conf.ar_action_converter)
         return self.env_config.action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------

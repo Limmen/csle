@@ -16,7 +16,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=4000,
+                                                num_iterations=1000,
                                                 eval_render=True, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=200, video_frequency=10,
@@ -26,7 +26,7 @@ def default_config() -> ClientConfig:
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
-                                                batch_size=2000,
+                                                batch_size=1000,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -41,7 +41,7 @@ def default_config() -> ClientConfig:
     env_name = "pycr-pwcrack-simple-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, warmup=True, warmup_iterations=500,
-                                   port_forward_next_port = 4000)
+                                   port_forward_next_port = 3000)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",

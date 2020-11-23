@@ -12,8 +12,8 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.995, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+    agent_config = AgentConfig(gamma=0.995, alpha=0.01, epsilon=1, render=False, eval_sleep=0.0,
+                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                                 num_iterations=4000,
@@ -23,17 +23,17 @@ def default_config() -> ClientConfig:
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500, input_dim=11 * 40,
                                                 output_dim=100,
-                                                pi_hidden_dim=512, pi_hidden_layers=1,
-                                                vf_hidden_dim=512, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=512,
-                                                batch_size=2000,
+                                                pi_hidden_dim=256, pi_hidden_layers=1,
+                                                vf_hidden_dim=256, vf_hidden_layers=1,
+                                                shared_hidden_layers=2, shared_hidden_dim=256,
+                                                batch_size=500,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10,
+                                                eps_clip=0.2, optimization_iterations=20,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
