@@ -22,7 +22,7 @@ def default_config() -> ClientConfig:
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=200, input_dim=11 * 40,
-                                                output_dim=852,
+                                                output_dim=853,
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
