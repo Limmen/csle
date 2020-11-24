@@ -12,12 +12,12 @@ def manual_control():
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
-    #                                server_connection=False)
-    cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim")
+    cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
+    # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim")
     # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",

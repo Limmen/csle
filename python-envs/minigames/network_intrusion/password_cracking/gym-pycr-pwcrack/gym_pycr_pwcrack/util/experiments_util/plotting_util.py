@@ -497,7 +497,7 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
                color="black",
                linestyle="dashed")
 
-    ax.set_title(r"Episodic Rewards $\upsilon_1$")
+    ax.set_title(r"Episodic Rewards $\upsilon_2$")
     ax.set_xlabel("\# Iteration", fontsize=20)
     ax.set_ylabel("Avg Episode Reward", fontsize=20)
     ax.set_xlim(0, len(rewards_means_1))

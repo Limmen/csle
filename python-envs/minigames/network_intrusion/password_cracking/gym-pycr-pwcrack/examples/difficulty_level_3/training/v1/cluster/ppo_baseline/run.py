@@ -16,13 +16,13 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=4000,
-                                                eval_render=False, gifs=True,
+                                                num_iterations=1000,
+                                                eval_render=True, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=500, input_dim=11 * 40,
-                                                output_dim=303,
+                                                checkpoint_freq=200, input_dim=11 * 40,
+                                                output_dim=108,
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
@@ -38,10 +38,15 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
                                                 )
-    env_name = "pycr-pwcrack-medium-cluster-v4"
-    cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False, warmup=True, warmup_iterations=1000,
-                                   port_forward_next_port = 5100)
+    env_name = "pycr-pwcrack-intermediate-cluster-v1"
+    cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False, port_forward_next_port = 2000,
+                                   warmup=True, warmup_iterations=500)
+    # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim", warmup=True, warmup_iterations=500,
+    #                                port_forward_next_port=4000)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
@@ -53,10 +58,9 @@ def default_config() -> ClientConfig:
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline v4",
-                                 run_many=False, #random_seeds=[0, 999, 299],
-                                 random_seed=499, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
-    #random_seeds=[0, 999, 299, 399, 499],
+                                 title="PPO-Baseline intermediate v1",
+                                 run_many=False, random_seeds=[0, 999, 299],
+                                 random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
 
 
@@ -78,7 +82,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO medium v4 cluster"
+    experiment_title = "PPO intermediate v1 cluster"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

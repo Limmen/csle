@@ -189,32 +189,32 @@ def default_topology() -> Topology:
     node_13 = NodeFirewallConfig(ip="172.18.3.4", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT", default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_14 = NodeFirewallConfig(ip="172.18.3.5", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
                                  default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_15 = NodeFirewallConfig(ip="172.18.3.6", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
                                  default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_16 = NodeFirewallConfig(ip="172.18.3.8", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
                                  default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_17 = NodeFirewallConfig(ip="172.18.3.9", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
                                  default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_18 = NodeFirewallConfig(ip="172.18.3.178", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
                                  default_forward="ACCEPT",
-                                 default_gw="172.18.3.10")
+                                 default_gw=None)
     node_19 = NodeFirewallConfig(ip="172.18.3.11", output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(), default_input="ACCEPT", default_output="ACCEPT",
