@@ -22,7 +22,7 @@ def default_config() -> ClientConfig:
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=200, input_dim=11 * 40,
-                                                output_dim=108,
+                                                output_dim=276,
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
@@ -38,10 +38,10 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
                                                 )
-    env_name = "pycr-pwcrack-intermediate-cluster-v1"
-    # cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
-    #                                server_connection=False, port_forward_next_port = 2000,
-    #                                warmup=True, warmup_iterations=500)
+    env_name = "pycr-pwcrack-intermediate-cluster-v2"
+    cluster_config = ClusterConfig(agent_ip="172.18.3.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False, port_forward_next_port = 2000,
+                                   warmup=True, warmup_iterations=500)
     # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
@@ -51,16 +51,16 @@ def default_config() -> ClientConfig:
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                   server_username="kim", warmup=True, warmup_iterations=500,
-                                   port_forward_next_port=2000)
+    # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.3.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                server_username="kim", warmup=True, warmup_iterations=500,
+    #                                port_forward_next_port=2000)
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline intermediate v1",
-                                 run_many=False, random_seeds=[0, 999, 299],
+                                 title="PPO-Baseline intermediate v2",
+                                 run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     return client_config
 
