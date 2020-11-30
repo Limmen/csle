@@ -77,7 +77,7 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         random.seed(thread_id*67)
         # Seed numpy RNG
         np.random.seed(thread_id*67)
-        thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=5000 + thread_id*100)
+        thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=7200 + thread_id*100)
         thread.start()
         time.sleep(120)
         threads.append(thread)

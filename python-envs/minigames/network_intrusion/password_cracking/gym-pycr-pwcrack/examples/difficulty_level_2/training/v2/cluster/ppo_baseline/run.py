@@ -12,7 +12,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.995, alpha=0.01, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -23,9 +23,9 @@ def default_config() -> ClientConfig:
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500, input_dim=11 * 40,
                                                 output_dim=100,
-                                                pi_hidden_dim=256, pi_hidden_layers=1,
-                                                vf_hidden_dim=256, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=256,
+                                                pi_hidden_dim=64, pi_hidden_layers=1,
+                                                vf_hidden_dim=64, vf_hidden_layers=1,
+                                                shared_hidden_layers=2, shared_hidden_dim=64,
                                                 batch_size=500,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
