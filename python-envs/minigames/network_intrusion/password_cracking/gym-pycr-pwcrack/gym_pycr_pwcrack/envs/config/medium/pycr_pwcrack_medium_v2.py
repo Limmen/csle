@@ -112,7 +112,7 @@ class PyCrPwCrackMediumV2:
 
         env_config.final_steps_reward_coefficient = 0
 
-        env_config.flag_found_reward_mult = 1
+        env_config.flag_found_reward_mult = 10
         env_config.all_flags_reward = 0
         env_config.base_step_reward = -1
         env_config.illegal_reward_action = -1

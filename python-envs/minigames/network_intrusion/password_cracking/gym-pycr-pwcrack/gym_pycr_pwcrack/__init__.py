@@ -24,6 +24,13 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Simple, Mode: Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-simple-sim-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSimWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Simple, Mode: Cluster, Version: 1 ------------
 register(
     id='pycr-pwcrack-simple-cluster-v1',
@@ -52,6 +59,27 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSimWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, Version: 2 ------------
+register(
+    id='pycr-pwcrack-simple-sim-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSim2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-simple-sim-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSimWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Simple, Mode: Cluster, Version: 2 ------------
 register(
     id='pycr-pwcrack-simple-cluster-v2',
@@ -66,6 +94,48 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Version: 2 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSim2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSimWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, Version: 3 ------------
+register(
+    id='pycr-pwcrack-simple-sim-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSim3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-simple-sim-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSimWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Version: 3 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSim3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSimWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Simple, Mode: Cluster, Version: 3 ------------
 register(
     id='pycr-pwcrack-simple-cluster-v3',
@@ -77,6 +147,34 @@ register(
 register(
     id='pycr-pwcrack-simple-cluster-costs-v3',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, Version: 4 ------------
+register(
+    id='pycr-pwcrack-simple-sim-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSim4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Simulation, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-simple-sim-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleSimWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Version: 4 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSim4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Simple, Mode: Generated Simulation, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-simple-generated-sim-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackSimpleGeneratedSimWithCosts4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
@@ -171,10 +269,24 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSimWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Medium, Mode: Simulation, Version: 1 ------------
 register(
     id='pycr-pwcrack-medium-sim-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-medium-sim-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumSimWithCosts1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
@@ -199,6 +311,20 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Version: 2 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSim2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSimWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Medium, Mode: Cluster, Version: 2 ------------
 register(
     id='pycr-pwcrack-intermediate-cluster-v2',
@@ -213,6 +339,20 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Version: 3 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSim3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSimWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
 # -------- Difficulty Level: Medium, Mode: Cluster, Version: 3 ------------
 register(
     id='pycr-pwcrack-intermediate-cluster-v3',
@@ -224,6 +364,20 @@ register(
 register(
     id='pycr-pwcrack-intermediate-cluster-costs-v3',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackIntermediateClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Version: 4 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSim4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Medium, Mode: Generated Simulation, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-medium-generated-sim-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMediumGeneratedSimWithCosts4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 

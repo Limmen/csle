@@ -38,7 +38,8 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
                                                 )
-    env_name = "pycr-pwcrack-medium-cluster-v3"
+    #env_name = "pycr-pwcrack-medium-cluster-v3"
+    env_name = "pycr-pwcrack-medium-cluster-costs-v3"
     cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, warmup=True, warmup_iterations=1000,
                                    port_forward_next_port = 4000)

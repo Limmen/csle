@@ -13,20 +13,21 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.995, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.0, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=150,
-                               eval_render=False, gifs=False,
+                               num_iterations=4000,
+                               eval_render=True, gifs=True,
                                gif_dir=util.default_output_dir() + "/results/gifs",
-                               eval_frequency=500, video_frequency=10,
+                               eval_frequency=100, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=150, input_dim=11 * 3,
+                               checkpoint_freq=500,
+                               input_dim=11 * 40,
                                output_dim=42,
-                               pi_hidden_dim=32, pi_hidden_layers=1,
-                               vf_hidden_dim=32, vf_hidden_layers=1,
-                               shared_hidden_layers=2, shared_hidden_dim=32,
+                               pi_hidden_dim=64, pi_hidden_layers=1,
+                               vf_hidden_dim=64, vf_hidden_layers=1,
+                               shared_hidden_layers=2, shared_hidden_dim=64,
                                batch_size=200,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
@@ -42,12 +43,15 @@ def default_config() -> ClientConfig:
     env_name = "pycr-pwcrack-medium-generated-sim-v1"
     eval_env_name = "pycr-pwcrack-medium-cluster-v1"
 
+    # env_name = "pycr-pwcrack-medium-generated-sim-costs-v1"
+    # eval_env_name = "pycr-pwcrack-medium-cluster-costs-v1"
+
     # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
     eval_cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+                                   server_connection=False, port_forward_next_port=3400)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,

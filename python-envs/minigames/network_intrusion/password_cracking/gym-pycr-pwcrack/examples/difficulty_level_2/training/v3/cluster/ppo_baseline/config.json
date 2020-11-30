@@ -106,7 +106,7 @@
     },
     "env_checkpoint_dir": null,
     "env_config": null,
-    "env_name": "pycr-pwcrack-medium-cluster-v3",
+    "env_name": "pycr-pwcrack-medium-cluster-costs-v3",
     "eval_cluster_config": null,
     "eval_env": null,
     "eval_env_name": null,
