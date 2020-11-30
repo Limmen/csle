@@ -65,7 +65,7 @@ class Runner:
         elif config.agent_type == AgentType.PPO_BASELINE.value:
             agent = PPOBaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.DQN_BASELINE.value:
-            agent = DQNBaselineAgent(env, config.agent_config)
+            agent = DQNBaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.A2C_BASELINE.value:
             agent = A2CBaselineAgent(env, config.agent_config)
         elif config.agent_type == AgentType.TD3_BASELINE.value:

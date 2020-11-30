@@ -510,16 +510,11 @@ class EnvDynamicsUtil:
                  env_config.new_login_reward_mult * num_new_logged_in + \
                  env_config.new_tools_installed_reward_mult * num_new_tools_installed + \
                  env_config.new_backdoors_installed_reward_mult * num_new_backdoors_installed
-        cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*100 # normalize between 0-100
+        cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*10 # normalize between 0-10
         if reward == 0:
-            # if num_new_logged_in > 0 or num_new_backdoors_installed > 0 or num_new_shell_access > 0 \
-            #         or num_new_tools_installed > 0:
-            #     reward = 0
-            # else:
             reward = env_config.base_step_reward - cost
         else:
-            reward = (-env_config.base_step_reward)*reward
-            #reward = reward - cost
+            reward = (-env_config.base_step_reward)*reward - cost
         return reward
 
     @staticmethod

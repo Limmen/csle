@@ -74,7 +74,7 @@ class Actor(BasePolicy):
         return self.mu(features)
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_config : EnvConfig = None,
-                 env_state: EnvState = None) -> th.Tensor:
+                 env_state: EnvState = None, m_index : int = None) -> th.Tensor:
         return self.forward(observation, deterministic=deterministic)
 
 
@@ -190,7 +190,7 @@ class TD3Policy(BasePolicy):
         return self._predict(observation, deterministic=deterministic)
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False,
-                 env_config: EnvConfig = None, env_state: EnvState = None) -> th.Tensor:
+                 env_config: EnvConfig = None, env_state: EnvState = None, m_index : int = None) -> th.Tensor:
         return self.actor(observation, deterministic=deterministic)
 
 

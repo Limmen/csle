@@ -300,6 +300,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
             if self.iteration % self.agent_config.train_log_frequency == 0:
+                episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
+                eval_episode_rewards, eval_episode_steps, \
+                eval_episode_flags_percentage, eval_episode_flags = None, None, None, None, None, None, None, None
                 if self.agent_config.train_progress_deterministic_eval:
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \

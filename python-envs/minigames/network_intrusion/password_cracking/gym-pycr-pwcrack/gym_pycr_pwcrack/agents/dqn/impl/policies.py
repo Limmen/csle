@@ -63,7 +63,7 @@ class QNetwork(BasePolicy):
         return self.q_net(self.extract_features(obs))
 
     def _predict(self, observation: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
-                env_config: EnvConfig = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
         q_values = self.forward(observation)
 
         # Masking legal actions
@@ -181,7 +181,7 @@ class DQNPolicy(BasePolicy):
         return self._predict(obs, deterministic=deterministic)
 
     def _predict(self, obs: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
-                env_config: EnvConfig = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
         return self.q_net._predict(obs, deterministic=deterministic, env_config=env_config, env_state=env_state)
 
     def _get_data(self) -> Dict[str, Any]:

@@ -17,6 +17,7 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv,
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import VecEnv
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.evaluation import quick_evaluate_policy
 
 class OffPolicyAlgorithm(BaseAlgorithm):
     """
@@ -93,7 +94,8 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         sde_sample_freq: int = -1,
         use_sde_at_warmup: bool = False,
         sde_support: bool = True,
-        agent_config: AgentConfig = None
+        agent_config: AgentConfig = None,
+        env_2: Union[GymEnv, str] = None
     ):
 
         super(OffPolicyAlgorithm, self).__init__(
@@ -110,7 +112,8 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             seed=seed,
             use_sde=use_sde,
             sde_sample_freq=sde_sample_freq,
-            agent_config=agent_config
+            agent_config=agent_config,
+            env_2=env_2
         )
         self.buffer_size = buffer_size
         self.batch_size = batch_size
@@ -187,6 +190,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         self,
         total_timesteps: int,
         eval_env: Optional[GymEnv],
+        eval_env_2: Optional[GymEnv],
         callback: Union[None, Callable, List[BaseCallback], BaseCallback] = None,
         eval_freq: int = 10000,
         n_eval_episodes: int = 5,
@@ -219,7 +223,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             self.replay_buffer.dones[pos] = True
 
         return super()._setup_learn(
-            total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, log_path, reset_num_timesteps, tb_log_name
+            total_timesteps, eval_env, eval_env_2, callback, eval_freq, n_eval_episodes, log_path, reset_num_timesteps, tb_log_name
         )
 
     def learn(
@@ -228,6 +232,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         callback: MaybeCallback = None,
         log_interval: int = 4,
         eval_env: Optional[GymEnv] = None,
+        eval_env_2: Optional[GymEnv] = None,
         eval_freq: int = -1,
         n_eval_episodes: int = 5,
         tb_log_name: str = "run",
@@ -236,7 +241,8 @@ class OffPolicyAlgorithm(BaseAlgorithm):
     ) -> "OffPolicyAlgorithm":
 
         total_timesteps, callback = self._setup_learn(
-            total_timesteps, eval_env, callback, eval_freq, n_eval_episodes, eval_log_path, reset_num_timesteps, tb_log_name
+            total_timesteps, eval_env, eval_env_2, callback, eval_freq, n_eval_episodes, eval_log_path,
+            reset_num_timesteps, tb_log_name
         )
 
         callback.on_training_start(locals(), globals())
@@ -278,16 +284,37 @@ class OffPolicyAlgorithm(BaseAlgorithm):
 
             # Log training infos
             if self.iteration % self.agent_config.train_log_frequency == 0:
+                episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
+                eval_episode_rewards, eval_episode_steps, \
+                eval_episode_flags_percentage, eval_episode_flags = None, None, None, None, None, None, None, None
                 if self.num_timesteps > self.learning_starts:
-                    self.log_metrics(iteration=self.num_timesteps, result=self.train_result,
+                    if self.agent_config.train_progress_deterministic_eval:
+                        episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
+                        eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
+                            quick_evaluate_policy(model=self.policy, env=self.env,
+                                                  n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
+                                                  deterministic=True, agent_config=self.agent_config,
+                                                  env_config=self.env.envs[0].env_config, env_2=self.env_2)
+
+                    self.log_metrics(iteration=self.iteration, result=self.train_result,
                                      episode_rewards=episode_rewards,
                                      episode_avg_loss=episode_loss,
                                      eval=False, lr=self.lr_schedule(self.num_timesteps),
-                                     total_num_episodes=self.num_timesteps,
+                                     total_num_episodes=self.num_episodes_total,
                                      episode_steps=episode_steps,
-                                     episode_flags=episode_flags,
-                                     episode_flags_percentage=episode_flags_percentage,
-                                     eps=self.exploration_rate)
+                                     episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
+                                     progress_left=self._current_progress_remaining,
+                                     n_af=self.env.envs[0].agent_state.num_all_flags,
+                                     n_d=self.env.envs[0].agent_state.num_detections,
+                                     eval_episode_rewards=episode_rewards_1, eval_episode_steps=episode_steps_1,
+                                     eval_episode_flags=episode_flags_1,
+                                     eval_episode_flags_percentage=episode_flags_percentage_1,
+                                     eval_2_episode_rewards=eval_episode_rewards,
+                                     eval_2_episode_steps=eval_episode_steps,
+                                     eval_2_episode_flags=eval_episode_flags,
+                                     eval_2_episode_flags_percentage=eval_episode_flags_percentage,
+                                     eps=self.exploration_rate
+                                     )
                     episode_loss = []
                     episode_rewards = []
                     episode_steps = []
@@ -327,7 +354,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         # Select action randomly or according to policy
         if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
             # Warmup phase
-            legal_actions = list(range(self.env.envs[0].env_config.all_actions_conf.num_actions))
+            legal_actions = list(range(self.agent_config.output_dim))
             if self.agent_config.filter_illegal_actions:
                 legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
                     action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), legal_actions))
