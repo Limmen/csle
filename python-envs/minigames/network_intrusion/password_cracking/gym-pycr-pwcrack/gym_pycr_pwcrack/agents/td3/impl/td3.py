@@ -81,7 +81,8 @@ class TD3(OffPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        agent_config : AgentConfig = None
+        agent_config : AgentConfig = None,
+        env_2: Union[GymEnv, str] = None
     ):
 
         super(TD3, self).__init__(
@@ -105,7 +106,8 @@ class TD3(OffPolicyAlgorithm):
             seed=seed,
             sde_support=False,
             optimize_memory_usage=optimize_memory_usage,
-            agent_config=agent_config
+            agent_config=agent_config,
+            env_2=env_2
         )
 
         self.policy_delay = policy_delay
@@ -184,6 +186,7 @@ class TD3(OffPolicyAlgorithm):
         callback: MaybeCallback = None,
         log_interval: int = 4,
         eval_env: Optional[GymEnv] = None,
+        eval_env_2: Optional[GymEnv] = None,
         eval_freq: int = -1,
         n_eval_episodes: int = 5,
         tb_log_name: str = "TD3",
@@ -196,6 +199,7 @@ class TD3(OffPolicyAlgorithm):
             callback=callback,
             log_interval=log_interval,
             eval_env=eval_env,
+            eval_env_2=eval_env_2,
             eval_freq=eval_freq,
             n_eval_episodes=n_eval_episodes,
             tb_log_name=tb_log_name,

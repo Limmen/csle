@@ -73,7 +73,8 @@ class A2C(OnPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        agent_config: AgentConfig = None
+        agent_config: AgentConfig = None,
+        env_2: Union[GymEnv, str] = None
     ):
 
         super(A2C, self).__init__(
@@ -94,7 +95,8 @@ class A2C(OnPolicyAlgorithm):
             create_eval_env=create_eval_env,
             seed=seed,
             _init_setup_model=False,
-            agent_config=agent_config
+            agent_config=agent_config,
+            env_2=env_2
         )
 
         self.normalize_advantage = normalize_advantage
@@ -168,6 +170,7 @@ class A2C(OnPolicyAlgorithm):
         callback: MaybeCallback = None,
         log_interval: int = 100,
         eval_env: Optional[GymEnv] = None,
+        eval_env_2: Optional[GymEnv] = None,
         eval_freq: int = -1,
         n_eval_episodes: int = 5,
         tb_log_name: str = "A2C",
@@ -180,6 +183,7 @@ class A2C(OnPolicyAlgorithm):
             callback=callback,
             log_interval=log_interval,
             eval_env=eval_env,
+            eval_env_2=eval_env_2,
             eval_freq=eval_freq,
             n_eval_episodes=n_eval_episodes,
             tb_log_name=tb_log_name,

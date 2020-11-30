@@ -67,11 +67,11 @@ class Runner:
         elif config.agent_type == AgentType.DQN_BASELINE.value:
             agent = DQNBaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.A2C_BASELINE.value:
-            agent = A2CBaselineAgent(env, config.agent_config)
+            agent = A2CBaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.TD3_BASELINE.value:
-            agent = TD3BaselineAgent(env, config.agent_config)
+            agent = TD3BaselineAgent(env, config.agent_config, eval_env=eval_env)
         elif config.agent_type == AgentType.DDPG_BASELINE.value:
-            agent = DDPGBaselineAgent(env, config.agent_config)
+            agent = DDPGBaselineAgent(env, config.agent_config, eval_env=eval_env)
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()
