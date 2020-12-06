@@ -1,19 +1,20 @@
 PROJECT=pycr
-NETWORK=pycr_net_1
+NETWORK=pycr_net_4
 MINIGAME=pwcrack
-CONTAINER=router1
+CONTAINER=hacker_kali1
 VERSION=0.0.1
-LEVEL=1
-IP=172.18.1.10
+LEVEL=4
+IP=172.18.4.191
 
 all: run
 
 run:
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true --cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --cap-add NET_ADMIN --publish-all=true --privileged=true $(PROJECT)/$(CONTAINER):$(VERSION)
 
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) /bin/bash
 
+# Start stopped containers
 start:
 	docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL)
 

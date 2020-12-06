@@ -1,10 +1,10 @@
 PROJECT=pycr
-NETWORK=pycr_net_1
+NETWORK=pycr_net_4
 MINIGAME=pwcrack
-CONTAINER=router1
+CONTAINER=honeypot1
 VERSION=0.0.1
-LEVEL=1
-IP=172.18.1.10
+LEVEL=4
+IP=172.18.4.21
 
 all: run
 

@@ -1,12 +1,12 @@
 PROJECT=pycr
-NETWORK=pycr_net_1
+NETWORK=pycr_net_4
 MINIGAME=pwcrack
-CONTAINER=router1
+CONTAINER=telnet4
 VERSION=0.0.1
-LEVEL=1
-IP=172.18.1.10
+LEVEL=4
+IP=172.18.4.3
 
-all: run
+all:
 
 run:
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --net $(NETWORK) --ip $(IP) --publish-all=true --cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)

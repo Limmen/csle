@@ -43,6 +43,8 @@ RUN apt-get -y install telnet
 RUN apt-get -y install xinetd telnetd
 RUN apt-get -y install lftp
 RUN apt-get -y install zip
+RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
+        apt-get install -y snort
 
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
@@ -162,3 +164,10 @@ RUN pip install waitress
 RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip
 RUN unzip latest-glassfish.zip
 
+# Setup Snort
+RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
+RUN tar -xvzf community-rules.tar.gz -C /etc/snort/rules
+RUN mkdir /var/snort
+RUN chmod 777 /var/snort
+RUN mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
+ADD docker/snort.conf /etc/snort/snort.conf
