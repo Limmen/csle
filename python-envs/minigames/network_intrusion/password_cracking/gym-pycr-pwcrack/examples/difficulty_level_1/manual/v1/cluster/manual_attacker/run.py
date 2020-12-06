@@ -16,7 +16,7 @@ def default_config() -> ClientConfig:
                                          video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                          num_episodes=1000,
                                          gifs=True, gif_dir=util.default_output_dir() + "/results/gifs", video_frequency=1)
-    env_name = "pycr-pwcrack-simple-cluster-v1"
+    env_name = "pycr-pwcrack-level-1-cluster-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v1 cluster"
+    experiment_title = "PPO level_1 v1 cluster"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

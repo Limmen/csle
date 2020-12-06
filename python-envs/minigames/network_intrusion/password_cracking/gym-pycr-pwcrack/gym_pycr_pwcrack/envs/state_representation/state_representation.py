@@ -279,7 +279,7 @@ class StateRepresentation:
     @staticmethod
     def simple_representation_spaces(obs_state: ObservationState) -> Tuple:
         """
-        Configures observation spaces for the simple representation
+        Configures observation spaces for the level_1 representation
 
         :param obs_state: the observation state
         :return: m_selection_obs_space (for AR), network_orig_shape, machine_orig_shape, m_action_obs_space (for AR)

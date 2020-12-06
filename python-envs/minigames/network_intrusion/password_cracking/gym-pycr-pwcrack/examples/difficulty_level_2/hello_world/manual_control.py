@@ -19,12 +19,12 @@ def manual_control():
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
 
-    #env = gym.make("pycr-pwcrack-medium-cluster-base-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-medium-cluster-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-pwcrack-medium-cluster-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-medium-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-2-cluster-base-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-2-cluster-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-level-2-cluster-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-2-sim-v1", env_config=None, cluster_config=cluster_config)
 
-    #env = gym.make("pycr-pwcrack-medium-sim-base-v1", env_config=None)
+    #env = gym.make("pycr-pwcrack-level-2-sim-base-v1", env_config=None)
     ManualAttackerAgent(env=env, env_config=env.env_config)
 
 

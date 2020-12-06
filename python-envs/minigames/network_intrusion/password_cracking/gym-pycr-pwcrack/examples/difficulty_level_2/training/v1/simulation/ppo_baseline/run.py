@@ -40,8 +40,8 @@ def default_config() -> ClientConfig:
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=1
                                )
-    env_name = "pycr-pwcrack-medium-sim-v1"
-    eval_env_name = "pycr-pwcrack-medium-cluster-v1"
+    env_name = "pycr-pwcrack-level-2-sim-v1"
+    eval_env_name = "pycr-pwcrack-level-2-cluster-v1"
 
     # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.21.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO medium v1 simulation"
+    experiment_title = "PPO level_2 v1 simulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

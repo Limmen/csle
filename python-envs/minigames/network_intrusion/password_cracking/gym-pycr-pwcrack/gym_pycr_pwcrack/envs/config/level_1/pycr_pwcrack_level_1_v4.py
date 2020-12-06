@@ -9,13 +9,13 @@ from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
-from gym_pycr_pwcrack.envs.config.intermediate.pycr_pwcrack_intermediate_base import PyCrPwCrackIntermediateBase
 from gym_pycr_pwcrack.dao.action.nikto_actions import NIKTOActions
 from gym_pycr_pwcrack.dao.action.masscan_actions import MasscanActions
+from gym_pycr_pwcrack.envs.config.level_1.pycr_pwcrack_level_1_base import PyCrPwCrackLevel1Base
 
-class PyCrPwCrackIntermediateV4:
+class PyCrPwCrackLevel1V4:
     """
-    V4 configuration of level 4 of the PyCrPwCrack environment.
+    V4 configuration of level 1 of the PyCrPwCrack environment.
     """
 
     @staticmethod
@@ -58,49 +58,47 @@ class PyCrPwCrackIntermediateV4:
 
         # Subnet actions
         actions.append(
-            NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.UDP_PORT_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+            NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.PING_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.UDP_PORT_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(
-            NMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.TCP_FIN_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.TCP_NULL_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+            NMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_FIN_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.TCP_NULL_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(
-            NMAPActions.TCP_XMAS_TREE_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+            NMAPActions.TCP_XMAS_TREE_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.OS_DETECTION_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.NMAP_VULNERS(num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                          subnet=True))
-        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
-        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
         actions.append(
-            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+            NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                             subnet=True))
-        actions.append(NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
-        actions.append(NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                    subnet=True))
-        actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                    subnet=True))
-        actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                   subnet=True))
         actions.append(
-            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+            NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                            subnet=True))
-        actions.append(ShellActions.FIND_FLAG(index=num_nodes + 1))
-        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes + 1))
-        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes + 1))
-        actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=num_nodes + 1, subnet=True,
+        actions.append(ShellActions.FIND_FLAG(index=num_nodes+1))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes+1))
+        actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=num_nodes+1, subnet=True,
                                                         host_ip=hacker_ip, ip=subnet_mask))
-        actions.append(NMAPActions.FIREWALK(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.HTTP_ENUM(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.HTTP_GREP(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.VULSCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.FINGER(num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.FIREWALK(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.HTTP_ENUM(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.HTTP_GREP(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.VULSCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.FINGER(num_nodes+1, ip=subnet_mask, subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -129,7 +127,7 @@ class PyCrPwCrackIntermediateV4:
             ActionId.FINGER_HOST, ActionId.FINGER_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
+        shell_action_ids = [ActionId.FIND_FLAG]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes, actions=actions,
@@ -143,8 +141,6 @@ class PyCrPwCrackIntermediateV4:
     def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
                    render_conf: RenderConfig) -> EnvConfig:
         """
-        Generates the environment configuration
-
         :param network_conf: the network config
         :param action_conf: the action config
         :param cluster_conf: the cluster config
@@ -152,19 +148,19 @@ class PyCrPwCrackIntermediateV4:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrPwCrackIntermediateBase.num_nodes(),
-                               render_config=render_conf, env_mode=EnvMode.CLUSTER,
+                               num_sh=3, num_nodes = PyCrPwCrackLevel1Base.num_nodes(),
+                               render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackIntermediateBase.hacker_ip(), state_type=StateType.ESSENTIAL,
-                               router_ip=PyCrPwCrackIntermediateBase.router_ip())
+                               hacker_ip=PyCrPwCrackLevel1Base.hacker_ip(), state_type=StateType.COMPACT,
+                               router_ip=PyCrPwCrackLevel1Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00
         env_config.os_scan_miss_p = 0.00
         env_config.vulners_miss_p = 0.00
-        env_config.num_flags = 6
-        env_config.blacklist_ips = ["172.18.3.1"]
+        env_config.num_flags = 3
+        env_config.blacklist_ips = ["172.18.1.1"]
 
         env_config.shell_access_found_reward_mult = 1
         env_config.new_tools_installed_reward_mult = 1
@@ -188,4 +184,5 @@ class PyCrPwCrackIntermediateV4:
         env_config.detection_reward = 0
 
         env_config.max_episode_length = 10000
+
         return env_config

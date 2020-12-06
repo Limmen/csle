@@ -35,10 +35,10 @@ def default_config() -> ClientConfig:
                                render_steps=100, illegal_action_logit=-100,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=10)
-    # env_name = "pycr-pwcrack-simple-sim-v2"
-    # eval_env_name = "pycr-pwcrack-simple-cluster-v2"
-    env_name = "pycr-pwcrack-simple-sim-costs-v2"
-    eval_env_name = "pycr-pwcrack-simple-cluster-costs-v2"
+    # env_name = "pycr-pwcrack-level-1-sim-v2"
+    # eval_env_name = "pycr-pwcrack-level-1-cluster-v2"
+    env_name = "pycr-pwcrack-level-1-sim-costs-v2"
+    eval_env_name = "pycr-pwcrack-level-1-cluster-costs-v2"
     # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
@@ -73,7 +73,7 @@ def write_default_config(path:str = None) -> None:
 if __name__ == '__main__':
 
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO simple v2 simulation"
+    experiment_title = "PPO level_1 v2 simulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

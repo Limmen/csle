@@ -9,15 +9,15 @@ from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
-from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
+from gym_pycr_pwcrack.envs.config.level_1.pycr_pwcrack_level_1_base import PyCrPwCrackLevel1Base
 
-class PyCrPwCrackSimpleNoCacheV1:
+class PyCrPwCrackLevel1V2:
     """
-    V1 configuration of level 1 of the PyCrPwCrack environment.
+    V2 configuration of level 1 of the PyCrPwCrack environment.
     """
 
     @staticmethod
-    def actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> ActionConfig:
+    def actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str = None) -> ActionConfig:
         """
         :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
         :param subnet_mask: subnet mask of the network
@@ -31,6 +31,11 @@ class PyCrPwCrackSimpleNoCacheV1:
             actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            actions.append(NMAPActions.NMAP_VULNERS(index=idx, subnet=False))
+            actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.PING_SCAN(index=idx, subnet=False))
+            actions.append(NMAPActions.OS_DETECTION_SCAN(index=idx, subnet=False))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
@@ -45,14 +50,20 @@ class PyCrPwCrackSimpleNoCacheV1:
                                                                  subnet=True))
         actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
                                                                  subnet=True))
+        actions.append(NMAPActions.UDP_PORT_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.PING_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.OS_DETECTION_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
-            ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            ActionId.NMAP_VULNERS_SUBNET,
+            ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
+            ActionId.NMAP_VULNERS_HOST, ActionId.NMAP_VULNERS_SUBNET,
             ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+            ActionId.UDP_PORT_SCAN_HOST, ActionId.UDP_PORT_SCAN_SUBNET,
+            ActionId.PING_SCAN_HOST, ActionId.PING_SCAN_SUBNET,
+            ActionId.OS_DETECTION_SCAN_HOST, ActionId.OS_DETECTION_SCAN_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG]
@@ -75,13 +86,11 @@ class PyCrPwCrackSimpleNoCacheV1:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrPwCrackSimpleBase.num_nodes(),
-                               render_config=render_conf, env_mode=EnvMode.SIMULATION,
+                               num_sh=3, num_nodes = PyCrPwCrackLevel1Base.num_nodes(), render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.COMPACT,
-                               router_ip=PyCrPwCrackSimpleBase.router_ip())
-
+                               hacker_ip=PyCrPwCrackLevel1Base.hacker_ip(), state_type=StateType.COMPACT,
+                               router_ip=PyCrPwCrackLevel1Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00
@@ -90,18 +99,18 @@ class PyCrPwCrackSimpleNoCacheV1:
         env_config.num_flags = 3
         env_config.blacklist_ips = ["172.18.1.1"]
 
-        env_config.shell_access_found_reward_mult = 0
-        env_config.new_tools_installed_reward_mult = 0
-        env_config.new_backdoors_installed_reward_mult = 0
-        env_config.new_login_reward_mult = 0
+        env_config.shell_access_found_reward_mult = 1
+        env_config.new_tools_installed_reward_mult = 1
+        env_config.new_backdoors_installed_reward_mult = 1
+        env_config.new_login_reward_mult = 1
         env_config.machine_found_reward_mult = 0
 
         env_config.final_steps_reward_coefficient = 0
 
-        env_config.flag_found_reward_mult = 3
+        env_config.flag_found_reward_mult = 10
         env_config.all_flags_reward = 0
-        env_config.base_step_reward = -10
-        env_config.illegal_reward_action = -10
+        env_config.base_step_reward = -1
+        env_config.illegal_reward_action = -1
 
         env_config.port_found_reward_mult = 0
         env_config.os_found_reward_mult = 0
@@ -112,10 +121,5 @@ class PyCrPwCrackSimpleNoCacheV1:
         env_config.detection_reward = 0
 
         env_config.max_episode_length = 10000
-
-        env_config.use_user_command_cache = False
-        env_config.use_nikto_cache = False
-        env_config.use_file_system_cache = False
-        env_config.use_nmap_cache = False
 
         return env_config

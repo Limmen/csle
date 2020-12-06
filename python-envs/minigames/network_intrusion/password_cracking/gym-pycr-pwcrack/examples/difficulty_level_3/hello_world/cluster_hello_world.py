@@ -64,9 +64,9 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    test_env("pycr-pwcrack-intermediate-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-intermediate-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-intermediate-cluster-base-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-level-3-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-3-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-3-cluster-base-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

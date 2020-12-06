@@ -2,7 +2,7 @@ import numpy as np
 import zipfile
 import matplotlib.pyplot as plt
 from scipy import *
-from gym_pycr_pwcrack.envs.config.simple.pycr_pwcrack_simple_base import PyCrPwCrackSimpleBase
+from gym_pycr_pwcrack.envs.config.level_1.pycr_pwcrack_level_1_base import PyCrPwCrackLevel1Base
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 
 

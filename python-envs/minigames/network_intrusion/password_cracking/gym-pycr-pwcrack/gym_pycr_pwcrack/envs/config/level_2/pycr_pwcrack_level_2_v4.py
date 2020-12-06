@@ -9,11 +9,11 @@ from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
-from gym_pycr_pwcrack.envs.config.medium.pycr_pwcrack_medium_base import PyCrPwCrackMediumBase
+from gym_pycr_pwcrack.envs.config.level_2.pycr_pwcrack_level_2_base import PyCrPwCrackLevel2Base
 from gym_pycr_pwcrack.dao.action.nikto_actions import NIKTOActions
 from gym_pycr_pwcrack.dao.action.masscan_actions import MasscanActions
 
-class PyCrPwCrackMediumV4:
+class PyCrPwCrackLevel2V4:
     """
     V4 configuration of level 2 of the PyCrPwCrack environment.
     """
@@ -152,12 +152,12 @@ class PyCrPwCrackMediumV4:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrPwCrackMediumBase.num_nodes(),
+                               num_sh=3, num_nodes = PyCrPwCrackLevel2Base.num_nodes(),
                                render_config=render_conf, env_mode=EnvMode.CLUSTER,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackMediumBase.hacker_ip(), state_type=StateType.ESSENTIAL,
-                               router_ip=PyCrPwCrackMediumBase.router_ip())
+                               hacker_ip=PyCrPwCrackLevel2Base.hacker_ip(), state_type=StateType.ESSENTIAL,
+                               router_ip=PyCrPwCrackLevel2Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00

@@ -21,7 +21,7 @@ from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
 import gym_pycr_pwcrack.constants.constants as constants
 
-class PyCrPwCrackSimpleBase:
+class PyCrPwCrackLevel1Base:
     """
     Base configuration of level 1 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
     and all the config of the environment have to be hardcoded)
@@ -268,13 +268,13 @@ class PyCrPwCrackSimpleBase:
         adj_matrix = []
         reachable = set()
         if not generate:
-            nodes = PyCrPwCrackSimpleBase.nodes()
-            adj_matrix = PyCrPwCrackSimpleBase.adj_matrix()
-            reachable = PyCrPwCrackSimpleBase.agent_reachable()
-        network_conf = NetworkConfig(subnet_mask=PyCrPwCrackSimpleBase.subnet_mask(),
+            nodes = PyCrPwCrackLevel1Base.nodes()
+            adj_matrix = PyCrPwCrackLevel1Base.adj_matrix()
+            reachable = PyCrPwCrackLevel1Base.agent_reachable()
+        network_conf = NetworkConfig(subnet_mask=PyCrPwCrackLevel1Base.subnet_mask(),
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
-                                     flags_lookup = PyCrPwCrackSimpleBase.flags_lookup(),
+                                     flags_lookup = PyCrPwCrackLevel1Base.flags_lookup(),
                                      agent_reachable=reachable)
         return network_conf
 
@@ -416,11 +416,11 @@ class PyCrPwCrackSimpleBase:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_nodes = PyCrPwCrackSimpleBase.num_nodes(), num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
+                               num_nodes = PyCrPwCrackLevel1Base.num_nodes(), num_sh=3, render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackSimpleBase.hacker_ip(), state_type=StateType.BASE,
-                               router_ip=PyCrPwCrackSimpleBase.router_ip())
+                               hacker_ip=PyCrPwCrackLevel1Base.hacker_ip(), state_type=StateType.BASE,
+                               router_ip=PyCrPwCrackLevel1Base.router_ip())
         env_config.ping_scan_miss_p = 0.0
         env_config.udp_port_scan_miss_p = 0.0
         env_config.syn_stealth_scan_miss_p = 0.0

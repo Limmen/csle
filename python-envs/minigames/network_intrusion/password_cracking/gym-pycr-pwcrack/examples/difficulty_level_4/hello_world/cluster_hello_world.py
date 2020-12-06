@@ -44,15 +44,15 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    #test_env("pycr-pwcrack-simple-sim-v1", num_steps=1000000000)
-    test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-v2", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-v4", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-nocache-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-base-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-v3", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-simple-generated-sim-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-sim-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-level-1-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-v2", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-v4", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-nocache-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-base-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-v3", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-pwcrack-level-1-generated-sim-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

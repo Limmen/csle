@@ -11,8 +11,8 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.util import copy_ob
 
 class DummyVecEnv(VecEnv):
     """
-    Creates a simple vectorized wrapper for multiple environments, calling each environment in sequence on the current
-    Python process. This is useful for computationally simple environment such as ``cartpole-v1``,
+    Creates a level_1 vectorized wrapper for multiple environments, calling each environment in sequence on the current
+    Python process. This is useful for computationally level_1 environment such as ``cartpole-v1``,
     as the overhead of multiprocess or multithread outweighs the environment computation time.
     This can also be used for RL methods that
     require a vectorized environment, but that you want a single environments to train with.

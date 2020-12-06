@@ -85,5 +85,5 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         t.join()
 
 if __name__ == '__main__':
-    start_explore_threads(num_threads=15, env_name="pycr-pwcrack-intermediate-cluster-v4",
+    start_explore_threads(num_threads=15, env_name="pycr-pwcrack-level-3-cluster-v4",
                           num_steps=10000000)

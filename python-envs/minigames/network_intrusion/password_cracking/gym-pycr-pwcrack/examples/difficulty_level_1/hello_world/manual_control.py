@@ -15,13 +15,13 @@ def manual_control():
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=9600)
 
-    #env = gym.make("pycr-pwcrack-simple-cluster-v4", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-cluster-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-cluster-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-pwcrack-simple-cluster-costs-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-sim-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-generated-sim-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-simple-cluster-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-cluster-v4", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-level-1-cluster-costs-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-generated-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
 
     ManualAttackerAgent(env=env, env_config=env.env_config)
 

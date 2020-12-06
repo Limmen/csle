@@ -5,7 +5,7 @@ from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 class SimulationGenerator:
     """
-    Class for with functions for running an exploration policy in an environment to build a simple model
+    Class for with functions for running an exploration policy in an environment to build a level_1 model
     that later can be used for simulations
     """
 

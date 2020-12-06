@@ -140,7 +140,7 @@ class MlpExtractor(nn.Module):
 
     For example to construct a network with one shared layer of size 55 followed by two non-shared layers for the value
     network of size 255 and a single non-shared layer of size 128 for the policy network, the following layers_spec
-    would be used: ``[55, dict(vf=[255, 255], pi=[128])]``. A simple shared network topology with two layers of size 128
+    would be used: ``[55, dict(vf=[255, 255], pi=[128])]``. A level_1 shared network topology with two layers of size 128
     would be specified as [128, 128].
 
     Adapted from Stable Baselines.

@@ -297,7 +297,7 @@ def polyak_update(params: Iterable[th.nn.Parameter], target_params: Iterable[th.
     target parameters are slowly updated towards the main parameters.
     ``tau``, the soft update coefficient controls the interpolation:
     ``tau=1`` corresponds to copying the parameters to the target ones whereas nothing happens when ``tau=0``.
-    The Polyak update is done in place, with ``no_grad``, and therefore does not create intermediate tensors,
+    The Polyak update is done in place, with ``no_grad``, and therefore does not create level_3 tensors,
     or a computation graph, reducing memory cost and improving performance.  We scale the target params
     by ``1-tau`` (in-place), add the new weights, scaled by ``tau`` and store the result of the sum in the target
     params (in place).

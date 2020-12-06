@@ -25,11 +25,11 @@ def default_config() -> ClientConfig:
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0)
-    env_name = "pycr-pwcrack-simple-sim-v1"
+    env_name = "pycr-pwcrack-level-1-sim-v1"
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.REINFORCE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="REINFORCE simple v1",
+                                 title="REINFORCE level_1 v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399)
     return client_config
@@ -52,7 +52,7 @@ def write_default_config(path:str = None) -> None:
 if __name__ == '__main__':
 
     args = util.parse_args(util.default_config_path())
-    experiment_title = "REINFORCE simple v1"
+    experiment_title = "REINFORCE level_1 v1"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()
