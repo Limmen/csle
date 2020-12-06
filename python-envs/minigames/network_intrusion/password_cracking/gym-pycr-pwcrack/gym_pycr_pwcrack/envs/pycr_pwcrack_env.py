@@ -31,6 +31,12 @@ from gym_pycr_pwcrack.envs.config.level_3.pycr_pwcrack_level_3_v1 import PyCrPwC
 from gym_pycr_pwcrack.envs.config.level_3.pycr_pwcrack_level_3_v2 import PyCrPwCrackLevel3V2
 from gym_pycr_pwcrack.envs.config.level_3.pycr_pwcrack_level_3_v3 import PyCrPwCrackLevel3V3
 from gym_pycr_pwcrack.envs.config.level_3.pycr_pwcrack_level_3_v4 import PyCrPwCrackLevel3V4
+from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_base import PyCrPwCrackLevel4Base
+from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_v1 import PyCrPwCrackLevel4V1
+from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_v2 import PyCrPwCrackLevel4V2
+from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_v3 import PyCrPwCrackLevel4V3
+from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_v4 import PyCrPwCrackLevel4V4
+
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_pwcrack.envs.logic.common.util as util
 from gym_pycr_pwcrack.envs.logic.cluster.simulation_generator import SimulationGenerator
@@ -1932,6 +1938,8 @@ class PyCRPwCrackLevel3ClusterWithCosts4Env(PyCRPwCrackEnv):
             render_config = PyCrPwCrackLevel3Base.render_conf()
             if cluster_config is None:
                 cluster_config = PyCrPwCrackLevel3Base.cluster_conf()
+            cluster_config.ids_router = True
+            cluster_config.ids_router_ip = PyCrPwCrackLevel4Base.router_ip()
             network_conf = PyCrPwCrackLevel3Base.network_conf()
             action_conf = PyCrPwCrackLevel3V4.actions_conf(num_nodes=PyCrPwCrackLevel3Base.num_nodes(),
                                                            subnet_mask=PyCrPwCrackLevel3Base.subnet_mask(),
@@ -1939,6 +1947,60 @@ class PyCRPwCrackLevel3ClusterWithCosts4Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackLevel3V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
             env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+
+# -------- Difficulty 4 (Level4) ------------
+
+# -------- Base Version (for testing) ------------
+
+class PyCRPwCrackLevel4ClusterBaseEnv(PyCRPwCrackEnv):
+    """
+    Base version with all set of actions
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackLevel4Base.render_conf()
+            if cluster_config is None:
+                cluster_config = PyCrPwCrackLevel4Base.cluster_conf()
+            cluster_config.ids_router = True
+            cluster_config.ids_router_ip = PyCrPwCrackLevel4Base.router_ip()
+            network_conf = PyCrPwCrackLevel4Base.network_conf()
+            action_conf = PyCrPwCrackLevel4Base.all_actions_conf(num_nodes=PyCrPwCrackLevel4Base.num_nodes(),
+                                                                 subnet_mask=PyCrPwCrackLevel4Base.subnet_mask(),
+                                                                 hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
+            env_config = PyCrPwCrackLevel4Base.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config)
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+
+# -------- Version 1 ------------
+
+class PyCRPwCrackLevel4Cluster1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str):
+        if env_config is None:
+            render_config = PyCrPwCrackLevel4Base.render_conf()
+            if cluster_config is None:
+                cluster_config = PyCrPwCrackLevel4Base.cluster_conf()
+            cluster_config.ids_router = True
+            cluster_config.ids_router_ip = PyCrPwCrackLevel4Base.router_ip()
+            network_conf = PyCrPwCrackLevel4Base.network_conf()
+            action_conf = PyCrPwCrackLevel4V1.actions_conf(num_nodes=PyCrPwCrackLevel4Base.num_nodes(),
+                                                           subnet_mask=PyCrPwCrackLevel4Base.subnet_mask(),
+                                                           hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
+            env_config = PyCrPwCrackLevel4V1.env_config(network_conf=network_conf, action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir

@@ -1,4 +1,4 @@
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackSimpleSim1Env, PyCRPwCrackSimpleCluster1Env
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackLevel1Sim1Env, PyCRPwCrackLevel1Cluster1Env
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 import gym
 import time
@@ -9,12 +9,12 @@ def test_env(env_name : str, num_steps : int):
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim")
-    # cluster_config = ClusterConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
-    #                                server_connection=False)
+    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim")
+    cluster_config = ClusterConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = True
@@ -44,15 +44,7 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    #test_env("pycr-pwcrack-level-1-sim-v1", num_steps=1000000000)
-    test_env("pycr-pwcrack-level-1-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-v2", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-v4", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-nocache-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-base-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-v3", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-cluster-v1", num_steps=1000000000)
-    #test_env("pycr-pwcrack-level-1-generated-sim-v1", num_steps=1000000000)
+    test_env("pycr-pwcrack-level-4-cluster-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

@@ -381,16 +381,30 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level3, Mode: Cluster, Version: 4 ------------
 register(
     id='pycr-pwcrack-level-3-cluster-v4',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel3Cluster4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level3, Mode: Cluster, Costs, Version: 4 ------------
 register(
     id='pycr-pwcrack-level-3-cluster-costs-v4',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel3ClusterWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Version: Base ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-base-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4ClusterBaseEnv',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4Cluster1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )

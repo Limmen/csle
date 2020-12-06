@@ -31,6 +31,9 @@ class ClusterConfig:
         self.warmup = warmup
         self.warmup_iterations = warmup_iterations
         self.port_forward_next_port = port_forward_next_port
+        self.ids_router = True
+        self.ids_router_ip = ""
+        self.router_conn = None
 
     def connect_server(self):
         """
@@ -51,6 +54,21 @@ class ClusterConfig:
         server_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         server_conn.connect(self.server_ip, username=self.server_username, pkey=key)
         self.server_conn = server_conn
+
+    def connect_router(self):
+        print("Connecting to router host..")
+        agent_addr = (self.agent_ip, 22)
+        target_addr = (self.ids_router_ip, 22)
+        agent_transport = self.agent_conn.get_transport()
+        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
+                                                     timeout=3)
+        router_conn = paramiko.SSHClient()
+        router_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        router_conn.connect(self.ids_router_ip, username="pycr_admin", password="pycr@admin-pw_191",
+                            sock=relay_channel, timeout=3)
+        self.router_conn = router_conn
+        print("Router host connected successfully")
+
 
     def connect_agent(self):
         """
@@ -86,6 +104,9 @@ class ClusterConfig:
             self.agent_channel = self.agent_conn.invoke_shell()
 
         print("Agent host connected successfully")
+
+        if self.ids_router and self.ids_router_ip != "":
+            self.connect_router()
 
         # self._su_root()
         #

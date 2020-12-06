@@ -18,4 +18,4 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCrPwCrackLe
     PyCRPwCrackLevel1GeneratedSim3Env, PyCRPwCrackLevel1GeneratedSimWithCosts3Env, PyCRPwCrackLevel1GeneratedSim4Env, \
     PyCRPwCrackLevel1GeneratedSimWithCosts4Env, PyCRPwCrackLevel2GeneratedSim2Env, PyCRPwCrackLevel2GeneratedSimWithCosts2Env, \
     PyCRPwCrackLevel2GeneratedSim3Env, PyCRPwCrackLevel2GeneratedSimWithCosts3Env, PyCRPwCrackLevel2GeneratedSim4Env, \
-    PyCRPwCrackLevel2GeneratedSimWithCosts4Env
+    PyCRPwCrackLevel2GeneratedSimWithCosts4Env, PyCRPwCrackLevel4ClusterBaseEnv, PyCRPwCrackLevel4Cluster1Env

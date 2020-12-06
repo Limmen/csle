@@ -419,6 +419,11 @@ class EXPLOIT_VULNERABILITES:
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
 
+class IDS_ROUTER:
+    ALERTS_FILE = "/var/snort/alert.csv"
+    TAIL_ALERTS_COMMAND = "tail -50"
+    TAIL_ALERTS_LATEST_COMMAND = "tail -1"
+
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24
 #

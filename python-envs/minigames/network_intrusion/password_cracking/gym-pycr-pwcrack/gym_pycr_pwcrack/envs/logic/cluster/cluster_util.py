@@ -32,6 +32,7 @@ from gym_pycr_pwcrack.dao.action_results.nmap_http_enum import NmapHttpEnum
 from gym_pycr_pwcrack.dao.action_results.nmap_http_grep import NmapHttpGrep
 from gym_pycr_pwcrack.dao.action_results.nmap_vulscan import NmapVulscan
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
+from gym_pycr_pwcrack.dao.action_results.ids_alert import IdsAlert
 
 class ClusterUtil:
     """
@@ -868,8 +869,11 @@ class ClusterUtil:
             cmd = a.nmap_cmd()
             if masscan:
                 cmd = a.masscan_cmd()
+            #last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd,
                                                                        conn=env_config.cluster_config.agent_conn)
+            # alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
+            # alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
             cache_result = cache_filename
@@ -2722,4 +2726,25 @@ class ClusterUtil:
                                                  env_config=env_config)
         return s_prime, reward, False
 
+    @staticmethod
+    def get_latest_alert_ts(env_config: EnvConfig):
+        stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
+            constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+        alerts = []
+        for line in stdout:
+            a_str = line.replace("\n", "")
+            alerts.append(IdsAlert.parse_from_str(a_str))
+        if len(alerts) == 0:
+            return None
+        else:
+            return alerts[0].timestamp
 
+    @staticmethod
+    def check_ids_alerts(env_config: EnvConfig) -> List[IdsAlert]:
+        stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
+            constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+        alerts = []
+        for line in stdout:
+            a_str = line.replace("\n", "")
+            alerts.append(IdsAlert.parse_from_str(a_str))
+        return alerts

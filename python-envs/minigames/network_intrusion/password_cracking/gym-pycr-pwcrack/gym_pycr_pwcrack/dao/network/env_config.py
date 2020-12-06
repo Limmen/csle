@@ -130,6 +130,7 @@ class EnvConfig:
         self.load_services_from_server = True
         self.cache_misses = 0
         self.print_cache_details_freq = 500
+        self.ids_router = False
 
 
     def get_port_forward_port(self) -> int:
