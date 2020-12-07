@@ -6,6 +6,18 @@ The task of an attacker agent is to identify the vulnerabilities and exploit the
 on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the 
 attacker. 
 
+- Number of nodes: 6
+- IDS: No
+- Traffic generation: No
+- Number of flags: 3
+- Vulnerabilities: SSH, FTP, Telnet servers that can be compromised using dictionary attacks 
+
+## Architecture
+<p align="center">
+<img src="env.png" width="600">
+</p>
+
+
 ## Useful commands
 
 ```bash

@@ -10,6 +10,7 @@ attacker.
 - IDS: Yes (Snort)
 - Traffic generation: Yes
 - Number of flags: 6
+- Vulnerabilities: SSH, FTP, Telnet servers that can be compromised using dictionary attacks
 
 ## Architecture
 <p align="center">
