@@ -12,21 +12,21 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.0, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=4000,
+                                                num_iterations=300,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=10,
+                                                eval_frequency=10000, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500, input_dim=11 * 40,
                                                 output_dim=303,
                                                 pi_hidden_dim=512, pi_hidden_layers=1,
                                                 vf_hidden_dim=512, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=512,
-                                                batch_size=500,
+                                                batch_size=800,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -38,8 +38,8 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
                                                 )
-    #env_name = "pycr-pwcrack-level-2-cluster-v4"
-    env_name = "pycr-pwcrack-level-2-cluster-costs-v4"
+    env_name = "pycr-pwcrack-level-2-cluster-v4"
+    #env_name = "pycr-pwcrack-level-2-cluster-costs-v4"
     cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, warmup=True, warmup_iterations=1000,
                                    port_forward_next_port = 5100)
@@ -55,7 +55,7 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v4",
-                                 run_many=False, #random_seeds=[0, 999, 299],
+                                 run_many=True, random_seeds=[0, 999],
                                  random_seed=499, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     #random_seeds=[0, 999, 299, 399, 499],
     return client_config

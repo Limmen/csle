@@ -4,7 +4,7 @@ from gym_pycr_pwcrack.util.experiments_util import plotting_util
 
 def plot_rewards_steps_v1_v2_v3_v4():
     ppo_v1_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/0/1606076332.6622746_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/0/1607354276.1132252_train.csv")
     # ppo_v1_df_299 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/299/1605649635.7844296_train.csv")
     # ppo_v1_df_399 = pd.read_csv(
@@ -12,12 +12,12 @@ def plot_rewards_steps_v1_v2_v3_v4():
     # ppo_v1_df_499 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/499/1605650125.7917361_train.csv")
     ppo_v1_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/999/1606120680.3494797_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v1/cluster/ppo_baseline/results/data/999/1607354503.7336388_train.csv")
     #ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_299, ppo_v1_df_399, ppo_v1_df_499, ppo_v1_df_999]
     ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_999]
 
     ppo_v2_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v2/cluster/ppo_baseline/results/data/0/1606076446.1390576_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v2/cluster/ppo_baseline/results/data/0/1607355028.841213_train.csv")
     # ppo_v2_df_299 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/299/1605644643.7108836_train.csv")
     # ppo_v2_df_399 = pd.read_csv(
@@ -25,33 +25,33 @@ def plot_rewards_steps_v1_v2_v3_v4():
     # ppo_v2_df_499 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/499/1605644994.556923_train.csv")
     ppo_v2_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v2/cluster/ppo_baseline/results/data/999/1606127797.095794_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v2/cluster/ppo_baseline/results/data/999/1607355714.2383244_train.csv")
     #ppo_dfs_v2 = [ppo_v2_df_0, ppo_v2_df_299, ppo_v2_df_399, ppo_v2_df_499, ppo_v2_df_999]
     ppo_dfs_v2 = [ppo_v2_df_0, ppo_v2_df_999]
 
     ppo_v3_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/0/1606147119.3484828_train.csv")
-    ppo_v3_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/299/1606178418.5719573_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/0/1607356532.8185706_train.csv")
+    # ppo_v3_df_299 = pd.read_csv(
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/299/1606178418.5719573_train.csv")
     # ppo_v3_df_399 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/399/1605646489.2817347_train.csv")
     # ppo_v3_df_499 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/499/1605646692.2049596_train.csv")
     ppo_v3_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/999/1606163204.4737759_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v3/cluster/ppo_baseline/results/data/999/1607357679.6717246_train.csv")
     #ppo_dfs_v3 = [ppo_v3_df_0, ppo_v3_df_299, ppo_v3_df_399, ppo_v3_df_499, ppo_v3_df_999]
-    ppo_dfs_v3 = [ppo_v3_df_0, ppo_v3_df_299, ppo_v3_df_999]
+    ppo_dfs_v3 = [ppo_v3_df_0, ppo_v3_df_999]
 
     # ppo_v4_df_0 = pd.read_csv(
     #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v4/cluster/ppo_baseline/results/data/299/1606202341.2206078_train.csv")
     ppo_v4_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v4/cluster/ppo_baseline/results/data/299/1606202341.2206078_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v4/cluster/ppo_baseline/results/data/0/1607359002.5806754_train.csv")
     # ppo_v4_df_399 = pd.read_csv(
     #     "./v4/cluster/ppo_baseline/results/data/399/1603194281.0459163_train.csv")
     # ppo_v4_df_499 = pd.read_csv(
     #     "./v4/cluster/ppo_baseline/results/data/499/1603195265.9069285_train.csv")
     ppo_v4_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v4/cluster/ppo_baseline/results/data/999/1606202137.883947_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/difficulty_level_2/training/v4/cluster/ppo_baseline/results/data/999/1607361151.7426789_train.csv")
     #ppo_dfs_v4 = [ppo_v4_df_0, ppo_v4_df_299, ppo_v4_df_399, ppo_v4_df_499, ppo_v4_df_999]
     ppo_dfs_v4 = [ppo_v4_df_299, ppo_v4_df_999]
 
@@ -124,6 +124,11 @@ def plot_rewards_steps_v1_v2_v3_v4():
     #             max([max(rewards_means_v1 + rewards_stds_v1)]))
     # ylim_step = (min([min(steps_means_v1 - steps_stds_v1)]),
     #              max([max(steps_means_v1 + steps_stds_v1)]))
+
+    ylim_rew = (-100, max([max(rewards_means_v1 + rewards_stds_v1),
+                     max(rewards_means_v2 + rewards_stds_v2),
+                     max(rewards_means_v3 + rewards_stds_v3),
+                     max(rewards_means_v4 + rewards_stds_v4)]))
 
     plotting_util.plot_rewards_steps_4(rewards_data_v1[0:200], rewards_means_v1[0:200], rewards_stds_v1[0:200],
                          flags_data_v1[0:200], flags_means_v1[0:200], flags_stds_v1[0:200],
@@ -248,6 +253,11 @@ def plot_rewards_steps_v1_v2_v3_v4():
     #              max([max(steps_means_v1 + steps_stds_v1),
     #                   max(steps_means_v2 + steps_stds_v2),
     #                   max(steps_means_v3 + steps_stds_v3)]))
+
+    ylim_rew = (-100, max([max(rewards_means_v1 + rewards_stds_v1),
+                        max(rewards_means_v2 + rewards_stds_v2),
+                        max(rewards_means_v3 + rewards_stds_v3),
+                        max(rewards_means_v4 + rewards_stds_v4)]))
 
     plotting_util.plot_rewards_steps_4(rewards_data_v1[0:200], rewards_means_v1[0:200], rewards_stds_v1[0:200],
                          flags_data_v1[0:200], flags_means_v1[0:200], flags_stds_v1[0:200],

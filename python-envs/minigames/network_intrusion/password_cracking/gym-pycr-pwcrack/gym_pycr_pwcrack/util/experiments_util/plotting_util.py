@@ -492,16 +492,16 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
                        rewards_means_4 - rewards_stds_4, rewards_means_4 + rewards_stds_4,
                        alpha=0.35, color="#661D98")
 
-    ax.plot(np.array(list(range(len(rewards_means_1)))),
-               [optimal_reward] * len(rewards_means_1), label="Optimal",
-               color="black",
-               linestyle="dashed")
+    # ax.plot(np.array(list(range(len(rewards_means_1)))),
+    #            [optimal_reward] * len(rewards_means_1), label="Optimal",
+    #            color="black",
+    #            linestyle="dashed")
 
     ax.set_title(r"Episodic Rewards $\upsilon_2$")
     ax.set_xlabel("\# Iteration", fontsize=20)
     ax.set_ylabel("Avg Episode Reward", fontsize=20)
     ax.set_xlim(0, len(rewards_means_1))
-    # ax.set_ylim(-80, 100)
+    ax.set_ylim(ylim_rew[0], ylim_rew[1])
     #ax.set_ylim(ylim_rew)
 
     # set the grid on
