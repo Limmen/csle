@@ -117,4 +117,5 @@ class PyCrPwCrackLevel3V1:
         env_config.detection_reward = 0
 
         env_config.max_episode_length = 10000
+        env_config.ids_router = False
         return env_config

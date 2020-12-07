@@ -253,4 +253,5 @@ class PyCrPwCrackLevel3Base:
         env_config.blacklist_ips = ["172.18.3.1"]
 
         env_config.max_episode_length = 10000
+        env_config.ids_router = False
         return env_config

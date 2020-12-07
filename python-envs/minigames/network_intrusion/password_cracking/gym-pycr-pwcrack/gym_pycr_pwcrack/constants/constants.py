@@ -1,7 +1,8 @@
+import re
+
 """
 Constants for the pycr-pwcrack environment
 """
-
 class RENDERING:
     """
     Rendering constants
@@ -369,6 +370,7 @@ class COMMANDS:
 class FILE_PATTERNS:
     COST_FILE_SUFFIX = "_cost.txt"
     NMAP_ACTION_RESULT_SUFFIX = ".xml"
+    ALERTS_FILE_SUFFIX = "_alerts.txt"
 
 
 class NIKTO:
@@ -420,9 +422,13 @@ class EXPLOIT_VULNERABILITES:
     WEAK_PASSWORD_CVSS = 10.0
 
 class IDS_ROUTER:
+    MAX_ALERTS = 100
+    FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
-    TAIL_ALERTS_COMMAND = "tail -50"
+    TAIL_ALERTS_COMMAND = "tail -" + str(MAX_ALERTS)
+    TAIL_FAST_LOG_COMMAND = "tail -" + str(str(MAX_ALERTS))
     TAIL_ALERTS_LATEST_COMMAND = "tail -1"
+    PRIORITY_REGEX = re.compile(r"Priority: \d")
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24

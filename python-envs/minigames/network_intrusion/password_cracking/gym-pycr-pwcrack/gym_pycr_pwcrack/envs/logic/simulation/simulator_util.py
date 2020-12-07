@@ -97,7 +97,8 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config,
+                                                   alerts=a.alerts, action=a)
 
         # Scan action on a whole subnet
         else:
@@ -139,7 +140,8 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config, alerts=a.alerts,
+                                                   action=a)
         return s_prime, reward
 
     @staticmethod
@@ -213,7 +215,8 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config, alerts=a.alerts,
+                                                   action=a)
 
         # Scan a whole subnetwork
         else:
@@ -243,7 +246,8 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config, alerts=a.alerts,
+                                                   action=a)
         return s_prime, reward
 
     @staticmethod
@@ -335,7 +339,7 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config, alerts=a.alerts, action=a)
 
         # Scan action on a whole subnet
         else:
@@ -386,7 +390,7 @@ class SimulatorUtil:
                                                    num_new_logged_in=total_new_logged_in,
                                                    num_new_tools_installed=total_new_tools_installed,
                                                    num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config)
+                                                   cost=a.cost, env_config=env_config, alerts=a.alerts, action=a)
 
         return s_prime, reward
 
@@ -453,7 +457,7 @@ class SimulatorUtil:
                                                num_new_logged_in=total_new_logged_in,
                                                num_new_tools_installed=total_new_tools_installed,
                                                num_new_backdoors_installed=total_new_backdoors_installed,
-                                               cost=a.cost, env_config=env_config)
+                                               cost=a.cost, env_config=env_config, alerts=a.alerts, action=a)
         return s_prime, reward
 
 

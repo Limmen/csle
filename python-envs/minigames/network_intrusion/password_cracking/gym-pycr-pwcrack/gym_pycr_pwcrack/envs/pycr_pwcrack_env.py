@@ -94,6 +94,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 nikto_ids=self.env_config.action_conf.nikto_action_ids,
                 masscan_ids=self.env_config.action_conf.masscan_action_ids,
                 action_lookup_d_val = self.env_config.action_conf.action_lookup_d_val)
+            self.env_config.action_alerts = self.env_config.cluster_config.load_action_alerts(
+                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
+                action_ids=self.env_config.action_conf.action_ids,
+                action_lookup_d_val=self.env_config.action_conf.action_lookup_d_val,
+                shell_ids=self.env_config.action_conf.shell_action_ids)
+
         self.env_config.scale_rewards_prep()
         self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,

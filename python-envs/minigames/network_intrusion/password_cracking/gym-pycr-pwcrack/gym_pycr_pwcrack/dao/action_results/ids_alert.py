@@ -1,4 +1,6 @@
 import datetime
+import re
+import gym_pycr_pwcrack.constants.constants as constants
 
 class IdsAlert:
 
@@ -30,11 +32,12 @@ class IdsAlert:
         self.icmp_code = None
         self.icmp_id = None
         self.icmp_seq = None
+        self.priority = None
 
 
     @staticmethod
-    def parse_from_str(a_str : str):
-        a_fields = a_str.split(",")
+    def parse_from_str(csv_str_record : str):
+        a_fields = csv_str_record.split(",")
         alert_dao = IdsAlert()
         alert_dao.timestamp = a_fields[0]
         if alert_dao.timestamp is not None and alert_dao.timestamp != "":
@@ -65,11 +68,29 @@ class IdsAlert:
         alert_dao.icmp_code = a_fields[24]
         alert_dao.icmp_id = a_fields[25]
         alert_dao.icmp_seq = a_fields[26]
+        alert_dao.priority = 1
         return alert_dao
+
+    def set_priority(self, priority):
+        self.priority = priority
+
+    @staticmethod
+    def fast_log_parse(fast_log_str):
+        priorities = re.findall(constants.IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
+        priority = None
+        if len(priorities) > 0:
+            temp = priorities[0].replace("Priority: ", "")
+            priority = int(temp)
+        ts = fast_log_str.split(" ")[0]
+        if ts is not None and ts != "":
+            ts = datetime.datetime.strptime(ts.strip(), '%m/%d-%H:%M:%S.%f').timestamp()
+        return priority, ts
 
 
 if __name__ == '__main__':
     test = "12/06-22:10:53.094913  [**] [1:1418:11] SNMP request tcp [**] [Classification: Attempted Information Leak] [Priority: 2] {TCP} 172.18.4.191:58278 -> 172.18.4.10:161"
+    ts = test.split(" ")[0]
+    print(ts)
     parts = test.split(" ")
     ts = parts[0]
     import re

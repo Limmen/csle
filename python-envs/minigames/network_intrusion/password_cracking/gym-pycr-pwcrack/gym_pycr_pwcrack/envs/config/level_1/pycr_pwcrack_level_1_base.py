@@ -428,4 +428,5 @@ class PyCrPwCrackLevel1Base:
         env_config.vulners_miss_p = 0.0
         env_config.num_flags = 3
         env_config.blacklist_ips = ["172.18.1.1"]
+        env_config.ids_router = False
         return env_config

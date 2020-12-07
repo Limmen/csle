@@ -114,6 +114,51 @@ class ClusterUtil:
             remote_file.close()
 
     @staticmethod
+    def write_alerts_response(sum_priorities, num_alerts, action: Action, env_config: EnvConfig, ip: str = None,
+                              user: str = None, service: str = None, conn=None, dir: str = None,
+                              machine_ip: str = None) -> None:
+        """
+        Caches the number of triggered IDS alerts of an action by writing it to a file
+
+        :param sum_priorities: the sum of the "priority" field of the alerts
+        :param num_alerts: the number of different alerts that were triggered
+        :param action: the action
+        :param env_config: the environment config
+        :param ip: ip
+        :param user: user
+        :param service: service
+        :param conn: conn
+        :param dir: dir
+        :param machine_ip: machine_ip
+        :return: None
+        """
+        if conn is None:
+            conn = env_config.cluster_config.agent_conn
+        if dir is None or dir == "":
+            dir = env_config.nmap_cache_dir
+
+        sftp_client = conn.open_sftp()
+        file_name = dir + str(action.id.value) + "_" + str(action.index)
+        if not action.subnet and action.ip is not None:
+            file_name = file_name + "_" + action.ip
+        elif ip is not None:
+            file_name = file_name + "_" + ip
+        if service is not None:
+            file_name = file_name + "_" + service
+        if user is not None:
+            file_name = file_name + "_" + user
+        if machine_ip is not None:
+            file_name = file_name + "_" + machine_ip
+        file_name = file_name + constants.FILE_PATTERNS.ALERTS_FILE_SUFFIX
+        remote_file = sftp_client.file(file_name, mode="w")
+        try:
+            remote_file.write(str(sum_priorities) + "," + str(num_alerts) + "\n")
+        except Exception as e:
+            print("exception writing alerts file:{}".format(str(e)))
+        finally:
+            remote_file.close()
+
+    @staticmethod
     def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str,files: List[str],
                                      ip : str) \
             -> None:
@@ -820,6 +865,11 @@ class ClusterUtil:
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
             a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
+
+        # Use measured # alerts
+        if env_config.action_alerts.exists(action_id=a.id, ip=a.ip):
+            a.alerts = env_config.action_alerts.get_alert(action_id=a.id, ip=a.ip)
+
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_vuln,
                                                  num_new_machines=total_new_machines,
@@ -831,7 +881,9 @@ class ClusterUtil:
                                                  num_new_tools_installed=total_new_tools_installed,
                                                  num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=a.cost,
-                                                 env_config=env_config)
+                                                 env_config=env_config,
+                                                 alerts=a.alerts, action=a
+                                                 )
         return s_prime, reward
 
     @staticmethod
@@ -869,13 +921,26 @@ class ClusterUtil:
             cmd = a.nmap_cmd()
             if masscan:
                 cmd = a.masscan_cmd()
-            #last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+            if env_config.ids_router:
+                last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd,
                                                                        conn=env_config.cluster_config.agent_conn)
-            # alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
-            # alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
+            if env_config.ids_router:
+                #alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
+                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                #alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
+                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                num_alerts = len(fast_logs)
+                # for i in range(len(alerts)):
+                #     if alerts[i].timestamp == fast_logs[i][1]:
+                #         alerts[i].priority = fast_logs[i][0]
+                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                  action=a, env_config=env_config)
+                env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time,1))
+            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
             cache_result = cache_filename
 
         # Read result
@@ -1457,6 +1522,7 @@ class ClusterUtil:
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
         root_scan = False
+        total_alerts = (0,0)
         for c in ssh_connections_sorted_by_root:
             cache_file = \
                 ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
@@ -1466,12 +1532,26 @@ class ClusterUtil:
                 flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
                                                               env_config=env_config)
             else:
+                if env_config.ids_router:
+                    last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                 cmd = a.cmd[0]
                 if c.root:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
                 for i in range(env_config.ssh_retry_find_flag):
                     outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                     new_m_obs.filesystem_searched = True
+                    if env_config.ids_router:
+                        fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                        fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                        sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                        num_alerts = len(fast_logs)
+                        ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                          action=a, env_config=env_config, ip=machine.ip,
+                                                          user=c.username, service=constants.SSH.SERVICE_NAME)
+                        env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                   service=constants.SSH.SERVICE_NAME,
+                                                                   alert=(sum_priority_alerts, num_alerts))
+
                     ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                      env_config=env_config, ip=machine.ip,
                                                      user=c.username,
@@ -1505,10 +1585,18 @@ class ClusterUtil:
                                                              service=constants.SSH.SERVICE_NAME)
                 total_cost += cost
 
+            # Update alerts
+            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                 user=c.username,
+                                                                                 service=constants.SSH.SERVICE_NAME):
+                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                             service=constants.SSH.SERVICE_NAME)
+                total_alerts = alerts
+
             if c.root:
                 root_scan = True
                 break
-        return new_m_obs, total_cost, root_scan
+        return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
     def _find_flag_using_telnet(machine: MachineObservationState, env_config: EnvConfig, a: Action,
@@ -1523,6 +1611,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
+        total_alerts = (0, 0)
         telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username),
                                                    reverse=True)
         root_scan = False
@@ -1538,12 +1627,27 @@ class ClusterUtil:
                 cmd = a.cmd[0] + "\n"
                 if c.root:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
+                if env_config.ids_router:
+                    last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                 start = time.time()
                 c.conn.write(cmd.encode())
                 response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
                 new_m_obs.filesystem_searched = True
                 end = time.time()
                 total_time = end - start
+                if env_config.ids_router:
+                    fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                    sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                    num_alerts = len(fast_logs)
+                    ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                      action=a, env_config=env_config, ip=machine.ip,
+                                                      user=c.username,
+                                                      service=constants.TELNET.SERVICE_NAME)
+                    env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                               service=constants.TELNET.SERVICE_NAME,
+                                                               alert=(sum_priority_alerts, num_alerts))
+
                 ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                  env_config=env_config, ip=machine.ip,
                                                  user=c.username,
@@ -1570,10 +1674,18 @@ class ClusterUtil:
                                                              service=constants.TELNET.SERVICE_NAME)
                 total_cost += cost
 
+            # Update alerts
+            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                 user=c.username,
+                                                                                 service=constants.TELNET.SERVICE_NAME):
+                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                    service=constants.TELNET.SERVICE_NAME)
+                total_alerts = alerts
+
             if c.root:
                 root_scan = True
                 break
-        return new_m_obs, total_cost, root_scan
+        return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
     def _find_flag_using_ftp(machine: MachineObservationState, env_config: EnvConfig, a: Action,
@@ -1588,6 +1700,7 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """
         total_cost = 0
+        total_alerts = (0, 0)
         ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
         root_scan = False
         for c in ftp_connections_sorted_by_root:
@@ -1603,6 +1716,8 @@ class ClusterUtil:
                     cmd = a.alt_cmd[0] + "\n"
                     if c.root:
                         cmd = constants.COMMANDS.SUDO + " " + cmd
+                    if env_config.ids_router:
+                        last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                     start = time.time()
                     c.interactive_shell.send(cmd)
                     output = b""
@@ -1626,6 +1741,21 @@ class ClusterUtil:
                                 command_complete = True
                                 end = time.time()
                                 total_time = end - start
+                                if env_config.ids_router:
+                                    fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                                    sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                                    num_alerts = len(fast_logs)
+                                    ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts,
+                                                                      num_alerts=num_alerts,
+                                                                      action=a, env_config=env_config, ip=machine.ip,
+                                                                      user=c.username,
+                                                                      service=constants.FTP.SERVICE_NAME)
+                                    env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip,
+                                                                               user=c.username,
+                                                                               service=constants.FTP.SERVICE_NAME,
+                                                                               alert=(sum_priority_alerts, num_alerts))
+
                                 ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                                  env_config=env_config, ip=machine.ip,
                                                                  user=c.username,
@@ -1669,10 +1799,18 @@ class ClusterUtil:
                                                              service=constants.FTP.SERVICE_NAME)
                 total_cost += cost
 
+            # Update alerts
+            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                 user=c.username,
+                                                                                 service=constants.FTP.SERVICE_NAME):
+                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                    service=constants.FTP.SERVICE_NAME)
+                total_alerts = alerts
+
             if c.root:
                 root_scan = True
                 break
-        return new_m_obs, total_cost, root_scan
+        return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
     def nikto_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
@@ -1702,8 +1840,19 @@ class ClusterUtil:
 
         # If cache miss, then execute cmd
         if cache_result is None:
+            if env_config.ids_router:
+                last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nikto_cmd(),
                                                                        conn=env_config.cluster_config.agent_conn)
+            if env_config.ids_router:
+                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                num_alerts = len(fast_logs)
+                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                  action=a, env_config=env_config)
+                env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+
             ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
             env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
             cache_result = cache_id
@@ -1760,6 +1909,11 @@ class ClusterUtil:
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
             a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
+
+        # Use measured # alerts
+        if env_config.action_alerts.exists(action_id=a.id, ip=a.ip):
+            a.alerts = env_config.action_alerts.get_alert(action_id=a.id, ip=a.ip)
+
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_vuln,
                                                  num_new_machines=total_new_machines,
@@ -1771,7 +1925,9 @@ class ClusterUtil:
                                                  num_new_tools_installed=total_new_tools_installed,
                                                  num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=a.cost,
-                                                 env_config=env_config)
+                                                 env_config=env_config,
+                                                 alerts=a.alerts, action=a
+                                                 )
         return s_prime, reward
 
     @staticmethod
@@ -1996,6 +2152,7 @@ class ClusterUtil:
         """
         new_machines_obs = []
         total_cost = 0
+        total_alerts = (0,0)
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             installed = False
@@ -2025,6 +2182,8 @@ class ClusterUtil:
                         new_m_obs.tools_installed = installed
                     else:
                         cmd = a.cmd[0]
+                        if env_config.ids_router:
+                            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                         outdata = outdata.decode()
                         ssh_cost += float(total_time)
@@ -2039,6 +2198,19 @@ class ClusterUtil:
                             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                             ssh_cost += float(total_time)
 
+                        if env_config.ids_router:
+                            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                            num_alerts = len(fast_logs)
+                            ssh_alerts = (sum_priority_alerts, num_alerts)
+                            ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                              action=a, env_config=env_config, ip=machine.ip,
+                                                              user=c.username)
+                            env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                       service=constants.SSH.SERVICE_NAME,
+                                                                       alert=ssh_alerts)
+                            total_alerts = (total_alerts[0] + ssh_alerts[0], total_alerts[1]+ ssh_alerts[1])
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                          env_config=env_config, ip=machine.ip,
                                                          user=c.username)
@@ -2088,6 +2260,8 @@ class ClusterUtil:
                         # Install packages
                         cmd = a.cmd[0] + "\n"
                         start = time.time()
+                        if env_config.ids_router:
+                            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                         c.conn.write(cmd.encode())
                         response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
                         response = response.decode()
@@ -2109,6 +2283,20 @@ class ClusterUtil:
                             end = time.time()
                             total_time = end - start
                             telnet_cost += float(total_time)
+
+                        if env_config.ids_router:
+                            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                            num_alerts = len(fast_logs)
+                            telnet_alerts = (sum_priority_alerts, num_alerts)
+                            ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                              action=a, env_config=env_config, ip=machine.ip,
+                                                              user=c.username, service=constants.TELNET.SERVICE_NAME)
+                            env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                       service=constants.TELNET.SERVICE_NAME,
+                                                                       alert=telnet_alerts)
+                            total_alerts = (total_alerts[0] + telnet_alerts[0], total_alerts[1] + telnet_alerts[1])
 
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                          env_config=env_config, ip=machine.ip,
@@ -2150,7 +2338,8 @@ class ClusterUtil:
                                                  num_new_tools_installed=total_new_tools_installed,
                                                  num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=total_cost,
-                                                 env_config=env_config)
+                                                 env_config=env_config,
+                                                 alerts=total_alerts, action=a)
         return s, reward, False
 
     @staticmethod
@@ -2279,13 +2468,26 @@ class ClusterUtil:
 
                     # If cache miss, then execute cmd
                     if cache_result is None:
+                        if env_config.ids_router:
+                            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                         cmd = a.nmap_cmd(machine_ip=machine.ip)
                         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                         total_cost += total_time
+                        if env_config.ids_router:
+                            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                            num_alerts = len(fast_logs)
+                            ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                              action=a, env_config=env_config,
+                                                              conn=c.conn, dir=cwd, machine_ip = machine.ip)
+                            env_config.action_alerts.pivot_scan_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                        target_ip=machine.ip, alert=(sum_priority_alerts, num_alerts))
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
                                                          conn=c.conn, dir=cwd, machine_ip=machine.ip)
                         env_config.action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
                                                                     target_ip=machine.ip, cost=round(total_time, 1))
+
                         cache_result = cache_filename
 
                     # Read result
@@ -2314,6 +2516,7 @@ class ClusterUtil:
 
         if env_config.use_nmap_cache:
             env_config.nmap_scan_cache.add(base_cache_id, (merged_scan_result, total_results))
+        a.cost = a.cost + total_cost
         s_prime, reward = ClusterUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
         new_machines_obs_1 = []
@@ -2456,6 +2659,7 @@ class ClusterUtil:
         pw = constants.SSH_BACKDOOR.DEFAULT_PW
         new_machines_obs = []
         total_cost = 0
+        total_alerts = (0,0)
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             backdoor_created = False
@@ -2610,7 +2814,8 @@ class ClusterUtil:
                                                  num_new_tools_installed=total_new_tools_installed,
                                                  num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=total_cost,
-                                                 env_config=env_config)
+                                                 env_config=env_config,
+                                                 alerts=total_alerts, action=a)
         return s, reward, False
 
     @staticmethod
@@ -2662,6 +2867,10 @@ class ClusterUtil:
         total_new_backdoors_installed = 0
         s_prime = s
         new_conn = False
+
+        if env_config.ids_router:
+            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+
         for machine in s.obs_state.machines:
             a.ip = machine.ip
             s_1, t_n_p_1, t_n_os_1, t_n_v_1, t_n_m_1, \
@@ -2705,13 +2914,26 @@ class ClusterUtil:
         if new_conn:
             env_config.action_costs.service_add_cost(action_id=a.id, ip=env_config.cluster_config.agent_ip,
                                                      cost=float(total_cost))
-            # ClusterUtil.write_estimated_cost(total_time=total_cost, action=a,
-            #                                  env_config=env_config, ip=a.ip)
+
+        # Update alerts cache
+        if env_config.ids_router and new_conn:
+            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+            num_alerts = len(fast_logs)
+            env_config.action_alerts.add_alert(action_id=a.id, ip=env_config.cluster_config.agent_ip,
+                                                       alert=(sum_priority_alerts, num_alerts))
 
         a.ip = ""
+
         # Use measured cost
         if env_config.action_costs.service_exists(action_id=a.id, ip=env_config.cluster_config.agent_ip):
             a.cost = env_config.action_costs.service_get_cost(action_id=a.id, ip=env_config.cluster_config.agent_ip)
+
+        # Use measured alerts
+        if env_config.action_alerts.exists(action_id=a.id, ip=env_config.cluster_config.agent_ip):
+            a.alerts = env_config.action_alerts.get_alert(action_id=a.id, ip=env_config.cluster_config.agent_ip)
+
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_cve_vuln,
                                                  num_new_machines=total_new_machines,
@@ -2723,11 +2945,14 @@ class ClusterUtil:
                                                  num_new_tools_installed=total_new_tools_installed,
                                                  num_new_backdoors_installed=total_new_backdoors_installed,
                                                  cost=a.cost,
-                                                 env_config=env_config)
+                                                 env_config=env_config,
+                                                 alerts=a.alerts, action=a)
         return s_prime, reward, False
 
     @staticmethod
     def get_latest_alert_ts(env_config: EnvConfig):
+        if not env_config.ids_router:
+            raise AssertionError("Can only read alert files if IDS router is enabled")
         stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
         alerts = []
@@ -2741,6 +2966,8 @@ class ClusterUtil:
 
     @staticmethod
     def check_ids_alerts(env_config: EnvConfig) -> List[IdsAlert]:
+        if not env_config.ids_router:
+            raise AssertionError("Can only read alert files if IDS router is enabled")
         stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
         alerts = []
@@ -2748,3 +2975,16 @@ class ClusterUtil:
             a_str = line.replace("\n", "")
             alerts.append(IdsAlert.parse_from_str(a_str))
         return alerts
+
+    @staticmethod
+    def check_ids_fast_log(env_config: EnvConfig) -> List[IdsAlert]:
+        if not env_config.ids_router:
+            raise AssertionError("Can only read alert files if IDS router is enabled")
+        stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
+            constants.IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.IDS_ROUTER.FAST_LOG_FILE)
+        fast_logs = []
+        for line in stdout:
+            a_str = line.replace("\n", "")
+            priority, ts = IdsAlert.fast_log_parse(a_str)
+            fast_logs.append((priority, ts))
+        return fast_logs

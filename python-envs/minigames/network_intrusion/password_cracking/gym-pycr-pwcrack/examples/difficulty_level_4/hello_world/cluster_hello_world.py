@@ -17,9 +17,7 @@ def test_env(env_name : str, num_steps : int):
                                    server_connection=False)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
     env.env_config.max_episode_length = 1000000000
-    env.env_config.manual_play = True
-
-
+    env.env_config.manual_play = False
 
     env.reset()
 

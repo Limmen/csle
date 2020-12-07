@@ -10,6 +10,7 @@ from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystem
 from gym_pycr_pwcrack.dao.action_results.nikto_scan_cache import NiktoScanCache
 from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
 from gym_pycr_pwcrack.dao.action_results.user_command_cache import UserCommandCache
+from gym_pycr_pwcrack.dao.action_results.action_alerts import ActionAlerts
 
 class EnvConfig:
     """
@@ -81,6 +82,7 @@ class EnvConfig:
         self.use_nikto_cache = True
         self.nikto_scan_cache = NiktoScanCache()
         self.action_costs = ActionCosts()
+        self.action_alerts = ActionAlerts()
         self.flag_lookup = self._create_flags_lookup()
         self.use_file_system_cache = True
         self.filesystem_scan_cache = FileSystemScanCache()
@@ -101,9 +103,13 @@ class EnvConfig:
         self.new_tools_installed_reward_mult = 1
         self.new_backdoors_installed_reward_mult = 1
         self.cost_coefficient = 1
+        self.alerts_coefficient = 1
         self.detection_reward = -50
         self.all_flags_reward = 500
         self.sum_costs = 1
+        self.max_costs = 1
+        self.sum_alerts = 1
+        self.max_alerts = 1
         self.max_episode_length = 10000
         self.base_step_reward = -1
         self.illegal_reward_action = 0
@@ -151,4 +157,11 @@ class EnvConfig:
 
     def scale_rewards_prep(self):
         sum_costs = sum(list(map(lambda x: x.cost, self.action_conf.actions)))
+        max_costs = max(list(map(lambda x: x.cost, self.action_conf.actions)))
         self.sum_costs = sum_costs
+        self.max_costs = max_costs
+        if self.ids_router:
+            sum_alerts = sum(list(map(lambda x: x.alerts[0], self.action_conf.actions)))
+            max_alerts = max(list(map(lambda x: x.alerts[0], self.action_conf.actions)))
+            self.sum_alerts = sum_alerts
+            self.max_alerts = max_alerts

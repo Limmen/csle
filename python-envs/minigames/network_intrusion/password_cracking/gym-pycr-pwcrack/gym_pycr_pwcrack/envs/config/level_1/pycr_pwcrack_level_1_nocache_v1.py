@@ -117,5 +117,5 @@ class PyCrPwCrackLevel1NoCacheV1:
         env_config.use_nikto_cache = False
         env_config.use_file_system_cache = False
         env_config.use_nmap_cache = False
-
+        env_config.ids_router = False
         return env_config

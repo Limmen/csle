@@ -481,7 +481,7 @@ class EnvDynamicsUtil:
                         num_new_flag_pts: int = 0, num_new_osvdb_vuln_found : int = 0,
                         num_new_logged_in : int = 0, num_new_tools_installed : int = 0,
                         num_new_backdoors_installed : int = 0,
-                        cost: float = 0.0, env_config: EnvConfig  = None) -> int:
+                        cost: float = 0.0, env_config: EnvConfig  = None, alerts: Tuple = None, action: Action = None) -> int:
         """
         Implements the reward function
 
@@ -497,6 +497,7 @@ class EnvDynamicsUtil:
         :param num_new_backdoors_installed: number of new backdoors installed
         :param cost: cost of the action that was performed
         :param env_config: env config
+        :param alerts: ids alerts
         :return: reward
         """
         reward = env_config.port_found_reward_mult * num_new_ports_found + \
@@ -510,11 +511,15 @@ class EnvDynamicsUtil:
                  env_config.new_login_reward_mult * num_new_logged_in + \
                  env_config.new_tools_installed_reward_mult * num_new_tools_installed + \
                  env_config.new_backdoors_installed_reward_mult * num_new_backdoors_installed
-        cost = ((cost*env_config.cost_coefficient)/env_config.sum_costs)*10 # normalize between 0-10
+        cost = ((cost*env_config.cost_coefficient)/env_config.max_costs)*10 # normalize between 0-10
+        alerts_pts = 0
+        if env_config.ids_router and alerts is not None:
+            alerts_pts = ((alerts[0] * env_config.alerts_coefficient) / env_config.max_alerts) * 10  # normalize between 0-10
+
         if reward == 0:
-            reward = env_config.base_step_reward - cost
+            reward = env_config.base_step_reward - cost - alerts_pts
         else:
-            reward = (-env_config.base_step_reward)*reward - cost
+            reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
         return reward
 
     @staticmethod
