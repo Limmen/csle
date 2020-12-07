@@ -395,6 +395,8 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
 
+## Level 4
+
 # -------- Difficulty Level: Level4, Mode: Cluster, Version: Base ------------
 register(
     id='pycr-pwcrack-level-4-cluster-base-v1',
@@ -406,5 +408,184 @@ register(
 register(
     id='pycr-pwcrack-level-4-cluster-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4Cluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4ClusterWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4Cluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4ClusterWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4Cluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4ClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4Cluster4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-4-cluster-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel4ClusterWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+## Level 5
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Version: Base ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-base-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5ClusterBaseEnv',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5Cluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5ClusterWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5Cluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5ClusterWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5Cluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5ClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5Cluster4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-5-cluster-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel5ClusterWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+## Level 6
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Version: Base ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-base-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6ClusterBaseEnv',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6Cluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6ClusterWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6Cluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6ClusterWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6Cluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6ClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6Cluster4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-level-6-cluster-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackLevel6ClusterWithCosts4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )

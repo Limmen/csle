@@ -1,4 +1,4 @@
-# Password Cracking - Level 2
+# Password Cracking - Level 3
 
 A virtual environment with a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka, 
 Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as they use weak passwords. 

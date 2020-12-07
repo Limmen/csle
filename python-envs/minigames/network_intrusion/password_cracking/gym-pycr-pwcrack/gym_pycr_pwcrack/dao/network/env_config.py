@@ -157,11 +157,11 @@ class EnvConfig:
 
     def scale_rewards_prep(self):
         sum_costs = sum(list(map(lambda x: x.cost, self.action_conf.actions)))
-        max_costs = max(list(map(lambda x: x.cost, self.action_conf.actions)))
+        max_costs = max(max(list(map(lambda x: x.cost, self.action_conf.actions))), 1)
         self.sum_costs = sum_costs
         self.max_costs = max_costs
         if self.ids_router:
             sum_alerts = sum(list(map(lambda x: x.alerts[0], self.action_conf.actions)))
-            max_alerts = max(list(map(lambda x: x.alerts[0], self.action_conf.actions)))
+            max_alerts = max(max(list(map(lambda x: x.alerts[0], self.action_conf.actions))), 1)
             self.sum_alerts = sum_alerts
             self.max_alerts = max_alerts

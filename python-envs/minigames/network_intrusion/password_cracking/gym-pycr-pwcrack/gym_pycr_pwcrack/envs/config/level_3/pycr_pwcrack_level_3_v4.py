@@ -15,7 +15,7 @@ from gym_pycr_pwcrack.dao.action.masscan_actions import MasscanActions
 
 class PyCrPwCrackLevel3V4:
     """
-    V4 configuration of level 4 of the PyCrPwCrack environment.
+    V4 configuration of level 3 of the PyCrPwCrack environment.
     """
 
     @staticmethod

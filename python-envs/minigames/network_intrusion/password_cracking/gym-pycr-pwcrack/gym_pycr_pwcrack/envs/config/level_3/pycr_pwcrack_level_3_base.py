@@ -17,7 +17,7 @@ from gym_pycr_pwcrack.dao.network.node import Node
 
 class PyCrPwCrackLevel3Base:
     """
-    Base configuration of level 2 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
+    Base configuration of level 3 of the PyCrPwCrack environment. (Mainly used when running in simulation mode
     and all the config of the environment have to be hardcoded)
     """
 

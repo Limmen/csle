@@ -18,4 +18,13 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCrPwCrackLe
     PyCRPwCrackLevel1GeneratedSim3Env, PyCRPwCrackLevel1GeneratedSimWithCosts3Env, PyCRPwCrackLevel1GeneratedSim4Env, \
     PyCRPwCrackLevel1GeneratedSimWithCosts4Env, PyCRPwCrackLevel2GeneratedSim2Env, PyCRPwCrackLevel2GeneratedSimWithCosts2Env, \
     PyCRPwCrackLevel2GeneratedSim3Env, PyCRPwCrackLevel2GeneratedSimWithCosts3Env, PyCRPwCrackLevel2GeneratedSim4Env, \
-    PyCRPwCrackLevel2GeneratedSimWithCosts4Env, PyCRPwCrackLevel4ClusterBaseEnv, PyCRPwCrackLevel4Cluster1Env
+    PyCRPwCrackLevel2GeneratedSimWithCosts4Env, PyCRPwCrackLevel4ClusterBaseEnv, PyCRPwCrackLevel4Cluster1Env, \
+    PyCRPwCrackLevel4ClusterWithCosts1Env, PyCRPwCrackLevel4Cluster2Env, PyCRPwCrackLevel4Cluster3Env, \
+    PyCRPwCrackLevel4Cluster4Env, PyCRPwCrackLevel4ClusterWithCosts2Env, PyCRPwCrackLevel4ClusterWithCosts3Env, \
+    PyCRPwCrackLevel4ClusterWithCosts4Env, PyCRPwCrackLevel5ClusterBaseEnv, PyCRPwCrackLevel5Cluster1Env, \
+    PyCRPwCrackLevel5ClusterWithCosts1Env, PyCRPwCrackLevel5Cluster2Env, PyCRPwCrackLevel5Cluster3Env, \
+    PyCRPwCrackLevel5Cluster4Env, PyCRPwCrackLevel5ClusterWithCosts2Env, PyCRPwCrackLevel5ClusterWithCosts3Env, \
+    PyCRPwCrackLevel5ClusterWithCosts4Env, PyCRPwCrackLevel6ClusterBaseEnv, PyCRPwCrackLevel6Cluster1Env, \
+    PyCRPwCrackLevel6ClusterWithCosts1Env, PyCRPwCrackLevel6Cluster2Env, PyCRPwCrackLevel6Cluster3Env, \
+    PyCRPwCrackLevel6Cluster4Env, PyCRPwCrackLevel6ClusterWithCosts2Env, PyCRPwCrackLevel6ClusterWithCosts3Env, \
+    PyCRPwCrackLevel6ClusterWithCosts4Env

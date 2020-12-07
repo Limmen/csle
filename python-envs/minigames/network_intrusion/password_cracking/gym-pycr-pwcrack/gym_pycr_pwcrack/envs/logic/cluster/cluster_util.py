@@ -929,7 +929,8 @@ class ClusterUtil:
                 #alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
                 fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
                 #alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
-                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                if last_alert_ts is not None:
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                 sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                 num_alerts = len(fast_logs)
                 # for i in range(len(alerts)):
@@ -1542,7 +1543,8 @@ class ClusterUtil:
                     new_m_obs.filesystem_searched = True
                     if env_config.ids_router:
                         fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                        fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                        if last_alert_ts is not None:
+                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                         sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                         num_alerts = len(fast_logs)
                         ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
@@ -1637,7 +1639,8 @@ class ClusterUtil:
                 total_time = end - start
                 if env_config.ids_router:
                     fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                    if last_alert_ts is not None:
+                        fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                     sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                     num_alerts = len(fast_logs)
                     ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
@@ -1743,7 +1746,8 @@ class ClusterUtil:
                                 total_time = end - start
                                 if env_config.ids_router:
                                     fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                                    if last_alert_ts is not None:
+                                        fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                                     sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                                     num_alerts = len(fast_logs)
                                     ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts,
@@ -1846,7 +1850,8 @@ class ClusterUtil:
                                                                        conn=env_config.cluster_config.agent_conn)
             if env_config.ids_router:
                 fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                if last_alert_ts is not None:
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                 sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                 num_alerts = len(fast_logs)
                 ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
@@ -2200,7 +2205,8 @@ class ClusterUtil:
 
                         if env_config.ids_router:
                             fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            if last_alert_ts is not None:
+                                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                             num_alerts = len(fast_logs)
                             ssh_alerts = (sum_priority_alerts, num_alerts)
@@ -2286,7 +2292,8 @@ class ClusterUtil:
 
                         if env_config.ids_router:
                             fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            if last_alert_ts is not None:
+                                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                             num_alerts = len(fast_logs)
                             telnet_alerts = (sum_priority_alerts, num_alerts)
@@ -2475,7 +2482,8 @@ class ClusterUtil:
                         total_cost += total_time
                         if env_config.ids_router:
                             fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                            if last_alert_ts is not None:
+                                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                             num_alerts = len(fast_logs)
                             ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
@@ -2918,7 +2926,8 @@ class ClusterUtil:
         # Update alerts cache
         if env_config.ids_router and new_conn:
             fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-            fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+            if last_alert_ts is not None:
+                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
             num_alerts = len(fast_logs)
             env_config.action_alerts.add_alert(action_id=a.id, ip=env_config.cluster_config.agent_ip,
@@ -2960,7 +2969,17 @@ class ClusterUtil:
             a_str = line.replace("\n", "")
             alerts.append(IdsAlert.parse_from_str(a_str))
         if len(alerts) == 0:
-            return None
+            # retry once
+            stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
+                constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+            alerts = []
+            for line in stdout:
+                a_str = line.replace("\n", "")
+                alerts.append(IdsAlert.parse_from_str(a_str))
+            if len(alerts) == 0:
+                return None
+            else:
+                return alerts[0].timestamp
         else:
             return alerts[0].timestamp
 
