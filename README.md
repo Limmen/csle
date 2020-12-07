@@ -1,6 +1,6 @@
 # `pycr` The Python Cyber Range for Self-Learning Cyber Security Systems
 
-The environment implements virtual cyber rangs for training reinforcement learning agnets. 
+The environment implements virtual cyber rangs for training reinforcement learning agents. 
 The environment exposes a Markov-game or Markov Decision Process API for OpenAI Gym.
 
 ## Architecture

@@ -1,4 +1,6 @@
-# TODO
+# Ubuntu 14 Base
+
+A base image with Ubuntu 14
 
 ## Useful commands
 
@@ -16,3 +18,14 @@ docker container prune # remove stopped containers
 nmap -p- <ip> # Scan TCP ports   
 ```
 
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+[LICENSE](LICENSE.md)
+
+Creative Commons
+
+(C) 2020, Kim Hammar

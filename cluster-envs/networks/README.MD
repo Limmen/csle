@@ -1,6 +1,6 @@
-# Base Images
+# Networks
 
-Base images used in `pycr` when creating "Mini-game" environments.  
+Scripts used to create the virtual subnetworks  
 
 ## Useful commands
 

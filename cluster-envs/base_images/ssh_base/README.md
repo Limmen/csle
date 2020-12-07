@@ -1,6 +1,6 @@
-# Kali Base image
+# SSH Base Image
 
-Kali docker image, used for implementing offensive agent 
+SSH base docker image, used for implementing servers with SSH vulnerabilities  
 
 ## Useful commands
 

@@ -1,6 +1,7 @@
-# Base Images
+# Derived Images
 
-Base images used in `pycr` when creating "Mini-game" environments.  
+Derived images used in `pycr` when creating "Mini-game" environments.
+The derived images inherit from the base images  
 
 ## Useful commands
 
