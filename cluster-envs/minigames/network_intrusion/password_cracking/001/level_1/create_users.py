@@ -57,6 +57,7 @@ def write_default_users_config(path:str = None) -> None:
     users_config = default_users()
     util.write_users_config_file(users_config, path)
 
+
 def create_users(users_config: UsersConfig, cluster_config: ClusterConfig):
     for users_conf in users_config.users:
         connect_admin(cluster_config=cluster_config, ip=users_conf.ip)
