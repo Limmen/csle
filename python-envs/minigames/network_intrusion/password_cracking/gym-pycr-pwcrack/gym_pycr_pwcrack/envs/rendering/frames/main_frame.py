@@ -510,7 +510,6 @@ class MainFrame(pyglet.window.Window):
                             self.second_foreground)
                 self.log_labels.append(l)
 
-
     def on_key_press(self, symbol, modifiers) -> None:
         """
         Event handler for on_key_press event.
@@ -792,7 +791,6 @@ class MainFrame(pyglet.window.Window):
             self.id_to_node[int(machine.ip.rsplit(".", 1)[-1])] = machine
         except IndexError as e:
             print("Too many nodes for GUI, increase GUI size: {}".format(str(e)))
-
 
     def add_new_links_to_gui(self):
         self.node_ip_to_links = {}

@@ -6,6 +6,7 @@ from gym_pycr_pwcrack.dao.container_config.node_firewall_config import NodeFirew
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.envs.logic.cluster.cluster_util import ClusterUtil
 from gym_pycr_pwcrack.envs.config.generator.generator_util import GeneratorUtil
+from gym_pycr_pwcrack.util.experiments_util import util
 
 
 class TopologyGenerator:
@@ -68,26 +69,34 @@ class TopologyGenerator:
         node_fw_configs = []
         for i in range(len(nodes_ip_suffixes)):
             ip = subnet_prefix + str(nodes_ip_suffixes[i])
+            net_gw = subnet_prefix + "1"
             output_accept = set()
             input_accept = set()
             forward_accept = set()
+            output_accept.add(net_gw)
+            input_accept.add(net_gw)
+            forward_accept.add(net_gw)
             output_drop = set()
             input_drop = set()
             forward_drop = set()
             routes = set()
             for j in range(adj_matrix.shape[1]):
                 if adj_matrix[i][j] == 1:
-                    input_accept.add(node_id_d_inv[j])
-                    output_accept.add(node_id_d_inv[j])
-                    forward_accept.add(node_id_d_inv[j])
+                    input_accept.add(subnet_prefix + str(node_id_d_inv[j]))
+                    output_accept.add(subnet_prefix + str(node_id_d_inv[j]))
+                    forward_accept.add(subnet_prefix + str(node_id_d_inv[j]))
                 else:
-                    input_drop.add(node_id_d_inv[j])
-                    output_drop.add(node_id_d_inv[j])
-                    forward_drop.add(node_id_d_inv[j])
+                    input_drop.add(subnet_prefix + str(node_id_d_inv[j]))
+                    output_drop.add(subnet_prefix + str(node_id_d_inv[j]))
+                    forward_drop.add(subnet_prefix + str(node_id_d_inv[j]))
+
+            default_gw = None
+            if nodes_ip_suffixes[i]==agent_ip_suffix:
+                default_gw = subnet_prefix + str(router_ip_suffix)
             node_cfg = NodeFirewallConfig(ip=ip, output_accept=output_accept, input_accept=input_accept,
                                forward_accept=forward_accept, output_drop=set(), input_drop=set(), forward_drop=set(),
                                routes=set(), default_input="DROP", default_output="DROP", default_forward="DROP",
-                               default_gw=None)
+                               default_gw=default_gw)
             node_fw_configs.append(node_cfg)
 
         topology = Topology(node_configs=node_fw_configs, subnetwork=subnet_prefix + "0/24")
@@ -101,7 +110,7 @@ class TopologyGenerator:
         done = False
         ip_suffix = -1
         while not done:
-            ip_suffix = random.randint(0, 255)
+            ip_suffix = random.randint(2, 254)
             if ip_suffix not in blacklist:
                 done = True
         return ip_suffix
@@ -109,8 +118,10 @@ class TopologyGenerator:
     @staticmethod
     def create_topology(topology: Topology, cluster_config: ClusterConfig):
         for node in topology.node_configs:
+
             print("node:{}".format(node.ip))
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
+            print("connected")
 
             for route in node.routes:
                 target, gw = route
@@ -160,6 +171,19 @@ class TopologyGenerator:
             ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+
+
+    @staticmethod
+    def write_topology(topology: Topology, path: str = None) -> None:
+        """
+        Writes the default configuration to a json file
+
+        :param path: the path to write the configuration to
+        :return: None
+        """
+        if path is None:
+            path = util.default_topology_path()
+        util.write_topology_file(topology, path)
 
 
 if __name__ == '__main__':

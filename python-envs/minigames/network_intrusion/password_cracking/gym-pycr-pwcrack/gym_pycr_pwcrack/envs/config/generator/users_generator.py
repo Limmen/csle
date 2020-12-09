@@ -8,6 +8,7 @@ from gym_pycr_pwcrack.dao.container_config.node_users_config import NodeUsersCon
 from gym_pycr_pwcrack.envs.config.generator.topology_generator import TopologyGenerator
 from gym_pycr_pwcrack.envs.config.generator.generator_util import GeneratorUtil
 from random_username.generate import generate_username
+from gym_pycr_pwcrack.util.experiments_util import util
 import secrets
 import string
 
@@ -15,7 +16,7 @@ class UsersGenerator:
 
 
     @staticmethod
-    def generate(max_num_users: int, topology: Topology):
+    def generate(max_num_users: int, topology: Topology, agent_ip: str):
         alphabet = string.ascii_letters + string.digits
         user_configs = []
         for node in topology.node_configs:
@@ -30,6 +31,11 @@ class UsersGenerator:
                 users.append((username, password, root))
             user_cfg = NodeUsersConfig(ip = node.ip, users=users)
             user_configs.append(user_cfg)
+
+        agent_user = ("agent", "agent", "root")
+        agent_user_cfg = NodeUsersConfig(ip=agent_ip, users=[agent_user])
+        user_configs.append(agent_user_cfg)
+
         users_conf = UsersConfig(users=user_configs)
         return users_conf
 
@@ -60,6 +66,19 @@ class UsersGenerator:
 
             GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
 
+    @staticmethod
+    def write_users_config(users_config: UsersConfig, path: str = None) -> None:
+        """
+        Writes the default configuration to a json file
+
+        :param path: the path to write the configuration to
+        :return: None
+        """
+        if path is None:
+            path = util.default_users_path()
+        util.write_users_config_file(users_config, path)
+
+
 if __name__ == '__main__':
     adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix="172.18.2.")
-    users_conf = UsersGenerator.generate(5, topology)
+    users_conf = UsersGenerator.generate(5, topology, "172.18.2.191")

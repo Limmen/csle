@@ -1,0 +1,109 @@
+{
+    "py/object": "gym_pycr_pwcrack.dao.container_config.users_config.UsersConfig",
+    "users": [
+        {
+            "ip": "172.18.16.14",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "boredGarlic4",
+                        "k2DcCI8MAd3esSOp8igD",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.110",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "chicIcecream6",
+                        "fRR5lkzPO6oDSQpPXvO1",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.153",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "dejectedBoars5",
+                        "XFc5fPFtlcqAOO8QLPfA",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.51",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "soreMacaw1",
+                        "2iS1AylVl84vBxnFrZ2Y",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.247",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "cheerfulBustard3",
+                        "cTTLDYcOcCLTZuPdHN1s",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.228",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "offendedTacos1",
+                        "NQ9p5o7v2S1iZg0p7KJj",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.77",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "wearyUnicorn1",
+                        "SS6Btpqze3E6P9cCs74G",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.16.14",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "agent",
+                        "agent",
+                        "root"
+                    ]
+                }
+            ]
+        }
+    ]
+}

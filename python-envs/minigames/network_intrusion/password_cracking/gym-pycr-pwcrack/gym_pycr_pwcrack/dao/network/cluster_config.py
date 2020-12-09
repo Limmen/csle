@@ -274,16 +274,18 @@ class ClusterConfig:
 
         # Load shell action costs which are user and service specific
         shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
-        for a in shell_actions:
-            id = a.id
-            cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
-            stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
-            file_list = []
-            for line in stdout:
-                line_str = line.replace("\n", "")
-                if "_cost" in line_str:
-                    file_list.append(line_str)
-            for file in file_list:
+        shell_id_values = list(map(lambda x: x.value, shell_ids))
+        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _cost"
+        stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+        file_list = []
+        for line in stdout:
+            line_str = line.replace("\n", "")
+            if "_cost" in line_str:
+                file_list.append(line_str)
+        for file in file_list:
+            parts = file.split("_")
+            id = int(parts[0])
+            if id in shell_id_values:
                 try:
                     parts = file.split("_")
                     idx = parts[1]
@@ -303,22 +305,22 @@ class ClusterConfig:
                         remote_file.close()
 
         # Load user command action costs which are user specific
-        shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
-        for a in shell_actions:
-            id = a.id
-            cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
-            stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
-            file_list = []
-            for line in stdout:
-                line_str = line.replace("\n", "")
-                if "_cost" in line_str:
-                    file_list.append(line_str)
-            for file in file_list:
+        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _cost"
+        stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+        file_list = []
+        for line in stdout:
+            line_str = line.replace("\n", "")
+            if "_cost" in line_str:
+                file_list.append(line_str)
+        for file in file_list:
+            parts = file.split("_")
+            id = int(parts[0])
+            if id in shell_id_values:
                 try:
                     parts = file.split("_")
                     idx = parts[1]
                     ip = parts[2]
-                    user = parts[3]
+                    service = parts[3]
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
@@ -361,57 +363,60 @@ class ClusterConfig:
             parts = file.split("_")
             id = int(parts[0])
             if id in action_id_values:
-                #try:
-                idx = parts[1]
-                a = action_lookup_d_val[(int(id), int(idx))]
-                ip = parts[2]
-                if ip == "alerts.txt":
-                    ip = a.ip
-                remote_file = sftp_client.open(file, mode="r")
-                alerts_str = remote_file.read().decode()
-                alerts_parts = alerts_str.split(",")
-                sum_priorities = int(alerts_parts[0])
-                num_alerts = int(alerts_parts[1])
-                action_alerts.add_alert(action_id=a.id, ip=ip, alert = (sum_priorities, num_alerts))
-                a.alerts = (sum_priorities, num_alerts)
-                # except Exception as e:
-                #     print("{}".format(str(e)))
-                # finally:
-                #     if remote_file is not None:
-                #         remote_file.close()
+                try:
+                    idx = parts[1]
+                    a = action_lookup_d_val[(int(id), int(idx))]
+                    ip = parts[2]
+                    if ip == "alerts.txt":
+                        ip = a.ip
+                    remote_file = sftp_client.open(file, mode="r")
+                    alerts_str = remote_file.read().decode()
+                    alerts_parts = alerts_str.split(",")
+                    sum_priorities = int(alerts_parts[0])
+                    num_alerts = int(alerts_parts[1])
+                    action_alerts.add_alert(action_id=a.id, ip=ip, alert = (sum_priorities, num_alerts))
+                    a.alerts = (sum_priorities, num_alerts)
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
 
         # Load shell action costs which are user and service specific
         shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
-        for a in shell_actions:
-            id = a.id
-            cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep " + str(id.value) + "_"
-            stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
-            file_list = []
-            for line in stdout:
-                line_str = line.replace("\n", "")
-                if "_alerts" in line_str:
-                    file_list.append(line_str)
-            for file in file_list:
-                #try:
-                parts = file.split("_")
-                idx = parts[1]
-                ip = parts[2]
-                service = parts[3]
-                user = parts[4]
-                remote_file = None
-                remote_file = sftp_client.open(file, mode="r")
-                alerts_str = remote_file.read().decode()
-                alerts_parts = alerts_str.split(",")
-                sum_priorities = int(alerts_parts[0])
-                num_alerts = int(alerts_parts[1])
-                alert = (sum_priorities, num_alerts)
-                action_alerts.user_ip_add_alert(action_id=id, ip=ip, alert=alert, user=user, service=service)
-                a.alerts = alert
-                # except Exception as e:
-                #     print("{}".format(str(e)))
-                # finally:
-                #     if remote_file is not None:
-                #         remote_file.close()
+        shell_id_values = list(map(lambda x: x.value, shell_ids))
+
+        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _cost"
+        stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
+        file_list = []
+        for line in stdout:
+            line_str = line.replace("\n", "")
+            if "_alerts" in line_str:
+                file_list.append(line_str)
+        for file in file_list:
+            parts = file.split("_")
+            id = int(parts[0])
+            if id in shell_id_values:
+                try:
+                    parts = file.split("_")
+                    idx = parts[1]
+                    ip = parts[2]
+                    service = parts[3]
+                    user = parts[4]
+                    remote_file = None
+                    remote_file = sftp_client.open(file, mode="r")
+                    alerts_str = remote_file.read().decode()
+                    alerts_parts = alerts_str.split(",")
+                    sum_priorities = int(alerts_parts[0])
+                    num_alerts = int(alerts_parts[1])
+                    alert = (sum_priorities, num_alerts)
+                    action_alerts.user_ip_add_alert(action_id=id, ip=ip, alert=alert, user=user, service=service)
+                    a.alerts = alert
+                except Exception as e:
+                    print("{}".format(str(e)))
+                finally:
+                    if remote_file is not None:
+                        remote_file.close()
 
         print("Successfully loaded {} action alerts from cluster".format(len(action_alerts.alerts) +
                                                                         len(action_alerts.user_ip_alerts) +

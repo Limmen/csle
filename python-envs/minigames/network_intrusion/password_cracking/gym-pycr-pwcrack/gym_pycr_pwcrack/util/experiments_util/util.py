@@ -16,6 +16,8 @@ from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_pwcrack.dao.container_config.topology import Topology
 from gym_pycr_pwcrack.dao.container_config.users_config import UsersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
+from gym_pycr_pwcrack.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
@@ -170,6 +172,32 @@ def write_flags_config_file(flags_config: FlagsConfig, path: str) -> None:
         f.write(json_str)
 
 
+def write_vulns_config_file(vulns_cfg: VulnerabilitiesConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param vulns_cfg: the vulns_cfg obj to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(vulns_cfg)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
+def write_containers_config_file(containers_cfg: ContainersConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param containers_cfg: the vulns_cfg obj to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(containers_cfg)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
 def read_config(config_path) -> ClientConfig:
     """
     Reads configuration of the experiment from a json file
@@ -209,15 +237,41 @@ def read_users_config(users_config_path) -> UsersConfig:
 
 def read_flags_config(flags_config_path) -> FlagsConfig:
     """
-    Reads users_config of the experiment from a json file
+    Reads flags_config of the experiment from a json file
 
-    :param users_config_path: the path to the users_config file
+    :param flags_config_path: the path to the users_config file
     :return: the configuration
     """
     with io.open(flags_config_path, 'r', encoding='utf-8') as f:
         json_str = f.read()
     flags_config: FlagsConfig = jsonpickle.decode(json_str)
     return flags_config
+
+
+def read_vulns_config(vulns_config_path) -> VulnerabilitiesConfig:
+    """
+    Reads vulns_config of the experiment from a json file
+
+    :param vulns_config_path: the path to the vulns_config file
+    :return: the configuration
+    """
+    with io.open(vulns_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    vulns_cfg: VulnerabilitiesConfig = jsonpickle.decode(json_str)
+    return vulns_cfg
+
+
+def read_containers_config(containers_config_path) -> VulnerabilitiesConfig:
+    """
+    Reads containers_config of the experiment from a json file
+
+    :param containers_config_path: the path to the vulns_config file
+    :return: the configuration
+    """
+    with io.open(containers_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    containers_cfg: ContainersConfig = jsonpickle.decode(json_str)
+    return containers_cfg
 
 
 def parse_args(default_config_path):
@@ -280,4 +334,46 @@ def default_flags_path() -> str:
     :return: the default path to flags file
     """
     config_path = os.path.join(default_output_dir(), './flags.json')
+    return config_path
+
+def default_vulnerabilities_path() -> str:
+    """
+    :return: the default path to vuln file
+    """
+    config_path = os.path.join(default_output_dir(), './vulnerabilities.json')
+    return config_path
+
+def default_containers_path() -> str:
+    """
+    :return: the default path to containers config file
+    """
+    config_path = os.path.join(default_output_dir(), './containers.json')
+    return config_path
+
+def default_containers_folders_path() -> str:
+    """
+    :return: the default path to container folders
+    """
+    config_path = os.path.join(default_output_dir(), './containers')
+    return config_path
+
+def default_container_makefile_template_path() -> str:
+    """
+    :return: the default path to makefile tempalte
+    """
+    config_path = os.path.join(default_output_dir(), './Container_Makefile_template')
+    return config_path
+
+def default_makefile_template_path() -> str:
+    """
+    :return: the default path to makefile tempalte
+    """
+    config_path = os.path.join(default_output_dir(), './Makefile_template')
+    return config_path
+
+def default_makefile_path() -> str:
+    """
+    :return: the default path to makefile tempalte
+    """
+    config_path = os.path.join(default_output_dir(), './Makefile')
     return config_path

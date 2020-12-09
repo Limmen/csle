@@ -1,0 +1,74 @@
+{
+    "agent_ip": "172.18.16.14",
+    "containers": [
+        {
+            "ip": "172.18.16.14",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "hacker_kali1",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.110",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "ssh3",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.153",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "telnet2",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.51",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "telnet3",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.247",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "telnet2",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.228",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "telnet3",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.16.77",
+            "level": "random_n7_f1_rid_85724",
+            "minigame": "pwcrack",
+            "name": "router1",
+            "network": "pycr_net_16",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        }
+    ],
+    "ids_enabled": true,
+    "network": "pycr_net_16",
+    "py/object": "gym_pycr_pwcrack.dao.container_config.containers_config.ContainersConfig",
+    "router_ip": "172.18.16.77",
+    "subnet_mask": "172.18.16.0/24",
+    "subnet_prefix": "172.18.16."
+}

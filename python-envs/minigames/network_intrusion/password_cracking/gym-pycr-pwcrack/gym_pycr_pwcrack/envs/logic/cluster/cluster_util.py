@@ -1663,7 +1663,6 @@ class ClusterUtil:
                 ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                          service=constants.TELNET.SERVICE_NAME, user=c.username,
                                                          files=flag_paths, ip=machine.ip)
-
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")

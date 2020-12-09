@@ -511,13 +511,19 @@ class EnvDynamicsUtil:
                  env_config.new_login_reward_mult * num_new_logged_in + \
                  env_config.new_tools_installed_reward_mult * num_new_tools_installed + \
                  env_config.new_backdoors_installed_reward_mult * num_new_backdoors_installed
+        new_info = [num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, num_new_machines,
+                    num_new_shell_access, num_new_root, num_new_flag_pts, num_new_osvdb_vuln_found,
+                    num_new_logged_in, num_new_tools_installed, num_new_backdoors_installed]
         cost = ((cost*env_config.cost_coefficient)/env_config.max_costs)*10 # normalize between 0-10
         alerts_pts = 0
         if env_config.ids_router and alerts is not None:
             alerts_pts = ((alerts[0] * env_config.alerts_coefficient) / env_config.max_alerts) * 10  # normalize between 0-10
 
         if reward == 0:
-            reward = env_config.base_step_reward - cost - alerts_pts
+            if sum(new_info) > 0:
+                reward = - cost - alerts_pts
+            else:
+                reward = env_config.base_step_reward - cost - alerts_pts
         else:
             reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
         return reward

@@ -27,4 +27,7 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCrPwCrackLe
     PyCRPwCrackLevel5ClusterWithCosts4Env, PyCRPwCrackLevel6ClusterBaseEnv, PyCRPwCrackLevel6Cluster1Env, \
     PyCRPwCrackLevel6ClusterWithCosts1Env, PyCRPwCrackLevel6Cluster2Env, PyCRPwCrackLevel6Cluster3Env, \
     PyCRPwCrackLevel6Cluster4Env, PyCRPwCrackLevel6ClusterWithCosts2Env, PyCRPwCrackLevel6ClusterWithCosts3Env, \
-    PyCRPwCrackLevel6ClusterWithCosts4Env
+    PyCRPwCrackLevel6ClusterWithCosts4Env, PyCRPwCrackRandomClusterBaseEnv, PyCRPwCrackRandomCluster1Env, \
+    PyCRPwCrackRandomClusterWithCosts1Env, PyCRPwCrackRandomCluster2Env, PyCRPwCrackRandomCluster3Env, \
+    PyCRPwCrackRandomCluster4Env, PyCRPwCrackRandomClusterWithCosts2Env, PyCRPwCrackRandomClusterWithCosts3Env, \
+    PyCRPwCrackRandomClusterWithCosts4Env
