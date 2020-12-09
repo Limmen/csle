@@ -10,6 +10,8 @@ from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 if typing.TYPE_CHECKING:
     from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgorithm
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                     n_eval_episodes : int=10,
@@ -177,8 +179,8 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags
 
 def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config):
-    if isinstance(env, VecEnv):
-        assert env.num_envs == 1, "You must pass only one environment when using this function"
+    # if isinstance(env, VecEnv):
+    #     assert env.num_envs == 1, "You must pass only one environment when using this function"
 
     done = False
     state = None
@@ -190,22 +192,47 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config):
     episode_flags_percentage = []
 
     for episode in range(n_eval_episodes):
-        obs = env.reset()
+        if isinstance(env, DummyVecEnv):
+            obs = env.envs[0].reset()
+        elif isinstance(env, SubprocVecEnv):
+            obs = env.eval_reset()
+            infos = np.array([{"non_legal_actions": env.initial_illegal_actions}])
+        else:
+            obs = env.reset()
         done = False
         episode_reward = 0.0
         episode_length = 0
         while not done:
-            action, state = model.predict(obs, state=state, deterministic=deterministic, env_config=env_config,
-                                          env_state=env.envs[0].env_state)
-            obs, reward, done, _info = env.step(action)
+            if isinstance(env, DummyVecEnv):
+                action, state = model.predict(obs, state=state, deterministic=deterministic, env_config=env_config,
+                                              env_state=env.envs[0].env_state)
+            elif isinstance(env, SubprocVecEnv):
+                action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                              env_config=env_config, env=env)
+            if isinstance(action, np.ndarray):
+                action = int(action[0])
+            if isinstance(env, DummyVecEnv):
+                obs, reward, done, _info = env.envs[0].step(action)
+            elif isinstance(env, SubprocVecEnv):
+                obs, reward, done, _info = env.eval_step(action)
+                infos = [_info]
             episode_reward += reward
             episode_length += 1
 
         # Record episode metrics
         episode_rewards.append(episode_reward)
         episode_steps.append(episode_length)
-        episode_flags.append(_info[0]["flags"])
-        episode_flags_percentage.append(_info[0]["flags"] / env.envs[0].env_config.num_flags)
+        if isinstance(_info, dict):
+            episode_flags.append(_info["flags"])
+            episode_flags_percentage.append(_info["flags"] / env_config.num_flags)
+        else:
+            episode_flags.append(_info[0]["flags"])
+            episode_flags_percentage.append(_info[0]["flags"] / env_config.num_flags)
 
-    env.reset()
+    if isinstance(env, DummyVecEnv):
+        env.envs[0].reset()
+    elif isinstance(env, SubprocVecEnv):
+        env.eval_reset()
+    else:
+        env.reset()
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags

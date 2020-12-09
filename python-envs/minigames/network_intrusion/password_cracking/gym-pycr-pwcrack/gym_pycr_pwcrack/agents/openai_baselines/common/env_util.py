@@ -120,7 +120,6 @@ def make_vec_env(
     if vec_env_cls is None:
         # Default: use a DummyVecEnv
         vec_env_cls = DummyVecEnv
-
     return vec_env_cls([make_env(i + start_index) for i in range(n_envs)], **vec_env_kwargs)
 
 

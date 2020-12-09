@@ -41,7 +41,7 @@ class AgentConfig:
                  input_dim_2 : int = 30, output_dim_2 : int = 30, pi_hidden_dim_2 : int = 64,
                  pi_hidden_layers_2 : int = 2, vf_hidden_layers_2 : int = 2, vf_hidden_dim_2 : int = 64,
                  filter_illegal_actions : bool = False, train_progress_deterministic_eval: bool = False,
-                 n_deterministic_eval_iter : int = 10
+                 n_deterministic_eval_iter : int = 10, env_config = None
                  ):
         """
         Initialize environment and hyperparameters

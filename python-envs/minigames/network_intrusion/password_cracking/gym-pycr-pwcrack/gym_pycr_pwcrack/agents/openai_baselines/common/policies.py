@@ -23,6 +23,8 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.distributions import (
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
 
 class BaseModel(nn.Module, ABC):
@@ -222,7 +224,9 @@ class BasePolicy(BaseModel):
         deterministic: bool = False,
         env_config: EnvConfig = None,
         env_state: EnvState = None,
-        m_index: int = None
+        m_index: int = None,
+        infos=None,
+        env=None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the policy action and state from an observation (and optional state).
@@ -237,11 +241,12 @@ class BasePolicy(BaseModel):
         """
         observation = np.array(observation)
         #vectorized_env = is_vectorized_observation(observation, self.observation_space)
-        observation = observation.reshape((-1,) + self.observation_space.shape)
+        if observation.shape != self.observation_space.shape:
+            observation = observation.reshape((-1,) + self.observation_space.shape)
         observation = th.as_tensor(observation).to(self.device)
         with th.no_grad():
             actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
-                                    env_state=env_state, m_index=m_index)
+                                    env_state=env_state, m_index=m_index, infos=infos, env=env)
         if type(actions) == th.Tensor:
             # Convert to numpy
             actions = actions.cpu().numpy()
@@ -434,8 +439,8 @@ class ActorCriticPolicy(BasePolicy):
         # Setup optimizer with initial learning rate
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
 
-    def forward(self, obs: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None, env = None) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
+    def forward(self, obs: th.Tensor, deterministic: bool = False,
+                m_index : int = None, env = None, infos=None) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
         Forward pass in all the networks (actor and critic)
 
@@ -454,22 +459,28 @@ class ActorCriticPolicy(BasePolicy):
             actions = list(range(self.agent_config.output_dim))
 
         non_legal_actions_total = []
-        for i in range(len(env.envs)):
-            non_legal_actions = []
-            if self.agent_config.filter_illegal_actions:
-                if self.agent_config.ar_policy:
-                    if self.m_action:
+        for i in range(env.num_envs):
+            if isinstance(env, DummyVecEnv):
+                non_legal_actions = []
+                if self.agent_config.filter_illegal_actions:
+                    if self.agent_config.ar_policy:
+                        if self.m_action:
+                            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                                action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_action=True, m_index = m_index), actions))
+                        elif self.m_selection:
+                            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                                action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_selection=True), actions))
+                    else:
                         non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                            action, env_config=env_config, env_state=env.envs[i].env_state, m_action=True, m_index = m_index), actions))
-                    elif self.m_selection:
-                        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                            action, env_config=env_config, env_state=env_state, m_selection=True), actions))
-                else:
-                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                        action, env_config=env_config, env_state=env_state), actions))
+                            action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
+                non_legal_actions_total.append(non_legal_actions)
+            elif isinstance(env, SubprocVecEnv):
+                non_legal_actions_total.append(infos[i]["non_legal_actions"])
+            else:
+                raise ValueError("Unrecognized env")
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
-                                                         non_legal_actions=non_legal_actions)
+                                                         non_legal_actions=non_legal_actions_total)
         actions = distribution.get_actions(deterministic=deterministic)
         log_prob = distribution.log_prob(actions)
         return actions, values, log_prob
@@ -506,21 +517,23 @@ class ActorCriticPolicy(BasePolicy):
         #mean_actions = mean_actions*100
         #print("actions sum:{}".format(th.sum(mean_actions)))
         action_logits = mean_actions.clone()
-        if non_legal_actions is not None and len(non_legal_actions) > 0:
-            if len(action_logits.shape) == 1:
-                # action_probs_1[non_legal_actions] = 0.00000000000001 # Don't set to zero due to invalid distribution errors
-                action_logits[non_legal_actions] = self.agent_config.illegal_action_logit
-            elif len(action_logits.shape) == 2:
-                # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
-                action_logits[:, non_legal_actions] = self.agent_config.illegal_action_logit
-            else:
-                raise AssertionError("Invalid shape of action probabilties")
+        if non_legal_actions is not None:
+            for i in range(len(non_legal_actions)):
+                if non_legal_actions is not None and len(non_legal_actions) > 0 and len(non_legal_actions[i]) > 0:
+                    if len(action_logits.shape) == 1:
+                        # action_probs_1[non_legal_actions] = 0.00000000000001 # Don't set to zero due to invalid distribution errors
+                        action_logits[non_legal_actions[i]] = self.agent_config.illegal_action_logit
+                    elif len(action_logits.shape) == 2:
+                        # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
+                        action_logits[i][non_legal_actions[i]] = self.agent_config.illegal_action_logit
+                    else:
+                        raise AssertionError("Invalid shape of action probabilties")
         action_logits_1 = action_logits.to(self.device)
         return self.action_dist.proba_distribution(action_logits=action_logits_1)
 
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None, env = None, infos = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -535,18 +548,25 @@ class ActorCriticPolicy(BasePolicy):
             actions = list(range(self.agent_config.output_dim_2))
         else:
             actions = list(range(self.agent_config.output_dim))
-        non_legal_actions = []
-        if self.agent_config.filter_illegal_actions:
-            if self.agent_config.ar_policy:
-                if self.m_action:
+        if env is None or isinstance(env, DummyVecEnv):
+            non_legal_actions = []
+            if self.agent_config.filter_illegal_actions:
+                if self.agent_config.ar_policy:
+                    if self.m_action:
+                        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                            action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
+                    elif self.m_selection:
+                        non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                            action, env_config=env_config, env_state=env_state, m_selection=True), actions))
+                else:
                     non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                        action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
-                elif self.m_selection:
-                    non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                        action, env_config=env_config, env_state=env_state, m_selection=True), actions))
-            else:
-                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
-                    action, env_config=env_config, env_state=env_state), actions))
+                        action, env_config=env_config, env_state=env_state), actions))
+            non_legal_actions = [non_legal_actions]
+        elif isinstance(env, SubprocVecEnv):
+            non_legal_actions = [infos[0]["non_legal_actions"]]
+        else:
+            raise ValueError("Unrecognized env: {}".format(env))
+
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)

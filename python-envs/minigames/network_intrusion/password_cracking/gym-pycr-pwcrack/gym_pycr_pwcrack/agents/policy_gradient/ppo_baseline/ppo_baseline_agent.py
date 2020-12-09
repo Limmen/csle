@@ -11,8 +11,8 @@ from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-from gym_pycr_pwcrack.agents.openai_baselines.common.env_util import make_vec_env
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 
 class PPOBaselineAgent(TrainAgent):
@@ -90,11 +90,16 @@ class PPOBaselineAgent(TrainAgent):
                                  "the video_dir argument")
         if isinstance(self.env, DummyVecEnv):
             train_eval_env_i = self.env.envs[0]
+        elif isinstance(self.env, SubprocVecEnv):
+            train_eval_env_i = self.eval_env
         else:
             train_eval_env_i = self.env
-        train_eval_env = PycrPwCrackMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
-                                  video_frequency=self.config.video_frequency, openai_baseline=True)
-        train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+        if train_eval_env_i is not None:
+            train_eval_env = PycrPwCrackMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
+                                      video_frequency=self.config.video_frequency, openai_baseline=True)
+            train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+        else:
+            train_eval_env = None
 
         eval_env = None
 

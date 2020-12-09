@@ -192,7 +192,8 @@ class DQN(OffPolicyAlgorithm):
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
         env_config : EnvConfig = None,
-        env_state : EnvState = None
+        env_state : EnvState = None,
+        infos = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Overrides the base_class predict function to include epsilon-greedy exploration.

@@ -26,7 +26,10 @@ class ClientConfig:
                  containers_config : ContainersConfig = None,
                  flags_config: FlagsConfig = None,
                  randomized_env :bool = False,
-                 eval_randomized_env: bool = False
+                 eval_randomized_env: bool = False,
+                 n_envs : int = 1,
+                 dummy_vec_env : bool = False,
+                 sub_proc_env: bool = False
                  ):
         """
         Class constructor, initializes the DTO
@@ -53,6 +56,9 @@ class ClientConfig:
         :param flags_config: flags config for the env
         :param randomized_env: boolean flag whether the env is randomized or not
         :param eval_randomized_env: boolean flag whether the eval env is randomized or not
+        :param n_envs: number of envs to use
+        :param dummy_vec_env: whether to use dummy vec env (sequential stepping)
+        :param sub_proc_env: whether to use subproc env (parallel env)
         """
         self.env_name = env_name
         self.logger = None
@@ -75,3 +81,6 @@ class ClientConfig:
         self.flags_config = flags_config
         self.randomized_env = randomized_env
         self.eval_randomized_env = eval_randomized_env
+        self.n_envs = n_envs
+        self.dummy_vec_env = dummy_vec_env
+        self.sub_proc_env = sub_proc_env

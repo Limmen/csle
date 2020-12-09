@@ -105,7 +105,7 @@
         "server_private_key_file": null,
         "server_username": null,
         "warmup": true,
-        "warmup_iterations": 500
+        "warmup_iterations": 10
     },
     "containers_config": {
         "agent_ip": "172.18.16.14",
@@ -181,6 +181,7 @@
         "subnet_mask": "172.18.16.0/24",
         "subnet_prefix": "172.18.16."
     },
+    "dummy_vec_env": false,
     "env_checkpoint_dir": null,
     "env_config": null,
     "env_name": "pycr-pwcrack-random-cluster-v1",
@@ -211,6 +212,7 @@
     },
     "logger": null,
     "mode": 0,
+    "n_envs": 10,
     "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random/training/v1/cluster/ppo_baseline",
     "py/object": "gym_pycr_pwcrack.dao.experiment.client_config.ClientConfig",
     "random_seed": 399,
@@ -221,5 +223,6 @@
     "randomized_env": true,
     "run_many": true,
     "simulation_config": null,
+    "sub_proc_env": true,
     "title": "PPO-Baseline random v1"
 }

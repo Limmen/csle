@@ -28,7 +28,7 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.utils import (
 )
 from gym_pycr_pwcrack.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from gym_pycr_pwcrack.agents.openai_baselines.common.callbacks import BaseCallback, CallbackList, ConvertCallback, EvalCallback
-from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize, SubprocVecEnv
 
 from gym_pycr_pwcrack.agents.openai_baselines.common.policies import BasePolicy, get_policy_from_name
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
@@ -143,6 +143,7 @@ class BaseAlgorithm(ABC):
         self.lr_schedule = None  # type: Optional[Callable]
         self._last_obs = None  # type: Optional[np.ndarray]
         self._last_dones = None  # type: Optional[np.ndarray]
+        self._last_infos = None
         # When using VecNormalize:
         self._last_original_obs = None  # type: Optional[np.ndarray]
         self._episode_num = 0
@@ -524,7 +525,8 @@ class BaseAlgorithm(ABC):
             mask: Optional[np.ndarray] = None,
             deterministic: bool = False,
             env_config : EnvConfig = None,
-            env_state : EnvState = None
+            env_state : EnvState = None,
+            infos = None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the model's action(s) from an observation
@@ -543,7 +545,8 @@ class BaseAlgorithm(ABC):
         else:
             m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic,
                                                                           env_config=env_config,
-                                                                          env_state=env_state)
+                                                                          env_state=env_state,
+                                                                          infos=infos)
             obs_2 = observation.reshape((observation.shape[0],) + self.env.envs[0].network_orig_shape)
             idx = m_selection_actions[0]
             if m_selection_actions[0] > 5:
@@ -552,7 +555,7 @@ class BaseAlgorithm(ABC):
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
             m_actions, state2 = self.m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
                                                     env_config=env_config,
-                                                    env_state=env_state)
+                                                    env_state=env_state, infos=infos)
             actions = self.env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
             return actions, state2
@@ -726,7 +729,14 @@ class BaseAlgorithm(ABC):
         # Avoid resetting the environment when calling ``.learn()`` consecutive times
         if reset_num_timesteps or self._last_obs is None:
             self._last_obs = self.env.reset()
+            if len(self._last_obs.shape) == 3:
+                self._last_obs = self._last_obs.reshape((self._last_obs.shape[0], self.observation_space.shape[0]))
             self._last_dones = np.zeros((self.env.num_envs,), dtype=np.bool)
+            if isinstance(self.env, SubprocVecEnv):
+                self._last_infos = np.array([{"non_legal_actions": self.env.initial_illegal_actions} for i in range(self.env.num_envs)])
+            else:
+                self._last_infos = np.array([{"non_legal_actions": []} for i in range(self.env.num_envs)])
+
             # Retrieve unnormalized observation for saving into the buffer
             if self._vec_normalize_env is not None:
                 self._last_original_obs = self._vec_normalize_env.get_original_obs()

@@ -73,6 +73,7 @@ def default_config() -> ClientConfig:
                                  run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_config=containers_config, flags_config=flags_config,
+                                 dummy_vec_env=False, sub_proc_env=True, n_envs=10,
                                  randomized_env=True)
     return client_config
 

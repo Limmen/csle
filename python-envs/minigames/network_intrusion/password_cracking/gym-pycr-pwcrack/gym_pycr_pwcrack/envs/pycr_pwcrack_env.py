@@ -140,6 +140,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             self.env_state.obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.reset()
+        self.reset()
+        actions = list(range(self.num_actions))
+        self.initial_illegal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=self.env_config, env_state=self.env_state), actions))
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:

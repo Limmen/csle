@@ -13,6 +13,8 @@ from gym_pycr_pwcrack.agents.openai_baselines.common.base_class import BaseAlgor
 from gym_pycr_pwcrack.agents.openai_baselines.common.policies import ActorCriticPolicy
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.agents.openai_baselines.common.evaluation import quick_evaluate_policy
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -186,8 +188,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_flags_percentage = []
 
         # Per episode metrics
-        episode_reward = 0
-        episode_step = 0
+        episode_reward = np.zeros(env.num_envs)
+        episode_step = np.zeros(env.num_envs)
 
         callback.on_rollout_start()
         dones = False
@@ -209,26 +211,28 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             episode_reward += rewards
             episode_step += 1
 
-            # # Give access to local variables
-            # callback.update_locals(locals())
-            # if callback.on_step(iteration=self.iteration) is False:
-            #     episode_rewards.append(episode_reward)
-            #     episode_steps.append(episode_step)
-            #     episode_flags.append(infos[0]["flags"])
-            #     episode_flags_percentage.append(infos[0]["flags"]/self.env.envs[0].env_config.num_flags)
-            #     return False, episode_rewards, episode_steps
-            #
-            # print("ep rew:{}, {}".format(episode_reward, episode_step))
-            # if dones.all():
-            #     # Record episode metrics
-            #     self.num_episodes += 1
-            #     self.num_episodes_total += 1
-            #     episode_rewards.append(episode_reward)
-            #     episode_steps.append(episode_step)
-            #     episode_flags.append(infos[0]["flags"])
-            #     episode_flags_percentage.append(infos[0]["flags"] / self.env.envs[0].env_config.num_flags)
-            #     episode_reward = 0
-            #     episode_step = 0
+            # Give access to local variables
+            callback.update_locals(locals())
+            if callback.on_step(iteration=self.iteration) is False:
+                for i in range(env.num_envs):
+                    episode_rewards.append(episode_reward[i])
+                    episode_steps.append(episode_step[i])
+                    episode_flags.append(infos[i]["flags"])
+                    episode_flags_percentage.append(infos[i]["flags"]/self.agent_config.env_config.num_flags)
+                return False, episode_rewards, episode_steps
+
+            if dones.any:
+                for i in range(len(dones)):
+                    if dones[i]:
+                        # Record episode metrics
+                        self.num_episodes += 1
+                        self.num_episodes_total += 1
+                        episode_rewards.append(episode_reward[i])
+                        episode_steps.append(episode_step[i])
+                        episode_flags.append(infos[i]["flags"])
+                        episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
+                        episode_reward[i] = 0
+                        episode_step[i] = 0
 
         if not self.agent_config.ar_policy:
             rollout_buffer.compute_returns_and_advantage(values, dones=dones)
@@ -237,9 +241,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             rollout_buffer.compute_returns_and_advantage(m_action_values, dones=dones, machine_action=True)
 
         callback.on_rollout_end()
-        if not dones:
-            episode_rewards.append(episode_reward)
-            episode_steps.append(episode_step)
+        for i in range(len(dones)):
+            if not dones[i]:
+                episode_rewards.append(episode_reward[i])
+                episode_steps.append(episode_step[i])
         return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage
 
     def train(self) -> None:
@@ -310,8 +315,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=True, agent_config=self.agent_config,
-                                              env_config=self.env.envs[0].env_config, env_2=self.env_2)
-
+                                              env_config=self.agent_config.env_config, env_2=self.env_2)
+                    d = {}
+                    if isinstance(self.env, SubprocVecEnv):
+                        self._last_infos[0]["non_legal_actions"] = self.env.initial_illegal_actions
+                n_af, n_d = 0,0
+                if isinstance(self.env, DummyVecEnv):
+                    n_af = self.env.envs[0].agent_state.num_all_flags
+                    n_d = self.env.envs[0].agent_state.num_detections
                 self.log_metrics(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
                                  episode_avg_loss=episode_loss,
@@ -320,8 +331,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  episode_steps=episode_steps,
                                  episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
                                  progress_left = self._current_progress_remaining,
-                                 n_af = self.env.envs[0].agent_state.num_all_flags,
-                                 n_d = self.env.envs[0].agent_state.num_detections,
+                                 n_af = n_af,
+                                 n_d = n_d,
                                  eval_episode_rewards = episode_rewards_1, eval_episode_steps=episode_steps_1,
                                  eval_episode_flags=episode_flags_1,
                                  eval_episode_flags_percentage=episode_flags_percentage_1,
@@ -377,8 +388,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         with th.no_grad():
             # Convert to pytorch tensor
             obs_tensor = th.as_tensor(self._last_obs).to(self.device)
-            actions, values, log_probs = self.policy.forward(obs_tensor, env_config=env.envs[0].env_config,
-                                                             env_state=env.envs[0].env_state)
+            actions, values, log_probs = self.policy.forward(obs_tensor,  env=env, infos=self._last_infos)
         actions = actions.cpu().numpy()
 
         # Rescale and perform action
@@ -388,6 +398,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             clipped_actions = np.clip(actions, self.action_space.low, self.action_space.high)
 
         new_obs, rewards, dones, infos = env.step(clipped_actions)
+        if len(new_obs.shape) == 3:
+            new_obs = new_obs.reshape((new_obs.shape[0], self.observation_space.shape[0]))
 
         if isinstance(self.action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
@@ -397,6 +409,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         self._last_obs = new_obs
         self._last_dones = dones
+        self._last_infos = infos
 
         return new_obs, rewards, dones, infos, values, log_probs, actions
 
@@ -438,6 +451,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         self._last_obs = new_obs
         self._last_dones = dones
+        self._last_infos = infos
 
         return new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
                m_action_log_probs, m_selection_actions, m_actions

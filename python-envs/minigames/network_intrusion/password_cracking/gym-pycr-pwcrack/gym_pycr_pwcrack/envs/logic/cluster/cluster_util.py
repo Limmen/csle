@@ -2739,8 +2739,9 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
-                                                                                                       c.proxy.ip))
+                        pass
+                        # raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
+                        #                                                                                c.proxy.ip))
 
                     if backdoor_created:
                         break
@@ -2796,12 +2797,15 @@ class ClusterUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
-                                                                                                       c.proxy.ip))
+                        pass
+                        # raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
+                        #                                                                                c.proxy.ip))
                     if backdoor_created:
                         break
 
                 total_cost += telnet_cost
+        if not backdoor_created:
+            print("failed to create backdoor, target:{}".format(a.ip))
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \

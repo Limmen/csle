@@ -21,7 +21,7 @@ class DummyVecEnv(VecEnv):
         that return environments to vectorize
     """
 
-    def __init__(self, env_fns: List[Callable[[], gym.Env]]):
+    def __init__(self, env_fns: List[Callable[[], gym.Env]], env_config = None):
         self.envs = [fn() for fn in env_fns]
         env = self.envs[0]
         VecEnv.__init__(self, len(env_fns), env.observation_space, env.action_space)

@@ -1,12 +1,12 @@
 import multiprocessing
 from collections import OrderedDict
 from typing import Sequence
-
+import pickle
 import gym
 import numpy as np
 
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv
-
+from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
 def _worker(remote, parent_remote, env_fn_wrapper):
     parent_remote.close()
@@ -16,10 +16,14 @@ def _worker(remote, parent_remote, env_fn_wrapper):
             cmd, data = remote.recv()
             if cmd == "step":
                 observation, reward, done, info = env.step(data)
+                actions = list(range(env.num_actions))
                 if done:
                     # save final observation where user can get it, then reset
                     info["terminal_observation"] = observation
                     observation = env.reset()
+                non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                    action, env_config=env.env_config, env_state=env.env_state), actions))
+                info["non_legal_actions"] = non_legal_actions
                 remote.send((observation, reward, done, info))
             elif cmd == "seed":
                 remote.send(env.seed(data))
@@ -34,6 +38,8 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 break
             elif cmd == "get_spaces":
                 remote.send((env.observation_space, env.action_space))
+            elif cmd == "initial_illegal_actions":
+                remote.send(env.initial_illegal_actions)
             elif cmd == "env_method":
                 method = getattr(env, data[0])
                 remote.send(method(*data[1], **data[2]))
@@ -71,10 +77,11 @@ class SubprocVecEnv(VecEnv):
            Defaults to 'forkserver' on available platforms, and 'spawn' otherwise.
     """
 
-    def __init__(self, env_fns, start_method=None):
+    def __init__(self, env_fns, start_method=None, env_config = None):
         self.waiting = False
         self.closed = False
         n_envs = len(env_fns)
+
 
         if start_method is None:
             # Fork is not a thread safe method (see issue #217)
@@ -96,6 +103,11 @@ class SubprocVecEnv(VecEnv):
 
         self.remotes[0].send(("get_spaces", None))
         observation_space, action_space = self.remotes[0].recv()
+
+        self.remotes[0].send(("initial_illegal_actions", None))
+        initial_illegal_actions = self.remotes[0].recv()
+        self.initial_illegal_actions = initial_illegal_actions
+
         VecEnv.__init__(self, len(env_fns), observation_space, action_space)
 
     def step_async(self, actions):
@@ -119,6 +131,18 @@ class SubprocVecEnv(VecEnv):
             remote.send(("reset", None))
         obs = [remote.recv() for remote in self.remotes]
         return _flatten_obs(obs, self.observation_space)
+
+    def eval_reset(self):
+        self.remotes[0].send(("reset", None))
+        obs = self.remotes[0].recv()
+        obs = _flatten_obs([obs], self.observation_space)
+        return obs
+
+    def eval_step(self, action):
+        self.remotes[0].send(("step", action))
+        result = self.remotes[0].recv()
+        obs, rews, dones, infos = result
+        return _flatten_obs([obs], self.observation_space), rews, dones, infos
 
     def close(self):
         if self.closed:
