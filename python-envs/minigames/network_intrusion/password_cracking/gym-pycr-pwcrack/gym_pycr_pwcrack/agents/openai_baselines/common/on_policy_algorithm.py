@@ -209,25 +209,26 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             episode_reward += rewards
             episode_step += 1
 
-            # Give access to local variables
-            callback.update_locals(locals())
-            if callback.on_step(iteration=self.iteration) is False:
-                episode_rewards.append(episode_reward)
-                episode_steps.append(episode_step)
-                episode_flags.append(infos[0]["flags"])
-                episode_flags_percentage.append(infos[0]["flags"]/self.env.envs[0].env_config.num_flags)
-                return False, episode_rewards, episode_steps
-
-            if dones:
-                # Record episode metrics
-                self.num_episodes += 1
-                self.num_episodes_total += 1
-                episode_rewards.append(episode_reward)
-                episode_steps.append(episode_step)
-                episode_flags.append(infos[0]["flags"])
-                episode_flags_percentage.append(infos[0]["flags"] / self.env.envs[0].env_config.num_flags)
-                episode_reward = 0
-                episode_step = 0
+            # # Give access to local variables
+            # callback.update_locals(locals())
+            # if callback.on_step(iteration=self.iteration) is False:
+            #     episode_rewards.append(episode_reward)
+            #     episode_steps.append(episode_step)
+            #     episode_flags.append(infos[0]["flags"])
+            #     episode_flags_percentage.append(infos[0]["flags"]/self.env.envs[0].env_config.num_flags)
+            #     return False, episode_rewards, episode_steps
+            #
+            # print("ep rew:{}, {}".format(episode_reward, episode_step))
+            # if dones.all():
+            #     # Record episode metrics
+            #     self.num_episodes += 1
+            #     self.num_episodes_total += 1
+            #     episode_rewards.append(episode_reward)
+            #     episode_steps.append(episode_step)
+            #     episode_flags.append(infos[0]["flags"])
+            #     episode_flags_percentage.append(infos[0]["flags"] / self.env.envs[0].env_config.num_flags)
+            #     episode_reward = 0
+            #     episode_step = 0
 
         if not self.agent_config.ar_policy:
             rollout_buffer.compute_returns_and_advantage(values, dones=dones)

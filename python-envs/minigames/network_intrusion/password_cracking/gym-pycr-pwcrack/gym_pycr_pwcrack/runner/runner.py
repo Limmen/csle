@@ -19,6 +19,7 @@ from gym_pycr_pwcrack.agents.policy_gradient.a2c_baseline.a2c_baseline_agent imp
 from gym_pycr_pwcrack.agents.td3.td3_baseline_agent import TD3BaselineAgent
 from gym_pycr_pwcrack.agents.ddpg.ddpg_baseline_agent import DDPGBaselineAgent
 from gym_pycr_pwcrack.agents.manual.manual_attacker_agent import ManualAttackerAgent
+from gym_pycr_pwcrack.agents.openai_baselines.common.env_util import make_vec_env
 
 class Runner:
     """
@@ -54,9 +55,15 @@ class Runner:
         env: PyCRPwCrackEnv = None
         eval_env: PyCRPwCrackEnv = None
         if config.randomized_env:
-            env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
-                           checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                           flags_config=config.flags_config)
+            env = make_vec_env(config.env_name, n_envs=2, seed=config.random_seed,
+                                    env_kwargs={"env_config": config.env_config,
+                                                "cluster_config":config.cluster_config,
+                                                "checkpoint_dir":config.env_checkpoint_dir,
+                                                "containers_config":config.containers_config,
+                                                "flags_config":config.flags_config})
+            # env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+            #                checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
+            #                flags_config=config.flags_config)
         else:
             env = gym.make(config.env_name, env_config = config.env_config, cluster_config = config.cluster_config,
                            checkpoint_dir = config.env_checkpoint_dir)

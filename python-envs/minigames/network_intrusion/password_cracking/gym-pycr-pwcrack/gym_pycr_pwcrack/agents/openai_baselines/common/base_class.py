@@ -196,8 +196,7 @@ class BaseAlgorithm(ABC):
 
     def _wrap_env(self, env: GymEnv) -> VecEnv:
         if not isinstance(env, VecEnv):
-            if self.verbose >= 1:
-                print("Wrapping the env in a DummyVecEnv.")
+            print("Wrapping the env in a DummyVecEnv.")
             env = DummyVecEnv([lambda: env])
 
         if is_image_space(env.observation_space) and not isinstance(env, VecTransposeImage):
