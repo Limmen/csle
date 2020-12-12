@@ -5,16 +5,18 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
+import localIpUrl from 'local-ip-url'
 
 const Main = () => {
     // Declare a new state variable, which we'll call "count"
     const [count, setCount] = useState(0);
     const [envs, setEnvs] = useState([]);
+    const ip = localIpUrl('public', 'ipv4')
 
 
     useEffect(() => {
         fetch(
-            `http://localhost:7777/envs`,
+            `http://` + ip + ':7777/envs',
             {
                 method: "GET",
                 headers: new Headers({

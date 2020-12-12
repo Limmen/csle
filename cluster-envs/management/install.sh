@@ -18,4 +18,7 @@ sudo npm install -g npx
 sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
+cd pycr_monitor; npm install
+sudo npm install react-file-download --save
+sudo npm install react-bootstrap bootstrap
 
