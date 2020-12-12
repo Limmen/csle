@@ -308,72 +308,112 @@ def default_output_dir() -> str:
     return script_dir
 
 
-def default_config_path() -> str:
+def default_config_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to configuration file
     """
-    config_path = os.path.join(default_output_dir(), './config.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './config.json')
+    else:
+        config_path = os.path.join(out_dir, './config.json')
     return config_path
 
-def default_topology_path() -> str:
+def default_topology_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to topology file
     """
-    config_path = os.path.join(default_output_dir(), './topology.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './topology.json')
+    else:
+        config_path = os.path.join(out_dir, './topology.json')
     return config_path
 
-def default_users_path() -> str:
+def default_users_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to users file
     """
-    config_path = os.path.join(default_output_dir(), './users.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './users.json')
+    else:
+        config_path = os.path.join(out_dir, './users.json')
     return config_path
 
-def default_flags_path() -> str:
+def default_flags_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to flags file
     """
-    config_path = os.path.join(default_output_dir(), './flags.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './flags.json')
+    else:
+        config_path = os.path.join(out_dir, './flags.json')
     return config_path
 
-def default_vulnerabilities_path() -> str:
+def default_vulnerabilities_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to vuln file
     """
-    config_path = os.path.join(default_output_dir(), './vulnerabilities.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './vulnerabilities.json')
+    else:
+        config_path = os.path.join(out_dir, './vulnerabilities.json')
     return config_path
 
-def default_containers_path() -> str:
+def default_containers_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to containers config file
     """
-    config_path = os.path.join(default_output_dir(), './containers.json')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './containers.json')
+    else:
+        config_path = os.path.join(out_dir, './containers.json')
     return config_path
 
-def default_containers_folders_path() -> str:
+def default_containers_folders_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to container folders
     """
-    config_path = os.path.join(default_output_dir(), './containers')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './containers')
+    else:
+        config_path = os.path.join(out_dir, 'containers')
     return config_path
 
-def default_container_makefile_template_path() -> str:
+def default_container_makefile_template_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to makefile tempalte
     """
-    config_path = os.path.join(default_output_dir(), './Container_Makefile_template')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './Container_Makefile_template')
+    else:
+        config_path = os.path.join(out_dir, 'Container_Makefile_template')
     return config_path
 
-def default_makefile_template_path() -> str:
+def default_makefile_template_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to makefile tempalte
     """
-    config_path = os.path.join(default_output_dir(), './Makefile_template')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './Makefile_template')
+    else:
+        config_path = os.path.join(out_dir, './Makefile_template')
     return config_path
 
-def default_makefile_path() -> str:
+def default_makefile_path(out_dir : str = None) -> str:
     """
+    :param out_dir: directory to write
     :return: the default path to makefile tempalte
     """
-    config_path = os.path.join(default_output_dir(), './Makefile')
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './Makefile')
+    else:
+        config_path = os.path.join(out_dir, './Makefile')
     return config_path

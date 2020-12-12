@@ -1,12 +1,3 @@
-PROJECT=pycr
-NETWORK=pycr_net_16
-MINIGAME=pwcrack
-CONTAINER=telnet3
-VERSION=0.0.1
-LEVEL=random_n7_f1_rid_85724
-IP=172.18.16.51
-SUFFIX=1
-
 all: run
 
 run:

@@ -74,8 +74,7 @@ class UsersGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        if path is None:
-            path = util.default_users_path()
+        path = util.default_users_path(out_dir=path)
         util.write_users_config_file(users_config, path)
 
 

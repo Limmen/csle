@@ -15,17 +15,15 @@ def test_env(env_name : str, num_steps : int):
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/containers.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.5./containers.json")
     flags_config = util.read_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/flags.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.5./flags.json")
     cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=9600)
-    env = gym.make("pycr-pwcrack-random-cluster-v1", env_config=None, cluster_config=cluster_config,
+    env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
                    containers_config=containers_config, flags_config=flags_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = True
-
-
 
     env.reset()
 

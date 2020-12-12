@@ -181,8 +181,7 @@ class TopologyGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        if path is None:
-            path = util.default_topology_path()
+        path = util.default_topology_path(out_dir=path)
         util.write_topology_file(topology, path)
 
 

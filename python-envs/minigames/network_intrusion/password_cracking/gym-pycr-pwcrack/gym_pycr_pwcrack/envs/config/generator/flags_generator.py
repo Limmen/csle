@@ -62,7 +62,6 @@ class FlagsGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        if path is None:
-            path = util.default_flags_path()
+        path = util.default_flags_path(out_dir=path)
         util.write_flags_config_file(flags_config, path)
 

@@ -127,8 +127,7 @@ class VulnerabilityGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        if path is None:
-            path = util.default_vulnerabilities_path()
+        path = util.default_vulnerabilities_path(out_dir=path)
         util.write_vulns_config_file(vulns_cfg, path)
 
 

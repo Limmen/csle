@@ -626,13 +626,14 @@ class MainFrame(pyglet.window.Window):
                 self.log_labels[i].text = ""
 
         for v in range(len(self.vuln_labels)):
-            self.vuln_labels[v][0].text = str(int(self.state.vuln_state[v][0]))
-            vuln_name = "-" if int(self.state.vuln_state[v][0]) not in self.state.vuln_lookup_inv else str(
-                self.state.vuln_lookup_inv[int(self.state.vuln_state[v][0])])
-            self.vuln_labels[v][1].text = vuln_name
-            self.vuln_labels[v][2].text = str(int(self.state.vuln_state[v][1]))
-            if len(str(int(self.state.vuln_state[v][0]))) > 3:
-                self.vuln_labels[v][0].font_size = 6
+            if v <= len(self.state.vuln_state)-1:
+                self.vuln_labels[v][0].text = str(int(self.state.vuln_state[v][0]))
+                vuln_name = "-" if int(self.state.vuln_state[v][0]) not in self.state.vuln_lookup_inv else str(
+                    self.state.vuln_lookup_inv[int(self.state.vuln_state[v][0])])
+                self.vuln_labels[v][1].text = vuln_name
+                self.vuln_labels[v][2].text = str(int(self.state.vuln_state[v][1]))
+                if len(str(int(self.state.vuln_state[v][0]))) > 3:
+                    self.vuln_labels[v][0].font_size = 6
 
         for o in range(len(self.os_labels)):
             if o < len(self.state.os_state):
