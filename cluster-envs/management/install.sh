@@ -11,3 +11,5 @@ mv node_exporter-1.0.1.linux-amd64 node_exporter
 
 mv prometheus.yml prometheus/prometheus.yml
 
+sudo sysctl fs.inotify.max_user_watches=1048576
+
