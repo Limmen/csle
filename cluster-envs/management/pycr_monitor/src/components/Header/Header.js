@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Header.css';
 
 const Header = () => (
   <div className="Header">
       <div className="jumbotron">
           <h1 className="text-center">PyCr Monitor</h1>
-          PyCR is a Cyber Range for Reinforcement Learning Agents
+          <span className="subtitle">PyCr is a Cyber Range for Reinforcement Learning Agents</span>
       </div>
   </div>
 );

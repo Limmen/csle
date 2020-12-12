@@ -30,29 +30,49 @@ apply_config: users flags vuln topology
 
 run:
 	cd containers/hacker_kali1_1/ && $(MAKE) run
-	cd containers/telnet1_1/ && $(MAKE) run
 	cd containers/ssh1_1/ && $(MAKE) run
+	cd containers/ssh3_1/ && $(MAKE) run
+	cd containers/telnet3_1/ && $(MAKE) run
+	cd containers/ftp2_1/ && $(MAKE) run
+	cd containers/honeypot1_1/ && $(MAKE) run
+	cd containers/telnet2_1/ && $(MAKE) run
+	cd containers/ftp2_3/ && $(MAKE) run
 	cd containers/router1_1/ && $(MAKE) run
 
 
 stop:
 	cd containers/hacker_kali1_1/ && $(MAKE) stop
-	cd containers/telnet1_1/ && $(MAKE) stop
 	cd containers/ssh1_1/ && $(MAKE) stop
+	cd containers/ssh3_1/ && $(MAKE) stop
+	cd containers/telnet3_1/ && $(MAKE) stop
+	cd containers/ftp2_1/ && $(MAKE) stop
+	cd containers/honeypot1_1/ && $(MAKE) stop
+	cd containers/telnet2_1/ && $(MAKE) stop
+	cd containers/ftp2_3/ && $(MAKE) stop
 	cd containers/router1_1/ && $(MAKE) stop
 
 
 start:
 	cd containers/hacker_kali1_1/ && $(MAKE) start
-	cd containers/telnet1_1/ && $(MAKE) start
 	cd containers/ssh1_1/ && $(MAKE) start
+	cd containers/ssh3_1/ && $(MAKE) start
+	cd containers/telnet3_1/ && $(MAKE) start
+	cd containers/ftp2_1/ && $(MAKE) start
+	cd containers/honeypot1_1/ && $(MAKE) start
+	cd containers/telnet2_1/ && $(MAKE) start
+	cd containers/ftp2_3/ && $(MAKE) start
 	cd containers/router1_1/ && $(MAKE) start
 
 
 clean:
 	cd containers/hacker_kali1_1/ && $(MAKE) clean
-	cd containers/telnet1_1/ && $(MAKE) clean
 	cd containers/ssh1_1/ && $(MAKE) clean
+	cd containers/ssh3_1/ && $(MAKE) clean
+	cd containers/telnet3_1/ && $(MAKE) clean
+	cd containers/ftp2_1/ && $(MAKE) clean
+	cd containers/honeypot1_1/ && $(MAKE) clean
+	cd containers/telnet2_1/ && $(MAKE) clean
+	cd containers/ftp2_3/ && $(MAKE) clean
 	cd containers/router1_1/ && $(MAKE) clean
 
 

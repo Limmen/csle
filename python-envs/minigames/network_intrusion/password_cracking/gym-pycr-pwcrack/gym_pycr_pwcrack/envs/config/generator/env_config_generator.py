@@ -206,6 +206,12 @@ class EnvConfigGenerator:
                 makefile_preamble = makefile_preamble + "CONTAINER=" + c.name + "\n"
                 makefile_preamble = makefile_preamble + "VERSION=" + c.version + "\n"
                 makefile_preamble = makefile_preamble + "LEVEL=" + c.level + "\n"
+                makefile_preamble = makefile_preamble + "DIR=" + path + "\n"
+                makefile_preamble = makefile_preamble + "CFG=" + path + "/containers.json\n"
+                makefile_preamble = makefile_preamble + "FLAGSCFG=" + path + "/flags.json\n"
+                makefile_preamble = makefile_preamble + "TOPOLOGYCFG=" + path + "/topology.json\n"
+                makefile_preamble = makefile_preamble + "USERSCFG=" + path + "/users.json\n"
+                makefile_preamble = makefile_preamble + "VULNERABILITIESCFG=" + path + "/vulnerabilities.json\n"
                 makefile_preamble = makefile_preamble + "IP=" + c.ip + "\n"
                 makefile_preamble = makefile_preamble + "SUFFIX=" + str(count) + "\n\n"
                 makefile_str = makefile_preamble + makefile_template_str

@@ -1,1 +1,44 @@
 .Main {}
+
+.circle_cont {
+    align-items: center;
+    height: 100%;
+    display: block;
+}
+
+.circle {
+    margin: 0 auto;
+    display: inline;
+}
+
+#svg-container {
+    height: 100%;
+}
+
+#svg-1 {
+    display: inline;
+    margin: auto;
+    height: 100%;
+    margin-left:10px;
+}
+
+.mgHeader {
+    font-style: normal;
+    text-decoration-color: black;
+    color:black;
+    text-decoration: none;
+}
+
+.subnetTitle  {
+    font-weight: bold;
+}
+
+.semiTitle{
+    font-style: italic;
+}
+
+.table2 {
+    overflow: auto;
+    display: block;
+    table-layout: auto;
+}
