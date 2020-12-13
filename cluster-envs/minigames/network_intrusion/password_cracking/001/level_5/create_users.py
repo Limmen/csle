@@ -8,11 +8,6 @@ from gym_pycr_pwcrack.envs.config.generator.users_generator import UsersGenerato
 
 def default_users() -> UsersConfig:
     users = [
-        NodeUsersConfig(ip="172.18.5.79", users = [
-            ("l_hopital", "l_hopital", True),
-            ("pi", "pi", True),
-            ("euler", "euler", False)
-        ]),
         NodeUsersConfig(ip="172.18.5.191", users=[
             ("agent", "agent", True)
         ]),
@@ -27,32 +22,19 @@ def default_users() -> UsersConfig:
         ]),
         NodeUsersConfig(ip="172.18.5.2", users=[
             ("admin", "test32121", False),
-            ("user1", "123123", True),
-            ("puppet", "puppet", True)
+            ("user1", "123123", True)
         ]),
         NodeUsersConfig(ip="172.18.5.3", users=[
-            ("admin", "admin", True),
             ("john", "doe", True),
             ("vagrant", "test_pw1", False)
         ]),
         NodeUsersConfig(ip="172.18.5.54", users=[
-            ("vagrant", "vagrant", True),
             ("trent", "xe125@41!341", True)
-        ]),
-        NodeUsersConfig(ip="172.18.5.74", users=[
-            ("administrator", "administrator", True)
-        ]),
-        NodeUsersConfig(ip="172.18.5.61", users=[
-            ("adm", "adm", True)
-        ]),
-        NodeUsersConfig(ip="172.18.5.62", users=[
-            ("guest", "guest", True)
         ]),
         NodeUsersConfig(ip="172.18.5.101", users=[
             ("zidane", "1b12ha9", True)
         ]),
         NodeUsersConfig(ip="172.18.5.7", users=[
-            ("ec2-user", "ec2-user", True),
             ("zlatan", "pi12195e", True),
             ("kennedy", "eul1145x", False)
         ])
