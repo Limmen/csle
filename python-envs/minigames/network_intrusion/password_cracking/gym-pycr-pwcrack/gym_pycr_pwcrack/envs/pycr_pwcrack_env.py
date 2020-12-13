@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 import gym
 import pickle
 from abc import ABC
@@ -2727,7 +2727,8 @@ class PyCRPwCrackRandomClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomBase.env_config(containers_config=containers_config, flags_config=flags_config,
                                                           action_conf=action_conf,
-                                                          cluster_conf=cluster_config, render_conf=render_config)
+                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          num_nodes=len(containers_config.containers)-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2755,7 +2756,8 @@ class PyCRPwCrackRandomCluster1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
                                                           flags_config=flags_config,
                                                           action_conf=action_conf,
-                                                          cluster_conf=cluster_config, render_conf=render_config)
+                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          num_nodes=len(containers_config.containers)-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2783,7 +2785,8 @@ class PyCRPwCrackRandomClusterWithCosts1Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2812,7 +2815,8 @@ class PyCRPwCrackRandomCluster2Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2840,7 +2844,8 @@ class PyCRPwCrackRandomClusterWithCosts2Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2869,7 +2874,8 @@ class PyCRPwCrackRandomCluster3Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2897,7 +2903,8 @@ class PyCRPwCrackRandomClusterWithCosts3Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2926,7 +2933,8 @@ class PyCRPwCrackRandomCluster4Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2954,8 +2962,48 @@ class PyCRPwCrackRandomClusterWithCosts4Env(PyCRPwCrackEnv):
             env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
-                                                        cluster_conf=cluster_config, render_conf=render_config)
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=len(containers_config.containers)-1)
             env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.CLUSTER
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+
+
+# -------- Difficulty RandomMany (RandomMany) ------------
+
+# -------- Cluster ------------
+
+# -------- Base Version (for testing) ------------
+
+# -------- Version 1 ------------
+
+class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_configs: List[ContainersConfig], flags_configs: List[FlagsConfig], idx : int):
+        max_num_nodes = max(list(map(lambda x: len(x.containers), containers_configs)))
+        containers_config = containers_configs[idx]
+        flags_config = flags_configs[idx]
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = True
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=max_num_nodes-1,
+                                                                 subnet_mask=containers_config.subnet_mask,
+                                                                 hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
+                                                          flags_config=flags_config,
+                                                          action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          num_nodes=max_num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir

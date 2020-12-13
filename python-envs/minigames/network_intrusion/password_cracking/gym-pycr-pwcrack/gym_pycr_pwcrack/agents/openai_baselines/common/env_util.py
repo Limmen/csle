@@ -46,6 +46,7 @@ def make_vec_env(
     vec_env_cls: Optional[Type[Union[DummyVecEnv, SubprocVecEnv]]] = None,
     vec_env_kwargs: Optional[Dict[str, Any]] = None,
     monitor_kwargs: Optional[Dict[str, Any]] = None,
+    multi_env : bool = False
 ) -> VecEnv:
     """
     Create a wrapped, monitored ``VecEnv``.
@@ -67,61 +68,74 @@ def make_vec_env(
     :param monitor_kwargs: Keyword arguments to pass to the ``Monitor`` class constructor.
     :return: The wrapped environment
     """
-    env_kwargs = {} if env_kwargs is None else env_kwargs
+    if multi_env:
+        env_kwargs = [{}] if env_kwargs is None else env_kwargs
+    else:
+        env_kwargs = {} if env_kwargs is None else env_kwargs
     vec_env_kwargs = {} if vec_env_kwargs is None else vec_env_kwargs
     monitor_kwargs = {} if monitor_kwargs is None else monitor_kwargs
-
-    def make_env(rank):
-        def _init():
-            cluster_config = env_kwargs["cluster_config"]
-            cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200*rank
-            if isinstance(env_id, str):
-                if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
-                    containers_config = env_kwargs["containers_config"]
-                    flags_config = env_kwargs["flags_config"]
-                    env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
-                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                   flags_config=flags_config)
-                else:
-                    env = gym.make(env_id, env_config=env_kwargs["env_config"],
-                                   cluster_config=cluster_config,
-                                   checkpoint_dir=env_kwargs["checkpoint_dir"])
-            else:
-                if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
-                    containers_config = env_kwargs["containers_config"]
-                    flags_config = env_kwargs["flags_config"]
-                    env = env_id(env_config=env_kwargs["env_config"],
-                                   cluster_config=cluster_config,
-                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                   flags_config=flags_config)
-                else:
-                    env = env_id(env_config=env_kwargs["env_config"],
-                                   cluster_config=cluster_config,
-                                   checkpoint_dir=env_kwargs["checkpoint_dir"])
-
-            if seed is not None:
-                env.seed(seed + rank)
-                env.action_space.seed(seed + rank)
-            # Wrap the env in a Monitor wrapper
-            # to have additional training information
-            monitor_path = os.path.join(monitor_dir, str(rank)) if monitor_dir is not None else None
-            # Create the monitor folder if needed
-            if monitor_path is not None:
-                os.makedirs(monitor_dir, exist_ok=True)
-            env = Monitor(env, filename=monitor_path, **monitor_kwargs)
-            # Optionally, wrap the environment with the provided wrapper
-            if wrapper_class is not None:
-                env = wrapper_class(env)
-            return env
-
-        return _init
 
     # No custom VecEnv is passed
     if vec_env_cls is None:
         # Default: use a DummyVecEnv
         vec_env_cls = DummyVecEnv
-    return vec_env_cls([make_env(i + start_index) for i in range(n_envs)], **vec_env_kwargs)
+    
+    if multi_env:
+        envs_list = []
+        for i in range(len(env_kwargs)):
+            envs_list = envs_list + [make_env(i + start_index, env_kwargs[i], env_id, seed,
+                                               monitor_dir, wrapper_class, monitor_kwargs[i]) for i in range(n_envs)]
+    else:
+        envs_list = [make_env(i + start_index, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor_kwargs)
+         for i in range(n_envs)]
 
+    return vec_env_cls(envs_list, **vec_env_kwargs)
+
+
+def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor_kwargs):
+    def _init():
+        cluster_config = env_kwargs["cluster_config"]
+        cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * rank
+        if isinstance(env_id, str):
+            if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
+                containers_config = env_kwargs["containers_config"]
+                flags_config = env_kwargs["flags_config"]
+                env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
+                               checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                               flags_config=flags_config)
+            else:
+                env = gym.make(env_id, env_config=env_kwargs["env_config"],
+                               cluster_config=cluster_config,
+                               checkpoint_dir=env_kwargs["checkpoint_dir"])
+        else:
+            if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
+                containers_config = env_kwargs["containers_config"]
+                flags_config = env_kwargs["flags_config"]
+                env = env_id(env_config=env_kwargs["env_config"],
+                             cluster_config=cluster_config,
+                             checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                             flags_config=flags_config)
+            else:
+                env = env_id(env_config=env_kwargs["env_config"],
+                             cluster_config=cluster_config,
+                             checkpoint_dir=env_kwargs["checkpoint_dir"])
+
+        if seed is not None:
+            env.seed(seed + rank)
+            env.action_space.seed(seed + rank)
+        # Wrap the env in a Monitor wrapper
+        # to have additional training information
+        monitor_path = os.path.join(monitor_dir, str(rank)) if monitor_dir is not None else None
+        # Create the monitor folder if needed
+        if monitor_path is not None:
+            os.makedirs(monitor_dir, exist_ok=True)
+        env = Monitor(env, filename=monitor_path, **monitor_kwargs)
+        # Optionally, wrap the environment with the provided wrapper
+        if wrapper_class is not None:
+            env = wrapper_class(env)
+        return env
+
+    return _init
 
 def make_atari_env(
     env_id: Union[str, Type[gym.Env]],

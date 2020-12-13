@@ -1,7 +1,9 @@
 from gym_pycr_pwcrack.envs.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_pwcrack.util.experiments_util import util
 
-def generate_envs(num_envs : int):
+def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
+                 max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
+                 subnet_prefix: str = "172.18."):
     EnvConfigGenerator.cleanup_envs(path = util.default_output_dir())
 
     container_pool = [("ftp1", "0.0.1"), ("ftp2", "0.0.1"), ("honeypot1", "0.0.1"),
@@ -22,6 +24,11 @@ def generate_envs(num_envs : int):
                                      gw_vuln_compatible_containers=gw_vuln_compatible_containers,
                                      pw_vuln_compatible_containers=pw_vuln_compatible_containers,
                                      agent_containers=agent_containers, router_containers=router_containers,
-                                     path=util.default_output_dir())
+                                     path=util.default_output_dir(),
+                                     min_num_users=min_num_users, max_num_users=max_num_users,
+                                     min_num_flags=min_num_flags, max_num_flags=max_num_flags,
+                                     min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
+                                     subnet_prefix=subnet_prefix)
 if __name__ == '__main__':
-    generate_envs(2)
+    generate_envs(3, min_num_users=1, max_num_users=3, min_num_flags=1, max_num_flags=5, min_num_nodes=4,
+                  max_num_nodes=10, subnet_prefix="172.18.")

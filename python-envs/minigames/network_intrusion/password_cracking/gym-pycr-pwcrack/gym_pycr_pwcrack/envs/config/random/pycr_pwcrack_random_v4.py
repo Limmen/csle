@@ -145,10 +145,12 @@ class PyCrPwCrackRandomV4:
     @staticmethod
     def env_config(containers_config: ContainersConfig, flags_config: FlagsConfig,
                    action_conf: ActionConfig, render_conf: RenderConfig,
-                   cluster_conf: ClusterConfig) -> EnvConfig:
+                   cluster_conf: ClusterConfig, num_nodes :int) -> EnvConfig:
         """
         Generates the environment configuration
 
+        :param containers_config: the containers config of the generated env
+        :param num_nodes: max number of nodes (defines obs space size and action space size)
         :param network_conf: the network config
         :param action_conf: the action config
         :param cluster_conf: the cluster config
@@ -165,7 +167,7 @@ class PyCrPwCrackRandomV4:
         network_conf = NetworkConfig(subnet_mask=containers_config.subnet_mask, nodes=[], adj_matrix=[],
                                      flags_lookup=flags_lookup)
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes=len(containers_config.containers)-1, render_config=render_conf,
+                               num_sh=3, num_nodes=num_nodes, render_config=render_conf,
                                env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,

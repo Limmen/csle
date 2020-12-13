@@ -6,6 +6,7 @@ from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_pwcrack.dao.experiment.simulation_config import SimulationConfig
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
+from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 
 class ClientConfig:
     """
@@ -29,7 +30,11 @@ class ClientConfig:
                  eval_randomized_env: bool = False,
                  n_envs : int = 1,
                  dummy_vec_env : bool = False,
-                 sub_proc_env: bool = False
+                 sub_proc_env: bool = False,
+                 containers_configs: List[ContainersConfig] = None,
+                 flags_configs: List[FlagsConfig] = None,
+                 cluster_configs: List[ClusterConfig] = None,
+                 multi_env: bool = False
                  ):
         """
         Class constructor, initializes the DTO
@@ -59,6 +64,10 @@ class ClientConfig:
         :param n_envs: number of envs to use
         :param dummy_vec_env: whether to use dummy vec env (sequential stepping)
         :param sub_proc_env: whether to use subproc env (parallel env)
+        :param containers_configs: list of containers config when using multi-env
+        :param flags_configs: list of flags config when using multi-env
+        :param multi_env: boolean flag whether using a multi-env or not
+        :param cluster_configs: list of cluster configs when using a multi-env
         """
         self.env_name = env_name
         self.logger = None
@@ -84,3 +93,7 @@ class ClientConfig:
         self.n_envs = n_envs
         self.dummy_vec_env = dummy_vec_env
         self.sub_proc_env = sub_proc_env
+        self.containers_configs = containers_configs
+        self.flags_configs = flags_configs
+        self.multi_env = multi_env
+        self.cluster_configs = cluster_configs

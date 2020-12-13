@@ -29,7 +29,6 @@ apply_config: users flags vuln topology
 run:
 	python make_cmd.py --c run
 
-
 stop:
 	python make_cmd.py --c stop
 

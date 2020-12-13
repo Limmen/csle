@@ -36,7 +36,9 @@ class EnvConfigGenerator:
                  gw_vuln_compatible_containers: List[Tuple[str, str]] = None,
                  pw_vuln_compatible_containers: List[Tuple[str, str]] = None, subnet_id: int = 1,
                  agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None,
-                 path: str = None):
+                 path: str = None, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
+                 max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
+                 subnet_prefix: str = "172.18."):
         EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
         envs_dirs_path = path
@@ -58,18 +60,21 @@ class EnvConfigGenerator:
                             os.path.join(env_path, "./create_vuln.py"))
             shutil.copyfile(os.path.join(envs_dirs_path, "./create_users.py"),
                             os.path.join(env_path, "./create_users.py"))
-            subnet_prefix, subnet_id = EnvConfigGenerator.create_env(min_num_users=1, max_num_users=5, min_num_flags=1,
-                                                                     max_num_flags=5,
-                                                                     min_num_nodes=4, max_num_nodes=10,
+            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(min_num_users=min_num_users,
+                                                                     max_num_users=max_num_users,
+                                                                     min_num_flags=min_num_flags,
+                                                                     max_num_flags=max_num_flags,
+                                                                     min_num_nodes=min_num_nodes,
+                                                                     max_num_nodes=max_num_nodes,
                                                                      container_pool=container_pool,
                                                                      gw_vuln_compatible_containers=gw_vuln_compatible_containers,
                                                                      pw_vuln_compatible_containers=pw_vuln_compatible_containers,
                                                                      agent_containers=agent_containers,
                                                                      router_containers=router_containers,
-                                                                     path=env_path, subnet_prefix="172.18.",
+                                                                     path=env_path, subnet_prefix=subnet_prefix,
                                                                      subnet_id_blacklist=subnet_id_blacklist)
             subnet_id_blacklist.add(subnet_id)
-            os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + subnet_prefix)
+            os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + gen_subnet_prefix)
 
     @staticmethod
     def generate(num_nodes: int = 5, subnet_prefix: str = "172.18.", num_flags: int = 1,
