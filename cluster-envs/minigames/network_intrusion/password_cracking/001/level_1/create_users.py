@@ -7,11 +7,6 @@ from gym_pycr_pwcrack.envs.config.generator.users_generator import UsersGenerato
 
 def default_users() -> UsersConfig:
     users = [
-        NodeUsersConfig(ip="172.18.1.79", users = [
-            ("l_hopital", "l_hopital", True),
-            ("pi", "pi", True),
-            ("euler", "euler", False)
-        ]),
         NodeUsersConfig(ip="172.18.1.191", users=[
             ("agent", "agent", True)
         ]),
@@ -26,11 +21,9 @@ def default_users() -> UsersConfig:
         ]),
         NodeUsersConfig(ip="172.18.1.2", users=[
             ("admin", "test32121", True),
-            ("user1", "123123", True),
-            ("puppet", "puppet", False)
+            ("user1", "123123", True)
         ]),
         NodeUsersConfig(ip="172.18.1.3", users=[
-            ("admin", "admin", True),
             ("john", "doe", True),
             ("vagrant", "test_pw1", False)
         ])

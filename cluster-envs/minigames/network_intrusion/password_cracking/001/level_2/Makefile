@@ -1,4 +1,4 @@
-all: run users flags topology
+all: run users flags topology vuln gen_containers_config
 
 run:
 	cd containers/router1/ && $(MAKE) run
@@ -65,3 +65,17 @@ users: ./create_users.py
 
 flags: ./create_flags.py
 	python create_flags.py
+
+vuln: ./create_vuln.py
+	python create_vuln.py
+
+gen_containers_config: ./gen_containers_config.py
+	python gen_containers_config.py
+
+clean_config:
+	rm -rf ./users.json
+	rm -rf ./vulnerabilities.json
+	rm -rf ./flags.json
+	rm -rf ./containers.json
+	rm -rf ./topology.json
+	rm -rf ./containers.json

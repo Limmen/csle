@@ -9,12 +9,26 @@ class EnvInfo:
     @staticmethod
     def parse_env_infos() -> List[RunningEnv]:
         client1 = docker.from_env()
-        containers = client1.containers.list()
         client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
-        parsed_containers = EnvInfo.parse_containers(containers=containers, client2=client2)
+        parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
         networks = list(set(list(map(lambda x: x.net, parsed_containers))))
         parsed_envs = EnvInfo.parse_envs(networks=networks, containers=parsed_containers)
         return parsed_envs
+
+
+    @staticmethod
+    def parse_running_containers(client1, client2):
+        containers = client1.containers.list()
+        parsed_containers = EnvInfo.parse_containers(containers=containers, client2=client2)
+        return parsed_containers
+
+
+    @staticmethod
+    def parse_stopped_containers(client1, client2):
+        containers = client1.containers.list(all=True)
+        stopped_containers = list(filter(lambda x: x.status == "exited" or x.status == "created", containers))
+        parsed_containers = EnvInfo.parse_containers(containers=stopped_containers, client2=client2)
+        return parsed_containers
 
 
     @staticmethod

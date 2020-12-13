@@ -20,7 +20,7 @@ clean_config:
 	rm -rf ./flags.json
 	rm -rf ./containers.json
 	rm -rf ./topology.json
-	rm -rf ./containers
+	rm -rf ./containers.json
 
 gen_config:
 	python generate_config.py
