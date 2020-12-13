@@ -34,6 +34,7 @@ RUN apt-get -y install iptables
 RUN apt-get -y install proxychains
 RUN apt-get -y install zip
 RUN apt-get -y install unzip
+RUN apt-get -y install arptables
 
 # Setup users
 

@@ -140,9 +140,13 @@ class TopologyGenerator:
             for output_node in node.output_accept:
                 cmd = "sudo iptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
                 ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                cmd = "sudo arptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
+                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             for input_node in node.input_accept:
                 cmd = "sudo iptables -A INPUT -s {} -j ACCEPT".format(input_node)
+                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                cmd = "sudo arptables -A INPUT -s {} -j ACCEPT".format(input_node)
                 ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             for forward_node in node.forward_accept:
@@ -152,9 +156,13 @@ class TopologyGenerator:
             for output_node in node.output_drop:
                 cmd = "sudo iptables -A OUTPUT -d {} -j DROP".format(output_node)
                 ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                cmd = "sudo arptables -A OUTPUT -d {} -j DROP".format(output_node)
+                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             for input_node in node.input_drop:
                 cmd = "sudo iptables -A INPUT -s {} -j DROP".format(input_node)
+                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                cmd = "sudo arptables -A INPUT -s {} -j DROP".format(input_node)
                 ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             for forward_node in node.forward_drop:
@@ -163,11 +171,17 @@ class TopologyGenerator:
 
             cmd = "sudo iptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
             o,e,_ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            cmd = "sudo arptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             cmd = "sudo iptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
             ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            cmd = "sudo arptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
+            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             cmd = "sudo iptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
+            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            cmd = "sudo arptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
             ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             GeneratorUtil.disconnect_admin(cluster_config=cluster_config)

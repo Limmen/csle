@@ -22,7 +22,7 @@ class FlagsGenerator:
 
         for i in range(num_flags):
             if vulnerabilities[i].vuln_type == VulnType.WEAK_PW:
-                flag_dirs = ["/tmp/", "/home/" + vulnerabilities[i].username]
+                flag_dirs = ["/tmp/", "/home/" + vulnerabilities[i].username + "/"]
             else:
                 flag_dirs = ["/tmp/"]
             dir_idx = random.randint(0, len(flag_dirs)-1)

@@ -1,6 +1,7 @@
 """
 Client configuration for running experiments (parsed from JSON)
 """
+from typing import List
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_pwcrack.dao.experiment.simulation_config import SimulationConfig

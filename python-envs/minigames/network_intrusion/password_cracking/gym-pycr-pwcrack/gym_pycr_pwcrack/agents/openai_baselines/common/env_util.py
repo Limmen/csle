@@ -100,9 +100,14 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
             if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
                 containers_config = env_kwargs["containers_config"]
                 flags_config = env_kwargs["flags_config"]
-                env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
-                               checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                               flags_config=flags_config)
+                if "idx"in env_kwargs:
+                    env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
+                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                                   flags_config=flags_config, idx=env_kwargs["idx"])
+                else:
+                    env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
+                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                                   flags_config=flags_config)
             else:
                 env = gym.make(env_id, env_config=env_kwargs["env_config"],
                                cluster_config=cluster_config,
@@ -111,10 +116,16 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
             if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
                 containers_config = env_kwargs["containers_config"]
                 flags_config = env_kwargs["flags_config"]
-                env = env_id(env_config=env_kwargs["env_config"],
-                             cluster_config=cluster_config,
-                             checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                             flags_config=flags_config)
+                if "idx" in env_kwargs:
+                    env = env_id(env_config=env_kwargs["env_config"],
+                                 cluster_config=cluster_config,
+                                 checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                                 flags_config=flags_config, idx=env_kwargs["idx"])
+                else:
+                    env = env_id(env_config=env_kwargs["env_config"],
+                                 cluster_config=cluster_config,
+                                 checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
+                                 flags_config=flags_config)
             else:
                 env = env_id(env_config=env_kwargs["env_config"],
                              cluster_config=cluster_config,

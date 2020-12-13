@@ -1350,6 +1350,7 @@ class ClusterUtil:
                         non_failed_credentials.append(cr)
                     except Exception as e:
                         print("telnet exception:{}".format(str(e)))
+                        print("Target:{} reachable from {}, {}".format(a.ip, m.ip, a.ip in m.reachable))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
                         print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.obs_state.agent_reachable))

@@ -4,6 +4,7 @@ import gym
 import time
 import numpy as np
 from gym_pycr_pwcrack.util.experiments_util import util
+from gym_pycr_pwcrack.envs.config.generator.env_config_generator import EnvConfigGenerator
 
 def test_env(env_name : str, num_steps : int):
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
@@ -15,11 +16,11 @@ def test_env(env_name : str, num_steps : int):
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.14./containers.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.9./containers.json")
     flags_config = util.read_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.14./flags.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.9./flags.json")
     cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
-                                   server_connection=False, port_forward_next_port=9600)
+                                   server_connection=False, port_forward_next_port=9800)
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
                    containers_config=containers_config, flags_config=flags_config)
     env.env_config.max_episode_length = 1000000000
@@ -32,11 +33,12 @@ def test_env(env_name : str, num_steps : int):
     print("num actions:{}".format(num_actions))
     tot_rew = 0
     for i in range(num_steps):
+        print(i)
         legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         tot_rew += reward
-        env.render()
+        #env.render()
         if done:
             tot_rew = 0
             env.reset()
@@ -48,6 +50,7 @@ def test_env(env_name : str, num_steps : int):
 
 def test_all():
     test_env("pycr-pwcrack-random-cluster-v1", num_steps=1000000000)
+
 
 if __name__ == '__main__':
     test_all()

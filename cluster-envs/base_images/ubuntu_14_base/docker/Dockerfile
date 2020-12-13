@@ -50,6 +50,7 @@ RUN apt-get -y install lftp
 RUN apt-get -y install zip
 RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
         apt-get install -y snort
+RUN apt-get -y install arptables
 
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh

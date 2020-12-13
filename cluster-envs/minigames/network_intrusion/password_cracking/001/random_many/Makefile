@@ -24,14 +24,13 @@ gen_config:
 	python make_cmd.py --c gen_config
 
 
-apply_config: users flags vuln topology
+apply_config: users vuln topology flags
 
 run:
 	python make_cmd.py --c run
 
 stop:
 	python make_cmd.py --c stop
-
 
 start:
 	python make_cmd.py --c start

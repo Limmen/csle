@@ -262,6 +262,8 @@ class NMAP_XML:
     HOP = "hop"
     OS = "os"
     STATE = "state"
+    REASON = "reason"
+    ARP_RESPONSE = "arp-response"
     STATUS_UP = "up"
     ADDR = "addr"
     ADDR_TYPE = "addrtype"

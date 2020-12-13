@@ -1,12 +1,10 @@
 from typing import List, Tuple
-import os
 import io
 import shutil
 import random
 import os
 import re
 import json
-import argparse
 import subprocess
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.envs.config.generator.topology_generator import TopologyGenerator
@@ -15,6 +13,7 @@ from gym_pycr_pwcrack.envs.config.generator.flags_generator import FlagsGenerato
 from gym_pycr_pwcrack.envs.config.generator.users_generator import UsersGenerator
 from gym_pycr_pwcrack.envs.config.generator.container_generator import ContainerGenerator
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
+from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.util.experiments_util import util
 
 class EnvConfigGenerator:
@@ -287,6 +286,26 @@ class EnvConfigGenerator:
             if re.search("env_*", f):
                 env_dirs.append(os.path.join(path, f))
         return env_dirs
+
+    @staticmethod
+    def get_all_envs_containers_config(path: str = None) -> List[ContainersConfig]:
+        if path == None:
+            path = util.default_output_dir()
+        env_dirs = EnvConfigGenerator.get_env_dirs(path)
+        containers_configs = []
+        for d in env_dirs:
+            containers_configs.append(util.read_containers_config(d + "/containers.json"))
+        return containers_configs
+
+    @staticmethod
+    def get_all_envs_flags_config(path: str = None) -> List[FlagsConfig]:
+        if path == None:
+            path = util.default_output_dir()
+        env_dirs = EnvConfigGenerator.get_env_dirs(path)
+        flags_config = []
+        for d in env_dirs:
+            flags_config.append(util.read_containers_config(d + "/flags.json"))
+        return flags_config
 
     @staticmethod
     def config_exists(path: str = None):

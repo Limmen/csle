@@ -1,4 +1,4 @@
-all: run users topology flags vuln
+all: run users topology vuln flags
 
 .PHONY: run
 
@@ -26,5 +26,5 @@ gen_config:
 	python generate_config.py
 
 
-apply_config: users flags vuln topology
+apply_config: users vuln topology flags
 
