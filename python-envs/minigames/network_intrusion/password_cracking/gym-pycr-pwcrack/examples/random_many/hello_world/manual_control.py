@@ -13,8 +13,10 @@ def manual_control():
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    containers_config = util.read_containers_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_1_172.18.15./containers.json")
-    flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_1_172.18.15./flags.json")
+    containers_config = util.read_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.17./containers.json")
+    flags_config = util.read_flags_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.17./flags.json")
     cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=4600)
     env = gym.make("pycr-pwcrack-random-cluster-v1", env_config=None, cluster_config=cluster_config,

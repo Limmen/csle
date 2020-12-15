@@ -55,12 +55,17 @@ class TopologyGenerator:
                     adj_matrix[j][i] = 1
 
         router_ip_suffix = TopologyGenerator.__generate_random_ip(nodes_ip_suffixes)
-        adj_matrix[-1] = adj_matrix[node_id_d[agent_ip_suffix]] # gw and agent same connections
-        gateways[agent_ip_suffix] = router_ip_suffix
-
-
         adj_matrix[node_id_d[agent_ip_suffix]][-1] = 1
         adj_matrix[-1][node_id_d[agent_ip_suffix]] = 1
+
+        # gw and agent same connections
+        adj_matrix[-1] = adj_matrix[node_id_d[agent_ip_suffix]]
+        for i in range(len(nodes_ip_suffixes)):
+            if not nodes_ip_suffixes[i] == agent_ip_suffix:
+                if adj_matrix[node_id_d[nodes_ip_suffixes[i]]][node_id_d[agent_ip_suffix]] == 1:
+                    adj_matrix[node_id_d[nodes_ip_suffixes[i]]][-1] = 1
+
+        gateways[agent_ip_suffix] = router_ip_suffix
 
         nodes_ip_suffixes.append(router_ip_suffix)
         node_id_d_inv[len(nodes_ip_suffixes) - 1] = router_ip_suffix
@@ -93,6 +98,7 @@ class TopologyGenerator:
             default_gw = None
             if nodes_ip_suffixes[i]==agent_ip_suffix:
                 default_gw = subnet_prefix + str(router_ip_suffix)
+
             node_cfg = NodeFirewallConfig(ip=ip, output_accept=output_accept, input_accept=input_accept,
                                forward_accept=forward_accept, output_drop=set(), input_drop=set(), forward_drop=set(),
                                routes=set(), default_input="DROP", default_output="DROP", default_forward="DROP",

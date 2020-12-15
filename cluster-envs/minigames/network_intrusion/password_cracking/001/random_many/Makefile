@@ -1,4 +1,4 @@
-all: run users topology flags vuln
+all: run users topology vuln flags
 
 .PHONY: run
 
