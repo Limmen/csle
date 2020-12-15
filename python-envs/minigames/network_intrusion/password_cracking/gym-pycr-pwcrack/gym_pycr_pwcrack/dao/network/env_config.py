@@ -128,6 +128,7 @@ class EnvConfig:
         self.ssh_retry_find_flag = 5
         self.retry_find_users = 5
         self.ftp_retry_find_flag = 2
+        self.retry_install_tools = 5
 
         self.exploration_policy = None
         self.max_exploration_steps = 100

@@ -2189,12 +2189,17 @@ class ClusterUtil:
                         cmd = a.cmd[0]
                         if env_config.ids_router:
                             last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
-                        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
-                        outdata = outdata.decode()
-                        ssh_cost += float(total_time)
-                        if ClusterUtil._parse_tools_installed_check_result(result=outdata):
-                            installed = True
-                            new_m_obs.tools_installed = True
+                        for i in range(env_config.retry_install_tools):
+                            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                            outdata = outdata.decode()
+                            ssh_cost += float(total_time)
+                            if ClusterUtil._parse_tools_installed_check_result(result=outdata):
+                                installed = True
+                                new_m_obs.tools_installed = True
+                            else:
+                                print("tools installed failed result. out:{}, err:{}".format(outdata, errdata))
+                            if installed:
+                                break
 
                         # try to download seclists
                         seclists_installed = ClusterUtil._check_if_seclists_is_installed(conn=c.conn, telnet=False)
@@ -2268,15 +2273,20 @@ class ClusterUtil:
                         start = time.time()
                         if env_config.ids_router:
                             last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
-                        c.conn.write(cmd.encode())
-                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
-                        response = response.decode()
-                        end = time.time()
-                        total_time = end - start
-                        telnet_cost += float(total_time)
-                        if ClusterUtil._parse_tools_installed_check_result(result=response):
-                            installed = True
-                            new_m_obs.tools_installed = True
+                        for i in range(env_config.retry_install_tools):
+                            c.conn.write(cmd.encode())
+                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
+                            response = response.decode()
+                            end = time.time()
+                            total_time = end - start
+                            telnet_cost += float(total_time)
+                            if ClusterUtil._parse_tools_installed_check_result(result=response):
+                                installed = True
+                                new_m_obs.tools_installed = True
+                            else:
+                                print("tools installed failed result.{}".format(response))
+                            if installed:
+                                break
 
                         seclists_installed = ClusterUtil._check_if_seclists_is_installed(conn=c.conn, telnet=True)
                         if not seclists_installed:
@@ -2841,7 +2851,7 @@ class ClusterUtil:
         """
         cmd = constants.SHELL.CHECK_FOR_SECLISTS
         if not telnet:
-            for i in range(5):
+            for i in range(8):
                 outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
                 checklists_installed = "file exists" in outdata.decode() or "file exists" in errdata.decode()
                 if checklists_installed:
