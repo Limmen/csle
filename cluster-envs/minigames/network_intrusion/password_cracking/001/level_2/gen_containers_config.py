@@ -31,7 +31,7 @@ def default_containers_config():
                             ip="172.18.2.62")
     ]
     containers_cfg = ContainersConfig(containers=containers, network="pycr_net_2", agent_ip="172.18.2.191",
-                                      router_ip="172.18.2.10", subnet_mask="172.18.2.0/24", subnet_prefix="172.18.2",
+                                      router_ip="172.18.2.10", subnet_mask="172.18.2.0/24", subnet_prefix="172.18.2.",
                                       ids_enabled=False)
     return containers_cfg
 

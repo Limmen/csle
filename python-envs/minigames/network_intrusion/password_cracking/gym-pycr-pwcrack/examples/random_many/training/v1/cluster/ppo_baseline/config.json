@@ -13,9 +13,10 @@
         "eps_clip": 0.2,
         "epsilon": 1,
         "epsilon_decay": 0.9999,
-        "eval_episodes": 10,
+        "eval_env_config": null,
+        "eval_episodes": 1,
         "eval_epsilon": 0.0,
-        "eval_frequency": 1,
+        "eval_frequency": 5,
         "eval_log_frequency": 1,
         "eval_render": true,
         "eval_sleep": 0.0,
@@ -33,7 +34,7 @@
         "gradient_steps": 1,
         "hidden_activation": "ReLU",
         "illegal_action_logit": -100,
-        "input_dim": 360,
+        "input_dim": 240,
         "input_dim_2": 30,
         "learning_starts": 50000,
         "load_path": null,
@@ -51,7 +52,7 @@
         "num_iterations": 300,
         "optimization_iterations": 10,
         "optimizer": "Adam",
-        "output_dim": 36,
+        "output_dim": 27,
         "output_dim_2": 30,
         "pi_hidden_dim": 64,
         "pi_hidden_dim_2": 64,
@@ -92,7 +93,7 @@
     "cluster_configs": [
         {
             "agent_conn": null,
-            "agent_ip": "172.18.14.53",
+            "agent_ip": "172.18.6.159",
             "agent_pw": "agent",
             "agent_username": "agent",
             "cluster_cves": [],
@@ -110,132 +111,10 @@
             "server_username": null,
             "warmup": true,
             "warmup_iterations": 500
-        },
-        {
-            "agent_conn": null,
-            "agent_ip": "172.18.6.159",
-            "agent_pw": "agent",
-            "agent_username": "agent",
-            "cluster_cves": [],
-            "cluster_services": [],
-            "ids_router": false,
-            "ids_router_ip": "",
-            "port_forward_next_port": 2151,
-            "py/object": "gym_pycr_pwcrack.dao.network.cluster_config.ClusterConfig",
-            "relay_channel": null,
-            "router_conn": null,
-            "server_conn": null,
-            "server_connection": false,
-            "server_ip": null,
-            "server_private_key_file": null,
-            "server_username": null,
-            "warmup": true,
-            "warmup_iterations": 500
         }
     ],
     "containers_config": null,
     "containers_configs": [
-        {
-            "agent_ip": "172.18.14.53",
-            "containers": [
-                {
-                    "ip": "172.18.14.53",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "hacker_kali1",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.18",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "ssh1",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.117",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "telnet2",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.136",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "ssh3",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.23",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "telnet2",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.198",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "ssh2",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.181",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "telnet1",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.102",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "ssh2",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.137",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "telnet2",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                },
-                {
-                    "ip": "172.18.14.212",
-                    "level": "random_n10_f1_rid_18365",
-                    "minigame": "pwcrack",
-                    "name": "router1",
-                    "network": "pycr_net_14",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                    "version": "0.0.1"
-                }
-            ],
-            "ids_enabled": true,
-            "network": "pycr_net_14",
-            "py/object": "gym_pycr_pwcrack.dao.container_config.containers_config.ContainersConfig",
-            "router_ip": "172.18.14.212",
-            "subnet_mask": "172.18.14.0/24",
-            "subnet_prefix": "172.18.14."
-        },
         {
             "agent_ip": "172.18.6.159",
             "containers": [
@@ -315,172 +194,15 @@
     "env_checkpoint_dir": null,
     "env_config": null,
     "env_name": "pycr-pwcrack-random-many-cluster-v1",
-    "eval_cluster_config": {
-        "agent_conn": null,
-        "agent_ip": "172.18.1.191",
-        "agent_pw": "agent",
-        "agent_username": "agent",
-        "cluster_cves": [],
-        "cluster_services": [],
-        "ids_router": false,
-        "ids_router_ip": "",
-        "port_forward_next_port": 4000,
-        "py/object": "gym_pycr_pwcrack.dao.network.cluster_config.ClusterConfig",
-        "relay_channel": null,
-        "router_conn": null,
-        "server_conn": null,
-        "server_connection": false,
-        "server_ip": null,
-        "server_private_key_file": null,
-        "server_username": null,
-        "warmup": false,
-        "warmup_iterations": 500
-    },
-    "eval_env": true,
-    "eval_env_containers_config": {
-        "agent_ip": "172.18.1.191",
-        "containers": [
-            {
-                "ip": "172.18.1.79",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "ftp1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            },
-            {
-                "ip": "172.18.1.191",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "hacker_kali1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            },
-            {
-                "ip": "172.18.1.21",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "honeypot1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            },
-            {
-                "ip": "172.18.1.10",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "router1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            },
-            {
-                "ip": "172.18.1.2",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "ssh1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            },
-            {
-                "ip": "172.18.1.3",
-                "level": "1",
-                "minigame": "pwcrack",
-                "name": "telnet1",
-                "network": "pycr_net_1",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
-                "version": "0.0.1"
-            }
-        ],
-        "ids_enabled": false,
-        "network": "pycr_net_1",
-        "py/object": "gym_pycr_pwcrack.dao.container_config.containers_config.ContainersConfig",
-        "router_ip": "172.18.1.10",
-        "subnet_mask": "172.18.1.0/24",
-        "subnet_prefix": "172.18.1"
-    },
-    "eval_env_flags_config": {
-        "flags": [
-            {
-                "flags": [
-                    {
-                        "py/tuple": [
-                            "/tmp/flag3.txt",
-                            "flag3",
-                            "/tmp/",
-                            3,
-                            true,
-                            1
-                        ]
-                    }
-                ],
-                "ip": "172.18.1.79",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
-            },
-            {
-                "flags": [
-                    {
-                        "py/tuple": [
-                            "/tmp/flag2.txt",
-                            "flag2",
-                            "/tmp/",
-                            2,
-                            true,
-                            1
-                        ]
-                    }
-                ],
-                "ip": "172.18.1.2",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
-            },
-            {
-                "flags": [
-                    {
-                        "py/tuple": [
-                            "/root/flag1.txt",
-                            "flag1",
-                            "/root/",
-                            1,
-                            true,
-                            1
-                        ]
-                    }
-                ],
-                "ip": "172.18.1.3",
-                "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
-            }
-        ],
-        "py/object": "gym_pycr_pwcrack.dao.container_config.flags_config.FlagsConfig"
-    },
-    "eval_env_name": "pycr-pwcrack-random-cluster-v1",
+    "eval_cluster_config": null,
+    "eval_env": null,
+    "eval_env_containers_config": null,
+    "eval_env_flags_config": null,
+    "eval_env_name": null,
     "eval_env_num_nodes": 10,
-    "eval_randomized_env": true,
+    "eval_randomized_env": false,
     "flags_config": null,
     "flags_configs": [
-        {
-            "flags": [
-                {
-                    "flags": [
-                        {
-                            "py/tuple": [
-                                "/home/pi/flag0.txt",
-                                "flag0",
-                                "/home/pi/",
-                                0,
-                                true,
-                                1
-                            ]
-                        }
-                    ],
-                    "ip": "172.18.14.18",
-                    "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
-                }
-            ],
-            "py/object": "gym_pycr_pwcrack.dao.container_config.flags_config.FlagsConfig"
-        },
         {
             "flags": [
                 {

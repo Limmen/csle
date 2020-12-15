@@ -22,13 +22,13 @@ def default_config() -> ClientConfig:
     num_nodes = max_num_nodes-1
     n_envs = 1
     agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=10, train_log_frequency=1,
+                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                                 num_iterations=300,
                                                 eval_render=True, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=1, video_frequency=10,
+                                                eval_frequency=5, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500,
                                                 input_dim=num_nodes * 40,
@@ -51,10 +51,10 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1
                                                 )
-    eval_env_name = "pycr-pwcrack-random-cluster-v1"
-    eval_env_containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/containers.json")
-    eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/flags.json")
+    # eval_env_name = "pycr-pwcrack-random-cluster-v1"
+    # eval_env_containers_config = util.read_containers_config(
+    #     "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/containers.json")
+    # eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/flags.json")
     env_name = "pycr-pwcrack-random-many-cluster-v1"
     #env_name = "pycr-pwcrack-random-many-cluster-costs-v1"
     cluster_configs = [
@@ -88,11 +88,12 @@ def default_config() -> ClientConfig:
                                  random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_configs=containers_configs, flags_configs=flags_configs,
                                  dummy_vec_env=False, sub_proc_env=True, n_envs=n_envs,
-                                 randomized_env=False, multi_env=True,
-                                 eval_env=True, eval_env_name=eval_env_name, eval_cluster_config=eval_cluster_config,
-                                 eval_env_flags_config = eval_env_flags_config,
-                                 eval_env_containers_config = eval_env_containers_config,
-                                 eval_env_num_nodes=max_num_nodes, eval_randomized_env=True
+                                 randomized_env=False, multi_env=True
+                                 # eval_env=True,
+                                 # eval_env_name=eval_env_name, eval_cluster_config=eval_cluster_config,
+                                 # eval_env_flags_config = eval_env_flags_config,
+                                 # eval_env_containers_config = eval_env_containers_config,
+                                 # eval_env_num_nodes=num_nodes, eval_randomized_env=True
                                  )
     return client_config
 

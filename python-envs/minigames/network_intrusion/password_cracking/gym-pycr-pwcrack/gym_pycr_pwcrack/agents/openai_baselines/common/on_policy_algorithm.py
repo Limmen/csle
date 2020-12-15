@@ -316,12 +316,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 eval_episode_rewards, eval_episode_steps, \
                 eval_episode_flags_percentage, eval_episode_flags = None, None, None, None, None, None, None, None
                 if self.agent_config.train_progress_deterministic_eval:
+                    eval_conf = self.agent_config.env_config
+                    if self.agent_config.eval_env_config is not None:
+                        eval_conf = self.agent_config.eval_env_config
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=True, agent_config=self.agent_config,
-                                              env_config=self.agent_config.env_config, env_2=self.env_2,
+                                              env_config=eval_conf, env_2=self.env_2,
                                               env_configs=self.agent_config.env_configs)
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

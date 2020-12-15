@@ -81,6 +81,7 @@ class Runner:
                 eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
                                     cluster_config = config.eval_cluster_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
+            config.agent_config.eval_env_config = eval_env.env_config
         agent: TrainAgent = None
         if config.multi_env:
             config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))

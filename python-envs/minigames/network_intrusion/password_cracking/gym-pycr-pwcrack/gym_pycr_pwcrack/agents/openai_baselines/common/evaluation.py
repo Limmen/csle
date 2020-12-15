@@ -206,11 +206,20 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
         episode_length = 0
         while not done:
             if isinstance(env, DummyVecEnv):
-                action, state = model.predict(obs, state=state, deterministic=deterministic, env_config=env_config,
-                                              env_state=env.envs[0].env_state)
+                if env_config is not None:
+                    action, state = model.predict(obs, state=state, deterministic=deterministic, env_config=env_config,
+                                                  env_state=env.envs[0].env_state)
+                else:
+                    action, state = model.predict(obs, state=state, deterministic=deterministic,
+                                                  env_config=env_configs[0],
+                                                  env_state=env.envs[0].env_state)
             elif isinstance(env, SubprocVecEnv):
-                action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
-                                              env_config=env_config, env=env)
+                if env_config is not None:
+                    action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                                  env_config=env_config, env=env)
+                else:
+                    action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                                  env_config=env_configs[0], env=env)
             if isinstance(action, np.ndarray):
                 action = int(action[0])
             if isinstance(env, DummyVecEnv):
