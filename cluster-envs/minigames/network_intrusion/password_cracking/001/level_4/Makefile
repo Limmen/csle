@@ -2,7 +2,7 @@ all: run users topology vuln gen_containers_config flags
 
 .PHONY: run
 
-run:
+run: gen_containers_config
 	cd containers/router2/ && $(MAKE) run
 	cd containers/ssh1/ && $(MAKE) run
 	cd containers/telnet1/ && $(MAKE) run
@@ -35,7 +35,7 @@ clean:
 	cd containers/ftp1/ && $(MAKE) clean
 	cd containers/hacker_kali1/ && $(MAKE) clean
 
-apply_config: users vuln flags topology
+apply_config: users vuln flags topology gen_containers_config
 
 topology: ./create_topology.py
 	python create_topology.py

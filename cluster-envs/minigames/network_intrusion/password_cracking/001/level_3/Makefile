@@ -1,6 +1,6 @@
 all: run users topology vuln gen_containers_config flags
 
-run:
+run: gen_containers_config
 	cd containers/router1/ && $(MAKE) run
 	cd containers/ssh1/ && $(MAKE) run
 	cd containers/ssh2/ && $(MAKE) run
@@ -141,7 +141,7 @@ clean: stop
 	cd containers/ftp2/ && $(MAKE) clean
 	cd containers/hacker_kali1/ && $(MAKE) clean
 
-apply_config: users vuln flags topology
+apply_config: users vuln flags topology gen_containers_config
 
 topology: ./create_topology.py
 	python create_topology.py
