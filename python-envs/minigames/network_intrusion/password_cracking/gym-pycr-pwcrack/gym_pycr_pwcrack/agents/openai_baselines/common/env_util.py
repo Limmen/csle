@@ -1,6 +1,6 @@
 import os
 from typing import Any, Callable, Dict, Optional, Type, Union
-
+import time
 import gym
 
 from stable_baselines3.common.atari_wrappers import AtariWrapper
@@ -83,12 +83,11 @@ def make_vec_env(
     if multi_env:
         envs_list = []
         for i in range(len(env_kwargs)):
-            envs_list = envs_list + [make_env(i + start_index, env_kwargs[i], env_id, seed,
-                                               monitor_dir, wrapper_class, monitor_kwargs[i]) for i in range(n_envs)]
+            envs_list = envs_list + [make_env(j + start_index, env_kwargs[i], env_id, seed,
+                                               monitor_dir, wrapper_class, monitor_kwargs) for j in range(n_envs)]
     else:
         envs_list = [make_env(i + start_index, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor_kwargs)
          for i in range(n_envs)]
-
     return vec_env_cls(envs_list, **vec_env_kwargs)
 
 
@@ -101,9 +100,10 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                 containers_config = env_kwargs["containers_config"]
                 flags_config = env_kwargs["flags_config"]
                 if "idx"in env_kwargs:
+                    cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * env_kwargs["idx"]
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
-                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                   flags_config=flags_config, idx=env_kwargs["idx"])
+                                   checkpoint_dir=env_kwargs["checkpoint_dir"], containers_configs=containers_config,
+                                   flags_configs=flags_config, idx=env_kwargs["idx"])
                 else:
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
@@ -144,6 +144,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
         # Optionally, wrap the environment with the provided wrapper
         if wrapper_class is not None:
             env = wrapper_class(env)
+
         return env
 
     return _init

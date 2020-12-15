@@ -41,7 +41,7 @@ class ExploreThread(threading.Thread):
         masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
         trajectory = []
         for i in range(self.num_steps):
-            print(i)
+            #print(i)
             legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
 
             legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
@@ -68,7 +68,6 @@ class ExploreThread(threading.Thread):
             trajectory.append(action)
             #env.render()
             if done:
-                print("done")
                 env.reset()
                 trajectory = []
             # time.sleep(0.001)
@@ -88,7 +87,7 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
             thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=4200 + thread_id*100 + i*100,
                                    containers_configs=containers_configs, flags_configs=flags_configs, idx=i)
             thread.start()
-            time.sleep(15)
+            time.sleep(60)
             threads.append(thread)
 
     for t in threads:
@@ -97,5 +96,5 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
 if __name__ == '__main__':
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
-    start_explore_threads(num_threads=2, env_name="pycr-pwcrack-random-many-cluster-v1",
+    start_explore_threads(num_threads=1, env_name="pycr-pwcrack-random-many-cluster-v1",
                           num_steps=10000000, containers_configs=containers_configs, flags_configs=flags_configs)

@@ -218,7 +218,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     episode_rewards.append(episode_reward[i])
                     episode_steps.append(episode_step[i])
                     episode_flags.append(infos[i]["flags"])
-                    episode_flags_percentage.append(infos[i]["flags"]/self.agent_config.env_config.num_flags)
+                    if self.agent_config.env_config is not None:
+                        episode_flags_percentage.append(infos[i]["flags"]/self.agent_config.env_config.num_flags)
+                    else:
+                        episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
                 return False, episode_rewards, episode_steps
 
             if dones.any:
@@ -230,7 +233,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_rewards.append(episode_reward[i])
                         episode_steps.append(episode_step[i])
                         episode_flags.append(infos[i]["flags"])
-                        episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
+                        if self.agent_config.env_config is not None:
+                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
+                        else:
+                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
                         episode_reward[i] = 0
                         episode_step[i] = 0
 
@@ -315,7 +321,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=True, agent_config=self.agent_config,
-                                              env_config=self.agent_config.env_config, env_2=self.env_2)
+                                              env_config=self.agent_config.env_config, env_2=self.env_2,
+                                              env_configs=self.agent_config.env_configs)
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
                         self._last_infos[0]["non_legal_actions"] = self.env.initial_illegal_actions

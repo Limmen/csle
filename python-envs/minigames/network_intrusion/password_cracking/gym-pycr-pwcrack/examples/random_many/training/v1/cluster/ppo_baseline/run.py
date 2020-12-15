@@ -7,27 +7,16 @@ from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.util.experiments_util import plotting_util
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_pwcrack.envs.config.generator.env_config_generator import EnvConfigGenerator
 
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    containers_configs = [
-        util.read_containers_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.14./containers.json"),
-        util.read_containers_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_1_172.18.19./containers.json"),
-        util.read_containers_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_2_172.18.9./containers.json")
-    ]
-    flags_configs = [
-        util.read_flags_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.14./flags.json"),
-        util.read_flags_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_1_172.18.19./flags.json"),
-        util.read_flags_config(
-            "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_2_172.18.9./flags.json")
-    ]
+    containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
     max_num_nodes = max(list(map(lambda x: len(x.containers), containers_configs)))
     num_nodes = max_num_nodes-1
     agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
@@ -48,7 +37,7 @@ def default_config() -> ClientConfig:
                                                 pi_hidden_dim=64, pi_hidden_layers=1,
                                                 vf_hidden_dim=64, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=200,
+                                                batch_size=2000,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -64,7 +53,7 @@ def default_config() -> ClientConfig:
     #env_name = "pycr-pwcrack-random-many-cluster-costs-v1"
     cluster_configs = [
         ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=2000 + i*100,
+                                       server_connection=False, port_forward_next_port=2001 + i*150,
                                        warmup=True, warmup_iterations=500)
         for i in range(len(containers_configs))
     ]
@@ -89,7 +78,7 @@ def default_config() -> ClientConfig:
                                  run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_configs=containers_configs, flags_configs=flags_configs,
-                                 dummy_vec_env=False, sub_proc_env=True, n_envs=5,
+                                 dummy_vec_env=False, sub_proc_env=True, n_envs=2,
                                  randomized_env=False, multi_env=True)
     return client_config
 

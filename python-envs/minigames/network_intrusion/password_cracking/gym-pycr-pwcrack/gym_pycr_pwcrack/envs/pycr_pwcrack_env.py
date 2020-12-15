@@ -87,6 +87,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.machine_orig_shape = self.env_state.machine_orig_shape
         self.reward_range = (float(0), float(1))
         self.num_states = 100
+        self.idx = self.env_config.idx
         self.viewer = None
         self.steps_beyond_done = None
         self.metadata = {
@@ -3008,4 +3009,5 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.idx=idx
         super().__init__(env_config=env_config)

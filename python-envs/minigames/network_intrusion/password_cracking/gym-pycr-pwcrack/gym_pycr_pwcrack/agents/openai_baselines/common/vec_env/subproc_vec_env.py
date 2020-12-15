@@ -4,7 +4,7 @@ from typing import Sequence
 import pickle
 import gym
 import numpy as np
-
+import time
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 
@@ -24,6 +24,7 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                     action, env_config=env.env_config, env_state=env.env_state), actions))
                 info["non_legal_actions"] = non_legal_actions
+                info["idx"] = env.idx
                 remote.send((observation, reward, done, info))
             elif cmd == "seed":
                 remote.send(env.seed(data))
@@ -94,6 +95,9 @@ class SubprocVecEnv(VecEnv):
         self.remotes, self.work_remotes = zip(*[ctx.Pipe() for _ in range(n_envs)])
         self.processes = []
         for work_remote, remote, env_fn in zip(self.work_remotes, self.remotes, env_fns):
+            print("sleeping")
+            time.sleep(10)
+            print("sleep finished")
             args = (work_remote, remote, CloudpickleWrapper(env_fn))
             # daemon=True: if the main process crashes, we should not cause things to hang
             process = ctx.Process(target=_worker, args=args, daemon=True)  # pytype:disable=attribute-error

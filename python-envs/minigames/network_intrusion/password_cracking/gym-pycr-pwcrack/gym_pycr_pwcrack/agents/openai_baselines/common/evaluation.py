@@ -155,7 +155,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                           n_eval_episodes : int=10,
                           deterministic : bool= True, agent_config : AgentConfig = None,
-                          env_config: EnvConfig = None):
+                          env_config: EnvConfig = None, env_configs : List[EnvConfig] = None):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
     This is made to work only with one env.
@@ -170,15 +170,17 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     """
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
     episode_rewards, episode_steps, episode_flags_percentage, episode_flags = _quick_eval_helper(
-        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config)
+        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
+        env_configs =env_configs)
 
     if env_2 is not None:
         eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = _quick_eval_helper(
-            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config)
+            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
+            env_configs=env_configs)
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags
 
-def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config):
+def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, env_configs = None):
     # if isinstance(env, VecEnv):
     #     assert env.num_envs == 1, "You must pass only one environment when using this function"
 
@@ -224,10 +226,16 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config):
         episode_steps.append(episode_length)
         if isinstance(_info, dict):
             episode_flags.append(_info["flags"])
-            episode_flags_percentage.append(_info["flags"] / env_config.num_flags)
+            if env_config is not None:
+                episode_flags_percentage.append(_info["flags"] / env_config.num_flags)
+            else:
+                episode_flags_percentage.append(_info["flags"] / env_configs[_info["idx"]].num_flags)
         else:
             episode_flags.append(_info[0]["flags"])
-            episode_flags_percentage.append(_info[0]["flags"] / env_config.num_flags)
+            if env_config is not None:
+                episode_flags_percentage.append(_info[0]["flags"] / env_config.num_flags)
+            else:
+                episode_flags_percentage.append(_info[0]["flags"] / env_configs[_info[0]["idx"]].num_flags)
 
     if isinstance(env, DummyVecEnv):
         env.envs[0].reset()
