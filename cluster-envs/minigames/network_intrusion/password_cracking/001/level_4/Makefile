@@ -1,4 +1,4 @@
-all: run users topology flags vuln gen_containers_config
+all: run users topology vuln gen_containers_config flags
 
 .PHONY: run
 
@@ -34,6 +34,8 @@ clean:
 	cd containers/honeypot1/ && $(MAKE) clean
 	cd containers/ftp1/ && $(MAKE) clean
 	cd containers/hacker_kali1/ && $(MAKE) clean
+
+apply_config: users vuln flags topology
 
 topology: ./create_topology.py
 	python create_topology.py

@@ -26,7 +26,7 @@ gen_config:
 	python generate_config.py
 
 
-apply_config: users flags vuln topology
+apply_config: users vuln flags topology
 
 run:
 	cd containers/hacker_kali1_1/ && $(MAKE) run

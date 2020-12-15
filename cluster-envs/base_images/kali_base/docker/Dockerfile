@@ -17,7 +17,7 @@ RUN apt-get -y install ssh
 RUN apt-get -y install openssh-server
 RUN apt-get -y install ftp
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y kali-tools-top10
-RUN apt-get -y install man-db
+#RUN apt-get -y install man-db
 RUN apt-get -y install exploitdb
 RUN apt-get -y install nikto
 RUN apt-get -y install traceroute

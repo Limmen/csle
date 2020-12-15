@@ -8,9 +8,9 @@ from gym_pycr_pwcrack.envs.config.generator.flags_generator import FlagsGenerato
 
 def default_flags() -> FlagsConfig:
     flags = [
-        NodeFlagsConfig(ip="172.18.1.79", flags = [("/tmp/flag3.txt", "flag3")]),
-        NodeFlagsConfig(ip="172.18.1.2", flags=[("/tmp/flag2.txt", "flag2")]),
-        NodeFlagsConfig(ip="172.18.1.3", flags=[("/root/flag1.txt", "flag1")])
+        NodeFlagsConfig(ip="172.18.1.79", flags = [("/tmp/flag3.txt", "flag3", "/tmp/", 3, True, 1)]),
+        NodeFlagsConfig(ip="172.18.1.2", flags=[("/tmp/flag2.txt", "flag2", "/tmp/", 2, True, 1)]),
+        NodeFlagsConfig(ip="172.18.1.3", flags=[("/root/flag1.txt", "flag1", "/root/", 1, True, 1)])
     ]
     flags_config = FlagsConfig(flags=flags)
     return flags_config
