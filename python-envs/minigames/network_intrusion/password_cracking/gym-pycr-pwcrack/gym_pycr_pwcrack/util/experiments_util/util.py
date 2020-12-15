@@ -417,3 +417,6 @@ def default_makefile_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, './Makefile')
     return config_path
+
+def round_batch_size(x: int):
+    return x if x % 100 == 0 else x + 100 - x%100

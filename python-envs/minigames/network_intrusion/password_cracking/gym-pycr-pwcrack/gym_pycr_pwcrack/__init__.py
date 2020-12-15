@@ -597,7 +597,7 @@ register(
     id='pycr-pwcrack-random-cluster-base-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterBaseEnv',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 1 ------------
@@ -605,7 +605,7 @@ register(
     id='pycr-pwcrack-random-cluster-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomCluster1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 1 ------------
@@ -613,7 +613,7 @@ register(
     id='pycr-pwcrack-random-cluster-costs-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterWithCosts1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 2 ------------
@@ -621,7 +621,7 @@ register(
     id='pycr-pwcrack-random-cluster-v2',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomCluster2Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 2 ------------
@@ -629,7 +629,7 @@ register(
     id='pycr-pwcrack-random-cluster-costs-v2',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterWithCosts2Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 3 ------------
@@ -637,7 +637,7 @@ register(
     id='pycr-pwcrack-random-cluster-v3',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomCluster3Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 3 ------------
@@ -645,7 +645,7 @@ register(
     id='pycr-pwcrack-random-cluster-costs-v3',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterWithCosts3Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 4 ------------
@@ -653,7 +653,7 @@ register(
     id='pycr-pwcrack-random-cluster-v4',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomCluster4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 # -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 4 ------------
@@ -661,7 +661,7 @@ register(
     id='pycr-pwcrack-random-cluster-costs-v4',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterWithCosts4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
-            "containers_config": None, "flags_config": None}
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 ## Random Many

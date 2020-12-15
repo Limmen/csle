@@ -75,7 +75,8 @@ class Runner:
             if config.eval_randomized_env:
                 eval_env = gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=config.eval_cluster_config,
                                     checkpoint_dir=config.env_checkpoint_dir,
-                                    containers_config=config.containers_config, flags_config=config.flags_config)
+                                    containers_config=config.eval_env_containers_config,
+                                    flags_config=config.eval_env_flags_config, num_nodes = config.eval_env_num_nodes)
             else:
                 eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
                                     cluster_config = config.eval_cluster_config,

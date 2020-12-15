@@ -35,7 +35,10 @@ class ClientConfig:
                  containers_configs: List[ContainersConfig] = None,
                  flags_configs: List[FlagsConfig] = None,
                  cluster_configs: List[ClusterConfig] = None,
-                 multi_env: bool = False
+                 multi_env: bool = False,
+                 eval_env_containers_config = None,
+                 eval_env_flags_config = None,
+                 eval_env_num_nodes : int = 10
                  ):
         """
         Class constructor, initializes the DTO
@@ -98,3 +101,6 @@ class ClientConfig:
         self.flags_configs = flags_configs
         self.multi_env = multi_env
         self.cluster_configs = cluster_configs
+        self.eval_env_containers_config = eval_env_containers_config
+        self.eval_env_flags_config = eval_env_flags_config
+        self.eval_env_num_nodes = eval_env_num_nodes
