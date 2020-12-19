@@ -315,8 +315,8 @@ class EvalCallback(EventCallback):
             if not isinstance(eval_env_2, VecEnv):
                 eval_env_2 = DummyVecEnv([lambda: eval_env_2])
 
-        if isinstance(eval_env, VecEnv):
-            assert eval_env.num_envs == 1, "You must pass only one environment for evaluation"
+        # if isinstance(eval_env, VecEnv):
+        #     assert eval_env.num_envs == 1, "You must pass only one environment for evaluation"
 
         self.eval_env = eval_env
         self.eval_env_2 = eval_env_2
@@ -355,7 +355,9 @@ class EvalCallback(EventCallback):
                 render=self.render,
                 deterministic=self.deterministic,
                 return_episode_rewards=True,
-                agent_config=self.agent_config
+                agent_config=self.agent_config,
+                env_config=self.agent_config.env_config,
+                env_configs=self.agent_config.env_configs
             )
 
             mean_reward, std_reward = np.mean(episode_rewards), np.std(episode_rewards)

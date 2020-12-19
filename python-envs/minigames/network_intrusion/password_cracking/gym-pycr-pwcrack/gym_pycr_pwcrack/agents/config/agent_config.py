@@ -41,8 +41,9 @@ class AgentConfig:
                  input_dim_2 : int = 30, output_dim_2 : int = 30, pi_hidden_dim_2 : int = 64,
                  pi_hidden_layers_2 : int = 2, vf_hidden_layers_2 : int = 2, vf_hidden_dim_2 : int = 64,
                  filter_illegal_actions : bool = False, train_progress_deterministic_eval: bool = False,
+                 eval_deterministic: bool = False,
                  n_deterministic_eval_iter : int = 10, env_config = None, env_configs = None,
-                 eval_env_config = None
+                 eval_env_config = None, eval_env_configs = None
                  ):
         """
         Initialize environment and hyperparameters
@@ -212,6 +213,8 @@ class AgentConfig:
         self.env_config = env_config
         self.env_configs = env_configs
         self.eval_env_config = eval_env_config
+        self.eval_env_configs = eval_env_configs
+        self.eval_deterministic = eval_deterministic
 
 
     def to_str(self) -> str:

@@ -364,10 +364,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
                     eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-                    eval_episode_flags_percentage_env_specific = \
+                    eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+                    eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+                    eval_2_episode_flags_percentage_env_specific = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
-                                              deterministic=True, agent_config=self.agent_config,
+                                              deterministic=self.agent_config.eval_deterministic, agent_config=self.agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
                                               env_configs=self.agent_config.env_configs)
                     d = {}
@@ -402,7 +404,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  eval_env_specific_rewards = eval_episode_rewards_env_specific,
                                  eval_env_specific_steps=eval_episode_steps_env_specific,
                                  eval_env_specific_flags=eval_episode_flags_env_specific,
-                                 eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific
+                                 eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific,
+                                 eval_2_env_specific_rewards = eval_2_episode_rewards_env_specific,
+                                 eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
+                                 eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
+                                 eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific
                                  )
                 episode_rewards = []
                 episode_loss = []

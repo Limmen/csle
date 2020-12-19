@@ -89,24 +89,28 @@ class PPOBaselineAgent(TrainAgent):
             raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                  "the video_dir argument")
         if isinstance(self.env, DummyVecEnv):
-            train_eval_env_i = self.eval_env
+            train_eval_env_i = self.env
+            train_eval_env = train_eval_env_i
         elif isinstance(self.env, SubprocVecEnv):
-            train_eval_env_i = self.eval_env
+            train_eval_env_i = self.env
+            train_eval_env = train_eval_env_i
         else:
             train_eval_env_i = self.env
-        if train_eval_env_i is not None:
-            train_eval_env = PycrPwCrackMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
-                                      video_frequency=self.config.video_frequency, openai_baseline=True)
-            train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
-        else:
-            train_eval_env = None
+            if train_eval_env_i is not None:
+                train_eval_env = PycrPwCrackMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
+                                          video_frequency=self.config.video_frequency, openai_baseline=True)
+                train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+            else:
+                train_eval_env = None
 
         eval_env = None
-
-        if self.eval_env is not None:
-            eval_env = PycrPwCrackMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
-                                                video_frequency=self.config.video_frequency, openai_baseline=True)
-            eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+        if isinstance(self.eval_env, DummyVecEnv) or isinstance(self.eval_env, SubprocVecEnv):
+            eval_env = self.eval_env
+        else:
+            if self.eval_env is not None:
+                eval_env = PycrPwCrackMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
+                                                    video_frequency=self.config.video_frequency, openai_baseline=True)
+                eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 
         model.learn(total_timesteps=self.config.num_episodes,
                     log_interval=self.config.train_log_frequency,

@@ -64,6 +64,10 @@ class Runner:
         else:
             cluster_conf_temp = deepcopy(config.cluster_config)
             cluster_conf_temp.warmup = False
+        if config.eval_multi_env:
+            eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
+            for cf in eval_cluster_conf_temps:
+                cf.warmup = False
 
         if config.multi_env:
             env, base_envs = Runner.multi_env_creation(config=config, cluster_conf_temps=cluster_conf_temps)
@@ -77,11 +81,16 @@ class Runner:
                                     checkpoint_dir=config.env_checkpoint_dir,
                                     containers_config=config.eval_env_containers_config,
                                     flags_config=config.eval_env_flags_config, num_nodes = config.eval_env_num_nodes)
+            elif config.eval_multi_env:
+                eval_env, eval_base_envs = Runner.eval_multi_env_creation(config=config, cluster_conf_temps=eval_cluster_conf_temps)
             else:
                 eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
                                     cluster_config = config.eval_cluster_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
-            config.agent_config.eval_env_config = eval_env.env_config
+            if config.eval_multi_env:
+                config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+            else:
+                config.agent_config.eval_env_config = eval_env.env_config
         agent: TrainAgent = None
         if config.multi_env:
             config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
@@ -209,3 +218,25 @@ class Runner:
             env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                            checkpoint_dir=config.env_checkpoint_dir)
         return env, base_env
+
+    @staticmethod
+    def eval_multi_env_creation(config: ClientConfig, cluster_conf_temps):
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=cluster_conf_temps[i],
+                              checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.eval_env_containers_configs,
+                              flags_configs=config.eval_env_flags_configs, idx=i) for i in range(len(config.eval_env_containers_configs))]
+
+        env_kwargs = [{"env_config": config.env_config, "cluster_config": config.eval_env_cluster_configs[i],
+                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.eval_env_containers_configs,
+                       "flags_config": config.eval_env_flags_configs, "idx": i, "num_nodes": config.eval_env_num_nodes
+                       } for i in range(len(config.eval_env_containers_configs))]
+        vec_env_kwargs = {"env_config": config.env_config}
+        vec_env_cls = DummyVecEnv
+        if config.sub_proc_env:
+            vec_env_cls = SubprocVecEnv
+        if config.eval_dummy_vec_env or config.eval_sub_proc_env:
+            env = make_vec_env(config.eval_env_name, n_envs=config.eval_n_envs, seed=config.random_seed,
+                               env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
+                               multi_env=True)
+        else:
+            raise ValueError("Have to use a vectorized env class to instantiate a multi-env config")
+        return env, base_envs

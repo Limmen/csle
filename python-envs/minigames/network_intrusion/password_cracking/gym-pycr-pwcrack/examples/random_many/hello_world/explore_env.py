@@ -11,7 +11,8 @@ import time
 
 class ExploreThread(threading.Thread):
 
-    def __init__(self, env_name: str, num_steps: int, port_start, containers_configs, flags_configs, idx :int):
+    def __init__(self, env_name: str, num_steps: int, port_start, containers_configs, flags_configs, idx :int,
+                 num_nodes: int):
         threading.Thread.__init__(self)
         self.env_name = env_name
         self.num_steps = num_steps
@@ -19,6 +20,7 @@ class ExploreThread(threading.Thread):
         self.containers_configs = containers_configs
         self.flags_configs = flags_configs
         self.idx = idx
+        self.num_nodes = num_nodes
 
     def run(self):
         # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.3g.191",
@@ -32,7 +34,7 @@ class ExploreThread(threading.Thread):
         cluster_config = ClusterConfig(agent_ip=self.containers_configs[self.idx].agent_ip, agent_username="agent", agent_pw="agent",
                           server_connection=False, port_forward_next_port=self.port_start + 100*self.idx)
         env = gym.make(self.env_name, env_config=None, cluster_config=cluster_config, containers_configs=self.containers_configs,
-                       flags_configs=self.flags_configs, idx=self.idx)
+                       flags_configs=self.flags_configs, idx=self.idx, num_nodes=self.num_nodes)
         env.env_config.max_episode_length = 1000000000
         env.reset()
         num_actions = env.env_config.action_conf.num_actions
@@ -76,7 +78,7 @@ class ExploreThread(threading.Thread):
 
 
 def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10000000,
-                          containers_configs = None, flags_configs =  None):
+                          containers_configs = None, flags_configs =  None, num_nodes: int = 10):
     threads = []
     for thread_id in range(num_threads):
         for i in range(len(containers_configs)):
@@ -85,7 +87,8 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
             # Seed numpy RNG
             np.random.seed(thread_id*67 + i*67)
             thread = ExploreThread(env_name=env_name, num_steps = num_steps, port_start=4200 + thread_id*100 + i*100,
-                                   containers_configs=containers_configs, flags_configs=flags_configs, idx=i)
+                                   containers_configs=containers_configs, flags_configs=flags_configs, idx=i,
+                                   num_nodes=num_nodes)
             thread.start()
             time.sleep(60)
             threads.append(thread)
@@ -94,7 +97,15 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         t.join()
 
 if __name__ == '__main__':
-    containers_configs = EnvConfigGenerator.get_all_envs_containers_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
-    flags_configs = EnvConfigGenerator.get_all_envs_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/")
+    eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/")
+    max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
+    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
+    max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     start_explore_threads(num_threads=1, env_name="pycr-pwcrack-random-many-cluster-v1",
-                          num_steps=10000000, containers_configs=containers_configs, flags_configs=flags_configs)
+                          num_steps=10000000, containers_configs=eval_containers_configs,
+                          flags_configs=eval_flags_configs, num_nodes=max_num_nodes)

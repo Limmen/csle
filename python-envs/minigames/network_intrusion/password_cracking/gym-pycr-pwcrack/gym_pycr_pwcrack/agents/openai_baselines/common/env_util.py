@@ -95,6 +95,10 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
     def _init():
         cluster_config = env_kwargs["cluster_config"]
         cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * rank
+        if "num_nodes" in env_kwargs:
+            num_nodes = env_kwargs["num_nodes"]
+        else:
+            num_nodes = -1
         if isinstance(env_id, str):
             if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
                 containers_config = env_kwargs["containers_config"]
@@ -103,11 +107,12 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                     cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * env_kwargs["idx"]
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_configs=containers_config,
-                                   flags_configs=flags_config, idx=env_kwargs["idx"])
+                                   flags_configs=flags_config, idx=env_kwargs["idx"],
+                                   num_nodes=num_nodes)
                 else:
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                   flags_config=flags_config, num_nodes = -1)
+                                   flags_config=flags_config, num_nodes=num_nodes)
             else:
                 env = gym.make(env_id, env_config=env_kwargs["env_config"],
                                cluster_config=cluster_config,
@@ -120,12 +125,12 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                     env = env_id(env_config=env_kwargs["env_config"],
                                  cluster_config=cluster_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                 flags_config=flags_config, idx=env_kwargs["idx"])
+                                 flags_config=flags_config, idx=env_kwargs["idx"], num_nodes=num_nodes)
                 else:
                     env = env_id(env_config=env_kwargs["env_config"],
                                  cluster_config=cluster_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                 flags_config=flags_config, num_nodes=-1)
+                                 flags_config=flags_config, num_nodes=num_nodes)
             else:
                 env = env_id(env_config=env_kwargs["env_config"],
                              cluster_config=cluster_config,

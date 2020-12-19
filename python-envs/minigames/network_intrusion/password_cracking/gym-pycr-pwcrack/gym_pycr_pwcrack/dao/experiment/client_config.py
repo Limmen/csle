@@ -38,7 +38,14 @@ class ClientConfig:
                  multi_env: bool = False,
                  eval_env_containers_config = None,
                  eval_env_flags_config = None,
-                 eval_env_num_nodes : int = 10
+                 eval_env_num_nodes : int = 10,
+                 eval_env_containers_configs: List[ContainersConfig] = None,
+                 eval_env_flags_configs: List[FlagsConfig] = None,
+                 eval_env_cluster_configs: List[ClusterConfig] = None,
+                 eval_multi_env: bool  = False,
+                 eval_n_envs: int = 2,
+                 eval_dummy_vec_env: bool = False,
+                 eval_sub_proc_env: bool = False
                  ):
         """
         Class constructor, initializes the DTO
@@ -104,3 +111,10 @@ class ClientConfig:
         self.eval_env_containers_config = eval_env_containers_config
         self.eval_env_flags_config = eval_env_flags_config
         self.eval_env_num_nodes = eval_env_num_nodes
+        self.eval_env_containers_configs = eval_env_containers_configs
+        self.eval_env_flags_configs = eval_env_flags_configs
+        self.eval_env_cluster_configs = eval_env_cluster_configs
+        self.eval_multi_env = eval_multi_env
+        self.eval_n_envs = eval_n_envs
+        self.eval_dummy_vec_env = eval_dummy_vec_env
+        self.eval_sub_proc_env = eval_sub_proc_env

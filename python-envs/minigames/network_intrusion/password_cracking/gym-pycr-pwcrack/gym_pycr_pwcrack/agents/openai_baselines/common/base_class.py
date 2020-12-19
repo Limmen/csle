@@ -221,6 +221,9 @@ class BaseAlgorithm(ABC):
                     eval_env_specific_rewards: dict = None,
                     eval_env_specific_steps: dict = None, eval_env_specific_flags: dict = None,
                     eval_env_specific_flags_percentage: dict = None,
+                    eval_2_env_specific_rewards: dict = None,
+                    eval_2_env_specific_steps: dict = None, eval_2_env_specific_flags: dict = None,
+                    eval_2_env_specific_flags_percentage: dict = None,
                     ) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
@@ -406,6 +409,35 @@ class BaseAlgorithm(ABC):
                 else:
                     result.eval_env_specific_flags_percentage[key] = [avg]
 
+        if eval_2_env_specific_rewards is not None:
+            for key in eval_2_env_specific_rewards.keys():
+                avg = np.mean(eval_2_env_specific_rewards[key])
+                if key in result.eval_2_env_specific_rewards:
+                    result.eval_2_env_specific_rewards[key].append(avg)
+                else:
+                    result.eval_2_env_specific_rewards[key] = [avg]
+        if eval_2_env_specific_steps is not None:
+            for key in eval_2_env_specific_steps.keys():
+                avg = np.mean(eval_2_env_specific_steps[key])
+                if key in result.eval_2_env_specific_steps:
+                    result.eval_2_env_specific_steps[key].append(avg)
+                else:
+                    result.eval_2_env_specific_steps[key] = [avg]
+        if eval_2_env_specific_flags is not None:
+            for key in eval_2_env_specific_flags.keys():
+                avg = np.mean(eval_2_env_specific_flags[key])
+                if key in result.eval_2_env_specific_flags:
+                    result.eval_2_env_specific_flags[key].append(avg)
+                else:
+                    result.eval_2_env_specific_flags[key] = [avg]
+        if eval_2_env_specific_flags_percentage is not None:
+            for key in eval_2_env_specific_flags_percentage.keys():
+                avg = np.mean(eval_2_env_specific_flags_percentage[key])
+                if key in result.eval_2_env_specific_flags_percentage:
+                    result.eval_2_env_specific_flags_percentage[key].append(avg)
+                else:
+                    result.eval_2_env_specific_flags_percentage[key] = [avg]
+
     def log_tensorboard(self, episode: int, avg_episode_rewards: float,
                         avg_episode_steps: float, episode_avg_loss: float,
                         epsilon: float, lr: float, eval=False, avg_flags_catched : int = 0,
@@ -482,7 +514,7 @@ class BaseAlgorithm(ABC):
 
         if eval_env is not None:
             eval_env = self._wrap_env(eval_env)
-            assert eval_env.num_envs == 1
+            #assert eval_env.num_envs == 1
         return eval_env
 
     def _setup_lr_schedule(self) -> None:
@@ -596,8 +628,12 @@ class BaseAlgorithm(ABC):
             mask: Optional[np.ndarray] = None,
             deterministic: bool = False,
             env_config : EnvConfig = None,
+            env_configs: List[EnvConfig] = None,
             env_state : EnvState = None,
-            infos = None
+            infos = None,
+            env_idx: int = None,
+            m_index: int = None,
+            env=None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the model's action(s) from an observation
@@ -612,7 +648,8 @@ class BaseAlgorithm(ABC):
         if not self.agent_config.ar_policy:
             return self.policy.predict(observation, state, mask, deterministic,
                                        env_config=env_config,
-                                       env_state=env_state)
+                                       env_state=env_state, env_configs=env_configs,
+                                       env=env, infos=infos, env_idx=env_idx)
         else:
             m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic,
                                                                           env_config=env_config,
@@ -743,6 +780,7 @@ class BaseAlgorithm(ABC):
             eval_callback = EvalCallback(
                 eval_env,
                 eval_env_2,
+                deterministic=self.agent_config.eval_deterministic,
                 best_model_save_path=log_path,
                 log_path=log_path,
                 eval_freq=eval_freq,

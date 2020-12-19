@@ -19,7 +19,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
                     render : bool =False, callback: Optional[Callable] = None,
                     reward_threshold: Optional[float] = None,
                     return_episode_rewards: bool = False, agent_config : AgentConfig = None,
-                    train_episode = 1):
+                    train_episode = 1, env_config = None, env_configs = None):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
     This is made to work only with one env.
@@ -46,25 +46,24 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
                                                                  n_eval_episodes=n_eval_episodes,
                                                                  deterministic=deterministic,
                                                                  callback=callback, train_episode=train_episode,
-                                                                 model=model)
+                                                                 model=model, env_config=env_config,
+                                                                 env_configs=env_configs)
     if env_2 is not None:
         eval_mean_reward, eval_std_reward = _eval_helper(
             env=env_2, agent_config=agent_config, n_eval_episodes=n_eval_episodes,  deterministic=deterministic,
-            callback=callback, train_episode=train_episode, model=model)
+            callback=callback, train_episode=train_episode, model=model, env_config=env_config,
+            env_configs=env_configs)
     return train_eval_mean_reward, train_eval_std_reward, eval_mean_reward, eval_std_reward
 
 
 def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, deterministic,
-                 callback, train_episode):
-    if isinstance(env, VecEnv):
-        assert env.num_envs == 1, "You must pass only one environment when using this function"
-
+                 callback, train_episode, env_config, env_configs):
     agent_config.logger.info("Starting Evaluation")
 
     model.num_eval_episodes = 0
-
     if agent_config.eval_episodes < 1:
         return
+
     done = False
     state = None
 
@@ -73,70 +72,100 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
     episode_steps = []
     episode_flags = []
     episode_flags_percentage = []
+    eval_episode_rewards_env_specific = {}
+    eval_episode_steps_env_specific = {}
+    eval_episode_flags_env_specific = {}
+    eval_episode_flags_percentage_env_specific = {}
 
-    env.envs[0].enabled = True
-    env.envs[0].stats_recorder.closed = False
-    env.envs[0].episode_id = 0
+    if env.num_envs == 1:
+        env.envs[0].enabled = True
+        env.envs[0].stats_recorder.closed = False
+        env.envs[0].episode_id = 0
+
 
     for episode in range(n_eval_episodes):
-        time_str = str(time.time())
-        obs = env.reset()
-        done = False
-        episode_reward = 0.0
-        episode_length = 0
-        for i in range(agent_config.render_steps):
-            if agent_config.eval_render:
-                time.sleep(1)
+        infos = np.array([{"non_legal_actions": env.initial_illegal_actions} for i in range(env.num_envs)])
+
+        for i in range(env.num_envs):
+            if env_configs is not None:
+                env_conf = env_configs[i]
+            else:
+                env_conf = env_config
+            if isinstance(env, SubprocVecEnv):
+                obs = env.eval_reset(idx=i)
+            elif isinstance(env, DummyVecEnv):
+                obs = env.envs[i].reset()
+            done = False
+            state = None
+            env_state = None
+            episode_reward = 0.0
+            episode_length = 0
+            time_str = str(time.time())
+            while not done:
+                if isinstance(env, DummyVecEnv):
+                    env_state = env.envs[i].env_state
+
+                if env.num_envs == 1 and agent_config.eval_render:
+                    time.sleep(1)
+                    env.render()
+
+                actions, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                               env_config=env_conf,
+                                               env_configs=env_configs, env=env, env_idx=i,
+                                               env_state=env_state)
+                action = actions[0]
+                if isinstance(env, SubprocVecEnv):
+                    obs, reward, done, _info = env.eval_step(action, idx=i)
+                elif isinstance(env, DummyVecEnv):
+                    obs, reward, done, _info = env.envs[i].step(action)
+                infos = [_info]
+                episode_reward += reward
+                episode_length += 1
+
+            # Render final frame when game completed
+            if env.num_envs == 1 and agent_config.eval_render:
                 env.render()
-                # time.sleep(agent_config.eval_sleep)
 
-            action, state = model.predict(obs, state=state, deterministic=deterministic,
-                                          env_config=env.envs[0].env_config,
-                                          env_state=env.envs[0].env_state
-                                          )
-            obs, reward, done, _info = env.step(action)
-            episode_reward += reward
+            # Record episode metrics
+            episode_rewards.append(episode_reward)
+            episode_steps.append(episode_length)
+            episode_flags.append(_info["flags"])
+            episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
+            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
+            eval_episode_flags_env_specific, eval_episode_flags_percentage_env_specific = \
+                update_env_specific_metrics(env_conf, eval_episode_rewards_env_specific,
+                                            eval_episode_steps_env_specific, eval_episode_flags_env_specific,
+                                            eval_episode_flags_percentage_env_specific, episode_reward, episode_length,
+                                            _info, i)
 
-            if callback is not None:
-                callback(locals(), globals())
+            if isinstance(env, SubprocVecEnv):
+                obs = env.eval_reset(idx=i)
+            elif isinstance(env, DummyVecEnv):
+                obs = env.envs[i].reset()
+            if env.num_envs == 1:
+                env.close()
 
-            episode_length += 1
-            if done:
-                break
+            # Update eval stats
+            model.num_eval_episodes += 1
+            model.num_eval_episodes_total += 1
 
-        # Render final frame when game completed
-        if agent_config.eval_render:
-            env.render()
 
-        agent_config.logger.info("Eval episode: {}, Episode ended after {} steps".format(episode, episode_length))
+            # Save gifs
+            if env.num_envs == 1 and agent_config.gifs or agent_config.video:
+                # Add frames to tensorboard
+                for idx, frame in enumerate(env.envs[0].episode_frames):
+                    model.tensorboard_writer.add_image(str(train_episode) + "_eval_frames/" + str(idx),
+                                                       frame, global_step=train_episode,
+                                                       dataformats="HWC")
 
-        # Record episode metrics
-        episode_rewards.append(episode_reward)
-        episode_steps.append(episode_length)
-        episode_flags.append(_info[0]["flags"])
-        episode_flags_percentage.append(_info[0]["flags"] / env.envs[0].env_config.num_flags)
-
-        # Update eval stats
-        model.num_eval_episodes += 1
-        model.num_eval_episodes_total += 1
-
+                # Save Gif
+                env.envs[0].generate_gif(agent_config.gif_dir + "episode_" + str(train_episode) + "_"
+                                         + time_str + ".gif", agent_config.video_fps)
         # Log average metrics every <self.config.eval_log_frequency> episodes
         if episode % agent_config.eval_log_frequency == 0:
             model.log_metrics(iteration=episode, result=model.eval_result, episode_rewards=episode_rewards,
                               episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
                               episode_flags_percentage=episode_flags_percentage)
-
-        # Save gifs
-        if agent_config.gifs or agent_config.video:
-            # Add frames to tensorboard
-            for idx, frame in enumerate(env.envs[0].episode_frames):
-                model.tensorboard_writer.add_image(str(train_episode) + "_eval_frames/" + str(idx),
-                                                   frame, global_step=train_episode,
-                                                   dataformats="HWC")
-
-            # Save Gif
-            env.envs[0].generate_gif(agent_config.gif_dir + "episode_" + str(train_episode) + "_"
-                                     + time_str + ".gif", agent_config.video_fps)
 
     # Log average eval statistics
     model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
@@ -148,9 +177,10 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
     agent_config.logger.info("Evaluation Complete")
     print("Evaluation Complete")
-    env.close()
-    env.reset()
+    # env.close()
+    # env.reset()
     return mean_reward, std_reward
+
 
 def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                           n_eval_episodes : int=10,
@@ -170,22 +200,28 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     """
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
     eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-    eval_episode_flags_percentage_env_specific = {}, {}, {}, {}
+    eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+    eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+    eval_2_episode_flags_percentage_env_specific = {}, {}, {}, {}, {}, {}, {}, {}
 
     episode_rewards, episode_steps, episode_flags_percentage, episode_flags, eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific = _quick_eval_helper(
-        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
+        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=True, env_config=env_config,
         env_configs =env_configs)
 
     if env_2 is not None:
-        eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = _quick_eval_helper(
+        eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+        eval_2_episode_rewards_env_specific, eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+        eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
             env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
             env_configs=env_configs)
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
            eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-           eval_episode_flags_percentage_env_specific
+           eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+           eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+           eval_2_episode_flags_percentage_env_specific
 
 
 def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, env_configs = None):

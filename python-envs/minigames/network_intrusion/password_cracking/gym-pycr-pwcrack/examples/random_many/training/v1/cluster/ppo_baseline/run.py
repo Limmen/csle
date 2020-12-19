@@ -18,17 +18,24 @@ def default_config() -> ClientConfig:
         "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
         "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
-    max_num_nodes = max(list(map(lambda x: len(x.containers), containers_configs)))
+    eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+    eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+
+    max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
+    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
+    max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     num_nodes = max_num_nodes-1
     n_envs = 1
-    agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=20,
+                                                num_iterations=2000,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=5, video_frequency=10,
+                                                eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
                                                 checkpoint_freq=500,
                                                 input_dim=num_nodes * 40,
@@ -39,22 +46,26 @@ def default_config() -> ClientConfig:
                                                 pi_hidden_dim=64, pi_hidden_layers=1,
                                                 vf_hidden_dim=64, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=util.round_batch_size(int(200/n_envs)),
+                                                #batch_size=util.round_batch_size(int(2000/n_envs)),
+                                                batch_size=500,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
+                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=1
+                                                filter_illegal_actions=False, train_progress_deterministic_eval=True,
+                                                n_deterministic_eval_iter=1, eval_deterministic=False
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(
     #     "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/containers.json")
     # eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/flags.json")
+    eval_env_name = "pycr-pwcrack-random-many-cluster-v1"
+    eval_n_envs = 1
+
     env_name = "pycr-pwcrack-random-many-cluster-v1"
     #env_name = "pycr-pwcrack-random-many-cluster-costs-v1"
     cluster_configs = [
@@ -64,8 +75,14 @@ def default_config() -> ClientConfig:
         for i in range(len(containers_configs))
     ]
 
-    eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                        server_connection=False)
+    # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    #                                     server_connection=False)
+    eval_env_cluster_configs = [
+        ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=8001 + i * 150,
+                      warmup=True, warmup_iterations=500)
+        for i in range(len(eval_env_containers_configs))
+    ]
 
     # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
@@ -88,9 +105,13 @@ def default_config() -> ClientConfig:
                                  random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_configs=containers_configs, flags_configs=flags_configs,
                                  dummy_vec_env=False, sub_proc_env=True, n_envs=n_envs,
-                                 randomized_env=False, multi_env=True
-                                 # eval_env=True,
-                                 # eval_env_name=eval_env_name, eval_cluster_config=eval_cluster_config,
+                                 randomized_env=False, multi_env=True,
+                                 eval_env=True,
+                                 eval_env_name=eval_env_name, eval_env_cluster_configs=eval_env_cluster_configs,
+                                 eval_env_containers_configs=eval_env_containers_configs,
+                                 eval_env_flags_configs=eval_env_flags_configs, eval_multi_env=True,
+                                 eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
+                                 eval_dummy_vec_env=False, eval_sub_proc_env=True
                                  # eval_env_flags_config = eval_env_flags_config,
                                  # eval_env_containers_config = eval_env_containers_config,
                                  # eval_env_num_nodes=num_nodes, eval_randomized_env=True

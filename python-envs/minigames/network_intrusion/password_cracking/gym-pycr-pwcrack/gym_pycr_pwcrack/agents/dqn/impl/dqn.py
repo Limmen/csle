@@ -192,8 +192,12 @@ class DQN(OffPolicyAlgorithm):
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
         env_config : EnvConfig = None,
+        env_configs: List[EnvConfig] = None,
         env_state : EnvState = None,
-        infos = None
+        infos = None,
+        env_idx: int = None,
+        m_index: int = None,
+        env=None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Overrides the base_class predict function to include epsilon-greedy exploration.
@@ -215,7 +219,8 @@ class DQN(OffPolicyAlgorithm):
             #action = np.array([self.action_space.sample() for _ in range(n_batch)])
         else:
             action, state = self.policy.predict(observation, state, mask, deterministic, env_config=env_config,
-                                                env_state=env_state)
+                                                env_state=env_state, env_configs=env_configs,
+                                                env=env, env_idx=env_idx, infos=infos)
         return action, state
 
     def learn(
