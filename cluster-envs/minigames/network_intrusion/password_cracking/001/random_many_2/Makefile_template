@@ -1,0 +1,30 @@
+all: run users topology vuln flags
+
+.PHONY: run
+
+topology: ./create_topology.py
+	python create_topology.py
+
+users: ./create_users.py
+	python create_users.py
+
+flags: ./create_flags.py
+	python create_flags.py
+
+vuln: ./create_vuln.py
+	python create_vuln.py
+
+clean_config:
+	rm -rf ./users.json
+	rm -rf ./vulnerabilities.json
+	rm -rf ./flags.json
+	rm -rf ./containers.json
+	rm -rf ./topology.json
+	rm -rf ./containers.json
+
+gen_config:
+	python generate_config.py
+
+
+apply_config: users vuln topology flags
+

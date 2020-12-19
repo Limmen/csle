@@ -721,5 +721,3 @@ class EnvDynamicsUtil:
                 merged_machines.append(merged_m)
                 ips.add(m.ip)
         return merged_machines
-
-

@@ -157,7 +157,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.trajectory = []
         self.trajectory.append(self.last_obs)
         self.trajectory.append(action_id)
-        info = {}
+        info = {"idx": self.idx}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action:{}".format(action_id))
             print("illegal action env mode:{}".format(self.env_config.env_mode))
@@ -171,8 +171,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
         action.ip = self.env_state.obs_state.get_action_ip(action)
-        if self.agent_state.time_step > 1000:
-            print("ts:{}, action:{}, ip:{}, idx:{}, id:{}".format(self.agent_state.time_step, action.name, action.ip, action.index, action.id))
         s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
         if done:
             reward = reward - self.env_config.final_steps_reward_coefficient*self.agent_state.time_step
@@ -2767,6 +2765,8 @@ class PyCRPwCrackRandomCluster1Env(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 

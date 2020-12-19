@@ -41,7 +41,7 @@ class ExploreThread(threading.Thread):
         masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
         trajectory = []
         for i in range(self.num_steps):
-            #print(i)
+            print(i)
             legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
 
             legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))

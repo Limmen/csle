@@ -107,7 +107,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                 else:
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                   flags_config=flags_config)
+                                   flags_config=flags_config, num_nodes = -1)
             else:
                 env = gym.make(env_id, env_config=env_kwargs["env_config"],
                                cluster_config=cluster_config,
@@ -125,7 +125,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                     env = env_id(env_config=env_kwargs["env_config"],
                                  cluster_config=cluster_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
-                                 flags_config=flags_config)
+                                 flags_config=flags_config, num_nodes=-1)
             else:
                 env = env_id(env_config=env_kwargs["env_config"],
                              cluster_config=cluster_config,

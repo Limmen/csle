@@ -22,7 +22,19 @@ class ExperimentResult:
                  eval_2_avg_episode_rewards: List[float] = None,
                  eval_2_avg_episode_steps: List[float] = None,
                  eval_2_avg_episode_flags: List[int] = None,
-                 eval_2_avg_episode_flags_percentage: List[float] = None
+                 eval_2_avg_episode_flags_percentage: List[float] = None,
+                 train_env_specific_rewards: dict = None,
+                 train_env_specific_steps: dict = None,
+                 train_env_specific_flags: dict = None,
+                 train_env_specific_flags_percentage: dict = None,
+                 eval_env_specific_rewards: dict = None,
+                 eval_env_specific_steps: dict = None,
+                 eval_env_specific_flags: dict = None,
+                 eval_env_specific_flags_percentage: dict = None,
+                 eval_2_env_specific_rewards: dict = None,
+                 eval_2_env_specific_steps: dict = None,
+                 eval_2_env_specific_flags: dict = None,
+                 eval_2_env_specific_flags_percentage: dict = None,
                  ):
         """
         Constructor, initializes the DTO
@@ -39,10 +51,22 @@ class ExperimentResult:
         :param eval_avg_episode_steps: list of episode steps for eval deterministic
         :param eval_avg_episode_flags: list of episode flags for eval deterministic
         :param eval_avg_episode_flags_percentage: list of episode flags for eval deterministic
-        :param eval_avg_episode_rewards: list of episode rewards for second eval env deterministic
-        :param eval_avg_episode_steps: list of episode steps for second eval enveval deterministic
-        :param eval_avg_episode_flags: list of episode flags for second eval enveval deterministic
-        :param eval_avg_episode_flags_percentage: list of episode flags for second eval env eval deterministic
+        :param eval_2_avg_episode_rewards: list of episode rewards for second eval env deterministic
+        :param eval_2_avg_episode_steps: list of episode steps for second eval enveval deterministic
+        :param eval_2_avg_episode_flags: list of episode flags for second eval enveval deterministic
+        :param eval_2_avg_episode_flags_percentage: list of episode flags for second eval env eval deterministic
+        :param train_env_specific_rewards: rewards data for specific train env
+        :param train_env_specific_flags: flags data for specific train env
+        :param train_env_specific_steps: steps data for specific train env
+        :param train_env_specific_flags_percentage: flags percentage for specific train env
+        :param eval_env_specific_rewards: eval reward data for specific train env deterministic
+        :param eval_env_specific_flags: eval flags data for specific train env deterministic
+        :param eval_env_specific_flags_percentage: eval flags percentage data for specific train env deterministic
+        :param eval_env_specific_steps: eval steps data for specific train env deterministic
+        :param eval_2_env_specific_rewards: eval reward data for specific eval env deterministic
+        :param eval_2_env_specific_flags: eval flags data for specific eval env deterministic
+        :param eval_2_env_specific_flags_percentage: eval flags percentage dat2a for specific eval env deterministic
+        :param eval_2_env_specific_steps: eval steps data for specific eval env env deterministic
         """
         self.avg_episode_rewards = avg_episode_rewards
         self.avg_episode_rewards_a = avg_episode_rewards_a
@@ -61,6 +85,18 @@ class ExperimentResult:
         self.eval_2_avg_episode_steps = eval_2_avg_episode_steps
         self.eval_2_avg_episode_flags = eval_2_avg_episode_flags
         self.eval_2_avg_episode_flags_percentage = eval_2_avg_episode_flags_percentage
+        self.train_env_specific_rewards = train_env_specific_rewards
+        self.train_env_specific_flags = train_env_specific_flags
+        self.train_env_specific_steps = train_env_specific_steps
+        self.train_env_specific_flags_percentage = train_env_specific_flags_percentage
+        self.eval_env_specific_rewards = eval_env_specific_rewards
+        self.eval_env_specific_flags = eval_env_specific_flags
+        self.eval_env_specific_steps = eval_env_specific_steps
+        self.eval_env_specific_flags_percentage = eval_env_specific_flags_percentage
+        self.eval_2_env_specific_rewards = eval_2_env_specific_rewards
+        self.eval_2_env_specific_flags = eval_2_env_specific_flags
+        self.eval_2_env_specific_steps = eval_2_env_specific_steps
+        self.eval_2_env_specific_flags_percentage = eval_2_env_specific_flags_percentage
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -95,6 +131,30 @@ class ExperimentResult:
             self.eval_2_avg_episode_flags = []
         if eval_2_avg_episode_flags_percentage is None:
             self.eval_2_avg_episode_flags_percentage = []
+        if train_env_specific_rewards is None:
+            self.train_env_specific_rewards = {}
+        if train_env_specific_steps is None:
+            self.train_env_specific_steps = {}
+        if train_env_specific_flags is None:
+            self.train_env_specific_flags = {}
+        if train_env_specific_flags_percentage is None:
+            self.train_env_specific_flags_percentage = {}
+        if eval_env_specific_rewards is None:
+            self.eval_env_specific_rewards = {}
+        if eval_env_specific_steps is None:
+            self.eval_env_specific_steps = {}
+        if eval_env_specific_flags is None:
+            self.eval_env_specific_flags = {}
+        if eval_env_specific_flags_percentage is None:
+            self.eval_env_specific_flags_percentage = {}
+        if eval_2_env_specific_rewards is None:
+            self.eval_2_env_specific_rewards = {}
+        if eval_2_env_specific_steps is None:
+            self.eval_2_env_specific_steps = {}
+        if eval_2_env_specific_flags is None:
+            self.eval_2_env_specific_flags = {}
+        if eval_2_env_specific_flags_percentage is None:
+            self.eval_2_env_specific_flags_percentage = {}
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -123,6 +183,55 @@ class ExperimentResult:
             if len(metrics[i]) > 0:
                 filtered_metrics.append(metrics[i])
                 filtered_metric_labels.append(metric_labels[i])
+        for key in self.train_env_specific_rewards.keys():
+            if len(self.train_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_rewards")
+        for key in self.train_env_specific_steps.keys():
+            if len(self.train_env_specific_steps[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_steps[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_steps")
+        for key in self.train_env_specific_flags.keys():
+            if len(self.train_env_specific_flags[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_flags[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_flags")
+        for key in self.train_env_specific_flags_percentage.keys():
+            if len(self.train_env_specific_flags_percentage[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_flags_percentage[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_flags_percentage")
+        for key in self.eval_env_specific_rewards.keys():
+            if len(self.eval_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_rewards")
+        for key in self.eval_env_specific_steps.keys():
+            if len(self.eval_env_specific_steps[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_steps[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_steps")
+        for key in self.eval_env_specific_flags.keys():
+            if len(self.eval_env_specific_flags[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_flags[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_flags")
+        for key in self.eval_env_specific_flags_percentage.keys():
+            if len(self.eval_env_specific_flags_percentage[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_flags_percentage[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_flags_percentage")
+        for key in self.eval_2_env_specific_rewards.keys():
+            if len(self.eval_2_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_rewards")
+        for key in self.eval_2_env_specific_steps.keys():
+            if len(self.eval_2_env_specific_steps[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_steps[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_steps")
+        for key in self.eval_2_env_specific_flags.keys():
+            if len(self.eval_2_env_specific_flags[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_flags[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_flags")
+        for key in self.eval_2_env_specific_flags_percentage.keys():
+            if len(self.eval_2_env_specific_flags_percentage[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_flags_percentage[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_flags_percentage")
+
         rows = zip(*filtered_metrics)
         with open(file_path, "w") as f:
             writer = csv.writer(f)

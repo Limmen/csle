@@ -37,6 +37,9 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 env.close()
                 remote.close()
                 break
+            elif cmd == "cleanup":
+                env.cleanup()
+                remote.send(1)
             elif cmd == "get_spaces":
                 remote.send((env.observation_space, env.action_space))
             elif cmd == "initial_illegal_actions":
@@ -136,15 +139,15 @@ class SubprocVecEnv(VecEnv):
         obs = [remote.recv() for remote in self.remotes]
         return _flatten_obs(obs, self.observation_space)
 
-    def eval_reset(self):
-        self.remotes[0].send(("reset", None))
-        obs = self.remotes[0].recv()
+    def eval_reset(self, idx : int):
+        self.remotes[idx].send(("reset", None))
+        obs = self.remotes[idx].recv()
         obs = _flatten_obs([obs], self.observation_space)
         return obs
 
-    def eval_step(self, action):
-        self.remotes[0].send(("step", action))
-        result = self.remotes[0].recv()
+    def eval_step(self, action, idx: int):
+        self.remotes[idx].send(("step", action))
+        result = self.remotes[idx].recv()
         obs, rews, dones, infos = result
         return _flatten_obs([obs], self.observation_space), rews, dones, infos
 
@@ -159,6 +162,12 @@ class SubprocVecEnv(VecEnv):
         for process in self.processes:
             process.join()
         self.closed = True
+
+    def cleanup(self):
+        for remote in self.remotes:
+            remote.send(("cleanup", None))
+        res = [remote.recv() for remote in self.remotes]
+        return res
 
     def get_images(self) -> Sequence[np.ndarray]:
         for pipe in self.remotes:

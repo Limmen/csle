@@ -13,11 +13,11 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/containers.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.13./containers.json")
     flags_config = util.read_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/flags.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.13./flags.json")
     num_nodes = len(containers_config.containers)-1
-    agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.00001, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -35,7 +35,7 @@ def default_config() -> ClientConfig:
                                                 pi_hidden_dim=64, pi_hidden_layers=1,
                                                 vf_hidden_dim=64, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=200,
+                                                batch_size=1000,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -73,7 +73,7 @@ def default_config() -> ClientConfig:
                                  run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_config=containers_config, flags_config=flags_config,
-                                 dummy_vec_env=False, sub_proc_env=True, n_envs=10,
+                                 dummy_vec_env=False, sub_proc_env=True, n_envs=1,
                                  randomized_env=True)
     return client_config
 

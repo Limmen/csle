@@ -169,7 +169,12 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
-    episode_rewards, episode_steps, episode_flags_percentage, episode_flags = _quick_eval_helper(
+    eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+    eval_episode_flags_percentage_env_specific = {}, {}, {}, {}
+
+    episode_rewards, episode_steps, episode_flags_percentage, episode_flags, eval_episode_rewards_env_specific, \
+    eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+    eval_episode_flags_percentage_env_specific = _quick_eval_helper(
         env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
         env_configs =env_configs)
 
@@ -178,78 +183,95 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
             env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
             env_configs=env_configs)
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags
+           eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+           eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+           eval_episode_flags_percentage_env_specific
+
 
 def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, env_configs = None):
-    # if isinstance(env, VecEnv):
-    #     assert env.num_envs == 1, "You must pass only one environment when using this function"
-
-    done = False
-    state = None
-
     # Tracking metrics
     episode_rewards = []
     episode_steps = []
     episode_flags = []
     episode_flags_percentage = []
+    eval_episode_rewards_env_specific = {}
+    eval_episode_steps_env_specific = {}
+    eval_episode_flags_env_specific = {}
+    eval_episode_flags_percentage_env_specific = {}
 
     for episode in range(n_eval_episodes):
-        if isinstance(env, DummyVecEnv):
-            obs = env.envs[0].reset()
-        elif isinstance(env, SubprocVecEnv):
-            obs = env.eval_reset()
-            infos = np.array([{"non_legal_actions": env.initial_illegal_actions}])
-        else:
-            obs = env.reset()
-        done = False
-        episode_reward = 0.0
-        episode_length = 0
-        while not done:
-            if isinstance(env, DummyVecEnv):
-                if env_config is not None:
-                    action, state = model.predict(obs, state=state, deterministic=deterministic, env_config=env_config,
-                                                  env_state=env.envs[0].env_state)
-                else:
-                    action, state = model.predict(obs, state=state, deterministic=deterministic,
-                                                  env_config=env_configs[0],
-                                                  env_state=env.envs[0].env_state)
-            elif isinstance(env, SubprocVecEnv):
-                if env_config is not None:
-                    action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
-                                                  env_config=env_config, env=env)
-                else:
-                    action, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
-                                                  env_config=env_configs[0], env=env)
-            if isinstance(action, np.ndarray):
-                action = int(action[0])
-            if isinstance(env, DummyVecEnv):
-                obs, reward, done, _info = env.envs[0].step(action)
-            elif isinstance(env, SubprocVecEnv):
-                obs, reward, done, _info = env.eval_step(action)
+        infos = np.array([{"non_legal_actions": env.initial_illegal_actions} for i in range(env.num_envs)])
+        for i in range(env.num_envs):
+            if env_configs is not None:
+                env_conf = env_configs[i]
+            else:
+                env_conf = env_config
+            if isinstance(env, SubprocVecEnv):
+                obs = env.eval_reset(idx=i)
+            elif isinstance(env, DummyVecEnv):
+                obs = env.envs[i].reset()
+            done = False
+            state = None
+            env_state = None
+            episode_reward = 0.0
+            episode_length = 0
+            while not done:
+                if isinstance(env, DummyVecEnv):
+                    env_state = env.envs[i].env_state
+                actions, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                               env_config = env_conf,
+                                               env_configs=env_configs, env=env, env_idx=i,
+                                               env_state=env_state)
+                action = actions[0]
+                if isinstance(env, SubprocVecEnv):
+                    obs, reward, done, _info = env.eval_step(action, idx=i)
+                elif isinstance(env, DummyVecEnv):
+                    obs, reward, done, _info = env.envs[i].step(action)
                 infos = [_info]
-            episode_reward += reward
-            episode_length += 1
-
-        # Record episode metrics
-        episode_rewards.append(episode_reward)
-        episode_steps.append(episode_length)
-        if isinstance(_info, dict):
+                episode_reward += reward
+                episode_length += 1
+            # Record episode metrics
+            episode_rewards.append(episode_reward)
+            episode_steps.append(episode_length)
             episode_flags.append(_info["flags"])
-            if env_config is not None:
-                episode_flags_percentage.append(_info["flags"] / env_config.num_flags)
-            else:
-                episode_flags_percentage.append(_info["flags"] / env_configs[_info["idx"]].num_flags)
-        else:
-            episode_flags.append(_info[0]["flags"])
-            if env_config is not None:
-                episode_flags_percentage.append(_info[0]["flags"] / env_config.num_flags)
-            else:
-                episode_flags_percentage.append(_info[0]["flags"] / env_configs[_info[0]["idx"]].num_flags)
+            episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
+            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
+            eval_episode_flags_env_specific, eval_episode_flags_percentage_env_specific = \
+                update_env_specific_metrics(env_conf, eval_episode_rewards_env_specific,
+                                        eval_episode_steps_env_specific, eval_episode_flags_env_specific,
+                                        eval_episode_flags_percentage_env_specific, episode_reward,episode_length,
+                                        _info, i)
+            if isinstance(env, SubprocVecEnv):
+                obs = env.eval_reset(idx=i)
+            elif isinstance(env, DummyVecEnv):
+                obs = env.envs[i].reset()
+    return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+           eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+           eval_episode_flags_percentage_env_specific
 
-    if isinstance(env, DummyVecEnv):
-        env.envs[0].reset()
-    elif isinstance(env, SubprocVecEnv):
-        env.eval_reset()
+def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_steps, env_specific_flags,
+                                env_specific_flags_percentage, episode_reward, episode_step, infos, i):
+    agent_ip = env_config.cluster_config.agent_ip
+    num_flags = env_config.num_flags
+
+    if agent_ip not in env_specific_rewards:
+        env_specific_rewards[agent_ip] = [episode_reward]
     else:
-        env.reset()
-    return episode_rewards, episode_steps, episode_flags_percentage, episode_flags
+        env_specific_rewards[agent_ip].append(episode_reward)
+
+    if agent_ip not in env_specific_steps:
+        env_specific_steps[agent_ip] = [episode_step]
+    else:
+        env_specific_steps[agent_ip].append(episode_step)
+
+    if agent_ip not in env_specific_flags:
+        env_specific_flags[agent_ip] = [infos["flags"]]
+    else:
+        env_specific_flags[agent_ip].append(infos["flags"])
+
+    if agent_ip not in env_specific_flags_percentage:
+        env_specific_flags[agent_ip] = [infos["flags"] / num_flags]
+    else:
+        env_specific_flags[agent_ip].append(infos["flags"] / num_flags)
+
+    return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage

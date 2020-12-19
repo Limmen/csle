@@ -223,7 +223,9 @@ class BasePolicy(BaseModel):
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
         env_config: EnvConfig = None,
+        env_configs: EnvConfig = None,
         env_state: EnvState = None,
+        env_idx: int = None,
         m_index: int = None,
         infos=None,
         env=None
@@ -246,7 +248,8 @@ class BasePolicy(BaseModel):
         observation = th.as_tensor(observation).to(self.device)
         with th.no_grad():
             actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
-                                    env_state=env_state, m_index=m_index, infos=infos, env=env)
+                                    env_state=env_state, m_index=m_index, infos=infos, env=env,
+                                    env_configs=env_configs, env_idx=env_idx)
         if type(actions) == th.Tensor:
             # Convert to numpy
             actions = actions.cpu().numpy()
@@ -533,7 +536,8 @@ class ActorCriticPolicy(BasePolicy):
 
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None, env = None, infos = None) -> th.Tensor:
+                env_config: EnvConfig = None, m_index : int = None, env = None, infos = None,
+                 env_configs: List[EnvConfig] = None, env_idx: int = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -548,6 +552,9 @@ class ActorCriticPolicy(BasePolicy):
             actions = list(range(self.agent_config.output_dim_2))
         else:
             actions = list(range(self.agent_config.output_dim))
+
+        non_legal_actions_total = []
+
         if env is None or isinstance(env, DummyVecEnv):
             non_legal_actions = []
             if self.agent_config.filter_illegal_actions:
@@ -563,10 +570,10 @@ class ActorCriticPolicy(BasePolicy):
                         action, env_config=env_config, env_state=env_state), actions))
             non_legal_actions = [non_legal_actions]
         elif isinstance(env, SubprocVecEnv):
-            non_legal_actions = [infos[0]["non_legal_actions"]]
+            non_legal_actions = infos[0]["non_legal_actions"]
+            non_legal_actions = [non_legal_actions]
         else:
             raise ValueError("Unrecognized env: {}".format(env))
-
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)

@@ -186,6 +186,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_steps = []
         episode_flags = []
         episode_flags_percentage = []
+        env_specific_rewards = {}
+        env_specific_steps = {}
+        env_specific_flags = {}
+        env_specific_flags_percentage = {}
 
         # Per episode metrics
         episode_reward = np.zeros(env.num_envs)
@@ -214,6 +218,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             # Give access to local variables
             callback.update_locals(locals())
             if callback.on_step(iteration=self.iteration) is False:
+                print("local variables trigger???")
                 for i in range(env.num_envs):
                     episode_rewards.append(episode_reward[i])
                     episode_steps.append(episode_step[i])
@@ -224,7 +229,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
                 return False, episode_rewards, episode_steps
 
-            if dones.any:
+            if dones.any():
                 for i in range(len(dones)):
                     if dones[i]:
                         # Record episode metrics
@@ -237,6 +242,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                             episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
                         else:
                             episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
+
+                        env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage= \
+                            self.update_env_specific_metrics(env_specific_rewards=env_specific_rewards,
+                                                         env_specific_steps=env_specific_steps,
+                                                         env_specific_flags=env_specific_flags,
+                                                         env_specific_flags_percentage=env_specific_flags_percentage,
+                                                         episode_reward=episode_reward, episode_step=episode_step,
+                                                         infos=infos, i=i)
                         episode_reward[i] = 0
                         episode_step[i] = 0
 
@@ -251,7 +264,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if not dones[i]:
                 episode_rewards.append(episode_reward[i])
                 episode_steps.append(episode_step[i])
-        return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage
+        return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage, env_specific_rewards, \
+               env_specific_steps, env_specific_flags, env_specific_flags_percentage
 
     def train(self) -> None:
         """
@@ -293,17 +307,42 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_steps = []
         episode_loss = []
         episode_flags_percentage = []
+        train_episode_rewards_env_specific = {}
+        train_episode_steps_env_specific = {}
+        train_episode_flags_env_specific = {}
+        train_episode_flags_percentage_env_specific = {}
         lr = 0.0
 
         while self.iteration < self.agent_config.num_iterations:
 
-            continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage = \
+            continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
+            env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage = \
                 self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
 
             episode_rewards.extend(rollouts_rewards)
             episode_steps.extend(rollouts_steps)
             episode_flags.extend(rollouts_flags)
             episode_flags_percentage.extend(rollouts_flags_percentage)
+            for key in env_specific_rewards.keys():
+                if key in train_episode_rewards_env_specific:
+                    train_episode_rewards_env_specific[key].extend(env_specific_rewards[key])
+                else:
+                    train_episode_rewards_env_specific[key] = env_specific_rewards[key]
+            for key in env_specific_steps.keys():
+                if key in train_episode_steps_env_specific:
+                    train_episode_steps_env_specific[key].extend(env_specific_steps[key])
+                else:
+                    train_episode_steps_env_specific[key] = env_specific_steps[key]
+            for key in env_specific_flags.keys():
+                if key in train_episode_flags_env_specific:
+                    train_episode_flags_env_specific[key].extend(env_specific_flags[key])
+                else:
+                    train_episode_flags_env_specific[key] = env_specific_flags[key]
+            for key in env_specific_flags_percentage.keys():
+                if key in train_episode_flags_percentage_env_specific:
+                    train_episode_flags_percentage_env_specific[key].extend(env_specific_flags_percentage[key])
+                else:
+                    train_episode_flags_percentage_env_specific[key] = env_specific_flags_percentage[key]
 
             if continue_training is False:
                 break
@@ -314,13 +353,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.iteration % self.agent_config.train_log_frequency == 0:
                 episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                 eval_episode_rewards, eval_episode_steps, \
-                eval_episode_flags_percentage, eval_episode_flags = None, None, None, None, None, None, None, None
+                eval_episode_flags_percentage, eval_episode_flags, eval_episode_rewards_env_specific, \
+                eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, \
+                                                             {}, {}, {}, {}
                 if self.agent_config.train_progress_deterministic_eval:
                     eval_conf = self.agent_config.env_config
                     if self.agent_config.eval_env_config is not None:
                         eval_conf = self.agent_config.eval_env_config
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
-                    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = \
+                    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+                    eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+                    eval_episode_flags_percentage_env_specific = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=True, agent_config=self.agent_config,
@@ -328,7 +372,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               env_configs=self.agent_config.env_configs)
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
-                        self._last_infos[0]["non_legal_actions"] = self.env.initial_illegal_actions
+                        for i in range(self.env.num_envs):
+                            self._last_infos[i]["non_legal_actions"] = self.env.initial_illegal_actions
                 n_af, n_d = 0,0
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].agent_state.num_all_flags
@@ -349,13 +394,25 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  eval_2_episode_rewards=eval_episode_rewards,
                                  eval_2_episode_steps=eval_episode_steps,
                                  eval_2_episode_flags=eval_episode_flags,
-                                 eval_2_episode_flags_percentage=eval_episode_flags_percentage
+                                 eval_2_episode_flags_percentage=eval_episode_flags_percentage,
+                                 train_env_specific_rewards=train_episode_rewards_env_specific,
+                                 train_env_specific_steps=train_episode_steps_env_specific,
+                                 train_env_specific_flags=train_episode_flags_env_specific,
+                                 train_env_specific_flags_percentage=train_episode_flags_percentage_env_specific,
+                                 eval_env_specific_rewards = eval_episode_rewards_env_specific,
+                                 eval_env_specific_steps=eval_episode_steps_env_specific,
+                                 eval_env_specific_flags=eval_episode_flags_env_specific,
+                                 eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific
                                  )
                 episode_rewards = []
                 episode_loss = []
                 episode_flags = []
                 episode_steps = []
                 episode_flags_percentage = []
+                train_episode_rewards_env_specific = {}
+                train_episode_steps_env_specific = {}
+                train_episode_flags_env_specific = {}
+                train_episode_flags_percentage_env_specific = {}
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations
@@ -465,3 +522,35 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         return new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
                m_action_log_probs, m_selection_actions, m_actions
+
+    def update_env_specific_metrics(self, env_specific_rewards, env_specific_steps, env_specific_flags,
+                                    env_specific_flags_percentage, episode_reward, episode_step, infos, i):
+        if self.agent_config.env_config is not None:
+            agent_ip = self.agent_config.env_config.cluster_config.agent_ip
+            num_flags = self.agent_config.env_config.num_flags
+        else:
+            agent_ip = self.agent_config.env_configs[i].cluster_config.agent_ip
+            num_flags = self.agent_config.env_configs[infos[i]["idx"]].num_flags
+
+        if agent_ip not in env_specific_rewards:
+            env_specific_rewards[agent_ip] = [episode_reward[i]]
+        else:
+            env_specific_rewards[agent_ip].append(episode_reward[i])
+
+        if agent_ip not in env_specific_steps:
+            env_specific_steps[agent_ip] = [episode_step[i]]
+        else:
+            env_specific_steps[agent_ip].append(episode_step[i])
+
+        if agent_ip not in env_specific_flags:
+            env_specific_flags[agent_ip] = [infos[i]["flags"]]
+        else:
+            env_specific_flags[agent_ip].append(infos[i]["flags"])
+
+        if agent_ip not in env_specific_flags_percentage:
+            env_specific_flags[agent_ip] = [infos[i]["flags"]/ num_flags]
+        else:
+            env_specific_flags[agent_ip].append(infos[i]["flags"]/ num_flags)
+
+        return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage
+

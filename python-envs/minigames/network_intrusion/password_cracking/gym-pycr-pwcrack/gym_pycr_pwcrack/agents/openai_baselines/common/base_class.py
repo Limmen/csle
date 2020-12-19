@@ -215,7 +215,13 @@ class BaseAlgorithm(ABC):
                     eval_episode_steps :list = None, eval_episode_flags_percentage :list = None,
                     eval_episode_flags : list = None, eval_2_episode_rewards: list = None,
                     eval_2_episode_steps :list = None, eval_2_episode_flags_percentage :list = None,
-                    eval_2_episode_flags : list = None) -> None:
+                    eval_2_episode_flags : list = None, train_env_specific_rewards : dict = None,
+                    train_env_specific_steps: dict = None, train_env_specific_flags : dict = None,
+                    train_env_specific_flags_percentage: dict = None,
+                    eval_env_specific_rewards: dict = None,
+                    eval_env_specific_steps: dict = None, eval_env_specific_flags: dict = None,
+                    eval_env_specific_flags_percentage: dict = None,
+                    ) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -238,6 +244,14 @@ class BaseAlgorithm(ABC):
         :param eval_2_episode_steps: deterministic policy eval steps
         :param eval_2_episode_flags: deterministic policy eval flags
         :param eval_2_episode_flags_percentage: deterministic policy eval flag percentage
+        :param train_env_specific_rewards: episodic rewards per train env
+        :param train_env_specific_steps: episodic steps per train env
+        :param train_env_specific_flags: episodic flags per train env
+        :param train_env_specific_flags_percentage: episodic flags_percentage per train env
+        :param eval_env_specific_rewards: episodic rewards per train eval env
+        :param eval_env_specific_steps: episodic steps per train eval env
+        :param eval_env_specific_flags: episodic flags per train eval env
+        :param eval_env_specific_flags_percentage: episodic flags_percentage per train eval env
         :return: None
         """
         if eps is None:
@@ -334,6 +348,63 @@ class BaseAlgorithm(ABC):
         result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
         result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
         result.lr_list.append(lr)
+        if train_env_specific_rewards is not None:
+            for key in train_env_specific_rewards.keys():
+                avg = np.mean(train_env_specific_rewards[key])
+                if key in result.train_env_specific_rewards:
+                    result.train_env_specific_rewards[key].append(avg)
+                else:
+                    result.train_env_specific_rewards[key] = [avg]
+        if train_env_specific_steps is not None:
+            for key in train_env_specific_steps.keys():
+                avg = np.mean(train_env_specific_steps[key])
+                if key in result.train_env_specific_steps:
+                    result.train_env_specific_steps[key].append(avg)
+                else:
+                    result.train_env_specific_steps[key] = [avg]
+        if train_env_specific_flags is not None:
+            for key in train_env_specific_flags.keys():
+                avg = np.mean(train_env_specific_flags[key])
+                if key in result.train_env_specific_flags:
+                    result.train_env_specific_flags[key].append(avg)
+                else:
+                    result.train_env_specific_flags[key] = [avg]
+        if train_env_specific_flags_percentage is not None:
+            for key in train_env_specific_flags_percentage.keys():
+                avg = np.mean(train_env_specific_flags_percentage[key])
+                if key in result.train_env_specific_flags_percentage:
+                    result.train_env_specific_flags_percentage[key].append(avg)
+                else:
+                    result.train_env_specific_flags_percentage[key] = [avg]
+
+        if eval_env_specific_rewards is not None:
+            for key in eval_env_specific_rewards.keys():
+                avg = np.mean(eval_env_specific_rewards[key])
+                if key in result.eval_env_specific_rewards:
+                    result.eval_env_specific_rewards[key].append(avg)
+                else:
+                    result.eval_env_specific_rewards[key] = [avg]
+        if eval_env_specific_steps is not None:
+            for key in eval_env_specific_steps.keys():
+                avg = np.mean(eval_env_specific_steps[key])
+                if key in result.eval_env_specific_steps:
+                    result.eval_env_specific_steps[key].append(avg)
+                else:
+                    result.eval_env_specific_steps[key] = [avg]
+        if eval_env_specific_flags is not None:
+            for key in eval_env_specific_flags.keys():
+                avg = np.mean(eval_env_specific_flags[key])
+                if key in result.eval_env_specific_flags:
+                    result.eval_env_specific_flags[key].append(avg)
+                else:
+                    result.eval_env_specific_flags[key] = [avg]
+        if eval_env_specific_flags_percentage is not None:
+            for key in eval_env_specific_flags_percentage.keys():
+                avg = np.mean(eval_env_specific_flags_percentage[key])
+                if key in result.eval_env_specific_flags_percentage:
+                    result.eval_env_specific_flags_percentage[key].append(avg)
+                else:
+                    result.eval_env_specific_flags_percentage[key] = [avg]
 
     def log_tensorboard(self, episode: int, avg_episode_rewards: float,
                         avg_episode_steps: float, episode_avg_loss: float,

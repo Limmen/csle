@@ -15,6 +15,9 @@ from gym_pycr_pwcrack.envs.config.generator.container_generator import Container
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.util.experiments_util import util
+from gym_pycr_pwcrack.dao.container_config.topology import Topology
+from gym_pycr_pwcrack.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from gym_pycr_pwcrack.dao.container_config.users_config import UsersConfig
 
 class EnvConfigGenerator:
 
@@ -81,7 +84,8 @@ class EnvConfigGenerator:
                  container_pool: List[Tuple[str, str]] = None,
                  gw_vuln_compatible_containers: List[Tuple[str, str]] = None,
                  pw_vuln_compatible_containers: List[Tuple[str, str]] = None, subnet_id: int = 1,
-                 agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None):
+                 agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None) \
+            -> Tuple[Topology, VulnerabilitiesConfig, UsersConfig, FlagsConfig, ContainersConfig]:
 
         adj_matrix, gws, topology, agent_ip, router_ip = TopologyGenerator.generate(num_nodes=num_nodes,
                                                                                     subnet_prefix=subnet_prefix)
@@ -325,6 +329,21 @@ class EnvConfigGenerator:
             return False
 
         return True
+
+    @staticmethod
+    def compute_approx_pi_star(env, ids_enabled, num_flags) -> float:
+        action_costs = env.env_config.action_costs
+        action_alerts = env.env_config.action_alerts
+        pi_star = 0
+        if env.env_config.cost_coefficient == 0 and not ids_enabled:
+            pi_star = (-env.env_config.base_step_reward)*num_flags
+        elif env.env_config.cost_coefficient > 0 and not ids_enabled:
+            pi_star = (-env.env_config.base_step_reward) * num_flags # dont' know optimal cost, this is upper bound on optimality
+        elif env.env_config.cost_coefficient == 0 and ids_enabled:
+            pi_star = (-env.env_config.base_step_reward) * num_flags # dont' know optimal cost, this is upper bound on optimality
+        else:
+            pi_star = (-env.env_config.base_step_reward) * num_flags  # dont' know optimal cost, this is upper bound on optimality
+        return pi_star
 
 
 if __name__ == '__main__':

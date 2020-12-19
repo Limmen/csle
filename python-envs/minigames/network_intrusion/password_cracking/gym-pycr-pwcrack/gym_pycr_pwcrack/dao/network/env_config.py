@@ -110,7 +110,7 @@ class EnvConfig:
         self.max_costs = 1
         self.sum_alerts = 1
         self.max_alerts = 1
-        self.max_episode_length = 10000
+        self.max_episode_length = 1000
         self.base_step_reward = -1
         self.illegal_reward_action = 0
         self.final_steps_reward_coefficient = 1

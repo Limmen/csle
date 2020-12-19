@@ -89,7 +89,7 @@ class PPOBaselineAgent(TrainAgent):
             raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                  "the video_dir argument")
         if isinstance(self.env, DummyVecEnv):
-            train_eval_env_i = self.env.envs[0]
+            train_eval_env_i = self.eval_env
         elif isinstance(self.env, SubprocVecEnv):
             train_eval_env_i = self.eval_env
         else:

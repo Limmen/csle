@@ -174,11 +174,10 @@ class Runner:
     def randomized_env_creation(config: ClientConfig, cluster_conf_temp):
         base_env = gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temp,
                             checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                            flags_config=config.flags_config,
-                            multi_env=False)
+                            flags_config=config.flags_config, num_nodes = -1)
         env_kwargs = {"env_config": config.env_config, "cluster_config": config.cluster_config,
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_config,
-                      "flags_config": config.flags_config}
+                      "flags_config": config.flags_config, "num_nodes": -1}
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
         if config.sub_proc_env:
@@ -189,7 +188,7 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                            checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                           flags_config=config.flags_config)
+                           flags_config=config.flags_config, num_nodes=-1)
         return env, base_env
 
 

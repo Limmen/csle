@@ -22,11 +22,11 @@ def default_config() -> ClientConfig:
     num_nodes = max_num_nodes-1
     n_envs = 1
     agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
+                                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=300,
-                                                eval_render=True, gifs=True,
+                                                num_iterations=20,
+                                                eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=5, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",

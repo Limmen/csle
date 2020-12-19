@@ -1,0 +1,4 @@
+*.zip
+containers
+*.json
+env_*

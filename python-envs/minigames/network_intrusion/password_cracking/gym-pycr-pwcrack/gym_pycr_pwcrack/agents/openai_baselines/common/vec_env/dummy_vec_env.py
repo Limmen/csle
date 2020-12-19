@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from copy import deepcopy
 from typing import Callable, List, Optional, Sequence
-
+import time
 import gym
 import numpy as np
 
@@ -22,6 +22,12 @@ class DummyVecEnv(VecEnv):
     """
 
     def __init__(self, env_fns: List[Callable[[], gym.Env]], env_config = None):
+        self.envs = []
+        for fn in env_fns:
+            print("sleeping")
+            time.sleep(10)
+            print("sleep finished")
+            self.envs.append(fn())
         self.envs = [fn() for fn in env_fns]
         env = self.envs[0]
         VecEnv.__init__(self, len(env_fns), env.observation_space, env.action_space)
@@ -31,9 +37,10 @@ class DummyVecEnv(VecEnv):
         self.buf_obs = OrderedDict([(k, np.zeros((self.num_envs,) + tuple(shapes[k]), dtype=dtypes[k])) for k in self.keys])
         self.buf_dones = np.zeros((self.num_envs,), dtype=np.bool)
         self.buf_rews = np.zeros((self.num_envs,), dtype=np.float32)
-        self.buf_infos = [{} for _ in range(self.num_envs)]
+        self.buf_infos = [{"idx": self.envs[i].idx} for i in range(self.num_envs)]
         self.actions = None
         self.metadata = env.metadata
+        self.initial_illegal_actions = self.envs[0].initial_illegal_actions
 
     def step_async(self, actions: np.ndarray):
         self.actions = actions
@@ -43,6 +50,7 @@ class DummyVecEnv(VecEnv):
             obs, self.buf_rews[env_idx], self.buf_dones[env_idx], self.buf_infos[env_idx] = self.envs[env_idx].step(
                 self.actions[env_idx]
             )
+            self.buf_infos[env_idx]["idx"] = self.envs[env_idx].idx
             if self.buf_dones[env_idx]:
                 # save final observation where user can get it, then reset
                 self.buf_infos[env_idx]["terminal_observation"] = obs
@@ -65,6 +73,10 @@ class DummyVecEnv(VecEnv):
     def close(self):
         for env in self.envs:
             env.close()
+
+    def cleanup(self):
+        for env in self.envs:
+            env.cleanup()
 
     def get_images(self) -> Sequence[np.ndarray]:
         return [env.render(mode="rgb_array") for env in self.envs]
