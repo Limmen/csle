@@ -158,6 +158,11 @@ vuln: ./create_vuln.py
 gen_containers_config: ./gen_containers_config.py
 	python gen_containers_config.py
 
+
+clean_fs_cache:
+	python clean_fs_cache.py
+
+
 clean_config:
 	rm -rf ./users.json
 	rm -rf ./vulnerabilities.json

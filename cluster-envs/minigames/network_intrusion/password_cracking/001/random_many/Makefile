@@ -42,3 +42,7 @@ clean_envs:
 	python make_cmd.py --c clean_envs
 
 
+clean:
+	python make_cmd.py --c clean_fs_cache
+
+

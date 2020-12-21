@@ -25,7 +25,7 @@ class EnvConfigGenerator:
     def execute_env_cmd(path :str, cmd: str):
         env_dirs = EnvConfigGenerator.get_env_dirs(path=path)
         cmds = ["clean", "clean_config", "gen_config", "apply_config", "run", "stop", "start", "topology", "users",
-                "flags", "vuln", "all"]
+                "flags", "vuln", "all", "clean_fs_cache"]
         if cmd in cmds:
             for dir in env_dirs:
                 cmd_full = "make " + cmd
