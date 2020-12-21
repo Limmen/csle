@@ -176,7 +176,7 @@ class Runner:
         if config.dummy_vec_env or config.sub_proc_env:
             env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
                                env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
-                               multi_env=True, num_nodes=config.agent_config.num_nodes)
+                               multi_env=True)
         else:
             raise ValueError("Have to use a vectorized env class to instantiate a multi-env config")
         return env, base_envs

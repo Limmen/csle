@@ -32,7 +32,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=10,
+                                                num_iterations=50,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -57,7 +57,8 @@ def default_config() -> ClientConfig:
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=False, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=1, eval_deterministic=False
+                                                n_deterministic_eval_iter=1, eval_deterministic=False,
+                                                num_nodes=max_num_nodes
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(

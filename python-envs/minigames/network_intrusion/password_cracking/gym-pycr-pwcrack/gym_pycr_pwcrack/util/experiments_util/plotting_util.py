@@ -2,6 +2,7 @@
 Utility functions for plotting training results
 """
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -589,6 +590,7 @@ def plot_rewards_steps_4(rewards_data_1, rewards_means_1, rewards_stds_1,
     # plt.close(fig)
 
 def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means_1, train_avg_rewards_stds_1,
+                               eval_avg_rewards_data_1, eval_avg_rewards_means_1, eval_avg_rewards_stds_1,
                                train_envs_specific_rewards_data, train_envs_specific_rewards_means,
                                train_envs_specific_rewards_stds,
                                eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
@@ -598,6 +600,7 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
     """
     Plots rewards, flags % and steps of two different configurations
     """
+    #matplotlib.style.use("seaborn")
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 4.5))
@@ -605,7 +608,7 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
 
     # ylims = (0, 920)
 
-    # Plot Rewards
+    # Plot Avg Train Rewards
     ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
             train_avg_rewards_means_1, label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
             markevery=markevery)
@@ -613,29 +616,37 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
                     train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
                     alpha=0.35, color="#599ad3")
 
-    colors = ["r", "#f9a65a", "#661D98", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#A65628", "#F781BF",
-              "#999999", "#FFFF33", "#000000", "blue", "green", "purple", "orange", "browen", "ppink", "#1B9E77",
-              '#D95F02', '#7570B3', '#E7298A', '#66A61E', '#E6AB02', '#A6761D', '#666666',
-              '#8DD3C7', '#FFFFB3', '#BEBADA', '#FB8072', '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
-              '#D9D9D9', '#BC80BD', '#CCEBC5', '#FFED6F']
-    markers = ["o", "p", "^", "*", "+", "v", "x", "p", "s", "h", "H", "d", "1", "2", "3", "4", "|", ",", "."]
+    colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
+              '#D95F02', '#7570B3', '#E7298A', '#E6AB02', '#A6761D', '#666666',
+              '#8DD3C7', '#CCEBC5', '#BEBADA','#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
+              '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
+              "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
+    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", "."]
 
     i = 0
     for key in train_envs_specific_rewards_data.keys():
         r_means = train_envs_specific_rewards_means[key]
         r_stds = train_envs_specific_rewards_stds[key]
-        label = r"T\_." + key.rsplit(".", 1)[-1]
+        label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax.plot(np.array(list(range(len(r_means)))),
                    r_means, label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
         ax.fill_between(np.array(list(range(len(r_means)))),
                            r_means - r_stds, r_means + r_stds, alpha=0.35, color=colors[i])
         i += 1
 
+    # Plot Avg Eval Rewards
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
+            eval_avg_rewards_means_1, label=r"Avg\_E", marker="o", ls='-', color="r",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
+                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
+                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+                    alpha=0.35, color="r")
 
     for key in eval_envs_specific_rewards_data.keys():
         r_means = eval_envs_specific_rewards_means[key]
         r_stds = eval_envs_specific_rewards_stds[key]
-        label = r"E\_." + key.rsplit(".", 1)[-1]
+        label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax.plot(np.array(list(range(len(r_means)))),
                    r_means, label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
         ax.fill_between(np.array(list(range(len(r_means)))),
@@ -663,8 +674,8 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
     ax.spines['right'].set_color((.8, .8, .8))
     ax.spines['top'].set_color((.8, .8, .8))
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.28),
-              ncol=4, fancybox=True, shadow=True)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+              ncol=5, fancybox=True, shadow=True)
     #ax.legend(loc="lower right")
     ax.xaxis.label.set_size(13.5)
     ax.yaxis.label.set_size(13.5)
@@ -676,6 +687,172 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
     # plt.close(fig)
 
-# def plot_value_function(model_path: str, env, device, agent_config: AgentConfig):
-#     model = PPO.load(env=env, load_path=model_path, device=device,
-#                           agent_config=agent_config)
+
+def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_rewards_means_1, train_avg_rewards_stds_1,
+                               eval_avg_rewards_data_1, eval_avg_rewards_means_1, eval_avg_rewards_stds_1,
+                               train_envs_specific_rewards_data, train_envs_specific_rewards_means,
+                               train_envs_specific_rewards_stds,
+                               eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
+                               eval_envs_specific_rewards_stds,
+                               ylim_rew,
+                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
+    """
+    Plots rewards, flags % and steps of two different configurations
+    """
+    #matplotlib.style.use("seaborn")
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 4.5))
+    plt.rcParams.update({'font.size': 12})
+
+    # ylims = (0, 920)
+
+    # Plot Avg Train Rewards
+    ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
+            train_avg_rewards_means_1, label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1)))),
+                    train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
+                    alpha=0.35, color="#599ad3")
+
+    # colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
+    #           '#D95F02', '#7570B3', '#E7298A', '#E6AB02', '#A6761D', '#666666',
+    #           '#8DD3C7', '#CCEBC5', '#BEBADA','#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
+    #           '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
+    #           "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
+    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", "."]
+
+    i = 0
+    for key in train_envs_specific_rewards_data.keys():
+        r_means = train_envs_specific_rewards_means[key]
+        r_stds = train_envs_specific_rewards_stds[key]
+        label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
+        ax.plot(np.array(list(range(len(r_means)))),
+                   r_means, label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means)))),
+                           r_means - r_stds, r_means + r_stds, alpha=0.35, color="#599ad3")
+        i += 1
+
+    # Plot Avg Eval Rewards
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
+            eval_avg_rewards_means_1, label=r"Avg\_E", marker="o", ls='-', color="r",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
+                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
+                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+                    alpha=0.35, color="r")
+
+    for key in eval_envs_specific_rewards_data.keys():
+        r_means = eval_envs_specific_rewards_means[key]
+        r_stds = eval_envs_specific_rewards_stds[key]
+        label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
+        ax.plot(np.array(list(range(len(r_means)))),
+                   r_means, label=label, marker=markers[i], ls='-', color="r", markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means)))),
+                           r_means - r_stds, r_means + r_stds, alpha=0.35, color="r")
+        i += 1
+
+    ax.set_title(r"Episodic Rewards")
+    ax.set_xlabel("\# Iteration", fontsize=20)
+    ax.set_ylabel("Avg Episode Reward", fontsize=20)
+    ax.set_xlim(0, len(train_avg_rewards_means_1))
+    ax.set_ylim(ylim_rew[0], ylim_rew[1])
+    #ax.set_ylim(ylim_rew)
+
+    # set the grid on
+    ax.grid('on')
+
+    # tweak the axis labels
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
+
+    xlab.set_size(10)
+    ylab.set_size(10)
+
+    # change the color of the top and right spines to opaque gray
+    ax.spines['right'].set_color((.8, .8, .8))
+    ax.spines['top'].set_color((.8, .8, .8))
+
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+              ncol=5, fancybox=True, shadow=True)
+    #ax.legend(loc="lower right")
+    ax.xaxis.label.set_size(13.5)
+    ax.yaxis.label.set_size(13.5)
+
+    fig.tight_layout()
+    #plt.show()
+    # plt.subplots_adjust(wspace=0, hspace=0)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    # plt.close(fig)
+
+
+def plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1, train_avg_rewards_means_1, train_avg_rewards_stds_1,
+                               eval_avg_rewards_data_1, eval_avg_rewards_means_1, eval_avg_rewards_stds_1,
+                               train_envs_specific_rewards_data, train_envs_specific_rewards_means,
+                               train_envs_specific_rewards_stds,
+                               eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
+                               eval_envs_specific_rewards_stds,
+                               ylim_rew,
+                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
+    """
+    Plots rewards, flags % and steps of two different configurations
+    """
+    #matplotlib.style.use("seaborn")
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 4.5))
+    plt.rcParams.update({'font.size': 12})
+
+    # ylims = (0, 920)
+
+    # Plot Avg Train Rewards
+    ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
+            train_avg_rewards_means_1, label=r"Avg Train", marker="s", ls='-', color="#599ad3",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1)))),
+                    train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
+                    alpha=0.35, color="#599ad3")
+
+    # Plot Avg Eval Rewards
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
+            eval_avg_rewards_means_1, label=r"Avg Eval", marker="o", ls='-', color="r",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
+                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
+                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+                    alpha=0.35, color="r")
+
+    ax.set_title(r"Episodic Rewards")
+    ax.set_xlabel("\# Iteration", fontsize=20)
+    ax.set_ylabel("Avg Episode Reward", fontsize=20)
+    ax.set_xlim(0, len(train_avg_rewards_means_1))
+    ax.set_ylim(ylim_rew[0], ylim_rew[1])
+    #ax.set_ylim(ylim_rew)
+
+    # set the grid on
+    ax.grid('on')
+
+    # tweak the axis labels
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
+
+    xlab.set_size(10)
+    ylab.set_size(10)
+
+    # change the color of the top and right spines to opaque gray
+    ax.spines['right'].set_color((.8, .8, .8))
+    ax.spines['top'].set_color((.8, .8, .8))
+
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+              ncol=5, fancybox=True, shadow=True)
+    #ax.legend(loc="lower right")
+    ax.xaxis.label.set_size(13.5)
+    ax.yaxis.label.set_size(13.5)
+
+    fig.tight_layout()
+    #plt.show()
+    # plt.subplots_adjust(wspace=0, hspace=0)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    # plt.close(fig)

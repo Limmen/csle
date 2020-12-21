@@ -11,18 +11,32 @@ from gym_pycr_pwcrack.util.experiments_util import util
 
 def plot_cluster_train(train_containers_configs: List[ContainersConfig], eval_containers_configs: List[ContainersConfig]):
     base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random_many/training/v1/cluster/ppo_baseline/results/data/"
-    ppo_v1_df_0 = pd.read_csv(base_path + "0/1608564648.5423095_train.csv")
+    ppo_v1_df_0 = pd.read_csv(base_path + "0/1608570356.6742551_train.csv")
     ppo_dfs_v1 = [ppo_v1_df_0]
 
-    avg_eval_rewards_data_v1 = list(map(lambda df: df["avg_episode_rewards"].values, ppo_dfs_v1))
-    avg_eval_rewards_means_v1 = np.mean(tuple(avg_eval_rewards_data_v1), axis=0)
-    avg_eval_rewards_stds_v1 = np.std(tuple(avg_eval_rewards_data_v1), axis=0, ddof=1)
+    # Train avg
+    avg_train_rewards_data_v1 = list(map(lambda df: df["avg_episode_rewards"].values, ppo_dfs_v1))
+    avg_train_rewards_means_v1 = np.mean(tuple(avg_train_rewards_data_v1), axis=0)
+    avg_train_rewards_stds_v1 = np.std(tuple(avg_train_rewards_data_v1), axis=0, ddof=1)
 
     avg_train_flags_data_v1 = list(map(lambda df: df["avg_episode_flags_percentage"].values, ppo_dfs_v1))
     avg_train_flags_means_v1 = np.mean(tuple(avg_train_flags_data_v1), axis=0)
     avg_train_flags_stds_v1 = np.std(tuple(avg_train_flags_data_v1), axis=0, ddof=1)
 
-    avg_eval_steps_data_v1 = list(map(lambda df: df["avg_episode_steps"].values, ppo_dfs_v1))
+    avg_train_steps_data_v1 = list(map(lambda df: df["avg_episode_steps"].values, ppo_dfs_v1))
+    avg_train_steps_means_v1 = np.mean(tuple(avg_train_steps_data_v1), axis=0)
+    avg_train_steps_stds_v1 = np.std(tuple(avg_train_steps_data_v1), axis=0, ddof=1)
+
+    # Eval avg
+    avg_eval_rewards_data_v1 = list(map(lambda df: df["eval_2_avg_episode_rewards"].values, ppo_dfs_v1))
+    avg_eval_rewards_means_v1 = np.mean(tuple(avg_eval_rewards_data_v1), axis=0)
+    avg_eval_rewards_stds_v1 = np.std(tuple(avg_eval_rewards_data_v1), axis=0, ddof=1)
+
+    avg_eval_flags_data_v1 = list(map(lambda df: df["eval_2_avg_episode_flags_percentage"].values, ppo_dfs_v1))
+    avg_eval_flags_means_v1 = np.mean(tuple(avg_eval_flags_data_v1), axis=0)
+    avg_eval_flags_stds_v1 = np.std(tuple(avg_eval_flags_data_v1), axis=0, ddof=1)
+
+    avg_eval_steps_data_v1 = list(map(lambda df: df["eval_2_avg_episode_steps"].values, ppo_dfs_v1))
     avg_eval_steps_means_v1 = np.mean(tuple(avg_eval_steps_data_v1), axis=0)
     avg_eval_steps_stds_v1 = np.std(tuple(avg_eval_steps_data_v1), axis=0, ddof=1)
 
@@ -42,29 +56,29 @@ def plot_cluster_train(train_containers_configs: List[ContainersConfig], eval_co
         flags_label = agent_ip + "_avg_episode_flags_percentage"
         steps_label = agent_ip + "_avg_episode_steps"
 
-        avg_eval_rewards_data_v1 = list(map(lambda df: df[rewards_label].values, ppo_dfs_v1))
-        avg_eval_rewards_means_v1 = np.mean(tuple(avg_eval_rewards_data_v1), axis=0)
-        avg_eval_rewards_stds_v1 = np.std(tuple(avg_eval_rewards_data_v1), axis=0, ddof=1)
+        env_train_rewards_data_v1 = list(map(lambda df: df[rewards_label].values, ppo_dfs_v1))
+        env_train_rewards_means_v1 = np.mean(tuple(env_train_rewards_data_v1), axis=0)
+        env_train_rewards_stds_v1 = np.std(tuple(env_train_rewards_data_v1), axis=0, ddof=1)
 
-        avg_train_flags_data_v1 = list(map(lambda df: df[flags_label].values, ppo_dfs_v1))
-        avg_train_flags_means_v1 = np.mean(tuple(avg_train_flags_data_v1), axis=0)
-        avg_train_flags_stds_v1 = np.std(tuple(avg_train_flags_data_v1), axis=0, ddof=1)
+        env_train_flags_data_v1 = list(map(lambda df: df[flags_label].values, ppo_dfs_v1))
+        env_train_flags_means_v1 = np.mean(tuple(env_train_flags_data_v1), axis=0)
+        env_train_flags_stds_v1 = np.std(tuple(env_train_flags_data_v1), axis=0, ddof=1)
 
-        avg_eval_steps_data_v1 = list(map(lambda df: df[steps_label].values, ppo_dfs_v1))
-        avg_eval_steps_means_v1 = np.mean(tuple(avg_eval_steps_data_v1), axis=0)
-        avg_eval_steps_stds_v1 = np.std(tuple(avg_eval_steps_data_v1), axis=0, ddof=1)
+        env_train_steps_data_v1 = list(map(lambda df: df[steps_label].values, ppo_dfs_v1))
+        env_train_steps_means_v1 = np.mean(tuple(env_train_steps_data_v1), axis=0)
+        env_train_steps_stds_v1 = np.std(tuple(env_train_steps_data_v1), axis=0, ddof=1)
 
-        train_containers_rewards_data_v1[agent_ip] = avg_eval_rewards_data_v1
-        train_containers_rewards_means_v1[agent_ip] = avg_eval_rewards_means_v1
-        train_containers_rewards_stds_v1[agent_ip] = avg_eval_rewards_stds_v1
+        train_containers_rewards_data_v1[agent_ip] = env_train_rewards_data_v1
+        train_containers_rewards_means_v1[agent_ip] = env_train_rewards_means_v1
+        train_containers_rewards_stds_v1[agent_ip] = env_train_rewards_stds_v1
 
-        train_containers_flags_data_v1[agent_ip] = avg_train_flags_data_v1
-        train_containers_flags_means_v1[agent_ip] = avg_train_flags_means_v1
-        train_containers_flags_stds_v1[agent_ip] = avg_train_flags_stds_v1
+        train_containers_flags_data_v1[agent_ip] = env_train_flags_data_v1
+        train_containers_flags_means_v1[agent_ip] = env_train_flags_means_v1
+        train_containers_flags_stds_v1[agent_ip] = env_train_flags_stds_v1
 
-        train_containers_steps_data_v1[agent_ip] = avg_eval_steps_data_v1
-        train_containers_steps_means_v1[agent_ip] = avg_eval_steps_means_v1
-        train_containers_steps_stds_v1[agent_ip] = avg_eval_steps_stds_v1
+        train_containers_steps_data_v1[agent_ip] = env_train_steps_data_v1
+        train_containers_steps_means_v1[agent_ip] = env_train_steps_means_v1
+        train_containers_steps_stds_v1[agent_ip] = env_train_steps_stds_v1
 
     eval_containers_rewards_data_v1 = {}
     eval_containers_rewards_means_v1 = {}
@@ -82,40 +96,43 @@ def plot_cluster_train(train_containers_configs: List[ContainersConfig], eval_co
         flags_label = agent_ip + "_eval_2_avg_episode_flags_percentage"
         steps_label = agent_ip + "_eval_2_avg_episode_steps"
 
-        avg_eval_rewards_data_v1 = list(map(lambda df: df[rewards_label].values, ppo_dfs_v1))
-        avg_eval_rewards_means_v1 = np.mean(tuple(avg_eval_rewards_data_v1), axis=0)
-        avg_eval_rewards_stds_v1 = np.std(tuple(avg_eval_rewards_data_v1), axis=0, ddof=1)
+        env_eval_rewards_data_v1 = list(map(lambda df: df[rewards_label].values, ppo_dfs_v1))
+        env_eval_rewards_means_v1 = np.mean(tuple(env_eval_rewards_data_v1), axis=0)
+        env_eval_rewards_stds_v1 = np.std(tuple(env_eval_rewards_data_v1), axis=0, ddof=1)
 
-        avg_eval_flags_data_v1 = list(map(lambda df: df[flags_label].values, ppo_dfs_v1))
-        avg_eval_flags_means_v1 = np.mean(tuple(avg_eval_flags_data_v1), axis=0)
-        avg_eval_flags_stds_v1 = np.std(tuple(avg_eval_flags_data_v1), axis=0, ddof=1)
+        env_eval_flags_data_v1 = list(map(lambda df: df[flags_label].values, ppo_dfs_v1))
+        env_eval_flags_means_v1 = np.mean(tuple(env_eval_flags_data_v1), axis=0)
+        env_eval_flags_stds_v1 = np.std(tuple(env_eval_flags_data_v1), axis=0, ddof=1)
 
-        avg_eval_steps_data_v1 = list(map(lambda df: df[steps_label].values, ppo_dfs_v1))
-        avg_eval_steps_means_v1 = np.mean(tuple(avg_eval_steps_data_v1), axis=0)
-        avg_eval_steps_stds_v1 = np.std(tuple(avg_eval_steps_data_v1), axis=0, ddof=1)
+        env_eval_steps_data_v1 = list(map(lambda df: df[steps_label].values, ppo_dfs_v1))
+        env_eval_steps_means_v1 = np.mean(tuple(env_eval_steps_data_v1), axis=0)
+        env_eval_steps_stds_v1 = np.std(tuple(env_eval_steps_data_v1), axis=0, ddof=1)
 
-        eval_containers_rewards_data_v1[agent_ip] = avg_eval_rewards_data_v1
-        eval_containers_rewards_means_v1[agent_ip] = avg_eval_rewards_means_v1
-        eval_containers_rewards_stds_v1[agent_ip] = avg_eval_rewards_stds_v1
+        eval_containers_rewards_data_v1[agent_ip] = env_eval_rewards_data_v1
+        eval_containers_rewards_means_v1[agent_ip] = env_eval_rewards_means_v1
+        eval_containers_rewards_stds_v1[agent_ip] = env_eval_rewards_stds_v1
 
-        eval_containers_flags_data_v1[agent_ip] = avg_eval_flags_data_v1
-        eval_containers_flags_means_v1[agent_ip] = avg_eval_flags_means_v1
-        eval_containers_flags_stds_v1[agent_ip] = avg_eval_flags_stds_v1
+        eval_containers_flags_data_v1[agent_ip] = env_eval_flags_data_v1
+        eval_containers_flags_means_v1[agent_ip] = env_eval_flags_means_v1
+        eval_containers_flags_stds_v1[agent_ip] = env_eval_flags_stds_v1
 
-        eval_containers_steps_data_v1[agent_ip] = avg_eval_steps_data_v1
-        eval_containers_steps_means_v1[agent_ip] = avg_eval_steps_means_v1
-        eval_containers_steps_stds_v1[agent_ip] = avg_eval_steps_stds_v1
+        eval_containers_steps_data_v1[agent_ip] = env_eval_steps_data_v1
+        eval_containers_steps_means_v1[agent_ip] = env_eval_steps_means_v1
+        eval_containers_steps_stds_v1[agent_ip] = env_eval_steps_stds_v1
 
 
     # ylim_rew = (min([min(rewards_means_v1 - rewards_stds_v1)]),
     #             max([max(rewards_means_v1 + rewards_stds_v1)]))
     # ylim_step = (min([min(steps_means_v1 - steps_stds_v1)]),
     #              max([max(steps_means_v1 + steps_stds_v1)]))
-    ylim_rew = (-50, 50)
+    ylim_rew = (-50, 35)
 
-    plotting_util.plot_rewards_train_cluster(train_avg_rewards_data_1=avg_eval_rewards_data_v1,
-                                             train_avg_rewards_means_1=avg_eval_rewards_means_v1,
-                                             train_avg_rewards_stds_1=avg_eval_rewards_stds_v1,
+    plotting_util.plot_rewards_train_cluster(train_avg_rewards_data_1=avg_train_rewards_data_v1,
+                                             train_avg_rewards_means_1=avg_train_rewards_means_v1,
+                                             train_avg_rewards_stds_1=avg_train_rewards_stds_v1,
+                                             eval_avg_rewards_data_1=avg_eval_rewards_data_v1,
+                                             eval_avg_rewards_means_1=avg_eval_rewards_means_v1,
+                                             eval_avg_rewards_stds_1=avg_eval_rewards_stds_v1,
                                              train_envs_specific_rewards_data=train_containers_rewards_data_v1,
                                              train_envs_specific_rewards_means=train_containers_rewards_means_v1,
                                              train_envs_specific_rewards_stds=train_containers_rewards_stds_v1,
@@ -124,9 +141,42 @@ def plot_cluster_train(train_containers_configs: List[ContainersConfig], eval_co
                                              eval_envs_specific_rewards_stds=eval_containers_rewards_stds_v1,
                                              ylim_rew=ylim_rew,
                                              file_name="./rewards_cluster_train_mult_env",
-                                             markevery=1, optimal_steps=5, optimal_reward=16
+                                             markevery=5, optimal_steps=5, optimal_reward=16
                                              )
 
+    plotting_util.plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1=avg_train_rewards_data_v1,
+                                             train_avg_rewards_means_1=avg_train_rewards_means_v1,
+                                             train_avg_rewards_stds_1=avg_train_rewards_stds_v1,
+                                             eval_avg_rewards_data_1=avg_eval_rewards_data_v1,
+                                             eval_avg_rewards_means_1=avg_eval_rewards_means_v1,
+                                             eval_avg_rewards_stds_1=avg_eval_rewards_stds_v1,
+                                             train_envs_specific_rewards_data=train_containers_rewards_data_v1,
+                                             train_envs_specific_rewards_means=train_containers_rewards_means_v1,
+                                             train_envs_specific_rewards_stds=train_containers_rewards_stds_v1,
+                                             eval_envs_specific_rewards_data=eval_containers_rewards_data_v1,
+                                             eval_envs_specific_rewards_means=eval_containers_rewards_means_v1,
+                                             eval_envs_specific_rewards_stds=eval_containers_rewards_stds_v1,
+                                             ylim_rew=ylim_rew,
+                                             file_name="./rewards_cluster_train_mult_env_2_colors",
+                                             markevery=5, optimal_steps=5, optimal_reward=16
+                                             )
+
+    plotting_util.plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1=avg_train_rewards_data_v1,
+                                                        train_avg_rewards_means_1=avg_train_rewards_means_v1,
+                                                        train_avg_rewards_stds_1=avg_train_rewards_stds_v1,
+                                                        eval_avg_rewards_data_1=avg_eval_rewards_data_v1,
+                                                        eval_avg_rewards_means_1=avg_eval_rewards_means_v1,
+                                                        eval_avg_rewards_stds_1=avg_eval_rewards_stds_v1,
+                                                        train_envs_specific_rewards_data=train_containers_rewards_data_v1,
+                                                        train_envs_specific_rewards_means=train_containers_rewards_means_v1,
+                                                        train_envs_specific_rewards_stds=train_containers_rewards_stds_v1,
+                                                        eval_envs_specific_rewards_data=eval_containers_rewards_data_v1,
+                                                        eval_envs_specific_rewards_means=eval_containers_rewards_means_v1,
+                                                        eval_envs_specific_rewards_stds=eval_containers_rewards_stds_v1,
+                                                        ylim_rew=ylim_rew,
+                                                        file_name="./rewards_cluster_train_mult_env_avg",
+                                                        markevery=5, optimal_steps=5, optimal_reward=16
+                                                        )
 
 
     # ylim_rew = (min([min(avg_train_rewards_means_v1 - avg_train_rewards_stds_v1)]),
@@ -163,16 +213,16 @@ if __name__ == '__main__':
         "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
         "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
-    #plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs)
+    plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs)
 
     #base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random_many/training/v1/cluster/ppo_baseline/results/data/"
-    base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random/training/v1/cluster/ppo_baseline/results/data/"
-    model_path = base_path + "0/1608569758.6168735_policy_network.zip"
-    max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
-    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
-    max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
-    num_nodes = max_num_nodes - 1
-    n_envs = 1
-    print(model_path)
-    plot_value_function(model_path=model_path, device="cpu", env=None)
+    # base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random/training/v1/cluster/ppo_baseline/results/data/"
+    # model_path = base_path + "0/1608569758.6168735_policy_network.zip"
+    # max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
+    # max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
+    # max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
+    # num_nodes = max_num_nodes - 1
+    # n_envs = 1
+    # print(model_path)
+    # plot_value_function(model_path=model_path, device="cpu", env=None)
 
