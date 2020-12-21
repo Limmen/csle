@@ -185,7 +185,8 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                           n_eval_episodes : int=10,
                           deterministic : bool= True, agent_config : AgentConfig = None,
-                          env_config: EnvConfig = None, env_configs : List[EnvConfig] = None):
+                          env_config: EnvConfig = None, env_configs : List[EnvConfig] = None,
+                          eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
     This is made to work only with one env.
@@ -214,8 +215,8 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
         eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
         eval_2_episode_rewards_env_specific, eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
         eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
-            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=env_config,
-            env_configs=env_configs)
+            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=eval_env_config,
+            env_configs=eval_envs_configs)
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
            eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
@@ -306,8 +307,8 @@ def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_s
         env_specific_flags[agent_ip].append(infos["flags"])
 
     if agent_ip not in env_specific_flags_percentage:
-        env_specific_flags[agent_ip] = [infos["flags"] / num_flags]
+        env_specific_flags_percentage[agent_ip] = [infos["flags"] / num_flags]
     else:
-        env_specific_flags[agent_ip].append(infos["flags"] / num_flags)
+        env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
 
     return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage

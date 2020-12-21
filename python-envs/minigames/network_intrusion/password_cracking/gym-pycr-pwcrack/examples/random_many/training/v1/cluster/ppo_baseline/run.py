@@ -15,13 +15,13 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
@@ -32,7 +32,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=2000,
+                                                num_iterations=10,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,

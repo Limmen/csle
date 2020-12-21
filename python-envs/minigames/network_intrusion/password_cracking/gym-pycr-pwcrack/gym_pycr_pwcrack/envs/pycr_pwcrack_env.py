@@ -68,7 +68,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.env_config = env_config
         if util.is_network_conf_incomplete(env_config) and self.env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Must provide a simulation model to run in simulation mode")
-
         self.env_state = EnvState(network_config=self.env_config.network_conf, num_ports=self.env_config.num_ports,
                                   num_vuln=self.env_config.num_vuln, num_sh=self.env_config.num_sh,
                                   num_nodes=env_config.num_nodes,
@@ -2716,20 +2715,20 @@ class PyCRPwCrackRandomClusterBaseEnv(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers)-1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomBase.all_actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomBase.all_actions_conf(num_nodes=num_nodes-1,
                                                                  subnet_mask=containers_config.subnet_mask,
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomBase.env_config(containers_config=containers_config, flags_config=flags_config,
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
-                                                          num_nodes=num_nodes)
+                                                          num_nodes=num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2746,21 +2745,21 @@ class PyCRPwCrackRandomCluster1Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=num_nodes-1,
                                                                  subnet_mask=containers_config.subnet_mask,
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
                                                           flags_config=flags_config,
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
-                                                          num_nodes=num_nodes)
+                                                          num_nodes=num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2779,21 +2778,21 @@ class PyCRPwCrackRandomClusterWithCosts1Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2811,21 +2810,21 @@ class PyCRPwCrackRandomCluster2Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2842,21 +2841,21 @@ class PyCRPwCrackRandomClusterWithCosts2Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2874,21 +2873,21 @@ class PyCRPwCrackRandomCluster3Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2905,21 +2904,21 @@ class PyCRPwCrackRandomClusterWithCosts3Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2937,21 +2936,21 @@ class PyCRPwCrackRandomCluster4Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes= num_nodes,
+            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes= num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2968,21 +2967,21 @@ class PyCRPwCrackRandomClusterWithCosts4Env(PyCRPwCrackEnv):
     def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
-            num_nodes = len(containers_config.containers) - 1
+            num_nodes = len(containers_config.containers)
         if env_config is None:
             render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
             if cluster_config is None:
                 raise ValueError("Cluster config cannot be None")
             cluster_config.ids_router = True
             cluster_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes=num_nodes,
+            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes=num_nodes-1,
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
                                                         flags_config=flags_config,
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
-                                                        num_nodes=num_nodes)
+                                                        num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False

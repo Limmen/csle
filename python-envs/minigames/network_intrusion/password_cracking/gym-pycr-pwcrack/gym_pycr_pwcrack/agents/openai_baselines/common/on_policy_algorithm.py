@@ -371,7 +371,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
                                               deterministic=self.agent_config.eval_deterministic, agent_config=self.agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
-                                              env_configs=self.agent_config.env_configs)
+                                              env_configs=self.agent_config.env_configs,
+                                              eval_env_config=self.agent_config.eval_env_config,
+                                              eval_envs_configs=self.agent_config.eval_env_configs
+                                              )
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
                         for i in range(self.env.num_envs):
@@ -554,9 +557,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             env_specific_flags[agent_ip].append(infos[i]["flags"])
 
         if agent_ip not in env_specific_flags_percentage:
-            env_specific_flags[agent_ip] = [infos[i]["flags"]/ num_flags]
+            env_specific_flags_percentage[agent_ip] = [infos[i]["flags"]/ num_flags]
         else:
-            env_specific_flags[agent_ip].append(infos[i]["flags"]/ num_flags)
+            env_specific_flags_percentage[agent_ip].append(infos[i]["flags"]/ num_flags)
 
         return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage
 

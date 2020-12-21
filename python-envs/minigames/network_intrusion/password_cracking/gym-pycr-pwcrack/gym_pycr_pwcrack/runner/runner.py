@@ -163,10 +163,12 @@ class Runner:
     def multi_env_creation(config: ClientConfig, cluster_conf_temps):
         base_envs = [gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temps[i],
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.containers_configs,
-                              flags_configs=config.flags_configs, idx=i) for i in range(len(config.containers_configs))]
+                              flags_configs=config.flags_configs, idx=i,
+                              num_nodes=config.agent_config.num_nodes) for i in range(len(config.containers_configs))]
         env_kwargs = [{"env_config": config.env_config, "cluster_config": config.cluster_configs[i],
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_configs,
-                      "flags_config": config.flags_configs, "idx": i} for i in range(len(config.containers_configs))]
+                      "flags_config": config.flags_configs, "idx": i,
+                       "num_nodes": config.agent_config.num_nodes} for i in range(len(config.containers_configs))]
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
         if config.sub_proc_env:
@@ -174,7 +176,7 @@ class Runner:
         if config.dummy_vec_env or config.sub_proc_env:
             env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
                                env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
-                               multi_env=True)
+                               multi_env=True, num_nodes=config.agent_config.num_nodes)
         else:
             raise ValueError("Have to use a vectorized env class to instantiate a multi-env config")
         return env, base_envs
@@ -183,10 +185,10 @@ class Runner:
     def randomized_env_creation(config: ClientConfig, cluster_conf_temp):
         base_env = gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temp,
                             checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                            flags_config=config.flags_config, num_nodes = -1)
+                            flags_config=config.flags_config, num_nodes = config.agent_config.num_nodes)
         env_kwargs = {"env_config": config.env_config, "cluster_config": config.cluster_config,
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_config,
-                      "flags_config": config.flags_config, "num_nodes": -1}
+                      "flags_config": config.flags_config, "num_nodes": config.agent_config.num_nodes}
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
         if config.sub_proc_env:
@@ -197,7 +199,7 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                            checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                           flags_config=config.flags_config, num_nodes=-1)
+                           flags_config=config.flags_config, num_nodes=config.agent_config.num_nodes)
         return env, base_env
 
 

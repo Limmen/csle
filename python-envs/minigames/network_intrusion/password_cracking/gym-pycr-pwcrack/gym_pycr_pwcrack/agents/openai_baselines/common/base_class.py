@@ -633,6 +633,7 @@ class BaseAlgorithm(ABC):
             infos = None,
             env_idx: int = None,
             m_index: int = None,
+            mask_actions: bool = True,
             env=None
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
@@ -649,7 +650,7 @@ class BaseAlgorithm(ABC):
             return self.policy.predict(observation, state, mask, deterministic,
                                        env_config=env_config,
                                        env_state=env_state, env_configs=env_configs,
-                                       env=env, infos=infos, env_idx=env_idx)
+                                       env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions)
         else:
             m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic,
                                                                           env_config=env_config,
@@ -954,7 +955,19 @@ class BaseAlgorithm(ABC):
         if self.agent_config.save_dir is not None:
             path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
             self.agent_config.logger.info("Saving policy-network to: {}".format(path))
+            env_config = self.agent_config.env_config
+            env_configs = self.agent_config.env_configs
+            eval_env_config = self.agent_config.eval_env_config
+            eval_env_configs = self.agent_config.eval_env_configs
+            self.agent_config.env_config = None
+            self.agent_config.env_configs = None
+            self.agent_config.eval_env_config = None
+            self.agent_config.eval_env_configs = None
             self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env"])
+            self.agent_config.env_config = env_config
+            self.agent_config.env_configs = env_configs
+            self.agent_config.eval_env_config = eval_env_config
+            self.agent_config.eval_env_configs = eval_env_configs
         else:
             self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
             print("Save path not defined, not saving policy-networks to disk")
