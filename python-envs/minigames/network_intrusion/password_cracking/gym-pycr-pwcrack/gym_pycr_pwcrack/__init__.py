@@ -616,6 +616,14 @@ register(
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 2 ------------
 register(
     id='pycr-pwcrack-random-cluster-v2',
@@ -670,6 +678,14 @@ register(
 register(
     id='pycr-pwcrack-random-many-cluster-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomManyCluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_configs": None, "flags_configs": None, "idx": None}
+)
+
+# -------- Difficulty Level: Random Many, Mode: Cluster, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-random-many-cluster-costs-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomManyClusterWithCosts1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )

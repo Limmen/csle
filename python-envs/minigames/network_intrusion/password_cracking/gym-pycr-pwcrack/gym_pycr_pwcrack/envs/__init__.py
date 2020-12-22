@@ -30,4 +30,5 @@ from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv, PyCrPwCrackLe
     PyCRPwCrackLevel6ClusterWithCosts4Env, PyCRPwCrackRandomClusterBaseEnv, PyCRPwCrackRandomCluster1Env, \
     PyCRPwCrackRandomClusterWithCosts1Env, PyCRPwCrackRandomCluster2Env, PyCRPwCrackRandomCluster3Env, \
     PyCRPwCrackRandomCluster4Env, PyCRPwCrackRandomClusterWithCosts2Env, PyCRPwCrackRandomClusterWithCosts3Env, \
-    PyCRPwCrackRandomClusterWithCosts4Env, PyCRPwCrackRandomManyCluster1Env
+    PyCRPwCrackRandomClusterWithCosts4Env, PyCRPwCrackRandomManyCluster1Env, PyCRPwCrackRandomManyClusterWithCosts1Env, \
+    PyCRPwCrackRandomGeneratedSim1Env
