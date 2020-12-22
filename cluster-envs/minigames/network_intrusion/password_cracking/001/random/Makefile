@@ -20,59 +20,60 @@ clean_config:
 	rm -rf ./flags.json
 	rm -rf ./containers.json
 	rm -rf ./topology.json
-	rm -rf ./containers.json
+	rm -rf ./containers
 
 gen_config:
 	python generate_config.py
 
 
-apply_config: users vuln flags topology
+clean_fs_cache:
+	python clean_fs_cache.py
+
+
+
+apply_config: users vuln topology flags
 
 run:
 	cd containers/hacker_kali1_1/ && $(MAKE) run
-	cd containers/ssh1_1/ && $(MAKE) run
-	cd containers/ssh3_1/ && $(MAKE) run
-	cd containers/telnet3_1/ && $(MAKE) run
-	cd containers/ftp2_1/ && $(MAKE) run
-	cd containers/honeypot1_1/ && $(MAKE) run
+	cd containers/telnet1_1/ && $(MAKE) run
+	cd containers/telnet1_3/ && $(MAKE) run
 	cd containers/telnet2_1/ && $(MAKE) run
-	cd containers/ftp2_3/ && $(MAKE) run
-	cd containers/router1_1/ && $(MAKE) run
+	cd containers/ftp2_1/ && $(MAKE) run
+	cd containers/telnet1_5/ && $(MAKE) run
+	cd containers/honeypot2_1/ && $(MAKE) run
+	cd containers/router2_1/ && $(MAKE) run
 
 
 stop:
 	cd containers/hacker_kali1_1/ && $(MAKE) stop
-	cd containers/ssh1_1/ && $(MAKE) stop
-	cd containers/ssh3_1/ && $(MAKE) stop
-	cd containers/telnet3_1/ && $(MAKE) stop
-	cd containers/ftp2_1/ && $(MAKE) stop
-	cd containers/honeypot1_1/ && $(MAKE) stop
+	cd containers/telnet1_1/ && $(MAKE) stop
+	cd containers/telnet1_3/ && $(MAKE) stop
 	cd containers/telnet2_1/ && $(MAKE) stop
-	cd containers/ftp2_3/ && $(MAKE) stop
-	cd containers/router1_1/ && $(MAKE) stop
+	cd containers/ftp2_1/ && $(MAKE) stop
+	cd containers/telnet1_5/ && $(MAKE) stop
+	cd containers/honeypot2_1/ && $(MAKE) stop
+	cd containers/router2_1/ && $(MAKE) stop
 
 
 start:
 	cd containers/hacker_kali1_1/ && $(MAKE) start
-	cd containers/ssh1_1/ && $(MAKE) start
-	cd containers/ssh3_1/ && $(MAKE) start
-	cd containers/telnet3_1/ && $(MAKE) start
-	cd containers/ftp2_1/ && $(MAKE) start
-	cd containers/honeypot1_1/ && $(MAKE) start
+	cd containers/telnet1_1/ && $(MAKE) start
+	cd containers/telnet1_3/ && $(MAKE) start
 	cd containers/telnet2_1/ && $(MAKE) start
-	cd containers/ftp2_3/ && $(MAKE) start
-	cd containers/router1_1/ && $(MAKE) start
+	cd containers/ftp2_1/ && $(MAKE) start
+	cd containers/telnet1_5/ && $(MAKE) start
+	cd containers/honeypot2_1/ && $(MAKE) start
+	cd containers/router2_1/ && $(MAKE) start
 
 
 clean:
 	cd containers/hacker_kali1_1/ && $(MAKE) clean
-	cd containers/ssh1_1/ && $(MAKE) clean
-	cd containers/ssh3_1/ && $(MAKE) clean
-	cd containers/telnet3_1/ && $(MAKE) clean
-	cd containers/ftp2_1/ && $(MAKE) clean
-	cd containers/honeypot1_1/ && $(MAKE) clean
+	cd containers/telnet1_1/ && $(MAKE) clean
+	cd containers/telnet1_3/ && $(MAKE) clean
 	cd containers/telnet2_1/ && $(MAKE) clean
-	cd containers/ftp2_3/ && $(MAKE) clean
-	cd containers/router1_1/ && $(MAKE) clean
+	cd containers/ftp2_1/ && $(MAKE) clean
+	cd containers/telnet1_5/ && $(MAKE) clean
+	cd containers/honeypot2_1/ && $(MAKE) clean
+	cd containers/router2_1/ && $(MAKE) clean
 
 

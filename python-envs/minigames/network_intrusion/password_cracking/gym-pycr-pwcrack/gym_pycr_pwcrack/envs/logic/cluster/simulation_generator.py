@@ -1,3 +1,4 @@
+import numpy as np
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.envs.logic.exploration.exploration_policy import ExplorationPolicy
@@ -10,12 +11,21 @@ class SimulationGenerator:
     """
 
     @staticmethod
-    def explore(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False):
+    def explore(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) -> np.ndarray:
+        """
+        Explores the environment to generate trajectories that can be used to learn a dynamics model
+
+        :param exp_policy: the exploration policy to use
+        :param env_config: the env config
+        :param env: the env to explore
+        :param render: whether to render the env or not
+        :return: The final observation
+        """
         env.reset()
         done = False
         step = 0
         while not done:
-            action = exp_policy.action(env=env)
+            action = exp_policy.action(env=env, filter_illegal=env_config.exploration_filter_illegal)
             obs, reward, done, info = env.step(action)
 
             if render:

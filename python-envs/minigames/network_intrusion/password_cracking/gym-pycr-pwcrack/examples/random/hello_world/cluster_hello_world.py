@@ -35,18 +35,25 @@ def test_env(env_name : str, num_steps : int):
 
 
     containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/env_0_172.18.2./containers.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/containers.json")
     flags_config = util.read_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/env_0_172.18.2./flags.json")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/flags.json")
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
     max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
+
     cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
                                    port_forward_next_port=9600,
-                                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim", server_ip="172.31.212.92",
-                                   warmup=True, warmup_iterations=500
+                                   server_connection=False, warmup=True, warmup_iterations=500
                                    )
+
+    # cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
+    #                                port_forward_next_port=9600,
+    #                                server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim", server_ip="172.31.212.92",
+    #                                warmup=True, warmup_iterations=500
+    #                                )
+
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
                    containers_config=containers_config, flags_config=flags_config, num_nodes=max_num_nodes)
     env.env_config.max_episode_length = 1000000000

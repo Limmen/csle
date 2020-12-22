@@ -35,6 +35,7 @@ class ClusterConfig:
         self.ids_router = False
         self.ids_router_ip = ""
         self.router_conn = None
+        self.skip_exploration = False
 
     def connect_server(self):
         """

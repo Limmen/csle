@@ -8,5 +8,5 @@ class ExplorationPolicy(ABC):
         self.actions = np.array(list(range(num_actions)))
 
     @abstractmethod
-    def action(self, env) -> int:
+    def action(self, env, filter_illegal: bool = True) -> int:
         pass

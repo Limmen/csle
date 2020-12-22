@@ -134,7 +134,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
                 len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
                 self.env_config.cache_misses))
-        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION and not self.env_config.cluster_config.skip_exploration:
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
                                                            env_config=self.env_config, env=self)
             self.env_state.obs_state = obs_state
@@ -560,6 +560,8 @@ class PyCRPwCrackLevel1SimBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.simulate_detection = True
             env_config.save_trajectories = False
             # env_config.simulate_detection = False
@@ -583,6 +585,8 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -606,6 +610,7 @@ class PyCRPwCrackLevel1SimWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -629,6 +634,8 @@ class PyCRPwCrackLevel1Sim2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -651,6 +658,7 @@ class PyCRPwCrackLevel1SimWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -674,6 +682,8 @@ class PyCRPwCrackLevel1Sim3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -696,6 +706,7 @@ class PyCRPwCrackLevel1SimWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -719,6 +730,8 @@ class PyCRPwCrackLevel1Sim4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -741,6 +754,7 @@ class PyCRPwCrackLevel1SimWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -768,6 +782,8 @@ class PyCRPwCrackLevel1GeneratedSim1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -798,6 +814,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -830,6 +847,8 @@ class PyCRPwCrackLevel1GeneratedSim2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -859,6 +878,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -889,6 +909,8 @@ class PyCRPwCrackLevel1GeneratedSim3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -918,6 +940,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -949,6 +972,8 @@ class PyCRPwCrackLevel1GeneratedSim4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -978,6 +1003,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1009,6 +1035,8 @@ class PyCRPwCrackLevel1ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1032,6 +1060,8 @@ class PyCRPwCrackLevel1Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1057,6 +1087,8 @@ class PyCRPwCrackLevel1ClusterNoCache1Env(PyCRPwCrackEnv):
                                                                   hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1NoCacheV1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                                cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1080,6 +1112,7 @@ class PyCRPwCrackLevel1ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1104,6 +1137,8 @@ class PyCRPwCrackLevel1Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1128,6 +1163,7 @@ class PyCRPwCrackLevel1ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1153,6 +1189,8 @@ class PyCRPwCrackLevel1Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1177,6 +1215,7 @@ class PyCRPwCrackLevel1ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1202,6 +1241,8 @@ class PyCRPwCrackLevel1Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1226,6 +1267,7 @@ class PyCRPwCrackLevel1ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel1Base.hacker_ip())
             env_config = PyCrPwCrackLevel1V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1252,6 +1294,8 @@ class PyCRPwCrackLevel2SimBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.simulate_detection = True
             env_config.save_trajectories = False
             # env_config.simulate_detection = False
@@ -1276,6 +1320,8 @@ class PyCRPwCrackLevel2Sim1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -1297,6 +1343,7 @@ class PyCRPwCrackLevel2SimWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=None, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1324,6 +1371,8 @@ class PyCRPwCrackLevel2GeneratedSim1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -1353,6 +1402,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1384,6 +1434,8 @@ class PyCRPwCrackLevel2GeneratedSim2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -1413,6 +1465,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1443,6 +1496,8 @@ class PyCRPwCrackLevel2GeneratedSim3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -1472,6 +1527,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1502,6 +1558,8 @@ class PyCRPwCrackLevel2GeneratedSim4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -1531,6 +1589,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
@@ -1563,6 +1622,8 @@ class PyCRPwCrackLevel2ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1586,6 +1647,8 @@ class PyCRPwCrackLevel2Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1610,6 +1673,7 @@ class PyCRPwCrackLevel2ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1634,6 +1698,8 @@ class PyCRPwCrackLevel2Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1658,6 +1724,7 @@ class PyCRPwCrackLevel2ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1683,6 +1750,8 @@ class PyCRPwCrackLevel2Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1707,6 +1776,7 @@ class PyCRPwCrackLevel2ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1731,6 +1801,8 @@ class PyCRPwCrackLevel2Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1754,6 +1826,7 @@ class PyCRPwCrackLevel2ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel2Base.hacker_ip())
             env_config = PyCrPwCrackLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1780,6 +1853,8 @@ class PyCRPwCrackLevel3ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1803,6 +1878,8 @@ class PyCRPwCrackLevel3Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1826,6 +1903,7 @@ class PyCRPwCrackLevel3ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1850,6 +1928,8 @@ class PyCRPwCrackLevel3Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1874,6 +1954,7 @@ class PyCRPwCrackLevel3ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1898,6 +1979,8 @@ class PyCRPwCrackLevel3Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1921,6 +2004,7 @@ class PyCRPwCrackLevel3ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1945,6 +2029,8 @@ class PyCRPwCrackLevel3Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -1968,6 +2054,7 @@ class PyCRPwCrackLevel3ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel3Base.hacker_ip())
             env_config = PyCrPwCrackLevel3V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -1999,6 +2086,8 @@ class PyCRPwCrackLevel4ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2025,6 +2114,8 @@ class PyCRPwCrackLevel4Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2051,6 +2142,7 @@ class PyCRPwCrackLevel4ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2078,6 +2170,8 @@ class PyCRPwCrackLevel4Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2104,6 +2198,7 @@ class PyCRPwCrackLevel4ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2131,6 +2226,8 @@ class PyCRPwCrackLevel4Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2157,6 +2254,7 @@ class PyCRPwCrackLevel4ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2184,6 +2282,8 @@ class PyCRPwCrackLevel4Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2210,6 +2310,7 @@ class PyCRPwCrackLevel4ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel4Base.hacker_ip())
             env_config = PyCrPwCrackLevel4V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2241,6 +2342,8 @@ class PyCRPwCrackLevel5ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2267,6 +2370,8 @@ class PyCRPwCrackLevel5Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2293,6 +2398,7 @@ class PyCRPwCrackLevel5ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2320,6 +2426,8 @@ class PyCRPwCrackLevel5Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2346,6 +2454,7 @@ class PyCRPwCrackLevel5ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2373,6 +2482,8 @@ class PyCRPwCrackLevel5Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2399,6 +2510,7 @@ class PyCRPwCrackLevel5ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2426,6 +2538,8 @@ class PyCRPwCrackLevel5Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2452,6 +2566,7 @@ class PyCRPwCrackLevel5ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel5Base.hacker_ip())
             env_config = PyCrPwCrackLevel5V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2483,6 +2598,8 @@ class PyCRPwCrackLevel6ClusterBaseEnv(PyCRPwCrackEnv):
                                                                  hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2509,6 +2626,8 @@ class PyCRPwCrackLevel6Cluster1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2535,6 +2654,7 @@ class PyCRPwCrackLevel6ClusterWithCosts1Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2562,6 +2682,8 @@ class PyCRPwCrackLevel6Cluster2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2588,6 +2710,7 @@ class PyCRPwCrackLevel6ClusterWithCosts2Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2615,6 +2738,8 @@ class PyCRPwCrackLevel6Cluster3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2641,6 +2766,7 @@ class PyCRPwCrackLevel6ClusterWithCosts3Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2668,6 +2794,8 @@ class PyCRPwCrackLevel6Cluster4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2694,6 +2822,7 @@ class PyCRPwCrackLevel6ClusterWithCosts4Env(PyCRPwCrackEnv):
                                                            hacker_ip=PyCrPwCrackLevel6Base.hacker_ip())
             env_config = PyCrPwCrackLevel6V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2729,6 +2858,8 @@ class PyCRPwCrackRandomClusterBaseEnv(PyCRPwCrackEnv):
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2760,6 +2891,8 @@ class PyCRPwCrackRandomCluster1Env(PyCRPwCrackEnv):
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2793,6 +2926,7 @@ class PyCRPwCrackRandomClusterWithCosts1Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
@@ -2824,6 +2958,8 @@ class PyCRPwCrackRandomGeneratedSim1Env(PyCRPwCrackEnv):
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -2832,6 +2968,7 @@ class PyCRPwCrackRandomGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.max_episode_length = 50
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.exploration_filter_illegal = True
         super().__init__(env_config=env_config)
 
 # -------- Version 1 Generated Sim With Costs ------------
@@ -2858,15 +2995,17 @@ class PyCRPwCrackRandomGeneratedSimWithCosts1Env(PyCRPwCrackEnv):
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.filter_illegal_actions = False
-            env_config.max_episode_length = 50
+            env_config.max_episode_length = 100
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.exploration_filter_illegal = True
         super().__init__(env_config=env_config)
 
 # -------- Version 2 ------------
@@ -2893,10 +3032,14 @@ class PyCRPwCrackRandomCluster2Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 
@@ -2924,11 +3067,14 @@ class PyCRPwCrackRandomClusterWithCosts2Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 2 Generated Sim ------------
@@ -2955,12 +3101,17 @@ class PyCRPwCrackRandomGeneratedSim2Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.exploration_filter_illegal = True
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 2 Generated Sim With Costs ------------
@@ -2986,13 +3137,17 @@ class PyCRPwCrackRandomGeneratedSimWithCosts2Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 3 ------------
@@ -3019,10 +3174,14 @@ class PyCRPwCrackRandomCluster3Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 3 with costs------------
@@ -3049,11 +3208,14 @@ class PyCRPwCrackRandomClusterWithCosts3Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Generated Simulation ------------
@@ -3079,12 +3241,17 @@ class PyCRPwCrackRandomGeneratedSim3Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Generated Simulation With Costs ------------
@@ -3111,12 +3278,16 @@ class PyCRPwCrackRandomGeneratedSimWithCosts3Env(PyCRPwCrackEnv):
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
+            env_config.alerts_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
@@ -3142,10 +3313,14 @@ class PyCRPwCrackRandomCluster4Env(PyCRPwCrackEnv):
                                                         action_conf=action_conf,
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 
@@ -3173,10 +3348,13 @@ class PyCRPwCrackRandomClusterWithCosts4Env(PyCRPwCrackEnv):
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
+            env_config.alerts_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 
@@ -3205,11 +3383,16 @@ class PyCRPwCrackRandomGeneratedSim4Env(PyCRPwCrackEnv):
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes - 1)
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.exploration_filter_illegal = True
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Version 4, Generated Simulation, With Costs------------
@@ -3237,12 +3420,16 @@ class PyCRPwCrackRandomGeneratedSimWithCosts4Env(PyCRPwCrackEnv):
                                                         cluster_conf=cluster_config, render_conf=render_config,
                                                         num_nodes=num_nodes - 1)
             env_config.cost_coefficient = 1
+            env_config.alerts_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
 # -------- Difficulty RandomMany (RandomMany) ------------
@@ -3278,6 +3465,8 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
                                                           action_conf=action_conf,
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -3316,6 +3505,7 @@ class PyCRPwCrackRandomManyClusterWithCosts1Env(PyCRPwCrackEnv):
                                                           cluster_conf=cluster_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
             env_config.cost_coefficient = 1
+            env_config.alerts_coefficient = 1
             env_config.env_mode = EnvMode.CLUSTER
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir

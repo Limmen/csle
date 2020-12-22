@@ -132,13 +132,14 @@ class EnvConfig:
 
         self.exploration_policy = None
         self.max_exploration_steps = 100
-        self.max_exploration_trajectories = 10
+        self.max_exploration_trajectories = 100
         self.load_cves_from_server = True
         self.load_services_from_server = True
         self.cache_misses = 0
         self.print_cache_details_freq = 500
         self.ids_router = False
         self.idx = 0
+        self.exploration_filter_illegal = True
 
 
     def get_port_forward_port(self) -> int:

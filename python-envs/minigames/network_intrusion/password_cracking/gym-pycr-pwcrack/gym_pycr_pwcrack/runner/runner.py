@@ -61,13 +61,16 @@ class Runner:
             cluster_conf_temps = deepcopy(config.cluster_configs)
             for cf in cluster_conf_temps:
                 cf.warmup = False
+                cf.skip_exploration = True
         else:
             cluster_conf_temp = deepcopy(config.cluster_config)
             cluster_conf_temp.warmup = False
+            cluster_conf_temp.skip_exploration = True
         if config.eval_multi_env:
             eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
             for cf in eval_cluster_conf_temps:
                 cf.warmup = False
+                cf.skip_exploration = True
 
         if config.multi_env:
             env, base_envs = Runner.multi_env_creation(config=config, cluster_conf_temps=cluster_conf_temps)

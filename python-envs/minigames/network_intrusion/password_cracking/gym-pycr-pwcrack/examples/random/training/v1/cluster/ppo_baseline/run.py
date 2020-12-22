@@ -14,30 +14,29 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
-    eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/")
+    eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/backup/random_many_2/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/backup/random_many_2/")
+
+    containers_config = util.read_containers_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/containers.json")
+    flags_config = util.read_flags_config(
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random/flags.json")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
-    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
+    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
     max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     num_nodes = max_num_nodes - 1
 
-
-    containers_config = util.read_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.2./containers.json")
-    flags_config = util.read_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/env_0_172.18.2./flags.json")
-    #num_nodes = len(containers_config.containers)-1
-    agent_config = AgentConfig(gamma=0.99, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
                                                 min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=2,
+                                                num_iterations=2000,
                                                 eval_render=True, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -57,13 +56,14 @@ def default_config() -> ClientConfig:
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
                                                 lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
+                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=500,
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1, num_nodes=max_num_nodes
                                                 )
-    env_name = "pycr-pwcrack-random-cluster-v1"
+    #env_name = "pycr-pwcrack-random-cluster-v1"
+    env_name = "pycr-pwcrack-random-generated-sim-v1"
     #env_name = "pycr-pwcrack-random-cluster-costs-v1"
     cluster_config = ClusterConfig(agent_ip=containers_config.agent_ip, agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=2000,

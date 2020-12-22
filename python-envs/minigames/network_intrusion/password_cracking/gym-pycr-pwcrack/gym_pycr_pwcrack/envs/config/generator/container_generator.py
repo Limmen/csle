@@ -29,8 +29,8 @@ class ContainerGenerator:
             if ip == agent_ip:
                 container = agent_containers[random.randint(0, len(agent_containers)-1)]
             elif ip == router_ip:
-                container = router_containers[random.randint(0, len(agent_containers) - 1)]
-                if container == "router1":
+                container = router_containers[random.randint(0, len(router_containers) - 1)]
+                if container[0] == "router1":
                     ids_enabled = False
             else:
                 gw_node = False
