@@ -34,10 +34,10 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
     return subnet_id_blacklist
 if __name__ == '__main__':
     subnet_id_blacklist = generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=8, max_num_flags=8, min_num_nodes=25,
-                  max_num_nodes=25, subnet_prefix="172.18.", idx=2)
+                  max_num_nodes=25, subnet_prefix="172.18.", idx=0)
     subnet_id_blacklist = generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=14, max_num_flags=14, min_num_nodes=50,
-                  max_num_nodes=50, subnet_prefix="172.18.", idx=5, subnet_id_blacklist=subnet_id_blacklist)
+                  max_num_nodes=50, subnet_prefix="172.18.", idx=1, subnet_id_blacklist=subnet_id_blacklist)
     subnet_id_blacklist = generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=22, max_num_flags=22, min_num_nodes=75,
-                  max_num_nodes=70, subnet_prefix="172.18.", idx=7, subnet_id_blacklist=subnet_id_blacklist)
+                  max_num_nodes=70, subnet_prefix="172.18.", idx=2, subnet_id_blacklist=subnet_id_blacklist)
     subnet_id_blacklist = generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=29, max_num_flags=29, min_num_nodes=100,
-                  max_num_nodes=100, subnet_prefix="172.18.", idx=10, subnet_id_blacklist=subnet_id_blacklist)
+                  max_num_nodes=100, subnet_prefix="172.18.", idx=3, subnet_id_blacklist=subnet_id_blacklist)
