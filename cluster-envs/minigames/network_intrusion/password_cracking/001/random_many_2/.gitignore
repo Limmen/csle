@@ -2,3 +2,5 @@
 containers
 *.json
 env_*
+
+backup

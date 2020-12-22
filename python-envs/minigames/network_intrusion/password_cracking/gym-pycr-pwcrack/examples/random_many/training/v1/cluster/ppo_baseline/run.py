@@ -14,14 +14,22 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2/backup/random_many/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/backup/random_many_2/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many_2")
+        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/random_many/backup/random_many_2/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
@@ -69,18 +77,35 @@ def default_config() -> ClientConfig:
 
     env_name = "pycr-pwcrack-random-many-cluster-v1"
     #env_name = "pycr-pwcrack-random-many-cluster-costs-v1"
+    # cluster_configs = [
+    #     ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #                                    server_connection=False, port_forward_next_port=2001 + i*150,
+    #                                    warmup=True, warmup_iterations=500)
+    #     for i in range(len(containers_configs))
+    # ]
     cluster_configs = [
         ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=2001 + i*150,
-                                       warmup=True, warmup_iterations=500)
+                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                      server_username="kim", server_ip="172.31.212.92",
+                      port_forward_next_port=2001 + i * 150,
+                      warmup=True, warmup_iterations=500)
         for i in range(len(containers_configs))
     ]
 
     # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
+    # eval_env_cluster_configs = [
+    #     ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #                   server_connection=False, port_forward_next_port=8001 + i * 150,
+    #                   warmup=True, warmup_iterations=500)
+    #     for i in range(len(eval_env_containers_configs))
+    # ]
+
     eval_env_cluster_configs = [
         ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=False, port_forward_next_port=8001 + i * 150,
+                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                      server_username="kim", server_ip="172.31.212.92",
+                      port_forward_next_port=8001 + i * 150,
                       warmup=True, warmup_iterations=500)
         for i in range(len(eval_env_containers_configs))
     ]

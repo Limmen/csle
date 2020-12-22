@@ -10,6 +10,7 @@ import time
 import argparse
 import os
 import sys
+import numpy as np
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.runner.runner import Runner
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
@@ -420,3 +421,15 @@ def default_makefile_path(out_dir : str = None) -> str:
 
 def round_batch_size(x: int):
     return x if x % 100 == 0 else x + 100 - x%100
+
+
+def running_average(x, N):
+    ''' Function used to compute the running average
+        of the last N elements of a vector x
+    '''
+    if len(x) >= N:
+        y = np.copy(x)
+        y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+    else:
+        y = np.zeros_like(x)
+    return y

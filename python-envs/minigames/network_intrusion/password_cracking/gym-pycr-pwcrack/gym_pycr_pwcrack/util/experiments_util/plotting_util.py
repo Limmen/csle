@@ -596,7 +596,7 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
                                eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
                                eval_envs_specific_rewards_stds,
                                ylim_rew,
-                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
+                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95, sample_step = 1):
     """
     Plots rewards, flags % and steps of two different configurations
     """
@@ -609,11 +609,12 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
     # ylims = (0, 920)
 
     # Plot Avg Train Rewards
-    ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
-            train_avg_rewards_means_1, label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
+    ax.plot(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+            train_avg_rewards_means_1[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1)))),
-                    train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    train_avg_rewards_means_1[::sample_step] - train_avg_rewards_stds_1[::sample_step], train_avg_rewards_means_1[::sample_step]
+                    + train_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="#599ad3")
 
     colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
@@ -628,35 +629,37 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
         r_means = train_envs_specific_rewards_means[key]
         r_stds = train_envs_specific_rewards_stds[key]
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
-        ax.plot(np.array(list(range(len(r_means)))),
-                   r_means, label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
-        ax.fill_between(np.array(list(range(len(r_means)))),
-                           r_means - r_stds, r_means + r_stds, alpha=0.35, color=colors[i])
+        ax.plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                           r_means[::sample_step] - r_stds[::sample_step], r_means[::sample_step] +
+                        r_stds[::sample_step], alpha=0.35, color=colors[i])
         i += 1
 
     # Plot Avg Eval Rewards
-    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
-            eval_avg_rewards_means_1, label=r"Avg\_E", marker="o", ls='-', color="r",
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+            eval_avg_rewards_means_1[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
-                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
-                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    eval_avg_rewards_means_1[::sample_step] - eval_avg_rewards_stds_1[::sample_step],
+                    eval_avg_rewards_means_1[::sample_step] + eval_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="r")
 
     for key in eval_envs_specific_rewards_data.keys():
         r_means = eval_envs_specific_rewards_means[key]
         r_stds = eval_envs_specific_rewards_stds[key]
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
-        ax.plot(np.array(list(range(len(r_means)))),
-                   r_means, label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
-        ax.fill_between(np.array(list(range(len(r_means)))),
-                           r_means - r_stds, r_means + r_stds, alpha=0.35, color=colors[i])
+        ax.plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color=colors[i], markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                           r_means[::sample_step] - r_stds[::sample_step],
+                        r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color=colors[i])
         i += 1
 
     ax.set_title(r"Episodic Rewards")
     ax.set_xlabel("\# Iteration", fontsize=20)
     ax.set_ylabel("Avg Episode Reward", fontsize=20)
-    ax.set_xlim(0, len(train_avg_rewards_means_1))
+    ax.set_xlim(0, len(train_avg_rewards_means_1[::sample_step])*sample_step)
     ax.set_ylim(ylim_rew[0], ylim_rew[1])
     #ax.set_ylim(ylim_rew)
 
@@ -674,7 +677,7 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
     ax.spines['right'].set_color((.8, .8, .8))
     ax.spines['top'].set_color((.8, .8, .8))
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
               ncol=5, fancybox=True, shadow=True)
     #ax.legend(loc="lower right")
     ax.xaxis.label.set_size(13.5)
@@ -695,7 +698,7 @@ def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_re
                                eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
                                eval_envs_specific_rewards_stds,
                                ylim_rew,
-                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
+                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95, sample_step = 1):
     """
     Plots rewards, flags % and steps of two different configurations
     """
@@ -708,11 +711,12 @@ def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_re
     # ylims = (0, 920)
 
     # Plot Avg Train Rewards
-    ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
-            train_avg_rewards_means_1, label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
+    ax.plot(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+            train_avg_rewards_means_1[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1)))),
-                    train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    train_avg_rewards_means_1[::sample_step] - train_avg_rewards_stds_1[::sample_step],
+                    train_avg_rewards_means_1[::sample_step] + train_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="#599ad3")
 
     # colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
@@ -727,35 +731,37 @@ def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_re
         r_means = train_envs_specific_rewards_means[key]
         r_stds = train_envs_specific_rewards_stds[key]
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
-        ax.plot(np.array(list(range(len(r_means)))),
-                   r_means, label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery)
-        ax.fill_between(np.array(list(range(len(r_means)))),
-                           r_means - r_stds, r_means + r_stds, alpha=0.35, color="#599ad3")
+        ax.plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                           r_means[::sample_step] - r_stds[::sample_step],
+                        r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
         i += 1
 
     # Plot Avg Eval Rewards
-    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
-            eval_avg_rewards_means_1, label=r"Avg\_E", marker="o", ls='-', color="r",
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+            eval_avg_rewards_means_1[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
-                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
-                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    eval_avg_rewards_means_1[::sample_step] - eval_avg_rewards_stds_1[::sample_step],
+                    eval_avg_rewards_means_1[::sample_step] + eval_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="r")
 
     for key in eval_envs_specific_rewards_data.keys():
         r_means = eval_envs_specific_rewards_means[key]
         r_stds = eval_envs_specific_rewards_stds[key]
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
-        ax.plot(np.array(list(range(len(r_means)))),
-                   r_means, label=label, marker=markers[i], ls='-', color="r", markevery=markevery)
-        ax.fill_between(np.array(list(range(len(r_means)))),
-                           r_means - r_stds, r_means + r_stds, alpha=0.35, color="r")
+        ax.plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r", markevery=markevery)
+        ax.fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
+                           r_means[::sample_step] - r_stds[::sample_step],
+                        r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
         i += 1
 
     ax.set_title(r"Episodic Rewards")
     ax.set_xlabel("\# Iteration", fontsize=20)
     ax.set_ylabel("Avg Episode Reward", fontsize=20)
-    ax.set_xlim(0, len(train_avg_rewards_means_1))
+    ax.set_xlim(0, len(train_avg_rewards_means_1[::sample_step])*sample_step)
     ax.set_ylim(ylim_rew[0], ylim_rew[1])
     #ax.set_ylim(ylim_rew)
 
@@ -773,7 +779,7 @@ def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_re
     ax.spines['right'].set_color((.8, .8, .8))
     ax.spines['top'].set_color((.8, .8, .8))
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
               ncol=5, fancybox=True, shadow=True)
     #ax.legend(loc="lower right")
     ax.xaxis.label.set_size(13.5)
@@ -794,7 +800,7 @@ def plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1, train_avg_rewa
                                eval_envs_specific_rewards_data, eval_envs_specific_rewards_means,
                                eval_envs_specific_rewards_stds,
                                ylim_rew,
-                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95):
+                               file_name, markevery=10, optimal_steps = 10, optimal_reward = 95, sample_step = 1):
     """
     Plots rewards, flags % and steps of two different configurations
     """
@@ -807,26 +813,27 @@ def plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1, train_avg_rewa
     # ylims = (0, 920)
 
     # Plot Avg Train Rewards
-    ax.plot(np.array(list(range(len(train_avg_rewards_means_1)))),
-            train_avg_rewards_means_1, label=r"Avg Train", marker="s", ls='-', color="#599ad3",
+    ax.plot(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+            train_avg_rewards_means_1[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1)))),
-                    train_avg_rewards_means_1 - train_avg_rewards_stds_1, train_avg_rewards_means_1 + train_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    train_avg_rewards_means_1[::sample_step] - train_avg_rewards_stds_1[::sample_step],
+                    train_avg_rewards_means_1[::sample_step] + train_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="#599ad3")
 
     # Plot Avg Eval Rewards
-    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1)))),
-            eval_avg_rewards_means_1, label=r"Avg Eval", marker="o", ls='-', color="r",
+    ax.plot(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+            eval_avg_rewards_means_1[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
             markevery=markevery)
-    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1)))),
-                    eval_avg_rewards_means_1 - eval_avg_rewards_stds_1,
-                    eval_avg_rewards_means_1 + eval_avg_rewards_stds_1,
+    ax.fill_between(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
+                    eval_avg_rewards_means_1[::sample_step] - eval_avg_rewards_stds_1[::sample_step],
+                    eval_avg_rewards_means_1[::sample_step] + eval_avg_rewards_stds_1[::sample_step],
                     alpha=0.35, color="r")
 
     ax.set_title(r"Episodic Rewards")
     ax.set_xlabel("\# Iteration", fontsize=20)
     ax.set_ylabel("Avg Episode Reward", fontsize=20)
-    ax.set_xlim(0, len(train_avg_rewards_means_1))
+    ax.set_xlim(0, len(train_avg_rewards_means_1[::sample_step])*sample_step)
     ax.set_ylim(ylim_rew[0], ylim_rew[1])
     #ax.set_ylim(ylim_rew)
 
@@ -844,7 +851,7 @@ def plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1, train_avg_rewa
     ax.spines['right'].set_color((.8, .8, .8))
     ax.spines['top'].set_color((.8, .8, .8))
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
               ncol=5, fancybox=True, shadow=True)
     #ax.legend(loc="lower right")
     ax.xaxis.label.set_size(13.5)
@@ -856,3 +863,4 @@ def plot_rewards_train_cluster_avg_only(train_avg_rewards_data_1, train_avg_rewa
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
     # plt.close(fig)
+            
