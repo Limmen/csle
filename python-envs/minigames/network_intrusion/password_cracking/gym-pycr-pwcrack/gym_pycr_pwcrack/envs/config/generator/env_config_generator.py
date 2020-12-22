@@ -40,14 +40,16 @@ class EnvConfigGenerator:
                  agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None,
                  path: str = None, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
                  max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
-                 subnet_prefix: str = "172.18.", cleanup_old_envs : bool = True):
+                 subnet_prefix: str = "172.18.", cleanup_old_envs : bool = True, start_idx : int = 0,
+                 subnet_id_blacklist = None):
         if cleanup_old_envs:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
         envs_dirs_path = path
-        subnet_id_blacklist = set()
+        if subnet_id_blacklist is None:
+            subnet_id_blacklist = set()
         for i in range(num_envs):
-            dir_name = "env_" + str(i)
+            dir_name = "env_" + str(start_idx + i)
             dir_path = os.path.join(envs_dirs_path, dir_name)
             os.makedirs(dir_path)
             env_path = os.path.join(envs_dirs_path, dir_name + "/")
@@ -78,6 +80,7 @@ class EnvConfigGenerator:
                                                                      subnet_id_blacklist=subnet_id_blacklist)
             subnet_id_blacklist.add(subnet_id)
             os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + gen_subnet_prefix)
+        return subnet_id_blacklist
 
     @staticmethod
     def generate(num_nodes: int = 5, subnet_prefix: str = "172.18.", num_flags: int = 1,
