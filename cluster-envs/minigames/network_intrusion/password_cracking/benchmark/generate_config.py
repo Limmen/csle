@@ -29,7 +29,7 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
                                      min_num_users=min_num_users, max_num_users=max_num_users,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
-                                     subnet_prefix=subnet_prefix)
+                                     subnet_prefix=subnet_prefix, cleanup_old_envs = False)
 if __name__ == '__main__':
     generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=1, max_num_flags=1, min_num_nodes=5,
                   max_num_nodes=5, subnet_prefix="172.18.")

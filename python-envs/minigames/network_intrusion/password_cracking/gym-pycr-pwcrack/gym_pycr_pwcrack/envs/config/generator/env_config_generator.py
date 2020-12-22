@@ -40,8 +40,9 @@ class EnvConfigGenerator:
                  agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None,
                  path: str = None, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
                  max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
-                 subnet_prefix: str = "172.18."):
-        EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
+                 subnet_prefix: str = "172.18.", cleanup_old_envs : bool = True):
+        if cleanup_old_envs:
+            EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
         envs_dirs_path = path
         subnet_id_blacklist = set()
