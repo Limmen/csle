@@ -2834,6 +2834,41 @@ class PyCRPwCrackRandomGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.exploration_policy = exp_policy
         super().__init__(env_config=env_config)
 
+# -------- Version 1 Generated Sim With Costs ------------
+
+class PyCRPwCrackRandomGeneratedSimWithCosts1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV1.actions_conf(num_nodes=num_nodes-1,
+                                                                 subnet_mask=containers_config.subnet_mask,
+                                                                 hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV1.env_config(containers_config=containers_config,
+                                                          flags_config=flags_config,
+                                                          action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          num_nodes=num_nodes-1)
+            env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+        super().__init__(env_config=env_config)
+
 # -------- Version 2 ------------
 
 class PyCRPwCrackRandomCluster2Env(PyCRPwCrackEnv):
@@ -2896,6 +2931,69 @@ class PyCRPwCrackRandomClusterWithCosts2Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
 
+# -------- Version 2 Generated Sim ------------
+
+class PyCRPwCrackRandomGeneratedSim2Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V3. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes-1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes-1)
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+# -------- Version 2 Generated Sim With Costs ------------
+class PyCRPwCrackRandomGeneratedSimWithCosts2Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V3. Does take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV2.actions_conf(num_nodes=num_nodes-1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV2.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes-1)
+            env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
 
 # -------- Version 3 ------------
 
@@ -2926,7 +3024,6 @@ class PyCRPwCrackRandomCluster3Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
-
 
 # -------- Version 3 with costs------------
 
@@ -2959,9 +3056,70 @@ class PyCRPwCrackRandomClusterWithCosts3Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
         super().__init__(env_config=env_config)
 
+# -------- Version 3, Generated Simulation ------------
+class PyCRPwCrackRandomGeneratedSim3Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V2. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes-1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes-1)
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+# -------- Version 3, Generated Simulation With Costs ------------
+class PyCRPwCrackRandomGeneratedSimWithCosts3Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V2. Does take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV3.actions_conf(num_nodes=num_nodes-1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV3.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes-1)
+            env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
-
 class PyCRPwCrackRandomCluster4Env(PyCRPwCrackEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -2992,7 +3150,6 @@ class PyCRPwCrackRandomCluster4Env(PyCRPwCrackEnv):
 
 
 # -------- Version 4 with costs------------
-
 class PyCRPwCrackRandomClusterWithCosts4Env(PyCRPwCrackEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
@@ -3023,6 +3180,70 @@ class PyCRPwCrackRandomClusterWithCosts4Env(PyCRPwCrackEnv):
         super().__init__(env_config=env_config)
 
 
+# -------- Version 4, Generated Simulation ------------
+class PyCRPwCrackRandomGeneratedSim4Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V3. Does not take action costs into account.
+    """
+
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir: str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes: int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes=num_nodes - 1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes - 1)
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
+
+# -------- Version 4, Generated Simulation, With Costs------------
+class PyCRPwCrackRandomGeneratedSimWithCosts4Env(PyCRPwCrackEnv):
+    """
+    Slightly more set of actions than V3. Does take action costs into account.
+    """
+
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir: str,
+                 containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes: int = -1):
+        if num_nodes == -1:
+            num_nodes = len(containers_config.containers)
+        if env_config is None:
+            render_config = PyCrPwCrackRandomBase.render_conf(containers_config=containers_config)
+            if cluster_config is None:
+                raise ValueError("Cluster config cannot be None")
+            cluster_config.ids_router = containers_config.ids_enabled
+            cluster_config.ids_router_ip = containers_config.router_ip
+            action_conf = PyCrPwCrackRandomV4.actions_conf(num_nodes=num_nodes - 1,
+                                                           subnet_mask=containers_config.subnet_mask,
+                                                           hacker_ip=containers_config.agent_ip)
+            env_config = PyCrPwCrackRandomV4.env_config(containers_config=containers_config,
+                                                        flags_config=flags_config,
+                                                        action_conf=action_conf,
+                                                        cluster_conf=cluster_config, render_conf=render_config,
+                                                        num_nodes=num_nodes - 1)
+            env_config.cost_coefficient = 1
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_policy = exp_policy
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+        super().__init__(env_config=env_config)
 
 # -------- Difficulty RandomMany (RandomMany) ------------
 

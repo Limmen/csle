@@ -616,9 +616,17 @@ register(
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 1 ------------
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-pwcrack-random-generated-sim-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-costs-v1',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim1Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
@@ -640,6 +648,22 @@ register(
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Version: 2 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 2 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-costs-v2',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 3 ------------
 register(
     id='pycr-pwcrack-random-cluster-v3',
@@ -656,6 +680,22 @@ register(
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Version: 3 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 3 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-costs-v3',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
 # -------- Difficulty Level: Random, Mode: Cluster, Version: 4 ------------
 register(
     id='pycr-pwcrack-random-cluster-v4',
@@ -668,6 +708,22 @@ register(
 register(
     id='pycr-pwcrack-random-cluster-costs-v4',
     entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomClusterWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Version: 4 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_config": None, "flags_config": None, "num_nodes" : None}
+)
+
+# -------- Difficulty Level: Random, Mode: Generated Simulation, Costs, Version: 4 ------------
+register(
+    id='pycr-pwcrack-random-generated-sim-costs-v4',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomGeneratedSim4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
