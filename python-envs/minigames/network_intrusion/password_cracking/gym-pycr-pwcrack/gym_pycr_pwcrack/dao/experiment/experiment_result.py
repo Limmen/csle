@@ -35,6 +35,9 @@ class ExperimentResult:
                  eval_2_env_specific_steps: dict = None,
                  eval_2_env_specific_flags: dict = None,
                  eval_2_env_specific_flags_percentage: dict = None,
+                 rollout_times : List = None, env_response_times : List = None,
+                 action_pred_times : List = None, grad_comp_times : List = None,
+                 weight_update_times : List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -97,6 +100,11 @@ class ExperimentResult:
         self.eval_2_env_specific_flags = eval_2_env_specific_flags
         self.eval_2_env_specific_steps = eval_2_env_specific_steps
         self.eval_2_env_specific_flags_percentage = eval_2_env_specific_flags_percentage
+        self.rollout_times = rollout_times
+        self.env_response_times = env_response_times
+        self.action_pred_times = action_pred_times
+        self.grad_comp_times = grad_comp_times
+        self.weight_update_times = weight_update_times
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -155,6 +163,16 @@ class ExperimentResult:
             self.eval_2_env_specific_flags = {}
         if eval_2_env_specific_flags_percentage is None:
             self.eval_2_env_specific_flags_percentage = {}
+        if rollout_times is None:
+            self.rollout_times = []
+        if env_response_times is None:
+            self.env_response_times = []
+        if action_pred_times is None:
+            self.action_pred_times = []
+        if grad_comp_times is None:
+            self.grad_comp_times = []
+        if weight_update_times is None:
+            self.weight_update_times = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -168,14 +186,16 @@ class ExperimentResult:
                    self.avg_episode_flags_percentage, self.eval_avg_episode_rewards, self.eval_avg_episode_steps,
                    self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage,
                    self.eval_2_avg_episode_rewards, self.eval_2_avg_episode_steps,
-                   self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage
+                   self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage, self.rollout_times,
+                   self.env_response_times, self.action_pred_times, self.grad_comp_times, self.weight_update_times
                    ]
         metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
                          "epsilon_values", "cumulative_reward", "avg_episode_loss",
                          "lr_list", "avg_episode_flags", "avg_episode_flags_percentage", "eval_avg_episode_rewards",
                          "eval_avg_episode_steps", "eval_avg_episode_flags", "eval_avg_episode_flags_percentage",
                          "eval_2_avg_episode_rewards", "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
-                         "eval_2_avg_episode_flags_percentage"
+                         "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times", "action_pred_times",
+                         "grad_comp_times", "weight_update_times"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

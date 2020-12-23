@@ -2632,6 +2632,8 @@ class PyCRPwCrackLevel6Cluster1Env(PyCRPwCrackEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 100
         super().__init__(env_config=env_config)
 
 

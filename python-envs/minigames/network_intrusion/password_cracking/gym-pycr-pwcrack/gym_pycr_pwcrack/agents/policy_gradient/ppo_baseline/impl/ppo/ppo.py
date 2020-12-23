@@ -1,5 +1,5 @@
 from typing import Any, Callable, Dict, Optional, Type, Union
-
+import time
 import numpy as np
 import torch as th
 from gym import spaces
@@ -149,12 +149,17 @@ class PPO(OnPolicyAlgorithm):
         entropy_losses, all_kl_divs = [], []
         pg_losses, value_losses = [], []
         clip_fractions = []
+        grad_comp_times = []
+        weight_update_times = []
 
         # train for gradient_steps epochs
         for epoch in range(self.n_epochs):
             approx_kl_divs = []
             # Do a complete pass on the rollout buffer
             for rollout_data in self.rollout_buffer.get(self.batch_size):
+                if self.agent_config.performance_analysis:
+                    start= time.time()
+
                 actions = rollout_data.actions
                 if isinstance(self.action_space, spaces.Discrete):
                     # Convert discrete action from float to long
@@ -212,9 +217,17 @@ class PPO(OnPolicyAlgorithm):
                 # Optimization step
                 self.policy.optimizer.zero_grad()
                 loss.backward()
+                if self.agent_config.performance_analysis:
+                    end= time.time()
+                    grad_comp_times.append(end-start)
                 # Clip grad norm
+                if self.agent_config.performance_analysis:
+                    start = time.time()
                 th.nn.utils.clip_grad_norm_(self.policy.parameters(), self.max_grad_norm)
                 self.policy.optimizer.step()
+                if self.agent_config.performance_analysis:
+                    end = time.time()
+                    weight_update_times.append(end-start)
                 approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
 
             all_kl_divs.append(np.mean(approx_kl_divs))
@@ -226,7 +239,7 @@ class PPO(OnPolicyAlgorithm):
         self._n_updates += self.n_epochs
         explained_var = explained_variance(self.rollout_buffer.returns.flatten(), self.rollout_buffer.values.flatten())
 
-        return np.mean(entropy_losses), np.mean(pg_losses), np.mean(value_losses), lr
+        return np.mean(entropy_losses), np.mean(pg_losses), np.mean(value_losses), lr, grad_comp_times, weight_update_times
 
     def train_ar(self) -> None:
         """

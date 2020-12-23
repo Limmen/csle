@@ -224,6 +224,8 @@ class BaseAlgorithm(ABC):
                     eval_2_env_specific_rewards: dict = None,
                     eval_2_env_specific_steps: dict = None, eval_2_env_specific_flags: dict = None,
                     eval_2_env_specific_flags_percentage: dict = None,
+                    rollout_times = None, env_response_times = None, action_pred_times = None,
+                    grad_comp_times = None, weight_update_times = None
                     ) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
@@ -303,6 +305,41 @@ class BaseAlgorithm(ABC):
             eval_2_avg_episode_steps = np.mean(eval_2_episode_steps)
         else:
             eval_2_avg_episode_steps = 0.0
+        if rollout_times is not None:
+            if len(rollout_times)> 0:
+                avg_rollout_times = np.mean(rollout_times)
+            else:
+                avg_rollout_times = 0.0
+        else:
+            avg_rollout_times = 0.0
+        if env_response_times is not None and len(env_response_times) > 0:
+            if len(env_response_times) > 0:
+                avg_env_response_times = np.mean(env_response_times)
+            else:
+                avg_env_response_times = 0.0
+        else:
+            avg_env_response_times = 0.0
+        if action_pred_times is not None and len(action_pred_times) > 0:
+            if len(action_pred_times) > 0:
+                avg_action_pred_times = np.mean(action_pred_times)
+            else:
+                avg_action_pred_times = 0.0
+        else:
+            avg_action_pred_times = 0.0
+        if grad_comp_times is not None and len(grad_comp_times) > 0:
+            if len(grad_comp_times) > 0:
+                avg_grad_comp_times = np.mean(grad_comp_times)
+            else:
+                avg_grad_comp_times = 0.0
+        else:
+            avg_grad_comp_times = 0.0
+        if weight_update_times is not None and len(weight_update_times) > 0:
+            if len(weight_update_times):
+                avg_weight_update_times = np.mean(weight_update_times)
+            else:
+                avg_weight_update_times = 0.0
+        else:
+            avg_weight_update_times = 0.0
 
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
@@ -351,6 +388,11 @@ class BaseAlgorithm(ABC):
         result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
         result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
         result.lr_list.append(lr)
+        result.rollout_times.append(avg_rollout_times)
+        result.env_response_times.append(avg_env_response_times)
+        result.action_pred_times.append(avg_action_pred_times)
+        result.grad_comp_times.append(avg_grad_comp_times)
+        result.weight_update_times.append(avg_weight_update_times)
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
                 avg = np.mean(train_env_specific_rewards[key])

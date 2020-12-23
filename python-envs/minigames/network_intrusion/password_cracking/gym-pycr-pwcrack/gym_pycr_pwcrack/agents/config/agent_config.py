@@ -43,7 +43,8 @@ class AgentConfig:
                  filter_illegal_actions : bool = False, train_progress_deterministic_eval: bool = False,
                  eval_deterministic: bool = False,
                  n_deterministic_eval_iter : int = 10, env_config = None, env_configs = None,
-                 eval_env_config = None, eval_env_configs = None, num_nodes: int = 10
+                 eval_env_config = None, eval_env_configs = None, num_nodes: int = 10,
+                 performance_analysis : bool = False
                  ):
         """
         Initialize environment and hyperparameters
@@ -216,6 +217,7 @@ class AgentConfig:
         self.eval_env_configs = eval_env_configs
         self.eval_deterministic = eval_deterministic
         self.num_nodes = num_nodes
+        self.performance_analysis = performance_analysis
 
 
     def to_str(self) -> str:

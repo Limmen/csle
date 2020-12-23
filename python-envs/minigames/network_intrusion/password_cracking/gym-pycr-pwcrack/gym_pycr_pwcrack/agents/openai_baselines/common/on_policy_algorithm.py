@@ -190,10 +190,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         env_specific_steps = {}
         env_specific_flags = {}
         env_specific_flags_percentage = {}
+        env_response_times = []
+        action_pred_times = []
 
         # Per episode metrics
         episode_reward = np.zeros(env.num_envs)
         episode_step = np.zeros(env.num_envs)
+        env_response_time = 0
+        action_pred_time = 0
 
         callback.on_rollout_start()
         dones = False
@@ -203,7 +207,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.policy.reset_noise(env.num_envs)
 
             if not self.agent_config.ar_policy:
-                new_obs, rewards, dones, infos, values, log_probs, actions = self.step_policy(env, rollout_buffer)
+                new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time_s, env_step_time = self.step_policy(env, rollout_buffer)
+                if self.agent_config.performance_analysis:
+                    env_response_time += env_step_time
+                    action_pred_time += action_pred_time_s
             else:
                 new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
                 m_action_log_probs, m_selection_actions, m_actions = self.step_policy_ar(env, rollout_buffer)
@@ -214,20 +221,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             n_steps += 1
             episode_reward += rewards
             episode_step += 1
-
-            # Give access to local variables
-            callback.update_locals(locals())
-            if callback.on_step(iteration=self.iteration) is False:
-                print("local variables trigger???")
-                for i in range(env.num_envs):
-                    episode_rewards.append(episode_reward[i])
-                    episode_steps.append(episode_step[i])
-                    episode_flags.append(infos[i]["flags"])
-                    if self.agent_config.env_config is not None:
-                        episode_flags_percentage.append(infos[i]["flags"]/self.agent_config.env_config.num_flags)
-                    else:
-                        episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
-                return False, episode_rewards, episode_steps
 
             if dones.any():
                 for i in range(len(dones)):
@@ -242,6 +235,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                             episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
                         else:
                             episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
+
+                        if self.agent_config.performance_analysis:
+                            env_response_times.append(env_response_time)
+                            action_pred_times.append(action_pred_time)
+                            env_response_time = 0
+                            action_pred_time = 0
 
                         env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage= \
                             self.update_env_specific_metrics(env_specific_rewards=env_specific_rewards,
@@ -265,7 +264,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 episode_rewards.append(episode_reward[i])
                 episode_steps.append(episode_step[i])
         return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage, env_specific_rewards, \
-               env_specific_steps, env_specific_flags, env_specific_flags_percentage
+               env_specific_steps, env_specific_flags, env_specific_flags_percentage, env_response_times, action_pred_times
 
     def train(self) -> None:
         """
@@ -312,17 +311,34 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         train_episode_flags_env_specific = {}
         train_episode_flags_percentage_env_specific = {}
         lr = 0.0
+        rollout_times = []
+        env_response_times = []
+        action_pred_times = []
+        grad_comp_times = []
+        weight_update_times = []
 
         while self.iteration < self.agent_config.num_iterations:
 
+            if self.agent_config.performance_analysis:
+                start = time.time()
+
             continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
-            env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage = \
+            env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage, \
+            rollout_env_response_times, rollout_action_pred_times = \
                 self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+
+            if self.agent_config.performance_analysis:
+                end = time.time()
+                rollout_times.append(end-start)
+                env_response_times.extend(rollout_env_response_times)
+                action_pred_times.extend(rollout_action_pred_times)
+
 
             episode_rewards.extend(rollouts_rewards)
             episode_steps.extend(rollouts_steps)
             episode_flags.extend(rollouts_flags)
             episode_flags_percentage.extend(rollouts_flags_percentage)
+
             for key in env_specific_rewards.keys():
                 if key in train_episode_rewards_env_specific:
                     train_episode_rewards_env_specific[key].extend(env_specific_rewards[key])
@@ -411,12 +427,21 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  eval_2_env_specific_rewards = eval_2_episode_rewards_env_specific,
                                  eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
                                  eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
-                                 eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific
+                                 eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific,
+                                 rollout_times=rollout_times, env_response_times=env_response_times,
+                                 action_pred_times=action_pred_times, grad_comp_times=grad_comp_times,
+                                 weight_update_times=weight_update_times
                                  )
+
                 episode_rewards = []
                 episode_loss = []
                 episode_flags = []
                 episode_steps = []
+                rollout_times = []
+                env_response_times = []
+                action_pred_times = []
+                grad_comp_times = []
+                weight_update_times = []
                 episode_flags_percentage = []
                 train_episode_rewards_env_specific = {}
                 train_episode_steps_env_specific = {}
@@ -438,7 +463,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         self.agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
             if not self.agent_config.ar_policy:
-                entropy_loss, pg_loss, value_loss, lr = self.train()
+                entropy_loss, pg_loss, value_loss, lr, grad_comp_times, weight_update_times = self.train()
+                if self.agent_config.performance_analysis:
+                    grad_comp_times.append(np.sum(grad_comp_times))
+                    weight_update_times.append(np.sum(weight_update_times))
             else:
                 entropy_loss, pg_loss, value_loss, lr = self.train_ar()
             episode_loss.append(entropy_loss + pg_loss + value_loss)
@@ -461,11 +489,20 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
 
     def step_policy(self, env, rollout_buffer):
+        action_pred_time = 0.0
+        env_step_time = 0.0
+        if self.agent_config.performance_analysis:
+            start = time.time()
         with th.no_grad():
             # Convert to pytorch tensor
             obs_tensor = th.as_tensor(self._last_obs).to(self.device)
             actions, values, log_probs = self.policy.forward(obs_tensor,  env=env, infos=self._last_infos)
         actions = actions.cpu().numpy()
+
+        if self.agent_config.performance_analysis:
+            end = time.time()
+            action_pred_time = end-start
+
 
         # Rescale and perform action
         clipped_actions = actions
@@ -473,7 +510,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         if isinstance(self.action_space, gym.spaces.Box):
             clipped_actions = np.clip(actions, self.action_space.low, self.action_space.high)
 
+        if self.agent_config.performance_analysis:
+            start = time.time()
         new_obs, rewards, dones, infos = env.step(clipped_actions)
+        if self.agent_config.performance_analysis:
+            end = time.time()
+            env_step_time = end-start
         if len(new_obs.shape) == 3:
             new_obs = new_obs.reshape((new_obs.shape[0], self.observation_space.shape[0]))
 
@@ -487,7 +529,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self._last_dones = dones
         self._last_infos = infos
 
-        return new_obs, rewards, dones, infos, values, log_probs, actions
+        return new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time, env_step_time
 
     def step_policy_ar(self, env, rollout_buffer):
         with th.no_grad():

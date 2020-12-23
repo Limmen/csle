@@ -77,7 +77,7 @@ class Runner:
         elif config.randomized_env:
             env, base_env = Runner.randomized_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
         else:
-            env, base_env = Runner.randomized_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
+            env, base_env = Runner.regular_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
         if config.eval_env is not None:
             if config.eval_randomized_env:
                 eval_env = gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=config.eval_cluster_config,
