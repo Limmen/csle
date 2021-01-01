@@ -106,6 +106,9 @@ class VulnerabilityGenerator:
                         cmd = "sudo rm -rf /home/{}".format(user)
                         ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
+                cmd = "sudo deluser {}".format(vuln.username)
+                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
                 if vuln.root:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}".format(
                         vuln.username, vuln.pw, vuln.username)

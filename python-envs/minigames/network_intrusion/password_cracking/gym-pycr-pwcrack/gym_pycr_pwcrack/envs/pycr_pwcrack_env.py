@@ -3474,7 +3474,7 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = False
+            env_config.filter_illegal_actions = True
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 

@@ -31,8 +31,9 @@ class ExploreThread(threading.Thread):
         #                                agent_username="agent", agent_pw="agent", server_connection=True,
         #                                server_private_key_file="/home/kim/.ssh/id_rsa",
         #                                server_username="kim")
-        cluster_config = ClusterConfig(agent_ip=self.containers_configs[self.idx].agent_ip, agent_username="agent", agent_pw="agent",
-                          server_connection=False, port_forward_next_port=self.port_start + 100*self.idx)
+        cluster_config = ClusterConfig(agent_ip=self.containers_configs[self.idx].agent_ip, agent_username="agent",
+                                       agent_pw="agent",
+                                       server_connection=False, port_forward_next_port=self.port_start + 100*self.idx)
         env = gym.make(self.env_name, env_config=None, cluster_config=cluster_config, containers_configs=self.containers_configs,
                        flags_configs=self.flags_configs, idx=self.idx, num_nodes=self.num_nodes)
         env.env_config.max_episode_length = 1000000000
