@@ -341,7 +341,6 @@ class EvalCallback(EventCallback):
             os.makedirs(os.path.dirname(self.log_path), exist_ok=True)
 
     def _on_rollout_end(self) -> bool:
-
         if self.eval_freq > 0 and self.iteration % self.eval_freq == 0 and self.n_eval_episodes > 0:
             # Sync training and eval env if there is VecNormalize
             sync_envs_normalization(self.training_env, self.eval_env)
@@ -363,6 +362,8 @@ class EvalCallback(EventCallback):
             mean_reward, std_reward = np.mean(episode_rewards), np.std(episode_rewards)
             #mean_ep_length, std_ep_length = np.mean(episode_lengths), np.std(episode_lengths)
             self.last_mean_reward = mean_reward
+
+        self.iteration += 1
 
         return True
 

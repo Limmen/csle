@@ -18,7 +18,7 @@ from gym_pycr_pwcrack.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 import gym_pycr_pwcrack.constants.constants as constants
 
 class PyCrPwCrackLevel1Base:

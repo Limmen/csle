@@ -44,7 +44,7 @@ class AgentConfig:
                  eval_deterministic: bool = False,
                  n_deterministic_eval_iter : int = 10, env_config = None, env_configs = None,
                  eval_env_config = None, eval_env_configs = None, num_nodes: int = 10,
-                 performance_analysis : bool = False
+                 performance_analysis : bool = False, ar_policy2: bool = False
                  ):
         """
         Initialize environment and hyperparameters
@@ -218,6 +218,7 @@ class AgentConfig:
         self.eval_deterministic = eval_deterministic
         self.num_nodes = num_nodes
         self.performance_analysis = performance_analysis
+        self.ar_policy2 = ar_policy2
 
 
     def to_str(self) -> str:

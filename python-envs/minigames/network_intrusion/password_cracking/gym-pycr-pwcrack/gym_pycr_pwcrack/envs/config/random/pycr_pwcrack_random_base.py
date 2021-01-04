@@ -11,7 +11,7 @@ from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceAc
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 from gym_pycr_pwcrack.dao.network.node import Node
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig

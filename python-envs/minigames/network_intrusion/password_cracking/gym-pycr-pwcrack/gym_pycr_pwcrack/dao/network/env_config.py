@@ -8,7 +8,7 @@ from gym_pycr_pwcrack.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_pwcrack.dao.action_results.action_costs import ActionCosts
 from gym_pycr_pwcrack.dao.action_results.filesystem_scan_cache import FileSystemScanCache
 from gym_pycr_pwcrack.dao.action_results.nikto_scan_cache import NiktoScanCache
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 from gym_pycr_pwcrack.dao.action_results.user_command_cache import UserCommandCache
 from gym_pycr_pwcrack.dao.action_results.action_alerts import ActionAlerts
 

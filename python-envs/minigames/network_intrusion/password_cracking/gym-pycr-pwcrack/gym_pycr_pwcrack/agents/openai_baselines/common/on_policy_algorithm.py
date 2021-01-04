@@ -128,7 +128,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 n_envs=self.n_envs,
                 agent_config = self.agent_config
             )
-        if not self.agent_config.ar_policy:
+        if not hasattr(self.agent_config, 'ar_policy2') or not self.agent_config.ar_policy2:
             self.policy = self.policy_class(
                 self.observation_space,
                 self.action_space,
@@ -364,6 +364,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 break
 
             self.iteration += 1
+            callback.iteration += 1
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
             if self.iteration % self.agent_config.train_log_frequency == 0:

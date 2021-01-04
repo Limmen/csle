@@ -745,3 +745,11 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )
+
+# -------- Difficulty Level: Random Many, Mode: Generated Simulation, Version: 1 ------------
+register(
+    id='pycr-pwcrack-random-many-generated-sim-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackRandomManyGeneratedSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "containers_configs": None, "flags_configs": None, "idx": None}
+)

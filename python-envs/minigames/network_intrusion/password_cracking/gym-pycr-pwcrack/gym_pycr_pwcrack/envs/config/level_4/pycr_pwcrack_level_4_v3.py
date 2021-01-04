@@ -8,7 +8,7 @@ from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceAc
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 from gym_pycr_pwcrack.envs.config.level_4.pycr_pwcrack_level_4_base import PyCrPwCrackLevel4Base
 
 class PyCrPwCrackLevel4V3:

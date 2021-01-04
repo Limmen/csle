@@ -253,7 +253,7 @@ class StateRepresentation:
                     obs_state.machines[i].filesystem_searched)
 
                 # Untried credentials
-                machines_obs[i][7] = int(obs_state.machines[i].untried_credentials)
+                machines_obs[i][6] = int(obs_state.machines[i].untried_credentials)
 
                 # SSH brute tried
                 machines_obs[i][7] = int(

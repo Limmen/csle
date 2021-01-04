@@ -3,7 +3,7 @@ import numpy as np
 from gym_pycr_pwcrack.dao.network.network_config import NetworkConfig
 from gym_pycr_pwcrack.dao.observation.observation_state import ObservationState
 from gym_pycr_pwcrack.envs.state_representation.state_representation import StateRepresentation
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 
 class EnvState:
     """

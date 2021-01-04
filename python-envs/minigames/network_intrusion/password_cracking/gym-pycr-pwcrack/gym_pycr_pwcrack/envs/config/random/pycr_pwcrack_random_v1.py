@@ -8,7 +8,7 @@ from gym_pycr_pwcrack.dao.action.network_service_actions import NetworkServiceAc
 from gym_pycr_pwcrack.dao.action.shell_actions import ShellActions
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
-from gym_pycr_pwcrack.envs.state_representation.state_type import StateType
+from gym_pycr_pwcrack.dao.state_representation.state_type import StateType
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.dao.network.flag import Flag
@@ -98,7 +98,7 @@ class PyCrPwCrackRandomV1:
                                env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=containers_config.agent_ip, state_type=StateType.BASE,
+                               hacker_ip=containers_config.agent_ip, state_type=StateType.ESSENTIAL,
                                router_ip=containers_config.router_ip)
 
         env_config.ping_scan_miss_p = 0.00

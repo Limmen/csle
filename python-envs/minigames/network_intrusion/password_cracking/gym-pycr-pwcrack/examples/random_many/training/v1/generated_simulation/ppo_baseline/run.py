@@ -75,8 +75,8 @@ def default_config() -> ClientConfig:
     eval_env_name = "pycr-pwcrack-random-many-cluster-v1"
     eval_n_envs = 1
 
-    env_name = "pycr-pwcrack-random-many-cluster-v1"
-    #env_name = "pycr-pwcrack-random-many-cluster-costs-v1"
+    #env_name = "pycr-pwcrack-random-many-cluster-v1"
+    env_name="pycr-pwcrack-random-many-generated-sim-v1"
     cluster_configs = [
         ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                                        server_connection=False, port_forward_next_port=2001 + i*150,
