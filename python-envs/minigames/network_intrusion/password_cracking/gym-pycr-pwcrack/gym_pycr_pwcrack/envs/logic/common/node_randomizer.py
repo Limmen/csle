@@ -43,10 +43,16 @@ class NodeRandomizer:
         type = NodeType.SERVER
         flags = NodeRandomizer.parse_flags(flags_conf=flags_config)
         vulns, n_serv, creds, n_roots = NodeRandomizer.generate_required_vulns(vuln_conf=vulns_config, gateway=gateway)
-        # if not router:
-        #     r_vulns = NodeRandomizer.random_vulnerabilities(vulns=r_space.vulnerabilities, num_vulns=1)
-        #     vulns =  vulns + r_vulns
-        services = NodeRandomizer.random_services(services=r_space.services, num_services=1)
+        if not router:
+            vulns_blacklist = constants.EXPLOIT_VULNERABILITES.WEAK_PW_VULNS
+            vulns_blacklist = vulns_blacklist + list(map(lambda x: x.name, vulns))
+            num_vulns = random.randint(0, len(r_space.vulnerabilities)-1)
+            r_vulns = NodeRandomizer.random_vulnerabilities(vulns=r_space.vulnerabilities, num_vulns=num_vulns,
+                                                            blacklist_vulnerabilities=vulns_blacklist)
+            vulns =  vulns + r_vulns
+        num_services = random.randint(0, len(r_space.services) - 1)
+        services = NodeRandomizer.random_services(services=r_space.services, num_services=num_services,
+                                                  blacklist_services=list(map(lambda x: x.name, n_serv)))
         services = services + n_serv
         os = NodeRandomizer.random_os(os=r_space.os)
         credentials, root_usernames = NodeRandomizer.parse_credentials(users_conf=users_config)
@@ -90,16 +96,19 @@ class NodeRandomizer:
         return credentials, root_usernames
 
     @staticmethod
-    def random_vulnerabilities(vulns: List[Vulnerability], num_vulns: int) -> List[Vulnerability]:
+    def random_vulnerabilities(vulns: List[Vulnerability], num_vulns: int, blacklist_vulnerabilities: List[str]) -> List[Vulnerability]:
+        vulns = list(filter(lambda x: not x.name in blacklist_vulnerabilities, vulns))
         if num_vulns > len(vulns):
             sample_vulns = vulns
         else:
             sample_vulns = random.sample(vulns, num_vulns)
+        vulns = list(map(lambda x: x.copy(), sample_vulns))
 
         return list(map(lambda x: x.copy(), sample_vulns))
 
     @staticmethod
-    def random_services(services: List[NetworkService], num_services: int) -> List[NetworkService]:
+    def random_services(services: List[NetworkService], num_services: int, blacklist_services: List[str]) -> List[NetworkService]:
+        services = list(filter(lambda x: not x.name in blacklist_services, services))
         if num_services > len(services):
             sample_services = services
         else:

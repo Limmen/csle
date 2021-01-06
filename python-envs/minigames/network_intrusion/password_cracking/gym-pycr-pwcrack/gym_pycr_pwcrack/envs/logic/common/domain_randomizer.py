@@ -45,15 +45,25 @@ class DomainRandomizer:
         services = list(services)
         vulnerabilities = list(vulnerabilities)
         os = list(os)
+        filtered_services = []
+        services_names = set()
         for s in services:
-            s = s.copy()
-            s.port = int(s.port)
-            s.credentials = []
+            if s.name not in services_names:
+                s = s.copy()
+                s.port = int(s.port)
+                s.credentials = []
+                filtered_services.append(s)
+                services_names.add(s.name)
+        filtered_vulnerabilities = []
+        vulnerabilities_names = set()
         for v in vulnerabilities:
-            v = v.copy()
-            v.port = int(v.port)
-            v.credentials = []
-        r_space = RandomizationSpace(services=services, vulnerabilities=vulnerabilities, os=os,
+            if v.name not in vulnerabilities_names:
+                v = v.copy()
+                v.port = int(v.port)
+                v.credentials = []
+                filtered_vulnerabilities.append(v)
+                vulnerabilities_names.add(v.name)
+        r_space = RandomizationSpace(services=filtered_services, vulnerabilities=filtered_vulnerabilities, os=os,
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_users=min_num_users, max_num_users=max_num_users)

@@ -94,6 +94,16 @@ class Runner:
                 config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             else:
                 config.agent_config.eval_env_config = eval_env.env_config
+
+        if config.agent_config.domain_randomization:
+            if isinstance(env, DummyVecEnv):
+                pass
+            elif isinstance(env, SubprocVecEnv):
+                pass
+            else:
+                pass
+            network_confs = list(map(lambda x: x.env_config.network_conf, env.envs))
+
         agent: TrainAgent = None
         if config.multi_env:
             config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
