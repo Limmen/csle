@@ -526,6 +526,7 @@ class EnvDynamicsUtil:
                 reward = env_config.base_step_reward - cost - alerts_pts
         else:
             reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
+        #print("reward{}, new_info:{}, alerts_pts:{}, cost:{}".format(reward, new_info, alerts_pts, cost))
         return reward
 
     @staticmethod

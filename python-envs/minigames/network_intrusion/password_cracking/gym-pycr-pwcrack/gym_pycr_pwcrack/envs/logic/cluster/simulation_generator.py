@@ -24,15 +24,15 @@ class SimulationGenerator:
         env.reset()
         done = False
         step = 0
-        while not done:
+        while not done and step < env_config.max_exploration_steps:
             action = exp_policy.action(env=env, filter_illegal=env_config.exploration_filter_illegal)
             obs, reward, done, info = env.step(action)
-
+            step +=1
             if render:
                 env.render()
+        if step >= env_config.max_exploration_steps:
+            print("maximum exploration steps reached")
         return obs
-
-
 
     @staticmethod
     def build_model(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) -> NetworkConfig:
@@ -40,7 +40,7 @@ class SimulationGenerator:
         aggregated_observation = env.env_state.obs_state.copy()
         for i in range(env_config.max_exploration_trajectories):
             print("Collecting trajectory {}/{}".format(i, env_config.max_exploration_trajectories))
-            SimulationGenerator.explore(exp_policy = exp_policy, env_config=env_config, env=env)
+            SimulationGenerator.explore(exp_policy = exp_policy, env_config=env_config, env=env, render=render)
             observation = env.env_state.obs_state
             aggregated_observation = EnvDynamicsUtil.merge_complete_obs_state(old_obs_state=aggregated_observation,
                                                                               new_obs_state=observation,

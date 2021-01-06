@@ -3443,6 +3443,7 @@ class PyCRPwCrackRandomGeneratedSimWithCosts4Env(PyCRPwCrackEnv):
 
 # -------- Version 1 Cluster ------------
 
+
 class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -3555,7 +3556,9 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.filter_illegal_actions = False
             env_config.max_episode_length = 50
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
+            env_config.exploration_filter_illegal = env_config.filter_illegal_actions
+            env_config.simulate_detection = False
             env_config.exploration_policy = exp_policy
-            env_config.max_exploration_steps = 100
+            env_config.max_exploration_steps = 1000
             env_config.max_exploration_trajectories = 100
         super().__init__(env_config=env_config)
