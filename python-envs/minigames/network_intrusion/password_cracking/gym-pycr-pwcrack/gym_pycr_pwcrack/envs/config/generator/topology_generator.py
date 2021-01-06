@@ -109,7 +109,7 @@ class TopologyGenerator:
         agent_ip = subnet_prefix + str(agent_ip_suffix)
         router_ip = subnet_prefix + str(router_ip_suffix)
 
-        return adj_matrix, gateways, topology, agent_ip, router_ip
+        return adj_matrix, gateways, topology, agent_ip, router_ip, node_id_d, node_id_d_inv
 
     @staticmethod
     def __generate_random_ip(blacklist: List) -> int:

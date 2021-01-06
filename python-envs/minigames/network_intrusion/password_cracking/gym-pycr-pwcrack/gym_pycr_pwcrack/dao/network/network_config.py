@@ -18,6 +18,11 @@ class NetworkConfig:
         self.flags_lookup = flags_lookup
         self.agent_reachable = agent_reachable
 
+    def __str__(self):
+        return "subnet_mask:{}, nodes:{}, adj_matrix:{}, hacker:{}, router: {}, flags_lookup: {}, agent_reachable: {}".format(
+            self.subnet_mask, list(map(lambda x: str(x), self.nodes)), self.adj_matrix, self.hacker, self.router, self.flags_lookup,
+            self.agent_reachable)
+
     def create_lookup_dicts(self) -> Union[dict, Node, Node, dict]:
         levels_d = {}
         node_d = {}
@@ -40,3 +45,9 @@ class NetworkConfig:
                 levels_d[node.level] = [node]
 
         return node_d, hacker, router, levels_d
+
+
+    def copy(self):
+        return NetworkConfig(
+            subnet_mask=self.subnet_mask, nodes=self.nodes, adj_matrix=self.adj_matrix, flags_lookup=self.flags_lookup,
+            agent_reachable=self.agent_reachable)

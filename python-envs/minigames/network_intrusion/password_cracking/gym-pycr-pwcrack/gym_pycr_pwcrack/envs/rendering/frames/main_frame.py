@@ -550,7 +550,9 @@ class MainFrame(pyglet.window.Window):
                     actions = list(map(lambda x: int(x), self.state.manual_action.split(",")))
                     #action = int(self.state.manual_action)
                     for a in actions:
-                        self.env.step(a)
+                        _, _, done, _ = self.env.step(a)
+                        if done:
+                            print("done:{}".format(done))
                 except Exception as e:
                     print("invalid action: {}".format(str(e)))
             self.state.manual_action = ""

@@ -91,8 +91,8 @@ class EnvConfigGenerator:
                  agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None) \
             -> Tuple[Topology, VulnerabilitiesConfig, UsersConfig, FlagsConfig, ContainersConfig]:
 
-        adj_matrix, gws, topology, agent_ip, router_ip = TopologyGenerator.generate(num_nodes=num_nodes,
-                                                                                    subnet_prefix=subnet_prefix)
+        adj_matrix, gws, topology, agent_ip, router_ip, node_id_d, node_id_d_inv = \
+            TopologyGenerator.generate(num_nodes=num_nodes, subnet_prefix=subnet_prefix)
         vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
                                                           subnet_prefix=subnet_prefix,
                                                           num_flags=num_flags, access_vuln_types=[VulnType.WEAK_PW],

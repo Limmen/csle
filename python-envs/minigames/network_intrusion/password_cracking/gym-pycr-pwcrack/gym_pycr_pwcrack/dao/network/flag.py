@@ -7,6 +7,11 @@ class Flag:
         self.requires_root = requires_root
         self.score = score
 
+    def __str__(self):
+        return "name:{}, id:{}, path:{}, requires_root:{}, score:{}".format(
+            self.name, self.id, self.path, self.requires_root, self.score
+        )
+
     def __hash__(self):
         return hash(self.id)
 

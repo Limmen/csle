@@ -29,3 +29,12 @@ class Node:
         self.visible = visible
         self.reachable_nodes = reachable_nodes
         self.firewall = firewall
+
+    def __str__(self):
+        return "ip:{}, ip_id:{}, id:{}, type:{}, flags:{}, level:{}, vulnerabilities:{}, services:{}, os:{}," \
+               " credentials:{}, root_usernames:{}, visible:{}, reachable_nodes:{}, firewall:{}".format(
+            self.ip, self.ip_id, self.id, self.type, list(map(lambda x: str(x), self.flags)), self.level,
+            list(map(lambda x: str(x), self.vulnerabilities)), list(map(lambda x: str(x), self.services)),
+            self.os, list(map(lambda x: str(x), self.credentials)), self.root_usernames, self.visible,
+            self.reachable_nodes, self.firewall
+        )

@@ -168,3 +168,92 @@ class EnvConfig:
             max_alerts = max(max(list(map(lambda x: x.alerts[0], self.action_conf.actions))), 1)
             self.sum_alerts = sum_alerts
             self.max_alerts = max_alerts
+
+
+    def copy(self):
+        env_config = EnvConfig(
+            network_conf=self.network_conf, action_conf=self.action_conf, num_ports=self.num_ports,
+            num_vuln=self.num_vuln, num_sh=self.num_sh, num_nodes=self.num_nodes, hacker_ip=self.hacker_ip,
+            router_ip=self.router_ip, render_config=self.render_config, env_mode=self.env_mode,
+            cluster_config=self.cluster_config, simulate_detection=self.simulate_detection,
+            detection_reward=self.detection_reward, base_detection_p=self.base_detection_p, manual_play=self.manual_play,
+            state_type=self.state_type)
+
+        env_config.ping_scan_miss_p = self.ping_scan_miss_p
+        env_config.udp_port_scan_miss_p = self.udp_port_scan_miss_p
+        env_config.syn_stealth_scan_miss_p = self.syn_stealth_scan_miss_p
+        env_config.os_scan_miss_p = self.os_scan_miss_p
+        env_config.vulscan_miss_p = self.vulscan_miss_p
+        env_config.vulners_miss_p = self.vulners_miss_p
+        env_config.telnet_dict_attack_miss_p = self.telnet_dict_attack_miss_p
+        env_config.ssh_dict_attack_miss_p = self.ssh_dict_attack_miss_p
+        env_config.irc_dict_attack_miss_p = self.irc_dict_attack_miss_p
+        env_config.mongo_dict_attack_miss_p = self.mongo_dict_attack_miss_p
+        env_config.cassandra_dict_attack_miss_p = self.cassandra_dict_attack_miss_p
+        env_config.ftp_dict_attack_miss_p = self.ftp_dict_attack_miss_p
+        env_config.shell_escape = self.shell_escape
+        env_config.shell_read_wait = self.shell_read_wait
+        env_config.shell_max_timeouts = self.shell_max_timeouts
+        env_config.max_nmap_command_output_size = self.max_nmap_command_output_size
+        env_config.nmap_cache_dir = self.nmap_cache_dir
+        env_config.nmap_cache = self.nmap_cache
+        env_config.retry_timeout = self.retry_timeout
+        env_config.num_retries = self.num_retries
+        env_config.use_nmap_cache = self.use_nmap_cache
+        env_config.nmap_scan_cache = self.nmap_scan_cache
+        env_config.use_nikto_cache = self.use_nikto_cache
+        env_config.action_costs = self.action_costs
+        env_config.action_alerts = self.action_alerts
+        env_config.flag_lookup = self.flag_lookup
+        env_config.use_file_system_cache = self.use_file_system_cache
+        env_config.filesystem_scan_cache = self.filesystem_scan_cache
+        env_config.filesystem_file_cache = self.filesystem_file_cache
+        env_config.use_user_command_cache = self.use_user_command_cache
+        env_config.user_command_cache = self.user_command_cache
+        env_config.user_command_cache_files_cache = self.user_command_cache_files_cache
+        env_config.flag_found_reward_mult = self.flag_found_reward_mult
+        env_config.port_found_reward_mult = self.port_found_reward_mult
+        env_config.os_found_reward_mult = self.os_found_reward_mult
+        env_config.cve_vuln_found_reward_mult = self.cve_vuln_found_reward_mult
+        env_config.osvdb_vuln_found_reward_mult = self.osvdb_vuln_found_reward_mult
+        env_config.machine_found_reward_mult = self.machine_found_reward_mult
+        env_config.shell_access_found_reward_mult = self.shell_access_found_reward_mult
+        env_config.root_found_reward_mult = self.root_found_reward_mult
+        env_config.new_login_reward_mult = self.new_login_reward_mult
+        env_config.new_tools_installed_reward_mult = self.new_tools_installed_reward_mult
+        env_config.new_backdoors_installed_reward_mult = self.new_backdoors_installed_reward_mult
+        env_config.cost_coefficient = self.cost_coefficient
+        env_config.alerts_coefficient = self.alerts_coefficient
+        env_config.detection_reward = self.detection_reward
+        env_config.all_flags_reward = self.all_flags_reward
+        env_config.sum_costs = self.sum_costs
+        env_config.max_costs = self.max_costs
+        env_config.sum_alerts = self.sum_alerts
+        env_config.max_alerts = self.max_alerts
+        env_config.max_episode_length = self.max_episode_length
+        env_config.base_step_reward = self.base_step_reward
+        env_config.illegal_reward_action = self.illegal_reward_action
+        env_config.final_steps_reward_coefficient = self.final_steps_reward_coefficient
+        env_config.filter_illegal_actions = self.filter_illegal_actions
+        env_config.checkpoint_dir = self.checkpoint_dir
+        env_config.checkpoint_freq = self.checkpoint_freq
+        env_config.num_flags = self.num_flags
+        env_config.ip_to_machine_id_mapping = self.ip_to_machine_id_mapping
+        env_config.save_trajectories = self.save_trajectories
+        env_config.blacklist_ips = self.blacklist_ips
+        env_config.manual_play = self.manual_play
+        env_config.state_type = self.state_type
+        env_config.ssh_retry_find_flag = self.ssh_retry_find_flag
+        env_config.retry_find_users = self.retry_find_users
+        env_config.ftp_retry_find_flag = self.ftp_retry_find_flag
+        env_config.retry_install_tools = self.retry_install_tools
+        env_config.exploration_policy = self.exploration_policy
+        env_config.max_exploration_steps = self.max_exploration_steps
+        env_config.max_exploration_trajectories = self.max_exploration_trajectories
+        env_config.load_cves_from_server = self.load_cves_from_server
+        env_config.cache_misses = self.cache_misses
+        env_config.print_cache_details_freq = self.print_cache_details_freq
+        env_config.ids_router = self.ids_router
+        env_config.idx = self.idx
+        env_config.exploration_filter_illegal = self.exploration_policy
+        return env_config

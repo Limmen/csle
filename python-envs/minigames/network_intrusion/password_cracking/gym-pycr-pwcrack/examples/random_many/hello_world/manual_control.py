@@ -3,6 +3,7 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.agents.manual.manual_attacker_agent import ManualAttackerAgent
 from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.envs.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer
 import gym
 
 def manual_control():
@@ -34,10 +35,19 @@ def manual_control():
                                    agent_username="agent", agent_pw="agent", server_connection=True,
                                    server_private_key_file="/home/kim/.ssh/id_rsa",
                                    server_username="kim")
-    env_name = "pycr-pwcrack-random-many-cluster-v1"
+    env_name = "pycr-pwcrack-random-many-generated-sim-v1"
+    #env_name = "pycr-pwcrack-random-many-cluster-v1"
     env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
                    containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
                    num_nodes=max_num_nodes)
+
+    env.reset()
+    randomization_space = DomainRandomizer.generate_randomization_space([env.env_config.network_conf])
+    randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                     network_ids=list(range(1, 254)),
+                                                                     r_space=randomization_space,
+                                                                     env_config=env.env_config)
+    env.env_config = env_config
 
 
     ManualAttackerAgent(env=env, env_config=env.env_config)

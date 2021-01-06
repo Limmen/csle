@@ -32,7 +32,7 @@ class UsersGenerator:
             user_cfg = NodeUsersConfig(ip = node.ip, users=users)
             user_configs.append(user_cfg)
 
-        agent_user = ("agent", "agent", "root")
+        agent_user = ("agent", "agent", True)
         agent_user_cfg = NodeUsersConfig(ip=agent_ip, users=[agent_user])
         user_configs.append(agent_user_cfg)
 

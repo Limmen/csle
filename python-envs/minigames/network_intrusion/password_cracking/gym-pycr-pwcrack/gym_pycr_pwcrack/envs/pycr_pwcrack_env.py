@@ -3560,5 +3560,5 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.simulate_detection = False
             env_config.exploration_policy = exp_policy
             env_config.max_exploration_steps = 1000
-            env_config.max_exploration_trajectories = 100
+            env_config.max_exploration_trajectories = 5
         super().__init__(env_config=env_config)

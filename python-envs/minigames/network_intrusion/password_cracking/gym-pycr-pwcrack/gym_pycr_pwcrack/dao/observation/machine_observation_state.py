@@ -62,6 +62,8 @@ class MachineObservationState:
             len(self.reachable), self.backdoor_tried, self.install_tools_tried)
 
     def sort_ports(self):
+        for p in self.ports:
+            p.port = int(p.port)
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
 
     def sort_cve_vuln(self, vuln_lookup):

@@ -9,6 +9,7 @@ class RandomExplorationPolicy(ExplorationPolicy):
     def action(self, env, filter_illegal: bool = True) -> int:
         if filter_illegal:
             legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), self.actions))
-        else: legal_actions = self.actions
+        else:
+            legal_actions = self.actions
         action = np.random.choice(legal_actions)
         return action

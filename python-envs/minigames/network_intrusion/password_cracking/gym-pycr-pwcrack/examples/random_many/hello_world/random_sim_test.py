@@ -5,6 +5,7 @@ import time
 import numpy as np
 from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.envs.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer
 
 def test_env(env_name : str, num_steps : int):
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
@@ -47,16 +48,23 @@ def test_env(env_name : str, num_steps : int):
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tot_rew = 0
+    randomization_space = DomainRandomizer.generate_randomization_space([env.env_config.network_conf])
     for i in range(num_steps):
-        print(i)
+        #rint(i)
         #legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
         legal_actions = actions
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         tot_rew += reward
-        env.render()
-        if done:
+        #env.render()
+        if done or (i >900 and i % 1000 == 0):
+            print("env done")
             tot_rew = 0
+            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                             network_ids=list(range(1, 254)),
+                                                                             r_space=randomization_space,
+                                                                             env_config=env.env_config)
+            env.env_config = env_config
             env.reset()
         #time.sleep(0.001)
         #time.sleep(0.5)
