@@ -7,6 +7,7 @@ import numpy as np
 import time
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv
 from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+import gym_pycr_pwcrack.constants.constants as constants
 
 def _worker(remote, parent_remote, env_fn_wrapper):
     parent_remote.close()
@@ -44,6 +45,13 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send((env.observation_space, env.action_space))
             elif cmd == "initial_illegal_actions":
                 remote.send(env.initial_illegal_actions)
+            elif cmd == "network_conf":
+                remote.send(env.env_config.network_conf)
+            elif cmd == "set_randomization_space":
+                env.randomization_space = data
+                env.env.randomization_space = data
+            elif cmd == "set_domain_randomization_eval_env":
+                env.env.env_config.domain_randomization = data
             elif cmd == "env_method":
                 method = getattr(env, data[0])
                 remote.send(method(*data[1], **data[2]))
@@ -99,7 +107,7 @@ class SubprocVecEnv(VecEnv):
         self.processes = []
         for work_remote, remote, env_fn in zip(self.work_remotes, self.remotes, env_fns):
             print("sleeping")
-            time.sleep(10)
+            time.sleep(constants.SUB_PROC_ENV.SLEEP_TIME_STARTUP)
             print("sleep finished")
             args = (work_remote, remote, CloudpickleWrapper(env_fn))
             # daemon=True: if the main process crashes, we should not cause things to hang
@@ -115,6 +123,7 @@ class SubprocVecEnv(VecEnv):
         initial_illegal_actions = self.remotes[0].recv()
         self.initial_illegal_actions = initial_illegal_actions
 
+        self.get_network_confs()
         VecEnv.__init__(self, len(env_fns), observation_space, action_space)
 
     def step_async(self, actions):
@@ -144,6 +153,23 @@ class SubprocVecEnv(VecEnv):
         obs = self.remotes[idx].recv()
         obs = _flatten_obs([obs], self.observation_space)
         return obs
+
+    def get_network_confs(self):
+        network_confs = []
+        for remote in self.remotes:
+            remote.send(("network_conf", None))
+        for remote in self.remotes:
+            network_confs.append(remote.recv())
+        self.network_confs = network_confs
+        return self.network_confs
+
+    def set_randomization_space(self, randomization_space):
+        for remote in self.remotes:
+            remote.send(("set_randomization_space", randomization_space))
+
+    def set_domain_randomization(self, domain_randomization):
+        for remote in self.remotes:
+            remote.send(("set_domain_randomization_eval_env", domain_randomization))
 
     def eval_step(self, action, idx: int):
         self.remotes[idx].send(("step", action))

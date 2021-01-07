@@ -9,7 +9,7 @@ from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
 from gym_pycr_pwcrack.dao.agent.agent_type import AgentType
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.policy_gradient.reinforce.reinforce_agent import ReinforceAgent
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+#from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
 from gym_pycr_pwcrack.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
@@ -23,6 +23,7 @@ from gym_pycr_pwcrack.agents.manual.manual_attacker_agent import ManualAttackerA
 from gym_pycr_pwcrack.agents.openai_baselines.common.env_util import make_vec_env
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer
 
 class Runner:
     """
@@ -55,8 +56,8 @@ class Runner:
         :param config: Training configuration
         :return: trainresult, evalresult
         """
-        env: PyCRPwCrackEnv = None
-        eval_env: PyCRPwCrackEnv = None
+        env = None
+        eval_env = None
         if config.multi_env:
             cluster_conf_temps = deepcopy(config.cluster_configs)
             for cf in cluster_conf_temps:
@@ -99,10 +100,15 @@ class Runner:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
-                pass
+                randomization_space = DomainRandomizer.generate_randomization_space(env.network_confs)
+                print("Randomization space created")
+                env.set_randomization_space(randomization_space)
+                print("Randomization space sent to all envs")
+                eval_env.set_randomization_space(randomization_space)
+                eval_env.set_domain_randomization(False)
             else:
+                # No aggregation to do since there is just a single env
                 pass
-            network_confs = list(map(lambda x: x.env_config.network_conf, env.envs))
 
         agent: TrainAgent = None
         if config.multi_env:
@@ -143,7 +149,7 @@ class Runner:
         :param config: the simulation config
         :return: experiment result
         """
-        env: PyCRPwCrackEnv = None
+        env = None
         env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                        checkpoint_dir=config.env_checkpoint_dir)
         attacker: PPOAttackerBotAgent = None
@@ -166,7 +172,7 @@ class Runner:
         :param config: the manual play config
         :return: experiment result
         """
-        env: PyCRPwCrackEnv = None
+        env = None
         env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                        checkpoint_dir=config.env_checkpoint_dir)
         ManualAttackerAgent(env_config=env.env_config, env=env)

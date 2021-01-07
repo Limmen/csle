@@ -7,7 +7,7 @@ import logging
 import random
 import torch
 from abc import ABC, abstractmethod
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+#from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 
@@ -15,7 +15,7 @@ class TrainAgent(ABC):
     """
     Abstract Train Agent
     """
-    def __init__(self, env:PyCRPwCrackEnv, config: AgentConfig, eval_env: PyCRPwCrackEnv):
+    def __init__(self, env, config: AgentConfig, eval_env):
         """
         Initialize environment and hyperparameters
 

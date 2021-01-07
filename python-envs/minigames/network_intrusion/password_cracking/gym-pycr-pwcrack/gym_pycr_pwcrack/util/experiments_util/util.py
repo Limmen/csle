@@ -12,7 +12,6 @@ import os
 import sys
 import numpy as np
 from gym_pycr_pwcrack.dao.experiment.client_config import ClientConfig
-from gym_pycr_pwcrack.runner.runner import Runner
 from gym_pycr_pwcrack.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_pwcrack.dao.container_config.topology import Topology
 from gym_pycr_pwcrack.dao.container_config.users_config import UsersConfig
@@ -29,6 +28,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     :param title: title of the experiment
     :return: train_csv_path, eval_csv_path
     """
+    from gym_pycr_pwcrack.runner.runner import Runner
     time_str = str(time.time())
     create_artefact_dirs(config.output_dir, random_seed)
     logger = setup_logger(title, config.output_dir + "/results/logs/" +

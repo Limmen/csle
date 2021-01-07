@@ -40,12 +40,12 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=400,
+                                                num_iterations=50,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
                                                 save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=50,
+                                                checkpoint_freq=500,
                                                 input_dim=num_nodes * 12,
                                                 #input_dim=7,
                                                 #input_dim=11 * 8,
@@ -65,7 +65,7 @@ def default_config() -> ClientConfig:
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=False, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=50, eval_deterministic=False,
+                                                n_deterministic_eval_iter=1, eval_deterministic=False,
                                                 num_nodes=max_num_nodes, domain_randomization = True
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
@@ -77,37 +77,46 @@ def default_config() -> ClientConfig:
 
     #env_name = "pycr-pwcrack-random-many-cluster-v1"
     env_name="pycr-pwcrack-random-many-generated-sim-v1"
+    idx = 0
     cluster_configs = [
-        ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=2001 + i*150,
-                                       warmup=True, warmup_iterations=500)
-        for i in range(len(containers_configs))
+        ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                                       server_connection=False, port_forward_next_port=2001 + idx*150,
+                                       warmup=True, warmup_iterations=500),
+        ClusterConfig(agent_ip=containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=2001 + (idx+1) * 150,
+                      warmup=True, warmup_iterations=500),
+        ClusterConfig(agent_ip=containers_configs[idx + 2].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=2001 + (idx + 2) * 150,
+                      warmup=True, warmup_iterations=500),
+        ClusterConfig(agent_ip=containers_configs[idx + 3].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=2001 + (idx + 3) * 150,
+                      warmup=True, warmup_iterations=500)
     ]
     # cluster_configs = [
-    #     ClusterConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #     ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
-    #                   port_forward_next_port=2001 + i * 150,
+    #                   port_forward_next_port=2001 + idx * 150,
     #                   warmup=True, warmup_iterations=500)
-    #     for i in range(len(containers_configs))
     # ]
 
     # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
     eval_env_cluster_configs = [
-        ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=False, port_forward_next_port=8001 + i * 150,
+        ClusterConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=8001 + idx * 150,
+                      warmup=True, warmup_iterations=500),
+        ClusterConfig(agent_ip=eval_env_containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=False, port_forward_next_port=8001 + (idx+1) * 150,
                       warmup=True, warmup_iterations=500)
-        for i in range(len(eval_env_containers_configs))
     ]
 
     # eval_env_cluster_configs = [
-    #     ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #     ClusterConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
-    #                   port_forward_next_port=8001 + i * 150,
+    #                   port_forward_next_port=8001 + idx * 150,
     #                   warmup=True, warmup_iterations=500)
-    #     for i in range(len(eval_env_containers_configs))
     # ]
 
     # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
@@ -129,13 +138,16 @@ def default_config() -> ClientConfig:
                                  title="PPO-Baseline random many v1",
                                  run_many=True, random_seeds=[0, 999],
                                  random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
-                                 containers_configs=containers_configs, flags_configs=flags_configs,
+                                 containers_configs=[containers_configs[idx], containers_configs[idx+1],
+                                                     containers_configs[idx+2], containers_configs[idx+3]],
+                                 flags_configs=[flags_configs[idx], flags_configs[idx+1], flags_configs[idx+2],
+                                                flags_configs[idx+3]],
                                  dummy_vec_env=False, sub_proc_env=True, n_envs=n_envs,
                                  randomized_env=False, multi_env=True,
                                  eval_env=True,
                                  eval_env_name=eval_env_name, eval_env_cluster_configs=eval_env_cluster_configs,
-                                 eval_env_containers_configs=eval_env_containers_configs,
-                                 eval_env_flags_configs=eval_env_flags_configs, eval_multi_env=True,
+                                 eval_env_containers_configs=[eval_env_containers_configs[idx], eval_env_containers_configs[idx+1]],
+                                 eval_env_flags_configs=[eval_env_flags_configs[idx], eval_env_flags_configs[idx+1]], eval_multi_env=True,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
                                  eval_dummy_vec_env=False, eval_sub_proc_env=True
                                  # eval_env_flags_config = eval_env_flags_config,

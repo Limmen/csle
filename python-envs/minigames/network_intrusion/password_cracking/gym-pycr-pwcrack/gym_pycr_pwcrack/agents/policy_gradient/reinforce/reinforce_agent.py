@@ -6,7 +6,7 @@ import numpy as np
 import time
 import tqdm
 from gym_pycr_pwcrack.agents.models.fnn_w_softmax import FNNwithSoftmax
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+#from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
@@ -14,7 +14,7 @@ from gym_pycr_pwcrack.envs.rendering.video.pycr_pwcrack_monitor import PycrPwCra
 
 class ReinforceAgent(TrainAgent):
 
-    def __init__(self, env:PyCRPwCrackEnv, config: AgentConfig):
+    def __init__(self, env, config: AgentConfig):
         super(ReinforceAgent, self).__init__(env, config)
         self.policy_network = None
         self.loss_fn = None

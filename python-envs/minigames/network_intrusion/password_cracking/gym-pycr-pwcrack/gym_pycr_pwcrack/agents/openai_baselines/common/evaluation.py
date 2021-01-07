@@ -77,7 +77,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
     eval_episode_flags_env_specific = {}
     eval_episode_flags_percentage_env_specific = {}
 
-    if env.num_envs == 1:
+    if env.num_envs == 1 and not isinstance(env, SubprocVecEnv):
         env.envs[0].enabled = True
         env.envs[0].stats_recorder.closed = False
         env.envs[0].episode_id = 0
@@ -105,7 +105,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
 
-                if env.num_envs == 1 and agent_config.eval_render:
+                if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and agent_config.eval_render:
                     time.sleep(1)
                     env.render()
 
@@ -151,7 +151,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
 
             # Save gifs
-            if env.num_envs == 1 and agent_config.gifs or agent_config.video:
+            if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and agent_config.gifs or agent_config.video:
                 # Add frames to tensorboard
                 for idx, frame in enumerate(env.envs[0].episode_frames):
                     model.tensorboard_writer.add_image(str(train_episode) + "_eval_frames/" + str(idx),

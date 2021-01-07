@@ -58,6 +58,7 @@ from gym_pycr_pwcrack.envs.logic.exploration.random_exploration_policy import Ra
 from gym_pycr_pwcrack.envs.logic.cluster.cluster_warmup import ClusterWarmup
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
+from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -88,6 +89,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.num_states = 100
         self.idx = self.env_config.idx
         self.viewer = None
+        self.randomization_space = None
         self.steps_beyond_done = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
@@ -139,6 +141,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                                            env_config=self.env_config, env=self)
             self.env_state.obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
+            self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
             self.reset()
         self.reset()
         actions = list(range(self.num_actions))
@@ -197,12 +200,19 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
-        if self.agent_state.num_episodes % self.env_config.print_cache_details_freq == 0:
-            print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
-                  "cache_misses:{}".format(
-                len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
-                len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
-                self.env_config.cache_misses))
+        # if self.agent_state.num_episodes % self.env_config.print_cache_details_freq == 0:
+        #     print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
+        #           "cache_misses:{}".format(
+        #         len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
+        #         len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
+        #         self.env_config.cache_misses))
+        if self.env_config.env_mode == EnvMode.SIMULATION and self.env_config.domain_randomization and self.randomization_space is not None:
+            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                             network_ids=list(range(1, 254)),
+                                                                             r_space=self.randomization_space,
+                                                                             env_config=self.env_config)
+            #print("randomize env, max num nodes:{}, max num flags:{}".format(self.randomization_space.max_num_nodes, self.randomization_space.max_num_flags))
+            self.env_config = env_config
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:
@@ -791,6 +801,7 @@ class PyCRPwCrackLevel1GeneratedSim1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -823,6 +834,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -856,6 +868,7 @@ class PyCRPwCrackLevel1GeneratedSim2Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -887,6 +900,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts2Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -918,6 +932,7 @@ class PyCRPwCrackLevel1GeneratedSim3Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -949,6 +964,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts3Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -981,6 +997,7 @@ class PyCRPwCrackLevel1GeneratedSim4Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -1012,6 +1029,7 @@ class PyCRPwCrackLevel1GeneratedSimWithCosts4Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
@@ -1380,6 +1398,7 @@ class PyCRPwCrackLevel2GeneratedSim1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1411,6 +1430,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1443,6 +1463,7 @@ class PyCRPwCrackLevel2GeneratedSim2Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1474,6 +1495,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts2Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1505,6 +1527,7 @@ class PyCRPwCrackLevel2GeneratedSim3Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1536,6 +1559,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts3Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1567,6 +1591,7 @@ class PyCRPwCrackLevel2GeneratedSim4Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -1598,6 +1623,7 @@ class PyCRPwCrackLevel2GeneratedSimWithCosts4Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.max_exploration_steps = 100
             env_config.max_exploration_trajectories = 10
 
@@ -2970,6 +2996,7 @@ class PyCRPwCrackRandomGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.max_episode_length = 50
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.exploration_filter_illegal = True
         super().__init__(env_config=env_config)
 
@@ -3007,6 +3034,7 @@ class PyCRPwCrackRandomGeneratedSimWithCosts1Env(PyCRPwCrackEnv):
             env_config.max_episode_length = 100
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.exploration_filter_illegal = True
         super().__init__(env_config=env_config)
 
@@ -3108,6 +3136,7 @@ class PyCRPwCrackRandomGeneratedSim2Env(PyCRPwCrackEnv):
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.exploration_filter_illegal = True
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -3146,6 +3175,7 @@ class PyCRPwCrackRandomGeneratedSimWithCosts2Env(PyCRPwCrackEnv):
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -3250,6 +3280,7 @@ class PyCRPwCrackRandomGeneratedSim3Env(PyCRPwCrackEnv):
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -3286,6 +3317,7 @@ class PyCRPwCrackRandomGeneratedSimWithCosts3Env(PyCRPwCrackEnv):
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -3390,6 +3422,7 @@ class PyCRPwCrackRandomGeneratedSim4Env(PyCRPwCrackEnv):
             env_config.cost_coefficient = 0
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.exploration_filter_illegal = True
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -3428,6 +3461,7 @@ class PyCRPwCrackRandomGeneratedSimWithCosts4Env(PyCRPwCrackEnv):
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = True
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = False
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -3554,11 +3588,12 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
             env_config.filter_illegal_actions = False
-            env_config.max_episode_length = 50
+            env_config.max_episode_length = 200
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = env_config.filter_illegal_actions
             env_config.simulate_detection = False
             env_config.exploration_policy = exp_policy
+            env_config.domain_randomization = True
             env_config.max_exploration_steps = 1000
-            env_config.max_exploration_trajectories = 5
+            env_config.max_exploration_trajectories = 100
         super().__init__(env_config=env_config)

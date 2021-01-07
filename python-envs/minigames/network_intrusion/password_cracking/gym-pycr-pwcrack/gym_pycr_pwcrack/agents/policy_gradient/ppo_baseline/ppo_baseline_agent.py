@@ -6,7 +6,7 @@ import torch
 import math
 
 from gym_pycr_pwcrack.envs.rendering.video.pycr_pwcrack_monitor import PycrPwCrackMonitor
-from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
+#from gym_pycr_pwcrack.envs.pycr_pwcrack_env import PyCRPwCrackEnv
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.agents.train_agent import TrainAgent
 from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
@@ -20,7 +20,7 @@ class PPOBaselineAgent(TrainAgent):
     An agent for the pycr-pwcrack env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
     """
 
-    def __init__(self, env: PyCRPwCrackEnv, config: AgentConfig, eval_env: PyCRPwCrackEnv):
+    def __init__(self, env, config: AgentConfig, eval_env):
         """
         Initialize environment and hyperparameters
 

@@ -26,6 +26,7 @@ class DomainRandomizer:
         min_num_users=1
         max_num_users=1
         for nc in network_confs:
+            print("nc nodes:{}".format(len(nc.nodes)))
             node_services = set()
             node_vulns = set()
             for node in nc.nodes:
@@ -41,6 +42,7 @@ class DomainRandomizer:
             vulnerabilities = vulnerabilities.union(node_vulns)
             if len(nc.nodes) > max_num_nodes:
                 max_num_nodes = len(nc.nodes)
+                print("set max num nodes:{}".format(max_num_nodes))
 
         services = list(services)
         vulnerabilities = list(vulnerabilities)
@@ -67,6 +69,8 @@ class DomainRandomizer:
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_users=min_num_users, max_num_users=max_num_users)
+        print("{} nc, max num nodes:{}, max_num_flags:{}, services:{}, vulns:{}, os:{}".format(
+            len(network_confs), max_num_nodes, max_num_flags, len(filtered_services), len(filtered_vulnerabilities), os))
         return r_space
 
     @staticmethod
@@ -139,6 +143,7 @@ class DomainRandomizer:
         env_config.ids_router=ids_router
         env_config.num_flags = len(flags_lookup)
         env_config.blacklist_ips = [subnet_prefix + ".1"]
+        #env_config.num_nodes = len(randomized_nodes)
         for a in env_config.action_conf.actions:
             if a.subnet:
                 a.ip = subnet_mask

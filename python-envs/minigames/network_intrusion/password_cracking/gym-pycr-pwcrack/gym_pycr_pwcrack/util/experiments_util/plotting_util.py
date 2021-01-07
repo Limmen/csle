@@ -622,7 +622,7 @@ def plot_rewards_train_cluster(train_avg_rewards_data_1, train_avg_rewards_means
               '#8DD3C7', '#CCEBC5', '#BEBADA','#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
               '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
               "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
-    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", "."]
+    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", ".", "H", "X", "s", "8", ">", "<", "P", "D", 0, 1, 2]
 
     i = 0
     for key in train_envs_specific_rewards_data.keys():
@@ -724,7 +724,8 @@ def plot_rewards_train_cluster_two_colors(train_avg_rewards_data_1, train_avg_re
     #           '#8DD3C7', '#CCEBC5', '#BEBADA','#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
     #           '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
     #           "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
-    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", "."]
+    markers = ["p", "^", "*", "+", "v", "1", "2", "3", "4", "x", "p", "h", "H", "d", "|", ",", ".", "H", "X", "s", "8",
+               ">", "<", "P", "D", 0, 1, 2]
 
     i = 0
     for key in train_envs_specific_rewards_data.keys():

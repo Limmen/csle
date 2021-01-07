@@ -102,14 +102,14 @@ def plot_freq_dist(d1, d2, labels, title, num_bins, colors, xlabel, filename, bi
     #     weights = np.ones_like(d2[i]) / float(len(d2[i]))
     #     total_weights.append(weights)
 
-    # ax.hist(data[3], bins=30, alpha=0.5, range=(0, 2300),
-    #         label=labels[3], stacked=False, log=True, color=colors[3], density=True, edgecolor='black', ls="-.")
-    # ax.hist(data[2], bins=30, alpha=0.5, range=(0, 2300),
-    #         label=labels[2], stacked=False, log=True, color=colors[2], density=True, edgecolor='black', ls="dotted")
-    # ax.hist(data[1], bins=30, alpha=0.5, range=(0, 2300),
-    #         label=labels[1], stacked=False, log=True, color=colors[1], density=True, edgecolor='black', ls="dashed")
-    print(data)
-    ax.hist(data, bins=30, alpha=0.5, range=(0, 260),
+    ax.hist(data[3], bins=30, alpha=1, range=(0, 2300),
+            label=labels[3], stacked=False, log=True, color=colors[3], density=True, edgecolor='black', ls="-.")
+    ax.hist(data[2], bins=30, alpha=1, range=(0, 2300),
+            label=labels[2], stacked=False, log=True, color=colors[2], density=True, edgecolor='black', ls="dotted")
+    ax.hist(data[1], bins=30, alpha=1, range=(0, 2300),
+            label=labels[1], stacked=False, log=True, color=colors[1], density=True, edgecolor='black', ls="dashed")
+    #print(data)
+    ax.hist(data[0], bins=30, alpha=1, range=(0, 2300),
             label=labels[0], stacked=False, log=True, color=colors[0], density=True, edgecolor='black')
 
     colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
@@ -137,7 +137,8 @@ def plot_freq_dist(d1, d2, labels, title, num_bins, colors, xlabel, filename, bi
     ylab = ax.yaxis.get_label()
     xlab.set_size(10)
     ylab.set_size(10)
-    ax.set_xlim((0, 260))
+    #ax.set_xlim((0, 260))
+    ax.set_xlim((0, 2300))
 
     if len(labels) > 1:
         ax.legend(loc="upper right")
@@ -147,7 +148,7 @@ def plot_freq_dist(d1, d2, labels, title, num_bins, colors, xlabel, filename, bi
     file_name = filename
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
-    plt.close(fig)
+    #plt.close(fig)
 
 
 if __name__ == '__main__':
@@ -160,22 +161,25 @@ if __name__ == '__main__':
     cm = plt.cm.get_cmap('RdYlBu_r')
     colors = plt.cm.GnBu(np.linspace(0.3, 1, 4))[-4:]
     colors = plt.cm.viridis(np.linspace(0.3, 1, 4))[-4:]
+    print(colors[0])
+    print(len(colors))
 
     # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_1/agent_cache.zip", num_bins=100)
     # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/agent_cache.zip", num_bins=100)
     #plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
-    # d_1, d_factors, bin_edges, costs_factors = read_action_costs(
-    #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
-    #     num_bins=100, factors=[2, 3, 4])
-    # plot_freq_dist(d1=d_1, d2=d_factors, num_bins=100, labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$", r"$|\mathcal{N}|=100$"],
-    # title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
-    # filename="action_cost_dist_plot", bin_edges=bin_edges, data=costs_factors)
+
+    d_1, d_factors, bin_edges, costs_factors = read_action_costs(
+        zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
+        num_bins=100, factors=[2, 3, 4])
+    plot_freq_dist(d1=d_1, d2=d_factors, num_bins=100, labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$", r"$|\mathcal{N}|=100$"],
+    title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
+    filename="action_cost_dist_plot", bin_edges=bin_edges, data=costs_factors)
     #
     # colors = ["r"]
 
-    total_alerts, total_priority = read_action_alerts(
-        zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
-        num_bins=250)
+    # total_alerts, total_priority = read_action_alerts(
+    #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
+    #     num_bins=250)
     #print(max(digitized_total))
     # plot_freq_dist(d1=None, d2=None,
     #                labels=[r"test"],title=r"Intrusion detection alerts per action", num_bins=30,
@@ -183,8 +187,8 @@ if __name__ == '__main__':
     #                filename="action_alerts_dist_plot", data=total_alerts, bin_edges = None)
 
     #colors=["#599ad3"]
-    plot_freq_dist(d1=None, d2=None,
-                   labels=[r"test"], title=r"Intrusion detection alerts total priority $\sum_a p(a)$ per action", num_bins=30,
-                   colors=colors, xlabel=r"Total priority of triggered alerts",
-                   filename="action_alerts_priority_dist_plot", data=total_priority, bin_edges=None)
+    # plot_freq_dist(d1=None, d2=None,
+    #                labels=[r"test"], title=r"Intrusion detection alerts total priority $\sum_a p(a)$ per action", num_bins=30,
+    #                colors=colors, xlabel=r"Total priority of triggered alerts",
+    #                filename="action_alerts_priority_dist_plot", data=total_priority, bin_edges=None)
 

@@ -140,6 +140,7 @@ class EnvConfig:
         self.ids_router = False
         self.idx = 0
         self.exploration_filter_illegal = True
+        self.domain_randomization = False
 
 
     def get_port_forward_port(self) -> int:
@@ -256,4 +257,5 @@ class EnvConfig:
         env_config.ids_router = self.ids_router
         env_config.idx = self.idx
         env_config.exploration_filter_illegal = self.exploration_policy
+        env_config.domain_randomization = self.domain_randomization
         return env_config
