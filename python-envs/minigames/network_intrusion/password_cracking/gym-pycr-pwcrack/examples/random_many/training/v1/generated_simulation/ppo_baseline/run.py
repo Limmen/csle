@@ -65,8 +65,11 @@ def default_config() -> ClientConfig:
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
                                                 filter_illegal_actions=False, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=50, eval_deterministic=False,
-                                                num_nodes=max_num_nodes, domain_randomization = True
+                                                n_deterministic_eval_iter=0, eval_deterministic=False,
+                                                num_nodes=max_num_nodes, domain_randomization = True,
+                                                n_quick_eval_iter=30, dr_max_num_nodes = max_num_nodes,
+                                                dr_min_num_nodes = 4, dr_min_num_users = 1,
+                                                dr_max_num_users = 5, dr_min_num_flags=1, dr_max_num_flags = 3
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(

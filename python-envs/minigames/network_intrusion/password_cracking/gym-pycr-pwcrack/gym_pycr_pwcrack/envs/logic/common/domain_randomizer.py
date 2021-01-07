@@ -15,16 +15,22 @@ from gym_pycr_pwcrack.dao.network.flag import Flag
 class DomainRandomizer:
 
     @staticmethod
-    def generate_randomization_space(network_confs: List[NetworkConfig]) -> RandomizationSpace:
-        services = set()
-        vulnerabilities = set()
-        os = set()
-        min_num_nodes = 4
-        max_num_nodes = 4
-        min_num_flags=1
-        max_num_flags=1
-        min_num_users=1
-        max_num_users=1
+    def generate_randomization_space(network_confs: List[NetworkConfig], min_num_nodes : int=4,
+                                     max_num_nodes : int=4, min_num_flags : int = 1, max_num_flags : int = 1,
+                                     min_num_users: int = 1, max_num_users : int = 1,
+                                     services = None, vulnerabilities = None, os = None) -> RandomizationSpace:
+        if services is None:
+            services = set()
+        if vulnerabilities is None:
+            vulnerabilities = set()
+        if os is None:
+            os = set()
+        min_num_nodes = min_num_nodes
+        max_num_nodes = max_num_nodes
+        min_num_flags=min_num_flags
+        max_num_flags=max_num_flags
+        min_num_users=min_num_users
+        max_num_users=max_num_users
         for nc in network_confs:
             print("nc nodes:{}".format(len(nc.nodes)))
             node_services = set()

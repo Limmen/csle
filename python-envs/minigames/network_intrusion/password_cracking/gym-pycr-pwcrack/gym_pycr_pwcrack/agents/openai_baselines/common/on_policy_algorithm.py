@@ -385,7 +385,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
                     eval_2_episode_flags_percentage_env_specific = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
-                                              n_eval_episodes=self.agent_config.n_deterministic_eval_iter,
+                                              n_eval_episodes_train=self.agent_config.n_deterministic_eval_iter,
+                                              n_eval_episodes_eval2=self.agent_config.n_quick_eval_iter,
                                               deterministic=self.agent_config.eval_deterministic, agent_config=self.agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
                                               env_configs=self.agent_config.env_configs,

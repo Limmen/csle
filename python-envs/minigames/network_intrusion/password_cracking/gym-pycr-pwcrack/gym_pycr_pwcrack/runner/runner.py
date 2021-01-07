@@ -100,7 +100,11 @@ class Runner:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
-                randomization_space = DomainRandomizer.generate_randomization_space(env.network_confs)
+                randomization_space = DomainRandomizer.generate_randomization_space(
+                    env.network_confs, max_num_nodes = config.agent_config.dr_max_num_nodes,
+                min_num_nodes = config.agent_config.dr_min_num_nodes, max_num_flags=config.agent_config.dr_max_num_flags,
+                min_num_flags=config.agent_config.dr_min_num_flags, min_num_users=config.agent_config.dr_min_num_users,
+                max_num_users=config.agent_config.dr_max_num_users)
                 print("Randomization space created")
                 env.set_randomization_space(randomization_space)
                 print("Randomization space sent to all envs")

@@ -183,7 +183,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
 
 def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
-                          n_eval_episodes : int=10,
+                          n_eval_episodes_train : int=10,n_eval_episodes_eval2 : int=10,
                           deterministic : bool= True, agent_config : AgentConfig = None,
                           env_config: EnvConfig = None, env_configs : List[EnvConfig] = None,
                           eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None):
@@ -194,7 +194,7 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     :param model: (BaseRLModel) The RL agent you want to evaluate.
     :param env: (gym.Env or VecEnv) The gym environment. In the case of a ``VecEnv``
         this must contain only one environment.
-    :param n_eval_episodes: (int) Number of episode to evaluate the agent
+    :param n_eval_episodes_train: (int) Number of episode to evaluate the agent
     :param deterministic: (bool) Whether to use deterministic or stochastic actions
     :param agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
@@ -208,14 +208,14 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     episode_rewards, episode_steps, episode_flags_percentage, episode_flags, eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific = _quick_eval_helper(
-        env=env, model=model, n_eval_episodes=n_eval_episodes, deterministic=True, env_config=env_config,
+        env=env, model=model, n_eval_episodes=n_eval_episodes_train, deterministic=True, env_config=env_config,
         env_configs =env_configs)
 
     if env_2 is not None:
         eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
         eval_2_episode_rewards_env_specific, eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
         eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
-            env=env_2, model=model, n_eval_episodes=n_eval_episodes, deterministic=deterministic, env_config=eval_env_config,
+            env=env_2, model=model, n_eval_episodes=n_eval_episodes_eval2, deterministic=deterministic, env_config=eval_env_config,
             env_configs=eval_envs_configs)
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
            eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \

@@ -44,7 +44,10 @@ class AgentConfig:
                  eval_deterministic: bool = False,
                  n_deterministic_eval_iter : int = 10, env_config = None, env_configs = None,
                  eval_env_config = None, eval_env_configs = None, num_nodes: int = 10,
-                 performance_analysis : bool = False, ar_policy2: bool = False, domain_randomization: bool = False
+                 performance_analysis : bool = False, ar_policy2: bool = False, domain_randomization: bool = False,
+                 n_quick_eval_iter: int = 10, dr_max_num_nodes : int=4, dr_min_num_nodes : int = 1,
+                 dr_min_num_flags : int = 1, dr_max_num_flags : int = 1,
+                 dr_min_num_users: int = 1, dr_max_num_users : int = 1
                  ):
         """
         Initialize environment and hyperparameters
@@ -220,6 +223,13 @@ class AgentConfig:
         self.performance_analysis = performance_analysis
         self.ar_policy2 = ar_policy2
         self.domain_randomization = domain_randomization
+        self.n_quick_eval_iter = n_quick_eval_iter
+        self.dr_max_num_nodes = dr_max_num_nodes
+        self.dr_min_num_nodes = dr_min_num_nodes
+        self.dr_min_num_flags = dr_min_num_flags
+        self.dr_max_num_flags = dr_max_num_flags
+        self.dr_min_num_users = dr_min_num_users
+        self.dr_max_num_users = dr_max_num_users
 
 
     def to_str(self) -> str:
@@ -246,7 +256,11 @@ class AgentConfig:
                "target_policy_noise:{69},target_noise_clip:{70},input_dim_2:{71}," \
                "output_dim_2:{72},pi_hidden_dim_2:{73},pi_hidden_layers_2:{74}," \
                "vf_hidden_layers_2:{75},vf_hidden_dim_2:{76},filter_illegal_actions:{77}," \
-               "train_progress_deterministic_eval:{78},n_deterministic_eval_iter:{79}".format(
+               "train_progress_deterministic_eval:{78},n_deterministic_eval_iter:{79}," \
+               "eval_deterministic:{80},num_nodes:{81},performance_analysis:{82}," \
+               "ar_policy2:{83},domain_randomization:{84},n_quick_eval_iter:{85}," \
+               "dr_max_num_nodes:{86},dr_min_num_nodes:{87},dr_min_num_flags:{88}," \
+               "dr_max_num_flags:{89},dr_min_num_users:{90},dr_max_num_users:{91}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -264,7 +278,10 @@ class AgentConfig:
             self.exploration_final_eps, self.policy_delay, self.target_policy_noise, self.target_noise_clip,
             self.input_dim_2, self.output_dim_2, self.pi_hidden_dim_2, self.pi_hidden_layers_2, self.vf_hidden_layers_2,
             self.vf_hidden_dim_2, self.filter_illegal_actions, self.train_progress_deterministic_eval,
-            self.n_deterministic_eval_iter)
+            self.n_deterministic_eval_iter, self.eval_deterministic, self.num_nodes, self.performance_analysis,
+            self.ar_policy2, self.domain_randomization, self.n_quick_eval_iter,
+            self.dr_max_num_nodes, self.dr_min_num_nodes, self.dr_min_num_flags, self.dr_max_num_flags,
+            self.dr_min_num_users, self.dr_max_num_users)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -348,6 +365,18 @@ class AgentConfig:
             writer.writerow(["filter_illegal_actions", str(self.filter_illegal_actions)])
             writer.writerow(["train_progress_deterministic_eval", str(self.train_progress_deterministic_eval)])
             writer.writerow(["n_deterministic_eval_iter", str(self.n_deterministic_eval_iter)])
+            writer.writerow(["eval_deterministic", str(self.eval_deterministic)])
+            writer.writerow(["num_nodes", str(self.num_nodes)])
+            writer.writerow(["performance_analysis", str(self.performance_analysis)])
+            writer.writerow(["ar_policy2", str(self.ar_policy2)])
+            writer.writerow(["domain_randomization", str(self.domain_randomization)])
+            writer.writerow(["n_quick_eval_iter", str(self.n_quick_eval_iter)])
+            writer.writerow(["dr_max_num_nodes", str(self.dr_max_num_nodes)])
+            writer.writerow(["dr_min_num_nodes", str(self.dr_min_num_nodes)])
+            writer.writerow(["dr_min_num_flags", str(self.dr_min_num_flags)])
+            writer.writerow(["dr_max_num_flags", str(self.dr_max_num_flags)])
+            writer.writerow(["dr_min_num_users", str(self.dr_min_num_users)])
+            writer.writerow(["dr_max_num_users", str(self.dr_max_num_users)])
 
 
     def hparams_dict(self):
@@ -413,4 +442,15 @@ class AgentConfig:
         hparams["filter_illegal_actions"] = self.filter_illegal_actions
         hparams["train_progress_deterministic_eval"] = self.train_progress_deterministic_eval
         hparams["n_deterministic_eval_iter"] = self.n_deterministic_eval_iter
+        hparams["num_nodes"] = self.num_nodes
+        hparams["performance_analysis"] = self.performance_analysis
+        hparams["ar_policy2"] = self.ar_policy2
+        hparams["domain_randomization"] = self.domain_randomization
+        hparams["n_quick_eval_iter"] = self.n_quick_eval_iter
+        hparams["dr_max_num_nodes"] = self.dr_max_num_nodes
+        hparams["dr_min_num_nodes"] = self.dr_min_num_nodes
+        hparams["dr_max_num_flags"] = self.dr_max_num_flags
+        hparams["dr_min_num_flags"] = self.dr_min_num_flags
+        hparams["dr_min_num_users"] = self.dr_min_num_users
+        hparams["dr_max_num_users"] = self.dr_max_num_users
         return hparams
