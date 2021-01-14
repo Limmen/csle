@@ -69,7 +69,8 @@ def default_config() -> ClientConfig:
                                                 num_nodes=max_num_nodes, domain_randomization = True,
                                                 n_quick_eval_iter=30, dr_max_num_nodes = max_num_nodes,
                                                 dr_min_num_nodes = 4, dr_min_num_users = 1,
-                                                dr_max_num_users = 5, dr_min_num_flags=1, dr_max_num_flags = 3
+                                                dr_max_num_users = 5, dr_min_num_flags=1, dr_max_num_flags = 3,
+                                                dr_use_base=True
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(

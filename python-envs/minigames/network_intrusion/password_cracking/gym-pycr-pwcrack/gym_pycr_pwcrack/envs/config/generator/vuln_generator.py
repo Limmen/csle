@@ -75,7 +75,7 @@ class VulnerabilityGenerator:
                         raise ValueError("Unrecognized vulnerability type")
 
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
-        return vulns_cfg
+        return vulns_cfg, vulnerable_nodes
 
 
     @staticmethod

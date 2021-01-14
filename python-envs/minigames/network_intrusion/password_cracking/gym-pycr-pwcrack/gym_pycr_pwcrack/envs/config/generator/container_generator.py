@@ -14,7 +14,8 @@ class ContainerGenerator:
                  gw_vuln_compatible_containers: List[Tuple[str, str]],
                  pw_vuln_compatible_containers: List[Tuple[str, str]], subnet_id: int, num_flags: int,
                  agent_ip: str, router_ip: str, agent_containers: List[Tuple[str, str]],
-                 router_containers: List[Tuple[str, str]], subnet_prefix: str) -> ContainersConfig:
+                 router_containers: List[Tuple[str, str]], subnet_prefix: str,
+                 vulnerable_nodes: set = None) -> ContainersConfig:
 
         network = "pycr_net_" + str(subnet_id)
         minigame = "pwcrack"
@@ -59,7 +60,7 @@ class ContainerGenerator:
         subnet_mask = subnet_prefix + "0/24"
         containers_cfg = ContainersConfig(containers=container_configs, network=network, agent_ip=agent_ip,
                                           router_ip=router_ip, subnet_mask=subnet_mask, subnet_prefix=subnet_prefix,
-                                          ids_enabled=ids_enabled)
+                                          ids_enabled=ids_enabled, vulnerable_nodes=vulnerable_nodes)
         return containers_cfg
 
     @staticmethod

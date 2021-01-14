@@ -95,7 +95,11 @@ class PyCrPwCrackLevel6Base:
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
                                      flags_lookup = PyCrPwCrackLevel6Base.flags_lookup(),
-                                     agent_reachable=agent_reachable)
+                                     agent_reachable=agent_reachable,
+                                     vulnerable_nodes=set(["172.18.6.3", "172.18.6.79", "172.18.6.2",
+                                                           "172.18.6.54", "172.18.6.74", "172.18.6.61",
+                                                           "172.18.6.62", "172.18.6.7"])
+                                     )
         return network_conf
 
     @staticmethod

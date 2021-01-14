@@ -93,7 +93,7 @@ class EnvConfigGenerator:
 
         adj_matrix, gws, topology, agent_ip, router_ip, node_id_d, node_id_d_inv = \
             TopologyGenerator.generate(num_nodes=num_nodes, subnet_prefix=subnet_prefix)
-        vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
+        vulnerabilities, vulnerable_nodes = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
                                                           subnet_prefix=subnet_prefix,
                                                           num_flags=num_flags, access_vuln_types=[VulnType.WEAK_PW],
                                                           router_ip=router_ip)
@@ -104,7 +104,7 @@ class EnvConfigGenerator:
             gw_vuln_compatible_containers=gw_vuln_compatible_containers,
             pw_vuln_compatible_containers=pw_vuln_compatible_containers, subnet_id=subnet_id, num_flags=num_flags,
             agent_ip=agent_ip, router_ip=router_ip, agent_containers=agent_containers,
-            router_containers=router_containers, subnet_prefix=subnet_prefix)
+            router_containers=router_containers, subnet_prefix=subnet_prefix, vulnerable_nodes = vulnerable_nodes)
 
         return topology, vulnerabilities, users, flags, containers
 

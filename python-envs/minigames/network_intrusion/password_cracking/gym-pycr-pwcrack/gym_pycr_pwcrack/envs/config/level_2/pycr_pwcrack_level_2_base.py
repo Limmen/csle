@@ -496,7 +496,10 @@ class PyCrPwCrackLevel2Base:
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
                                      flags_lookup = PyCrPwCrackLevel2Base.flags_lookup(),
-                                     agent_reachable=agent_reachable)
+                                     agent_reachable=agent_reachable,
+                                     vulnerable_nodes = set(["172.18.2.3", "172.18.2.79", "172.18.2.2",
+                                                             "172.18.2.54", "172.18.2.74", "172.18.2.61",
+                                                             "172.18.2.62", "172.18.2.7"]))
         return network_conf
 
     @staticmethod
@@ -654,3 +657,7 @@ class PyCrPwCrackLevel2Base:
         env_config.blacklist_ips = ["172.18.2.1"]
         env_config.ids_router = False
         return env_config
+
+if __name__ == '__main__':
+    network_conf = PyCrPwCrackLevel2Base.network_conf()
+    network_conf._shortest_path()

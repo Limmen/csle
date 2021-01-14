@@ -10,6 +10,7 @@ from gym_pycr_pwcrack.envs.config.generator.flags_generator import FlagsGenerato
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.envs.logic.common.node_randomizer import NodeRandomizer
 from gym_pycr_pwcrack.dao.domain_randomization.randomization_space import RandomizationSpace
+from gym_pycr_pwcrack.envs.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
 from gym_pycr_pwcrack.dao.network.flag import Flag
 
 class DomainRandomizer:
@@ -18,13 +19,18 @@ class DomainRandomizer:
     def generate_randomization_space(network_confs: List[NetworkConfig], min_num_nodes : int=4,
                                      max_num_nodes : int=4, min_num_flags : int = 1, max_num_flags : int = 1,
                                      min_num_users: int = 1, max_num_users : int = 1,
-                                     services = None, vulnerabilities = None, os = None) -> RandomizationSpace:
+                                     services = None, vulnerabilities = None, os = None,
+                                     use_base_randomization: bool = False) -> RandomizationSpace:
         if services is None:
             services = set()
         if vulnerabilities is None:
             vulnerabilities = set()
         if os is None:
             os = set()
+        if use_base_randomization:
+            services = services.union(set(BaseRandomizationSpace.base_services()))
+            os = os.union(BaseRandomizationSpace.base_os())
+            vulnerabilities = vulnerabilities.union(BaseRandomizationSpace.base_vulns())
         min_num_nodes = min_num_nodes
         max_num_nodes = max_num_nodes
         min_num_flags=min_num_flags
@@ -32,7 +38,6 @@ class DomainRandomizer:
         min_num_users=min_num_users
         max_num_users=max_num_users
         for nc in network_confs:
-            print("nc nodes:{}".format(len(nc.nodes)))
             node_services = set()
             node_vulns = set()
             for node in nc.nodes:
@@ -48,7 +53,6 @@ class DomainRandomizer:
             vulnerabilities = vulnerabilities.union(node_vulns)
             if len(nc.nodes) > max_num_nodes:
                 max_num_nodes = len(nc.nodes)
-                print("set max num nodes:{}".format(max_num_nodes))
 
         services = list(services)
         vulnerabilities = list(vulnerabilities)
@@ -75,8 +79,8 @@ class DomainRandomizer:
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_users=min_num_users, max_num_users=max_num_users)
-        print("{} nc, max num nodes:{}, max_num_flags:{}, services:{}, vulns:{}, os:{}".format(
-            len(network_confs), max_num_nodes, max_num_flags, len(filtered_services), len(filtered_vulnerabilities), os))
+        print("randomization space created, num nodes:{}, num services:{}, num_vulns:{}, os:{}".format(max_num_nodes, len(services), len(vulnerabilities),
+                                                                                                       len(os)))
         return r_space
 
     @staticmethod
@@ -88,7 +92,7 @@ class DomainRandomizer:
         num_users = random.randint(r_space.min_num_users, r_space.max_num_users)
         adj_matrix, gws, topology, agent_ip, router_ip, node_id_d, node_id_d_inv = \
             TopologyGenerator.generate(num_nodes=num_nodes, subnet_prefix=subnet_prefix)
-        vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
+        vulnerabilities, vulnerable_nodes = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
                                                           subnet_prefix=subnet_prefix,
                                                           num_flags=num_flags, access_vuln_types=[VulnType.WEAK_PW],
                                                           router_ip=router_ip)
@@ -141,7 +145,8 @@ class DomainRandomizer:
                                                                                  score=fl.flags[0][5])
         subnet_mask = subnet_prefix + "0/24"
         randomized_network_conf = NetworkConfig(subnet_mask=subnet_mask, nodes=randomized_nodes, adj_matrix=adj_matrix,
-                                     flags_lookup=flags_lookup, agent_reachable=agent_reachable)
+                                     flags_lookup=flags_lookup, agent_reachable=agent_reachable,
+                                                vulnerable_nodes=vulnerable_nodes)
         env_config = env_config.copy()
         env_config.network_conf=randomized_network_conf
         env_config.router_ip=router_ip

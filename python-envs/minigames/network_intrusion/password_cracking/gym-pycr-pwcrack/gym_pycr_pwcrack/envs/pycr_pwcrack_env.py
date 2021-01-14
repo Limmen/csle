@@ -211,7 +211,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,
                                                                              env_config=self.env_config)
-            #print("randomize env, max num nodes:{}, max num flags:{}".format(self.randomization_space.max_num_nodes, self.randomization_space.max_num_flags))
+            # print("randomize env, max num nodes:{}, max num flags:{}, ips:{}".format(
+            #     self.randomization_space.max_num_nodes, self.randomization_space.max_num_flags,
+            #     list(map(lambda x: x.ip, randomized_network_conf.nodes))))
             self.env_config = env_config
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
