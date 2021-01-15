@@ -37,7 +37,8 @@ class ExperimentResult:
                  eval_2_env_specific_flags_percentage: dict = None,
                  rollout_times : List = None, env_response_times : List = None,
                  action_pred_times : List = None, grad_comp_times : List = None,
-                 weight_update_times : List = None
+                 weight_update_times : List = None,
+                 avg_regret: List = None, avg_opt_frac : List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -105,6 +106,8 @@ class ExperimentResult:
         self.action_pred_times = action_pred_times
         self.grad_comp_times = grad_comp_times
         self.weight_update_times = weight_update_times
+        self.avg_opt_frac = avg_opt_frac
+        self.avg_regret = avg_regret
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -173,6 +176,10 @@ class ExperimentResult:
             self.grad_comp_times = []
         if weight_update_times is None:
             self.weight_update_times = []
+        if avg_regret is None:
+            self.avg_regret = []
+        if avg_opt_frac is None:
+            self.avg_opt_frac = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -187,7 +194,8 @@ class ExperimentResult:
                    self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage,
                    self.eval_2_avg_episode_rewards, self.eval_2_avg_episode_steps,
                    self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage, self.rollout_times,
-                   self.env_response_times, self.action_pred_times, self.grad_comp_times, self.weight_update_times
+                   self.env_response_times, self.action_pred_times, self.grad_comp_times, self.weight_update_times,
+                   self.avg_regret, self.avg_opt_frac
                    ]
         metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
                          "epsilon_values", "cumulative_reward", "avg_episode_loss",
@@ -195,7 +203,7 @@ class ExperimentResult:
                          "eval_avg_episode_steps", "eval_avg_episode_flags", "eval_avg_episode_flags_percentage",
                          "eval_2_avg_episode_rewards", "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
                          "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times", "action_pred_times",
-                         "grad_comp_times", "weight_update_times"
+                         "grad_comp_times", "weight_update_times", "avg_regret", "avg_opt_frac"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

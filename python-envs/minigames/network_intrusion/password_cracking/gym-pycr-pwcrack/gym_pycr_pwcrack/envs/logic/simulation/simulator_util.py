@@ -268,7 +268,6 @@ class SimulatorUtil:
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
-
         # Exploit on a single host
         if not a.subnet:
             new_m_obs = None

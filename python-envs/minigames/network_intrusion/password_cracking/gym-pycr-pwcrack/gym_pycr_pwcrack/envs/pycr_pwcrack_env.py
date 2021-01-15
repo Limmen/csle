@@ -59,6 +59,7 @@ from gym_pycr_pwcrack.envs.logic.cluster.cluster_warmup import ClusterWarmup
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_pwcrack.envs.logic.simulation.find_pi_star import FindPiStar
 
 class PyCRPwCrackEnv(gym.Env, ABC):
     """
@@ -147,6 +148,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         actions = list(range(self.num_actions))
         self.initial_illegal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                     action, env_config=self.env_config, env_state=self.env_state), actions))
+        if (self.env_config.env_mode == EnvMode.SIMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
+                and self.env_config.compute_pi_star:
+            pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+            self.env_config.pi_star_tau = pi_star_tau
+            self.env_config.pi_star_rew = pi_star_rew
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
@@ -601,10 +607,12 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
             env_config.cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 200
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.compute_pi_star = True
         super().__init__(env_config=env_config)
 
 

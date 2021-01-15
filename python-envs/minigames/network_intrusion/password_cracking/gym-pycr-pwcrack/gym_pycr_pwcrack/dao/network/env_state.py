@@ -166,3 +166,11 @@ class EnvState:
             if m.ip == ip:
                 return m
         return None
+
+
+    def copy(self):
+        copy = EnvState(network_config=self.network_config, num_ports=self.num_ports, num_vuln=self.num_vuln,
+                        num_sh=self.num_sh, num_flags=self.num_flags, num_nodes=self.num_nodes, vuln_lookup=self.vuln_lookup,
+                        service_lookup=self.service_lookup, os_lookup=self.os_lookup, state_type=self.state_type)
+        copy.obs_state = self.obs_state.copy()
+        return copy

@@ -48,7 +48,7 @@ class AgentConfig:
                  n_quick_eval_iter: int = 10, dr_max_num_nodes : int=4, dr_min_num_nodes : int = 1,
                  dr_min_num_flags : int = 1, dr_max_num_flags : int = 1,
                  dr_min_num_users: int = 1, dr_max_num_users : int = 1,
-                 dr_use_base : bool = False
+                 dr_use_base : bool = False, log_regret : bool = False
                  ):
         """
         Initialize environment and hyperparameters
@@ -232,6 +232,7 @@ class AgentConfig:
         self.dr_min_num_users = dr_min_num_users
         self.dr_max_num_users = dr_max_num_users
         self.dr_use_base = dr_use_base
+        self.log_regret = log_regret
 
 
     def to_str(self) -> str:
@@ -262,7 +263,7 @@ class AgentConfig:
                "eval_deterministic:{80},num_nodes:{81},performance_analysis:{82}," \
                "ar_policy2:{83},domain_randomization:{84},n_quick_eval_iter:{85}," \
                "dr_max_num_nodes:{86},dr_min_num_nodes:{87},dr_min_num_flags:{88}," \
-               "dr_max_num_flags:{89},dr_min_num_users:{90},dr_max_num_users:{91},dr_use_base:{92}".format(
+               "dr_max_num_flags:{89},dr_min_num_users:{90},dr_max_num_users:{91},dr_use_base:{92},log_regret:{93}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -283,7 +284,7 @@ class AgentConfig:
             self.n_deterministic_eval_iter, self.eval_deterministic, self.num_nodes, self.performance_analysis,
             self.ar_policy2, self.domain_randomization, self.n_quick_eval_iter,
             self.dr_max_num_nodes, self.dr_min_num_nodes, self.dr_min_num_flags, self.dr_max_num_flags,
-            self.dr_min_num_users, self.dr_max_num_users, self.dr_use_base)
+            self.dr_min_num_users, self.dr_max_num_users, self.dr_use_base, self.log_regret)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -380,6 +381,7 @@ class AgentConfig:
             writer.writerow(["dr_min_num_users", str(self.dr_min_num_users)])
             writer.writerow(["dr_max_num_users", str(self.dr_max_num_users)])
             writer.writerow(["dr_use_base", str(self.dr_use_base)])
+            writer.writerow(["log_regret", str(self.log_regret)])
 
 
     def hparams_dict(self):
@@ -457,4 +459,5 @@ class AgentConfig:
         hparams["dr_min_num_users"] = self.dr_min_num_users
         hparams["dr_max_num_users"] = self.dr_max_num_users
         hparams["dr_use_base"] = self.dr_use_base
+        hparams["log_regret"] = self.log_regret
         return hparams

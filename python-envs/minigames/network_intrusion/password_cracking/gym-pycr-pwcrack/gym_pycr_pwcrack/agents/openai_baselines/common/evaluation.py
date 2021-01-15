@@ -288,7 +288,10 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
 
 def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_steps, env_specific_flags,
                                 env_specific_flags_percentage, episode_reward, episode_step, infos, i):
-    agent_ip = env_config.cluster_config.agent_ip
+    if env_config.cluster_config is not None:
+        agent_ip = env_config.cluster_config.agent_ip
+    else:
+        agent_ip = "agent_ip"
     num_flags = env_config.num_flags
 
     if agent_ip not in env_specific_rewards:

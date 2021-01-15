@@ -579,8 +579,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
     def update_env_specific_metrics(self, env_specific_rewards, env_specific_steps, env_specific_flags,
                                     env_specific_flags_percentage, episode_reward, episode_step, infos, i):
         if self.agent_config.env_config is not None:
-            agent_ip = self.agent_config.env_config.cluster_config.agent_ip
             num_flags = self.agent_config.env_config.num_flags
+            if self.agent_config.env_config.cluster_config is not None:
+                agent_ip = self.agent_config.env_config.cluster_config.agent_ip
+            else:
+                agent_ip = "agent_ip"
         else:
             agent_ip = self.agent_config.env_configs[i].cluster_config.agent_ip
             num_flags = self.agent_config.env_configs[infos[i]["idx"]].num_flags

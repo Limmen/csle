@@ -276,6 +276,18 @@ class BaseAlgorithm(ABC):
             eval_avg_episode_rewards = np.mean(eval_episode_rewards)
         else:
             eval_avg_episode_rewards = 0.0
+        if self.agent_config.log_regret:
+            avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
+        else:
+            avg_regret = 0.0
+        if self.agent_config.log_regret:
+            avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
+            if avg_episode_rewards != 0.0:
+                avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
+            else:
+                avg_opt_frac = 0.0
+        else:
+            avg_regret = 0.0
         if not eval and eval_episode_flags is not None:
             eval_avg_episode_flags = np.mean(eval_episode_flags)
         else:
@@ -342,20 +354,20 @@ class BaseAlgorithm(ABC):
             avg_weight_update_times = 0.0
 
         if eval:
-            log_str = "[Eval] iter:{},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
+            log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}".format(
-                iteration, avg_episode_rewards, avg_episode_steps, lr, avg_episode_flags,
+                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, avg_episode_steps, lr, avg_episode_flags,
                 avg_episode_flags_percentage, n_af, n_d)
         else:
-            log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R_T:{:.2f},avg_t_T:{:.2f}," \
+            log_str = "[Train] iter:{:.2f},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R_T:{:.2f},avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
                       "n_af:{},n_d:{},avg_R_E:{:.2f},avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
-                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f}".format(
-                iteration, self.agent_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
+                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f},epsilon:{:.2f}".format(
+                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
                 lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps, n_af, n_d,
                 eval_avg_episode_rewards, eval_avg_episode_steps, eval_avg_episode_flags,
                 eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, eval_2_avg_episode_steps,
-                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage)
+                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage,self.agent_config.epsilon)
         self.agent_config.logger.info(log_str)
         print(log_str)
         if self.agent_config.tensorboard:
@@ -393,6 +405,7 @@ class BaseAlgorithm(ABC):
         result.action_pred_times.append(avg_action_pred_times)
         result.grad_comp_times.append(avg_grad_comp_times)
         result.weight_update_times.append(avg_weight_update_times)
+        result.avg_regret.append(avg_regret)
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
                 avg = np.mean(train_env_specific_rewards[key])

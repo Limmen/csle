@@ -13,7 +13,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.0, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -27,7 +27,7 @@ def default_config() -> ClientConfig:
                                pi_hidden_dim=64, pi_hidden_layers=1,
                                vf_hidden_dim=64, vf_hidden_layers=1,
                                shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=200,
+                               batch_size=10000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -37,18 +37,27 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-100,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=10
+                               n_deterministic_eval_iter=10, eval_deterministic=False, log_regret=True
                                )
-    #env_name = "pycr-pwcrack-level-1-sim-v1"
-    # eval_env_name = "pycr-pwcrack-level-1-cluster-v1"
-    env_name = "pycr-pwcrack-level-1-sim-costs-v1"
-    eval_env_name = "pycr-pwcrack-level-1-cluster-costs-v1"
+    env_name = "pycr-pwcrack-level-1-sim-v1"
+    #eval_env_name = "pycr-pwcrack-level-1-cluster-v1"
+    # env_name = "pycr-pwcrack-level-1-sim-costs-v1"
+    # eval_env_name = "pycr-pwcrack-level-1-cluster-costs-v1"
     # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
+    # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False)
+
+    # client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    #                              agent_type=AgentType.PPO_BASELINE.value,
+    #                              output_dir=util.default_output_dir(),
+    #                              title="PPO-Baseline v1",
+    #                              run_many=True, random_seeds=[0, 999, 299, 399, 499],
+    #                              random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
+    #                              eval_env=True, eval_env_name=eval_env_name,
+    #                              eval_cluster_config=eval_cluster_config)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
@@ -56,8 +65,8 @@ def default_config() -> ClientConfig:
                                  title="PPO-Baseline v1",
                                  run_many=True, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
-                                 eval_env=True, eval_env_name=eval_env_name,
-                                 eval_cluster_config=eval_cluster_config)
+                                 eval_env=False)
+
     return client_config
 
 

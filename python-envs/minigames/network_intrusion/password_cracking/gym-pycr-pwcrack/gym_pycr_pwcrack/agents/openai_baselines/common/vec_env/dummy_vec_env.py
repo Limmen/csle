@@ -41,6 +41,7 @@ class DummyVecEnv(VecEnv):
         self.actions = None
         self.metadata = env.metadata
         self.initial_illegal_actions = self.envs[0].initial_illegal_actions
+        self.env_config = self.envs[0].env_config
 
     def step_async(self, actions: np.ndarray):
         self.actions = actions

@@ -1,6 +1,5 @@
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.envs.logic.transition_operator import TransitionOperator
-from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 
 class FindPiStar:
@@ -13,105 +12,135 @@ class FindPiStar:
         pivot_actions = FindPiStar.pivot_actions(env_config=env_config)
         env.reset()
         p = p[0]
-        print("p:{}".format(p))
         for n in p:
             for a in env_config.action_conf.actions:
+                a.ip = env.env_state.obs_state.get_action_ip(a)
                 s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a, env_config=env_config)
-                #print("n:{}, list:{}".format(n[0], list(map(lambda x: x.ip, s_prime.obs_state.machines))))
                 if n in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
-                    # print("node found")
                     env.env_state = s_prime
-                    #print("breach node call, n:{}".format(n))
-                    print("first action:{}".format(a))
-                    paths = paths + FindPiStar._breach_node(path=[a], current_node=n, remaining_nodes=p[1:],
+                    r_nodes = p.copy()
+                    r_nodes.remove(n)
+                    next_node = n
+                    paths = paths + FindPiStar._breach_node(path=[a], current_node=next_node, remaining_nodes=r_nodes,
                                                             rew=reward, env=env, env_config=env_config,
                                                             pivot_actions=pivot_actions)
                     env.reset()
-
-        print("paths:{}".format(paths))
-
-
-    # @staticmethod
-    # def _find_node(path, current_node, remaining_nodes, rew, env, env_config, pivot_actions):
-    #     paths = []
-    #     node_found = False
-    #     for n in remaining_nodes:
-    #         for a in env_config.action_conf.actions:
-    #             s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a, env_config=env_config)
-    #             if n in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
-    #                 env.env_state = s_prime
-    #                 node_found = True
-    #                 path = path + [a]
-    #                 r_nodes = remaining_nodes.copy()
-    #                 r_nodes.remove(n)
-    #                 print("remaining nodes:{}, current node:{}".format(remaining_nodes, current_node))
-    #                 paths = paths + FindPiStar._breach_node(path=path, current_node=n,
-    #                                                         remaining_nodes=r_nodes, rew=reward,
-    #                                                         env=env, env_config=env_config,
-    #                                                         pivot_actions=pivot_actions)
-    #                 env.reset()
-    #     if not node_found:
-    #         raise ValueError("Node not found")
-    #     return paths
+        sorted_paths = sorted(paths, key=lambda x: x[1])
+        pi_star =sorted_paths[-1]
+        return pi_star[0], pi_star[1]
 
     @staticmethod
     def _breach_node(path, current_node, remaining_nodes, rew, env, env_config, pivot_actions):
-        #print("current node:{}, remaining nodes:{}".format(current_node, remaining_nodes))
         paths = []
-        #for n in remaining_nodes:
-        for a in env_config.action_conf.actions:
-            s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a, env_config=env_config)
-            for k in s_prime.obs_state.machines:
-                #print("current node:{}, ip:{}".format(current_node, k.ip))
-                if k.ip == current_node:
-                    if k.shell_access:
-                        path = path + [a]
-                        #print("shell access")
-                        env.env_state = s_prime
-                        for a in pivot_actions:
+        shell_access = False
+        old_state = env.env_state.copy()
+        for k in env.env_state.obs_state.machines:
+            if k.ip == current_node and k.shell_access:
+                shell_access = True
+        if not shell_access:
+            for a in env_config.action_conf.actions:
+                env.reset()
+                env.env_state = old_state.copy()
+                k_path = path
+                a_rew = rew
+                a.ip = env.env_state.obs_state.get_action_ip(a)
+                s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a, env_config=env_config)
+                for k in s_prime.obs_state.machines:
+                    if k.ip == current_node:
+                        if k.shell_access:
+                            k_path = k_path + [a]
+                            a_rew = a_rew + reward
+                            env.env_state = s_prime
+                            for a in pivot_actions:
+                                a.ip = env.env_state.obs_state.get_action_ip(a)
+                                s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
+                                                                                      env_config=env_config)
+                                a_rew = reward + a_rew
+                                k_path = k_path + [a]
+                                env.env_state = s_prime
+                                if done:
+                                    paths.append((k_path, a_rew))
+
+                            if not len(remaining_nodes) == 0 and not done:
+                                old_state2 = env.env_state.copy()
+                                for n in remaining_nodes:
+                                    env.reset()
+                                    env.env_state = old_state2.copy()
+                                    a_rew2 = a_rew
+                                    if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
+                                        old_state3 = env.env_state.copy()
+                                        for a in env_config.action_conf.actions:
+                                            env.reset()
+                                            env.env_state = old_state3.copy()
+                                            a.ip = env.env_state.obs_state.get_action_ip(a)
+                                            s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
+                                                                                                  env_config=env_config)
+                                            if n in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
+                                                a_rew2 = a_rew2 + reward
+                                                env.env_state = s_prime
+                                                r_path = k_path + [a]
+                                                r_nodes = remaining_nodes.copy()
+                                                r_nodes.remove(n)
+                                                next_node = n
+                                                paths = paths + FindPiStar._breach_node(path=r_path, current_node=next_node,
+                                                                                        remaining_nodes=r_nodes,
+                                                                                        rew=a_rew2, env=env,
+                                                                                        env_config=env_config,
+                                                                                        pivot_actions=pivot_actions)
+                                    else:
+                                        r_nodes = remaining_nodes.copy()
+                                        r_nodes.remove(n)
+                                        next_node = n
+                                        paths = paths + FindPiStar._breach_node(path=k_path, current_node=next_node,
+                                                                              remaining_nodes=r_nodes,
+                                                                              rew=a_rew2, env=env, env_config=env_config,
+                                                                              pivot_actions=pivot_actions)
+        else:
+            a_rew = rew
+            for a in pivot_actions:
+                a.ip = env.env_state.obs_state.get_action_ip(a)
+                s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
+                                                                      env_config=env_config)
+                a_rew = reward + a_rew
+                path = path + [a]
+                env.env_state = s_prime
+                if done:
+                    paths.append((path, a_rew))
+            old_state = env.env_state.copy()
+            if not len(remaining_nodes) == 0 and not done:
+                # next_node = remaining_nodes[0]
+                for n in remaining_nodes:
+                    env.reset()
+                    env.env_state = old_state.copy()
+                    a_rew2 = a_rew
+                    if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
+                        old_state2 = env.env_state.copy()
+                        for a in env_config.action_conf.actions:
+                            env.reset()
+                            env.env_state = old_state2.copy()
+                            a.ip = env.env_state.obs_state.get_action_ip(a)
                             s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
                                                                                   env_config=env_config)
-                            rew = reward + rew
-                            path = path + [a]
-                            env.env_state = s_prime
-                            if done:
-                                print("done:{}".format(done))
-                                paths = paths + path
-
-                        if not len(remaining_nodes) == 0 and not done:
-                            #next_node = remaining_nodes[0]
-                            rew = reward + rew
-                            for n in remaining_nodes:
-                                if n not in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
-                                    for a in env_config.action_conf.actions:
-                                        s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
-                                                                                              env_config=env_config)
-                                        if n in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
-                                            env.env_state = s_prime
-                                            r_path = path + [a]
-                                            r_nodes = remaining_nodes.copy()
-                                            r_nodes.remove(n)
-                                            next_node = n
-                                            #print("recursion")
-                                            paths = paths + FindPiStar._breach_node(path=r_path, current_node=next_node,
-                                                                                    remaining_nodes=r_nodes,
-                                                                                    rew=reward, env=env,
-                                                                                    env_config=env_config,
-                                                                                    pivot_actions=pivot_actions)
-                                else:
-                                    r_nodes = remaining_nodes.copy()
-                                    r_nodes.remove(n)
-                                    next_node = n
-                                    #print("recursion")
-                                    paths = paths + FindPiStar._breach_node(path=path, current_node=next_node,
-                                                                          remaining_nodes=remaining_nodes[1:],
-                                                                          rew=reward, env=env, env_config=env_config,
-                                                                          pivot_actions=pivot_actions)
-                        else:
-                            print("done:{} or no remaining:{}, actions:{}".format(done, remaining_nodes, list(map(lambda x: x.id, path))))
-                        env.reset()
-                env.reset()
-        print("breach returning:{}".format(paths))
+                            if n in list(map(lambda x: x.ip, s_prime.obs_state.machines)):
+                                a_rew2 = a_rew2 + reward
+                                env.env_state = s_prime
+                                r_path = path + [a]
+                                r_nodes = remaining_nodes.copy()
+                                r_nodes.remove(n)
+                                next_node = n
+                                paths = paths + FindPiStar._breach_node(path=r_path, current_node=next_node,
+                                                                        remaining_nodes=r_nodes,
+                                                                        rew=a_rew2, env=env,
+                                                                        env_config=env_config,
+                                                                        pivot_actions=pivot_actions)
+                    else:
+                        r_nodes = remaining_nodes.copy()
+                        r_nodes.remove(n)
+                        next_node = n
+                        paths = paths + FindPiStar._breach_node(path=path, current_node=next_node,
+                                                                remaining_nodes=r_nodes,
+                                                                rew=a_rew2, env=env, env_config=env_config,
+                                                                pivot_actions=pivot_actions)
         return paths
 
     @staticmethod

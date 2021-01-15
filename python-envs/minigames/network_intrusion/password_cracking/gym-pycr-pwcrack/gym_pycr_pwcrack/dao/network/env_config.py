@@ -141,6 +141,9 @@ class EnvConfig:
         self.idx = 0
         self.exploration_filter_illegal = True
         self.domain_randomization = False
+        self.compute_pi_star = False
+        self.pi_star_tau = None
+        self.pi_star_rew = -1
 
 
     def get_port_forward_port(self) -> int:
@@ -258,4 +261,5 @@ class EnvConfig:
         env_config.idx = self.idx
         env_config.exploration_filter_illegal = self.exploration_policy
         env_config.domain_randomization = self.domain_randomization
+        env_config.compute_pi_star = self.compute_pi_star
         return env_config

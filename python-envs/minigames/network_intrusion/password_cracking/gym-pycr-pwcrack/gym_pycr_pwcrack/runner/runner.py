@@ -64,9 +64,11 @@ class Runner:
                 cf.warmup = False
                 cf.skip_exploration = True
         else:
-            cluster_conf_temp = deepcopy(config.cluster_config)
-            cluster_conf_temp.warmup = False
-            cluster_conf_temp.skip_exploration = True
+            cluster_conf_temp = None
+            if config.cluster_config is not None:
+                cluster_conf_temp = deepcopy(config.cluster_config)
+                cluster_conf_temp.warmup = False
+                cluster_conf_temp.skip_exploration = True
         if config.eval_multi_env:
             eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
             for cf in eval_cluster_conf_temps:
@@ -79,7 +81,7 @@ class Runner:
             env, base_env = Runner.randomized_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
         else:
             env, base_env = Runner.regular_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
-        if config.eval_env is not None:
+        if config.eval_env is not None and config.eval_env:
             if config.eval_randomized_env:
                 eval_env = gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=config.eval_cluster_config,
                                     checkpoint_dir=config.env_checkpoint_dir,
