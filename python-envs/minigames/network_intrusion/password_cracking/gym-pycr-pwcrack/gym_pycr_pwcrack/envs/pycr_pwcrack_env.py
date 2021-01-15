@@ -600,6 +600,7 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
             env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 0
             env_config.save_trajectories = False
+            env_config.filter_illegal_actions = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir

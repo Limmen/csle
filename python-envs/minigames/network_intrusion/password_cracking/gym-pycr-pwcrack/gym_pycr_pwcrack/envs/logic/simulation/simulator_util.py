@@ -412,6 +412,8 @@ class SimulatorUtil:
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_obs_machines = []
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
+        discovered_nodes = list(map(lambda x: x.ip, s.obs_state.machines))
+        reachable_nodes = list(filter(lambda x: x in discovered_nodes, reachable_nodes))
         for node in env_config.network_conf.nodes:
             if node.ip not in reachable_nodes:
                 continue

@@ -18,8 +18,8 @@ def manual_control():
     #env = gym.make("pycr-pwcrack-level-1-cluster-v4", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-pwcrack-level-1-cluster-costs-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-pwcrack-level-1-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-pwcrack-level-1-cluster-costs-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-pwcrack-level-1-sim-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-level-1-generated-sim-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-pwcrack-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
 
