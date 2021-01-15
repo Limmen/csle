@@ -47,6 +47,8 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(env.initial_illegal_actions)
             elif cmd == "network_conf":
                 remote.send(env.env_config.network_conf)
+            elif cmd == "pi_star_rew":
+                remote.send(env.env_config.pi_star_rew)
             elif cmd == "set_randomization_space":
                 env.randomization_space = data
                 env.env.randomization_space = data
@@ -162,6 +164,16 @@ class SubprocVecEnv(VecEnv):
             network_confs.append(remote.recv())
         self.network_confs = network_confs
         return self.network_confs
+
+    def get_pi_star_rew(self):
+        pi_star_rews = []
+        for remote in self.remotes:
+            remote.send(("pi_star_rew", None))
+        for remote in self.remotes:
+            pi_star_rews.append(remote.recv())
+        self.pi_star_rews = pi_star_rews
+        return self.pi_star_rews
+
 
     def set_randomization_space(self, randomization_space):
         for remote in self.remotes:

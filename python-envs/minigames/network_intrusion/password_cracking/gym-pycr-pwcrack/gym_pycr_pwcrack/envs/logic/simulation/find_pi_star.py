@@ -7,6 +7,8 @@ class FindPiStar:
     @staticmethod
     def brute_force(env_config: EnvConfig, env):
         shortest_paths = env_config.network_conf.shortest_paths()
+        if len(shortest_paths) == 0:
+            return [], -1
         p = shortest_paths[0]
         paths = []
         pivot_actions = FindPiStar.pivot_actions(env_config=env_config)

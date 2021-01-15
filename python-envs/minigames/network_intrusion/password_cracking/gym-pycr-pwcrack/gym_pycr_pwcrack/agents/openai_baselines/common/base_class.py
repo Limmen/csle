@@ -35,6 +35,7 @@ from gym_pycr_pwcrack.agents.config.agent_config import AgentConfig
 from gym_pycr_pwcrack.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
+import gym_pycr_pwcrack.envs.logic.common.util as pycr_util
 
 
 def maybe_make_env(env: Union[GymEnv, str, None], monitor_wrapper: bool, verbose: int) -> Optional[GymEnv]:
@@ -265,6 +266,19 @@ class BaseAlgorithm(ABC):
         avg_episode_flags = np.mean(episode_flags)
         avg_episode_flags_percentage = np.mean(episode_flags_percentage)
         avg_episode_steps = np.mean(episode_steps)
+
+        if result.avg_episode_rewards is not None:
+            rolling_avg_rewards = pycr_util.running_average(result.avg_episode_rewards + [avg_episode_rewards],
+                                                            self.agent_config.running_avg)
+        else:
+            rolling_avg_rewards = 0.0
+
+        if result.avg_episode_steps is not None:
+            rolling_avg_steps = pycr_util.running_average(result.avg_episode_steps + [avg_episode_steps],
+                                                            self.agent_config.running_avg)
+        else:
+            rolling_avg_steps = 0.0
+
         if lr is None:
             lr = 0.0
         if not eval and episode_avg_loss is not None:
@@ -277,11 +291,11 @@ class BaseAlgorithm(ABC):
         else:
             eval_avg_episode_rewards = 0.0
         if self.agent_config.log_regret:
-            avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
-        else:
-            avg_regret = 0.0
-        if self.agent_config.log_regret:
-            avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
+            if self.env.env_config is not None:
+                avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
+            else:
+                #self.env.get_pi_star_rew()
+                pass
             if avg_episode_rewards != 0.0:
                 avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
             else:
@@ -354,16 +368,20 @@ class BaseAlgorithm(ABC):
             avg_weight_update_times = 0.0
 
         if eval:
-            log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
+            log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
+                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}".format(
-                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, avg_episode_steps, lr, avg_episode_flags,
+                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_steps, rolling_avg_steps, lr, avg_episode_flags,
                 avg_episode_flags_percentage, n_af, n_d)
         else:
-            log_str = "[Train] iter:{:.2f},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R_T:{:.2f},avg_t_T:{:.2f}," \
+            log_str = "[Train] iter:{:.2f},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
                       "n_af:{},n_d:{},avg_R_E:{:.2f},avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
                       "avg_R_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f},epsilon:{:.2f}".format(
-                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, avg_episode_steps, avg_episode_loss,
+                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps, n_af, n_d,
                 eval_avg_episode_rewards, eval_avg_episode_steps, eval_avg_episode_flags,
                 eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, eval_2_avg_episode_steps,
@@ -382,7 +400,9 @@ class BaseAlgorithm(ABC):
                                  eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
                                  eval_2_avg_episode_steps=eval_2_avg_episode_steps,
                                  eval_2_avg_episode_flags=eval_2_avg_episode_flags,
-                                 eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage
+                                 eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage,
+                                 rolling_avg_episode_rewards=rolling_avg_rewards,
+                                 rolling_avg_episode_steps=rolling_avg_steps
                                  )
 
         result.avg_episode_steps.append(avg_episode_steps)
@@ -504,7 +524,9 @@ class BaseAlgorithm(ABC):
                         eval_2_avg_episode_rewards: float = 0.0,
                         eval_2_avg_episode_steps: float = 0.0,
                         eval_2_avg_episode_flags: float = 0.0,
-                        eval_2_avg_episode_flags_percentage: float = 0.0
+                        eval_2_avg_episode_flags_percentage: float = 0.0,
+                        rolling_avg_episode_rewards: float = 0.0,
+                        rolling_avg_episode_steps: float = 0.0
                         ) -> None:
         """
         Log metrics to tensorboard
@@ -531,7 +553,10 @@ class BaseAlgorithm(ABC):
         train_or_eval = "eval" if eval else "train"
         self.tensorboard_writer.add_scalar('avg_episode_rewards/' + train_or_eval,
                                            avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('rolling_avg_episode_rewards/' + train_or_eval,
+                                           rolling_avg_episode_rewards, episode)
         self.tensorboard_writer.add_scalar('avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('rolling_avg_episode_steps/' + train_or_eval, rolling_avg_episode_steps, episode)
         self.tensorboard_writer.add_scalar('episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
         self.tensorboard_writer.add_scalar('epsilon/' + train_or_eval, epsilon, episode)
         self.tensorboard_writer.add_scalar('avg_episode_flags/' + train_or_eval, avg_flags_catched, episode)
