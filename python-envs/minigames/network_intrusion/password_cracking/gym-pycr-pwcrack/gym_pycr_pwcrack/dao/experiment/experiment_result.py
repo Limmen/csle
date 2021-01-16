@@ -27,18 +27,26 @@ class ExperimentResult:
                  train_env_specific_steps: dict = None,
                  train_env_specific_flags: dict = None,
                  train_env_specific_flags_percentage: dict = None,
+                 train_env_specific_regrets: dict = None,
+                 train_env_specific_opt_fracs: dict = None,
                  eval_env_specific_rewards: dict = None,
                  eval_env_specific_steps: dict = None,
                  eval_env_specific_flags: dict = None,
                  eval_env_specific_flags_percentage: dict = None,
+                 eval_env_specific_regrets: dict = None,
+                 eval_env_specific_opt_fracs: dict = None,
                  eval_2_env_specific_rewards: dict = None,
                  eval_2_env_specific_steps: dict = None,
                  eval_2_env_specific_flags: dict = None,
                  eval_2_env_specific_flags_percentage: dict = None,
+                 eval_2_env_specific_regrets: dict = None,
+                 eval_2_env_specific_opt_fracs: dict = None,
                  rollout_times : List = None, env_response_times : List = None,
                  action_pred_times : List = None, grad_comp_times : List = None,
                  weight_update_times : List = None,
-                 avg_regret: List = None, avg_opt_frac : List = None
+                 avg_regret: List = None, avg_opt_frac : List = None,
+                 eval_avg_regret: List = None, eval_avg_opt_frac: List = None,
+                 eval_2_avg_regret: List = None, eval_2_avg_opt_frac: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -93,14 +101,20 @@ class ExperimentResult:
         self.train_env_specific_flags = train_env_specific_flags
         self.train_env_specific_steps = train_env_specific_steps
         self.train_env_specific_flags_percentage = train_env_specific_flags_percentage
+        self.train_env_specific_regrets = train_env_specific_regrets
+        self.train_env_specific_opt_fracs = train_env_specific_opt_fracs
         self.eval_env_specific_rewards = eval_env_specific_rewards
         self.eval_env_specific_flags = eval_env_specific_flags
         self.eval_env_specific_steps = eval_env_specific_steps
         self.eval_env_specific_flags_percentage = eval_env_specific_flags_percentage
+        self.eval_env_specific_regrets = eval_env_specific_regrets
+        self.eval_env_specific_opt_fracs = eval_env_specific_opt_fracs
         self.eval_2_env_specific_rewards = eval_2_env_specific_rewards
         self.eval_2_env_specific_flags = eval_2_env_specific_flags
         self.eval_2_env_specific_steps = eval_2_env_specific_steps
         self.eval_2_env_specific_flags_percentage = eval_2_env_specific_flags_percentage
+        self.eval_2_env_specific_regrets = eval_2_env_specific_regrets
+        self.eval_2_env_specific_opt_fracs = eval_2_env_specific_opt_fracs
         self.rollout_times = rollout_times
         self.env_response_times = env_response_times
         self.action_pred_times = action_pred_times
@@ -108,6 +122,10 @@ class ExperimentResult:
         self.weight_update_times = weight_update_times
         self.avg_opt_frac = avg_opt_frac
         self.avg_regret = avg_regret
+        self.eval_avg_regret = eval_avg_regret
+        self.eval_avg_opt_frac = eval_avg_opt_frac
+        self.eval_2_avg_regret = eval_2_avg_regret
+        self.eval_2_avg_opt_frac = eval_2_avg_opt_frac
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if avg_episode_rewards is None:
@@ -144,6 +162,10 @@ class ExperimentResult:
             self.eval_2_avg_episode_flags_percentage = []
         if train_env_specific_rewards is None:
             self.train_env_specific_rewards = {}
+        if train_env_specific_regrets is None:
+            self.train_env_specific_regrets = {}
+        if train_env_specific_opt_fracs is None:
+            self.train_env_specific_opt_fracs = {}
         if train_env_specific_steps is None:
             self.train_env_specific_steps = {}
         if train_env_specific_flags is None:
@@ -152,6 +174,10 @@ class ExperimentResult:
             self.train_env_specific_flags_percentage = {}
         if eval_env_specific_rewards is None:
             self.eval_env_specific_rewards = {}
+        if eval_env_specific_regrets is None:
+            self.eval_env_specific_regrets = {}
+        if eval_env_specific_opt_fracs is None:
+            self.eval_env_specific_opt_fracs = {}
         if eval_env_specific_steps is None:
             self.eval_env_specific_steps = {}
         if eval_env_specific_flags is None:
@@ -160,6 +186,10 @@ class ExperimentResult:
             self.eval_env_specific_flags_percentage = {}
         if eval_2_env_specific_rewards is None:
             self.eval_2_env_specific_rewards = {}
+        if eval_2_env_specific_regrets is None:
+            self.eval_2_env_specific_regrets = {}
+        if eval_2_env_specific_opt_fracs is None:
+            self.eval_2_env_specific_opt_fracs = {}
         if eval_2_env_specific_steps is None:
             self.eval_2_env_specific_steps = {}
         if eval_2_env_specific_flags is None:
@@ -180,6 +210,14 @@ class ExperimentResult:
             self.avg_regret = []
         if avg_opt_frac is None:
             self.avg_opt_frac = []
+        if eval_avg_regret is None:
+            self.eval_avg_regret = []
+        if eval_avg_opt_frac is None:
+            self.eval_avg_opt_frac = []
+        if eval_2_avg_regret is None:
+            self.eval_2_avg_regret = []
+        if eval_2_avg_opt_frac is None:
+            self.eval_2_avg_opt_frac = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -195,7 +233,8 @@ class ExperimentResult:
                    self.eval_2_avg_episode_rewards, self.eval_2_avg_episode_steps,
                    self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage, self.rollout_times,
                    self.env_response_times, self.action_pred_times, self.grad_comp_times, self.weight_update_times,
-                   self.avg_regret, self.avg_opt_frac
+                   self.avg_regret, self.avg_opt_frac, self.eval_avg_regret, self.eval_avg_opt_frac,
+                   self.eval_2_avg_regret, self.eval_2_avg_opt_frac
                    ]
         metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
                          "epsilon_values", "cumulative_reward", "avg_episode_loss",
@@ -203,7 +242,8 @@ class ExperimentResult:
                          "eval_avg_episode_steps", "eval_avg_episode_flags", "eval_avg_episode_flags_percentage",
                          "eval_2_avg_episode_rewards", "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
                          "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times", "action_pred_times",
-                         "grad_comp_times", "weight_update_times", "avg_regret", "avg_opt_frac"
+                         "grad_comp_times", "weight_update_times", "avg_regret", "avg_opt_frac", "eval_avg_regret",
+                         "eval_avg_opt_frac", "eval_2_avg_regret", "eval_2_avg_opt_frac"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
@@ -215,6 +255,14 @@ class ExperimentResult:
             if len(self.train_env_specific_rewards[key]) > 0:
                 filtered_metrics.append(self.train_env_specific_rewards[key])
                 filtered_metric_labels.append(str(key) + "_" + "avg_episode_rewards")
+        for key in self.train_env_specific_regrets.keys():
+            if len(self.train_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_regrets")
+        for key in self.train_env_specific_opt_fracs.keys():
+            if len(self.train_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.train_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "avg_episode_opt_fracs")
         for key in self.train_env_specific_steps.keys():
             if len(self.train_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.train_env_specific_steps[key])
@@ -231,6 +279,14 @@ class ExperimentResult:
             if len(self.eval_env_specific_rewards[key]) > 0:
                 filtered_metrics.append(self.eval_env_specific_rewards[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_rewards")
+        for key in self.eval_env_specific_regrets.keys():
+            if len(self.eval_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_regrets")
+        for key in self.eval_env_specific_opt_fracs.keys():
+            if len(self.eval_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.eval_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_opt_fracs")
         for key in self.eval_env_specific_steps.keys():
             if len(self.eval_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.eval_env_specific_steps[key])
@@ -247,6 +303,14 @@ class ExperimentResult:
             if len(self.eval_2_env_specific_rewards[key]) > 0:
                 filtered_metrics.append(self.eval_2_env_specific_rewards[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_rewards")
+        for key in self.eval_2_env_specific_regrets.keys():
+            if len(self.eval_2_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_regrets")
+        for key in self.eval_2_env_specific_opt_fracs.keys():
+            if len(self.eval_2_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.eval_2_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_opt_fracs")
         for key in self.eval_2_env_specific_steps.keys():
             if len(self.eval_2_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.eval_2_env_specific_steps[key])

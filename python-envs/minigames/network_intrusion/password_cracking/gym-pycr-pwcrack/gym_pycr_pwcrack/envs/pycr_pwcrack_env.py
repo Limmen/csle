@@ -152,11 +152,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 and self.env_config.compute_pi_star:
             if not self.env_config.use_upper_bound_pi_star:
                 pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
-            else:
-                pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
-                pi_star_tau = None
-            self.env_config.pi_star_tau = pi_star_tau
-            self.env_config.pi_star_rew = pi_star_rew
+                self.env_config.pi_star_tau = pi_star_tau
+                self.env_config.pi_star_rew = pi_star_rew
+        if self.env_config.use_upper_bound_pi_star:
+            self.env_config.pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
+            self.env_config.pi_star_tau = None
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
@@ -234,6 +234,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                     pi_star_tau = None
                 self.env_config.pi_star_tau = pi_star_tau
                 self.env_config.pi_star_rew = pi_star_rew
+            actions = list(range(self.num_actions))
+            self.initial_illegal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                action, env_config=self.env_config, env_state=self.env_state), actions))
 
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
@@ -3539,7 +3542,7 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
             env_config.idx=idx
             env_config.filter_illegal_actions = False
             env_config.max_episode_length = 50
-            env_config.compute_pi_star = False
+            env_config.compute_pi_star = True
             env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
 

@@ -267,6 +267,13 @@ class BaseAlgorithm(ABC):
         avg_episode_flags_percentage = np.mean(episode_flags_percentage)
         avg_episode_steps = np.mean(episode_steps)
 
+        train_env_specific_regret = {}
+        eval_env_specific_regret = {}
+        eval_2_env_specific_regret = {}
+        train_env_specific_opt_frac = {}
+        eval_env_specific_opt_frac = {}
+        eval_2_env_specific_opt_frac = {}
+
         if result.avg_episode_rewards is not None:
             rolling_avg_rewards = pycr_util.running_average(result.avg_episode_rewards + [avg_episode_rewards],
                                                             self.agent_config.running_avg)
@@ -293,20 +300,86 @@ class BaseAlgorithm(ABC):
         if self.agent_config.log_regret:
             if self.env.env_config is not None:
                 avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
+                avg_eval_regret = self.env.env_config.pi_star_rew - eval_avg_episode_rewards
             else:
-                #self.env.get_pi_star_rew()
-                avg_regret = 0.0
-                pass
-            if avg_episode_rewards != 0.0:
-                if self.env.env_config is not None:
-                    avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
+                regrets = []
+                eval_regrets = []
+                pi_star_rew_per_env = self.env.get_pi_star_rew()
+                for env_regret in pi_star_rew_per_env:
+                    ip = env_regret[0]
+                    pi_star_rew = env_regret[1]
+                    if train_env_specific_rewards is not None:
+                        rewards = train_env_specific_rewards[ip]
+                        r = list(map(lambda x: pi_star_rew - x, rewards))
+                        train_env_specific_regret[ip] = r
+                        regrets = regrets + r
+                    if eval_env_specific_rewards is not None:
+                        rewards = eval_env_specific_rewards[ip]
+                        r = list(map(lambda x: pi_star_rew - x, rewards))
+                        eval_env_specific_regret[ip] = r
+                        eval_regrets = eval_regrets + r
+                avg_regret = np.mean(np.array(regrets))
+                avg_eval_regret = np.mean(eval_regrets)
+
+            if self.env_2 is not None:
+                if self.env_2.env_config is not None:
+                    avg_regret_2 = self.env_2.env_config.pi_star_rew - eval_2_episode_rewards
+                    avg_opt_frac_2 = eval_2_episode_rewards / self.env_2.env_config.pi_star_rew
                 else:
-                    avg_opt_frac = 0.0
-                    pass
+                    regrets_2 = []
+                    pi_star_rew_per_env_2 = self.env_2.get_pi_star_rew()
+                    for env_regret in pi_star_rew_per_env_2:
+                        ip = env_regret[0]
+                        pi_star_rew = env_regret[1]
+                        if eval_2_env_specific_rewards is not None:
+                            rewards = eval_2_env_specific_rewards[ip]
+                            r = list(map(lambda x: pi_star_rew - x, rewards))
+                            eval_2_env_specific_regret[ip] = r
+                            regrets_2 = regrets_2 + r
+                    avg_regret_2 = np.mean(np.array(regrets_2))
+
+                    opt_fracs = []
+                    for env_pi_star in pi_star_rew_per_env_2:
+                        ip = env_pi_star[0]
+                        pi_star_rew = env_pi_star[1]
+                        if eval_2_env_specific_rewards is not None:
+                            rewards = eval_2_env_specific_rewards[ip]
+                            of = list(map(lambda x: x / pi_star_rew, rewards))
+                            eval_2_env_specific_opt_frac[ip] = of
+                            opt_fracs = opt_fracs + of
+                    avg_opt_frac_2 = np.mean(np.array(opt_fracs))
             else:
-                avg_opt_frac = 0.0
+                avg_regret_2 = 0.0
+                avg_opt_frac_2 = 0.0
+            if self.env.env_config is not None:
+                avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
+                eval_avg_opt_frac = eval_avg_episode_rewards / self.env.env_config.pi_star_rew
+            else:
+                opt_fracs = []
+                eval_opt_fracs = []
+                pi_star_rew_per_env = self.env.get_pi_star_rew()
+                for env_pi_star in pi_star_rew_per_env:
+                    ip = env_pi_star[0]
+                    pi_star_rew = env_pi_star[1]
+                    if train_env_specific_rewards is not None:
+                        rewards = train_env_specific_rewards[ip]
+                        of = list(map(lambda x: x / pi_star_rew, rewards))
+                        train_env_specific_opt_frac[ip] = of
+                        opt_fracs = opt_fracs + of
+                    elif eval_env_specific_rewards is not None:
+                        rewards = eval_env_specific_rewards[ip]
+                        of = list(map(lambda x: x / pi_star_rew, rewards))
+                        eval_env_specific_opt_frac[ip] = of
+                        eval_opt_fracs = eval_opt_fracs + of
+                avg_opt_frac = np.mean(np.array(opt_fracs))
+                eval_avg_opt_frac = np.mean(eval_opt_fracs)
         else:
             avg_regret = 0.0
+            avg_eval_regret = 0.0
+            avg_eval2_regret = 0.0
+            avg_opt_frac = 0.0
+            eval_avg_opt_frac = 0.0
+            avg_opt_frac_2 = 0.0
         if not eval and eval_episode_flags is not None:
             eval_avg_episode_flags = np.mean(eval_episode_flags)
         else:
@@ -380,16 +453,20 @@ class BaseAlgorithm(ABC):
                 avg_episode_steps, rolling_avg_steps, lr, avg_episode_flags,
                 avg_episode_flags_percentage, n_af, n_d)
         else:
-            log_str = "[Train] iter:{:.2f},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
-                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
-                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f},epsilon:{:.2f}".format(
+                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
+                      "avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
+                      "avg_R_E2:{:.2f},Avg_Reg_E2:{:.2f},Opt_frac_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f}," \
+                      "avg_F_E2%:{:.2f},epsilon:{:.2f}".format(
                 iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps, n_af, n_d,
-                eval_avg_episode_rewards, eval_avg_episode_steps, eval_avg_episode_flags,
-                eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, eval_2_avg_episode_steps,
+                eval_avg_episode_rewards, avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
+                eval_avg_episode_flags,
+                eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, avg_regret_2, avg_opt_frac_2,
+                eval_2_avg_episode_steps,
                 eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage,self.agent_config.epsilon)
         self.agent_config.logger.info(log_str)
         print(log_str)
@@ -431,6 +508,11 @@ class BaseAlgorithm(ABC):
         result.grad_comp_times.append(avg_grad_comp_times)
         result.weight_update_times.append(avg_weight_update_times)
         result.avg_regret.append(avg_regret)
+        result.avg_opt_frac.append(avg_opt_frac)
+        result.eval_avg_regret.append(avg_eval_regret)
+        result.eval_avg_opt_frac.append(eval_avg_opt_frac)
+        result.eval_2_avg_regret.append(avg_regret_2)
+        result.eval_2_avg_opt_frac.append(avg_opt_frac_2)
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
                 avg = np.mean(train_env_specific_rewards[key])
@@ -438,6 +520,20 @@ class BaseAlgorithm(ABC):
                     result.train_env_specific_rewards[key].append(avg)
                 else:
                     result.train_env_specific_rewards[key] = [avg]
+        if train_env_specific_regret is not None:
+            for key in train_env_specific_regret.keys():
+                avg = np.mean(train_env_specific_regret[key])
+                if key in result.train_env_specific_regrets:
+                    result.train_env_specific_regrets[key].append(avg)
+                else:
+                    result.train_env_specific_regrets[key] = [avg]
+        if train_env_specific_opt_frac is not None:
+            for key in train_env_specific_opt_frac.keys():
+                avg = np.mean(train_env_specific_opt_frac[key])
+                if key in result.train_env_specific_opt_fracs:
+                    result.train_env_specific_opt_fracs[key].append(avg)
+                else:
+                    result.train_env_specific_opt_fracs[key] = [avg]
         if train_env_specific_steps is not None:
             for key in train_env_specific_steps.keys():
                 avg = np.mean(train_env_specific_steps[key])
@@ -467,6 +563,20 @@ class BaseAlgorithm(ABC):
                     result.eval_env_specific_rewards[key].append(avg)
                 else:
                     result.eval_env_specific_rewards[key] = [avg]
+        if eval_env_specific_regret is not None:
+            for key in eval_env_specific_regret.keys():
+                avg = np.mean(eval_env_specific_regret[key])
+                if key in result.eval_env_specific_regrets:
+                    result.eval_env_specific_regrets[key].append(avg)
+                else:
+                    result.eval_env_specific_regrets[key] = [avg]
+        if eval_env_specific_opt_frac is not None:
+            for key in eval_env_specific_opt_frac.keys():
+                avg = np.mean(eval_env_specific_opt_frac[key])
+                if key in result.eval_env_specific_opt_fracs:
+                    result.eval_env_specific_opt_fracs[key].append(avg)
+                else:
+                    result.eval_env_specific_opt_fracs[key] = [avg]
         if eval_env_specific_steps is not None:
             for key in eval_env_specific_steps.keys():
                 avg = np.mean(eval_env_specific_steps[key])
@@ -496,6 +606,20 @@ class BaseAlgorithm(ABC):
                     result.eval_2_env_specific_rewards[key].append(avg)
                 else:
                     result.eval_2_env_specific_rewards[key] = [avg]
+        if eval_2_env_specific_regret is not None:
+            for key in eval_2_env_specific_regret.keys():
+                avg = np.mean(eval_2_env_specific_regret[key])
+                if key in result.eval_2_env_specific_regrets:
+                    result.eval_2_env_specific_regrets[key].append(avg)
+                else:
+                    result.eval_2_env_specific_regrets[key] = [avg]
+        if eval_2_env_specific_opt_frac is not None:
+            for key in eval_2_env_specific_opt_frac.keys():
+                avg = np.mean(eval_2_env_specific_opt_frac[key])
+                if key in result.eval_2_env_specific_opt_fracs:
+                    result.eval_2_env_specific_opt_fracs[key].append(avg)
+                else:
+                    result.eval_2_env_specific_opt_fracs[key] = [avg]
         if eval_2_env_specific_steps is not None:
             for key in eval_2_env_specific_steps.keys():
                 avg = np.mean(eval_2_env_specific_steps[key])
