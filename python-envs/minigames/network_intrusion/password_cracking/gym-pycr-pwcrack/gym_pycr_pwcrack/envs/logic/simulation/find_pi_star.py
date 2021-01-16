@@ -6,13 +6,14 @@ class FindPiStar:
 
     @staticmethod
     def brute_force(env_config: EnvConfig, env):
+        print("brute")
         shortest_paths = env_config.network_conf.shortest_paths()
         if len(shortest_paths) == 0:
             return [], -1
         p = shortest_paths[0]
         paths = []
         pivot_actions = FindPiStar.pivot_actions(env_config=env_config)
-        env.reset()
+        env.reset(soft=True)
         p = p[0]
         for n in p:
             for a in env_config.action_conf.actions:
@@ -26,7 +27,7 @@ class FindPiStar:
                     paths = paths + FindPiStar._breach_node(path=[a], current_node=next_node, remaining_nodes=r_nodes,
                                                             rew=reward, env=env, env_config=env_config,
                                                             pivot_actions=pivot_actions)
-                    env.reset()
+                    env.reset(soft=True)
         sorted_paths = sorted(paths, key=lambda x: x[1])
         pi_star =sorted_paths[-1]
         return pi_star[0], pi_star[1]
@@ -41,7 +42,7 @@ class FindPiStar:
                 shell_access = True
         if not shell_access:
             for a in env_config.action_conf.actions:
-                env.reset()
+                env.reset(soft=True)
                 env.env_state = old_state.copy()
                 k_path = path
                 a_rew = rew
@@ -66,13 +67,13 @@ class FindPiStar:
                             if not len(remaining_nodes) == 0 and not done:
                                 old_state2 = env.env_state.copy()
                                 for n in remaining_nodes:
-                                    env.reset()
+                                    env.reset(soft=True)
                                     env.env_state = old_state2.copy()
                                     a_rew2 = a_rew
                                     if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
                                         old_state3 = env.env_state.copy()
                                         for a in env_config.action_conf.actions:
-                                            env.reset()
+                                            env.reset(soft=True)
                                             env.env_state = old_state3.copy()
                                             a.ip = env.env_state.obs_state.get_action_ip(a)
                                             s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
@@ -112,13 +113,13 @@ class FindPiStar:
             if not len(remaining_nodes) == 0 and not done:
                 # next_node = remaining_nodes[0]
                 for n in remaining_nodes:
-                    env.reset()
+                    env.reset(soft=True)
                     env.env_state = old_state.copy()
                     a_rew2 = a_rew
                     if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
                         old_state2 = env.env_state.copy()
                         for a in env_config.action_conf.actions:
-                            env.reset()
+                            env.reset(soft=True)
                             env.env_state = old_state2.copy()
                             a.ip = env.env_state.obs_state.get_action_ip(a)
                             s_prime, reward, done = TransitionOperator.transition(s=env.env_state, a=a,
@@ -165,3 +166,13 @@ class FindPiStar:
             if a.id == ActionId.SSH_BACKDOOR:
                 pivot_actions.append(a)
         return pivot_actions
+
+
+    @staticmethod
+    def upper_bound_pi(env_config):
+        #shortest_path = env_config.network_conf.shortest_paths()[0][0]
+        num_flags = len(env_config.network_conf.flags_lookup)
+        reward = env_config.flag_found_reward_mult*num_flags
+        reward = reward + env_config.all_flags_reward
+        return reward
+

@@ -150,7 +150,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                     action, env_config=self.env_config, env_state=self.env_state), actions))
         if (self.env_config.env_mode == EnvMode.SIMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
                 and self.env_config.compute_pi_star:
-            pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+            if not self.env_config.use_upper_bound_pi_star:
+                pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+            else:
+                pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
+                pi_star_tau = None
             self.env_config.pi_star_tau = pi_star_tau
             self.env_config.pi_star_rew = pi_star_rew
 
@@ -200,7 +204,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         return m_obs, reward, done, info
 
-    def reset(self) -> np.ndarray:
+    def reset(self, soft : bool = False) -> np.ndarray:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -212,7 +216,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         #         len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
         #         len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
         #         self.env_config.cache_misses))
-        if self.env_config.env_mode == EnvMode.SIMULATION and self.env_config.domain_randomization and self.randomization_space is not None:
+        if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
+                and self.env_config.domain_randomization and self.randomization_space is not None:
             randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,
@@ -222,9 +227,14 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             #     list(map(lambda x: x.ip, randomized_network_conf.nodes))))
             self.env_config = env_config
             if self.env_config.compute_pi_star:
-                pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+                if not self.env_config.use_upper_bound_pi_star:
+                    pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+                else:
+                    pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
+                    pi_star_tau = None
                 self.env_config.pi_star_tau = pi_star_tau
                 self.env_config.pi_star_rew = pi_star_rew
+
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.obs_state.detected:
@@ -3482,6 +3492,8 @@ class PyCRPwCrackRandomGeneratedSimWithCosts4Env(PyCRPwCrackEnv):
             env_config.checkpoint_freq = 1000
             env_config.filter_illegal_actions = False
             env_config.max_episode_length = 50
+            env_config.compute_pi_star = False
+            env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
 
 # -------- Difficulty RandomMany (RandomMany) ------------
@@ -3527,6 +3539,8 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
             env_config.idx=idx
             env_config.filter_illegal_actions = False
             env_config.max_episode_length = 50
+            env_config.compute_pi_star = False
+            env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
 
 
@@ -3566,6 +3580,8 @@ class PyCRPwCrackRandomManyClusterWithCosts1Env(PyCRPwCrackEnv):
             env_config.idx=idx
             env_config.filter_illegal_actions = False
             env_config.max_episode_length = 50
+            env_config.compute_pi_star = False
+            env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
 
 
@@ -3612,4 +3628,5 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.max_exploration_steps = 1000
             env_config.max_exploration_trajectories = 100
             env_config.compute_pi_star = True
+            env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)

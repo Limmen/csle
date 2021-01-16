@@ -370,10 +370,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.iteration % self.agent_config.train_log_frequency == 0:
                 episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                 eval_episode_rewards, eval_episode_steps, \
-                eval_episode_flags_percentage, eval_episode_flags, eval_episode_rewards_env_specific, \
+                eval_episode_flags_percentage, eval_episode_flags, eval_2_episode_rewards_env_specific, \
+                    eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+                    eval_2_episode_flags_percentage_env_specific, eval_episode_rewards_env_specific, \
                 eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, \
-                                                             {}, {}, {}, {}
+                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, None, \
+                                                             None, None, None, {}, {}, {}, {}
                 if self.agent_config.train_progress_deterministic_eval:
                     eval_conf = self.agent_config.env_config
                     if self.agent_config.eval_env_config is not None:

@@ -106,12 +106,12 @@ def default_config() -> ClientConfig:
 
     # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
-    eval_env_cluster_configs = [
-        ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=False, port_forward_next_port=8001 + i * 150,
-                      warmup=True, warmup_iterations=500)
-        for i in range(len(eval_env_containers_configs))
-    ]
+    # eval_env_cluster_configs = [
+    #     ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #                   server_connection=False, port_forward_next_port=8001 + i * 150,
+    #                   warmup=True, warmup_iterations=500)
+    #     for i in range(len(eval_env_containers_configs))
+    # ]
 
     eval_env_cluster_configs = [
         ClusterConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",

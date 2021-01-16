@@ -94,6 +94,7 @@ class SubprocVecEnv(VecEnv):
     def __init__(self, env_fns, start_method=None, env_config = None):
         self.waiting = False
         self.closed = False
+        self.env_config = None
         n_envs = len(env_fns)
 
 
@@ -166,6 +167,7 @@ class SubprocVecEnv(VecEnv):
         return self.network_confs
 
     def get_pi_star_rew(self):
+        print("get pi star rew")
         pi_star_rews = []
         for remote in self.remotes:
             remote.send(("pi_star_rew", None))

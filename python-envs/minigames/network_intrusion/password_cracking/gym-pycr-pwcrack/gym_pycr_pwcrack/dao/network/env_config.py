@@ -142,6 +142,7 @@ class EnvConfig:
         self.exploration_filter_illegal = True
         self.domain_randomization = False
         self.compute_pi_star = False
+        self.use_upper_bound_pi_star = False
         self.pi_star_tau = None
         self.pi_star_rew = -1
 
@@ -262,4 +263,5 @@ class EnvConfig:
         env_config.exploration_filter_illegal = self.exploration_policy
         env_config.domain_randomization = self.domain_randomization
         env_config.compute_pi_star = self.compute_pi_star
+        env_config.use_upper_bound_pi_star = self.use_upper_bound_pi_star
         return env_config

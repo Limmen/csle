@@ -295,9 +295,14 @@ class BaseAlgorithm(ABC):
                 avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
             else:
                 #self.env.get_pi_star_rew()
+                avg_regret = 0.0
                 pass
             if avg_episode_rewards != 0.0:
-                avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
+                if self.env.env_config is not None:
+                    avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
+                else:
+                    avg_opt_frac = 0.0
+                    pass
             else:
                 avg_opt_frac = 0.0
         else:
