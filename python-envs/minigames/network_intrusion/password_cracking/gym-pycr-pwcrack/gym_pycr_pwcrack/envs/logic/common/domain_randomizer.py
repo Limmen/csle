@@ -79,8 +79,8 @@ class DomainRandomizer:
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_users=min_num_users, max_num_users=max_num_users)
-        print("randomization space created, num nodes:{}, num services:{}, num_vulns:{}, os:{}".format(max_num_nodes, len(services), len(vulnerabilities),
-                                                                                                       len(os)))
+        # print("randomization space created, num nodes:{}, num services:{}, num_vulns:{}, os:{}".format(max_num_nodes, len(services), len(vulnerabilities),
+        #                                                                                                len(os)))
         return r_space
 
     @staticmethod

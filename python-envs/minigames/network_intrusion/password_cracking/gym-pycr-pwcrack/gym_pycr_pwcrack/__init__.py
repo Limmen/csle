@@ -753,3 +753,12 @@ register(
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )
+
+# -------- Difficulty Level: MultiSim, Mode: Multi-Simulation, Version: 1 ------------
+register(
+    id='pycr-pwcrack-multisim-v1',
+    entry_point='gym_pycr_pwcrack.envs.pycr_pwcrack_env:PyCRPwCrackMultiSim1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+            "idx": None, "dr_max_num_nodes": int, "dr_min_num_nodes": int, "dr_max_num_flags": int,
+            "dr_min_num_flags": int, "dr_min_num_users": int, "dr_max_num_users": int}
+)

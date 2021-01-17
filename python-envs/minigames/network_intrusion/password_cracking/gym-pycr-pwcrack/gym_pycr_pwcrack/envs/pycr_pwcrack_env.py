@@ -51,6 +51,8 @@ from gym_pycr_pwcrack.envs.config.random.pycr_pwcrack_random_v1 import PyCrPwCra
 from gym_pycr_pwcrack.envs.config.random.pycr_pwcrack_random_v2 import PyCrPwCrackRandomV2
 from gym_pycr_pwcrack.envs.config.random.pycr_pwcrack_random_v3 import PyCrPwCrackRandomV3
 from gym_pycr_pwcrack.envs.config.random.pycr_pwcrack_random_v4 import PyCrPwCrackRandomV4
+from gym_pycr_pwcrack.envs.config.multi_sim.pycr_pwcrack_multisim_base import PyCrPwCrackMultiSimBase
+from gym_pycr_pwcrack.envs.config.multi_sim.pycr_pwcrack_multisim_v1 import PyCrPwCrackMultiSimV1
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_pwcrack.envs.logic.common.util as util
 from gym_pycr_pwcrack.envs.logic.cluster.simulation_generator import SimulationGenerator
@@ -3589,6 +3591,7 @@ class PyCRPwCrackRandomManyClusterWithCosts1Env(PyCRPwCrackEnv):
 
 
 # -------- Version 1 Generated Sim ------------
+
 class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -3632,4 +3635,54 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.max_exploration_trajectories = 100
             env_config.compute_pi_star = True
             env_config.use_upper_bound_pi_star = True
+        super().__init__(env_config=env_config)
+
+
+# -------- Difficulty MultiSim (MultiSim) ------------
+
+# -------- Cluster ------------
+
+# -------- Base Version (for testing) ------------
+
+# -------- Version 1 Cluster ------------
+
+
+class PyCRPwCrackMultiSim1Env(PyCRPwCrackEnv):
+    """
+    The simplest possible configuration, minimal set of actions. Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+                 idx: int = -1, dr_max_num_nodes : int = 10, dr_min_num_nodes : int  = 4, dr_max_num_flags = 3,
+                 dr_min_num_flags : int = 1, dr_min_num_users :int = 2, dr_max_num_users : int = 5):
+        if env_config is None:
+            render_config = PyCrPwCrackMultiSimBase.render_conf(num_nodes=dr_max_num_nodes)
+            randomization_space = DomainRandomizer.generate_randomization_space(
+                [], max_num_nodes=dr_max_num_nodes,
+                min_num_nodes=dr_min_num_nodes, max_num_flags=dr_max_num_flags,
+                min_num_flags=dr_min_num_flags, min_num_users=dr_min_num_users,
+                max_num_users=dr_max_num_users,
+                use_base_randomization=True)
+            self.randomization_space = randomization_space
+            action_conf = PyCrPwCrackMultiSimV1.actions_conf(num_nodes=dr_max_num_nodes-1,
+                                                                 subnet_mask="172.18.2.0/24",
+                                                                 hacker_ip="172.18.2.191")
+            env_config = PyCrPwCrackMultiSimV1.env_config(action_conf=action_conf,
+                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          num_nodes=dr_max_num_nodes-1)
+            env_config.domain_randomization = True
+            env_config.alerts_coefficient = 1
+            env_config.cost_coefficient = 0
+            env_config.env_mode = EnvMode.SIMULATION
+            env_config.save_trajectories = False
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+            env_config.idx=idx
+            env_config.filter_illegal_actions = False
+            env_config.max_episode_length = 50
+            env_config.compute_pi_star = True
+            env_config.use_upper_bound_pi_star = True
+            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                             network_ids=list(range(1, 254)),
+                                                                             r_space=self.randomization_space,
+                                                                             env_config=env_config)
         super().__init__(env_config=env_config)

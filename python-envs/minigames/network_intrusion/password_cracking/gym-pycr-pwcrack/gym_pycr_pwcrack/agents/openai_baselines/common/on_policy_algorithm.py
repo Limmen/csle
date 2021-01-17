@@ -221,7 +221,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             n_steps += 1
             episode_reward += rewards
             episode_step += 1
-
             if dones.any():
                 for i in range(len(dones)):
                     if dones[i]:
@@ -585,9 +584,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.agent_config.env_config.cluster_config is not None:
                 agent_ip = self.agent_config.env_config.cluster_config.agent_ip
             else:
-                agent_ip = "agent_ip"
+                agent_ip = self.agent_config.env_config.idx
         else:
-            agent_ip = self.agent_config.env_configs[i].cluster_config.agent_ip
+            if self.agent_config.env_configs[i].cluster_config is not None:
+                agent_ip = self.agent_config.env_configs[i].cluster_config.agent_ip
+            else:
+                agent_ip = self.agent_config.env_configs[i].idx
             num_flags = self.agent_config.env_configs[infos[i]["idx"]].num_flags
 
         if agent_ip not in env_specific_rewards:

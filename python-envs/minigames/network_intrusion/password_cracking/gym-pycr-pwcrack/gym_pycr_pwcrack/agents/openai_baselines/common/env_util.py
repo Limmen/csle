@@ -93,8 +93,10 @@ def make_vec_env(
 
 def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor_kwargs):
     def _init():
-        cluster_config = env_kwargs["cluster_config"]
-        cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * rank
+        if "cluster_config" in env_kwargs:
+            cluster_config = env_kwargs["cluster_config"]
+            if cluster_config is not None:
+                cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * rank
         if "num_nodes" in env_kwargs:
             num_nodes = env_kwargs["num_nodes"]
         else:
@@ -113,6 +115,19 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                     env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
                                    flags_config=flags_config, num_nodes=num_nodes)
+            elif "dr_max_num_nodes" in env_kwargs:
+                dr_max_num_nodes = env_kwargs["dr_max_num_nodes"]
+                dr_min_num_nodes = env_kwargs["dr_min_num_nodes"]
+                dr_max_num_flags = env_kwargs["dr_max_num_flags"]
+                dr_min_num_flags = env_kwargs["dr_min_num_flags"]
+                dr_max_num_users = env_kwargs["dr_max_num_users"]
+                dr_min_num_users = env_kwargs["dr_min_num_users"]
+                idx = env_kwargs["idx"]
+                env = gym.make(env_id, env_config=env_kwargs["env_config"],
+                               checkpoint_dir=env_kwargs["checkpoint_dir"], dr_max_num_nodes=dr_max_num_nodes,
+                               dr_min_num_nodes=dr_min_num_nodes, dr_max_num_flags=dr_max_num_flags,
+                               dr_min_num_flags=dr_min_num_flags, dr_max_num_users=dr_max_num_users,
+                               dr_min_num_users=dr_min_num_users, idx=idx)
             else:
                 env = gym.make(env_id, env_config=env_kwargs["env_config"],
                                cluster_config=cluster_config,
@@ -131,6 +146,19 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                                  cluster_config=cluster_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
                                  flags_config=flags_config, num_nodes=num_nodes)
+            elif "dr_max_num_nodes" in env_kwargs:
+                dr_max_num_nodes = env_kwargs["dr_max_num_nodes"]
+                dr_min_num_nodes = env_kwargs["dr_min_num_nodes"]
+                dr_max_num_flags = env_kwargs["dr_max_num_flags"]
+                dr_min_num_flags = env_kwargs["dr_min_num_flags"]
+                dr_max_num_users = env_kwargs["dr_max_num_users"]
+                dr_min_num_users = env_kwargs["dr_min_num_users"]
+                idx = env_kwargs["idx"]
+                env = env_id(env_id, env_config=env_kwargs["env_config"],
+                               checkpoint_dir=env_kwargs["checkpoint_dir"], dr_max_num_nodes=dr_max_num_nodes,
+                               dr_min_num_nodes=dr_min_num_nodes, dr_max_num_flags=dr_max_num_flags,
+                               dr_min_num_flags=dr_min_num_flags, dr_max_num_users=dr_max_num_users,
+                               dr_min_num_users=dr_min_num_users, idx=idx)
             else:
                 env = env_id(env_config=env_kwargs["env_config"],
                              cluster_config=cluster_config,

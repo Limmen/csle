@@ -45,7 +45,11 @@ class ClientConfig:
                  eval_multi_env: bool  = False,
                  eval_n_envs: int = 2,
                  eval_dummy_vec_env: bool = False,
-                 eval_sub_proc_env: bool = False
+                 eval_sub_proc_env: bool = False,
+                 train_multi_sim: bool = False,
+                 eval_multi_sim: bool = False,
+                 num_sims : int = 1,
+                 num_sims_eval: int = 1
                  ):
         """
         Class constructor, initializes the DTO
@@ -118,3 +122,7 @@ class ClientConfig:
         self.eval_n_envs = eval_n_envs
         self.eval_dummy_vec_env = eval_dummy_vec_env
         self.eval_sub_proc_env = eval_sub_proc_env
+        self.train_multi_sim = train_multi_sim
+        self.eval_multi_sim = eval_multi_sim
+        self.num_sims = num_sims
+        self.num_sims_eval = num_sims_eval

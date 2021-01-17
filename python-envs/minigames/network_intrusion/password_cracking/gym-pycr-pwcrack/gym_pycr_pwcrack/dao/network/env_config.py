@@ -161,7 +161,10 @@ class EnvConfig:
 
         :return: returns dict of (flagpath -> FlagDTO)
         """
-        return self.network_conf.flags_lookup
+        if self.network_conf is not None:
+            return self.network_conf.flags_lookup
+        else:
+            return None
 
     def scale_rewards_prep(self):
         sum_costs = sum(list(map(lambda x: x.cost, self.action_conf.actions)))

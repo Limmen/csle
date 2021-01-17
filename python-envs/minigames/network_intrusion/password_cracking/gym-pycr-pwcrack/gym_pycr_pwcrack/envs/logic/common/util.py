@@ -4,11 +4,11 @@ from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 def is_network_conf_incomplete(env_config: EnvConfig):
     if env_config.network_conf is None:
         return True
-    if env_config.network_conf.nodes == None:
+    if env_config.network_conf.nodes is None:
         return True
     if len(env_config.network_conf.nodes) == 0:
         return True
-    if env_config.network_conf.adj_matrix == None:
+    if env_config.network_conf.adj_matrix is None:
         return True
     if len(env_config.network_conf.adj_matrix) == 0:
         return True

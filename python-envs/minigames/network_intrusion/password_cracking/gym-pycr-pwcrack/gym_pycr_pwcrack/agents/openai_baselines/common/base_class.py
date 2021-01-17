@@ -301,6 +301,12 @@ class BaseAlgorithm(ABC):
             if self.env.env_config is not None:
                 avg_regret = self.env.env_config.pi_star_rew - avg_episode_rewards
                 avg_eval_regret = self.env.env_config.pi_star_rew - eval_avg_episode_rewards
+            elif train_env_specific_rewards is None and eval_env_specific_rewards is None:
+                env_regret = self.env.get_pi_star_rew()[0]
+                ip = env_regret[0]
+                pi_star_rew = env_regret[1]
+                avg_regret = pi_star_rew - avg_episode_rewards
+                avg_eval_regret = pi_star_rew - eval_avg_episode_rewards
             else:
                 regrets = []
                 eval_regrets = []
@@ -318,6 +324,7 @@ class BaseAlgorithm(ABC):
                         r = list(map(lambda x: pi_star_rew - x, rewards))
                         eval_env_specific_regret[ip] = r
                         eval_regrets = eval_regrets + r
+
                 avg_regret = np.mean(np.array(regrets))
                 avg_eval_regret = np.mean(eval_regrets)
 
@@ -354,6 +361,12 @@ class BaseAlgorithm(ABC):
             if self.env.env_config is not None:
                 avg_opt_frac = avg_episode_rewards/self.env.env_config.pi_star_rew
                 eval_avg_opt_frac = eval_avg_episode_rewards / self.env.env_config.pi_star_rew
+            elif train_env_specific_rewards is None and eval_env_specific_rewards is None:
+                env_regret = self.env.get_pi_star_rew()[0]
+                ip = env_regret[0]
+                pi_star_rew = env_regret[1]
+                avg_opt_frac = avg_episode_rewards / pi_star_rew
+                eval_avg_opt_frac = eval_avg_episode_rewards / pi_star_rew
             else:
                 opt_fracs = []
                 eval_opt_fracs = []
@@ -446,6 +459,7 @@ class BaseAlgorithm(ABC):
             avg_weight_update_times = 0.0
 
         if eval:
+            print("eval, avg_regr:{}, avg_opt:{}, evg_eval_reg:{}".format(avg_regret, avg_opt_frac, avg_eval_regret))
             log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}".format(

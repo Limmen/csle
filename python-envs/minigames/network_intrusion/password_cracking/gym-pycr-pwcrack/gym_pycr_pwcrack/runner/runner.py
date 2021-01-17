@@ -59,10 +59,12 @@ class Runner:
         env = None
         eval_env = None
         if config.multi_env:
-            cluster_conf_temps = deepcopy(config.cluster_configs)
-            for cf in cluster_conf_temps:
-                cf.warmup = False
-                cf.skip_exploration = True
+            cluster_conf_temps = None
+            if config.cluster_configs is not None:
+                cluster_conf_temps = deepcopy(config.cluster_configs)
+                for cf in cluster_conf_temps:
+                    cf.warmup = False
+                    cf.skip_exploration = True
         else:
             cluster_conf_temp = None
             if config.cluster_config is not None:
@@ -70,15 +72,19 @@ class Runner:
                 cluster_conf_temp.warmup = False
                 cluster_conf_temp.skip_exploration = True
         if config.eval_multi_env:
-            eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
-            for cf in eval_cluster_conf_temps:
-                cf.warmup = False
-                cf.skip_exploration = True
+            eval_cluster_conf_temps = None
+            if config.eval_env_cluster_configs is not None:
+                eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
+                for cf in eval_cluster_conf_temps:
+                    cf.warmup = False
+                    cf.skip_exploration = True
 
         if config.multi_env:
             env, base_envs = Runner.multi_env_creation(config=config, cluster_conf_temps=cluster_conf_temps)
         elif config.randomized_env:
             env, base_env = Runner.randomized_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
+        elif config.train_multi_sim:
+            env, base_envs = Runner.multisim_env_creation(config=config)
         else:
             env, base_env = Runner.regular_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
         if config.eval_env is not None and config.eval_env:
@@ -89,16 +95,20 @@ class Runner:
                                     flags_config=config.eval_env_flags_config, num_nodes = config.eval_env_num_nodes)
             elif config.eval_multi_env:
                 eval_env, eval_base_envs = Runner.eval_multi_env_creation(config=config, cluster_conf_temps=eval_cluster_conf_temps)
+            elif config.eval_multi_sim:
+                eval_env, eval_base_envs = Runner.eval_multisim_env_creation(config=config)
             else:
                 eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
                                     cluster_config = config.eval_cluster_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
             if config.eval_multi_env:
                 config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+            elif config.train_multi_sim:
+                config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             else:
                 config.agent_config.eval_env_config = eval_env.env_config
 
-        if config.agent_config.domain_randomization:
+        if config.agent_config.domain_randomization and config.multi_env:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
@@ -118,6 +128,8 @@ class Runner:
 
         agent: TrainAgent = None
         if config.multi_env:
+            config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+        elif config.train_multi_sim:
             config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
         else:
             config.agent_config.env_config = base_env.env_config
@@ -262,6 +274,70 @@ class Runner:
             vec_env_cls = SubprocVecEnv
         if config.eval_dummy_vec_env or config.eval_sub_proc_env:
             env = make_vec_env(config.eval_env_name, n_envs=config.eval_n_envs, seed=config.random_seed,
+                               env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
+                               multi_env=True)
+        else:
+            raise ValueError("Have to use a vectorized env class to instantiate a multi-env config")
+        return env, base_envs
+
+    @staticmethod
+    def multisim_env_creation(config: ClientConfig):
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=None,
+                              idx=i, checkpoint_dir=config.env_checkpoint_dir,
+                              dr_max_num_nodes=config.agent_config.dr_max_num_nodes,
+                              dr_min_num_nodes=config.agent_config.dr_min_num_nodes,
+                              dr_max_num_users=config.agent_config.dr_max_num_users,
+                              dr_min_num_users=config.agent_config.dr_min_num_users,
+                              dr_max_num_flags=config.agent_config.dr_max_num_flags,
+                              dr_min_num_flags=config.agent_config.dr_min_num_flags
+                              ) for i in range(config.num_sims_eval)]
+        env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
+                       "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
+                       "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
+                       "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,
+                       "dr_max_num_flags": config.agent_config.dr_max_num_flags,
+                       "dr_min_num_flags": config.agent_config.dr_min_num_flags,
+                       "dr_max_num_users": config.agent_config.dr_max_num_users,
+                       "dr_min_num_users": config.agent_config.dr_min_num_users
+                       } for i in range(config.num_sims)]
+        vec_env_kwargs = {"env_config": config.env_config}
+        vec_env_cls = DummyVecEnv
+        if config.sub_proc_env:
+            vec_env_cls = SubprocVecEnv
+        if config.dummy_vec_env or config.sub_proc_env:
+            env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
+                               env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
+                               multi_env=True)
+        else:
+            raise ValueError("Have to use a vectorized env class to instantiate a multi-env config")
+        return env, base_envs
+
+    @staticmethod
+    def eval_multisim_env_creation(config: ClientConfig):
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=None,
+                              idx=i, checkpoint_dir=config.env_checkpoint_dir,
+                              dr_max_num_nodes = config.agent_config.dr_max_num_nodes,
+                              dr_min_num_nodes = config.agent_config.dr_min_num_nodes,
+                              dr_max_num_users = config.agent_config.dr_max_num_users,
+                              dr_min_num_users = config.agent_config.dr_min_num_users,
+                              dr_max_num_flags = config.agent_config.dr_max_num_flags,
+                              dr_min_num_flags = config.agent_config.dr_min_num_flags
+                              ) for i in range(config.num_sims)]
+        env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
+                       "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
+                       "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
+                       "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,
+                       "dr_max_num_flags": config.agent_config.dr_max_num_flags,
+                       "dr_min_num_flags": config.agent_config.dr_min_num_flags,
+                       "dr_max_num_users": config.agent_config.dr_max_num_users,
+                       "dr_min_num_users": config.agent_config.dr_min_num_users
+                       } for i in range(config.num_sims_eval)]
+        vec_env_kwargs = {"env_config": config.env_config}
+        vec_env_cls = DummyVecEnv
+        if config.sub_proc_env:
+            vec_env_cls = SubprocVecEnv
+        if config.dummy_vec_env or config.sub_proc_env:
+            env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
                                env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls,
                                multi_env=True)
         else:

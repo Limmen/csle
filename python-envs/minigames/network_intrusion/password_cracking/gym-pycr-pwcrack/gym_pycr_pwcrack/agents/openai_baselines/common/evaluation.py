@@ -291,7 +291,7 @@ def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_s
     if env_config.cluster_config is not None:
         agent_ip = env_config.cluster_config.agent_ip
     else:
-        agent_ip = "agent_ip"
+        agent_ip = env_config.idx
     num_flags = env_config.num_flags
 
     if agent_ip not in env_specific_rewards:

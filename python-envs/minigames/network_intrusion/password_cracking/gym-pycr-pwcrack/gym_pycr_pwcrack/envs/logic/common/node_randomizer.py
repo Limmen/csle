@@ -23,9 +23,14 @@ class NodeRandomizer:
                   router: bool = False, agent: bool = False, gateway: bool = False):
         id = id
         ip_id = int(ip.rsplit(".", 1)[-1])
-        return NodeRandomizer.randomize_server(ip=ip, reachable=reachable, id=id, users_config=users_config,
+        node = NodeRandomizer.randomize_server(ip=ip, reachable=reachable, id=id, users_config=users_config,
                                                flags_config=flags_config, vulns_config=vulns_config, r_space=r_space,
                                                gateway=gateway, router = router)
+        if agent:
+            node.type == NodeType.HACKER
+        if router:
+            node.type == NodeType.ROUTER
+        return node
         # if router:
         #     pass
         # elif agent:
