@@ -19,7 +19,7 @@ def default_config() -> ClientConfig:
                                                 min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
                                                 epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                                 video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=50,
+                                                num_iterations=5000,
                                                 eval_render=False, gifs=True,
                                                 gif_dir=util.default_output_dir() + "/results/gifs",
                                                 eval_frequency=100, video_frequency=10,
@@ -45,7 +45,7 @@ def default_config() -> ClientConfig:
                                                 dr_max_num_nodes=max_num_nodes,
                                                 dr_min_num_nodes=4, dr_min_num_users=1,
                                                 dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
-                                                dr_use_base=True, log_regret=True, running_avg=10
+                                                dr_use_base=True, log_regret=True, running_avg=2
                                                 )
     eval_env_name = "pycr-pwcrack-multisim-v1"
     eval_n_envs = 1
@@ -63,7 +63,7 @@ def default_config() -> ClientConfig:
                                  eval_multi_env=False,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
                                  eval_dummy_vec_env=False, eval_sub_proc_env=True,
-                                 train_multi_sim=True,  eval_multi_sim=True, num_sims = 2, num_sims_eval=2
+                                 train_multi_sim=True,  eval_multi_sim=True, num_sims = 10, num_sims_eval=2
                                  )
     return client_config
 

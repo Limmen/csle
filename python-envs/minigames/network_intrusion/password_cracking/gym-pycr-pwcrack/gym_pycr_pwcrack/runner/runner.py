@@ -256,6 +256,19 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                            checkpoint_dir=config.env_checkpoint_dir)
+            if config.agent_config.domain_randomization:
+                randomization_space = DomainRandomizer.generate_randomization_space(
+                    [], max_num_nodes=config.agent_config.dr_max_num_nodes,
+                    min_num_nodes=config.agent_config.dr_min_num_nodes,
+                    max_num_flags=config.agent_config.dr_max_num_flags,
+                    min_num_flags=config.agent_config.dr_min_num_flags,
+                    min_num_users=config.agent_config.dr_min_num_users,
+                    max_num_users=config.agent_config.dr_max_num_users,
+                    use_base_randomization=config.agent_config.dr_use_base)
+                env.randomization_space = randomization_space
+                env.env_config.domain_randomization = True
+                base_env.randomization_space = randomization_space
+                base_env.env_config.domain_randomization = True
         return env, base_env
 
     @staticmethod
@@ -290,7 +303,7 @@ class Runner:
                               dr_min_num_users=config.agent_config.dr_min_num_users,
                               dr_max_num_flags=config.agent_config.dr_max_num_flags,
                               dr_min_num_flags=config.agent_config.dr_min_num_flags
-                              ) for i in range(config.num_sims_eval)]
+                              ) for i in range(config.num_sims)]
         env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
@@ -322,7 +335,7 @@ class Runner:
                               dr_min_num_users = config.agent_config.dr_min_num_users,
                               dr_max_num_flags = config.agent_config.dr_max_num_flags,
                               dr_min_num_flags = config.agent_config.dr_min_num_flags
-                              ) for i in range(config.num_sims)]
+                              ) for i in range(config.num_sims_eval)]
         env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,

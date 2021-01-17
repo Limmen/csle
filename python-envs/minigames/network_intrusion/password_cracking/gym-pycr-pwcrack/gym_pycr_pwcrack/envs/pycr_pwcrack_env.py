@@ -68,7 +68,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
     Abstract OpenAI Gym Env for the PyCr PwCrack minigame
     """
 
-    def __init__(self, env_config : EnvConfig):
+    def __init__(self, env_config : EnvConfig, rs = None):
         self.env_config = env_config
         if util.is_network_conf_incomplete(env_config) and self.env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Must provide a simulation model to run in simulation mode")
@@ -88,11 +88,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.num_actions = self.env_config.action_conf.num_actions
         self.network_orig_shape = self.env_state.network_orig_shape
         self.machine_orig_shape = self.env_state.machine_orig_shape
+        self.env_config.pi_star_rew_list = []
         self.reward_range = (float(0), float(1))
         self.num_states = 100
         self.idx = self.env_config.idx
         self.viewer = None
-        self.randomization_space = None
+        self.randomization_space = rs
         self.steps_beyond_done = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
@@ -156,9 +157,11 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                 pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
                 self.env_config.pi_star_tau = pi_star_tau
                 self.env_config.pi_star_rew = pi_star_rew
+                self.env_config.pi_star_rew_list.append(pi_star_rew)
         if self.env_config.use_upper_bound_pi_star:
             self.env_config.pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
             self.env_config.pi_star_tau = None
+            self.env_config.pi_star_rew_list.append(self.env_config.pi_star_rew)
 
     # -------- API ------------
     def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
@@ -218,6 +221,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         #         len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
         #         len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
         #         self.env_config.cache_misses))
+        # print("sott:{},env_mode:{},dr:{},rs:{}".format(soft, self.env_config.env_mode,
+        #                                                self.env_config.domain_randomization,
+        #                                                self.randomization_space))
         if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
                 and self.env_config.domain_randomization and self.randomization_space is not None:
             randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
@@ -236,6 +242,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                     pi_star_tau = None
                 self.env_config.pi_star_tau = pi_star_tau
                 self.env_config.pi_star_rew = pi_star_rew
+                self.env_config.pi_star_rew_list.append(pi_star_rew)
             actions = list(range(self.num_actions))
             self.initial_illegal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
@@ -625,13 +632,14 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
             env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 0
             env_config.save_trajectories = False
-            env_config.filter_illegal_actions = True
+            env_config.filter_illegal_actions = False
             env_config.max_episode_length = 200
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.compute_pi_star = True
+            env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
 
 
@@ -3685,4 +3693,4 @@ class PyCRPwCrackMultiSim1Env(PyCRPwCrackEnv):
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,
                                                                              env_config=env_config)
-        super().__init__(env_config=env_config)
+        super().__init__(env_config=env_config, rs=randomization_space)

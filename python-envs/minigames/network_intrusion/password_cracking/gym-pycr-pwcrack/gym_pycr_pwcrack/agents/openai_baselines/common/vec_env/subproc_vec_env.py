@@ -53,10 +53,13 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                     id = env.env_config.cluster_config.agent_ip
                 elif env.env_config.network_conf.hacker is not None:
                     id = env.env_config.network_conf.hacker.ip
-                remote.send((id, env.env_config.pi_star_rew))
+                remote.send((id, env.env_config.pi_star_rew, env.env_config.pi_star_rew_list))
+                #env.env.env_config.pi_star_rew_list = [env.env.env_config.pi_star_rew]
             elif cmd == "set_randomization_space":
                 env.randomization_space = data
                 env.env.randomization_space = data
+            elif cmd == "reset_pi_star_rew":
+                env.env.env_config.pi_star_rew_list = [env.env.env_config.pi_star_rew]
             elif cmd == "set_domain_randomization_eval_env":
                 env.env.env_config.domain_randomization = data
             elif cmd == "env_method":
@@ -184,6 +187,10 @@ class SubprocVecEnv(VecEnv):
     def set_randomization_space(self, randomization_space):
         for remote in self.remotes:
             remote.send(("set_randomization_space", randomization_space))
+
+    def reset_pi_star_rew(self):
+        for remote in self.remotes:
+            remote.send(("reset_pi_star_rew", None))
 
     def set_domain_randomization(self, domain_randomization):
         for remote in self.remotes:

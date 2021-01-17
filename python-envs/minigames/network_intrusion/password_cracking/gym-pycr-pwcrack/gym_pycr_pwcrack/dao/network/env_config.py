@@ -145,6 +145,7 @@ class EnvConfig:
         self.use_upper_bound_pi_star = False
         self.pi_star_tau = None
         self.pi_star_rew = -1
+        self.pi_star_rew_list = []
 
 
     def get_port_forward_port(self) -> int:
@@ -267,4 +268,6 @@ class EnvConfig:
         env_config.domain_randomization = self.domain_randomization
         env_config.compute_pi_star = self.compute_pi_star
         env_config.use_upper_bound_pi_star = self.use_upper_bound_pi_star
+        env_config.pi_star_rew = self.pi_star_rew
+        env_config.pi_star_rew_list = self.pi_star_rew_list
         return env_config
