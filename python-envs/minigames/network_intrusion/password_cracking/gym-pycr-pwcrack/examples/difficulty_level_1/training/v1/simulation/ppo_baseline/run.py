@@ -14,35 +14,35 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     max_num_nodes = 6
-    agent_config = AgentConfig(gamma=1, alpha=0.005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=100,
+                               num_iterations=10000,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=150, input_dim=((max_num_nodes-1) * 3),
                                output_dim=7 + (3*(max_num_nodes-1)),
-                               pi_hidden_dim=64, pi_hidden_layers=1,
-                               vf_hidden_dim=64, vf_hidden_layers=1,
-                               shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=10000,
+                               pi_hidden_dim=32, pi_hidden_layers=1,
+                               vf_hidden_dim=32, vf_hidden_layers=1,
+                               shared_hidden_layers=1, shared_hidden_dim=32,
+                               batch_size=500,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
+                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0,
                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-100,
                                filter_illegal_actions=False, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=10, eval_deterministic=False, log_regret=True,
-                               domain_randomization=True, dr_max_num_nodes=max_num_nodes,
+                               domain_randomization=False, dr_max_num_nodes=max_num_nodes,
                                dr_min_num_nodes=6, dr_min_num_users=1,
                                dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=2,
-                               dr_use_base=True, running_avg=10
+                               dr_use_base=True, running_avg=50
                                )
     env_name = "pycr-pwcrack-level-1-sim-v1"
     #eval_env_name = "pycr-pwcrack-level-1-cluster-v1"

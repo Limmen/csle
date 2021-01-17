@@ -639,7 +639,8 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.compute_pi_star = True
-            env_config.use_upper_bound_pi_star = True
+            env_config.use_upper_bound_pi_star = False
+            env_config.domain_randomization = False
         super().__init__(env_config=env_config)
 
 

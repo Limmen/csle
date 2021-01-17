@@ -481,7 +481,8 @@ class EnvDynamicsUtil:
                         num_new_flag_pts: int = 0, num_new_osvdb_vuln_found : int = 0,
                         num_new_logged_in : int = 0, num_new_tools_installed : int = 0,
                         num_new_backdoors_installed : int = 0,
-                        cost: float = 0.0, env_config: EnvConfig  = None, alerts: Tuple = None, action: Action = None) -> int:
+                        cost: float = 0.0, env_config: EnvConfig  = None, alerts: Tuple = None,
+                        action: Action = None) -> int:
         """
         Implements the reward function
 
@@ -519,13 +520,24 @@ class EnvDynamicsUtil:
         if env_config.ids_router and alerts is not None:
             alerts_pts = ((alerts[0] * env_config.alerts_coefficient) / env_config.max_alerts) * 10  # normalize between 0-10
 
+        #reward = (-env_config.base_step_reward) * reward - cost - alerts_pts
+
         if reward == 0:
             if sum(new_info) > 0:
                 reward = - cost - alerts_pts
             else:
                 reward = env_config.base_step_reward - cost - alerts_pts
         else:
-            reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
+            reward = reward - cost - alerts_pts
+
+        # if reward == 0:
+        #     if sum(new_info) > 0:
+        #         reward = - cost - alerts_pts
+        #     else:
+        #         reward = env_config.base_step_reward - cost - alerts_pts
+        # else:
+        #     reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
+
         #print("reward{}, new_info:{}, alerts_pts:{}, cost:{}".format(reward, new_info, alerts_pts, cost))
         # print("flag reward:{}, new flags:{}".format(env_config.flag_found_reward_mult * num_new_flag_pts, num_new_flag_pts))
         return reward

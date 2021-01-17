@@ -299,14 +299,20 @@ class BaseAlgorithm(ABC):
             eval_avg_episode_rewards = 0.0
         if self.agent_config.log_regret:
             if self.env.env_config is not None:
-                pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(episode_rewards):]
-                r = [pi_star_rews[i] - episode_rewards[i] for i in range(len(episode_rewards))]
-                avg_regret = np.mean(np.array(r))
+                if len(self.env.envs[0].env_config.pi_star_rew_list) >= len(episode_rewards):
+                    pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(episode_rewards):]
+                    r = [pi_star_rews[i] - episode_rewards[i] for i in range(len(episode_rewards))]
+                    avg_regret = np.mean(np.array(r))
+                else:
+                    avg_regret = self.env.envs[0].env_config.pi_star_rew - avg_episode_rewards
 
                 if eval_episode_rewards is not None:
-                    pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(eval_episode_rewards):]
-                    r = [pi_star_rews[i] - eval_episode_rewards[i] for i in range(len(eval_episode_rewards))]
-                    avg_eval_regret = np.mean(np.array(r))
+                    if len(self.env.envs[0].env_config.pi_star_rew_list) >= len(eval_episode_rewards):
+                        pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(eval_episode_rewards):]
+                        r = [pi_star_rews[i] - eval_episode_rewards[i] for i in range(len(eval_episode_rewards))]
+                        avg_eval_regret = np.mean(np.array(r))
+                    else:
+                        avg_eval_regret = self.env.envs[0].env_config.pi_star_rew - eval_avg_episode_rewards
                 else:
                     avg_eval_regret = 0.0
 
@@ -386,14 +392,21 @@ class BaseAlgorithm(ABC):
                 avg_regret_2 = 0.0
                 avg_opt_frac_2 = 0.0
             if self.env.env_config is not None:
-                pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(episode_rewards):]
-                of = [episode_rewards[i]/pi_star_rews[i] for i in range(len(episode_rewards))]
-                avg_opt_frac = np.mean(np.array(of))
+
+                if len(self.env.envs[0].env_config.pi_star_rew_list) >= len(episode_rewards):
+                    pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(episode_rewards):]
+                    of = [episode_rewards[i]/pi_star_rews[i] for i in range(len(episode_rewards))]
+                    avg_opt_frac = np.mean(np.array(of))
+                else:
+                    avg_opt_frac = avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew
 
                 if eval_episode_rewards is not None:
-                    pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(eval_episode_rewards):]
-                    of = [eval_episode_rewards[i]/pi_star_rews[i] for i in range(len(eval_episode_rewards))]
-                    eval_avg_opt_frac = np.mean(np.array(of))
+                    if len(self.env.envs[0].env_config.pi_star_rew_list) >= len(eval_episode_rewards):
+                        pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(eval_episode_rewards):]
+                        of = [eval_episode_rewards[i]/pi_star_rews[i] for i in range(len(eval_episode_rewards))]
+                        eval_avg_opt_frac = np.mean(np.array(of))
+                    else:
+                        eval_avg_opt_frac = eval_avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew
                 else:
                     eval_avg_opt_frac = 0.0
             elif train_env_specific_rewards is None and eval_env_specific_rewards is None:

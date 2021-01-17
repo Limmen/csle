@@ -100,7 +100,7 @@ class PyCrPwCrackLevel1V1:
 
         env_config.flag_found_reward_mult = 10
         env_config.all_flags_reward = 0
-        env_config.base_step_reward = -1
+        env_config.base_step_reward = -10
         env_config.illegal_reward_action = -1
 
         env_config.port_found_reward_mult = 0
