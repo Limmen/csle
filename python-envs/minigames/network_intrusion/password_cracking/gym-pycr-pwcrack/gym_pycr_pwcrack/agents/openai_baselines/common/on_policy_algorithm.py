@@ -231,7 +231,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_steps.append(episode_step[i])
                         episode_flags.append(infos[i]["flags"])
                         if self.agent_config.env_config is not None:
-                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags)
+                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags) # TODO this does not work with DR
                         else:
                             episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
 

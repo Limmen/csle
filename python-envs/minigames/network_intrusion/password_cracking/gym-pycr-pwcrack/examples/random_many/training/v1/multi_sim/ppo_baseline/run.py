@@ -39,13 +39,13 @@ def default_config() -> ClientConfig:
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=False, train_progress_deterministic_eval=True,
+                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=1, eval_deterministic=False,
                                                 num_nodes=max_num_nodes, domain_randomization = True,
                                                 dr_max_num_nodes=max_num_nodes,
                                                 dr_min_num_nodes=4, dr_min_num_users=1,
                                                 dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
-                                                dr_use_base=True, log_regret=True, running_avg=2
+                                                dr_use_base=True, log_regret=True, running_avg=50
                                                 )
     eval_env_name = "pycr-pwcrack-multisim-v1"
     eval_n_envs = 1

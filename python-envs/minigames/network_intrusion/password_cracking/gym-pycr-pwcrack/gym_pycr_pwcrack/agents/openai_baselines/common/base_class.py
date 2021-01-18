@@ -369,8 +369,9 @@ class BaseAlgorithm(ABC):
                         pi_star_rew = env_regret[1]
                         if eval_2_env_specific_rewards is not None:
                             rewards = eval_2_env_specific_rewards[ip]
-                            pi_star_rews = env_regret[2][-len(rewards):]
-                            r = [pi_star_rews[i] - rewards[i] for i in range(len(rewards))]
+                            #print("len ip:{} reg:{}, rews:{}".format(ip, env_regret[2], rewards))
+                            #pi_star_rews = env_regret[2][-len(rewards):]
+                            r = [pi_star_rew - rewards[i] for i in range(len(rewards))]
                             #r = list(map(lambda x: pi_star_rew - x, rewards))
                             eval_2_env_specific_regret[ip] = r
                             regrets_2 = regrets_2 + r
@@ -382,8 +383,8 @@ class BaseAlgorithm(ABC):
                         pi_star_rew = env_pi_star[1]
                         if eval_2_env_specific_rewards is not None:
                             rewards = eval_2_env_specific_rewards[ip]
-                            pi_star_rews = env_regret[2][-len(rewards):]
-                            of = [rewards[i]/pi_star_rews[i] for i in range(len(rewards))]
+                            #pi_star_rews = env_regret[2][-len(rewards):]
+                            of = [rewards[i]/pi_star_rew for i in range(len(rewards))]
                             #of = list(map(lambda x: x / pi_star_rew, rewards))
                             eval_2_env_specific_opt_frac[ip] = of
                             opt_fracs = opt_fracs + of
