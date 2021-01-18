@@ -33,32 +33,34 @@ class PyCrPwCrackLevel1V1:
             actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
 
         # Subnet actions
-        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
+        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                         subnet=True))
-        actions.append(NMAPActions.NMAP_VULNERS(num_nodes+1, ip=subnet_mask, subnet=True))
-        actions.append(ShellActions.FIND_FLAG(index=num_nodes+1))
-        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes+1))
+        actions.append(NMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(ShellActions.FIND_FLAG(index=num_nodes + 1))
+        actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
+        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes + 1))
         actions.append(
-            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
+            NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                          subnet=True))
-        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
+        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                  subnet=True))
-        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask,
+        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                  subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            ActionId.NMAP_VULNERS_SUBNET,
+            ActionId.PING_SCAN_SUBNET,
             ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
             ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [ActionId.FIND_FLAG]
+        shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,
+        action_config = ActionConfig(num_indices=num_nodes, actions=actions, nmap_action_ids=nmap_action_ids,
                                      network_service_action_ids=network_service_action_ids,
                                      shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
                                      masscan_action_ids=masscan_action_ids)
@@ -78,8 +80,8 @@ class PyCrPwCrackLevel1V1:
                                num_sh=3, num_nodes = PyCrPwCrackLevel1Base.num_nodes(),
                                render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
-                               simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrPwCrackLevel1Base.hacker_ip(), state_type=StateType.COMPACT,
+                               simulate_detection=False, detection_reward=10, base_detection_p=0.05,
+                               hacker_ip=PyCrPwCrackLevel1Base.hacker_ip(), state_type=StateType.ESSENTIAL,
                                router_ip=PyCrPwCrackLevel1Base.router_ip())
 
         env_config.ping_scan_miss_p = 0.00
@@ -98,9 +100,9 @@ class PyCrPwCrackLevel1V1:
 
         env_config.final_steps_reward_coefficient = 0
 
-        env_config.flag_found_reward_mult = 10
+        env_config.flag_found_reward_mult = 1
         env_config.all_flags_reward = 0
-        env_config.base_step_reward = -10
+        env_config.base_step_reward = -1
         env_config.illegal_reward_action = -1
 
         env_config.port_found_reward_mult = 0

@@ -815,6 +815,7 @@ class MainFrame(pyglet.window.Window):
 
         for machine in self.state.obs_state.machines:
             machine1_links = []
+            #print("self.node_ip_to_coords:{}".format(self.node_ip_to_coords))
             coords1 = self.node_ip_to_coords[machine.ip]
             reachable = machine.reachable.copy()
             if machine.ip == self.env_config.router_ip:

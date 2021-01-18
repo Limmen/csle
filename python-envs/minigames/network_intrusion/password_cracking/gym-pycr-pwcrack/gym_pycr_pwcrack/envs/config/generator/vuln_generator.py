@@ -41,13 +41,12 @@ class VulnerabilityGenerator:
                 vuln_type = access_vuln_types[vuln_idx]
                 if vuln_type == VulnType.WEAK_PW:
                     for node in topology.node_configs:
-                        if node.ip == ip:
+                        if node.ip == ip and ip not in vulnerable_nodes:
                             vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
                             vulnerabilities.append(vuln_cfg)
                             vulnerable_nodes.add(ip)
                 else:
                     raise ValueError("Unrecognized vulnerability type")
-
 
         for node in topology.node_configs:
             # Create vuln necessary for flags
@@ -73,7 +72,6 @@ class VulnerabilityGenerator:
                         vulnerable_nodes.add(node.ip)
                     else:
                         raise ValueError("Unrecognized vulnerability type")
-
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
         return vulns_cfg, vulnerable_nodes
 

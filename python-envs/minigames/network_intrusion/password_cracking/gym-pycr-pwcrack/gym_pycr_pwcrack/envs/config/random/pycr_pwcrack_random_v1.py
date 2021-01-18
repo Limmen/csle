@@ -64,7 +64,7 @@ class PyCrPwCrackRandomV1:
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        action_config = ActionConfig(num_indices=num_nodes, actions=actions, nmap_action_ids=nmap_action_ids,
+        action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,
                                      network_service_action_ids=network_service_action_ids,
                                      shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
                                      masscan_action_ids=masscan_action_ids)

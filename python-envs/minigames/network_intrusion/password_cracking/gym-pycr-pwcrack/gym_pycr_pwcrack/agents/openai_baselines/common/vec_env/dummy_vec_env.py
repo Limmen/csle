@@ -4,10 +4,9 @@ from typing import Callable, List, Optional, Sequence
 import time
 import gym
 import numpy as np
-
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.base_vec_env import VecEnv
 from gym_pycr_pwcrack.agents.openai_baselines.common.vec_env.util import copy_obs_dict, dict_to_obs, obs_space_info
-
+import gym_pycr_pwcrack.constants.constants as constants
 
 class DummyVecEnv(VecEnv):
     """
@@ -25,7 +24,7 @@ class DummyVecEnv(VecEnv):
         self.envs = []
         for fn in env_fns:
             print("sleeping")
-            time.sleep(10)
+            time.sleep(constants.SUB_PROC_ENV.SLEEP_TIME_STARTUP)
             print("sleep finished")
             self.envs.append(fn())
         self.envs = [fn() for fn in env_fns]
@@ -40,11 +39,17 @@ class DummyVecEnv(VecEnv):
         self.buf_infos = [{"idx": self.envs[i].idx} for i in range(self.num_envs)]
         self.actions = None
         self.metadata = env.metadata
-        self.initial_illegal_actions = self.envs[0].initial_illegal_actions
-        self.env_config = self.envs[0].env_config
+        #self.initial_illegal_actions = self.envs[0].initial_illegal_actions
+        #self.env_config = self.envs[0].env_config
 
     def step_async(self, actions: np.ndarray):
         self.actions = actions
+
+    def env_configs(self):
+        return [self.envs[i].env_config for i in range(len(self.envs))]
+
+    def env_config(self, idx: int):
+        return self.envs[idx].env_config
 
     def step_wait(self):
         for env_idx in range(self.num_envs):

@@ -4,6 +4,7 @@ import pickle
 from abc import ABC
 import numpy as np
 import os
+import sys
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.agent.agent_state import AgentState
 from gym_pycr_pwcrack.dao.network.env_state import EnvState
@@ -177,7 +178,20 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         info = {"idx": self.idx}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action:{}".format(action_id))
-            print("illegal action env mode:{}".format(self.env_config.env_mode))
+            actions = list(range(len(self.env_config.action_conf.actions)))
+            non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+                action, env_config=self.env_config, env_state=self.env_state), actions))
+            print("true illegal actins:{}".format(non_legal_actions))
+            legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
+                action, env_config=self.env_config, env_state=self.env_state), actions))
+            print("true legal actions:{}".format(legal_actions))
+            print("flags found:{}".format(self.env_state.num_flags))
+            print("flags found:{}".format(list(map(lambda x: x.flags_found, self.env_state.obs_state.machines))))
+            print("flags found:{}".format(self.env_state.obs_state.catched_flags))
+            print("total flags:{}".format(self.env_config.network_conf.flags_lookup))
+            print(self.env_config.network_conf)
+            raise ValueError("Test")
+            sys.exit(0)
             done = False
             info["flags"] = self.env_state.obs_state.catched_flags
             self.agent_state.time_step += 1
@@ -291,6 +305,16 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.viewer.mainframe.set_state(self.agent_state)
         arr = self.viewer.render(return_rgb_array=mode == 'rgb_array')
         return arr
+
+    def randomize(self):
+        randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                         network_ids=list(range(1, 254)),
+                                                                         r_space=self.randomization_space,
+                                                                         env_config=self.env_config)
+        self.env_config = env_config
+        actions = list(range(self.num_actions))
+        self.initial_illegal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
+            action, env_config=self.env_config, env_state=self.env_state), actions))
 
     @staticmethod
     def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
@@ -632,15 +656,16 @@ class PyCRPwCrackLevel1Sim1Env(PyCRPwCrackEnv):
             env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 0
             env_config.save_trajectories = False
-            env_config.filter_illegal_actions = False
+            env_config.filter_illegal_actions = True
             env_config.max_episode_length = 200
             env_config.simulate_detection = False
+            env_config.base_detection_p = 0.0
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.compute_pi_star = True
-            env_config.use_upper_bound_pi_star = False
-            env_config.domain_randomization = False
+            env_config.use_upper_bound_pi_star = True
+            env_config.domain_randomization = True
         super().__init__(env_config=env_config)
 
 

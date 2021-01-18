@@ -237,7 +237,7 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
     eval_episode_flags_percentage_env_specific = {}
 
     for episode in range(n_eval_episodes):
-        infos = np.array([{"non_legal_actions": env.initial_illegal_actions} for i in range(env.num_envs)])
+        infos = np.array([{"non_legal_actions": env.envs[i].initial_illegal_actions} for i in range(env.num_envs)])
         for i in range(env.num_envs):
             if env_configs is not None:
                 env_conf = env_configs[i]
@@ -247,6 +247,8 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
                 obs = env.eval_reset(idx=i)
             elif isinstance(env, DummyVecEnv):
                 obs = env.envs[i].reset()
+                env_conf = env.env_config(i)
+                env_configs = env.env_configs()
             done = False
             state = None
             env_state = None
@@ -282,6 +284,8 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
                 obs = env.eval_reset(idx=i)
             elif isinstance(env, DummyVecEnv):
                 obs = env.envs[i].reset()
+                env_conf = env.env_config(i)
+                env_configs = env.env_configs()
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific

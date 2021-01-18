@@ -81,6 +81,7 @@ class Viewer():
 
         :return: None
         """
+        print("closing the frame")
         self.mainframe.close()
 
     def render_frame(self, return_rgb_array: bool = False):

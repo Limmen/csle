@@ -377,8 +377,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                                              None, None, None, {}, {}, {}, {}
                 if self.agent_config.train_progress_deterministic_eval:
                     eval_conf = self.agent_config.env_config
+                    env_configs = self.agent_config.env_configs
+                    eval_env_configs = self.agent_config.eval_env_configs
+                    if self.agent_config.domain_randomization:
+                        eval_conf = self.env.env_config(0)
+                        env_configs = self.env.env_configs()
+                        if self.eval_env is not None:
+                            eval_env_configs = self.eval_env.env_config
                     if self.agent_config.eval_env_config is not None:
                         eval_conf = self.agent_config.eval_env_config
+                        if self.agent_config.domain_randomization:
+                            eval_conf = self.eval_env.env_config(0)
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
                     eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
@@ -390,9 +399,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               n_eval_episodes_eval2=self.agent_config.n_quick_eval_iter,
                                               deterministic=self.agent_config.eval_deterministic, agent_config=self.agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
-                                              env_configs=self.agent_config.env_configs,
-                                              eval_env_config=self.agent_config.eval_env_config,
-                                              eval_envs_configs=self.agent_config.eval_env_configs
+                                              env_configs=env_configs,
+                                              eval_env_config=eval_conf,
+                                              eval_envs_configs=eval_env_configs
                                               )
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

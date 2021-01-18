@@ -4,7 +4,12 @@ class SimulationConfig:
 
     def __init__(self, num_episodes: int = 10, video_fps=5,
                  video=False, gif_dir=None, video_dir=None, gifs=False, render=False, sleep=0.35,
-                 log_frequency = 1, video_frequency = 100):
+                 log_frequency = 1, video_frequency = 100, domain_randomization: bool = False,
+                 dr_max_num_nodes: int = 4, dr_min_num_nodes: int = 1,
+                 dr_min_num_flags: int = 1, dr_max_num_flags: int = 1,
+                 dr_min_num_users: int = 1, dr_max_num_users: int = 1,
+                 dr_use_base: bool = False
+                 ):
         self.num_episodes = num_episodes
         self.video_fps = video_fps
         self.video = video
@@ -16,6 +21,14 @@ class SimulationConfig:
         self.log_frequency = log_frequency
         self.logger = None
         self.video_frequency = video_frequency
+        self.domain_randomization = domain_randomization
+        self.dr_use_base = dr_use_base
+        self.dr_max_num_nodes = dr_max_num_nodes
+        self.dr_min_num_nodes = dr_min_num_nodes
+        self.dr_min_num_flags = dr_min_num_flags
+        self.dr_max_num_flags = dr_max_num_flags
+        self.dr_min_num_users = dr_min_num_users
+        self.dr_max_num_users = dr_max_num_users
 
     def to_str(self) -> str:
         """
@@ -25,10 +38,13 @@ class SimulationConfig:
                "log_frequency:{2}," \
                "video:{3},video_fps:{4}," \
                "video_dir:{5},num_episodes:{6},gifs:{7}," \
-               "gifdir:{8},video_frequency:{9}".format(
-            self.render, self.sleep,
-            self.log_frequency, self.video,
-            self.video_fps, self.video_dir, self.num_episodes, self.gifs, self.gif_dir, self.video_frequency)
+               "gifdir:{8},video_frequency:{9},dr:{10}, dr_max_num_nodes:{11}," \
+               "dr_min_num_nodes:{12},dr_max_num_flags:{13},dr_min_num_flags:{14}," \
+               "dr_max_num_users:{15},dr_min_num_users:{16},dr_use_base:{17}".format(
+            self.render, self.sleep, self.log_frequency, self.video, self.video_fps, self.video_dir, self.num_episodes,
+            self.gifs, self.gif_dir, self.video_frequency, self.domain_randomization, self.dr_max_num_nodes,
+            self.dr_min_num_nodes, self.dr_max_num_flags, self.dr_min_num_flags, self.dr_max_num_users,
+            self.dr_min_num_users, self.dr_use_base)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -50,3 +66,11 @@ class SimulationConfig:
             writer.writerow(["gifs", str(self.gifs)])
             writer.writerow(["gifdir", str(self.gif_dir)])
             writer.writerow(["video_frequency", str(self.video_frequency)])
+            writer.writerow(["domain_randomization", str(self.domain_randomization)])
+            writer.writerow(["dr_max_num_nodes", str(self.dr_max_num_nodes)])
+            writer.writerow(["dr_min_num_nodes", str(self.dr_min_num_nodes)])
+            writer.writerow(["dr_max_num_flags", str(self.dr_max_num_flags)])
+            writer.writerow(["dr_min_num_flags", str(self.dr_min_num_flags)])
+            writer.writerow(["dr_max_num_users", str(self.dr_max_num_users)])
+            writer.writerow(["dr_min_num_users", str(self.dr_min_num_users)])
+            writer.writerow(["dr_use_base", str(self.dr_use_base)])

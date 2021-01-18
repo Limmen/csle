@@ -521,14 +521,10 @@ class EnvDynamicsUtil:
             alerts_pts = ((alerts[0] * env_config.alerts_coefficient) / env_config.max_alerts) * 10  # normalize between 0-10
 
         #reward = (-env_config.base_step_reward) * reward - cost - alerts_pts
-
-        if reward == 0:
-            if sum(new_info) > 0:
-                reward = - cost - alerts_pts
-            else:
-                reward = env_config.base_step_reward - cost - alerts_pts
-        else:
-            reward = reward - cost - alerts_pts
+        # if reward == 0:
+        #     reward = reward + env_config.base_step_reward - cost - alerts_pts
+        # else:
+        #     reward = reward - cost - alerts_pts
 
         # if reward == 0:
         #     if sum(new_info) > 0:
@@ -536,7 +532,15 @@ class EnvDynamicsUtil:
         #     else:
         #         reward = env_config.base_step_reward - cost - alerts_pts
         # else:
-        #     reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
+        #     reward = reward - cost - alerts_pts
+
+        if reward == 0:
+            if sum(new_info) > 0:
+                reward = - cost - alerts_pts
+            else:
+                reward = env_config.base_step_reward - cost - alerts_pts
+        else:
+            reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
 
         #print("reward{}, new_info:{}, alerts_pts:{}, cost:{}".format(reward, new_info, alerts_pts, cost))
         # print("flag reward:{}, new flags:{}".format(env_config.flag_found_reward_mult * num_new_flag_pts, num_new_flag_pts))

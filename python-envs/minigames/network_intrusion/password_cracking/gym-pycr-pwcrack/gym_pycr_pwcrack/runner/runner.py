@@ -170,6 +170,19 @@ class Runner:
         env = None
         env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                        checkpoint_dir=config.env_checkpoint_dir)
+
+        if config.simulation_config.domain_randomization:
+            randomization_space = DomainRandomizer.generate_randomization_space(
+                [], max_num_nodes=config.simulation_config.dr_max_num_nodes,
+                min_num_nodes=config.simulation_config.dr_min_num_nodes,
+                max_num_flags=config.simulation_config.dr_max_num_flags,
+                min_num_flags=config.simulation_config.dr_min_num_flags,
+                min_num_users=config.simulation_config.dr_min_num_users,
+                max_num_users=config.simulation_config.dr_max_num_users,
+                use_base_randomization=config.simulation_config.dr_use_base)
+            env.randomization_space = randomization_space
+            env.env_config.domain_randomization = True
+
         attacker: PPOAttackerBotAgent = None
         if config.agent_type == AgentType.PPO_BASELINE.value:
             if config.agent_config is None or config.agent_config.load_path is None:
@@ -193,6 +206,18 @@ class Runner:
         env = None
         env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
                        checkpoint_dir=config.env_checkpoint_dir)
+        if config.simulation_config.domain_randomization:
+            randomization_space = DomainRandomizer.generate_randomization_space(
+                [], max_num_nodes=config.simulation_config.dr_max_num_nodes,
+                min_num_nodes=config.simulation_config.dr_min_num_nodes,
+                max_num_flags=config.simulation_config.dr_max_num_flags,
+                min_num_flags=config.simulation_config.dr_min_num_flags,
+                min_num_users=config.simulation_config.dr_min_num_users,
+                max_num_users=config.simulation_config.dr_max_num_users,
+                use_base_randomization=config.simulation_config.dr_use_base)
+            env.randomization_space = randomization_space
+            env.env_config.domain_randomization = True
+            env.randomize()
         ManualAttackerAgent(env_config=env.env_config, env=env)
         return env
 

@@ -436,7 +436,7 @@ class IDS_ROUTER:
     PRIORITY_REGEX = re.compile(r"Priority: \d")
 
 class SUB_PROC_ENV:
-    SLEEP_TIME_STARTUP = 10
+    SLEEP_TIME_STARTUP = 1
 
 #/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
 #crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24

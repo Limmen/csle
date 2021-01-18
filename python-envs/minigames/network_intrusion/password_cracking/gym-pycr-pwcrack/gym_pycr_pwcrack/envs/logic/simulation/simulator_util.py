@@ -11,6 +11,7 @@ from gym_pycr_pwcrack.dao.observation.vulnerability_observation_state import Vul
 from gym_pycr_pwcrack.dao.action.action_outcome import ActionOutcome
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_pwcrack.dao.network.node import Node
+from gym_pycr_pwcrack.dao.action.action_type import ActionType
 
 class SimulatorUtil:
     """
@@ -472,7 +473,13 @@ class SimulatorUtil:
         :return: boolean, true if detected otherwise false, reward
         """
         if env_config.simulate_detection:
-            detected = np.random.rand() < (a.noise + env_config.base_detection_p)
+            detected = False
+            if a.type == ActionType.EXPLOIT or a.type == ActionType.RECON:
+                # Base detection
+                detected = np.random.rand() < (a.noise + env_config.base_detection_p)
+            # Alerts detection
+            if not detected:
+                detected = np.random.rand() < (a.alerts[0]/env_config.max_alerts)
             r = env_config.detection_reward
             if not detected:
                 r = 0
