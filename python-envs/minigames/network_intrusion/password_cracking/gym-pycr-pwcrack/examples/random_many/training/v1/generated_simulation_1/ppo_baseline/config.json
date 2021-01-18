@@ -474,6 +474,7 @@
     "eval_env_name": "pycr-pwcrack-random-many-cluster-v1",
     "eval_env_num_nodes": 6,
     "eval_multi_env": true,
+    "eval_multi_sim": false,
     "eval_n_envs": 1,
     "eval_randomized_env": false,
     "eval_sub_proc_env": true,
@@ -542,6 +543,8 @@
     "mode": 0,
     "multi_env": true,
     "n_envs": 1,
+    "num_sims": 1,
+    "num_sims_eval": 1,
     "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random_many/training/v1/generated_simulation_1/ppo_baseline",
     "py/object": "gym_pycr_pwcrack.dao.experiment.client_config.ClientConfig",
     "random_seed": 399,
@@ -553,5 +556,6 @@
     "run_many": true,
     "simulation_config": null,
     "sub_proc_env": true,
-    "title": "PPO-Baseline random many v1"
+    "title": "PPO-Baseline random many v1",
+    "train_multi_sim": false
 }

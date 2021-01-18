@@ -63,7 +63,7 @@ def default_config() -> ClientConfig:
                                                 vf_hidden_dim=64, vf_hidden_layers=1,
                                                 shared_hidden_layers=2, shared_hidden_dim=64,
                                                 #batch_size=util.round_batch_size(int(2000/n_envs)),
-                                                batch_size=500,
+                                                batch_size=1000,
                                                 gpu=False, tensorboard=True,
                                                 tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -72,13 +72,13 @@ def default_config() -> ClientConfig:
                                                 vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                                 eps_clip=0.2, optimization_iterations=10,
                                                 render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=False, train_progress_deterministic_eval=True,
+                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=0, eval_deterministic=False,
                                                 num_nodes=max_num_nodes, domain_randomization = True,
-                                                n_quick_eval_iter=30, dr_max_num_nodes = max_num_nodes,
+                                                n_quick_eval_iter=50, dr_max_num_nodes = max_num_nodes,
                                                 dr_min_num_nodes = 4, dr_min_num_users = 1,
                                                 dr_max_num_users = 5, dr_min_num_flags=1, dr_max_num_flags = 3,
-                                                dr_use_base=True, log_regret=True, running_avg=10
+                                                dr_use_base=True, log_regret=True, running_avg=50
                                                 )
     # eval_env_name = "pycr-pwcrack-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(
@@ -139,7 +139,7 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline random many v1",
-                                 run_many=True, random_seeds=[0, 999],
+                                 run_many=True, random_seeds=[0, 999, 299],
                                  random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_configs=containers_configs, flags_configs=flags_configs,
                                  dummy_vec_env=False, sub_proc_env=True, n_envs=n_envs,

@@ -3576,8 +3576,8 @@ class PyCRPwCrackRandomManyCluster1Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = False
-            env_config.max_episode_length = 50
+            env_config.filter_illegal_actions = True
+            env_config.max_episode_length = 200
             env_config.compute_pi_star = True
             env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
@@ -3617,8 +3617,8 @@ class PyCRPwCrackRandomManyClusterWithCosts1Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = False
-            env_config.max_episode_length = 50
+            env_config.filter_illegal_actions = True
+            env_config.max_episode_length = 200
             env_config.compute_pi_star = False
             env_config.use_upper_bound_pi_star = True
         super().__init__(env_config=env_config)
@@ -3658,7 +3658,7 @@ class PyCRPwCrackRandomManyGeneratedSim1Env(PyCRPwCrackEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = False
+            env_config.filter_illegal_actions = True
             env_config.max_episode_length = 200
             exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
             env_config.exploration_filter_illegal = env_config.filter_illegal_actions
