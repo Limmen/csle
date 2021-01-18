@@ -380,14 +380,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     env_configs = self.agent_config.env_configs
                     eval_env_configs = self.agent_config.eval_env_configs
                     if self.agent_config.domain_randomization:
-                        eval_conf = self.env.env_config(0)
-                        env_configs = self.env.env_configs()
+                        if isinstance(self.env, DummyVecEnv):
+                            eval_conf = self.env.env_config(0)
+                            env_configs = self.env.env_configs()
                         if self.eval_env is not None:
                             eval_env_configs = self.eval_env.env_config
                     if self.agent_config.eval_env_config is not None:
                         eval_conf = self.agent_config.eval_env_config
                         if self.agent_config.domain_randomization:
-                            eval_conf = self.eval_env.env_config(0)
+                            if isinstance(self.env, DummyVecEnv):
+                                eval_conf = self.eval_env.env_config(0)
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
                     eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \

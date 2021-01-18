@@ -1,9 +1,9 @@
 {
     "agent_config": {
-        "alpha": 0.0001,
+        "alpha": 5e-05,
         "ar_policy": false,
         "ar_policy2": false,
-        "batch_size": 1000,
+        "batch_size": 10000,
         "buffer_size": 1000000,
         "checkpoint_freq": 150,
         "clip_gradient": false,
@@ -149,7 +149,7 @@
     "randomized_env": false,
     "run_many": true,
     "simulation_config": null,
-    "sub_proc_env": false,
+    "sub_proc_env": true,
     "title": "PPO-Baseline v1",
     "train_multi_sim": false
 }

@@ -51,8 +51,8 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 id = env.idx
                 if env.env_config.cluster_config is not None:
                     id = env.env_config.cluster_config.agent_ip
-                elif env.env_config.network_conf.hacker is not None:
-                    id = env.env_config.network_conf.hacker.ip
+                # elif env.env_config.network_conf.hacker is not None:
+                #     id = env.env_config.network_conf.hacker.ip
                 remote.send((id, env.env_config.pi_star_rew, env.env_config.pi_star_rew_list))
                 #env.env.env_config.pi_star_rew_list = [env.env.env_config.pi_star_rew]
             elif cmd == "set_randomization_space":

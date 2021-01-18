@@ -14,7 +14,7 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     max_num_nodes = 6
-    agent_config = AgentConfig(gamma=1, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -28,7 +28,7 @@ def default_config() -> ClientConfig:
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
                                shared_hidden_layers=1, shared_hidden_dim=32,
-                               batch_size=1000,
+                               batch_size=10000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -70,7 +70,7 @@ def default_config() -> ClientConfig:
                                  title="PPO-Baseline v1",
                                  run_many=True, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
-                                 eval_env=False)
+                                 eval_env=False, sub_proc_env = True)
 
     return client_config
 

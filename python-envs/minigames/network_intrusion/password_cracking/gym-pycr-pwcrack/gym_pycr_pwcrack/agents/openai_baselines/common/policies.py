@@ -485,8 +485,6 @@ class ActorCriticPolicy(BasePolicy):
                     non_legal_actions_total.append(infos[i]["non_legal_actions"])
                 else:
                     raise ValueError("Unrecognized env")
-        legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
-                                action, env_config=env.envs[0].env_config, env_state=env.envs[0].env_state), actions))
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
                                                          non_legal_actions=non_legal_actions_total)
         actions = distribution.get_actions(deterministic=deterministic)
@@ -581,9 +579,6 @@ class ActorCriticPolicy(BasePolicy):
                 non_legal_actions = [non_legal_actions]
             else:
                 raise ValueError("Unrecognized env: {}".format(env))
-
-        legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
-            action, env_config=env_config, env_state=env_state), actions))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)

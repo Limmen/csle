@@ -108,7 +108,7 @@ class Runner:
             else:
                 config.agent_config.eval_env_config = eval_env.env_config
 
-        if config.agent_config.domain_randomization and config.multi_env:
+        if config.agent_config.domain_randomization and config.sub_proc_env:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
@@ -120,8 +120,9 @@ class Runner:
                 print("Randomization space created, base:{}".format(config.agent_config.dr_use_base))
                 env.set_randomization_space(randomization_space)
                 print("Randomization space sent to all envs")
-                eval_env.set_randomization_space(randomization_space)
-                eval_env.set_domain_randomization(False)
+                if eval_env is not None:
+                    eval_env.set_randomization_space(randomization_space)
+                    eval_env.set_domain_randomization(False)
             else:
                 # No aggregation to do since there is just a single env
                 pass
