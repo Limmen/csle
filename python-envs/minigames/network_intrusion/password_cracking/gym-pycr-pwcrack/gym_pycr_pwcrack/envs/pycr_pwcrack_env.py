@@ -284,6 +284,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if self.env_config.env_mode == EnvMode.SIMULATION:
             self.env_state.obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         self.env_config.cache_misses = 0
+        sys.stdout.flush()
         return m_obs
 
     def render(self, mode: str = 'human'):
