@@ -88,7 +88,10 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
         for i in range(env.num_envs):
             if env_configs is not None:
-                env_conf = env_configs[i]
+                if i < len(env_configs):
+                    env_conf = env_configs[i]
+                else:
+                    env_conf = env_configs[0]
             else:
                 env_conf = env_config
             if isinstance(env, SubprocVecEnv):
