@@ -344,8 +344,6 @@ class BaseAlgorithm(ABC):
                         train_env_specific_regret[ip] = r
                         regrets = regrets + r
                     if eval_env_specific_rewards is not None and eval_env_specific_rewards != {}:
-                        print("eval env spec:{}".format(eval_env_specific_rewards))
-                        print("ip:{}".format(ip))
                         rewards = eval_env_specific_rewards[ip]
                         pi_star_rews = env_regret[2][-len(rewards):]
                         r = [pi_star_rews[i] - rewards[i] for i in range(len(rewards))]

@@ -177,19 +177,21 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.trajectory.append(action_id)
         info = {"idx": self.idx}
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
-            print("illegal action:{}".format(action_id))
+            print("illegal action:{}, idx:{}".format(action_id, self.idx))
             actions = list(range(len(self.env_config.action_conf.actions)))
             non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true illegal actins:{}".format(non_legal_actions))
+            print("true illegal actins:{}, idx:{}".format(non_legal_actions, self.idx))
             legal_actions = list(filter(lambda action: PyCRPwCrackEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true legal actions:{}".format(legal_actions))
-            print("flags found:{}".format(self.env_state.num_flags))
-            print("flags found:{}".format(list(map(lambda x: x.flags_found, self.env_state.obs_state.machines))))
-            print("flags found:{}".format(self.env_state.obs_state.catched_flags))
-            print("total flags:{}".format(self.env_config.network_conf.flags_lookup))
+            print("true legal actions:{}, idx:{}".format(legal_actions, self.idx))
+            print("flags found:{}, idx:{}".format(self.env_state.num_flags, self.idx))
+            print("flags found:{}, idx:{}".format(list(map(lambda x: x.flags_found, self.env_state.obs_state.machines)), self.idx))
+            print("flags found:{}, idx:{}".format(self.env_state.obs_state.catched_flags, self.idx))
+            print("total flags:{}, idx:{}".format(self.env_config.network_conf.flags_lookup, self.idx))
             print(self.env_config.network_conf)
+            print("Idx:{}".format(self.idx))
+            #self.env_config.network_conf.save("./netconf" + str(self.idx) + ".pkl")
             raise ValueError("Test")
             sys.exit(0)
             done = False

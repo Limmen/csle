@@ -408,6 +408,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
                         for i in range(self.env.num_envs):
+                            self.env.eval_reset(i)
                             self._last_infos[i]["non_legal_actions"] = self.env.initial_illegal_actions
                 n_af, n_d = 0,0
                 if isinstance(self.env, DummyVecEnv):

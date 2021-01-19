@@ -477,7 +477,6 @@ class ActorCriticPolicy(BasePolicy):
                                 non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                                     action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_selection=True), actions))
                         else:
-                            # print("network config:{}".format(env.envs[i].env_config.network_conf))
                             non_legal_actions = list(filter(lambda action: not PyCRPwCrackEnv.is_action_legal(
                                 action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
                     non_legal_actions_total.append(non_legal_actions)
@@ -521,7 +520,6 @@ class ActorCriticPolicy(BasePolicy):
         """
         mean_actions = self.action_net(latent_pi)
         #mean_actions = mean_actions*100
-        #print("actions sum:{}".format(th.sum(mean_actions)))
         action_logits = mean_actions.clone()
         if non_legal_actions is not None:
             for i in range(len(non_legal_actions)):

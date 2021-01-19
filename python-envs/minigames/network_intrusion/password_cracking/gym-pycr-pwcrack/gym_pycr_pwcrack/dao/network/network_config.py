@@ -1,4 +1,5 @@
 from typing import List, Union
+import pickle
 from gym_pycr_pwcrack.dao.network.node import Node
 from gym_pycr_pwcrack.dao.network.node_type import NodeType
 import numpy as np
@@ -65,10 +66,6 @@ class NetworkConfig:
     def shortest_paths(self):
         shortest_paths = self._find_nodes(reachable=self.agent_reachable, path=[], flags=[])
         return shortest_paths
-        # print(shortest_paths)
-        # print("num paths:{}".format(len(shortest_paths)))
-        # print(set(list(map(lambda x: x[0][0], shortest_paths))))
-        # print(len(set(list(map(lambda x: ",".join(x[0]), shortest_paths)))))
 
     def _find_nodes(self, reachable, path, flags):
         paths = []
@@ -88,4 +85,15 @@ class NetworkConfig:
                 elif len(l_path) < min_path_len:
                     paths = paths + self._find_nodes(l_reachable, l_path, l_flags)
         return paths
+
+    def save(self, path):
+        with open(path, 'wb') as file:
+            pickle.dump(self, file)
+
+    @staticmethod
+    def load(path):
+        with open(path, 'rb') as file:
+            obj = pickle.load(file)
+            return obj
+
 

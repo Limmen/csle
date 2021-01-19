@@ -16,9 +16,9 @@ def default_config() -> ClientConfig:
                                          video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                          num_episodes=1000,
                                          gifs=True, gif_dir=util.default_output_dir() + "/results/gifs",
-                                         video_frequency=1, domain_randomization=True, dr_max_num_nodes=6,
-                                         dr_min_num_nodes=6, dr_min_num_users=1, dr_max_num_users=5,
-                                         dr_min_num_flags=1, dr_max_num_flags=2, dr_use_base=True)
+                                         video_frequency=1, domain_randomization=True, dr_max_num_nodes=4,
+                                         dr_min_num_nodes=4, dr_min_num_users=1, dr_max_num_users=5,
+                                         dr_min_num_flags=1, dr_max_num_flags=3, dr_use_base=True)
     env_name = "pycr-pwcrack-level-1-sim-v1"
     cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
