@@ -438,7 +438,15 @@ def plot_cluster_train(train_containers_configs: List[ContainersConfig], eval_co
            avg_train_regret_data_v1, avg_train_regret_means_v1, avg_train_regret_stds_v1, avg_eval_regret_data_v1, \
            avg_eval_regret_means_v1, avg_eval_regret_stds_v1, \
            avg_train_opt_frac_data_v1, avg_train_opt_frac_means_v1, avg_train_opt_frac_stds_v1, avg_eval_opt_frac_data_v1, \
-           avg_eval_opt_frac_means_v1, avg_eval_opt_frac_stds_v1
+           avg_eval_opt_frac_means_v1, avg_eval_opt_frac_stds_v1, \
+           train_containers_rewards_data_v1, train_containers_rewards_means_v1, train_containers_rewards_stds_v1, \
+           train_containers_flags_data_v1, train_containers_flags_means_v1, train_containers_flags_stds_v1, train_containers_steps_data_v1, \
+           train_containers_steps_means_v1, train_containers_steps_stds_v1, train_containers_regret_data_v1, train_containers_regret_means_v1, \
+           train_containers_regret_stds_v1, train_containers_opt_frac_data_v1, train_containers_opt_frac_means_v1, train_containers_opt_frac_stds_v1, \
+           eval_containers_rewards_data_v1, eval_containers_rewards_means_v1, eval_containers_rewards_stds_v1, \
+           eval_containers_flags_data_v1, eval_containers_flags_means_v1, eval_containers_flags_stds_v1, eval_containers_steps_data_v1, \
+           eval_containers_steps_means_v1, eval_containers_steps_stds_v1, eval_containers_regret_data_v1, eval_containers_regret_means_v1, \
+           eval_containers_regret_stds_v1, eval_containers_opt_frac_data_v1, eval_containers_opt_frac_means_v1, eval_containers_opt_frac_stds_v1
 
 
 def plot_value_function(model_path: str, env, device):
@@ -659,7 +667,16 @@ if __name__ == '__main__':
     avg_train_regret_data_v1_gensim, avg_train_regret_means_v1_gensim, avg_train_regret_stds_v1_gensim, avg_eval_regret_data_v1_gensim, \
     avg_eval_regret_means_v1_gensim, avg_eval_regret_stds_v1_gensim, \
     avg_train_opt_frac_data_v1_gensim, avg_train_opt_frac_means_v1_gensim, avg_train_opt_frac_stds_v1_gensim, avg_eval_opt_frac_data_v1_gensim, \
-    avg_eval_opt_frac_means_v1_gensim, avg_eval_opt_frac_stds_v1_gensim = plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs, base_path=base_path, suffix="gensim")
+    avg_eval_opt_frac_means_v1_gensim, avg_eval_opt_frac_stds_v1_gensim, \
+    train_containers_rewards_data_v1_gensim, train_containers_rewards_means_v1_gensim, train_containers_rewards_stds_v1_gensim, \
+    train_containers_flags_data_v1_gensim, train_containers_flags_means_v1_gensim, train_containers_flags_stds_v1_gensim, train_containers_steps_data_v1_gensim, \
+    train_containers_steps_means_v1_gensim, train_containers_steps_stds_v1_gensim, train_containers_regret_data_v1_gensim, train_containers_regret_means_v1_gensim, \
+    train_containers_regret_stds_v1_gensim, train_containers_opt_frac_data_v1_gensim, train_containers_opt_frac_means_v1_gensim, train_containers_opt_frac_stds_v1_gensim, \
+    eval_containers_rewards_data_v1_gensim, eval_containers_rewards_means_v1_gensim, eval_containers_rewards_stds_v1_gensim, \
+    eval_containers_flags_data_v1_gensim, eval_containers_flags_means_v1_gensim, eval_containers_flags_stds_v1_gensim, eval_containers_steps_data_v1_gensim, \
+    eval_containers_steps_means_v1_gensim, eval_containers_steps_stds_v1_gensim, eval_containers_regret_data_v1_gensim, eval_containers_regret_means_v1_gensim, \
+    eval_containers_regret_stds_v1_gensim, eval_containers_opt_frac_data_v1_gensim, eval_containers_opt_frac_means_v1_gensim, eval_containers_opt_frac_stds_v1_gensim, \
+        = plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs, base_path=base_path, suffix="gensim")
 
     base_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random_many/training/v1/cluster/ppo_baseline/results/data/"
     avg_train_steps_data_v1_cluster_20, avg_train_steps_means_v1_cluster_20, avg_train_steps_stds_v1_cluster_20, avg_eval_steps_data_v1_cluster_20, \
@@ -669,7 +686,16 @@ if __name__ == '__main__':
     avg_train_regret_data_v1_cluster_20, avg_train_regret_means_v1_cluster_20, avg_train_regret_stds_v1_cluster_20, avg_eval_regret_data_v1_cluster_20, \
     avg_eval_regret_means_v1_cluster_20, avg_eval_regret_stds_v1_cluster_20, \
     avg_train_opt_frac_data_v1_cluster_20, avg_train_opt_frac_means_v1_cluster_20, avg_train_opt_frac_stds_v1_cluster_20, avg_eval_opt_frac_data_v1_cluster_20, \
-    avg_eval_opt_frac_means_v1_cluster_20, avg_eval_opt_frac_stds_v1_cluster_20  = \
+    avg_eval_opt_frac_means_v1_cluster_20, avg_eval_opt_frac_stds_v1_cluster_20, \
+    train_containers_rewards_data_v1_cluster_20, train_containers_rewards_means_v1_cluster_20, train_containers_rewards_stds_v1_cluster_20, \
+    train_containers_flags_data_v1_cluster_20, train_containers_flags_means_v1_cluster_20, train_containers_flags_stds_v1_cluster_20, train_containers_steps_data_v1_cluster_20, \
+    train_containers_steps_means_v1_cluster_20, train_containers_steps_stds_v1_cluster_20, train_containers_regret_data_v1_cluster_20, train_containers_regret_means_v1_cluster_20, \
+    train_containers_regret_stds_v1_cluster_20, train_containers_opt_frac_data_v1_cluster_20, train_containers_opt_frac_means_v1_cluster_20, train_containers_opt_frac_stds_v1_cluster_20, \
+    eval_containers_rewards_data_v1_cluster_20, eval_containers_rewards_means_v1_cluster_20, eval_containers_rewards_stds_v1_cluster_20, \
+    eval_containers_flags_data_v1_cluster_20, eval_containers_flags_means_v1_cluster_20, eval_containers_flags_stds_v1_cluster_20, eval_containers_steps_data_v1_cluster_20, \
+    eval_containers_steps_means_v1_cluster_20, eval_containers_steps_stds_v1_cluster_20, eval_containers_regret_data_v1_cluster_20, eval_containers_regret_means_v1_cluster_20, \
+    eval_containers_regret_stds_v1_cluster_20, eval_containers_opt_frac_data_v1_cluster_20, eval_containers_opt_frac_means_v1_cluster_20, eval_containers_opt_frac_stds_v1_cluster_20 \
+        = \
         plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs,
                        base_path=base_path, suffix="cluster_20")
 
@@ -682,48 +708,118 @@ if __name__ == '__main__':
     avg_train_regret_data_v1_cluster_1, avg_train_regret_means_v1_cluster_1, avg_train_regret_stds_v1_cluster_1, avg_eval_regret_data_v1_cluster_1, \
     avg_eval_regret_means_v1_cluster_1, avg_eval_regret_stds_v1_cluster_1, \
     avg_train_opt_frac_data_v1_cluster_1, avg_train_opt_frac_means_v1_cluster_1, avg_train_opt_frac_stds_v1_cluster_1, avg_eval_opt_frac_data_v1_cluster_1, \
-    avg_eval_opt_frac_means_v1_cluster_1, avg_eval_opt_frac_stds_v1_cluster_1 = \
+    avg_eval_opt_frac_means_v1_cluster_1, avg_eval_opt_frac_stds_v1_cluster_1, \
+    train_containers_rewards_data_v1_cluster_1, train_containers_rewards_means_v1_cluster_1, train_containers_rewards_stds_v1_cluster_1, \
+    train_containers_flags_data_v1_cluster_1, train_containers_flags_means_v1_cluster_1, train_containers_flags_stds_v1_cluster_1, train_containers_steps_data_v1_cluster_1, \
+    train_containers_steps_means_v1_cluster_1, train_containers_steps_stds_v1_cluster_1, train_containers_regret_data_v1_cluster_1, train_containers_regret_means_v1_cluster_1, \
+    train_containers_regret_stds_v1_cluster_1, train_containers_opt_frac_data_v1_cluster_1, train_containers_opt_frac_means_v1_cluster_1, train_containers_opt_frac_stds_v1_cluster_1, \
+    eval_containers_rewards_data_v1_cluster_1, eval_containers_rewards_means_v1_cluster_1, eval_containers_rewards_stds_v1_cluster_1, \
+    eval_containers_flags_data_v1_cluster_1, eval_containers_flags_means_v1_cluster_1, eval_containers_flags_stds_v1_cluster_1, eval_containers_steps_data_v1_cluster_1, \
+    eval_containers_steps_means_v1_cluster_1, eval_containers_steps_stds_v1_cluster_1, eval_containers_regret_data_v1_cluster_1, eval_containers_regret_means_v1_cluster_1, \
+    eval_containers_regret_stds_v1_cluster_1, eval_containers_opt_frac_data_v1_cluster_1, eval_containers_opt_frac_means_v1_cluster_1, eval_containers_opt_frac_stds_v1_cluster_1 \
+        = \
         plot_cluster_train(train_containers_configs=containers_configs, eval_containers_configs=eval_env_containers_configs,
                        base_path=base_path, suffix="cluster_1", ips=ips, eval_ips=None)
 
-    plot_avg_comparison(
-        avg_train_steps_data_v1_gensim, avg_train_steps_means_v1_gensim, avg_train_steps_stds_v1_gensim,
-        avg_eval_steps_data_v1_gensim,
-        avg_eval_steps_means_v1_gensim, avg_eval_steps_stds_v1_gensim,
-        avg_train_rewards_data_v1_gensim, avg_train_rewards_means_v1_gensim, avg_train_rewards_stds_v1_gensim,
-        avg_eval_rewards_data_v1_gensim,
-        avg_eval_rewards_means_v1_gensim, avg_eval_rewards_stds_v1_gensim,
-        avg_train_regret_data_v1_gensim, avg_train_regret_means_v1_gensim, avg_train_regret_stds_v1_gensim,
-        avg_eval_regret_data_v1_gensim,
-        avg_eval_regret_means_v1_gensim, avg_eval_regret_stds_v1_gensim,
+    # plot_avg_comparison(
+    #     avg_train_steps_data_v1_gensim, avg_train_steps_means_v1_gensim, avg_train_steps_stds_v1_gensim,
+    #     avg_eval_steps_data_v1_gensim,
+    #     avg_eval_steps_means_v1_gensim, avg_eval_steps_stds_v1_gensim,
+    #     avg_train_rewards_data_v1_gensim, avg_train_rewards_means_v1_gensim, avg_train_rewards_stds_v1_gensim,
+    #     avg_eval_rewards_data_v1_gensim,
+    #     avg_eval_rewards_means_v1_gensim, avg_eval_rewards_stds_v1_gensim,
+    #     avg_train_regret_data_v1_gensim, avg_train_regret_means_v1_gensim, avg_train_regret_stds_v1_gensim,
+    #     avg_eval_regret_data_v1_gensim,
+    #     avg_eval_regret_means_v1_gensim, avg_eval_regret_stds_v1_gensim,
+    #     avg_train_opt_frac_data_v1_gensim, avg_train_opt_frac_means_v1_gensim, avg_train_opt_frac_stds_v1_gensim,
+    #     avg_eval_opt_frac_data_v1_gensim,
+    #     avg_eval_opt_frac_means_v1_gensim, avg_eval_opt_frac_stds_v1_gensim,
+    #     avg_train_steps_data_v1_cluster_20, avg_train_steps_means_v1_cluster_20, avg_train_steps_stds_v1_cluster_20,
+    #     avg_eval_steps_data_v1_cluster_20,
+    #     avg_eval_steps_means_v1_cluster_20, avg_eval_steps_stds_v1_cluster_20,
+    #     avg_train_rewards_data_v1_cluster_20, avg_train_rewards_means_v1_cluster_20,
+    #     avg_train_rewards_stds_v1_cluster_20, avg_eval_rewards_data_v1_cluster_20,
+    #     avg_eval_rewards_means_v1_cluster_20, avg_eval_rewards_stds_v1_cluster_20,
+    #     avg_train_regret_data_v1_cluster_20, avg_train_regret_means_v1_cluster_20, avg_train_regret_stds_v1_cluster_20,
+    #     avg_eval_regret_data_v1_cluster_20,
+    #     avg_eval_regret_means_v1_cluster_20, avg_eval_regret_stds_v1_cluster_20,
+    #     avg_train_opt_frac_data_v1_cluster_20, avg_train_opt_frac_means_v1_cluster_20,
+    #     avg_train_opt_frac_stds_v1_cluster_20, avg_eval_opt_frac_data_v1_cluster_20,
+    #     avg_eval_opt_frac_means_v1_cluster_20, avg_eval_opt_frac_stds_v1_cluster_20,
+    #     avg_train_steps_data_v1_cluster_1, avg_train_steps_means_v1_cluster_1, avg_train_steps_stds_v1_cluster_1,
+    #     avg_eval_steps_data_v1_cluster_1,
+    #     avg_eval_steps_means_v1_cluster_1, avg_eval_steps_stds_v1_cluster_1,
+    #     avg_train_rewards_data_v1_cluster_1, avg_train_rewards_means_v1_cluster_1, avg_train_rewards_stds_v1_cluster_1,
+    #     avg_eval_rewards_data_v1_cluster_1,
+    #     avg_eval_rewards_means_v1_cluster_1, avg_eval_rewards_stds_v1_cluster_1,
+    #     avg_train_regret_data_v1_cluster_1, avg_train_regret_means_v1_cluster_1, avg_train_regret_stds_v1_cluster_1,
+    #     avg_eval_regret_data_v1_cluster_1,
+    #     avg_eval_regret_means_v1_cluster_1, avg_eval_regret_stds_v1_cluster_1,
+    #     avg_train_opt_frac_data_v1_cluster_1, avg_train_opt_frac_means_v1_cluster_1,
+    #     avg_train_opt_frac_stds_v1_cluster_1, avg_eval_opt_frac_data_v1_cluster_1,
+    #     avg_eval_opt_frac_means_v1_cluster_1, avg_eval_opt_frac_stds_v1_cluster_1
+    # )
+
+    plotting_util.plot_mega(
         avg_train_opt_frac_data_v1_gensim, avg_train_opt_frac_means_v1_gensim, avg_train_opt_frac_stds_v1_gensim,
-        avg_eval_opt_frac_data_v1_gensim,
-        avg_eval_opt_frac_means_v1_gensim, avg_eval_opt_frac_stds_v1_gensim,
-        avg_train_steps_data_v1_cluster_20, avg_train_steps_means_v1_cluster_20, avg_train_steps_stds_v1_cluster_20,
-        avg_eval_steps_data_v1_cluster_20,
-        avg_eval_steps_means_v1_cluster_20, avg_eval_steps_stds_v1_cluster_20,
-        avg_train_rewards_data_v1_cluster_20, avg_train_rewards_means_v1_cluster_20,
-        avg_train_rewards_stds_v1_cluster_20, avg_eval_rewards_data_v1_cluster_20,
-        avg_eval_rewards_means_v1_cluster_20, avg_eval_rewards_stds_v1_cluster_20,
+        avg_eval_opt_frac_data_v1_gensim, avg_eval_opt_frac_means_v1_gensim, avg_eval_opt_frac_stds_v1_gensim,
+        train_containers_opt_frac_data_v1_gensim, train_containers_opt_frac_means_v1_gensim,
+        train_containers_opt_frac_stds_v1_gensim, eval_containers_opt_frac_data_v1_gensim,
+        eval_containers_opt_frac_means_v1_gensim, eval_containers_opt_frac_stds_v1_gensim,
+
+        avg_train_regret_data_v1_gensim, avg_train_regret_means_v1_gensim, avg_train_regret_stds_v1_gensim,
+        avg_eval_regret_data_v1_gensim, avg_eval_regret_means_v1_gensim, avg_eval_regret_stds_v1_gensim,
+        train_containers_regret_data_v1_gensim, train_containers_regret_means_v1_gensim,
+        train_containers_regret_stds_v1_gensim, eval_containers_regret_data_v1_gensim,
+        eval_containers_regret_means_v1_gensim, eval_containers_regret_stds_v1_gensim,
+
+        avg_train_steps_data_v1_gensim, avg_train_steps_means_v1_gensim, avg_train_steps_stds_v1_gensim,
+        avg_eval_steps_data_v1_gensim, avg_eval_steps_means_v1_gensim, avg_eval_steps_stds_v1_gensim,
+        train_containers_steps_data_v1_gensim, train_containers_steps_means_v1_gensim,
+        train_containers_steps_stds_v1_gensim, eval_containers_steps_data_v1_gensim,
+        eval_containers_steps_means_v1_gensim, eval_containers_steps_stds_v1_gensim,
+
+        avg_train_opt_frac_data_v1_cluster_20, avg_train_opt_frac_means_v1_cluster_20, avg_train_opt_frac_stds_v1_cluster_20,
+        avg_eval_opt_frac_data_v1_cluster_20, avg_eval_opt_frac_means_v1_cluster_20, avg_eval_opt_frac_stds_v1_cluster_20,
+        train_containers_opt_frac_data_v1_cluster_20, train_containers_opt_frac_means_v1_cluster_20,
+        train_containers_opt_frac_stds_v1_cluster_20, eval_containers_opt_frac_data_v1_cluster_20,
+        eval_containers_opt_frac_means_v1_cluster_20, eval_containers_opt_frac_stds_v1_cluster_20,
+
         avg_train_regret_data_v1_cluster_20, avg_train_regret_means_v1_cluster_20, avg_train_regret_stds_v1_cluster_20,
-        avg_eval_regret_data_v1_cluster_20,
-        avg_eval_regret_means_v1_cluster_20, avg_eval_regret_stds_v1_cluster_20,
-        avg_train_opt_frac_data_v1_cluster_20, avg_train_opt_frac_means_v1_cluster_20,
-        avg_train_opt_frac_stds_v1_cluster_20, avg_eval_opt_frac_data_v1_cluster_20,
-        avg_eval_opt_frac_means_v1_cluster_20, avg_eval_opt_frac_stds_v1_cluster_20,
-        avg_train_steps_data_v1_cluster_1, avg_train_steps_means_v1_cluster_1, avg_train_steps_stds_v1_cluster_1,
-        avg_eval_steps_data_v1_cluster_1,
-        avg_eval_steps_means_v1_cluster_1, avg_eval_steps_stds_v1_cluster_1,
-        avg_train_rewards_data_v1_cluster_1, avg_train_rewards_means_v1_cluster_1, avg_train_rewards_stds_v1_cluster_1,
-        avg_eval_rewards_data_v1_cluster_1,
-        avg_eval_rewards_means_v1_cluster_1, avg_eval_rewards_stds_v1_cluster_1,
-        avg_train_regret_data_v1_cluster_1, avg_train_regret_means_v1_cluster_1, avg_train_regret_stds_v1_cluster_1,
-        avg_eval_regret_data_v1_cluster_1,
-        avg_eval_regret_means_v1_cluster_1, avg_eval_regret_stds_v1_cluster_1,
+        avg_eval_regret_data_v1_cluster_20, avg_eval_regret_means_v1_cluster_20, avg_eval_regret_stds_v1_cluster_20,
+        train_containers_regret_data_v1_cluster_20, train_containers_regret_means_v1_cluster_20,
+        train_containers_regret_stds_v1_cluster_20, eval_containers_regret_data_v1_cluster_20,
+        eval_containers_regret_means_v1_cluster_20, eval_containers_regret_stds_v1_cluster_20,
+
+        avg_train_steps_data_v1_cluster_20, avg_train_steps_means_v1_cluster_20, avg_train_steps_stds_v1_cluster_20,
+        avg_eval_steps_data_v1_cluster_20, avg_eval_steps_means_v1_cluster_20, avg_eval_steps_stds_v1_cluster_20,
+        train_containers_steps_data_v1_cluster_20, train_containers_steps_means_v1_cluster_20,
+        train_containers_steps_stds_v1_cluster_20, eval_containers_steps_data_v1_cluster_20,
+        eval_containers_steps_means_v1_cluster_20, eval_containers_steps_stds_v1_cluster_20,
+
+
         avg_train_opt_frac_data_v1_cluster_1, avg_train_opt_frac_means_v1_cluster_1,
-        avg_train_opt_frac_stds_v1_cluster_1, avg_eval_opt_frac_data_v1_cluster_1,
-        avg_eval_opt_frac_means_v1_cluster_1, avg_eval_opt_frac_stds_v1_cluster_1
-    )
+        avg_train_opt_frac_stds_v1_cluster_1,
+        avg_eval_opt_frac_data_v1_cluster_1, avg_eval_opt_frac_means_v1_cluster_1,
+        avg_eval_opt_frac_stds_v1_cluster_1,
+        train_containers_opt_frac_data_v1_cluster_1, train_containers_opt_frac_means_v1_cluster_1,
+        train_containers_opt_frac_stds_v1_cluster_1, eval_containers_opt_frac_data_v1_cluster_1,
+        eval_containers_opt_frac_means_v1_cluster_1, eval_containers_opt_frac_stds_v1_cluster_1,
+
+        avg_train_regret_data_v1_cluster_1, avg_train_regret_means_v1_cluster_1, avg_train_regret_stds_v1_cluster_1,
+        avg_eval_regret_data_v1_cluster_1, avg_eval_regret_means_v1_cluster_1, avg_eval_regret_stds_v1_cluster_1,
+        train_containers_regret_data_v1_cluster_1, train_containers_regret_means_v1_cluster_1,
+        train_containers_regret_stds_v1_cluster_1, eval_containers_regret_data_v1_cluster_1,
+        eval_containers_regret_means_v1_cluster_1, eval_containers_regret_stds_v1_cluster_1,
+
+        avg_train_steps_data_v1_cluster_1, avg_train_steps_means_v1_cluster_1, avg_train_steps_stds_v1_cluster_1,
+        avg_eval_steps_data_v1_cluster_1, avg_eval_steps_means_v1_cluster_1, avg_eval_steps_stds_v1_cluster_1,
+        train_containers_steps_data_v1_cluster_1, train_containers_steps_means_v1_cluster_1,
+        train_containers_steps_stds_v1_cluster_1, eval_containers_steps_data_v1_cluster_1,
+        eval_containers_steps_means_v1_cluster_1, eval_containers_steps_stds_v1_cluster_1,
+
+        ylim_rew=(-0.5,1.5), file_name="mega_20_dr_20_1", markevery=100000, optimal_steps = 10, optimal_reward = 1, sample_step = 10,
+        plot_opt=True, ylim_reg=(-0.5,20), ylim_step=(1, 15))
 
     #base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random_many/training/v1/cluster/ppo_baseline/results/data/"
     # base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/password_cracking/gym-pycr-pwcrack/examples/random/training/v1/cluster/ppo_baseline/results/data/"
