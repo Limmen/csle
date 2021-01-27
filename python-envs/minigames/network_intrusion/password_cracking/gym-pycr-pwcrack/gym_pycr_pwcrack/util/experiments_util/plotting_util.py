@@ -2131,7 +2131,7 @@ def plot_mega(
         eval_envs_specific_steps_stds_3,
 
         ylim_rew=(0,1), file_name="test", markevery=10, optimal_steps = 10, optimal_reward = 95, sample_step = 1,
-        plot_opt=False, ylim_reg=(-0.5,20), optimal_regret = 0, ylim_step = (0,1), markersize=0):
+        plot_opt=False, ylim_reg=(-0.5,20), optimal_regret = 0, ylim_step = (0,1), markersize=0, linewidth=0.5):
     """
     Plots rewards, flags % and steps of two different configurations
     """
@@ -2147,7 +2147,7 @@ def plot_mega(
     # Plot Avg Train Rewards
     ax[0][0].plot(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
             train_avg_rewards_means_1[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][0].fill_between(np.array(list(range(len(train_avg_rewards_means_1[::sample_step]))))*sample_step,
                     train_avg_rewards_means_1[::sample_step] - train_avg_rewards_stds_1[::sample_step],
                     train_avg_rewards_means_1[::sample_step] + train_avg_rewards_stds_1[::sample_step],
@@ -2160,7 +2160,8 @@ def plot_mega(
         r_stds = train_envs_specific_rewards_stds_1[key]
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][0].plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
-                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery)
+                   r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery,
+                      markersize=markersize, linewidth=linewidth)
         ax[0][0].fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
                            r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2169,7 +2170,7 @@ def plot_mega(
     # Plot Avg Eval Rewards
     ax[0][0].plot(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
             eval_avg_rewards_means_1[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][0].fill_between(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step]))))*sample_step,
                     eval_avg_rewards_means_1[::sample_step] - eval_avg_rewards_stds_1[::sample_step],
                     eval_avg_rewards_means_1[::sample_step] + eval_avg_rewards_stds_1[::sample_step],
@@ -2181,7 +2182,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][0].plot(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
                    r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r", markevery=markevery,
-                      markersize=markersize)
+                      markersize=markersize, linewidth=linewidth)
         ax[0][0].fill_between(np.array(list(range(len(r_means[::sample_step]))))*sample_step,
                            r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2190,22 +2191,21 @@ def plot_mega(
     if plot_opt:
         ax[0][0].plot(np.array(list(range(len(train_avg_rewards_means_1)))),
                 [optimal_reward] * len(train_avg_rewards_means_1), label=r"upper bound $\pi^{*}$",
-                color="black",
-                linestyle="dashed")
+                color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train Rewards
     ax[0][1].plot(np.array(list(range(len(train_avg_rewards_means_1[::sample_step])))) * sample_step,
             train_avg_rewards_means_1[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][1].fill_between(np.array(list(range(len(train_avg_rewards_means_1[::sample_step])))) * sample_step,
                     train_avg_rewards_means_1[::sample_step] - train_avg_rewards_stds_1[::sample_step],
                     train_avg_rewards_means_1[::sample_step] + train_avg_rewards_stds_1[::sample_step],
-                    alpha=0.35, color="#599ad3")
+                    alpha=0.35, color="#599ad3", linewidth=linewidth)
 
     # Plot Avg Eval Rewards
     ax[0][1].plot(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step])))) * sample_step,
             eval_avg_rewards_means_1[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][1].fill_between(np.array(list(range(len(eval_avg_rewards_means_1[::sample_step])))) * sample_step,
                     eval_avg_rewards_means_1[::sample_step] - eval_avg_rewards_stds_1[::sample_step],
                     eval_avg_rewards_means_1[::sample_step] + eval_avg_rewards_stds_1[::sample_step],
@@ -2214,13 +2214,12 @@ def plot_mega(
     if plot_opt:
         ax[0][1].plot(np.array(list(range(len(train_avg_rewards_means_1)))),
                 [optimal_reward] * len(train_avg_rewards_means_1), label=r"upper bound $\pi^{*}$",
-                color="black",
-                linestyle="dashed")
+                color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[0][2].plot(np.array(list(range(len(train_avg_regret_means_1[::sample_step])))) * sample_step,
             train_avg_regret_means_1[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][2].fill_between(np.array(list(range(len(train_avg_regret_means_1[::sample_step])))) * sample_step,
                     train_avg_regret_means_1[::sample_step] - train_avg_regret_stds_1[::sample_step],
                     train_avg_regret_means_1[::sample_step] + train_avg_regret_stds_1[::sample_step],
@@ -2233,7 +2232,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                 r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery,
-                      markersize=markersize)
+                      markersize=markersize, linewidth=linewidth)
         ax[0][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                         r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2242,7 +2241,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[0][2].plot(np.array(list(range(len(eval_avg_regret_means_1[::sample_step])))) * sample_step,
             eval_avg_regret_means_1[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][2].fill_between(np.array(list(range(len(eval_avg_regret_means_1[::sample_step])))) * sample_step,
                     eval_avg_regret_means_1[::sample_step] - eval_avg_regret_stds_1[::sample_step],
                     eval_avg_regret_means_1[::sample_step] + eval_avg_regret_stds_1[::sample_step],
@@ -2254,7 +2253,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                 r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r", markevery=markevery,
-                      markersize=markersize)
+                      markersize=markersize, linewidth=linewidth)
         ax[0][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                         r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2262,13 +2261,12 @@ def plot_mega(
 
     ax[0][2].plot(np.array(list(range(len(train_avg_regret_means_1)))),
             [optimal_regret] * len(train_avg_regret_means_1), label=r"lower bound $\pi^{*}$",
-            color="black",
-            linestyle="dashed")
+            color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[0][3].plot(np.array(list(range(len(train_avg_regret_means_1[::sample_step])))) * sample_step,
             train_avg_regret_means_1[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][3].fill_between(np.array(list(range(len(train_avg_regret_means_1[::sample_step])))) * sample_step,
                     train_avg_regret_means_1[::sample_step] - train_avg_regret_stds_1[::sample_step],
                     train_avg_regret_means_1[::sample_step] + train_avg_regret_stds_1[::sample_step],
@@ -2277,7 +2275,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[0][3].plot(np.array(list(range(len(eval_avg_regret_means_1[::sample_step])))) * sample_step,
             eval_avg_regret_means_1[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][3].fill_between(np.array(list(range(len(eval_avg_regret_means_1[::sample_step])))) * sample_step,
                     eval_avg_regret_means_1[::sample_step] - eval_avg_regret_stds_1[::sample_step],
                     eval_avg_regret_means_1[::sample_step] + eval_avg_regret_stds_1[::sample_step],
@@ -2286,7 +2284,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[0][4].plot(np.array(list(range(len(train_avg_steps_means_1[::sample_step])))) * sample_step,
             train_avg_steps_means_1[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][4].fill_between(np.array(list(range(len(train_avg_steps_means_1[::sample_step])))) * sample_step,
                     train_avg_steps_means_1[::sample_step] - train_avg_steps_stds_1[::sample_step],
                     train_avg_steps_means_1[::sample_step] + train_avg_steps_stds_1[::sample_step],
@@ -2299,7 +2297,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                 r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3", markevery=markevery,
-                      markersize=markersize)
+                      markersize=markersize, linewidth=linewidth)
         ax[0][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                         r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2308,7 +2306,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[0][4].plot(np.array(list(range(len(eval_avg_steps_means_1[::sample_step])))) * sample_step,
             eval_avg_steps_means_1[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][4].fill_between(np.array(list(range(len(eval_avg_steps_means_1[::sample_step])))) * sample_step,
                     eval_avg_steps_means_1[::sample_step] - eval_avg_steps_stds_1[::sample_step],
                     eval_avg_steps_means_1[::sample_step] + eval_avg_steps_stds_1[::sample_step],
@@ -2320,7 +2318,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[0][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                 r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r", markevery=markevery,
-                      markersize=markersize)
+                      markersize=markersize, linewidth=linewidth)
         ax[0][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                         r_means[::sample_step] - r_stds[::sample_step],
                         r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2329,7 +2327,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[0][5].plot(np.array(list(range(len(train_avg_steps_means_1[::sample_step])))) * sample_step,
             train_avg_steps_means_1[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][5].fill_between(np.array(list(range(len(train_avg_steps_means_1[::sample_step])))) * sample_step,
                     train_avg_steps_means_1[::sample_step] - train_avg_steps_stds_1[::sample_step],
                     train_avg_steps_means_1[::sample_step] + train_avg_steps_stds_1[::sample_step],
@@ -2338,7 +2336,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[0][5].plot(np.array(list(range(len(eval_avg_steps_means_1[::sample_step])))) * sample_step,
             eval_avg_steps_means_1[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-            markevery=markevery, markersize=markersize)
+            markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[0][5].fill_between(np.array(list(range(len(eval_avg_steps_means_1[::sample_step])))) * sample_step,
                     eval_avg_steps_means_1[::sample_step] - eval_avg_steps_stds_1[::sample_step],
                     eval_avg_steps_means_1[::sample_step] + eval_avg_steps_stds_1[::sample_step],
@@ -2361,7 +2359,7 @@ def plot_mega(
             ax[0][i].set_ylim(ylim_reg[0], ylim_reg[1])
         elif i == 4 or i == 4:
             ax[0][i].set_ylim(ylim_step[0], ylim_step[1])
-        ax[0][i].grid('on')
+        #ax[0][i].grid('on')
         xlab = ax[0][i].xaxis.get_label()
         ylab = ax[0][i].yaxis.get_label()
         xlab.set_size(9)
@@ -2375,15 +2373,15 @@ def plot_mega(
         ax[0][i].xaxis.label.set_size(9)
         ax[0][i].yaxis.label.set_size(9)
         ax[0][i].set_xticks([])
-        ax[0][i].tick_params(axis='both', which='major', labelsize=6)
-        ax[0][i].tick_params(axis='both', which='minor', labelsize=6)
+        ax[0][i].tick_params(axis='both', which='major', labelsize=4)
+        ax[0][i].tick_params(axis='both', which='minor', labelsize=4)
 
     # Cluster 20
 
     # Plot Avg Train Rewards
     ax[1][0].plot(np.array(list(range(len(train_avg_rewards_means_2[::sample_step])))) * sample_step,
                   train_avg_rewards_means_2[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][0].fill_between(np.array(list(range(len(train_avg_rewards_means_2[::sample_step])))) * sample_step,
                           train_avg_rewards_means_2[::sample_step] - train_avg_rewards_stds_2[::sample_step],
                           train_avg_rewards_means_2[::sample_step] + train_avg_rewards_stds_2[::sample_step],
@@ -2398,7 +2396,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][0].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][0].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2407,7 +2405,7 @@ def plot_mega(
     # Plot Avg Eval Rewards
     ax[1][0].plot(np.array(list(range(len(eval_avg_rewards_means_2[::sample_step])))) * sample_step,
                   eval_avg_rewards_means_2[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][0].fill_between(np.array(list(range(len(eval_avg_rewards_means_2[::sample_step])))) * sample_step,
                           eval_avg_rewards_means_2[::sample_step] - eval_avg_rewards_stds_2[::sample_step],
                           eval_avg_rewards_means_2[::sample_step] + eval_avg_rewards_stds_2[::sample_step],
@@ -2419,7 +2417,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][0].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][0].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2428,12 +2426,12 @@ def plot_mega(
     if plot_opt:
         ax[1][0].plot(np.array(list(range(len(train_avg_rewards_means_2)))),
                       [optimal_reward] * len(train_avg_rewards_means_2), label=r"upper bound $\pi^{*}$",
-                      color="black", linestyle="dashed")
+                      color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train Rewards
     ax[1][1].plot(np.array(list(range(len(train_avg_rewards_means_2[::sample_step])))) * sample_step,
                   train_avg_rewards_means_2[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][1].fill_between(np.array(list(range(len(train_avg_rewards_means_2[::sample_step])))) * sample_step,
                           train_avg_rewards_means_2[::sample_step] - train_avg_rewards_stds_2[::sample_step],
                           train_avg_rewards_means_2[::sample_step] + train_avg_rewards_stds_2[::sample_step],
@@ -2442,7 +2440,7 @@ def plot_mega(
     # Plot Avg Eval Rewards
     ax[1][1].plot(np.array(list(range(len(eval_avg_rewards_means_2[::sample_step])))) * sample_step,
                   eval_avg_rewards_means_2[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][1].fill_between(np.array(list(range(len(eval_avg_rewards_means_2[::sample_step])))) * sample_step,
                           eval_avg_rewards_means_2[::sample_step] - eval_avg_rewards_stds_2[::sample_step],
                           eval_avg_rewards_means_2[::sample_step] + eval_avg_rewards_stds_2[::sample_step],
@@ -2451,13 +2449,12 @@ def plot_mega(
     if plot_opt:
         ax[1][1].plot(np.array(list(range(len(train_avg_rewards_means_2)))),
                       [optimal_reward] * len(train_avg_rewards_means_2), label=r"upper bound $\pi^{*}$",
-                      color="black",
-                      linestyle="dashed")
+                      color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[1][2].plot(np.array(list(range(len(train_avg_regret_means_2[::sample_step])))) * sample_step,
                   train_avg_regret_means_2[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][2].fill_between(np.array(list(range(len(train_avg_regret_means_2[::sample_step])))) * sample_step,
                           train_avg_regret_means_2[::sample_step] - train_avg_regret_stds_2[::sample_step],
                           train_avg_regret_means_2[::sample_step] + train_avg_regret_stds_2[::sample_step],
@@ -2470,7 +2467,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2479,7 +2476,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[1][2].plot(np.array(list(range(len(eval_avg_regret_means_2[::sample_step])))) * sample_step,
                   eval_avg_regret_means_2[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][2].fill_between(np.array(list(range(len(eval_avg_regret_means_2[::sample_step])))) * sample_step,
                           eval_avg_regret_means_2[::sample_step] - eval_avg_regret_stds_2[::sample_step],
                           eval_avg_regret_means_2[::sample_step] + eval_avg_regret_stds_2[::sample_step],
@@ -2491,7 +2488,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2499,12 +2496,12 @@ def plot_mega(
 
     ax[1][2].plot(np.array(list(range(len(train_avg_regret_means_2)))),
                   [optimal_regret] * len(train_avg_regret_means_2), label=r"lower bound $\pi^{*}$",
-                  color="black", linestyle="dashed", markersize=markersize)
+                  color="black", linestyle="dashed", markersize=markersize, linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[1][3].plot(np.array(list(range(len(train_avg_regret_means_2[::sample_step])))) * sample_step,
                   train_avg_regret_means_2[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][3].fill_between(np.array(list(range(len(train_avg_regret_means_2[::sample_step])))) * sample_step,
                           train_avg_regret_means_2[::sample_step] - train_avg_regret_stds_2[::sample_step],
                           train_avg_regret_means_2[::sample_step] + train_avg_regret_stds_2[::sample_step],
@@ -2513,7 +2510,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[1][3].plot(np.array(list(range(len(eval_avg_regret_means_2[::sample_step])))) * sample_step,
                   eval_avg_regret_means_2[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][3].fill_between(np.array(list(range(len(eval_avg_regret_means_2[::sample_step])))) * sample_step,
                           eval_avg_regret_means_2[::sample_step] - eval_avg_regret_stds_2[::sample_step],
                           eval_avg_regret_means_2[::sample_step] + eval_avg_regret_stds_2[::sample_step],
@@ -2522,7 +2519,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[1][4].plot(np.array(list(range(len(train_avg_steps_means_2[::sample_step])))) * sample_step,
                   train_avg_steps_means_2[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][4].fill_between(np.array(list(range(len(train_avg_steps_means_2[::sample_step])))) * sample_step,
                           train_avg_steps_means_2[::sample_step] - train_avg_steps_stds_2[::sample_step],
                           train_avg_steps_means_2[::sample_step] + train_avg_steps_stds_2[::sample_step],
@@ -2535,7 +2532,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2544,7 +2541,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[1][4].plot(np.array(list(range(len(eval_avg_steps_means_2[::sample_step])))) * sample_step,
                   eval_avg_steps_means_2[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][4].fill_between(np.array(list(range(len(eval_avg_steps_means_2[::sample_step])))) * sample_step,
                           eval_avg_steps_means_2[::sample_step] - eval_avg_steps_stds_2[::sample_step],
                           eval_avg_steps_means_2[::sample_step] + eval_avg_steps_stds_2[::sample_step],
@@ -2556,7 +2553,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[1][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[1][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2565,7 +2562,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[1][5].plot(np.array(list(range(len(train_avg_steps_means_2[::sample_step])))) * sample_step,
                   train_avg_steps_means_2[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][5].fill_between(np.array(list(range(len(train_avg_steps_means_2[::sample_step])))) * sample_step,
                           train_avg_steps_means_2[::sample_step] - train_avg_steps_stds_2[::sample_step],
                           train_avg_steps_means_2[::sample_step] + train_avg_steps_stds_2[::sample_step],
@@ -2574,7 +2571,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[1][5].plot(np.array(list(range(len(eval_avg_steps_means_2[::sample_step])))) * sample_step,
                   eval_avg_steps_means_2[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[1][5].fill_between(np.array(list(range(len(eval_avg_steps_means_2[::sample_step])))) * sample_step,
                           eval_avg_steps_means_2[::sample_step] - eval_avg_steps_stds_2[::sample_step],
                           eval_avg_steps_means_2[::sample_step] + eval_avg_steps_stds_2[::sample_step],
@@ -2598,7 +2595,7 @@ def plot_mega(
             ax[1][i].set_ylim(ylim_reg[0], ylim_reg[1])
         elif i == 4 or i == 4:
             ax[1][i].set_ylim(ylim_step[0], ylim_step[1])
-        ax[1][i].grid('on')
+        #ax[1][i].grid('on')
         xlab = ax[1][i].xaxis.get_label()
         ylab = ax[1][i].yaxis.get_label()
         xlab.set_size(8)
@@ -2612,15 +2609,15 @@ def plot_mega(
         ax[1][i].xaxis.label.set_size(8)
         ax[1][i].yaxis.label.set_size(8)
         ax[1][i].set_xticks([])
-        ax[1][i].tick_params(axis='both', which='major', labelsize=6)
-        ax[1][i].tick_params(axis='both', which='minor', labelsize=6)
+        ax[1][i].tick_params(axis='both', which='major', labelsize=4)
+        ax[1][i].tick_params(axis='both', which='minor', labelsize=4)
 
     # Cluster 1
 
     # Plot Avg Train Rewards
     ax[2][0].plot(np.array(list(range(len(train_avg_rewards_means_3[::sample_step])))) * sample_step,
                   train_avg_rewards_means_3[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][0].fill_between(np.array(list(range(len(train_avg_rewards_means_3[::sample_step])))) * sample_step,
                           train_avg_rewards_means_3[::sample_step] - train_avg_rewards_stds_3[::sample_step],
                           train_avg_rewards_means_3[::sample_step] + train_avg_rewards_stds_3[::sample_step],
@@ -2635,7 +2632,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][0].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][0].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2644,7 +2641,7 @@ def plot_mega(
     # Plot Avg Eval Rewards
     ax[2][0].plot(np.array(list(range(len(eval_avg_rewards_means_3[::sample_step])))) * sample_step,
                   eval_avg_rewards_means_3[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][0].fill_between(np.array(list(range(len(eval_avg_rewards_means_3[::sample_step])))) * sample_step,
                           eval_avg_rewards_means_3[::sample_step] - eval_avg_rewards_stds_3[::sample_step],
                           eval_avg_rewards_means_3[::sample_step] + eval_avg_rewards_stds_3[::sample_step],
@@ -2656,7 +2653,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][0].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][0].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2665,13 +2662,12 @@ def plot_mega(
     if plot_opt:
         ax[2][0].plot(np.array(list(range(len(train_avg_rewards_means_3)))),
                       [optimal_reward] * len(train_avg_rewards_means_3), label=r"upper bound $\pi^{*}$",
-                      color="black",
-                      linestyle="dashed")
+                      color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train Rewards
     ax[2][1].plot(np.array(list(range(len(train_avg_rewards_means_3[::sample_step])))) * sample_step,
                   train_avg_rewards_means_3[::sample_step], label=r"Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][1].fill_between(np.array(list(range(len(train_avg_rewards_means_3[::sample_step])))) * sample_step,
                           train_avg_rewards_means_3[::sample_step] - train_avg_rewards_stds_3[::sample_step],
                           train_avg_rewards_means_3[::sample_step] + train_avg_rewards_stds_3[::sample_step],
@@ -2680,7 +2676,7 @@ def plot_mega(
     # Plot Avg Eval Rewards
     ax[2][1].plot(np.array(list(range(len(eval_avg_rewards_means_3[::sample_step])))) * sample_step,
                   eval_avg_rewards_means_3[::sample_step], label=r"Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][1].fill_between(np.array(list(range(len(eval_avg_rewards_means_3[::sample_step])))) * sample_step,
                           eval_avg_rewards_means_3[::sample_step] - eval_avg_rewards_stds_3[::sample_step],
                           eval_avg_rewards_means_3[::sample_step] + eval_avg_rewards_stds_3[::sample_step],
@@ -2689,13 +2685,12 @@ def plot_mega(
     if plot_opt:
         ax[2][1].plot(np.array(list(range(len(train_avg_rewards_means_3)))),
                       [optimal_reward] * len(train_avg_rewards_means_3), label=r"$\pi^{*}$",
-                      color="black",
-                      linestyle="dashed")
+                      color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[2][2].plot(np.array(list(range(len(train_avg_regret_means_3[::sample_step])))) * sample_step,
                   train_avg_regret_means_3[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][2].fill_between(np.array(list(range(len(train_avg_regret_means_3[::sample_step])))) * sample_step,
                           train_avg_regret_means_3[::sample_step] - train_avg_regret_stds_3[::sample_step],
                           train_avg_regret_means_3[::sample_step] + train_avg_regret_stds_3[::sample_step],
@@ -2708,7 +2703,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2717,7 +2712,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[2][2].plot(np.array(list(range(len(eval_avg_regret_means_3[::sample_step])))) * sample_step,
                   eval_avg_regret_means_3[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][2].fill_between(np.array(list(range(len(eval_avg_regret_means_3[::sample_step])))) * sample_step,
                           eval_avg_regret_means_3[::sample_step] - eval_avg_regret_stds_3[::sample_step],
                           eval_avg_regret_means_3[::sample_step] + eval_avg_regret_stds_3[::sample_step],
@@ -2729,7 +2724,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][2].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][2].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2737,13 +2732,12 @@ def plot_mega(
 
     ax[2][2].plot(np.array(list(range(len(train_avg_regret_means_3)))),
                   [optimal_regret] * len(train_avg_regret_means_3), label=r"lower bound $\pi^{*}$",
-                  color="black",
-                  linestyle="dashed")
+                  color="black", linestyle="dashed", linewidth=linewidth)
 
     # Plot Avg Train regret
     ax[2][3].plot(np.array(list(range(len(train_avg_regret_means_3[::sample_step])))) * sample_step,
                   train_avg_regret_means_3[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][3].fill_between(np.array(list(range(len(train_avg_regret_means_3[::sample_step])))) * sample_step,
                           train_avg_regret_means_3[::sample_step] - train_avg_regret_stds_3[::sample_step],
                           train_avg_regret_means_3[::sample_step] + train_avg_regret_stds_3[::sample_step],
@@ -2752,7 +2746,7 @@ def plot_mega(
     # Plot Avg Eval regret
     ax[2][3].plot(np.array(list(range(len(eval_avg_regret_means_3[::sample_step])))) * sample_step,
                   eval_avg_regret_means_3[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][3].fill_between(np.array(list(range(len(eval_avg_regret_means_3[::sample_step])))) * sample_step,
                           eval_avg_regret_means_3[::sample_step] - eval_avg_regret_stds_3[::sample_step],
                           eval_avg_regret_means_3[::sample_step] + eval_avg_regret_stds_3[::sample_step],
@@ -2761,7 +2755,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[2][4].plot(np.array(list(range(len(train_avg_steps_means_3[::sample_step])))) * sample_step,
                   train_avg_steps_means_3[::sample_step], label=r"Avg\_T", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][4].fill_between(np.array(list(range(len(train_avg_steps_means_3[::sample_step])))) * sample_step,
                           train_avg_steps_means_3[::sample_step] - train_avg_steps_stds_3[::sample_step],
                           train_avg_steps_means_3[::sample_step] + train_avg_steps_stds_3[::sample_step],
@@ -2774,7 +2768,7 @@ def plot_mega(
         label = r"T\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="#599ad3",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="#599ad3")
@@ -2783,7 +2777,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[2][4].plot(np.array(list(range(len(eval_avg_steps_means_3[::sample_step])))) * sample_step,
                   eval_avg_steps_means_3[::sample_step], label=r"Avg\_E", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][4].fill_between(np.array(list(range(len(eval_avg_steps_means_3[::sample_step])))) * sample_step,
                           eval_avg_steps_means_3[::sample_step] - eval_avg_steps_stds_3[::sample_step],
                           eval_avg_steps_means_3[::sample_step] + eval_avg_steps_stds_3[::sample_step],
@@ -2795,7 +2789,7 @@ def plot_mega(
         label = r"E\_." + key.rsplit(".", 1)[-2].rsplit(".", 1)[-1]
         ax[2][4].plot(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                       r_means[::sample_step], label=label, marker=markers[i], ls='-', color="r",
-                      markevery=markevery, markersize=markersize)
+                      markevery=markevery, markersize=markersize, linewidth=linewidth)
         ax[2][4].fill_between(np.array(list(range(len(r_means[::sample_step])))) * sample_step,
                               r_means[::sample_step] - r_stds[::sample_step],
                               r_means[::sample_step] + r_stds[::sample_step], alpha=0.35, color="r")
@@ -2804,7 +2798,7 @@ def plot_mega(
     # Plot Avg Train steps
     ax[2][5].plot(np.array(list(range(len(train_avg_steps_means_3[::sample_step])))) * sample_step,
                   train_avg_steps_means_3[::sample_step], label=r"Avg Train", marker="s", ls='-', color="#599ad3",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][5].fill_between(np.array(list(range(len(train_avg_steps_means_3[::sample_step])))) * sample_step,
                           train_avg_steps_means_3[::sample_step] - train_avg_steps_stds_3[::sample_step],
                           train_avg_steps_means_3[::sample_step] + train_avg_steps_stds_3[::sample_step],
@@ -2813,7 +2807,7 @@ def plot_mega(
     # Plot Avg Eval steps
     ax[2][5].plot(np.array(list(range(len(eval_avg_steps_means_3[::sample_step])))) * sample_step,
                   eval_avg_steps_means_3[::sample_step], label=r"Avg Eval", marker="o", ls='-', color="r",
-                  markevery=markevery, markersize=markersize)
+                  markevery=markevery, markersize=markersize, linewidth=linewidth)
     ax[2][5].fill_between(np.array(list(range(len(eval_avg_steps_means_3[::sample_step])))) * sample_step,
                           eval_avg_steps_means_3[::sample_step] - eval_avg_steps_stds_3[::sample_step],
                           eval_avg_steps_means_3[::sample_step] + eval_avg_steps_stds_3[::sample_step],
@@ -2828,7 +2822,7 @@ def plot_mega(
         #ax[2][i].set_title(titles[i])
         ax[2][i].set_xlabel(x_lables[i], fontsize=8)
         if i == 0:
-            ax[2][i].set_ylabel("1 Env", fontsize=8)
+            ax[2][i].set_ylabel("2 Envs", fontsize=8)
         ax[2][i].set_xlim(0, len(train_avg_rewards_means_3[::sample_step]) * sample_step)
         if i == 0 or i == 1:
             ax[2][i].set_ylim(ylim_rew[0], ylim_rew[1])
@@ -2836,7 +2830,7 @@ def plot_mega(
             ax[2][i].set_ylim(ylim_reg[0], ylim_reg[1])
         elif i == 4 or i == 4:
             ax[2][i].set_ylim(ylim_step[0], ylim_step[1])
-        ax[2][i].grid('on')
+        #ax[2][i].grid('on')
         xlab = ax[2][i].xaxis.get_label()
         ylab = ax[2][i].yaxis.get_label()
         xlab.set_size(9)
@@ -2847,8 +2841,8 @@ def plot_mega(
         # if i != 0:
         ax[2][i].xaxis.label.set_size(9)
         ax[2][i].yaxis.label.set_size(9)
-        ax[2][i].tick_params(axis='both', which='major', labelsize=6)
-        ax[2][i].tick_params(axis='both', which='minor', labelsize=6)
+        ax[2][i].tick_params(axis='both', which='major', labelsize=4)
+        ax[2][i].tick_params(axis='both', which='minor', labelsize=4)
 
     # ax[2][1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.27),
     #                 ncol=5, fancybox=True, shadow=True)
