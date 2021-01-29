@@ -282,50 +282,50 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     plt.rcParams['font.family'] = ['serif']
     plt.rcParams['font.serif'] = ['Times New Roman']
-    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=(12, 2.5))
+    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=(11, 2.5))
     plt.rcParams.update({'font.size': 10})
 
     #let numpy calculate the histogram entries
-    histo, bin_edges = np.histogram(data[3], 30, (0, 2300))
+    histo, bin_edges = np.histogram(data[0], 30, (0, 2300))
     bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    print(np.array(data[3])*0.01)
-    ax[0].hist(data[3], bins=30, alpha=1, range=(0, 2300),
-            label=labels[3], stacked=False, log=True, color=colors[3], density=True, edgecolor='black', ls="-")
+    print(np.array(data[0])*0.01)
+    ax[0].hist(data[0], bins=30, alpha=1, range=(0, 2300),
+            label=labels[0], stacked=False, log=True, color=colors[3], density=True, edgecolor='black', ls="-")
 
-    normalisation = 30 / (len(data[3]) * (2300 - 0))
+    normalisation = 30 / (len(data[0]) * (2300 - 0))
     y_err = np.sqrt(histo) * normalisation
     y = histo*normalisation
     y_err[0] = y_err[0] + 0.0025
     y_err[1] = y_err[1] + 0.0001
     ax[0].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
 
-    histo, bin_edges = np.histogram(data[2], 30, (0, 2300))
+    histo, bin_edges = np.histogram(data[1], 30, (0, 2300))
     bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    ax[1].hist(data[2], bins=30, alpha=1, range=(0, 2300),
-            label=labels[2], stacked=False, log=True, color=colors[2], density=True, edgecolor='black')
-    normalisation = 30 / (len(data[2]) * (2300 - 0))
+    ax[1].hist(data[1], bins=30, alpha=1, range=(0, 2300),
+            label=labels[1], stacked=False, log=True, color=colors[2], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[1]) * (2300 - 0))
     y_err = np.sqrt(histo) * normalisation
     y_err[0] = y_err[0] + 0.005
     y_err[1] = y_err[1] + 0.00001
     y = histo * normalisation
     ax[1].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
 
-    histo, bin_edges = np.histogram(data[1], 30, (0, 2300))
+    histo, bin_edges = np.histogram(data[2], 30, (0, 2300))
     bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    ax[2].hist(data[1], bins=30, alpha=1, range=(0, 2300),
-            label=labels[1], stacked=False, log=True, color=colors[1], density=True, edgecolor='black')
-    normalisation = 30 / (len(data[1]) * (2300 - 0))
+    ax[2].hist(data[2], bins=30, alpha=1, range=(0, 2300),
+            label=labels[2], stacked=False, log=True, color=colors[1], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[2]) * (2300 - 0))
     y_err = np.sqrt(histo) * normalisation
     y_err[0] = y_err[0] + 0.005
     y_err[1] = y_err[1] + 0.00001
     y = histo * normalisation
     ax[2].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
 
-    histo, bin_edges = np.histogram(data[0], 30, (0, 2300))
+    histo, bin_edges = np.histogram(data[3], 30, (0, 2300))
     bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
-    ax[3].hist(data[0], bins=30, alpha=1, range=(0, 2300),
-            label=labels[0], stacked=False, log=True, color=colors[0], density=True, edgecolor='black')
-    normalisation = 30 / (len(data[0]) * (2300 - 0))
+    ax[3].hist(data[3], bins=30, alpha=1, range=(0, 2300),
+            label=labels[3], stacked=False, log=True, color=colors[0], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[3]) * (2300 - 0))
     y_err = np.sqrt(histo) * normalisation
     y_err[0] = y_err[0] + 0.005
     y_err[1] = y_err[1] + 0.00001
@@ -355,7 +355,7 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
 
     ax[1].set_title(title)
     ax[1].set_xlabel(xlabel, fontsize=20)
-    ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
+    #ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
     ax[1].grid('on')
     ax[1].xaxis.set_tick_params(size=0)
     ax[1].yaxis.set_tick_params(size=0)
@@ -371,7 +371,7 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
 
     ax[2].set_title(title)
     ax[2].set_xlabel(xlabel, fontsize=20)
-    ax[2].set_ylabel(r"Normalized Frequency", fontsize=20)
+    #ax[2].set_ylabel(r"Normalized Frequency", fontsize=20)
     ax[2].grid('on')
     ax[2].xaxis.set_tick_params(size=0)
     ax[2].yaxis.set_tick_params(size=0)
@@ -387,7 +387,7 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
 
     ax[3].set_title(title)
     ax[3].set_xlabel(xlabel, fontsize=20)
-    ax[3].set_ylabel(r"Normalized Frequency", fontsize=20)
+    #ax[3].set_ylabel(r"Normalized Frequency", fontsize=20)
     ax[3].grid('on')
     ax[3].xaxis.set_tick_params(size=0)
     ax[3].yaxis.set_tick_params(size=0)
@@ -402,6 +402,7 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
         ax[3].legend(loc="upper right")
 
     fig.tight_layout()
+    fig.subplots_adjust(wspace=0.05, hspace=0.09)
     plt.show()
     file_name = filename
     fig.savefig(file_name + ".png", format="png", dpi=600)
@@ -418,7 +419,7 @@ def plot_freq_dist_w_boxes_all_alerts(d1, d2, labels, title, num_bins, colors, x
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     plt.rcParams['font.family'] = ['serif']
     plt.rcParams['font.serif'] = ['Times New Roman']
-    fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(10, 2.5))
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(6, 2.5))
     plt.rcParams.update({'font.size': 10})
 
     #let numpy calculate the histogram entries
@@ -459,41 +460,41 @@ def plot_freq_dist_w_boxes_all_alerts(d1, d2, labels, title, num_bins, colors, x
     pos_bar_positions = np.arange(len(pos_weight_upd))
     neg_bar_positions = pos_bar_positions + bar_width - 0.45
 
-    weight_update_bar = ax[2].bar(pos_bar_positions, pos_weight_upd, bar_width - epsilon,
-                               edgecolor=colors[0],
-                               # edgecolor='',
-                               color="white",
-                               label=r'Weight update',
-                               linewidth=line_width,
-                               hatch='OO',
-                               alpha=opacity)
-    grad_comp_bar = ax[2].bar(pos_bar_positions, pos_grad_comp, bar_width - epsilon,
-                           bottom=pos_weight_upd,
-                           alpha=opacity,
-                           color='white',
-                           edgecolor=colors[1],
-                           # edgecolor='black',
-                           linewidth=line_width,
-                           hatch='////',
-                           label=r'Grad comp')
-    action_pred_bar = ax[2].bar(pos_bar_positions, pos_action_pred, bar_width - epsilon,
-                             bottom=pos_grad_comp + pos_weight_upd,
-                             alpha=opacity,
-                             color='white',
-                             edgecolor="black",
-                             linewidth=line_width,
-                             hatch='---',
-                             label=r'Action pred')
-    env_response_bar = ax[2].bar(pos_bar_positions, pos_env_response, bar_width - epsilon,
-                              bottom=pos_grad_comp + pos_weight_upd + pos_action_pred,
-                              label=r'Env response',
-                              edgecolor=colors[6],
-                              # edgecolor='black',
-                              color="white",
-                              hatch='xxx',
-                              linewidth=line_width,
-                              alpha=opacity,
-                              )
+    # weight_update_bar = ax[2].bar(pos_bar_positions, pos_weight_upd, bar_width - epsilon,
+    #                            edgecolor=colors[0],
+    #                            # edgecolor='',
+    #                            color="white",
+    #                            label=r'Weight update',
+    #                            linewidth=line_width,
+    #                            hatch='OO',
+    #                            alpha=opacity)
+    # grad_comp_bar = ax[2].bar(pos_bar_positions, pos_grad_comp, bar_width - epsilon,
+    #                        bottom=pos_weight_upd,
+    #                        alpha=opacity,
+    #                        color='white',
+    #                        edgecolor=colors[1],
+    #                        # edgecolor='black',
+    #                        linewidth=line_width,
+    #                        hatch='////',
+    #                        label=r'Grad comp')
+    # action_pred_bar = ax[2].bar(pos_bar_positions, pos_action_pred, bar_width - epsilon,
+    #                          bottom=pos_grad_comp + pos_weight_upd,
+    #                          alpha=opacity,
+    #                          color='white',
+    #                          edgecolor="black",
+    #                          linewidth=line_width,
+    #                          hatch='---',
+    #                          label=r'Action pred')
+    # env_response_bar = ax[2].bar(pos_bar_positions, pos_env_response, bar_width - epsilon,
+    #                           bottom=pos_grad_comp + pos_weight_upd + pos_action_pred,
+    #                           label=r'Env response',
+    #                           edgecolor=colors[6],
+    #                           # edgecolor='black',
+    #                           color="white",
+    #                           hatch='xxx',
+    #                           linewidth=line_width,
+    #                           alpha=opacity,
+    #                           )
 
     # histo, bin_edges = np.histogram(data[1], 30, (0, 2300))
     # bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
@@ -540,7 +541,7 @@ def plot_freq_dist_w_boxes_all_alerts(d1, d2, labels, title, num_bins, colors, x
 
     ax[1].set_title(title2)
     ax[1].set_xlabel(xlabel2, fontsize=20)
-    ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
+    #ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
     ax[1].grid('on')
     ax[1].xaxis.set_tick_params(size=0)
     ax[1].yaxis.set_tick_params(size=0)
@@ -557,25 +558,176 @@ def plot_freq_dist_w_boxes_all_alerts(d1, d2, labels, title, num_bins, colors, x
     #ax[2].set_title(title)
     #ax[2].set_xlabel(xlabel, fontsize=20)
     #ax[2].set_ylabel(r"Normalized Frequency", fontsize=20)
-    ax[2].grid('on')
+    # ax[2].grid('on')
+    # # ax[2].xaxis.set_tick_params(size=0)
+    # # ax[2].yaxis.set_tick_params(size=0)
+    # ax[2].spines['right'].set_color((.8, .8, .8))
+    # ax[2].spines['top'].set_color((.8, .8, .8))
+    # xlab = ax[2].xaxis.get_label()
+    # ylab = ax[2].yaxis.get_label()
+    # xlab.set_size(10)
+    # ylab.set_size(10)
+    # ax[2].set_ylim((0, 100))
+    # ax[2].set_xticks(neg_bar_positions)
+    # ax[2].set_xticklabels(labels, rotation=45)
+    # ax[2].patch.set_edgecolor('black')
+    # ax[2].patch.set_linewidth('1')
+    # ax[2].set_ylabel(r'Percentage $(\%)$')
+    # ax[2].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
+    #           ncol=2, fancybox=True, shadow=True, fontsize=8)
+
+    fig.tight_layout()
+    fig.subplots_adjust(wspace=0.05, hspace=0.09)
+    plt.show()
+    file_name = filename
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    #plt.close(fig)
+
+
+def plot_profiling(d1, d2, labels, title, num_bins, colors, xlabel, filename, bin_edges, data=None,
+                                      data2=None, title2=None, xlabel2 = None):
+    emulation_w_cache_env_response_times, emulation_w_cache_action_pred_times, \
+    emulation_w_cache_grad_comp_times, emulation_w_cache_weight_update_times = read_data()
+
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(2.75, 3.2))
+    plt.rcParams.update({'font.size': 10})
+
+    perf_labels = [r"Simulation", r"Emulation", r"Emulation w. Cache"]
+    bar_width = 0.35
+    epsilon = .015
+    line_width = 1
+    opacity = 1
+    pos_weight_upd = np.array([5.5, 0.005, emulation_w_cache_weight_update_times])
+    pos_grad_comp = np.array([8.5, 0.005, emulation_w_cache_grad_comp_times])
+    pos_action_pred = np.array([71, 0.01, emulation_w_cache_action_pred_times])
+    pos_env_response = np.array([15, 99.98, emulation_w_cache_env_response_times])
+    pos_other = np.array([5, 0, 0])
+    pos_bar_positions = np.arange(len(pos_weight_upd))
+    neg_bar_positions = pos_bar_positions + bar_width - 0.45
+
+    weight_update_bar = ax.bar(pos_bar_positions, pos_weight_upd, bar_width - epsilon,
+                               edgecolor=colors[0],
+                               # edgecolor='',
+                               color="white",
+                               label=r'Weight update',
+                               linewidth=line_width,
+                               hatch='OO',
+                               alpha=opacity)
+    grad_comp_bar = ax.bar(pos_bar_positions, pos_grad_comp, bar_width - epsilon,
+                           bottom=pos_weight_upd,
+                           alpha=opacity,
+                           color='white',
+                           edgecolor=colors[1],
+                           # edgecolor='black',
+                           linewidth=line_width,
+                           hatch='////',
+                           label=r'Grad comp')
+    action_pred_bar = ax.bar(pos_bar_positions, pos_action_pred, bar_width - epsilon,
+                             bottom=pos_grad_comp + pos_weight_upd,
+                             alpha=opacity,
+                             color='white',
+                             edgecolor="black",
+                             linewidth=line_width,
+                             hatch='---',
+                             label=r'Action pred')
+    env_response_bar = ax.bar(pos_bar_positions, pos_env_response, bar_width - epsilon,
+                              bottom=pos_grad_comp + pos_weight_upd + pos_action_pred,
+                              label=r'Env response',
+                              edgecolor=colors[6],
+                              # edgecolor='black',
+                              color="white",
+                              hatch='xxx',
+                              linewidth=line_width,
+                              alpha=opacity,
+                              )
+
+    # histo, bin_edges = np.histogram(data[1], 30, (0, 2300))
+    # bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    # ax[2].hist(data[1], bins=30, alpha=1, range=(0, 2300),
+    #         label=labels[1], stacked=False, log=True, color=colors[1], density=True, edgecolor='black')
+    # normalisation = 30 / (len(data[1]) * (2300 - 0))
+    # y_err = np.sqrt(histo) * normalisation
+    # y_err[0] = y_err[0] + 0.005
+    # y_err[1] = y_err[1] + 0.00001
+    # y = histo * normalisation
+    # ax[2].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+    #
+    # histo, bin_edges = np.histogram(data[0], 30, (0, 2300))
+    # bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    # ax[3].hist(data[0], bins=30, alpha=1, range=(0, 2300),
+    #         label=labels[0], stacked=False, log=True, color=colors[0], density=True, edgecolor='black')
+    # normalisation = 30 / (len(data[0]) * (2300 - 0))
+    # y_err = np.sqrt(histo) * normalisation
+    # y_err[0] = y_err[0] + 0.005
+    # y_err[1] = y_err[1] + 0.00001
+    # y = histo * normalisation
+    # ax[3].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
+              '#D95F02', '#7570B3', '#E7298A', '#E6AB02', '#A6761D', '#666666',
+              '#8DD3C7', '#CCEBC5', '#BEBADA', '#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
+              '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
+              "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
+    # ax[0].set_title(title)
+    # ax[0].set_xlabel(xlabel, fontsize=20)
+    # ax[0].set_ylabel(r"Normalized Frequency", fontsize=20)
+    # ax[0].grid('on')
+    # ax[0].xaxis.set_tick_params(size=0)
+    # ax[0].yaxis.set_tick_params(size=0)
+    # ax[0].spines['right'].set_color((.8, .8, .8))
+    # ax[0].spines['top'].set_color((.8, .8, .8))
+    # xlab = ax[0].xaxis.get_label()
+    # ylab = ax[0].yaxis.get_label()
+    # xlab.set_size(10)
+    # ylab.set_size(10)
+    # ax[0].set_xlim((0, 260))
+    # # if len(labels) > 1:
+    # #     ax[0].legend(loc="upper right")
+    #
+    # ax[1].set_title(title2)
+    # ax[1].set_xlabel(xlabel2, fontsize=20)
+    # #ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
+    # ax[1].grid('on')
+    # ax[1].xaxis.set_tick_params(size=0)
+    # ax[1].yaxis.set_tick_params(size=0)
+    # ax[1].spines['right'].set_color((.8, .8, .8))
+    # ax[1].spines['top'].set_color((.8, .8, .8))
+    # xlab = ax[1].xaxis.get_label()
+    # ylab = ax[1].yaxis.get_label()
+    # xlab.set_size(10)
+    # ylab.set_size(10)
+    # ax[1].set_xlim((0, 260))
+    # # if len(labels) > 1:
+    # #     ax[1].legend(loc="upper right")
+
+    #ax.set_title(title)
+    #ax.set_xlabel(xlabel, fontsize=20)
+    #ax.set_ylabel(r"Normalized Frequency", fontsize=20)
+    ax.grid('on')
     # ax[2].xaxis.set_tick_params(size=0)
     # ax[2].yaxis.set_tick_params(size=0)
-    ax[2].spines['right'].set_color((.8, .8, .8))
-    ax[2].spines['top'].set_color((.8, .8, .8))
-    xlab = ax[2].xaxis.get_label()
-    ylab = ax[2].yaxis.get_label()
+    ax.spines['right'].set_color((.8, .8, .8))
+    ax.spines['top'].set_color((.8, .8, .8))
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
     xlab.set_size(10)
     ylab.set_size(10)
-    ax[2].set_ylim((0, 100))
-    ax[2].set_xticks(neg_bar_positions)
-    ax[2].set_xticklabels(labels, rotation=45)
-    ax[2].patch.set_edgecolor('black')
-    ax[2].patch.set_linewidth('1')
-    ax[2].set_ylabel(r'Percentage $(\%)$')
-    ax[2].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
+    ax.set_ylim((0, 100))
+    ax.set_xticks(neg_bar_positions)
+    ax.set_xticklabels(perf_labels, rotation=45)
+    ax.patch.set_edgecolor('black')
+    ax.patch.set_linewidth('1')
+    ax.set_ylabel(r'Percentage $(\%)$')
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
               ncol=2, fancybox=True, shadow=True, fontsize=8)
 
     fig.tight_layout()
+    fig.subplots_adjust(top=0.78)
     plt.show()
     file_name = filename
     fig.savefig(file_name + ".png", format="png", dpi=600)
@@ -603,6 +755,7 @@ if __name__ == '__main__':
     # d_1, d_factors, bin_edges, costs_factors = read_action_costs(
     #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
     #     num_bins=100, factors=[2, 3, 4])
+
     # plot_freq_dist(d1=d_1, d2=d_factors, num_bins=100, labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$", r"$|\mathcal{N}|=100$"],
     # title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
     # filename="action_cost_dist_plot", bin_edges=bin_edges, data=costs_factors)
@@ -624,6 +777,7 @@ if __name__ == '__main__':
     total_alerts, total_priority = read_action_alerts(
         zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
         num_bins=250)
+
     #print(max(digitized_total))
     # plot_freq_dist(d1=None, d2=None,
     #                labels=[r"test"],title=r"Intrusion detection alerts per action", num_bins=30,
@@ -635,17 +789,27 @@ if __name__ == '__main__':
     #                labels=[r"test"], title=r"Intrusion detection alerts total priority $\sum_a p(a)$ per action", num_bins=30,
     #                colors=colors, xlabel=r"Total priority of triggered alerts",
     #                filename="action_alerts_priority_dist_plot", data=total_priority, bin_edges=None)
+
     colors = ["#599ad3"]
     cm = plt.cm.get_cmap('OrRd_r')
     #colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 4))[-4:]
     colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 10))
     #
-    plot_freq_dist_w_boxes_all_alerts(d1=None, d2=None, num_bins=30,
-                               labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
-                                       r"$|\mathcal{N}|=100$"],
-                               title=r"Intrusion detection alerts per action", xlabel=r"Number of triggered alerts",
-                               colors=colors,
-                               filename="action_alerts_dist_plot_all_boxes", bin_edges=None, data=total_alerts,
+    # plot_freq_dist_w_boxes_all_alerts(d1=None, d2=None, num_bins=30,
+    #                            labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
+    #                                    r"$|\mathcal{N}|=100$"],
+    #                            title=r"Intrusion detection alerts per action", xlabel=r"Number of triggered alerts",
+    #                            colors=colors,
+    #                            filename="action_alerts_dist_plot_all_boxes", bin_edges=None, data=total_alerts,
+    #                                   data2=total_priority, title2="Alerts priority $\sum_a p(a)$ per action",
+    #                                   xlabel2="Total priority of triggered alerts")
+    plot_profiling(d1=None, d2=None, num_bins=30,
+                                      labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
+                                              r"$|\mathcal{N}|=100$"],
+                                      title=r"Intrusion detection alerts per action",
+                                      xlabel=r"Number of triggered alerts",
+                                      colors=colors,
+                                      filename="training_iter_profiling", bin_edges=None, data=total_alerts,
                                       data2=total_priority, title2="Alerts priority $\sum_a p(a)$ per action",
                                       xlabel2="Total priority of triggered alerts")
 
