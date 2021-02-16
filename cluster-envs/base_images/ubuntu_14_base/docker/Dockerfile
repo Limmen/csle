@@ -161,6 +161,25 @@ RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 # make conda activate command available from /bin/bash --interative shells
 RUN conda init bash
 
+# Setup Samba
+ADD docker/exploit.py /exploit.py
+ADD docker/bindshell-samba.c /bindshell-samba.c
+ADD docker/bindshell-samba.h /bindshell-samba.h
+RUN gcc -c -fpic bindshell-samba.c
+RUN gcc -shared -o libbindshell-samba.so bindshell-samba.o
+RUN chmod 777 /exploit.py
+RUN chmod 777 /bindshell-samba.c
+RUN chmod 777 /bindshell-samba.h
+RUN chmod 777 /libbindshell-samba.so
+RUN chmod 777 /bindshell-samba.o
+RUN conda create --name samba python=2.7 -y
+# Make subsequent RUN commands use the samba env
+SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
+#RUN conda activate samba
+RUN pip install pycrypto==2.6
+RUN pip install git+git://github.com/opsxcq/impacket.git
+RUN pip install pyasn1
+
 # Web server HTTP
 RUN mkdir -p /web/
 RUN mkdir -p /web/static
