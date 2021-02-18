@@ -1264,6 +1264,7 @@ class ClusterUtil:
                         non_failed_credentials.append(cr)
                     except Exception as e:
                         print("SSH exception :{}".format(str(e)))
+                        print("user:{}, pw:{}".format(cr.username, cr.pw))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
                         print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.obs_state.agent_reachable))
@@ -3075,8 +3076,7 @@ class ClusterUtil:
             # Check in-memory cache
             if env_config.user_command_cache.get(cache_key) is not None:
                 cache_hit = True
-                target_machine, cost = env_config.user_command_cache.get(cache_key)
-                exploit_successful = target_machine.shell_access
+                target_machine, cost, exploit_successful = env_config.user_command_cache.get(cache_key)
             # Check on-disk cache
             else:
                 cache_file = ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=a.ip,
@@ -3136,28 +3136,6 @@ class ClusterUtil:
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(
                 cmd=cmd, conn=env_config.cluster_config.agent_conn)
 
-            # Measure  cost and alerts
-            cost += float(total_time)
-            if env_config.ids_router:
-                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                if last_alert_ts is not None:
-                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
-                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
-                num_alerts = len(fast_logs)
-                total_alerts = (num_alerts, sum_priority_alerts)
-                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                  action=a, env_config=env_config,
-                                                  user=env_config.cluster_config.agent_username,
-                                                  service=constants.SAMBA.SERVICE_NAME)
-                env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
-
-            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
-                                             user=env_config.cluster_config.agent_username,
-                                             service=constants.SAMBA.SERVICE_NAME)
-            env_config.action_costs.find_add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1),
-                                                  user=env_config.cluster_config.agent_username,
-                                                  service=constants.SAMBA.SERVICE_NAME)
-
             # Parse Result
             if constants.SAMBA.ALREADY_EXISTS in outdata.decode() or (constants.SAMBA.ERROR not in outdata.decode()
                                                                       and constants.SAMBA.ERROR not in errdata.decode()):
@@ -3179,19 +3157,42 @@ class ClusterUtil:
                 target_machine.backdoor_installed = True
                 target_machine.cve_vulns.append(vuln)
                 exploit_successful = True
-            else:
-                # Exploit failed
-                print("sambacry failed")
+
+            # Measure  cost and alerts
+            cost += float(total_time)
+            if env_config.ids_router:
+                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                if last_alert_ts is not None:
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                num_alerts = len(fast_logs)
+                total_alerts = (num_alerts, sum_priority_alerts)
+                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                  action=a, env_config=env_config,
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.SAMBA.SERVICE_NAME)
+                env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=a.ip,
+                                                           alert=(sum_priority_alerts, num_alerts),
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.SAMBA.SERVICE_NAME)
+
+            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
+                                             user=env_config.cluster_config.agent_username,
+                                             service=constants.SAMBA.SERVICE_NAME)
+            env_config.action_costs.find_add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1),
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.SAMBA.SERVICE_NAME)
+
+            # Persist cache result
+            ClusterUtil.write_user_command_cache(action=a, env_config=env_config,
+                                                 user=env_config.cluster_config.agent_username,
+                                                 result=str(int(exploit_successful)), ip=a.ip)
+
+            # Update cache
+            if env_config.use_user_command_cache:
+                env_config.user_command_cache.add(cache_key, (target_machine, cost, exploit_successful))
 
         target_machine.sambacry_tried = True
-        # Persist cache result
-        ClusterUtil.write_user_command_cache(action=a, env_config=env_config,
-                                             user=env_config.cluster_config.agent_username,
-                                             result=str(int(exploit_successful)), ip=a.ip)
-        # Update cache
-        if env_config.use_user_command_cache:
-            env_config.user_command_cache.add(cache_key, (target_machine, cost))
-
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
