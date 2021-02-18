@@ -1,6 +1,6 @@
-# SambaCry Base Image
+# Shellshock Base Image
 
-Samba base docker image, used for implementing sambacry cve-2017-7494 vulnerabilities  
+Shellshock base docker image, used for implementing Shellshock cve-2014-6271 vulnerabilities  
 
 ## Useful commands
 

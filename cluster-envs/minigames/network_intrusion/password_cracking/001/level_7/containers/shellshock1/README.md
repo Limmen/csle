@@ -1,6 +1,4 @@
-# SambaCry Base Image
-
-Samba base docker image, used for implementing sambacry cve-2017-7494 vulnerabilities  
+# TODO
 
 ## Useful commands
 
@@ -16,17 +14,7 @@ docker image ls --all # list all images
 docker system prune # remove unused images and containers
 docker container prune # remove stopped containers
 sudo nmap -sU -p 161 <ip> # UDP scan to test that SNMP port is open
-nmap -p- <ip> # Scan TCP ports   
+nmap -p- <ip> # Scan TCP ports
+netstat -tulpn # Run inside container to see network services   
 ```
 
-## Author & Maintainer
-
-Kim Hammar <kimham@kth.se>
-
-## Copyright and license
-
-[LICENSE](LICENSE.md)
-
-Creative Commons
-
-(C) 2020, Kim Hammar
