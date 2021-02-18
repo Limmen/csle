@@ -14,6 +14,7 @@ build:
 	cd telnet3/ && $(MAKE) build
 	cd router1/ && $(MAKE) build
 	cd router2/ && $(MAKE) build
+	cd samba1/ && $(MAKE) build
 
 rm-image:
 	cd ftp1/ && $(MAKE) rm-image
@@ -29,3 +30,4 @@ rm-image:
 	cd telnet3/ && $(MAKE) rm-image
 	cd router1/ && $(MAKE) rm-image
 	cd router2/ && $(MAKE) rm-image
+	cd samba1/ && $(MAKE) rm-image

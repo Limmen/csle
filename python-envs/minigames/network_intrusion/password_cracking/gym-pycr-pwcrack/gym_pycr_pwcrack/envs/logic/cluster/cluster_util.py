@@ -1119,8 +1119,10 @@ class ClusterUtil:
                                                         root=True, port=22, service=constants.SSH.SERVICE_NAME,
                                                         proxy= None, ip=env_config.cluster_config.agent_ip)]
         for m in s.obs_state.machines:
-            ssh_connections_sorted_by_root = sorted(m.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username),
-                                                    reverse=True)
+            ssh_connections_sorted_by_root = sorted(
+                m.ssh_connections,
+                key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                reverse=True)
             if len(ssh_connections_sorted_by_root) > 0:
                 proxy_connections.append(ssh_connections_sorted_by_root[0])
 
@@ -1522,7 +1524,10 @@ class ClusterUtil:
         :return: the updated machine observation with the found flags, cost, root
         """        
         total_cost = 0
-        ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
+        ssh_connections_sorted_by_root = sorted(
+            machine.ssh_connections,
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            reverse=True)
         root_scan = False
         total_alerts = (0,0)
         for c in ssh_connections_sorted_by_root:
@@ -1615,8 +1620,10 @@ class ClusterUtil:
         """
         total_cost = 0
         total_alerts = (0, 0)
-        telnet_connections_sorted_by_root = sorted(machine.telnet_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username),
-                                                   reverse=True)
+        telnet_connections_sorted_by_root = sorted(
+            machine.telnet_connections,
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            reverse=True)
         root_scan = False
         for c in telnet_connections_sorted_by_root:
             cache_file = \
@@ -1704,7 +1711,10 @@ class ClusterUtil:
         """
         total_cost = 0
         total_alerts = (0, 0)
-        ftp_connections_sorted_by_root = sorted(machine.ftp_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
+        ftp_connections_sorted_by_root = sorted(
+            machine.ftp_connections,
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            reverse=True)
         root_scan = False
         for c in ftp_connections_sorted_by_root:
             cache_file = \
@@ -2464,7 +2474,10 @@ class ClusterUtil:
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
 
                 # Start with ssh connections
-                ssh_connections_sorted_by_root = sorted(machine.ssh_connections, key=lambda x: ("ssh_backdoor" in x.username, x.root, x.username), reverse=True)
+                ssh_connections_sorted_by_root = sorted(
+                    machine.ssh_connections,
+                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                    reverse=True)
                 for c in ssh_connections_sorted_by_root:
 
                     # Check in-memory cache

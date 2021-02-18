@@ -49,7 +49,7 @@ class NodeRandomizer:
         flags = NodeRandomizer.parse_flags(flags_conf=flags_config)
         vulns, n_serv, creds, n_roots = NodeRandomizer.generate_required_vulns(vuln_conf=vulns_config, gateway=gateway)
         if not router:
-            vulns_blacklist = constants.EXPLOIT_VULNERABILITES.WEAK_PW_VULNS
+            vulns_blacklist = constants.EXPLOIT_VULNERABILITES.WEAK_PW_VULNS + constants.EXPLOIT_VULNERABILITES.CVE_VULNS
             vulns_blacklist = vulns_blacklist + list(map(lambda x: x.name, vulns))
             num_vulns = random.randint(0, len(r_space.vulnerabilities)-1)
             r_vulns = NodeRandomizer.random_vulnerabilities(vulns=r_space.vulnerabilities, num_vulns=num_vulns,

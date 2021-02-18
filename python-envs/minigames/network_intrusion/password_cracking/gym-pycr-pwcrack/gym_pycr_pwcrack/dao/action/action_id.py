@@ -60,3 +60,4 @@ class ActionId(Enum):
     FINGER_SUBNET = 50
     INSTALL_TOOLS = 51
     SSH_BACKDOOR = 52
+    SAMBACRY_EXPLOIT = 53

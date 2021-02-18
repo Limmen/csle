@@ -4,37 +4,12 @@ USER root
 
 # Install dependencies
 RUN apt-get update --fix-missing
-RUN apt-get -y install apt-utils
-RUN apt-get -y install openssl
-RUN apt-get -y install net-tools
-RUN apt-get -y install iputils-ping
-RUN apt-get -y install sudo
-RUN apt-get -y install emacs
-RUN apt-get -y install curl
-RUN apt-get -y install htop
-RUN apt-get -y install telnet
-RUN apt-get -y install ssh
-RUN apt-get -y install openssh-server
-RUN apt-get -y install ftp
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y kali-tools-top10
+RUN apt-get -y install apt-utils openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
+                       exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 netcat masscan \
+                       iptables proxychains zip unzip arptables
+
 #RUN apt-get -y install man-db
-RUN apt-get -y install exploitdb
-RUN apt-get -y install nikto
-RUN apt-get -y install traceroute
-RUN apt-get -y install finger
-RUN apt-get -y install git
-RUN apt-get -y install sshpass
-RUN apt-get -y install lftp
-RUN apt-get -y install recon-ng
-RUN apt-get -y install netdiscover
-RUN apt-get -y install hping3
-RUN apt-get -y install netcat
-RUN apt-get -y install masscan
-RUN apt-get -y install iptables
-RUN apt-get -y install proxychains
-RUN apt-get -y install zip
-RUN apt-get -y install unzip
-RUN apt-get -y install arptables
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y kali-tools-top10
 
 # Setup users
 
@@ -50,22 +25,21 @@ RUN /make_root_users.sh
 RUN service ssh start
 
 # NMAP vuln scan
-RUN git clone https://github.com/scipag/vulscan scipag_vulscan
-RUN ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
+RUN git clone https://github.com/scipag/vulscan scipag_vulscan &&\
+    ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
 
 # NMAP nmap-vulners
-RUN git clone https://github.com/vulnersCom/nmap-vulners
-RUN cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/
-RUN nmap --script-updatedb
+RUN git clone https://github.com/vulnersCom/nmap-vulners &&\
+    cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
+    nmap --script-updatedb
 
 # SecLists
 RUN git clone https://github.com/Limmen/SecLists
 
-# Alias
-RUN echo "alias ll='ls -al'" >> /root.bashrc
-
-# Setup root passwd
-RUN echo "root:root" | /usr/sbin/chpasswd
+# 1. Alias
+# 2. Setup root passwd
+RUN echo "alias ll='ls -al'" >> /root.bashrc &&\
+    echo "root:root" | /usr/sbin/chpasswd
 
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
@@ -75,11 +49,10 @@ ADD docker/sshd_config /etc/ssh/sshd_config
 RUN mv /etc/sudoers /etc/sudoers.bak
 ADD docker/sudoers /etc/sudoers
 
-# Download nmap-services
-RUN wget https://raw.githubusercontent.com/nmap/nmap/master/nmap-services
-
-# Download CVEs
-RUN wget https://cve.mitre.org/data/downloads/allitems.csv
+# 1. Download nmap-services
+# 2. Download CVEs
+RUN wget https://raw.githubusercontent.com/nmap/nmap/master/nmap-services &&\
+    wget https://cve.mitre.org/data/downloads/allitems.csv
 
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
@@ -98,23 +71,23 @@ RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 RUN conda init bash
 
 # Setup Samba
-ADD docker/exploit.py /exploit.py
+ADD docker/samba_exploit.py /samba_exploit.py
 ADD docker/bindshell-samba.c /bindshell-samba.c
 ADD docker/bindshell-samba.h /bindshell-samba.h
-RUN gcc -c -fpic bindshell-samba.c
-RUN gcc -shared -o libbindshell-samba.so bindshell-samba.o
-RUN chmod 777 /exploit.py
-RUN chmod 777 /bindshell-samba.c
-RUN chmod 777 /bindshell-samba.h
-RUN chmod 777 /libbindshell-samba.so
-RUN chmod 777 /bindshell-samba.o
-RUN conda create --name samba python=2.7 -y
+RUN gcc -c -fpic bindshell-samba.c &&\
+    gcc -shared -o libbindshell-samba.so bindshell-samba.o &&\
+    chmod 777 /samba_exploit.py &&\
+    chmod 777 /bindshell-samba.c &&\
+    chmod 777 /bindshell-samba.h &&\
+    chmod 777 /libbindshell-samba.so &&\
+    chmod 777 /bindshell-samba.o &&\
+    conda create --name samba python=2.7 -y
 # Make subsequent RUN commands use the samba env
 SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #RUN conda activate samba
-RUN pip install pycrypto==2.6
-RUN pip install git+git://github.com/opsxcq/impacket.git
-RUN pip install pyasn1
+RUN pip install pycrypto==2.6 &&\
+    pip install git+git://github.com/opsxcq/impacket.git &&\
+    pip install pyasn1
 
 # Prep CVEs
 ADD docker/cve_prep.py /cve_prep.py
