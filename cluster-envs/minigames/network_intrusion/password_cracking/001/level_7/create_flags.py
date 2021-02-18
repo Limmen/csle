@@ -11,6 +11,7 @@ def default_flags() -> FlagsConfig:
         NodeFlagsConfig(ip="172.18.7.2", flags=[("/tmp/flag2.txt", "flag2", "/tmp/", 2, True, 1)]),
         NodeFlagsConfig(ip="172.18.7.3", flags=[("/root/flag1.txt", "flag1", "/root/", 1, True, 1)]),
         NodeFlagsConfig(ip="172.18.7.19", flags=[("/tmp/flag4.txt", "flag4", "/tmp/", 4, True, 1)]),
+        NodeFlagsConfig(ip="172.18.7.31", flags=[("/tmp/flag5.txt", "flag5", "/tmp/", 5, True, 1)]),
     ]
     flags_config = FlagsConfig(flags=flags)
     return flags_config

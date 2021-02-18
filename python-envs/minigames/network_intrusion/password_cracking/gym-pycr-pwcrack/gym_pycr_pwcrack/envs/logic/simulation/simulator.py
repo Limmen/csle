@@ -111,6 +111,8 @@ class Simulator:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.SAMBACRY_EXPLOIT:
             raise NotImplementedError("Sambacry simulation not implemented")
+        elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
+            raise NotImplementedError("Shellshock simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

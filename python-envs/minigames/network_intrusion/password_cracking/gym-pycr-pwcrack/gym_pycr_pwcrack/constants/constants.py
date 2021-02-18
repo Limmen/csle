@@ -370,6 +370,12 @@ class SAMBA:
     ALREADY_EXISTS = "already exists"
     ERROR = "Error"
 
+class SHELLSHOCK:
+    SERVICE_NAME = "http"
+    BACKDOOR_USER="ssh_backdoor_shellshocked"
+    BACKDOOR_PW="shellshockedpw"
+    PORT=80
+
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"
@@ -440,6 +446,7 @@ class EXPLOIT_VULNERABILITES:
                      IRC_DICTS_SAME_USER_PASS, POSTGRES_DICTS_SAME_USER_PASS, SMTP_DICTS_SAME_USER_PASS,
                      MYSQL_DICTS_SAME_USER_PASS, MONGO_DICTS_SAME_USER_PASS, CASSANDRA_DICTS_SAME_USER_PASS]
     SAMBACRY_EXPLOIT = "CVE-2017-7494"
+    SHELLSHOCK_EXPLOIT = "CVE-2014-6271"
     CVE_VULNS = [SAMBACRY_EXPLOIT]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0

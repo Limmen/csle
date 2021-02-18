@@ -19,7 +19,8 @@ def default_vulns():
                               root=False),
         PwVulnerabilityConfig(node_ip="172.18.7.3", vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True),
-        RceVulnerabilityConfig(node_ip="172.18.7.19", vuln_type=VulnType.RCE)
+        RceVulnerabilityConfig(node_ip="172.18.7.19", vuln_type=VulnType.RCE),
+        RceVulnerabilityConfig(node_ip="172.18.7.31", vuln_type=VulnType.RCE)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

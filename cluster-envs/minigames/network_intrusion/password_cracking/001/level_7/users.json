@@ -120,6 +120,19 @@
                     ]
                 }
             ]
+        },
+        {
+            "ip": "172.18.7.31",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "stefan",
+                        "zweig",
+                        true
+                    ]
+                }
+            ]
         }
     ]
 }

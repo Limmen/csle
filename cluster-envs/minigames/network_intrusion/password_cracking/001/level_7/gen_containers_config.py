@@ -19,7 +19,7 @@ def default_containers_config():
                             ip="172.18.7.3"),
         NodeContainerConfig(name="samba1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
                             ip="172.18.7.19"),
-        NodeContainerConfig(name="shellshock1", nebtwork="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
+        NodeContainerConfig(name="shellshock1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
                             ip="172.18.7.31")
     ]
     containers_cfg = ContainersConfig(containers=containers, network="pycr_net_7", agent_ip="172.18.7.191",

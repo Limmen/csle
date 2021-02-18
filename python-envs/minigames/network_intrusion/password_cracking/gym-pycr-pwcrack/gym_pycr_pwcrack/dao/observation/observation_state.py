@@ -78,6 +78,9 @@ class ObservationState:
             if a.id == ActionId.SAMBACRY_EXPLOIT:
                 return m.sambacry_tried
 
+            if a.id == ActionId.SHELLSHOCK_EXPLOIT:
+                return m.shellshock_tried
+
             return False
         else:
             exploit_tried = True

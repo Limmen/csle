@@ -397,6 +397,8 @@ class EnvDynamicsUtil:
             n_m.postgres_brute_tried = o_m.postgres_brute_tried
         if not n_m.sambacry_tried:
             n_m.sambacry_tried = o_m.sambacry_tried
+        if not n_m.shellshock_tried:
+            n_m.shellshock_tried = o_m.shellshock_tried
         return n_m
 
     @staticmethod
@@ -629,6 +631,8 @@ class EnvDynamicsUtil:
             m_obs.cassandra_brute_tried = True
         elif a.id == ActionId.SAMBACRY_EXPLOIT:
             m_obs.sambacry_tried = True
+        elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
+            m_obs.shellshock_tried = True
         return m_obs
 
     @staticmethod
