@@ -3006,7 +3006,13 @@ class ClusterUtil:
         return s_prime, reward, False
 
     @staticmethod
-    def get_latest_alert_ts(env_config: EnvConfig):
+    def get_latest_alert_ts(env_config: EnvConfig) -> float:
+        """
+        Gets the latest timestamp in the snort alerts log
+
+        :param env_config: the environment config
+        :return: the latest timestamp
+        """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
         stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
@@ -3032,6 +3038,12 @@ class ClusterUtil:
 
     @staticmethod
     def check_ids_alerts(env_config: EnvConfig) -> List[IdsAlert]:
+        """
+        Reads alerts from the IDS alerts log
+
+        :param env_config: the environment config
+        :return: a list of alerts
+        """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
         stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
@@ -3044,6 +3056,12 @@ class ClusterUtil:
 
     @staticmethod
     def check_ids_fast_log(env_config: EnvConfig) -> List[IdsAlert]:
+        """
+        Reads alerts from the IDS fast-log
+
+        :param env_config: the environment config
+        :return: a list of alerts
+        """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
         stdin, stdout, stderr = env_config.cluster_config.router_conn.exec_command(
@@ -3058,6 +3076,14 @@ class ClusterUtil:
 
     @staticmethod
     def sambacry_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Helper for executing the SambaCry exploit action
+
+        :param s: the current state
+        :param a: the SambaCry exploit action
+        :param env_config: the environment config
+        :return: s_prime, reward, done
+        """
         # Extract target machine
         target_machine = None
         for m in s.obs_state.machines:
