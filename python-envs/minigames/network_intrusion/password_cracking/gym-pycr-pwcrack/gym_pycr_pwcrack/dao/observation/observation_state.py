@@ -37,7 +37,7 @@ class ObservationState:
             return self.machines[a.index].ip
         return a.ip
 
-    def brute_tried(self, a: Action, m: MachineObservationState):
+    def exploit_tried(self, a: Action, m: MachineObservationState):
         if m is not None:
             if (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET
                 or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
@@ -74,15 +74,19 @@ class ObservationState:
             if (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
                 or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.postgres_brute_tried
+
+            if a.id == ActionId.SAMBACRY_EXPLOIT:
+                return m.sambacry_tried
+
             return False
         else:
-            brute_tried = True
+            exploit_tried = True
             for m2 in self.machines:
-                res = self.brute_tried(a=a, m=m2)
+                res = self.exploit_tried(a=a, m=m2)
                 if not res:
-                    brute_tried = res
+                    exploit_tried = res
                     break
-            return brute_tried
+            return exploit_tried
 
     def copy(self):
         c = ObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,

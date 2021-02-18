@@ -213,7 +213,8 @@ class PyCrPwCrackLevel7Base:
                                             Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
                                                        service=constants.SAMBA.SERVICE_NAME)
                                         ],
-                                        port=445, protocol=TransportProtocol.TCP)
+                                        port=constants.SAMBA.PORT,
+                                        protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip="172.18.7.191", ip_id=191, id=7, type=NodeType.HACKER, flags=[], level=1, services=[],
                       os="linux", vulnerabilities=[],

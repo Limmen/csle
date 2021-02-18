@@ -26,12 +26,12 @@ from gym_pycr_pwcrack.dao.observation.connection_observation_state import Connec
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.envs.logic.cluster.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_pwcrack.dao.network.credential import Credential
+from gym_pycr_pwcrack.dao.network.vulnerability import Vulnerability
 from gym_pycr_pwcrack.dao.action_results.nmap_hop import NmapHop
 from gym_pycr_pwcrack.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_pwcrack.dao.action_results.nmap_http_enum import NmapHttpEnum
 from gym_pycr_pwcrack.dao.action_results.nmap_http_grep import NmapHttpGrep
 from gym_pycr_pwcrack.dao.action_results.nmap_vulscan import NmapVulscan
-from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action_results.ids_alert import IdsAlert
 
 class ClusterUtil:
@@ -2452,7 +2452,7 @@ class ClusterUtil:
                         machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
                     if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
-                        machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
+                        machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
                     new_machines_obs_1.append(machine)
                 s_prime.obs_state.machines = new_machines_obs_1
 
@@ -2563,7 +2563,7 @@ class ClusterUtil:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
             if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
-                machine = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=machine)
+                machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
             new_machines_obs_1.append(machine)
         s_prime.obs_state.machines = new_machines_obs_1
 
@@ -3034,3 +3034,96 @@ class ClusterUtil:
             priority, ts = IdsAlert.fast_log_parse(a_str)
             fast_logs.append((priority, ts))
         return fast_logs
+
+
+    @staticmethod
+    def sambacry_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        # Extract target machine
+        target_machine = None
+        for m in s.obs_state.machines:
+            if m.ip == a.ip:
+                target_machine = m.copy()
+        if target_machine is None:
+            target_machine = MachineObservationState(ip=a.ip)
+
+        # TODO: implement cache
+
+        # Try execute exploit from agent host
+        cost = 0
+        total_alerts = (0, 0)
+        if env_config.ids_router:
+            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+        cmd = a.cmd[0]
+        cmd = cmd.format(a.ip)
+        print("cmd:{}".format(cmd))
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(
+            cmd=cmd, conn=env_config.cluster_config.agent_conn)
+
+        # Measure  cost and alerts
+        cost += float(total_time)
+        if env_config.ids_router:
+            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+            if last_alert_ts is not None:
+                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+            num_alerts = len(fast_logs)
+            ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                              action=a, env_config=env_config)
+            env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+
+        ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
+        env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+
+        print("sambacry output:{}".format(outdata.decode()))
+        print("sambacry erroutput:{}".format(errdata.decode()))
+        # Parse Result
+        if constants.SAMBA.ALREADY_EXISTS in outdata.decode() or (constants.SAMBA.ERROR not in outdata.decode()
+                                                                  and constants.SAMBA.ERROR not in errdata.decode()):
+            print("sambacry successful, output:{}".format(outdata.decode()))
+            # Exploit successful
+            credential = Credential(username=constants.SAMBA.BACKDOOR_USER, pw=constants.SAMBA.BACKDOOR_PW,
+                                    port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+                                    service=constants.SSH.SERVICE_NAME)
+            vuln = Vulnerability(
+                name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
+                cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
+                credentials=[Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
+                                        service=constants.SAMBA.SERVICE_NAME)
+                             ], port=constants.SAMBA.PORT, protocol=TransportProtocol.TCP)
+            target_machine.shell_access = True
+            target_machine.untried_credentials = True
+            target_machine.shell_access_credentials.append(credential)
+            target_machine.backdoor_credentials.append(credential)
+            target_machine.backdoor_tried = True
+            target_machine.backdoor_installed = True
+            target_machine.cve_vulns.append(vuln)
+        else:
+            # Exploit failed
+            print("sambacry failed")
+
+        target_machine.sambacry_tried = True
+        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed, total_new_backdoors_installed = \
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config,
+                                                   action=a)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
+                                                 cost=cost,
+                                                 env_config=env_config,
+                                                 alerts=total_alerts, action=a)
+        return s, reward, False
+
+
+        # TODO: implement sambacry pivot

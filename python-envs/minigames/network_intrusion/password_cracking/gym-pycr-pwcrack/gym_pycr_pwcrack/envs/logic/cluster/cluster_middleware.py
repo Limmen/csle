@@ -109,6 +109,8 @@ class ClusterMiddleware:
             return ExploitMiddleware.execute_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
             return ExploitMiddleware.execute_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SAMBACRY_EXPLOIT:
+            return ExploitMiddleware.execute_sambacry(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

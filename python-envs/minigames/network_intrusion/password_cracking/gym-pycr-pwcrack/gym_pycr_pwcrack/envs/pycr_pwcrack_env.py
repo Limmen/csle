@@ -400,8 +400,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
             if action.subnet and target_machine is None:
                 return True
-            brute_tried = env_state.obs_state.brute_tried(a=action, m=target_machine)
-            if brute_tried:
+            exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)
+            if exploit_tried:
                 return False
             return True
 

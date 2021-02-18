@@ -296,7 +296,7 @@ class SimulatorUtil:
                                 port_obs = PortObservationState(port=service.port, open=True, service=service.name,
                                                                 protocol=service.protocol)
                                 new_m_obs.ports.append(port_obs)
-                    new_m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=new_m_obs)
+                    new_m_obs = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=new_m_obs)
             new_machines_obs = s.obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
@@ -370,7 +370,7 @@ class SimulatorUtil:
                         port_obs = PortObservationState(port=service.port, open=True, service=service.name,
                                                         protocol=service.protocol)
                         m_obs.ports.append(port_obs)
-                m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
+                m_obs = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=m_obs)
                 new_m_obs.append(m_obs)
 
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \

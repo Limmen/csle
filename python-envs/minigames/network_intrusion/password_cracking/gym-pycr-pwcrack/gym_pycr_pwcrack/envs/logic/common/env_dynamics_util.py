@@ -136,7 +136,7 @@ class EnvDynamicsUtil:
         n_m = EnvDynamicsUtil.merge_filesystem_scanned(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m, action)
         n_m = EnvDynamicsUtil.merge_trace(o_m, n_m)
-        n_m = EnvDynamicsUtil.merge_brute_tried(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_exploit_tried(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_backdoor_tried(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_tools_tried(o_m, n_m)
         n_m, num_new_tools_installed = EnvDynamicsUtil.merge_tools_installed(o_m, n_m)
@@ -368,8 +368,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_brute_tried(o_m: MachineObservationState,
-                                  n_m: MachineObservationState) -> MachineObservationState:
+    def merge_exploit_tried(o_m: MachineObservationState,
+                            n_m: MachineObservationState) -> MachineObservationState:
         """
         Helper function for merging an old machine observation tried_brute_flags with new information collected
 
@@ -395,6 +395,8 @@ class EnvDynamicsUtil:
             n_m.smtp_brute_tried = o_m.smtp_brute_tried
         if not n_m.postgres_brute_tried:
             n_m.postgres_brute_tried = o_m.postgres_brute_tried
+        if not n_m.sambacry_tried:
+            n_m.sambacry_tried = o_m.sambacry_tried
         return n_m
 
     @staticmethod
@@ -597,7 +599,7 @@ class EnvDynamicsUtil:
         return True
 
     @staticmethod
-    def brute_tried_flags(a: Action, m_obs: MachineObservationState):
+    def exploit_tried_flags(a: Action, m_obs: MachineObservationState):
         if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ftp_brute_tried = True
@@ -625,6 +627,8 @@ class EnvDynamicsUtil:
         elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.cassandra_brute_tried = True
+        elif a.id == ActionId.SAMBACRY_EXPLOIT:
+            m_obs.sambacry_tried = True
         return m_obs
 
     @staticmethod

@@ -364,6 +364,11 @@ class SAMBA:
     SERVICE_NAME = "samba"
     USER="sambacry"
     PW="nosambanocry"
+    BACKDOOR_USER="ssh_backdoor_sambapwned"
+    BACKDOOR_PW="sambapwnedpw"
+    PORT=445
+    ALREADY_EXISTS = "already exists"
+    ERROR = "Error"
 
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"

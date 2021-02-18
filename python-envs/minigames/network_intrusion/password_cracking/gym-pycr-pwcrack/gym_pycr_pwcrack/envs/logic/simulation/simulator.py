@@ -109,6 +109,8 @@ class Simulator:
             return ExploitSimulator.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.SAMBACRY_EXPLOIT:
+            raise NotImplementedError("Sambacry simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
