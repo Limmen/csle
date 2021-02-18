@@ -297,7 +297,8 @@ class ClusterConfig:
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
                     cost = round(float(cost_str), 1)
-                    action_costs.find_add_cost(action_id=id, ip=ip, cost=cost, user=user, service=service)
+                    a = action_lookup_d_val[(int(id), int(idx))]
+                    action_costs.find_add_cost(action_id=a.id, ip=ip, cost=cost, user=user, service=service)
                     a.cost = cost
                 except Exception as e:
                     print("{}".format(str(e)))
@@ -387,7 +388,7 @@ class ClusterConfig:
         shell_actions = list(filter(lambda x: x.id in shell_ids, actions))
         shell_id_values = list(map(lambda x: x.value, shell_ids))
 
-        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _cost"
+        cmd = constants.COMMANDS.LIST_CACHE + dir + " | grep _alerts"
         stdin, stdout, stderr = self.agent_conn.exec_command(cmd)
         file_list = []
         for line in stdout:
@@ -411,7 +412,8 @@ class ClusterConfig:
                     sum_priorities = int(alerts_parts[0])
                     num_alerts = int(alerts_parts[1])
                     alert = (sum_priorities, num_alerts)
-                    action_alerts.user_ip_add_alert(action_id=id, ip=ip, alert=alert, user=user, service=service)
+                    a = action_lookup_d_val[(int(id), int(idx))]
+                    action_alerts.user_ip_add_alert(action_id=a.id, ip=ip, alert=alert, user=user, service=service)
                     a.alerts = alert
                 except Exception as e:
                     print("{}".format(str(e)))

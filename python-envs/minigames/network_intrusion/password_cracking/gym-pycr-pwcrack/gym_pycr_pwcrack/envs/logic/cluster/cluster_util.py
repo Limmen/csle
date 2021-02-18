@@ -357,6 +357,25 @@ class ClusterUtil:
         return files
 
     @staticmethod
+    def parse_user_command_file(file_name: str, env_config: EnvConfig, conn) -> List[str]:
+        """
+        Parses a file containing cached results of a user command file on a server
+
+        :param file_name: name of the file to parse
+        :param env_config: environment config
+        :return: a list of files
+        """
+        sftp_client = conn.open_sftp()
+        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        result = "0"
+        try:
+            data = remote_file.read()
+            result = data.decode()
+        finally:
+            remote_file.close()
+        return result
+
+    @staticmethod
     def check_nmap_action_cache_interactive(a : Action, env_config : EnvConfig):
         """
         Checks if an NMAP action is cached or ot using an interactive shell
@@ -3046,62 +3065,134 @@ class ClusterUtil:
         if target_machine is None:
             target_machine = MachineObservationState(ip=a.ip)
 
-        # TODO: implement cache
+        cache_key = (target_machine.ip, env_config.cluster_config.agent_username)
+        exploit_successful = False
 
-        # Try execute exploit from agent host
-        cost = 0
-        total_alerts = (0, 0)
-        if env_config.ids_router:
-            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
-        cmd = a.cmd[0]
-        cmd = cmd.format(a.ip)
-        print("cmd:{}".format(cmd))
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(
-            cmd=cmd, conn=env_config.cluster_config.agent_conn)
+        # Check cache first
+        cache_hit = False
+        if env_config.use_user_command_cache:
 
-        # Measure  cost and alerts
-        cost += float(total_time)
-        if env_config.ids_router:
-            fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-            if last_alert_ts is not None:
-                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
-            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
-            num_alerts = len(fast_logs)
-            ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                              action=a, env_config=env_config)
-            env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+            # Check in-memory cache
+            if env_config.user_command_cache.get(cache_key) is not None:
+                cache_hit = True
+                target_machine, cost = env_config.user_command_cache.get(cache_key)
+                exploit_successful = target_machine.shell_access
+            # Check on-disk cache
+            else:
+                cache_file = ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=a.ip,
+                                                                 user=env_config.cluster_config.agent_username)
+                if cache_file is not None:
+                    cache_hit = True
+                    cache_res = ClusterUtil.parse_user_command_file(file_name=cache_file, env_config=env_config,
+                                                        conn=env_config.cluster_config.agent_conn)
+                    # Use measured cost
+                    if env_config.action_costs.find_exists(action_id=a.id, ip=a.ip,
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.SAMBA.SERVICE_NAME):
+                        a.cost = env_config.action_costs.find_get_cost(
+                            action_id=a.id, ip=a.ip, user=env_config.cluster_config.agent_username,
+                            service=constants.SAMBA.SERVICE_NAME)
+                        cost = a.cost
 
-        ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-        env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+                    if int(cache_res) == 0:
+                        exploit_successful = False
+                    else:
+                        exploit_successful = True
+                        credential = Credential(username=constants.SAMBA.BACKDOOR_USER, pw=constants.SAMBA.BACKDOOR_PW,
+                                                port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+                                                service=constants.SSH.SERVICE_NAME)
+                        vuln = Vulnerability(
+                            name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
+                            cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
+                            credentials=[Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
+                                                    service=constants.SAMBA.SERVICE_NAME)
+                                         ], port=constants.SAMBA.PORT, protocol=TransportProtocol.TCP)
+                        target_machine.shell_access = True
+                        target_machine.untried_credentials = True
+                        target_machine.shell_access_credentials.append(credential)
+                        target_machine.backdoor_credentials.append(credential)
+                        target_machine.backdoor_tried = True
+                        target_machine.backdoor_installed = True
+                        target_machine.cve_vulns.append(vuln)
 
-        print("sambacry output:{}".format(outdata.decode()))
-        print("sambacry erroutput:{}".format(errdata.decode()))
-        # Parse Result
-        if constants.SAMBA.ALREADY_EXISTS in outdata.decode() or (constants.SAMBA.ERROR not in outdata.decode()
-                                                                  and constants.SAMBA.ERROR not in errdata.decode()):
-            print("sambacry successful, output:{}".format(outdata.decode()))
-            # Exploit successful
-            credential = Credential(username=constants.SAMBA.BACKDOOR_USER, pw=constants.SAMBA.BACKDOOR_PW,
-                                    port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
-                                    service=constants.SSH.SERVICE_NAME)
-            vuln = Vulnerability(
-                name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
-                cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
-                credentials=[Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
-                                        service=constants.SAMBA.SERVICE_NAME)
-                             ], port=constants.SAMBA.PORT, protocol=TransportProtocol.TCP)
-            target_machine.shell_access = True
-            target_machine.untried_credentials = True
-            target_machine.shell_access_credentials.append(credential)
-            target_machine.backdoor_credentials.append(credential)
-            target_machine.backdoor_tried = True
-            target_machine.backdoor_installed = True
-            target_machine.cve_vulns.append(vuln)
-        else:
-            # Exploit failed
-            print("sambacry failed")
+            if cache_hit:
+                # Use measured # alerts
+                if env_config.action_alerts.user_ip_exists(action_id=a.id, ip=a.ip,
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.SAMBA.SERVICE_NAME):
+                    a.alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=a.ip,
+                                                                          user=env_config.cluster_config.agent_username,
+                                                                          service=constants.SAMBA.SERVICE_NAME)
+                    total_alerts = (a.alerts[0], a.alerts[1])
+
+        if not cache_hit:
+            # Try execute exploit from agent host
+            cost = 0
+            total_alerts = (0, 0)
+            if env_config.ids_router:
+                last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+            cmd = a.cmd[0]
+            cmd = cmd.format(a.ip)
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(
+                cmd=cmd, conn=env_config.cluster_config.agent_conn)
+
+            # Measure  cost and alerts
+            cost += float(total_time)
+            if env_config.ids_router:
+                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                if last_alert_ts is not None:
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                num_alerts = len(fast_logs)
+                total_alerts = (num_alerts, sum_priority_alerts)
+                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                  action=a, env_config=env_config,
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.SAMBA.SERVICE_NAME)
+                env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+
+            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
+                                             user=env_config.cluster_config.agent_username,
+                                             service=constants.SAMBA.SERVICE_NAME)
+            env_config.action_costs.find_add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1),
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.SAMBA.SERVICE_NAME)
+
+            # Parse Result
+            if constants.SAMBA.ALREADY_EXISTS in outdata.decode() or (constants.SAMBA.ERROR not in outdata.decode()
+                                                                      and constants.SAMBA.ERROR not in errdata.decode()):
+                # Exploit successful
+                credential = Credential(username=constants.SAMBA.BACKDOOR_USER, pw=constants.SAMBA.BACKDOOR_PW,
+                                        port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+                                        service=constants.SSH.SERVICE_NAME)
+                vuln = Vulnerability(
+                    name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
+                    cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
+                    credentials=[Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
+                                            service=constants.SAMBA.SERVICE_NAME)
+                                 ], port=constants.SAMBA.PORT, protocol=TransportProtocol.TCP)
+                target_machine.shell_access = True
+                target_machine.untried_credentials = True
+                target_machine.shell_access_credentials.append(credential)
+                target_machine.backdoor_credentials.append(credential)
+                target_machine.backdoor_tried = True
+                target_machine.backdoor_installed = True
+                target_machine.cve_vulns.append(vuln)
+                exploit_successful = True
+            else:
+                # Exploit failed
+                print("sambacry failed")
 
         target_machine.sambacry_tried = True
+        # Persist cache result
+        ClusterUtil.write_user_command_cache(action=a, env_config=env_config,
+                                             user=env_config.cluster_config.agent_username,
+                                             result=str(int(exploit_successful)), ip=a.ip)
+        # Update cache
+        if env_config.use_user_command_cache:
+            env_config.user_command_cache.add(cache_key, (target_machine, cost))
+
+
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
