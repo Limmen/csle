@@ -45,6 +45,8 @@ class VulnerabilityGenerator:
                             vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
                             vulnerabilities.append(vuln_cfg)
                             vulnerable_nodes.add(ip)
+                elif vuln_type == VulnType.RCE:
+                    raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                 else:
                     raise ValueError("Unrecognized vulnerability type")
 
@@ -58,6 +60,8 @@ class VulnerabilityGenerator:
                         vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
                         vulnerabilities.append(vuln_cfg)
                         vulnerable_nodes.add(node.ip)
+                    elif vuln_type == VulnType.RCE:
+                        raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
 
@@ -70,6 +74,8 @@ class VulnerabilityGenerator:
                         vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
                         vulnerabilities.append(vuln_cfg)
                         vulnerable_nodes.add(node.ip)
+                    elif vuln_type == VulnType.RCE:
+                        raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
@@ -114,7 +120,8 @@ class VulnerabilityGenerator:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(
                         vuln.username, vuln.pw, vuln.username)
                 o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
-
+            elif vuln.vuln_type == VulnType.RCE:
+                pass # Nothing to install
             else:
                 raise ValueError("Vulnerability type not recognized")
 

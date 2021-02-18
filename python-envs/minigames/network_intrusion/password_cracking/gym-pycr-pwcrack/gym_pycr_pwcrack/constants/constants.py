@@ -148,6 +148,9 @@ class SERVICES:
     service_lookup["nfsrdma"] = 102
     service_lookup["cockroachdb"] = 103
     service_lookup["glassfish"] = 104
+    service_lookup["samba"] = 105
+    service_lookup["netbios-ssn"] = 106
+    service_lookup["microsoft-ds"] = 107
 
     #
     service_lookup_inv = {v: k for k, v in service_lookup.items()}
@@ -357,6 +360,11 @@ class MONGO:
 class CASSANDRA:
     SERVICE_NAME = "cassandra"
 
+class SAMBA:
+    SERVICE_NAME = "samba"
+    USER="sambacry"
+    PW="nosambanocry"
+
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"
@@ -426,7 +434,7 @@ class EXPLOIT_VULNERABILITES:
     WEAK_PW_VULNS = [SSH_DICT_SAME_USER_PASS, FTP_DICT_SAME_USER_PASS, TELNET_DICTS_SAME_USER_PASS,
                      IRC_DICTS_SAME_USER_PASS, POSTGRES_DICTS_SAME_USER_PASS, SMTP_DICTS_SAME_USER_PASS,
                      MYSQL_DICTS_SAME_USER_PASS, MONGO_DICTS_SAME_USER_PASS, CASSANDRA_DICTS_SAME_USER_PASS]
-    SAMBACRY_EXPLOIT = "sambacry"
+    SAMBACRY_EXPLOIT = "CVE-2017-7494"
     CVE_VULNS = [SAMBACRY_EXPLOIT]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0

@@ -3,6 +3,7 @@ from gym_pycr_pwcrack.envs.config.generator.vuln_generator import VulnerabilityG
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
+from gym_pycr_pwcrack.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 
@@ -17,7 +18,8 @@ def default_vulns():
         PwVulnerabilityConfig(node_ip="172.18.7.2", vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
                               root=False),
         PwVulnerabilityConfig(node_ip="172.18.7.3", vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
-                              root=True)
+                              root=True),
+        RceVulnerabilityConfig(node_ip="172.18.7.19", vuln_type=VulnType.RCE)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

