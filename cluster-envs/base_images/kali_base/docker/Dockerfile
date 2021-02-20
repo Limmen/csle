@@ -99,3 +99,7 @@ RUN chmod 777 /etc/init.d/pycr-firewall
 
 # enable on boot
 RUN update-rc.d pycr-firewall defaults
+
+# DWVA WebApp Exploit
+ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh

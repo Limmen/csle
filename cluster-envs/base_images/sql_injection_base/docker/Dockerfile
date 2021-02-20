@@ -17,6 +17,18 @@ RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-s
 #RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
 #        apt-get install -y snort
 
+# Setup DVWA
+RUN mv /var/www/html/login.php /var/www/html/login_bak.php
+ADD docker/login.php /var/www/html/login.php
+RUN chmod 777 /var/www/html/login.php
+RUN mv /var/www/html/setup.php /var/www/html/setup_bak.php
+ADD docker/setup.php /var/www/html/setup.php
+RUN chmod 777 /var/www/html/setup.php
+ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh
+ADD docker/setup_db.sh /setup_db.sh
+RUN chmod 777 /setup_db.sh
+
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
 ADD docker/root_users.txt /root_users.txt

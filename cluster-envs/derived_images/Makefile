@@ -15,6 +15,8 @@ build:
 	cd router1/ && $(MAKE) build
 	cd router2/ && $(MAKE) build
 	cd samba1/ && $(MAKE) build
+	cd shellshock1/ && $(MAKE) build
+	cd sql_injection1/ && $(MAKE) build
 
 rm-image:
 	cd ftp1/ && $(MAKE) rm-image
@@ -31,3 +33,5 @@ rm-image:
 	cd router1/ && $(MAKE) rm-image
 	cd router2/ && $(MAKE) rm-image
 	cd samba1/ && $(MAKE) rm-image
+	cd shellshock1/ && $(MAKE) rm-image
+	cd sql_injection1/ && $(MAKE) rm-image

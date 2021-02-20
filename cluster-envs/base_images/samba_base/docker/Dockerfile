@@ -155,6 +155,10 @@ RUN pip install flask &&\
 RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
     unzip latest-glassfish.zip
 
+# DWVA WebApp Exploit
+ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh
+
 # Setup Snort
 #RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
 #RUN tar -xvzf community-rules.tar.gz -C /etc/snort/rules

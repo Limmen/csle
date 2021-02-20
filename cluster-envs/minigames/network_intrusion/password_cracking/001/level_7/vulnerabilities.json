@@ -82,6 +82,25 @@
             "vuln_type": {
                 "py/id": 9
             }
+        },
+        {
+            "node_ip": "172.18.7.42",
+            "pw": "0d107d09f5bbe40cade3de5c71e9e9b7",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.sql_injection_vulnerability_config.SQLInjectionVulnerabilityConfig",
+            "root": true,
+            "username": "pablo",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_pwcrack.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            2
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

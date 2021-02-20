@@ -44,6 +44,7 @@ class PyCrPwCrackLevel7V3:
             actions.append(NMAPActions.FINGER(index=idx, subnet=False))
             actions.append(ShellActions.SAMBACRY_EXPLOIT(index=idx))
             actions.append(ShellActions.SHELLSHOCK_EXPLOIT(index=idx))
+            actions.append(ShellActions.DVWA_SQL_INJECTION(index=idx))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
@@ -88,7 +89,8 @@ class PyCrPwCrackLevel7V3:
             ActionId.FINGER_HOST, ActionId.FINGER_SUBNET
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT]
+        shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
+                            ActionId.DVWA_SQL_INJECTION]
         nikto_action_ids = []
         masscan_action_ids = []
         action_config = ActionConfig(num_indices=num_nodes, actions=actions, nmap_action_ids=nmap_action_ids,

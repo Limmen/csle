@@ -72,6 +72,15 @@
             "network": "pycr_net_7",
             "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
             "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.7.42",
+            "level": "7",
+            "minigame": "pwcrack",
+            "name": "sql_injection1",
+            "network": "pycr_net_7",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
         }
     ],
     "ids_enabled": true,

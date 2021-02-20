@@ -33,6 +33,9 @@ def default_users() -> UsersConfig:
         ]),
         NodeUsersConfig(ip="172.18.7.31", users=[
             ("stefan", "zweig", True)
+        ]),
+        NodeUsersConfig(ip="172.18.7.42", users=[
+            ("roy", "neruda", True)
         ])
     ]
     users_conf = UsersConfig(users=users)

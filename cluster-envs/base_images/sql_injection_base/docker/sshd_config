@@ -122,4 +122,4 @@ Subsystem       sftp    /usr/lib/openssh/sftp-server
 #       PermitTTY no
 #       ForceCommand cvs server
 
-AllowUsers pycr_admin ssh_backdoor*
+AllowUsers pycr_admin ssh_backdoor* pabl*

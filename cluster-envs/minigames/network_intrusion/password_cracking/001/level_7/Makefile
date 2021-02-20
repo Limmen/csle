@@ -11,6 +11,7 @@ run: gen_containers_config
 	cd containers/hacker_kali1/ && $(MAKE) run
 	cd containers/samba1/ && $(MAKE) run
 	cd containers/shellshock1/ && $(MAKE) run
+	cd containers/sql_injection1/ && $(MAKE) run
 
 stop:
 	cd containers/router2/ && $(MAKE) stop
@@ -21,6 +22,7 @@ stop:
 	cd containers/hacker_kali1/ && $(MAKE) stop
 	cd containers/samba1/ && $(MAKE) stop
 	cd containers/shellshock1/ && $(MAKE) stop
+	cd containers/sql_injection1/ && $(MAKE) stop
 
 start:
 	cd containers/router2/ && $(MAKE) start
@@ -31,6 +33,7 @@ start:
 	cd containers/hacker_kali1/ && $(MAKE) start
 	cd containers/samba1/ && $(MAKE) start
 	cd containers/shellshock1/ && $(MAKE) start
+	cd containers/sql_injection1/ && $(MAKE) start
 	python create_topology.py
 
 clean:
@@ -42,6 +45,7 @@ clean:
 	cd containers/hacker_kali1/ && $(MAKE) clean
 	cd containers/samba1/ && $(MAKE) clean
 	cd containers/shellshock1/ && $(MAKE) clean
+	cd containers/sql_injection1/ && $(MAKE) clean
 
 
 apply_config: users vuln flags topology gen_containers_config

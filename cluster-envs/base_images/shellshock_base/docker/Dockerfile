@@ -148,6 +148,10 @@ RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
 # make conda activate command available from /bin/bash --interative shells
 RUN conda init bash
 
+# DWVA WebApp Exploit
+ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh
+
 ## Setup Samba
 #ADD docker/samba_exploit.py /samba_exploit.py
 #ADD docker/bindshell-samba.c /bindshell-samba.c

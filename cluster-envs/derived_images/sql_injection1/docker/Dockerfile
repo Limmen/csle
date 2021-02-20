@@ -1,5 +1,5 @@
 # OS
-FROM pycr/samba_base:0.0.1
+FROM pycr/sql_injection_base:0.0.1
 USER root
 
 # Add start script

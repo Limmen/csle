@@ -113,6 +113,8 @@ class ClusterMiddleware:
             return ExploitMiddleware.execute_sambacry(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
             return ExploitMiddleware.execute_shellshock(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.DVWA_SQL_INJECTION:
+            return ExploitMiddleware.execute_dvwa_sql_injection(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

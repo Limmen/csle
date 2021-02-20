@@ -4,6 +4,7 @@ from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
+from gym_pycr_pwcrack.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 
@@ -20,7 +21,9 @@ def default_vulns():
         PwVulnerabilityConfig(node_ip="172.18.7.3", vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True),
         RceVulnerabilityConfig(node_ip="172.18.7.19", vuln_type=VulnType.RCE),
-        RceVulnerabilityConfig(node_ip="172.18.7.31", vuln_type=VulnType.RCE)
+        RceVulnerabilityConfig(node_ip="172.18.7.31", vuln_type=VulnType.RCE),
+        SQLInjectionVulnerabilityConfig(node_ip="172.18.7.42", vuln_type=VulnType.SQL_INJECTION,
+                                        username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

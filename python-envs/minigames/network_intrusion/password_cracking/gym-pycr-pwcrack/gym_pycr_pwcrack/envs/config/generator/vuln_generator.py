@@ -47,6 +47,8 @@ class VulnerabilityGenerator:
                             vulnerable_nodes.add(ip)
                 elif vuln_type == VulnType.RCE:
                     raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                elif vuln_type == VulnType.SQL_INJECTION:
+                    raise NotImplementedError("Generation of SQL Injection Type Not implemented Yet")
                 else:
                     raise ValueError("Unrecognized vulnerability type")
 
@@ -62,6 +64,8 @@ class VulnerabilityGenerator:
                         vulnerable_nodes.add(node.ip)
                     elif vuln_type == VulnType.RCE:
                         raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                    elif vuln_type == VulnType.SQL_INJECTION:
+                        raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
 
@@ -76,6 +80,8 @@ class VulnerabilityGenerator:
                         vulnerable_nodes.add(node.ip)
                     elif vuln_type == VulnType.RCE:
                         raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                    elif vuln_type == VulnType.SQL_INJECTION:
+                        raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
@@ -97,7 +103,7 @@ class VulnerabilityGenerator:
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=vuln.node_ip)
-            if vuln.vuln_type == VulnType.WEAK_PW:
+            if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION:
                 cmd = "ls /home"
                 o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
                 users_w_home = o.decode().split("\n")

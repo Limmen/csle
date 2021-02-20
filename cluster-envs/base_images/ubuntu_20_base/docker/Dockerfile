@@ -155,3 +155,7 @@ RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O com
     chmod 777 /var/snort &&\
     mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
 ADD docker/snort.conf /etc/snort/snort.conf
+
+# DWVA WebApp Exploit
+ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
+RUN chmod 777 /sql_injection_exploit.sh

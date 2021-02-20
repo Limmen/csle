@@ -113,6 +113,8 @@ class Simulator:
             raise NotImplementedError("Sambacry simulation not implemented")
         elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
             raise NotImplementedError("Shellshock simulation not implemented")
+        elif a.id == ActionId.DVWA_SQL_INJECTION:
+            raise NotImplementedError("DVWA SQL Injection simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
