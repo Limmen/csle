@@ -3341,7 +3341,16 @@ class ClusterUtil:
             total_time = total_time + total_time1
 
             # Parse Result
-            if ClusterUtil.check_if_shellshock_succeeded():
+            proxy_conn = ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
+                                                        username=env_config.cluster_config.agent_username,
+                                                        root=True, port=22, service=constants.SSH.SERVICE_NAME,
+                                                        proxy= None, ip=env_config.cluster_config.agent_ip)
+            if ClusterUtil.check_if_shellshock_succeeded(user=constants.SHELLSHOCK.BACKDOOR_USER,
+                                                         pw=constants.SHELLSHOCK.BACKDOOR_PW,
+                                                         source_ip=env_config.cluster_config.agent_ip,
+                                                         port=constants.SSH.DEFAULT_PORT,
+                                                         target_ip=a.ip,
+                                                         proxy_conn=proxy_conn):
                 # Exploit successful
                 credential = Credential(username=constants.SHELLSHOCK.BACKDOOR_USER,
                                         pw=constants.SHELLSHOCK.BACKDOOR_PW,
@@ -3423,5 +3432,18 @@ class ClusterUtil:
         return s, reward, False
 
     @staticmethod
-    def check_if_shellshock_succeeded() -> bool:
-        return True
+    def check_if_shellshock_succeeded(user: str, pw: str, source_ip: str, port: int, target_ip: str, proxy_conn) -> bool:
+        agent_addr = (source_ip, port)
+        target_addr = (target_ip, port)
+        agent_transport = proxy_conn.conn.get_transport()
+        try:
+            relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
+                                                         timeout=3)
+            target_conn = paramiko.SSHClient()
+            target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel,
+                                timeout=3)
+            return True
+        except Exception as e:
+            # print("Shellshock failed:{}".format(str(e)))
+            return False
