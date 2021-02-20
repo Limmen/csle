@@ -197,7 +197,9 @@ class PyCrPwCrackLevel7Base:
                                         port=21, protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
                       ]
                       ),
-                 Node(ip="172.18.7.19", ip_id=19, id=6, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                 Node(ip="172.18.7.19", ip_id=19, id=6, type=NodeType.SERVER,
+                      flags=[Flag(name="flag4", path="/tmp", id=4, requires_root=False, score=1)],
+                      level=3, os="linux",
                       credentials=[
                           Credential(username="karl", pw="gustaf"),
                           Credential(username="steven", pw="carragher")
@@ -222,7 +224,9 @@ class PyCrPwCrackLevel7Base:
                                         port=constants.SAMBA.PORT,
                                         protocol=TransportProtocol.TCP)
                       ]),
-                 Node(ip="172.18.7.31", ip_id=31, id=7, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                 Node(ip="172.18.7.31", ip_id=31, id=7, type=NodeType.SERVER,
+                      flags=[Flag(name="flag5", path="/tmp", id=5, requires_root=False, score=1)],
+                      level=3, os="linux",
                       credentials=[
                           Credential(username="stefan", pw="zweig")
                       ],
@@ -245,7 +249,9 @@ class PyCrPwCrackLevel7Base:
                                         port=constants.SHELLSHOCK.PORT,
                                         protocol=TransportProtocol.TCP)
                       ]),
-                 Node(ip="172.18.7.42", ip_id=42, id=8, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                 Node(ip="172.18.7.42", ip_id=42, id=8, type=NodeType.SERVER,
+                      flags=[Flag(name="flag6", path="/tmp", id=6, requires_root=False, score=1)],
+                      level=3, os="linux",
                       credentials=[
                           Credential(username="roy", pw="neruda"),
                           Credential(username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7")
@@ -359,14 +365,14 @@ class PyCrPwCrackLevel7Base:
                                      adj_matrix=adj_matrix,
                                      flags_lookup = PyCrPwCrackLevel7Base.flags_lookup(),
                                      agent_reachable=reachable,
-                                     vulnerable_nodes = set(["172.18.1.3", "172.18.1.79", "172.18.1.2", "172.18.1.19",
-                                                             "172.18.1.31", "172.18.1.42"]))
+                                     vulnerable_nodes = set(["172.18.7.3", "172.18.7.79", "172.18.7.2", "172.18.7.19",
+                                                             "172.18.7.31", "172.18.7.42"]))
         return network_conf
 
     @staticmethod
     def agent_reachable() -> set():
         reachable = set(["172.18.7.10", "172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79","172.18.7.19",
-                         "172.18.7.31", "172.18.1.42"])
+                         "172.18.7.31", "172.18.7.42"])
         return reachable
 
     @staticmethod
@@ -516,7 +522,7 @@ class PyCrPwCrackLevel7Base:
         env_config.syn_stealth_scan_miss_p = 0.0
         env_config.os_scan_miss_p = 0.0
         env_config.vulners_miss_p = 0.0
-        env_config.num_flags = 3
+        env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.7.1"]
         env_config.ids_router = True
         return env_config

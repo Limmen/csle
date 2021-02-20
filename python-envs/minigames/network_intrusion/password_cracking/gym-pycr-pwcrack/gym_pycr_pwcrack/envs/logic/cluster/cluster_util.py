@@ -5,6 +5,7 @@ import time
 import paramiko
 import telnetlib
 import random
+import sys
 from ftplib import FTP
 from gym_pycr_pwcrack.dao.network.env_config import EnvConfig
 from gym_pycr_pwcrack.dao.action.action import Action
@@ -1268,6 +1269,7 @@ class ClusterUtil:
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
                         print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        print("Action:{}, {}, {}".format(a.id, a.ip, a.descr))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -3546,7 +3548,11 @@ class ClusterUtil:
                 exploit_result = ClusterUtil.read_dvwa_sql_injection_result(conn=env_config.cluster_config.agent_conn,
                                                                             env_config=env_config)
                 pw = exploit_result[exploit_result.find("pablo:")+6 : exploit_result.find("pablo:")+6 + exploit_result[exploit_result.find("pablo:")+6:].find("<")]
-                exploit_successful = True
+                if "0d107" in pw:
+                    exploit_successful = True
+                else:
+                    exploit_successful = False
+                    pw = "-"
             except Exception as e:
                 exploit_successful = False
                 pw = "-"
