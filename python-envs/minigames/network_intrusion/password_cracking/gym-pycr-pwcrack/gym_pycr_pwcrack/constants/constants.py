@@ -376,6 +376,12 @@ class SHELLSHOCK:
     BACKDOOR_PW="shellshockedpw"
     PORT=80
 
+class DVWA_SQL_INJECTION:
+    SERVICE_NAME = "http"
+    EXPLOIT_USER="pablo"
+    EXPLOIT_OUTPUT_FILENAME = "dvwa_sql_injection_result.txt"
+    PORT=80
+
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"

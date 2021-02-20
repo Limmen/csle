@@ -81,6 +81,9 @@ class ObservationState:
             if a.id == ActionId.SHELLSHOCK_EXPLOIT:
                 return m.shellshock_tried
 
+            if a.id == ActionId.DVWA_SQL_INJECTION:
+                return m.dvwa_sql_injection_tried
+
             return False
         else:
             exploit_tried = True

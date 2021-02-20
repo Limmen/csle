@@ -399,6 +399,8 @@ class EnvDynamicsUtil:
             n_m.sambacry_tried = o_m.sambacry_tried
         if not n_m.shellshock_tried:
             n_m.shellshock_tried = o_m.shellshock_tried
+        if not n_m.dvwa_sql_injection_tried:
+            n_m.dvwa_sql_injection_tried = o_m.dvwa_sql_injection_tried
         return n_m
 
     @staticmethod
@@ -633,6 +635,8 @@ class EnvDynamicsUtil:
             m_obs.sambacry_tried = True
         elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
             m_obs.shellshock_tried = True
+        elif a.id == ActionId.DVWA_SQL_INJECTION:
+            m_obs.dvwa_sql_injection_tried = True
         return m_obs
 
     @staticmethod
