@@ -43,10 +43,10 @@ def test_env(env_name : str, num_steps : int):
                 EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config)))
 
         action = np.random.choice(legal_actions)
-        if i < 1:
-            action = 21
-        else:
-            action = 40
+        # if i < 1:
+        #     action = 21
+        # else:
+        #     action = 40
         obs, reward, done, info = env.step(action)
         tried_actions.append(action)
         tot_rew += reward

@@ -1,6 +1,6 @@
 # OS
-# Debian GNU/Linux 8 (jessie)
-FROM vulnerables/cve-2017-7494
+# debian:9.2
+FROM vulnerables/web-dvwa
 USER root
 
 #RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
@@ -134,7 +134,6 @@ RUN gcc -c -fpic bindshell-samba.c &&\
     chmod 777 /bindshell-samba.h &&\
     chmod 777 /libbindshell-samba.so &&\
     chmod 777 /bindshell-samba.o &&\
-    chmod -R 777 /data &&\
     conda create --name samba python=2.7 -y
 # Make subsequent RUN commands use the samba env
 SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
