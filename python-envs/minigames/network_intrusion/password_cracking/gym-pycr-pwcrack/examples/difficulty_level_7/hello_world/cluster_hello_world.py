@@ -56,6 +56,7 @@ def test_env(env_name : str, num_steps : int):
             tot_rew = 0
             env.reset()
             tried_actions = []
+            done = False
         #time.sleep(0.001)
         #time.sleep(0.5)
     env.reset()
