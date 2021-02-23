@@ -17,7 +17,7 @@ RUN apt-get update
 RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         DEBIAN_FRONTEND=noninteractive apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping \
-        emacs curl htop ssh openssh-server \
+        emacs curl htop ssh openssh-server build-essential \
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
         dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
         wget apache2 &&\
@@ -153,23 +153,27 @@ ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
 RUN chmod 777 /sql_injection_exploit.sh
 
 ## Setup Samba
-#ADD docker/samba_exploit.py /samba_exploit.py
-#ADD docker/bindshell-samba.c /bindshell-samba.c
-#ADD docker/bindshell-samba.h /bindshell-samba.h
-#RUN gcc -c -fpic bindshell-samba.c &&\
-#    gcc -shared -o libbindshell-samba.so bindshell-samba.o &&\
-#    chmod 777 /samba_exploit.py &&\
-#    chmod 777 /bindshell-samba.c &&\
-#    chmod 777 /bindshell-samba.h &&\
-#    chmod 777 /libbindshell-samba.so &&\
-#    chmod 777 /bindshell-samba.o &&\
-#    conda create --name samba python=2.7 -y
-## Make subsequent RUN commands use the samba env
-#SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
-##RUN conda activate samba
-#RUN pip install pycrypto==2.6 &&\
-#    pip install git+git://github.com/opsxcq/impacket.git &&\
-#    pip install pyasn1
+ADD docker/samba_exploit.py /samba_exploit.py
+ADD docker/bindshell-samba.c /bindshell-samba.c
+ADD docker/bindshell-samba.h /bindshell-samba.h
+RUN gcc -c -fpic bindshell-samba.c &&\
+    gcc -shared -o libbindshell-samba.so bindshell-samba.o &&\
+    chmod 777 /samba_exploit.py &&\
+    chmod 777 /bindshell-samba.c &&\
+    chmod 777 /bindshell-samba.h &&\
+    chmod 777 /libbindshell-samba.so &&\
+    chmod 777 /bindshell-samba.o &&\
+    conda create --name samba python=2.7 -y
+# Make subsequent RUN commands use the samba env
+SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
+#RUN conda activate samba
+RUN pip install pycrypto==2.6 &&\
+    pip install git+git://github.com/opsxcq/impacket.git &&\
+    pip install pyasn1
+
+# CVE-2015-3306 Exploit
+ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
+RUN chmod 777 /cve_2015_3306_exploit.py
 
 ## Web server HTTP
 #RUN mkdir -p /web/ &&\

@@ -17,6 +17,7 @@ build:
 	cd samba1/ && $(MAKE) build
 	cd shellshock1/ && $(MAKE) build
 	cd sql_injection1/ && $(MAKE) build
+	cd cve_2015_3306_1/ && $(MAKE) build
 
 rm-image:
 	cd ftp1/ && $(MAKE) rm-image
@@ -35,3 +36,4 @@ rm-image:
 	cd samba1/ && $(MAKE) rm-image
 	cd shellshock1/ && $(MAKE) rm-image
 	cd sql_injection1/ && $(MAKE) rm-image
+	cd cve_2015_3306_1/ && $(MAKE) rm-image

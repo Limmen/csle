@@ -401,6 +401,8 @@ class EnvDynamicsUtil:
             n_m.shellshock_tried = o_m.shellshock_tried
         if not n_m.dvwa_sql_injection_tried:
             n_m.dvwa_sql_injection_tried = o_m.dvwa_sql_injection_tried
+        if not n_m.cve_2015_3306_tried:
+            n_m.cve_2015_3306_tried = o_m.cve_2015_3306_tried
         return n_m
 
     @staticmethod
@@ -637,6 +639,8 @@ class EnvDynamicsUtil:
             m_obs.shellshock_tried = True
         elif a.id == ActionId.DVWA_SQL_INJECTION:
             m_obs.dvwa_sql_injection_tried = True
+        elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
+            m_obs.cve_2015_3306_tried = True
         return m_obs
 
     @staticmethod

@@ -146,6 +146,19 @@
                     ]
                 }
             ]
+        },
+        {
+            "ip": "172.18.7.37",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "john",
+                        "conway",
+                        true
+                    ]
+                }
+            ]
         }
     ]
 }

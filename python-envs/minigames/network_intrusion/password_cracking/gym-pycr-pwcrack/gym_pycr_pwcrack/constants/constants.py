@@ -370,6 +370,12 @@ class SAMBA:
     ALREADY_EXISTS = "already exists"
     ERROR = "Error"
 
+class CVE_2015_3306:
+    SERVICE_NAME = "proftpd"
+    BACKDOOR_USER="ssh_backdoor_cve2015_3306_pwned"
+    BACKDOOR_PW="cve2015_3306_pwnedpw"
+    PORT=21
+
 class SHELLSHOCK:
     SERVICE_NAME = "http"
     BACKDOOR_USER="ssh_backdoor_shellshocked"
@@ -454,7 +460,8 @@ class EXPLOIT_VULNERABILITES:
     SAMBACRY_EXPLOIT = "CVE-2017-7494"
     SHELLSHOCK_EXPLOIT = "CVE-2014-6271"
     DVWA_SQL_INJECTION = "dvwa_sql_injection"
-    CVE_VULNS = [SAMBACRY_EXPLOIT]
+    CVE_2015_3306 = "CVE-2015-3306"
+    CVE_VULNS = [SAMBACRY_EXPLOIT, SHELLSHOCK_EXPLOIT, CVE_2015_3306]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
 

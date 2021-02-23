@@ -159,6 +159,10 @@ RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip
 ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
 RUN chmod 777 /sql_injection_exploit.sh
 
+# CVE-2015-3306 Exploit
+ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
+RUN chmod 777 /cve_2015_3306_exploit.py
+
 # Setup Snort
 #RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
 #RUN tar -xvzf community-rules.tar.gz -C /etc/snort/rules

@@ -113,3 +113,20 @@ class ShellActions:
                       descr="Uses the DVWA SQL Injection exploit to extract secret passwords",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)
+
+    @staticmethod
+    def CVE_2015_3306_EXPLOIT(index: int) -> Action:
+        """
+        Launches the CVE-2015-3306 exploit
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
+        id = ActionId.CVE_2015_3306_EXPLOIT
+        cmd = ["sudo /root/miniconda3/bin/python3 /cve_2015_3306_exploit.py --port 21 --path '/var/www/html/' --host {}"]
+        return Action(id=id, name="CVE-2015-3306 exploit", cmd=cmd,
+                      type=ActionType.EXPLOIT,
+                      descr="Uses the CVE-2015-3306 vulnerability to get remote code execution and then sets up a SSH backdoor "
+                            "to upgrade the channel",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)

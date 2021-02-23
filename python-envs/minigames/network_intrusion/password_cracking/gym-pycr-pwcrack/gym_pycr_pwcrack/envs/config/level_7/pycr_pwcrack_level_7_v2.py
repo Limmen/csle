@@ -39,6 +39,7 @@ class PyCrPwCrackLevel7V2:
             actions.append(ShellActions.SAMBACRY_EXPLOIT(index=idx))
             actions.append(ShellActions.SHELLSHOCK_EXPLOIT(index=idx))
             actions.append(ShellActions.DVWA_SQL_INJECTION(index=idx))
+            actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
@@ -70,7 +71,7 @@ class PyCrPwCrackLevel7V2:
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
-                            ActionId.DVWA_SQL_INJECTION]
+                            ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT]
         nikto_action_ids = []
         masscan_action_ids = []
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,
@@ -90,7 +91,8 @@ class PyCrPwCrackLevel7V2:
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrPwCrackLevel7Base.num_nodes(), render_config=render_conf, env_mode=EnvMode.SIMULATION,
+                               num_sh=3, num_nodes = PyCrPwCrackLevel7Base.num_nodes(), render_config=render_conf,
+                               env_mode=EnvMode.SIMULATION,
                                cluster_config=cluster_conf,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrPwCrackLevel7Base.hacker_ip(), state_type=StateType.COMPACT,
@@ -101,7 +103,7 @@ class PyCrPwCrackLevel7V2:
         env_config.syn_stealth_scan_miss_p = 0.00
         env_config.os_scan_miss_p = 0.00
         env_config.vulners_miss_p = 0.00
-        env_config.num_flags = 6
+        env_config.num_flags = 7
         env_config.blacklist_ips = ["172.18.7.1"]
 
         env_config.shell_access_found_reward_mult = 1

@@ -84,6 +84,9 @@ class ObservationState:
             if a.id == ActionId.DVWA_SQL_INJECTION:
                 return m.dvwa_sql_injection_tried
 
+            if a.id == ActionId.CVE_2015_3306_EXPLOIT:
+                return m.cve_2015_3306_tried
+
             return False
         else:
             exploit_tried = True

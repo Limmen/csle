@@ -21,6 +21,9 @@ shellshock_base:
 sql_injection_base:
 	cd sql_injection_base/ && $(MAKE) build
 
+cve_2015_3306_base:
+	cd cve_2015_3306_base/ && $(MAKE) build
+
 build:
 	cd kali_base/ && $(MAKE) build
 	cd ubuntu_20_base/ && $(MAKE) build
@@ -29,6 +32,7 @@ build:
 	cd samba_base/ && $(MAKE) build
 	cd shellshock_base/ && $(MAKE) build
 	cd sql_injection_base/ && $(MAKE) build
+	cd cve_2015_3306_base/ && $(MAKE) base
 
 rm-image:
 	cd kali_base/ && $(MAKE) rm-image
@@ -38,3 +42,4 @@ rm-image:
 	cd samba_base/ && $(MAKE) rm-image
 	cd shellshock_base/ && $(MAKE) rm-image
 	cd sql_injection_base/ && $(MAKE) rm-image
+	cd cve_2015_3306_base/ && $(MAKE) rm-image

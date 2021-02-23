@@ -103,3 +103,7 @@ RUN update-rc.d pycr-firewall defaults
 # DWVA WebApp Exploit
 ADD docker/sql_injection_exploit.sh /sql_injection_exploit.sh
 RUN chmod 777 /sql_injection_exploit.sh
+
+# CVE-2015-3306 Exploit
+ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
+RUN chmod 777 /cve_2015_3306_exploit.py

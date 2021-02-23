@@ -23,7 +23,8 @@ def default_vulns():
         RceVulnerabilityConfig(node_ip="172.18.7.19", vuln_type=VulnType.RCE),
         RceVulnerabilityConfig(node_ip="172.18.7.31", vuln_type=VulnType.RCE),
         SQLInjectionVulnerabilityConfig(node_ip="172.18.7.42", vuln_type=VulnType.SQL_INJECTION,
-                                        username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True)
+                                        username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True),
+        RceVulnerabilityConfig(node_ip="172.18.7.37", vuln_type=VulnType.RCE),
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config
