@@ -3848,3 +3848,187 @@ class ClusterUtil:
                                                  env_config=env_config,
                                                  alerts=total_alerts, action=a)
         return s, reward, False
+
+    @staticmethod
+    def cve_2015_1427_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Helper for executing the CVE-2015-1427 exploit action
+
+        :param s: the current state
+        :param a: the CVE-2015-1427 exploit action
+        :param env_config: the environment config
+        :return: s_prime, reward, done
+        """
+        # Extract target machine
+        target_machine = None
+        for m in s.obs_state.machines:
+            if m.ip == a.ip:
+                target_machine = m.copy()
+        if target_machine is None:
+            target_machine = MachineObservationState(ip=a.ip)
+
+        cache_key = (a.id, target_machine.ip, env_config.cluster_config.agent_username)
+        exploit_successful = False
+
+        # Check cache first
+        cache_hit = False
+        if env_config.use_user_command_cache:
+
+            # Check in-memory cache
+            if env_config.user_command_cache.get(cache_key) is not None:
+                cache_hit = True
+                target_machine, cost, exploit_successful = env_config.user_command_cache.get(cache_key)
+            # Check on-disk cache
+            else:
+                cache_file = ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=a.ip,
+                                                                 user=env_config.cluster_config.agent_username)
+                if cache_file is not None:
+                    cache_hit = True
+                    cache_res = ClusterUtil.parse_user_command_file(file_name=cache_file, env_config=env_config,
+                                                                    conn=env_config.cluster_config.agent_conn)
+                    # Use measured cost
+                    if env_config.action_costs.find_exists(action_id=a.id, ip=a.ip,
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.CVE_2015_1427.SERVICE_NAME):
+                        a.cost = env_config.action_costs.find_get_cost(
+                            action_id=a.id, ip=a.ip, user=env_config.cluster_config.agent_username,
+                            service=constants.CVE_2015_1427.SERVICE_NAME)
+                        cost = a.cost
+
+                    if int(cache_res) == 0:
+                        exploit_successful = False
+                    else:
+                        exploit_successful = True
+                        credential = Credential(username=constants.CVE_2015_1427.BACKDOOR_USER,
+                                                pw=constants.CVE_2015_1427.BACKDOOR_PW,
+                                                port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+                                                service=constants.SSH.SERVICE_NAME)
+                        vuln = Vulnerability(
+                            name=constants.EXPLOIT_VULNERABILITES.CVE_2015_1427,
+                            cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_1427, cvss=9.8,
+                            credentials=[Credential(username=constants.CVE_2015_1427.BACKDOOR_USER,
+                                                    pw=constants.CVE_2015_1427.BACKDOOR_PW,
+                                                    service=constants.CVE_2015_1427.SERVICE_NAME)
+                                         ], port=constants.CVE_2015_1427.PORT, protocol=TransportProtocol.TCP)
+                        target_machine.shell_access = True
+                        target_machine.untried_credentials = True
+                        target_machine.shell_access_credentials.append(credential)
+                        target_machine.backdoor_credentials.append(credential)
+                        target_machine.backdoor_tried = True
+                        target_machine.backdoor_installed = True
+                        target_machine.cve_vulns.append(vuln)
+
+            if cache_hit:
+                # Use measured # alerts
+                if env_config.action_alerts.user_ip_exists(action_id=a.id, ip=a.ip,
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.CVE_2015_1427.SERVICE_NAME):
+                    a.alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=a.ip,
+                                                                          user=env_config.cluster_config.agent_username,
+                                                                          service=constants.CVE_2015_1427.SERVICE_NAME)
+                    total_alerts = (a.alerts[0], a.alerts[1])
+
+        if not cache_hit:
+            # Try execute exploit from agent host
+            cost = 0
+            total_alerts = (0, 0)
+            if env_config.ids_router:
+                last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+            cmd = a.cmd[0]
+            cmd = cmd.format(a.ip)
+            print("cmd:{}".format(cmd))
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(
+                cmd=cmd, conn=env_config.cluster_config.agent_conn)
+            print(outdata.decode())
+            print(errdata.decode())
+
+            # Parse Result
+            proxy_conn = ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
+                                                    username=env_config.cluster_config.agent_username,
+                                                    root=True, port=22, service=constants.SSH.SERVICE_NAME,
+                                                    proxy=None, ip=env_config.cluster_config.agent_ip)
+            if ClusterUtil.check_if_rce_exploit_succeeded(user=constants.CVE_2015_1427.BACKDOOR_USER,
+                                                          pw=constants.CVE_2015_1427.BACKDOOR_PW,
+                                                          source_ip=env_config.cluster_config.agent_ip,
+                                                          port=constants.SSH.DEFAULT_PORT,
+                                                          target_ip=a.ip,
+                                                          proxy_conn=proxy_conn):
+                # Exploit successful
+                credential = Credential(username=constants.CVE_2015_1427.BACKDOOR_USER,
+                                        pw=constants.CVE_2015_1427.BACKDOOR_PW,
+                                        port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+                                        service=constants.SSH.SERVICE_NAME)
+                vuln = Vulnerability(
+                    name=constants.EXPLOIT_VULNERABILITES.CVE_2015_1427,
+                    cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_1427, cvss=9.8,
+                    credentials=[Credential(username=constants.CVE_2015_1427.BACKDOOR_USER,
+                                            pw=constants.CVE_2015_1427.BACKDOOR_PW,
+                                            service=constants.CVE_2015_1427.SERVICE_NAME)
+                                 ], port=constants.CVE_2015_1427.PORT, protocol=TransportProtocol.TCP)
+                target_machine.shell_access = True
+                target_machine.untried_credentials = True
+                target_machine.shell_access_credentials.append(credential)
+                target_machine.backdoor_credentials.append(credential)
+                target_machine.backdoor_tried = True
+                target_machine.backdoor_installed = True
+                target_machine.cve_vulns.append(vuln)
+                exploit_successful = True
+
+            # Measure  cost and alerts
+            cost += float(total_time)
+            if env_config.ids_router:
+                fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                if last_alert_ts is not None:
+                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                num_alerts = len(fast_logs)
+                total_alerts = (num_alerts, sum_priority_alerts)
+                ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                  action=a, env_config=env_config,
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.CVE_2015_1427.SERVICE_NAME)
+                env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=a.ip,
+                                                           alert=(sum_priority_alerts, num_alerts),
+                                                           user=env_config.cluster_config.agent_username,
+                                                           service=constants.CVE_2015_1427.SERVICE_NAME)
+
+            ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
+                                             user=env_config.cluster_config.agent_username,
+                                             service=constants.CVE_2015_1427.SERVICE_NAME)
+            env_config.action_costs.find_add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1),
+                                                  user=env_config.cluster_config.agent_username,
+                                                  service=constants.CVE_2015_1427.SERVICE_NAME)
+
+            # Persist cache result
+            ClusterUtil.write_user_command_cache(action=a, env_config=env_config,
+                                                 user=env_config.cluster_config.agent_username,
+                                                 result=str(int(exploit_successful)), ip=a.ip)
+
+            # Update cache
+            if env_config.use_user_command_cache:
+                env_config.user_command_cache.add(cache_key, (target_machine, cost, exploit_successful))
+
+        target_machine.cve_2015_1427_tried = True
+
+        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
+        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
+        total_new_tools_installed, total_new_backdoors_installed = \
+            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config,
+                                                   action=a)
+        s_prime = s
+        s_prime.obs_state.machines = new_machines_obs
+
+        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
+                                                 num_new_cve_vuln_found=total_new_vuln,
+                                                 num_new_machines=total_new_machines,
+                                                 num_new_shell_access=total_new_shell_access,
+                                                 num_new_root=total_new_root,
+                                                 num_new_flag_pts=total_new_flag_pts,
+                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
+                                                 num_new_logged_in=total_new_logged_in,
+                                                 num_new_tools_installed=total_new_tools_installed,
+                                                 num_new_backdoors_installed=total_new_backdoors_installed,
+                                                 cost=cost,
+                                                 env_config=env_config,
+                                                 alerts=total_alerts, action=a)
+        return s, reward, False

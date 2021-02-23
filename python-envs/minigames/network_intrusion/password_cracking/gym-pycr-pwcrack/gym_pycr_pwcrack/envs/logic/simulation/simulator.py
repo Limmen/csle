@@ -117,6 +117,8 @@ class Simulator:
             raise NotImplementedError("DVWA SQL Injection simulation not implemented")
         elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
             raise NotImplementedError("CVE-2015-3306 simulation not implemented")
+        elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
+            raise NotImplementedError("CVE-2015-1427 simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

@@ -41,6 +41,7 @@ def test_env(env_name : str, num_steps : int):
                         m.logged_in, m.tools_installed, m.backdoor_installed, m.flags_found))
             print("all flags?:{}".format(
                 EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config)))
+            print("done?:{}".format(done))
 
         action = np.random.choice(legal_actions)
         # if i < 1:
@@ -51,6 +52,8 @@ def test_env(env_name : str, num_steps : int):
         tried_actions.append(action)
         tot_rew += reward
         env.render()
+        if EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config) and not done:
+            print("All flags but done")
         if done:
             print("tot_rew:{}".format(tot_rew))
             tot_rew = 0

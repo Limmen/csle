@@ -313,12 +313,9 @@ class EnvDynamicsUtil:
         :return: the merged machine observation with updated flags, number of new flag points
         """
         new_flag_points = 0
-        #print("len flags found:{}".format(len(n_m.flags_found)))
         for flag in n_m.flags_found:
             if flag not in o_m.flags_found:
-                #print("new flag:{}, {}, {}".format(flag.name, flag.id, flag.path))
                 new_flag_points += flag.score
-        #print("done".format(len(n_m.flags_found)))
         n_m.flags_found = n_m.flags_found.union(o_m.flags_found)
         return n_m, new_flag_points
 
@@ -403,6 +400,8 @@ class EnvDynamicsUtil:
             n_m.dvwa_sql_injection_tried = o_m.dvwa_sql_injection_tried
         if not n_m.cve_2015_3306_tried:
             n_m.cve_2015_3306_tried = o_m.cve_2015_3306_tried
+        if not n_m.cve_2015_1427_tried:
+            n_m.cve_2015_1427_tried = o_m.cve_2015_1427_tried
         return n_m
 
     @staticmethod
@@ -549,9 +548,6 @@ class EnvDynamicsUtil:
                 reward = env_config.base_step_reward - cost - alerts_pts
         else:
             reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
-
-        #print("reward{}, new_info:{}, alerts_pts:{}, cost:{}".format(reward, new_info, alerts_pts, cost))
-        # print("flag reward:{}, new flags:{}".format(env_config.flag_found_reward_mult * num_new_flag_pts, num_new_flag_pts))
         return reward
 
     @staticmethod
@@ -641,6 +637,8 @@ class EnvDynamicsUtil:
             m_obs.dvwa_sql_injection_tried = True
         elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
             m_obs.cve_2015_3306_tried = True
+        elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
+            m_obs.cve_2015_1427_tried = True
         return m_obs
 
     @staticmethod

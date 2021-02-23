@@ -117,6 +117,8 @@ class ClusterMiddleware:
             return ExploitMiddleware.execute_dvwa_sql_injection(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
             return ExploitMiddleware.execute_cve_2015_3306_exploit(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
+            return ExploitMiddleware.execute_cve_2015_1427_exploit(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

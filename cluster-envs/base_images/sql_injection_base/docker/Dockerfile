@@ -3,8 +3,6 @@
 FROM vulnerables/web-dvwa
 USER root
 
-#RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
-
 # Install dependencies
 RUN apt-get update
 RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-selections &&\
@@ -13,9 +11,6 @@ RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-s
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget
-#RUN apt-get -y install openjdk-8-jdk
-#RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
-#        apt-get install -y snort
 
 # Setup DVWA
 RUN mv /var/www/html/login.php /var/www/html/login_bak.php
@@ -95,11 +90,6 @@ RUN wget https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-
 RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
-## setup Kafka
-#RUN wget http://www-us.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz
-#RUN tar xzf kafka_2.13-2.4.0.tgz
-#RUN mv kafka_2.13-2.4.0 /usr/local/kafka
-
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
 ADD docker/snmpd.conf /etc/snmp/snmpd.conf
@@ -108,10 +98,6 @@ RUN service snmpd restart
 # setup IRC
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker/inspircd.conf /etc/inspircd/inspircd.conf
-
-## setup Postgres
-#RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
-#ADD docker/postgresql.conf /etc/postgresql/12/main/postgresql.conf
 
 # Telnet config (disabled by default for security reasons)
 ADD docker/telnet /etc/xinetd.d/telnet
@@ -170,11 +156,7 @@ RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip
 ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
 RUN chmod 777 /cve_2015_3306_exploit.py
 
-# Setup Snort
-#RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
-#RUN tar -xvzf community-rules.tar.gz -C /etc/snort/rules
-#RUN mkdir /var/snort
-#RUN chmod 777 /var/snort
-#RUN mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
-#ADD docker/snort.conf /etc/snort/snort.conf
+# CVE-2015-1427 Exploit
+ADD docker/cve_2015_1427_exploit.sh /cve_2015_1427_exploit.sh
+RUN chmod 777 /cve_2015_1427_exploit.sh
 

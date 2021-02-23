@@ -1,18 +1,9 @@
 # OS
-# Debian GNU/Linux 8 (jessie)
-#FROM debian:jessie
-#FROM debian:wheezy
+# Debian GNU/Linux 8 (wheezy)
 FROM debian/eol:wheezy
 USER root
 
 RUN apt-get update
-
-#RUN apt-get update && \
-#    apt-get upgrade -y && \
-#    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#    apache2 && \
-#    apt-get clean && \
-#    rm -rf /var/lib/apt/lists/*
 
 RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
@@ -44,11 +35,6 @@ ADD docker/apache_envvars /etc/apache2/envvars
 RUN chown -R pycr_admin:root /run &&\
     chmod -R 777 /var &&\
     chown -R pycr_admin:root /var
-
-#RUN apt-get -y install openjdk-8-jdk
-#RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
-#        apt-get install -y snort
-
 
 # Setup FTP
 RUN mkdir -p /var/ftp &&\
@@ -92,26 +78,9 @@ RUN git clone https://github.com/vulnersCom/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-## Setup Tomcat
-#RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
-#    tar xvzf apache-tomcat-8.0.1.tar.gz &&\
-#    mv apache-tomcat-8.0.1 /usr/local/tomcat &&\
-#    mv /usr/local/tomcat/conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml.bak
-#ADD docker/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
-
-## Setup TeamSpeak 3 Server
-#RUN wget https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
-#    tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
-#    touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
 # Cockroach DB
 RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
-
-## setup Kafka
-#RUN wget http://www-us.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz
-#RUN tar xzf kafka_2.13-2.4.0.tgz
-#RUN mv kafka_2.13-2.4.0 /usr/local/kafka
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
@@ -121,10 +90,6 @@ RUN service snmpd restart
 # setup IRC
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker/inspircd.conf /etc/inspircd/inspircd.conf
-
-## setup Postgres
-#RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
-#ADD docker/postgresql.conf /etc/postgresql/12/main/postgresql.conf
 
 # Telnet config (disabled by default for security reasons)
 ADD docker/telnet /etc/xinetd.d/telnet
@@ -175,23 +140,6 @@ RUN pip install pycrypto==2.6 &&\
 ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
 RUN chmod 777 /cve_2015_3306_exploit.py
 
-## Web server HTTP
-#RUN mkdir -p /web/ &&\
-#    mkdir -p /web/static
-#ADD docker/web_server.py /web/web_server.py
-#ADD docker/index.html /web/static/index.html
-#RUN pip install flask &&\
-#    pip install waitress
-
-## Setup glassfish
-#RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
-#    unzip latest-glassfish.zip
-
-# Setup Snort
-#RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
-#RUN tar -xvzf community-rules.tar.gz -C /etc/snort/rules
-#RUN mkdir /var/snort
-#RUN chmod 777 /var/snort
-#RUN mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
-#ADD docker/snort.conf /etc/snort/snort.conf
-
+# CVE-2015-1427 Exploit
+ADD docker/cve_2015_1427_exploit.sh /cve_2015_1427_exploit.sh
+RUN chmod 777 /cve_2015_1427_exploit.sh

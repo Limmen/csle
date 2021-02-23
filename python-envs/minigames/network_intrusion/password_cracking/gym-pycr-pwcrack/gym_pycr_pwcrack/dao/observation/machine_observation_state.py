@@ -47,6 +47,7 @@ class MachineObservationState:
         self.shellshock_tried = False
         self.dvwa_sql_injection_tried = False
         self.cve_2015_3306_tried = False
+        self.cve_2015_1427_tried = False
         self.reachable = set()
 
 
@@ -57,7 +58,8 @@ class MachineObservationState:
                "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
                "smtp_brute_tried:{},postgres_brute_tried:{},tools_installed:{},backdoor_installed:{}," \
                "num_backdoor_credentials:{},num_reachable_nodes:{},backdoor_tried:{},install_tools_tried:{}," \
-               "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}".format(
+               "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
+               "cve_2015_1427_tried:{}".format(
             self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
@@ -65,7 +67,7 @@ class MachineObservationState:
             self.irc_brute_tried, self.mongo_brute_tried, self.mysql_brute_tried, self.smtp_brute_tried,
             self.postgres_brute_tried, self.tools_installed, self.backdoor_installed, len(self.backdoor_credentials),
             len(self.reachable), self.backdoor_tried, self.install_tools_tried, self.sambacry_tried,
-            self.shellshock_tried, self.dvwa_sql_injection_tried, self.cve_2015_3306_tried)
+            self.shellshock_tried, self.dvwa_sql_injection_tried, self.cve_2015_3306_tried, self.cve_2015_1427_tried)
 
     def sort_ports(self):
         for p in self.ports:
@@ -144,6 +146,7 @@ class MachineObservationState:
         m_copy.shellshock_tried = self.shellshock_tried
         m_copy.dvwa_sql_injection_tried = self.dvwa_sql_injection_tried
         m_copy.cve_2015_3306_tried = self.cve_2015_3306_tried
+        m_copy.cve_2015_1427_tried = self.cve_2015_1427_tried
         return m_copy
 
     def to_node(self) -> Node:

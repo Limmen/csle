@@ -163,3 +163,7 @@ RUN chmod 777 /sql_injection_exploit.sh
 # CVE-2015-3306 Exploit
 ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py
 RUN chmod 777 /cve_2015_3306_exploit.py
+
+# CVE-2015-1427 Exploit
+ADD docker/cve_2015_1427_exploit.sh /cve_2015_1427_exploit.sh
+RUN chmod 777 /cve_2015_1427_exploit.sh

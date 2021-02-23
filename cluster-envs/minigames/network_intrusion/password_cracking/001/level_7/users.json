@@ -159,6 +159,19 @@
                     ]
                 }
             ]
+        },
+        {
+            "ip": "172.18.7.82",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "john",
+                        "nash",
+                        true
+                    ]
+                }
+            ]
         }
     ]
 }
