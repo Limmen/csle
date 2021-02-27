@@ -8,7 +8,7 @@
                         "flag3",
                         "/tmp/",
                         3,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -24,7 +24,7 @@
                         "flag2",
                         "/tmp/",
                         2,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -56,7 +56,7 @@
                         "flag4",
                         "/tmp/",
                         4,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -72,7 +72,7 @@
                         "flag5",
                         "/tmp/",
                         5,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -88,7 +88,7 @@
                         "flag6",
                         "/tmp/",
                         6,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -104,7 +104,7 @@
                         "flag7",
                         "/tmp/",
                         7,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -120,7 +120,7 @@
                         "flag8",
                         "/tmp/",
                         8,
-                        true,
+                        false,
                         1
                     ]
                 }
@@ -136,12 +136,44 @@
                         "flag9",
                         "/tmp/",
                         9,
-                        true,
+                        false,
                         1
                     ]
                 }
             ],
             "ip": "172.18.7.75",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag10.txt",
+                        "flag10",
+                        "/root/",
+                        10,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.7.71",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag11.txt",
+                        "flag11",
+                        "/root/",
+                        11,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.7.11",
             "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
         }
     ],

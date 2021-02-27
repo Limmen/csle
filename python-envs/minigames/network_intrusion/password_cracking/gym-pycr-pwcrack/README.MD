@@ -1,7 +1,7 @@
 # `gym-pycr-pwcrack`
 
 `gym-pycr-pwcrack` is a reinforcement learning environment for studying the "first line of defense" against
-network intrusions. Specifically the environment focuses on reconnaissance, password vulnerabilities, 
+network intrusions. Specifically the environment focuses on reconnaissance, password vulnerabilities, RCE vulnerabilities, 
 intrusion detection, and dictionary attacks. The environment provides a MDP or Markov Game interface for 
 OpenAI Gym that can be used to train reinforcement learning agents. 
 

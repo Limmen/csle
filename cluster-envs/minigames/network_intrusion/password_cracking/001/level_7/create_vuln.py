@@ -5,6 +5,7 @@ from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
+from gym_pycr_pwcrack.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 
@@ -26,7 +27,11 @@ def default_vulns():
                                         username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True),
         RceVulnerabilityConfig(node_ip="172.18.7.37", vuln_type=VulnType.RCE),
         RceVulnerabilityConfig(node_ip="172.18.7.82", vuln_type=VulnType.RCE),
-        RceVulnerabilityConfig(node_ip="172.18.7.75", vuln_type=VulnType.RCE)
+        RceVulnerabilityConfig(node_ip="172.18.7.75", vuln_type=VulnType.RCE),
+        PrivEscVulnerabilityConfig(node_ip="172.18.7.71", vuln_type=VulnType.PRIVILEGE_ESCALATION,
+                                   username="alan", pw="turing15215@§", root=False, cve="2010-1427"),
+        PrivEscVulnerabilityConfig(node_ip="172.18.7.11", vuln_type=VulnType.PRIVILEGE_ESCALATION,
+                                   username="donald", pw="knuth1xz@2t§", root=False, cve="2015-5602")
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

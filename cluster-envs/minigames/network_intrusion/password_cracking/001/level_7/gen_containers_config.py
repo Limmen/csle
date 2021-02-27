@@ -29,7 +29,11 @@ def default_containers_config():
         NodeContainerConfig(name="cve_2015_1427_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
                             level="7", ip="172.18.7.82"),
         NodeContainerConfig(name="cve_2016_10033_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
-                            level="7", ip="172.18.7.75")
+                            level="7", ip="172.18.7.75"),
+        NodeContainerConfig(name="cve_2010_0426_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
+                            level="7", ip="172.18.7.71"),
+        NodeContainerConfig(name="cve_2015_5602_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
+                            level="7", ip="172.18.7.11")
     ]
     containers_cfg = ContainersConfig(containers=containers, network="pycr_net_7", agent_ip="172.18.7.191",
                                       router_ip="172.18.7.10", subnet_mask="172.18.7.0/24", subnet_prefix="172.18.7.",

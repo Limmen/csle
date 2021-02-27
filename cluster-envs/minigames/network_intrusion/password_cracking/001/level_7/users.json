@@ -185,6 +185,32 @@
                     ]
                 }
             ]
+        },
+        {
+            "ip": "172.18.7.71",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "robbins",
+                        "monro",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.7.11",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "rich",
+                        "sutton",
+                        true
+                    ]
+                }
+            ]
         }
     ]
 }

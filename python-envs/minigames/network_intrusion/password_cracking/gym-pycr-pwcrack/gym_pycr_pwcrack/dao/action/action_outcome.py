@@ -12,3 +12,4 @@ class ActionOutcome(Enum):
     LOGIN = 2
     FLAG = 3
     PIVOTING = 4
+    PRIVILEGE_ESCALATION_ROOT = 5

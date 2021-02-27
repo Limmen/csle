@@ -122,6 +122,37 @@
             "vuln_type": {
                 "py/id": 9
             }
+        },
+        {
+            "cve": "2010-1427",
+            "node_ip": "172.18.7.71",
+            "pw": "turing15215@\u00a7",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.priv_esc_vulnerability_config.PrivEscVulnerabilityConfig",
+            "root": false,
+            "username": "alan",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_pwcrack.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            3
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "cve": "2015-5602",
+            "node_ip": "172.18.7.11",
+            "pw": "knuth1xz@2t\u00a7",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.priv_esc_vulnerability_config.PrivEscVulnerabilityConfig",
+            "root": false,
+            "username": "donald",
+            "vuln_type": {
+                "py/id": 17
+            }
         }
     ]
 }

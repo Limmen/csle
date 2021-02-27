@@ -15,6 +15,8 @@ run: gen_containers_config
 	cd containers/cve_2015_3306_1/ && $(MAKE) run
 	cd containers/cve_2015_1427_1/ && $(MAKE) run
 	cd containers/cve_2016_10033_1/ && $(MAKE) run
+	cd containers/cve_2010_0426_1/ && $(MAKE) run
+	cd containers/cve_2015_5602_1/ && $(MAKE) run
 
 stop:
 	cd containers/router2/ && $(MAKE) stop
@@ -29,6 +31,8 @@ stop:
 	cd containers/cve_2015_3306_1/ && $(MAKE) stop
 	cd containers/cve_2015_1427_1/ && $(MAKE) stop
 	cd containers/cve_2016_10033_1/ && $(MAKE) stop
+	cd containers/cve_2010_0426_1/ && $(MAKE) stop
+	cd containers/cve_2015_5602_1/ && $(MAKE) stop
 
 start:
 	cd containers/router2/ && $(MAKE) start
@@ -43,6 +47,8 @@ start:
 	cd containers/cve_2015_3306_1/ && $(MAKE) start
 	cd containers/cve_2015_1427_1/ && $(MAKE) start
 	cd containers/cve_2016_10033_1/ && $(MAKE) start
+	cd containers/cve_2010_0426_1/ && $(MAKE) start
+	cd containers/cve_2015_5602_1/ && $(MAKE) start
 	python create_topology.py
 
 clean:
@@ -58,6 +64,8 @@ clean:
 	cd containers/cve_2015_3306_1/ && $(MAKE) clean
 	cd containers/cve_2015_1427_1/ && $(MAKE) clean
 	cd containers/cve_2016_10033_1/ && $(MAKE) clean
+	cd containers/cve_2010_0426_1/ && $(MAKE) clean
+	cd containers/cve_2015_5602_1/ && $(MAKE) clean
 
 
 apply_config: users vuln flags topology gen_containers_config

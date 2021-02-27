@@ -4210,3 +4210,15 @@ class ClusterUtil:
                                                  env_config=env_config,
                                                  alerts=total_alerts, action=a)
         return s, reward, False
+
+    @staticmethod
+    def cve_2010_0426_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Helper for executing the CVE-2010-0426 privelege_escalation action
+
+        :param s: the current state
+        :param a: the CVE-2010-0425 privilege escalation action
+        :param env_config: the environment config
+        :return: s_prime, reward, done
+        """
+        pass

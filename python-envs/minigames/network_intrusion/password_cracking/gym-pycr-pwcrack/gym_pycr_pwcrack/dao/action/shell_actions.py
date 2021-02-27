@@ -165,3 +165,20 @@ class ShellActions:
                             "to upgrade the channel",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)
+
+    @staticmethod
+    def CVE_2010_0426_EXPLOIT(index: int) -> Action:
+        """
+        Launches the CVE-2010-0426 exploit
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
+        id = ActionId.CVE_2010_0426_EXPLOIT
+        cmd = ["/cve_2010_0426_exploit.sh {}"]
+        return Action(id=id, name="CVE-2010-0426 exploit", cmd=cmd,
+                      type=ActionType.EXPLOIT,
+                      descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.PRIVILEGE_ESCALATION_ROOT_ACCESS,
+                      alt_cmd=None)

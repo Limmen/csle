@@ -124,7 +124,6 @@ class TopologyGenerator:
     @staticmethod
     def create_topology(topology: Topology, cluster_config: ClusterConfig):
         for node in topology.node_configs:
-
             print("node:{}".format(node.ip))
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
             print("connected")

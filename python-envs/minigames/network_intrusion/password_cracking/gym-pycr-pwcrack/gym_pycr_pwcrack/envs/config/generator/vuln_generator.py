@@ -49,6 +49,8 @@ class VulnerabilityGenerator:
                     raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                 elif vuln_type == VulnType.SQL_INJECTION:
                     raise NotImplementedError("Generation of SQL Injection Type Not implemented Yet")
+                elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                    raise NotImplementedError("Generation of Privilege Escalation Type Not implemented Yet")
                 else:
                     raise ValueError("Unrecognized vulnerability type")
 
@@ -66,6 +68,8 @@ class VulnerabilityGenerator:
                         raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                     elif vuln_type == VulnType.SQL_INJECTION:
                         raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
+                    elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                        raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
 
@@ -82,6 +86,8 @@ class VulnerabilityGenerator:
                         raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
                     elif vuln_type == VulnType.SQL_INJECTION:
                         raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
+                    elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                        raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
                     else:
                         raise ValueError("Unrecognized vulnerability type")
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
@@ -103,7 +109,8 @@ class VulnerabilityGenerator:
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=vuln.node_ip)
-            if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION:
+            if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION or \
+                    vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
                 cmd = "ls /home"
                 o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
                 users_w_home = o.decode().split("\n")
@@ -126,6 +133,31 @@ class VulnerabilityGenerator:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(
                         vuln.username, vuln.pw, vuln.username)
                 o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
+                # Update sudoers file
+                if vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
+
+                    # Restore/Backup sudoers file
+                    cmd = "sudo cp /etc/sudoers.bak /etc/sudoers"
+                    print("cmd:{}".format(cmd))
+                    ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
+                    # Install sudoers vulnerability
+                    if vuln.cve.lower() == "2010-1427":
+                        cmd = "sudo su root -c \"echo '{} ALL=NOPASSWD: sudoedit /etc/fstab' >> /etc/sudoers\""
+                    elif vuln.cve.lower() == "2015-5602":
+                        cmd = "sudo su root -c \"echo '{} ALL=NOPASSWD: sudoedit /home/*/*/esc.txt' >> /etc/sudoers\""
+                    else:
+                        raise ValueError("CVE not recognized:{}".format(vuln.cve))
+                    cmd = cmd.format(vuln.username)
+                    print("cmd:{}".format(cmd))
+                    o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    print(o.decode())
+                    print(e.decode())
+                    cmd = "sudo chmod 440 /etc/sudoers"
+                    o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    print("cmd:{}".format(cmd))
+
             elif vuln.vuln_type == VulnType.RCE:
                 pass # Nothing to install
             else:
