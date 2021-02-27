@@ -28,10 +28,12 @@ def default_vulns():
         RceVulnerabilityConfig(node_ip="172.18.7.37", vuln_type=VulnType.RCE),
         RceVulnerabilityConfig(node_ip="172.18.7.82", vuln_type=VulnType.RCE),
         RceVulnerabilityConfig(node_ip="172.18.7.75", vuln_type=VulnType.RCE),
+        PwVulnerabilityConfig(node_ip="172.18.7.71", vuln_type=VulnType.WEAK_PW, username="alan", pw="alan"),
         PrivEscVulnerabilityConfig(node_ip="172.18.7.71", vuln_type=VulnType.PRIVILEGE_ESCALATION,
-                                   username="alan", pw="turing15215@§", root=False, cve="2010-1427"),
+                                   username="alan", pw="alan", root=False, cve="2010-1427"),
+        PwVulnerabilityConfig(node_ip="172.18.7.11", vuln_type=VulnType.WEAK_PW, username="donald", pw="donald"),
         PrivEscVulnerabilityConfig(node_ip="172.18.7.11", vuln_type=VulnType.PRIVILEGE_ESCALATION,
-                                   username="donald", pw="knuth1xz@2t§", root=False, cve="2015-5602")
+                                   username="donald", pw="donald", root=False, cve="2015-5602")
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

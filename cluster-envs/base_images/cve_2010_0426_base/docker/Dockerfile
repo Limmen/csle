@@ -11,22 +11,15 @@ RUN wget https://www.sudo.ws/dist/OLD/sudo-1.7.2.tar.gz -O /tmp/sudo.tar.gz && \
     make && make install
 RUN rm -rf /tmp/sudo*
 
-# create default user
-#RUN useradd -d /home/user \
-#    -s /bin/bash \
-#    -ms /bin/bash user
-
 # backup sudoers
 RUN cp /etc/sudoers /etc/sudoers.bak
 RUN chmod 440 /etc/sudoers
-
-# add sudoers entry
-#RUN echo 'user ALL=NOPASSWD: sudoedit /etc/fstab' >> /etc/sudoers
-#RUN chmod 440 /etc/sudoers
 
 # SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker/sshd_config /etc/ssh/sshd_config
 RUN service ssh start
 
-
+# Backdoor
+ADD docker/create_backdoor_cve_2010_0426.sh /create_backdoor_cve_2010_0426.sh
+RUN chmod 777 /create_backdoor_cve_2010_0426.sh

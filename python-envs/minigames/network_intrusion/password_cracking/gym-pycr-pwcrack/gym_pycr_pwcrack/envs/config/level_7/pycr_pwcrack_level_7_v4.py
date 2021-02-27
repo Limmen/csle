@@ -61,6 +61,8 @@ class PyCrPwCrackLevel7V4:
             actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_1427_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2016_10033_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
 
         # Subnet actions
         actions.append(
@@ -135,7 +137,8 @@ class PyCrPwCrackLevel7V4:
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT,
-                            ActionId.CVE_2015_1427_EXPLOIT, ActionId.CVE_2016_10033_EXPLOIT]
+                            ActionId.CVE_2015_1427_EXPLOIT, ActionId.CVE_2016_10033_EXPLOIT,
+                            ActionId.CVE_2010_0426_EXPLOIT, ActionId.CVE_2015_5602_EXPLOIT]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes, actions=actions,
@@ -168,7 +171,7 @@ class PyCrPwCrackLevel7V4:
         env_config.syn_stealth_scan_miss_p = 0.00
         env_config.os_scan_miss_p = 0.00
         env_config.vulners_miss_p = 0.00
-        env_config.num_flags = 9
+        env_config.num_flags = 11
         env_config.blacklist_ips = ["172.18.7.1"]
 
         env_config.shell_access_found_reward_mult = 1

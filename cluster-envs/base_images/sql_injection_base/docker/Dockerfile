@@ -164,6 +164,10 @@ RUN chmod 777 /cve_2015_1427_exploit.sh
 ADD docker/cve_2016_10033_exploit.sh /cve_2016_10033_exploit.sh
 RUN chmod 777 /cve_2016_10033_exploit.sh
 
+# CVE-2010-0426 Exploit
+ADD docker/cve_2010_0426_exploit.sh /cve_2010_0426_exploit.sh
+RUN chmod 777 /cve_2010_0426_exploit.sh
+
 # CVE-2015-5602 Exploit
 ADD docker/cve_2015_5602_exploit.sh /cve_2015_5602_exploit.sh
 RUN chmod 777 /cve_2015_5602_exploit.sh

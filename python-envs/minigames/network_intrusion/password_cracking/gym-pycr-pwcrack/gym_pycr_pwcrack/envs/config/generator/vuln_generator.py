@@ -139,7 +139,6 @@ class VulnerabilityGenerator:
 
                     # Restore/Backup sudoers file
                     cmd = "sudo cp /etc/sudoers.bak /etc/sudoers"
-                    print("cmd:{}".format(cmd))
                     ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
                     # Install sudoers vulnerability
@@ -150,13 +149,9 @@ class VulnerabilityGenerator:
                     else:
                         raise ValueError("CVE not recognized:{}".format(vuln.cve))
                     cmd = cmd.format(vuln.username)
-                    print("cmd:{}".format(cmd))
                     o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
-                    print(o.decode())
-                    print(e.decode())
                     cmd = "sudo chmod 440 /etc/sudoers"
                     o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
-                    print("cmd:{}".format(cmd))
 
             elif vuln.vuln_type == VulnType.RCE:
                 pass # Nothing to install

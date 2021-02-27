@@ -39,12 +39,12 @@ class PyCrPwCrackLevel7Base:
                 Credential(username="jessica", pw="water")
             ], reachable_nodes = set(["172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79",
                                       "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.31", "172.18.7.42",
-                                      "172.18.7.37", "172.18.7.82", "172.18.7.75"]),
+                                      "172.18.7.37", "172.18.7.82", "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       root_usernames=["admin"]),
                  Node(ip="172.18.7.2", ip_id=2, id=2, type=NodeType.SERVER, reachable_nodes =
                  set(["172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79", "172.18.7.191", "172.18.7.10",
                       "172.18.7.19", "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                      "172.18.7.75"]),
+                      "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
@@ -104,7 +104,7 @@ class PyCrPwCrackLevel7Base:
                  Node(ip="172.18.7.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
                       reachable_nodes = set(["172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79", "172.18.7.191",
                                          "172.18.7.10", "172.18.7.19", "172.18.7.31", "172.18.7.42", "172.18.7.37",
-                                             "172.18.7.82", "172.18.7.75"]),
+                                             "172.18.7.82", "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
@@ -145,7 +145,8 @@ class PyCrPwCrackLevel7Base:
                       root_usernames=["admin", "test"],
                       reachable_nodes = set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                              "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19",
-                                             "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75"]),
+                                             "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75",
+                                             "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=25, name="smtp", credentials=[]),
@@ -162,7 +163,7 @@ class PyCrPwCrackLevel7Base:
                  Node(ip="172.18.7.79", ip_id=79, id=5, type=NodeType.SERVER,
                       reachable_nodes = set(["172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79", "172.18.7.191",
                                          "172.18.7.10", "172.18.7.19", "172.18.7.31", "172.18.7.42", "172.18.7.37",
-                                             "172.18.7.82", "172.18.7.75"]),
+                                             "172.18.7.82", "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
@@ -212,7 +213,7 @@ class PyCrPwCrackLevel7Base:
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
                                            "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                                           "172.18.7.75"]),
+                                           "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=139, name="netbios-ssn", credentials=[]),
@@ -239,7 +240,7 @@ class PyCrPwCrackLevel7Base:
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
                                            "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                                           "172.18.7.75"]),
+                                           "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[])
@@ -266,7 +267,7 @@ class PyCrPwCrackLevel7Base:
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
                                            "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                                           "172.18.7.75"]),
+                                           "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[])
@@ -290,7 +291,7 @@ class PyCrPwCrackLevel7Base:
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
                                            "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                                           "172.18.7.75"]),
+                                           "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http", credentials=[]),
@@ -317,7 +318,7 @@ class PyCrPwCrackLevel7Base:
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
                                            "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82",
-                                           "172.18.7.75"]),
+                                           "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=9300, name="vrace", credentials=[]),
@@ -343,7 +344,8 @@ class PyCrPwCrackLevel7Base:
                       root_usernames=["larry"],
                       reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
                                            "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
-                                           "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75"]),
+                                           "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75",
+                                           "172.18.7.71", "172.18.7.11"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=80, name="http"),
@@ -358,11 +360,60 @@ class PyCrPwCrackLevel7Base:
                                         ],
                                         port=constants.CVE_2016_10033.PORT, protocol=TransportProtocol.TCP)
                       ]),
-                 Node(ip="172.18.7.191", ip_id=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
+                 Node(ip="172.18.7.71", ip_id=71, id=11, type=NodeType.SERVER,
+                      flags=[Flag(name="flag10", path="/root", id=10, requires_root=True, score=1)],
+                      level=3, os="linux",
+                      credentials=[
+                          Credential(username="robbins", pw="monro"),
+                      ],
+                      root_usernames=["robbins"],
+                      reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
+                                           "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
+                                           "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75",
+                                           "172.18.7.71", "172.18.7.11"]),
+                      services=[
+                          NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
+                          NetworkService(protocol=TransportProtocol.TCP, port=80, name="http"),
+                          NetworkService(protocol=TransportProtocol.TCP, port=10011, name="teamspeak", credentials=[]),
+                          NetworkService(protocol=TransportProtocol.TCP, port=10022, name="teamspeak", credentials=[]),
+                          NetworkService(protocol=TransportProtocol.TCP, port=30033, name="teamspeak", credentials=[])
+                      ],
+                      vulnerabilities=[
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
+                                        cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, cvss=6,
+                                        credentials=[
+                                            Credential(username="alan", pw="alan", service=None)
+                                        ], port=None, protocol=TransportProtocol.TCP)
+                      ]),
+                 Node(ip="172.18.7.11", ip_id=11, id=12, type=NodeType.SERVER,
+                      flags=[Flag(name="flag11", path="/root", id=11, requires_root=True, score=1)],
+                      level=3, os="linux",
+                      credentials=[
+                          Credential(username="rich", pw="sutton"),
+                      ],
+                      root_usernames=["rich"],
+                      reachable_nodes=set(["172.18.7.2", "172.18.7.3", "172.18.7.21",
+                                           "172.18.7.79", "172.18.7.191", "172.18.7.10", "172.18.7.19", "172.18.7.21",
+                                           "172.18.7.31", "172.18.7.42", "172.18.7.37", "172.18.7.82", "172.18.7.75",
+                                           "172.18.7.71", "172.18.7.11"]),
+                      services=[
+                          NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
+                          NetworkService(protocol=TransportProtocol.TCP, port=80, name="http"),
+                          NetworkService(protocol=TransportProtocol.TCP, port=9042, name="cassandra", credentials=[]),
+                          NetworkService(protocol=TransportProtocol.TCP, port=9160, name="cassandra", credentials=[])
+                      ],
+                      vulnerabilities=[
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
+                                        cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, cvss=6,
+                                        credentials=[
+                                            Credential(username="alan", pw="alan", service=None)
+                                        ], port=None, protocol=TransportProtocol.TCP)
+                      ]),
+                 Node(ip="172.18.7.191", ip_id=191, id=13, type=NodeType.HACKER, flags=[], level=1, services=[],
                       os="linux", vulnerabilities=[],
                       reachable_nodes =set(["172.18.7.2", "172.18.7.3", "172.18.7.21", "172.18.7.79", "172.18.7.191",
                                             "172.18.7.10", "172.18.7.19", "172.18.7.31", "172.18.7.42", "172.18.7.37",
-                                            "172.18.7.82", "172.18.7.75"]),
+                                            "172.18.7.82", "172.18.7.75", "172.18.7.71", "172.18.7.11"]),
                       credentials=[
                           Credential(username="agent", pw="agent")
                       ],
@@ -377,18 +428,20 @@ class PyCrPwCrackLevel7Base:
         :return: adjacency matrix
         """
         adj_matrix = [
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
         return adj_matrix
 
@@ -405,7 +458,7 @@ class PyCrPwCrackLevel7Base:
         """
         :return: num nodes
         """
-        return 11
+        return 13
 
     @staticmethod
     def hacker_ip() -> str:
@@ -522,6 +575,8 @@ class PyCrPwCrackLevel7Base:
             actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_1427_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2016_10033_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
@@ -581,7 +636,8 @@ class PyCrPwCrackLevel7Base:
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT, ActionId.CVE_2015_1427_EXPLOIT,
-                            ActionId.CVE_2016_10033_EXPLOIT]
+                            ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_EXPLOIT,
+                            ActionId.CVE_2015_5602_EXPLOIT]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,
@@ -595,7 +651,7 @@ class PyCrPwCrackLevel7Base:
         """
         :return: the render config
         """
-        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 10)
+        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 12)
         return render_config
 
     @staticmethod
@@ -619,7 +675,7 @@ class PyCrPwCrackLevel7Base:
         env_config.syn_stealth_scan_miss_p = 0.0
         env_config.os_scan_miss_p = 0.0
         env_config.vulners_miss_p = 0.0
-        env_config.num_flags = 9
+        env_config.num_flags = 11
         env_config.blacklist_ips = ["172.18.7.1"]
         env_config.ids_router = True
         return env_config
