@@ -5,7 +5,7 @@ USER root
 
 ADD docker/www /www
 
-RUN git clone https://github.com/opsxcq/exploit-CVE-2016-10033
+RUN git clone https://github.com/Limmen/exploit-CVE-2016-10033
 RUN cp -r exploit-CVE-2016-10033/src /www/vulnerable/
 
 RUN chmod 777 -R /www

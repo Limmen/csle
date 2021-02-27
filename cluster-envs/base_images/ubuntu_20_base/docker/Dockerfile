@@ -53,11 +53,11 @@ RUN update-rc.d pycr-firewall defaults
 RUN git clone https://github.com/Limmen/SecLists
 
 # NMAP vuln scan
-RUN git clone https://github.com/scipag/vulscan scipag_vulscan &&\
+RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
     ln -s `pwd`/scipag_vulscan /usr/share/nmap/scripts/vulscan
 
 # NMAP nmap-vulners
-RUN git clone https://github.com/vulnersCom/nmap-vulners &&\
+RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
