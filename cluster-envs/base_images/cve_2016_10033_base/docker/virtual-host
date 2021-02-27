@@ -1,0 +1,18 @@
+<VirtualHost *:80>
+ServerAdmin admin@hacked.com
+
+DocumentRoot /www
+<Directory /www>
+Options -Indexes
+AllowOverride all
+Require all granted
+</Directory>
+
+# Possible values include: debug, info, notice, warn, error, crit,
+# alert, emerg.
+LogLevel warn
+
+ErrorLog /dev/stderr
+TransferLog /dev/stdout
+
+</VirtualHost>

@@ -30,6 +30,9 @@ cve_2015_3306_base:
 cve_2015_1427_base:
 	cd cve_2015_1427_base/ && $(MAKE) build
 
+cve_2016_10033_base:
+	cd cve_2016_10033_base/ && $(MAKE) build
+
 build:
 	cd kali_base/ && $(MAKE) build
 	cd ubuntu_20_base/ && $(MAKE) build
@@ -41,6 +44,7 @@ build:
 	cd debian_jessie_base/ && $(MAKE) build
 	cd cve_2015_3306_base/ && $(MAKE) build
 	cd cve_2015_1427_base/ && $(MAKE) build
+	cd cve_2016_10033_base/ && $(MAKE) build
 
 rm-image:
 	cd kali_base/ && $(MAKE) rm-image
@@ -53,3 +57,4 @@ rm-image:
 	cd debian_jessie_base/ && $(MAKE) rm-image
 	cd cve_2015_3306_base/ && $(MAKE) rm-image
 	cd cve_2015_1427_base/ && $(MAKE) rm-image
+	cd cve_2016_10033_base/ && $(MAKE) rm-image

@@ -11,7 +11,8 @@ RUN echo "postfix postfix/mailname string pwcrack_minigame.pycr" | debconf-set-s
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget openjdk-7-jre-headless &&\
-         DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 gcc make &&\
+         DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 gcc make \
+         php5-sqlite sqlite3 git golang sendmail-bin &&\
          apt-get clean &&\
          rm -rf /var/lib/apt/lists/*
 
@@ -158,3 +159,6 @@ RUN chmod 777 /cve_2015_3306_exploit.py
 ADD docker/cve_2015_1427_exploit.sh /cve_2015_1427_exploit.sh
 RUN chmod 777 /cve_2015_1427_exploit.sh
 
+# CVE-2016-10033 Exploit
+ADD docker/cve_2016_10033_exploit.sh /cve_2016_10033_exploit.sh
+RUN chmod 777 /cve_2016_10033_exploit.sh

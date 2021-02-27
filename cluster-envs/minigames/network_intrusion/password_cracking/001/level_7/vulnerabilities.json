@@ -115,6 +115,13 @@
             "vuln_type": {
                 "py/id": 9
             }
+        },
+        {
+            "node_ip": "172.18.7.75",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/id": 9
+            }
         }
     ]
 }

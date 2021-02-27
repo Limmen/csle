@@ -13,9 +13,9 @@ RUN chmod 777 -R /var/www/html/
 
 RUN mv /etc/apache2/envvars /etc/apache2/envvars.backup
 ADD docker/apache_envvars /etc/apache2/envvars
-RUN chown -R pycr_admin:root /run &&\
-    chmod -R 777 /var &&\
-    chown -R pycr_admin:root /var
+RUN chown -R pycr_admin:root /run/apache2 &&\
+    chmod -R 777 /var/www &&\
+    chown -R pycr_admin:root /var/www
 
 ADD docker/main.sh /main.sh
 RUN chmod 777 /main.sh

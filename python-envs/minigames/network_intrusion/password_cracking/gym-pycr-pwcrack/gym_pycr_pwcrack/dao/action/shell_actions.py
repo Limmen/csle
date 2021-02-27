@@ -141,10 +141,27 @@ class ShellActions:
         :return: the action
         """
         id = ActionId.CVE_2015_1427_EXPLOIT
-        cmd = ["/cve_2015_1427_exploit.py {}:9200"]
+        cmd = ["/cve_2015_1427_exploit.sh {}:9200"]
         return Action(id=id, name="CVE-2015-1427 exploit", cmd=cmd,
                       type=ActionType.EXPLOIT,
                       descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and then sets up a SSH backdoor "
+                            "to upgrade the channel",
+                      cost=0.0, noise=0.0, index=index,
+                      ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)
+
+    @staticmethod
+    def CVE_2016_10033_EXPLOIT(index: int) -> Action:
+        """
+        Launches the CVE-2016-10033 exploit
+
+        :param index: index of the machine to apply the action to
+        :return: the action
+        """
+        id = ActionId.CVE_2016_10033_EXPLOIT
+        cmd = ["/cve_2016_10033_exploit.sh {}:80"]
+        return Action(id=id, name="CVE-2016-10033 exploit", cmd=cmd,
+                      type=ActionType.EXPLOIT,
+                      descr="Uses the CVE-2016-10033 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)

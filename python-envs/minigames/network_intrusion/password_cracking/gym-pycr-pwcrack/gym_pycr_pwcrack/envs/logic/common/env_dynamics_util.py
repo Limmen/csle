@@ -402,6 +402,8 @@ class EnvDynamicsUtil:
             n_m.cve_2015_3306_tried = o_m.cve_2015_3306_tried
         if not n_m.cve_2015_1427_tried:
             n_m.cve_2015_1427_tried = o_m.cve_2015_1427_tried
+        if not n_m.cve_2016_10033_tried:
+            n_m.cve_2016_10033_tried = o_m.cve_2016_10033_tried
         return n_m
 
     @staticmethod
@@ -639,6 +641,8 @@ class EnvDynamicsUtil:
             m_obs.cve_2015_3306_tried = True
         elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
             m_obs.cve_2015_1427_tried = True
+        elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
+            m_obs.cve_2016_10033_tried = True
         return m_obs
 
     @staticmethod

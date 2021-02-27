@@ -143,3 +143,7 @@ RUN chmod 777 /cve_2015_3306_exploit.py
 # CVE-2015-1427 Exploit
 ADD docker/cve_2015_1427_exploit.sh /cve_2015_1427_exploit.sh
 RUN chmod 777 /cve_2015_1427_exploit.sh
+
+# CVE-2016-10033 Exploit
+ADD docker/cve_2016_10033_exploit.sh /cve_2016_10033_exploit.sh
+RUN chmod 777 /cve_2016_10033_exploit.sh

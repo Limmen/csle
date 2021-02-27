@@ -127,6 +127,22 @@
             ],
             "ip": "172.18.7.82",
             "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag9.txt",
+                        "flag9",
+                        "/tmp/",
+                        9,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.7.75",
+            "py/object": "gym_pycr_pwcrack.dao.container_config.node_flags_config.NodeFlagsConfig"
         }
     ],
     "py/object": "gym_pycr_pwcrack.dao.container_config.flags_config.FlagsConfig"

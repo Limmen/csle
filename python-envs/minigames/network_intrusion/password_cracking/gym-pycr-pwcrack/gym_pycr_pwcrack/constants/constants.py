@@ -378,6 +378,12 @@ class CVE_2015_3306:
     BACKDOOR_PW="cve2015_3306_pwnedpw"
     PORT=21
 
+class CVE_2016_10033:
+    SERVICE_NAME = "http"
+    BACKDOOR_USER="ssh_backdoor_2016_10033_pwn"
+    BACKDOOR_PW="cve_2016_10033_pwnedpw"
+    PORT=80
+
 class CVE_2015_1427:
     SERVICE_NAME = "elasticsearch"
     BACKDOOR_USER="ssh_backdoor_cve_2015_1427_pwned"
@@ -470,6 +476,7 @@ class EXPLOIT_VULNERABILITES:
     DVWA_SQL_INJECTION = "dvwa_sql_injection"
     CVE_2015_3306 = "CVE-2015-3306"
     CVE_2015_1427 = "CVE-2015-1427"
+    CVE_2016_10033 = "CVE-2016-10033"
     CVE_VULNS = [SAMBACRY_EXPLOIT, SHELLSHOCK_EXPLOIT, CVE_2015_3306, CVE_2015_1427]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0

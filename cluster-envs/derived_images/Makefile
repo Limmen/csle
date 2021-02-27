@@ -19,6 +19,7 @@ build:
 	cd sql_injection1/ && $(MAKE) build
 	cd cve_2015_3306_1/ && $(MAKE) build
 	cd cve_2015_1427_1/ && $(MAKE) build
+	cd cve_2016_10033_1/ && $(MAKE) build
 
 rm-image:
 	cd ftp1/ && $(MAKE) rm-image
@@ -39,3 +40,4 @@ rm-image:
 	cd sql_injection1/ && $(MAKE) rm-image
 	cd cve_2015_3306_1/ && $(MAKE) rm-image
 	cd cve_2015_1427_1/ && $(MAKE) rm-image
+	cd cve_2016_10033_1/ && $(MAKE) rm-image

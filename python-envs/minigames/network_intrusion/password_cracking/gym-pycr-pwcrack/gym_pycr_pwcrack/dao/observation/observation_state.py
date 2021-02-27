@@ -90,6 +90,9 @@ class ObservationState:
             if a.id == ActionId.CVE_2015_1427_EXPLOIT:
                 return m.cve_2015_1427_tried
 
+            if a.id == ActionId.CVE_2016_10033_EXPLOIT:
+                return m.cve_2016_10033_tried
+
             return False
         else:
             exploit_tried = True

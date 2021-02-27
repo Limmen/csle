@@ -6,7 +6,8 @@ from gym_pycr_pwcrack.util.experiments_util import util
 
 def default_containers_config():
     containers = [
-        NodeContainerConfig(name="ftp1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7", ip="172.18.7.79"),
+        NodeContainerConfig(name="ftp1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
+                            ip="172.18.7.79"),
         NodeContainerConfig(name="hacker_kali1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
                             ip="172.18.7.191"),
         NodeContainerConfig(name="honeypot1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
@@ -26,7 +27,9 @@ def default_containers_config():
         NodeContainerConfig(name="cve_2015_3306_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1", level="7",
                             ip="172.18.7.37"),
         NodeContainerConfig(name="cve_2015_1427_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
-                            level="7", ip="172.18.7.82")
+                            level="7", ip="172.18.7.82"),
+        NodeContainerConfig(name="cve_2016_10033_1", network="pycr_net_7", minigame="pwcrack", version="0.0.1",
+                            level="7", ip="172.18.7.75")
     ]
     containers_cfg = ContainersConfig(containers=containers, network="pycr_net_7", agent_ip="172.18.7.191",
                                       router_ip="172.18.7.10", subnet_mask="172.18.7.0/24", subnet_prefix="172.18.7.",
