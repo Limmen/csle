@@ -404,6 +404,10 @@ class EnvDynamicsUtil:
             n_m.cve_2015_1427_tried = o_m.cve_2015_1427_tried
         if not n_m.cve_2016_10033_tried:
             n_m.cve_2016_10033_tried = o_m.cve_2016_10033_tried
+        if not n_m.cve_2010_0426_tried:
+            n_m.cve_2010_0426_tried = o_m.cve_2010_0426_tried
+        if not n_m.cve_2015_5602_tried:
+            n_m.cve_2015_5602_tried = o_m.cve_2015_5602_tried
         return n_m
 
     @staticmethod
@@ -604,31 +608,32 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def exploit_tried_flags(a: Action, m_obs: MachineObservationState):
-        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        # Subnet scans sometimes fail due to stagnation, https://github.com/nmap/nmap/issues/1321
+        if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ftp_brute_tried = True
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ssh_brute_tried = True
-        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.telnet_brute_tried = True
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.irc_brute_tried = True
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.postgres_brute_tried = True
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.smtp_brute_tried = True
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mysql_brute_tried = True
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials)\
                 or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mongo_brute_tried = True
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.cassandra_brute_tried = True
         elif a.id == ActionId.SAMBACRY_EXPLOIT:
@@ -643,6 +648,10 @@ class EnvDynamicsUtil:
             m_obs.cve_2015_1427_tried = True
         elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
             m_obs.cve_2016_10033_tried = True
+        elif a.id == ActionId.CVE_2010_0426_EXPLOIT:
+            m_obs.cve_2010_0426_tried = True
+        elif a.id == ActionId.CVE_2015_5602_EXPLOIT:
+            m_obs.cve_2015_5602_tried = True
         return m_obs
 
     @staticmethod

@@ -121,6 +121,10 @@ class ClusterMiddleware:
             return ExploitMiddleware.execute_cve_2015_1427_exploit(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
             return ExploitMiddleware.execute_cve_2016_10033_exploit(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.CVE_2010_0426_EXPLOIT:
+            return ExploitMiddleware.execute_cve_2010_0426_exploit(s=s, a=a, env_config=env_config)
+        elif a.id == ActionId.CVE_2015_5602_EXPLOIT:
+            return ExploitMiddleware.execute_cve_2015_5602_exploit(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

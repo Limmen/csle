@@ -35,13 +35,14 @@ from gym_pycr_pwcrack.dao.action_results.nmap_http_grep import NmapHttpGrep
 from gym_pycr_pwcrack.dao.action_results.nmap_vulscan import NmapVulscan
 from gym_pycr_pwcrack.dao.action_results.ids_alert import IdsAlert
 
+
 class ClusterUtil:
     """
     Class containing utility functions for the cluster-middleware
     """
 
     @staticmethod
-    def execute_ssh_cmd(cmd : str, conn) -> Tuple[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd: str, conn) -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the cluster over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning
@@ -67,13 +68,13 @@ class ClusterUtil:
             if session.exit_status_ready():
                 break
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig, ip : str = None,
-                             user: str = None, service : str = None, conn = None, dir: str = None,
-                             machine_ip :str = None) -> None:
+    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig, ip: str = None,
+                             user: str = None, service: str = None, conn=None, dir: str = None,
+                             machine_ip: str = None) -> None:
         """
         Caches the estimated cost of an action by writing it to a file
 
@@ -160,8 +161,8 @@ class ClusterUtil:
             remote_file.close()
 
     @staticmethod
-    def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str,files: List[str],
-                                     ip : str) \
+    def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str, files: List[str],
+                                     ip: str) \
             -> None:
         """
         Caches the result of a file system scan
@@ -174,7 +175,8 @@ class ClusterUtil:
         :return: None
         """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
-        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(action.index) + "_" + ip + "_" + service \
+        file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
+            action.index) + "_" + ip + "_" + service \
                     + "_" + user + ".txt"
         remote_file = sftp_client.file(file_name, mode="a")
         try:
@@ -187,7 +189,7 @@ class ClusterUtil:
 
     @staticmethod
     def write_user_command_cache(action: Action, env_config: EnvConfig, user: str, result: str,
-                                     ip: str) \
+                                 ip: str) \
             -> None:
         """
         Caches the result of a user command action
@@ -221,7 +223,7 @@ class ClusterUtil:
         env_config.cluster_config.agent_channel.send(a.cmd[0] + "\n")
 
     @staticmethod
-    def read_result_interactive(env_config : EnvConfig) -> str:
+    def read_result_interactive(env_config: EnvConfig) -> str:
         """
         Reads the result of an action executed in interactive mode
 
@@ -236,8 +238,8 @@ class ClusterUtil:
         return output_str
 
     @staticmethod
-    def check_nmap_action_cache(a: Action, env_config: EnvConfig, conn = None,  dir : str = None,
-                                machine_ip : str = None):
+    def check_nmap_action_cache(a: Action, env_config: EnvConfig, conn=None, dir: str = None,
+                                machine_ip: str = None):
         """
         Checks if an nmap action is cached or not
 
@@ -278,7 +280,7 @@ class ClusterUtil:
         return None
 
     @staticmethod
-    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service : str, user: str):
+    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service: str, user: str):
         """
         Checks if a filesystem action is cached or not
 
@@ -377,7 +379,7 @@ class ClusterUtil:
         return result
 
     @staticmethod
-    def check_nmap_action_cache_interactive(a : Action, env_config : EnvConfig):
+    def check_nmap_action_cache_interactive(a: Action, env_config: EnvConfig):
         """
         Checks if an NMAP action is cached or ot using an interactive shell
 
@@ -420,7 +422,7 @@ class ClusterUtil:
         return ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.cluster_config.agent_conn)
 
     @staticmethod
-    def parse_nmap_scan(file_name: str, env_config: EnvConfig, conn = None, dir: str = None) -> ET.Element:
+    def parse_nmap_scan(file_name: str, env_config: EnvConfig, conn=None, dir: str = None) -> ET.Element:
         """
         Parses an XML file containing the result of an nmap scan
 
@@ -461,7 +463,7 @@ class ClusterUtil:
         return xml_data
 
     @staticmethod
-    def parse_nmap_scan_interactive(file_name : str, env_config : EnvConfig) -> ET.Element:
+    def parse_nmap_scan_interactive(file_name: str, env_config: EnvConfig) -> ET.Element:
         """
         Parses an XML file with the result of an nmap scan using an interactive shell
 
@@ -480,7 +482,6 @@ class ClusterUtil:
         xml_str = "\n".join(lines)
         xml_data = fromstring(xml_str)
         return xml_data
-
 
     @staticmethod
     def parse_nmap_scan_xml(xml_data, ip, action: Action) -> NmapScanResult:
@@ -542,7 +543,6 @@ class ClusterUtil:
                                           vulnerabilities=vulnerabilities, credentials=credentials, trace=trace)
         return nmap_host_result
 
-
     @staticmethod
     def _parse_nmap_status_xml(xml_data) -> NmapPortStatus:
         """
@@ -574,7 +574,6 @@ class ClusterUtil:
             type = NmapAddrType.MAC
         return addr, type
 
-
     @staticmethod
     def _parse_nmap_hostnames_xml(xml_data) -> List[str]:
         """
@@ -590,7 +589,8 @@ class ClusterUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data, action: Action) -> Tuple[List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
+    def _parse_nmap_ports_xml(xml_data, action: Action) -> Tuple[
+        List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
@@ -621,7 +621,7 @@ class ClusterUtil:
                         service_fp = ClusterUtil._parse_nmap_service_fp_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
                         result, brute_vuln = ClusterUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
-                                                                service=service_name, action=action)
+                                                                            service=service_name, action=action)
                         if result is not None:
                             if isinstance(result, list) and len(result) > 0 and isinstance(result[0], NmapVuln):
                                 vulnerabilities = result
@@ -642,7 +642,6 @@ class ClusterUtil:
                                     service_version=service_version, service_fp=service_fp)
                     ports.append(port)
         return ports, vulnerabilities, credentials
-
 
     @staticmethod
     def _parse_nmap_service_name_xml(xml_data) -> str:
@@ -812,7 +811,8 @@ class ClusterUtil:
                     if child.attrib[constants.NMAP_XML.KEY] == constants.NMAP_XML.ACCOUNTS:
                         for c_2 in list(child.iter())[1:]:
                             if c_2.tag == constants.NMAP_XML.TABLE:
-                                cred = ClusterUtil._parse_nmap_table_cred(c_2, port=port, protocol=protocol, service=service)
+                                cred = ClusterUtil._parse_nmap_table_cred(c_2, port=port, protocol=protocol,
+                                                                          service=service)
                                 credentials.append(cred)
                         break
         vulnerability = None
@@ -852,9 +852,8 @@ class ClusterUtil:
                                            service=service)
         return credentials
 
-
     @staticmethod
-    def merge_nmap_scan_result_with_state(scan_result : NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
+    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
             -> Tuple[EnvState, float]:
         """
         Merges a NMAP scan result with an existing observation state
@@ -870,7 +869,7 @@ class ClusterUtil:
         new_m_obs = []
         for host in scan_result.hosts:
             m_obs = host.to_obs()
-            #m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
+            # m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
@@ -907,7 +906,7 @@ class ClusterUtil:
         return s_prime, reward
 
     @staticmethod
-    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, masscan : bool = False) \
+    def nmap_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
         """
         Helper function for executing a NMAP scan action on the cluster. Implements caching.
@@ -921,7 +920,6 @@ class ClusterUtil:
         cache_id = (a.id, a.index, a.ip, a.subnet)
         if a.subnet:
             cache_filename = str(a.id.value) + "_" + str(a.index) + ".xml"
-
 
         # Check in-memory cache
         if env_config.use_nmap_cache:
@@ -946,9 +944,9 @@ class ClusterUtil:
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd,
                                                                        conn=env_config.cluster_config.agent_conn)
             if env_config.ids_router:
-                #alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
+                # alerts = ClusterUtil.check_ids_alerts(env_config=env_config)
                 fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
-                #alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
+                # alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
                 if last_alert_ts is not None:
                     fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                 sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
@@ -973,7 +971,7 @@ class ClusterUtil:
                 break
             except Exception as e:
                 scan_result = NmapScanResult(hosts=[], ip=env_config.hacker_ip)
-                #print("read nmap scan exception:{}, action:{}".format(str(e), a.name))
+                # print("read nmap scan exception:{}, action:{}".format(str(e), a.name))
                 # ClusterUtil.delete_cache_file(file_name=cache_result, env_config=env_config)
                 # outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=a.nmap_cmd(),
                 #                                                            conn=env_config.cluster_config.agent_conn)
@@ -992,9 +990,8 @@ class ClusterUtil:
         return ClusterUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
                                                          partial_result=scan_result.copy(), masscan=masscan)
 
-
     @staticmethod
-    def login_service_helper(s: EnvState, a: Action, alive_check, service_name : str,
+    def login_service_helper(s: EnvState, a: Action, alive_check, service_name: str,
                              env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int,
                                                              int, float, bool]:
         """
@@ -1008,7 +1005,7 @@ class ClusterUtil:
         :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn, total_new_osvdb_found,
                    total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
-        """        
+        """
         total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
         total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -1137,7 +1134,7 @@ class ClusterUtil:
         proxy_connections = [ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
                                                         username=env_config.cluster_config.agent_username,
                                                         root=True, port=22, service=constants.SSH.SERVICE_NAME,
-                                                        proxy= None, ip=env_config.cluster_config.agent_ip)]
+                                                        proxy=None, ip=env_config.cluster_config.agent_ip)]
         for m in s.obs_state.machines:
             ssh_connections_sorted_by_root = sorted(
                 m.ssh_connections,
@@ -1180,28 +1177,29 @@ class ClusterUtil:
                     c_root = False
                     if service_name == constants.SSH.SERVICE_NAME:
                         c_root, cost = ClusterUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
-                                                                      target_connections=target_connections, i=i,
-                                                                      ports=ports, proxies=proxies)
+                                                                            target_connections=target_connections, i=i,
+                                                                            ports=ports, proxies=proxies)
                     elif service_name == constants.TELNET.SERVICE_NAME:
-                        c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine, users=users,
-                                                                         target_connections=target_connections,
-                                                                         i=i, tunnel_threads=tunnel_threads,
-                                                                         forward_ports=forward_ports, ports=ports,
+                        c_root, cost = ClusterUtil._telnet_finalize_connection(target_machine=target_machine,
+                                                                               users=users,
+                                                                               target_connections=target_connections,
+                                                                               i=i, tunnel_threads=tunnel_threads,
+                                                                               forward_ports=forward_ports, ports=ports,
                                                                                proxies=proxies)
                     elif service_name == constants.FTP.SERVICE_NAME:
                         c_root, cost = ClusterUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
-                                                                      target_connections=target_connections,
-                                                                      i=i, tunnel_threads=tunnel_threads,
-                                                                      forward_ports=forward_ports, ports=ports,
-                                                                      interactive_shells=i_shells,
+                                                                            target_connections=target_connections,
+                                                                            i=i, tunnel_threads=tunnel_threads,
+                                                                            forward_ports=forward_ports, ports=ports,
+                                                                            interactive_shells=i_shells,
                                                                             proxies=proxies)
                     total_cost += cost
                     if c_root:
                         root = True
             target_machine.root = root
             new_machines_obs, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-               total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
+            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+            total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
                 EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config,
                                                        action=a)
             s_prime.obs_state.machines = new_machines_obs
@@ -1210,13 +1208,12 @@ class ClusterUtil:
             target_machine.shell_access_credentials = []
 
         return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
+               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, True
-
 
     @staticmethod
     def _ssh_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials : List[Credential], proxy_connections: List[ConnectionObservationState],
+                              credentials: List[Credential], proxy_connections: List[ConnectionObservationState],
                               s: EnvState) \
             -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
         """
@@ -1251,7 +1248,8 @@ class ClusterUtil:
                         agent_addr = (proxy_conn.ip, cr.port)
                         target_addr = (a.ip, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
-                        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
+                        relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
+                                                                     agent_addr,
                                                                      timeout=3)
                         target_conn = paramiko.SSHClient()
                         target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -1275,13 +1273,13 @@ class ClusterUtil:
             if connected:
                 break
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return connected, users, target_connections, ports, total_time, non_failed_credentials, proxies
 
     @staticmethod
     def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
-                                 target_connections: List, i : int, ports: List[int],
-                                 proxies : List) -> Tuple[bool, float]:
+                                 target_connections: List, i: int, ports: List[int],
+                                 proxies: List) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
@@ -1306,12 +1304,12 @@ class ClusterUtil:
                                                     port=ports[i], proxy=proxies[i], ip=target_machine.ip)
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return root, total_time
 
     @staticmethod
     def _telnet_setup_connection(a: Action, env_config: EnvConfig,
-                                 credentials : List[Credential], proxy_connections : List,
+                                 credentials: List[Credential], proxy_connections: List,
                                  s: EnvState) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
         """
@@ -1383,13 +1381,14 @@ class ClusterUtil:
             if connected:
                 break
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return connected, users, target_connections, tunnel_threads, forward_ports, ports, \
                total_time, non_failed_credentials, proxies
 
     @staticmethod
-    def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
-                                    tunnel_threads: List, forward_ports : List[int], ports: List[int],
+    def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List,
+                                    i: int,
+                                    tunnel_threads: List, forward_ports: List[int], ports: List[int],
                                     proxies: List) \
             -> Tuple[bool, float]:
         """
@@ -1412,19 +1411,20 @@ class ClusterUtil:
         if not "may not run sudo".format(users[i]) in response.decode("utf-8"):
             root = True
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
-                                                    service=constants.TELNET.SERVICE_NAME, tunnel_thread=tunnel_threads[i],
+                                                    service=constants.TELNET.SERVICE_NAME,
+                                                    tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
                                                     port=ports[i], proxy=proxies[i], ip=target_machine.ip)
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return root, total_time
 
     @staticmethod
     def _ftp_setup_connection(a: Action, env_config: EnvConfig,
-                              credentials : List[Credential], proxy_connections : List,
+                              credentials: List[Credential], proxy_connections: List,
                               s: EnvState) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float,  List[Credential]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
         """
         Helper function for setting up a FTP connection
 
@@ -1501,12 +1501,13 @@ class ClusterUtil:
             if connected:
                 break
         end = time.time()
-        total_time = end-start
+        total_time = end - start
         return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time, \
                non_failed_credentials, proxies
 
     @staticmethod
-    def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List, i: int,
+    def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List,
+                                 i: int,
                                  tunnel_threads: List, forward_ports: List[int], ports: List[int],
                                  interactive_shells: List, proxies: List) -> Tuple[bool, float]:
         """
@@ -1528,7 +1529,7 @@ class ClusterUtil:
                                                     tunnel_thread=tunnel_threads[i],
                                                     tunnel_port=forward_ports[i],
                                                     port=ports[i],
-                                                    interactive_shell = interactive_shells[i], ip=target_machine.ip,
+                                                    interactive_shell=interactive_shells[i], ip=target_machine.ip,
                                                     proxy=proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
@@ -1544,14 +1545,14 @@ class ClusterUtil:
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
         :return: the updated machine observation with the found flags, cost, root
-        """        
+        """
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(
             machine.ssh_connections,
             key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
             reverse=True)
         root_scan = False
-        total_alerts = (0,0)
+        total_alerts = (0, 0)
         for c in ssh_connections_sorted_by_root:
             cache_file = \
                 ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
@@ -1620,7 +1621,7 @@ class ClusterUtil:
                                                                                  user=c.username,
                                                                                  service=constants.SSH.SERVICE_NAME):
                 alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                             service=constants.SSH.SERVICE_NAME)
+                                                                    service=constants.SSH.SERVICE_NAME)
                 total_alerts = alerts
 
             if c.root:
@@ -1630,7 +1631,7 @@ class ClusterUtil:
 
     @staticmethod
     def _find_flag_using_telnet(machine: MachineObservationState, env_config: EnvConfig, a: Action,
-                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+                                new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
         """
         Utility function for using existing Telnet connections to a specific machine to search the file system for flags
 
@@ -1721,7 +1722,7 @@ class ClusterUtil:
 
     @staticmethod
     def _find_flag_using_ftp(machine: MachineObservationState, env_config: EnvConfig, a: Action,
-                                new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
         """
         Utility function for using existing FTP connections to a specific machine to search the file system for flags
 
@@ -1806,13 +1807,13 @@ class ClusterUtil:
                     output_str = env_config.shell_escape.sub("", output_str)
                     output_list = output_str.split('\r\n')
                     output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
-                    flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x and x!= "", output_list))
+                    flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x and x != "", output_list))
                     ff = False
                     # Check for flags
                     for fp in flag_paths:
                         fp = fp.replace(".txt", "")
                         if (machine.ip, fp) in env_config.flag_lookup:
-                            ff=True
+                            ff = True
                     if not ff:
                         continue
                     else:
@@ -1866,7 +1867,7 @@ class ClusterUtil:
             cache_value = env_config.nikto_scan_cache.get(cache_id)
             if cache_value is not None:
                 s_prime, reward = ClusterUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
-                                                                                env_config=env_config)
+                                                                                 env_config=env_config)
 
                 return s_prime, reward, False
 
@@ -1908,7 +1909,7 @@ class ClusterUtil:
         if env_config.use_nikto_cache:
             env_config.nikto_scan_cache.add(cache_id, scan_result)
         s_prime, reward = ClusterUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
-                                                                        env_config=env_config)
+                                                                         env_config=env_config)
         return s_prime, reward, False
 
     @staticmethod
@@ -1995,13 +1996,13 @@ class ClusterUtil:
         """
         target_ip = ""
         targetport = ""
-        sitename=""
+        sitename = ""
         vulnerabilities = []
 
         if constants.NIKTO_XML.TARGETPORT in xml_data.keys():
             targetport = xml_data.attrib[constants.NIKTO_XML.TARGETPORT]
         if constants.NIKTO_XML.TARGETIP in xml_data.keys():
-            target_ip = xml_data.attrib[constants. NIKTO_XML.TARGETIP]
+            target_ip = xml_data.attrib[constants.NIKTO_XML.TARGETIP]
         if constants.NIKTO_XML.SITENAME in xml_data.keys():
             sitename = xml_data.attrib[constants.NIKTO_XML.SITENAME]
 
@@ -2049,7 +2050,6 @@ class ClusterUtil:
                                uri=uri, description=description)
 
         return nikto_vuln
-
 
     @staticmethod
     def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult], action: Action) -> List[NmapHostResult]:
@@ -2118,7 +2118,6 @@ class ClusterUtil:
         nmap_http_enum = NmapHttpEnum(output=output)
         return nmap_http_enum
 
-
     @staticmethod
     def _parse_nmap_http_grep_xml(xml_data) -> NmapHttpGrep:
         """
@@ -2175,7 +2174,8 @@ class ClusterUtil:
         :param result: the result to check
         :return: True if sucessful otherwise False
         """
-        return ("will be installed" in result or "already installed" in result or "already the newest version" in result)
+        return (
+                    "will be installed" in result or "already installed" in result or "already the newest version" in result)
 
     @staticmethod
     def install_tools_helper(s: EnvState, a: Action, env_config: EnvConfig) -> bool:
@@ -2189,7 +2189,7 @@ class ClusterUtil:
         """
         new_machines_obs = []
         total_cost = 0
-        total_alerts = (0,0)
+        total_alerts = (0, 0)
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             installed = False
@@ -2253,7 +2253,7 @@ class ClusterUtil:
                             env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
                                                                        service=constants.SSH.SERVICE_NAME,
                                                                        alert=ssh_alerts)
-                            total_alerts = (total_alerts[0] + ssh_alerts[0], total_alerts[1]+ ssh_alerts[1])
+                            total_alerts = (total_alerts[0] + ssh_alerts[0], total_alerts[1] + ssh_alerts[1])
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a,
                                                          env_config=env_config, ip=machine.ip,
                                                          user=c.username)
@@ -2392,12 +2392,12 @@ class ClusterUtil:
         return s, reward, False
 
     @staticmethod
-    def merge_nmap_scan_results(scan_result_1: NmapScanResult, scan_result_2: NmapScanResult)-> NmapScanResult:
+    def merge_nmap_scan_results(scan_result_1: NmapScanResult, scan_result_2: NmapScanResult) -> NmapScanResult:
         new_hosts = []
 
         for h in scan_result_2.hosts:
             new_host = True
-            for h2 in scan_result_1. hosts:
+            for h2 in scan_result_1.hosts:
                 if h.ip_addr == h2.ip_addr:
                     new_host = False
             if new_host:
@@ -2533,9 +2533,11 @@ class ClusterUtil:
                             num_alerts = len(fast_logs)
                             ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                               action=a, env_config=env_config,
-                                                              conn=c.conn, dir=cwd, machine_ip = machine.ip)
-                            env_config.action_alerts.pivot_scan_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                        target_ip=machine.ip, alert=(sum_priority_alerts, num_alerts))
+                                                              conn=c.conn, dir=cwd, machine_ip=machine.ip)
+                            env_config.action_alerts.pivot_scan_add_alert(action_id=a.id, ip=machine.ip,
+                                                                          user=c.username,
+                                                                          target_ip=machine.ip,
+                                                                          alert=(sum_priority_alerts, num_alerts))
                         ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
                                                          conn=c.conn, dir=cwd, machine_ip=machine.ip)
                         env_config.action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
@@ -2600,7 +2602,7 @@ class ClusterUtil:
         :param telnet: whether the connection is a telnet connection
         :return: True if server is running, else false
         """
-        cmd= "service ssh status"
+        cmd = "service ssh status"
         if not telnet:
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=conn)
             return "is running" in outdata.decode() or "is running" in errdata.decode()
@@ -2611,7 +2613,7 @@ class ClusterUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet : bool = False) \
+    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet: bool = False) \
             -> List:
         """
         List all users on a machine
@@ -2692,7 +2694,8 @@ class ClusterUtil:
                 for user in users:
                     remote_file.write(user + "\n")
             except Exception as e:
-                print("Error writing list of users cache: {}, file:{}, ip:{}".format(str(e), cwd + cache_file_name, c.ip))
+                print(
+                    "Error writing list of users cache: {}, file:{}, ip:{}".format(str(e), cwd + cache_file_name, c.ip))
             finally:
                 if remote_file is not None:
                     remote_file.close()
@@ -2712,7 +2715,7 @@ class ClusterUtil:
         pw = constants.SSH_BACKDOOR.DEFAULT_PW
         new_machines_obs = []
         total_cost = 0
-        total_alerts = (0,0)
+        total_alerts = (0, 0)
         for machine in s.obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             backdoor_created = False
@@ -2980,7 +2983,7 @@ class ClusterUtil:
             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
             num_alerts = len(fast_logs)
             env_config.action_alerts.add_alert(action_id=a.id, ip=env_config.cluster_config.agent_ip,
-                                                       alert=(sum_priority_alerts, num_alerts))
+                                               alert=(sum_priority_alerts, num_alerts))
 
         a.ip = ""
 
@@ -3075,7 +3078,6 @@ class ClusterUtil:
             fast_logs.append((priority, ts))
         return fast_logs
 
-
     @staticmethod
     def sambacry_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
@@ -3112,7 +3114,7 @@ class ClusterUtil:
                 if cache_file is not None:
                     cache_hit = True
                     cache_res = ClusterUtil.parse_user_command_file(file_name=cache_file, env_config=env_config,
-                                                        conn=env_config.cluster_config.agent_conn)
+                                                                    conn=env_config.cluster_config.agent_conn)
                     # Use measured cost
                     if env_config.action_costs.find_exists(action_id=a.id, ip=a.ip,
                                                            user=env_config.cluster_config.agent_username,
@@ -3344,15 +3346,15 @@ class ClusterUtil:
 
             # Parse Result
             proxy_conn = ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
-                                                        username=env_config.cluster_config.agent_username,
-                                                        root=True, port=22, service=constants.SSH.SERVICE_NAME,
-                                                        proxy= None, ip=env_config.cluster_config.agent_ip)
+                                                    username=env_config.cluster_config.agent_username,
+                                                    root=True, port=22, service=constants.SSH.SERVICE_NAME,
+                                                    proxy=None, ip=env_config.cluster_config.agent_ip)
             if ClusterUtil.check_if_rce_exploit_succeeded(user=constants.SHELLSHOCK.BACKDOOR_USER,
-                                                         pw=constants.SHELLSHOCK.BACKDOOR_PW,
-                                                         source_ip=env_config.cluster_config.agent_ip,
-                                                         port=constants.SSH.DEFAULT_PORT,
-                                                         target_ip=a.ip,
-                                                         proxy_conn=proxy_conn):
+                                                          pw=constants.SHELLSHOCK.BACKDOOR_PW,
+                                                          source_ip=env_config.cluster_config.agent_ip,
+                                                          port=constants.SSH.DEFAULT_PORT,
+                                                          target_ip=a.ip,
+                                                          proxy_conn=proxy_conn):
                 # Exploit successful
                 credential = Credential(username=constants.SHELLSHOCK.BACKDOOR_USER,
                                         pw=constants.SHELLSHOCK.BACKDOOR_PW,
@@ -3434,7 +3436,8 @@ class ClusterUtil:
         return s, reward, False
 
     @staticmethod
-    def check_if_rce_exploit_succeeded(user: str, pw: str, source_ip: str, port: int, target_ip: str, proxy_conn) -> bool:
+    def check_if_rce_exploit_succeeded(user: str, pw: str, source_ip: str, port: int, target_ip: str,
+                                       proxy_conn) -> bool:
         agent_addr = (source_ip, port)
         target_addr = (target_ip, port)
         agent_transport = proxy_conn.conn.get_transport()
@@ -3547,7 +3550,11 @@ class ClusterUtil:
             try:
                 exploit_result = ClusterUtil.read_dvwa_sql_injection_result(conn=env_config.cluster_config.agent_conn,
                                                                             env_config=env_config)
-                pw = exploit_result[exploit_result.find("pablo:")+6 : exploit_result.find("pablo:")+6 + exploit_result[exploit_result.find("pablo:")+6:].find("<")]
+                pw = exploit_result[
+                     exploit_result.find("pablo:") + 6: exploit_result.find("pablo:") + 6 + exploit_result[
+                                                                                            exploit_result.find(
+                                                                                                "pablo:") + 6:].find(
+                         "<")]
                 if "0d107" in pw:
                     exploit_successful = True
                 else:
@@ -3639,7 +3646,6 @@ class ClusterUtil:
                                                  alerts=total_alerts, action=a)
         return s, reward, False
 
-
     @staticmethod
     def read_dvwa_sql_injection_result(conn, env_config: EnvConfig) -> str:
         """
@@ -3705,7 +3711,7 @@ class ClusterUtil:
                 if cache_file is not None:
                     cache_hit = True
                     cache_res = ClusterUtil.parse_user_command_file(file_name=cache_file, env_config=env_config,
-                                                        conn=env_config.cluster_config.agent_conn)
+                                                                    conn=env_config.cluster_config.agent_conn)
                     # Use measured cost
                     if env_config.action_costs.find_exists(action_id=a.id, ip=a.ip,
                                                            user=env_config.cluster_config.agent_username,
@@ -3771,7 +3777,8 @@ class ClusterUtil:
                                                           target_ip=a.ip,
                                                           proxy_conn=proxy_conn):
                 # Exploit successful
-                credential = Credential(username=constants.CVE_2015_3306.BACKDOOR_USER, pw=constants.CVE_2015_3306.BACKDOOR_PW,
+                credential = Credential(username=constants.CVE_2015_3306.BACKDOOR_USER,
+                                        pw=constants.CVE_2015_3306.BACKDOOR_PW,
                                         port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
                                         service=constants.SSH.SERVICE_NAME)
                 vuln = Vulnerability(
@@ -4212,13 +4219,151 @@ class ClusterUtil:
         return s, reward, False
 
     @staticmethod
-    def cve_2010_0426_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def cve_2010_0426_helper(s: EnvState, a: Action, env_config: EnvConfig, machine: MachineObservationState,
+                             result: MachineObservationState) \
+            -> Tuple[MachineObservationState, float, Tuple[float, float], bool, Credential, str]:
         """
         Helper for executing the CVE-2010-0426 privelege_escalation action
 
         :param s: the current state
         :param a: the CVE-2010-0425 privilege escalation action
         :param env_config: the environment config
+        :return: new_machine_obs, cost, alerts, successful, root_credential, service_name
+        """
+        agent_proxy_conn = ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
+                                                username=env_config.cluster_config.agent_username,
+                                                root=True, port=22,
+                                                service=constants.SSH.SERVICE_NAME,
+                                                proxy=None, ip=env_config.cluster_config.agent_ip)
+        cost = 0
+        alerts = (0,0)
+        if env_config.ids_router:
+            last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+        e_succ = False
+        root_credential = None
+        service = None
+        sleep_time = 0.5
+        # Start with SSH connections
+        for ssh_conn in machine.ssh_connections:
+
+            # Setup interactive shell
+            channel = ssh_conn.conn.invoke_shell()
+
+            # clear output
+            if channel.recv_ready():
+                output = channel.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+
+            # Exploit
+            cmd = a.cmd[0].format(machine.ip)
+            print("cmd:{}".format(cmd))
+            e_succ = True
+            try:
+                channel.send(cmd)
+                time.sleep(sleep_time)
+                cmd = a.cmd[1]
+                channel.send(cmd)
+                e_succ = ClusterUtil.check_if_rce_exploit_succeeded(
+                    user=constants.CVE_2010_0426.BACKDOOR_USER, pw=constants.CVE_2010_0426.BACKDOOR_PW,
+                    source_ip=env_config.cluster_config.agent_ip, port=constants.SSH.DEFAULT_PORT,
+                    target_ip=a.ip, proxy_conn=agent_proxy_conn)
+            except Exception as e:
+                e_succ = False
+            if e_succ:
+                root_credential = Credential(username=constants.CVE_2010_0426.BACKDOOR_USER,
+                                             pw=constants.CVE_2010_0426.BACKDOOR_PW, port=constants.SSH.DEFAULT_PORT,
+                                             protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME)
+                root_connection = ClusterUtil.setup_custom_connection(
+                    user=constants.CVE_2010_0426.BACKDOOR_USER, pw=constants.CVE_2010_0426.BACKDOOR_PW,
+                    source_ip = env_config.cluster_config.agent_ip, port=constants.SSH.DEFAULT_PORT,
+                    target_ip = machine.ip, proxy_conn=agent_proxy_conn, root=True)
+                vuln = Vulnerability(
+                    name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
+                    cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, cvss=6,
+                    credentials=[root_credential], port=constants.SSH.DEFAULT_PORT,
+                    protocol=TransportProtocol.TCP)
+                result.cve_vulns.append(vuln)
+                result.cve_2010_0426_tried = True
+                result.shell_access_credentials.append(root_credential)
+                result.backdoor_credentials.append(root_credential)
+                result.backdoor_tried = True
+                result.backdoor_installed = True
+                result.shell_access = True
+                result.logged_in = True
+                result.ssh_connections.append(root_connection)
+                service = constants.SSH.SERVICE_NAME
+                break
+
+                # Measure  cost and alerts
+                cost += float(sleep_time*2)
+                if env_config.ids_router:
+                    fast_logs = ClusterUtil.check_ids_fast_log(env_config=env_config)
+                    if last_alert_ts is not None:
+                        fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
+                    sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+                    num_alerts = len(fast_logs)
+                    alerts = (num_alerts, sum_priority_alerts)
+                    ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
+                                                      action=a, env_config=env_config,
+                                                      user=env_config.cluster_config.agent_username,
+                                                      service=constants.CVE_2010_0426.SERVICE_NAME)
+                    env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=a.ip,
+                                                               alert=(sum_priority_alerts, num_alerts),
+                                                               user=env_config.cluster_config.agent_username,
+                                                               service=constants.CVE_2010_0426.SERVICE_NAME)
+
+                ClusterUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
+                                                 user=env_config.cluster_config.agent_username,
+                                                 service=constants.CVE_2010_0426.SERVICE_NAME)
+                env_config.action_costs.find_add_cost(action_id=a.id, ip=a.ip, cost=cost,
+                                                      user=env_config.cluster_config.agent_username,
+                                                      service=constants.CVE_2010_0426.SERVICE_NAME)
+        result.cve_2010_0426_tried = True
+        return result, cost, alerts, e_succ, root_credential, service
+
+
+    @staticmethod
+    def cve_2015_5602_helper(s: EnvState, a: Action, env_config: EnvConfig, machine: MachineObservationState) \
+            -> Tuple[EnvState, int, bool]:
+        """
+        Helper for executing the CVE-2015-5602 privelege_escalation action
+
+        :param s: the current state
+        :param a: the CVE-2015-5602 privilege escalation action
+        :param env_config: the environment config
         :return: s_prime, reward, done
         """
         pass
+
+    @staticmethod
+    def setup_custom_connection(user: str, pw: str, source_ip: str, port: int, target_ip: str, proxy_conn,
+                                root: bool) \
+            -> ConnectionObservationState:
+        """
+        Utility function for setting up a custom SSH connection given credentials and a proxy connection
+        :param user: the username of the new connection
+        :param pw: the pw of the new connection
+        :param source_ip: the ip of the proxy
+        :param port: the port of the new connection
+        :param target_ip: the ip to connect to
+        :param proxy_conn: the proxy connection
+        :param root: whether it is a root connection or not
+        :return: the new connection
+        """
+        agent_addr = (source_ip, port)
+        target_addr = (target_ip, port)
+        agent_transport = proxy_conn.conn.get_transport()
+        try:
+            relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr, agent_addr,
+                                                         timeout=3)
+            target_conn = paramiko.SSHClient()
+            target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel,
+                                timeout=3)
+            connection_dto = ConnectionObservationState(conn=target_conn, username=user, root=root,
+                                                        service=constants.SSH.SERVICE_NAME,
+                                                        port=constants.SSH.DEFAULT_PORT,
+                                                        proxy=proxy_conn, ip=target_ip)
+            return connection_dto
+        except Exception as e:
+            print("Custom connection setup failed:{}".format(str(e)))
+            return None

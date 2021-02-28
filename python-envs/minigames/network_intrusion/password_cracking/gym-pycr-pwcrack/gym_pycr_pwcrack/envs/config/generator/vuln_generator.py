@@ -23,7 +23,8 @@ class VulnerabilityGenerator:
     @staticmethod
     def shortlist():
         names_shortlist = ["admin", "test", "guest", "info", "adm", "mysql", "user", "administrator",
-                           "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser"]
+                           "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser",
+                           "donald", "alan"]
         return names_shortlist
 
 
