@@ -362,8 +362,13 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action.type == ActionType.RECON and action.subnet:
             return True
 
+        # Recon on set of all found machines is always possible if there exists such machiens
+        if action.type == ActionType.RECON and action.index == -1 and len(env_state.obs_state.machines) > 0:
+            return True
+
         machine_discovered = False
         target_machine = None
+        target_machines = []
         logged_in = False
         unscanned_filesystems = False
         untried_credentials = False
@@ -373,6 +378,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         uninstalled_backdoor = False
 
         for m in env_state.obs_state.machines:
+            if m_index == -1:
+                target_machines.append(m)
+                machine_discovered = True
+
             if m.logged_in:
                 logged_in = True
                 if not m.filesystem_searched:
@@ -400,7 +409,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
             if action.subnet and target_machine is None:
                 return True
-            exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)
+            if m_index == -1:
+                exploit_tried = all(list(map(lambda x: env_state.obs_state.exploit_tried(a=action, m=x))))
+            else:
+                exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)
             if exploit_tried:
                 return False
             return True
