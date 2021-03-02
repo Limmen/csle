@@ -578,7 +578,7 @@ class PyCrPwCrackLevel7Base:
             actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
 
-        # Subnet actions
+        # Subnet Nmap actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(NMAPActions.PING_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(NMAPActions.UDP_PORT_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
@@ -597,41 +597,70 @@ class PyCrPwCrackLevel7Base:
         actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(num_nodes+1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.FIREWALK(num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.HTTP_ENUM(num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.HTTP_GREP(num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.VULSCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        actions.append(NMAPActions.FINGER(num_nodes + 1, ip=subnet_mask, subnet=True))
+
+        # Nmap actions ALL
+        actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.PING_SCAN(index=-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.UDP_PORT_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.TCP_CON_NON_STEALTH_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.TCP_FIN_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.TCP_NULL_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.TCP_XMAS_TREE_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.OS_DETECTION_SCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.NMAP_VULNERS(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.SSH_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.FTP_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.IRC_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.FIREWALK(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.HTTP_ENUM(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.HTTP_GREP(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.VULSCAN(-1, ip=subnet_mask, subnet=False))
+        actions.append(NMAPActions.FINGER(-1, ip=subnet_mask, subnet=False))
+
+        # Masscan subnet
+        actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=num_nodes + 1, subnet=True,
+                                                        host_ip=hacker_ip, ip=subnet_mask))
+
+        # Shell actions All
         actions.append(ShellActions.FIND_FLAG(index=num_nodes+1))
         actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes+1))
-        actions.append(MasscanActions.MASSCAN_HOST_SCAN(index=num_nodes+1, subnet=True,
-                                                        host_ip=hacker_ip, ip=subnet_mask))
-        actions.append(NMAPActions.FIREWALK(num_nodes+1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.HTTP_ENUM(num_nodes+1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.HTTP_GREP(num_nodes+1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.VULSCAN(num_nodes+1, ip=subnet_mask, subnet=True))
-        actions.append(NMAPActions.FINGER(num_nodes+1, ip=subnet_mask, subnet=True))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
-            ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            ActionId.PING_SCAN_HOST, ActionId.PING_SCAN_SUBNET,
-            ActionId.UDP_PORT_SCAN_HOST, ActionId.UDP_PORT_SCAN_SUBNET,
-            ActionId.TCP_CON_NON_STEALTH_SCAN_HOST, ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET,
-            ActionId.TCP_FIN_SCAN_HOST, ActionId.TCP_FIN_SCAN_SUBNET,
-            ActionId.TCP_NULL_SCAN_HOST, ActionId.TCP_NULL_SCAN_SUBNET,
-            ActionId.TCP_XMAS_TREE_SCAN_HOST, ActionId.TCP_XMAS_TREE_SCAN_SUBNET,
-            ActionId.OS_DETECTION_SCAN_HOST, ActionId.OS_DETECTION_SCAN_SUBNET,
-            ActionId.NMAP_VULNERS_HOST, ActionId.NMAP_VULNERS_SUBNET,
-            ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST, ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST, ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET,
-            ActionId.FIREWALK_HOST, ActionId.FIREWALK_SUBNET,
-            ActionId.HTTP_ENUM_HOST, ActionId.HTTP_ENUM_SUBNET,
-            ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET,
-            ActionId.VULSCAN_HOST, ActionId.VULSCAN_SUBNET,
-            ActionId.FINGER_HOST, ActionId.FINGER_SUBNET
+            ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.TCP_SYN_STEALTH_SCAN_SUBNET, ActionId.TCP_SYN_STEALTH_SCAN_ALL,
+            ActionId.PING_SCAN_HOST, ActionId.PING_SCAN_SUBNET, ActionId.PING_SCAN_ALL,
+            ActionId.UDP_PORT_SCAN_HOST, ActionId.UDP_PORT_SCAN_SUBNET, ActionId.UDP_PORT_SCAN_ALL,
+            ActionId.TCP_CON_NON_STEALTH_SCAN_HOST, ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET, ActionId.TCP_CON_NON_STEALTH_SCAN_ALL,
+            ActionId.TCP_FIN_SCAN_HOST, ActionId.TCP_FIN_SCAN_SUBNET, ActionId.TCP_FIN_SCAN_ALL,
+            ActionId.TCP_NULL_SCAN_HOST, ActionId.TCP_NULL_SCAN_SUBNET, ActionId.TCP_NULL_SCAN_ALL,
+            ActionId.TCP_XMAS_TREE_SCAN_HOST, ActionId.TCP_XMAS_TREE_SCAN_SUBNET, ActionId.TCP_XMAS_TREE_SCAN_ALL,
+            ActionId.OS_DETECTION_SCAN_HOST, ActionId.OS_DETECTION_SCAN_SUBNET, ActionId.OS_DETECTION_SCAN_ALL,
+            ActionId.NMAP_VULNERS_HOST, ActionId.NMAP_VULNERS_SUBNET, ActionId.NMAP_VULNERS_ALL,
+            ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST, ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST, ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST, ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST, ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET, ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL,
+            ActionId.FIREWALK_HOST, ActionId.FIREWALK_SUBNET, ActionId.FIREWALK_ALL,
+            ActionId.HTTP_ENUM_HOST, ActionId.HTTP_ENUM_SUBNET, ActionId.HTTP_ENUM_ALL,
+            ActionId.HTTP_GREP_HOST, ActionId.HTTP_GREP_SUBNET, ActionId.HTTP_GREP_ALL,
+            ActionId.VULSCAN_HOST, ActionId.VULSCAN_SUBNET, ActionId.VULSCAN_ALL,
+            ActionId.FINGER_HOST, ActionId.FINGER_SUBNET, ActionId.FINGER_ALL
         ]
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,

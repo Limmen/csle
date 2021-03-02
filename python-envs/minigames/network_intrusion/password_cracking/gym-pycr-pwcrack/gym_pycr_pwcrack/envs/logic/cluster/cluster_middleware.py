@@ -46,37 +46,45 @@ class ClusterMiddleware:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == ActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_SYN_STEALTH_SCAN_HOST:
+        if a.id == ActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_SYN_STEALTH_SCAN_HOST \
+                or a.id == ActionId.TCP_SYN_STEALTH_SCAN_ALL:
             return ReconMiddleware.execute_tcp_syn_stealth_scan(s=s,a=a,env_config=env_config)
-        elif a.id == ActionId.PING_SCAN_SUBNET or a.id == ActionId.PING_SCAN_HOST:
+        elif a.id == ActionId.PING_SCAN_SUBNET or a.id == ActionId.PING_SCAN_HOST or a.id == ActionId.PING_SCAN_ALL:
             return ReconMiddleware.execute_ping_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.UDP_PORT_SCAN_SUBNET or a.id == ActionId.UDP_PORT_SCAN_HOST:
+        elif a.id == ActionId.UDP_PORT_SCAN_SUBNET or a.id == ActionId.UDP_PORT_SCAN_HOST \
+                or a.id == ActionId.UDP_PORT_SCAN_ALL:
             return ReconMiddleware.execute_udp_port_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_HOST:
+        elif a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_HOST \
+                or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_ALL:
             return ReconMiddleware.execute_tcp_con_stealth_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_FIN_SCAN_SUBNET or a.id == ActionId.TCP_FIN_SCAN_HOST:
+        elif a.id == ActionId.TCP_FIN_SCAN_SUBNET or a.id == ActionId.TCP_FIN_SCAN_HOST \
+                or a.id == ActionId.TCP_FIN_SCAN_ALL:
             return ReconMiddleware.execute_tcp_fin_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_NULL_SCAN_SUBNET or a.id == ActionId.TCP_NULL_SCAN_HOST:
+        elif a.id == ActionId.TCP_NULL_SCAN_SUBNET or a.id == ActionId.TCP_NULL_SCAN_HOST \
+                or a.id == ActionId.TCP_NULL_SCAN_ALL:
             return ReconMiddleware.execute_tcp_null_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == ActionId.TCP_XMAS_TREE_SCAN_SUBNET:
+        elif a.id == ActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == ActionId.TCP_XMAS_TREE_SCAN_SUBNET \
+                or a.id == ActionId.TCP_XMAS_TREE_SCAN_ALL:
             return ReconMiddleware.execute_tcp_xmas_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.OS_DETECTION_SCAN_HOST or a.id == ActionId.OS_DETECTION_SCAN_SUBNET:
+        elif a.id == ActionId.OS_DETECTION_SCAN_HOST or a.id == ActionId.OS_DETECTION_SCAN_SUBNET \
+                or a.id == ActionId.OS_DETECTION_SCAN_ALL:
             return ReconMiddleware.execute_os_detection_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.VULSCAN_HOST or a.id == ActionId.VULSCAN_SUBNET:
+        elif a.id == ActionId.VULSCAN_HOST or a.id == ActionId.VULSCAN_SUBNET or a.id == ActionId.VULSCAN_ALL:
             return ReconMiddleware.execute_vulscan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET:
+        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET \
+                or a.id == ActionId.NMAP_VULNERS_ALL:
             return ReconMiddleware.execute_nmap_vulners(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.NIKTO_WEB_HOST_SCAN:
             return ReconMiddleware.execute_nikto_web_host_scan(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.MASSCAN_HOST_SCAN or a.id == ActionId.MASSCAN_SUBNET_SCAN:
             return ReconMiddleware.execute_masscan_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET:
+        elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET or a.id == ActionId.FIREWALK_ALL:
             return ReconMiddleware.execute_firewalk_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET:
+        elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET or a.id == ActionId.HTTP_ENUM_ALL:
             return ReconMiddleware.execute_http_enum(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.HTTP_GREP_HOST or a.id == ActionId.HTTP_GREP_SUBNET:
+        elif a.id == ActionId.HTTP_GREP_HOST or a.id == ActionId.HTTP_GREP_SUBNET or a.id == ActionId.HTTP_GREP_ALL:
             return ReconMiddleware.execute_http_grep(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FINGER_HOST or a.id == ActionId.FINGER_SUBNET:
+        elif a.id == ActionId.FINGER_HOST or a.id == ActionId.FINGER_SUBNET or a.id == ActionId.FINGER_ALL:
             return ReconMiddleware.execute_finger(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
@@ -91,23 +99,32 @@ class ClusterMiddleware:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET:
+        if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitMiddleware.execute_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == ActionId.SAMBACRY_EXPLOIT:
             return ExploitMiddleware.execute_sambacry(s=s, a=a, env_config=env_config)

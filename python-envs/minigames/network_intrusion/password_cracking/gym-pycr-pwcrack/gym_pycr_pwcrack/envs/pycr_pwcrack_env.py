@@ -61,9 +61,9 @@ from gym_pycr_pwcrack.envs.config.multi_sim.pycr_pwcrack_multisim_base import Py
 from gym_pycr_pwcrack.envs.config.multi_sim.pycr_pwcrack_multisim_v1 import PyCrPwCrackMultiSimV1
 from gym_pycr_pwcrack.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_pwcrack.envs.logic.common.util as util
-from gym_pycr_pwcrack.envs.logic.cluster.simulation_generator import SimulationGenerator
+from gym_pycr_pwcrack.envs.logic.cluster.system_id.simulation_generator import SimulationGenerator
 from gym_pycr_pwcrack.envs.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_pycr_pwcrack.envs.logic.cluster.cluster_warmup import ClusterWarmup
+from gym_pycr_pwcrack.envs.logic.cluster.warmup.cluster_warmup import ClusterWarmup
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.envs.logic.common.domain_randomizer import DomainRandomizer

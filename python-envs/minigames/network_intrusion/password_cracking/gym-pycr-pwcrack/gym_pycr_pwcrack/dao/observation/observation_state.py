@@ -32,8 +32,12 @@ class ObservationState:
 
 
     def get_action_ip(self, a : Action):
-        if a.index < len(self.machines) and a.index < self.num_machines:
+        if a.index == -1:
             self.sort_machines()
+            ips = list(map(lambda x: x.ip, self.machines))
+            ips_str = "_".join(ips)
+            return ips_str
+        if a.index < len(self.machines) and a.index < self.num_machines:
             return self.machines[a.index].ip
         return a.ip
 

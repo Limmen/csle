@@ -1,7 +1,7 @@
 import threading
 import time
-from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_server import ForwardSSHServer
-from gym_pycr_pwcrack.envs.logic.cluster.forward_ssh_handler import ForwardSSHHandler
+from gym_pycr_pwcrack.envs.logic.cluster.tunnel.forward_ssh_server import ForwardSSHServer
+from gym_pycr_pwcrack.envs.logic.cluster.tunnel.forward_ssh_handler import ForwardSSHHandler
 
 class ForwardTunnelThread(threading.Thread):
     """
