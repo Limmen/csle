@@ -19,6 +19,9 @@ grafana:
 node_exporter:
 	./run_node_exporter.sh
 
+pycr_monitor:
+	./run_pycr_monitor.sh
+
 list_stopped:
 	python manage_containers.py --c list_stopped
 

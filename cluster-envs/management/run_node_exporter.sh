@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./node_exporter/node_exporter
+nohup ./node_exporter/node_exporter & > node_exporter.log
