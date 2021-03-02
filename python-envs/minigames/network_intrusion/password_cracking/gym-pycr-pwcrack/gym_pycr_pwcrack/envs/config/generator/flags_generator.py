@@ -5,7 +5,7 @@ from gym_pycr_pwcrack.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_pwcrack.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_pwcrack.util.experiments_util import util
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.envs.logic.cluster.cluster_util import ClusterUtil
+from gym_pycr_pwcrack.envs.logic.cluster.util.cluster_util import ClusterUtil
 from gym_pycr_pwcrack.envs.config.generator.generator_util import GeneratorUtil
 
 class FlagsGenerator:

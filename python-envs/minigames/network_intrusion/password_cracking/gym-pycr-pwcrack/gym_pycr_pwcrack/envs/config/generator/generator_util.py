@@ -1,7 +1,7 @@
 from scp import SCPClient, SCPException
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
 from gym_pycr_pwcrack.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_pwcrack.envs.logic.cluster.cluster_util import ClusterUtil
+from gym_pycr_pwcrack.envs.logic.cluster.util.cluster_util import ClusterUtil
 
 
 class GeneratorUtil:

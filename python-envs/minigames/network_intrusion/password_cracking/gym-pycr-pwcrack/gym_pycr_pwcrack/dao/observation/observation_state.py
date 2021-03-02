@@ -42,40 +42,41 @@ class ObservationState:
         return a.ip
 
     def exploit_tried(self, a: Action, m: MachineObservationState):
+        # Known issue with subnet attacks and NMAP: https://github.com/nmap/nmap/issues/1321
         if m is not None:
-            if (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ssh_brute_tried
 
-            if (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.telnet_brute_tried
 
-            if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ftp_brute_tried
 
-            if (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.cassandra_brute_tried
 
-            if (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.irc_brute_tried
 
-            if (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mongo_brute_tried
 
-            if (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mysql_brute_tried
 
-            if (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.smtp_brute_tried
 
-            if (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+            if (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL
                 or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.postgres_brute_tried
 

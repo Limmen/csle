@@ -2,7 +2,7 @@ import random
 import numpy as np
 from gym_pycr_pwcrack.dao.container_config.topology import Topology
 from gym_pycr_pwcrack.dao.network.cluster_config import ClusterConfig
-from gym_pycr_pwcrack.envs.logic.cluster.cluster_util import ClusterUtil
+from gym_pycr_pwcrack.envs.logic.cluster.util.cluster_util import ClusterUtil
 from gym_pycr_pwcrack.dao.container_config.users_config import UsersConfig
 from gym_pycr_pwcrack.dao.container_config.node_users_config import NodeUsersConfig
 from gym_pycr_pwcrack.envs.config.generator.topology_generator import TopologyGenerator

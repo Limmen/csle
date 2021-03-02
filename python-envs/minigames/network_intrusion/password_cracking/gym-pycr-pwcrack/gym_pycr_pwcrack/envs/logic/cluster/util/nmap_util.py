@@ -614,8 +614,8 @@ class NmapUtil:
             if masscan:
                 cmd = a.masscan_cmd()
             if env_config.ids_router:
-                last_alert_ts = NmapUtil.get_latest_alert_ts(env_config=env_config)
-            outdata, errdata, total_time = NmapUtil.execute_ssh_cmd(cmd=cmd,
+                last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd,
                                                                        conn=env_config.cluster_config.agent_conn)
             if env_config.ids_router:
                 # alerts = ClusterUtil.check_ids_alerts(env_config=env_config)

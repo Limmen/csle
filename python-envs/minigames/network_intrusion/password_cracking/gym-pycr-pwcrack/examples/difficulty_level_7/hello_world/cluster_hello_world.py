@@ -28,6 +28,7 @@ def test_env(env_name : str, num_steps : int):
     tot_rew = 0
     tried_actions = []
     for i in range(num_steps):
+        print("i:{}".format(i))
         legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
         if len(legal_actions) == 0:
             print("no legal actions, {}".format(tried_actions))
@@ -51,7 +52,7 @@ def test_env(env_name : str, num_steps : int):
         obs, reward, done, info = env.step(action)
         tried_actions.append(action)
         tot_rew += reward
-        env.render()
+        #env.render()
         if EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config) and not done:
             print("All flags but done")
         if done:
