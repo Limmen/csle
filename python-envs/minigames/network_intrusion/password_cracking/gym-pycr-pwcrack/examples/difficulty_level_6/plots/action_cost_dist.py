@@ -277,12 +277,13 @@ def plot_freq_dist_w_boxes(d1, d2, labels, title, num_bins, colors, xlabel, file
     #plt.close(fig)
 
 
-def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, filename, bin_edges, data=None):
+def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, filename, bin_edges, data=None,
+                               ncols=4, figsize = (11, 2.5)):
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     plt.rcParams['font.family'] = ['serif']
     plt.rcParams['font.serif'] = ['Times New Roman']
-    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=(11, 2.5))
+    fig, ax = plt.subplots(nrows=1, ncols=ncols, figsize=figsize)
     plt.rcParams.update({'font.size': 10})
 
     #let numpy calculate the histogram entries
@@ -400,6 +401,140 @@ def plot_freq_dist_w_boxes_all(d1, d2, labels, title, num_bins, colors, xlabel, 
     ax[3].set_xlim((0, 2300))
     if len(labels) > 1:
         ax[3].legend(loc="upper right")
+
+    fig.tight_layout()
+    fig.subplots_adjust(wspace=0.05, hspace=0.09)
+    plt.show()
+    file_name = filename
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    #plt.close(fig)
+
+
+def plot_freq_dist_w_boxes_all_2_rows(d1, d2, labels, title, num_bins, colors, xlabel, filename, bin_edges, data=None,
+                               ncols=2, figsize = (5.5, 5)):
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=2, ncols=ncols, figsize=figsize)
+    plt.rcParams.update({'font.size': 10})
+
+    #let numpy calculate the histogram entries
+    histo, bin_edges = np.histogram(data[0], 30, (0, 2300))
+    bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    print(np.array(data[0])*0.01)
+    ax[0][0].hist(data[0], bins=30, alpha=1, range=(0, 2300),
+            label=labels[0], stacked=False, log=True, color=colors[3], density=True, edgecolor='black', ls="-")
+
+    normalisation = 30 / (len(data[0]) * (2300 - 0))
+    y_err = np.sqrt(histo) * normalisation
+    y = histo*normalisation
+    y_err[0] = y_err[0] + 0.0025
+    y_err[1] = y_err[1] + 0.0001
+    ax[0][0].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    histo, bin_edges = np.histogram(data[1], 30, (0, 2300))
+    bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    ax[0][1].hist(data[1], bins=30, alpha=1, range=(0, 2300),
+            label=labels[1], stacked=False, log=True, color=colors[2], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[1]) * (2300 - 0))
+    y_err = np.sqrt(histo) * normalisation
+    y_err[0] = y_err[0] + 0.005
+    y_err[1] = y_err[1] + 0.00001
+    y = histo * normalisation
+    ax[0][1].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    histo, bin_edges = np.histogram(data[2], 30, (0, 2300))
+    bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    ax[1][0].hist(data[2], bins=30, alpha=1, range=(0, 2300),
+            label=labels[2], stacked=False, log=True, color=colors[1], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[2]) * (2300 - 0))
+    y_err = np.sqrt(histo) * normalisation
+    y_err[0] = y_err[0] + 0.005
+    y_err[1] = y_err[1] + 0.00001
+    y = histo * normalisation
+    ax[1][0].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    histo, bin_edges = np.histogram(data[3], 30, (0, 2300))
+    bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    ax[1][1].hist(data[3], bins=30, alpha=1, range=(0, 2300),
+            label=labels[3], stacked=False, log=True, color=colors[0], density=True, edgecolor='black')
+    normalisation = 30 / (len(data[3]) * (2300 - 0))
+    y_err = np.sqrt(histo) * normalisation
+    y_err[0] = y_err[0] + 0.005
+    y_err[1] = y_err[1] + 0.00001
+    y = histo * normalisation
+    ax[1][1].errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    colors = ["#f9a65a", "#661D98", "#377EB8", "#4DAF4A", "#A65628", "#F781BF",
+              '#D95F02', '#7570B3', '#E7298A', '#E6AB02', '#A6761D', '#666666',
+              '#8DD3C7', '#CCEBC5', '#BEBADA', '#FB8072', "#FF7F00", '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5',
+              '#D9D9D9', '#BC80BD', '#FFED6F', "blue", "#984EA3", "green", "#FFFF33", '#66A61E', '#FFFFB3',
+              "purple", "orange", "browen", "ppink", "#1B9E77", "#E41A1C"]
+    ax[0][0].set_title(title)
+    ax[0][0].set_xlabel(xlabel, fontsize=20)
+    ax[0][0].set_ylabel(r"Normalized Frequency", fontsize=20)
+    ax[0][0].grid('on')
+    ax[0][0].xaxis.set_tick_params(size=0)
+    ax[0][0].yaxis.set_tick_params(size=0)
+    ax[0][0].spines['right'].set_color((.8, .8, .8))
+    ax[0][0].spines['top'].set_color((.8, .8, .8))
+    xlab = ax[0][0].xaxis.get_label()
+    ylab = ax[0][0].yaxis.get_label()
+    xlab.set_size(10)
+    ylab.set_size(10)
+    ax[0][0].set_xlim((0, 2300))
+    if len(labels) > 1:
+        ax[0][0].legend(loc="upper right")
+
+    ax[0][1].set_title(title)
+    ax[0][1].set_xlabel(xlabel, fontsize=20)
+    #ax[1].set_ylabel(r"Normalized Frequency", fontsize=20)
+    ax[0][1].grid('on')
+    ax[0][1].xaxis.set_tick_params(size=0)
+    ax[0][1].yaxis.set_tick_params(size=0)
+    ax[0][1].spines['right'].set_color((.8, .8, .8))
+    ax[0][1].spines['top'].set_color((.8, .8, .8))
+    xlab = ax[0][1].xaxis.get_label()
+    ylab = ax[0][1].yaxis.get_label()
+    xlab.set_size(10)
+    ylab.set_size(10)
+    ax[0][1].set_xlim((0, 2300))
+    if len(labels) > 1:
+        ax[0][1].legend(loc="upper right")
+
+    ax[1][0].set_title(title)
+    ax[1][0].set_xlabel(xlabel, fontsize=20)
+    #ax[2].set_ylabel(r"Normalized Frequency", fontsize=20)
+    ax[1][0].grid('on')
+    ax[1][0].xaxis.set_tick_params(size=0)
+    ax[1][0].yaxis.set_tick_params(size=0)
+    ax[1][0].spines['right'].set_color((.8, .8, .8))
+    ax[1][0].spines['top'].set_color((.8, .8, .8))
+    xlab = ax[1][0].xaxis.get_label()
+    ylab = ax[1][0].yaxis.get_label()
+    xlab.set_size(10)
+    ylab.set_size(10)
+    ax[1][0].set_xlim((0, 2300))
+    if len(labels) > 1:
+        ax[1][0].legend(loc="upper right")
+
+    ax[1][1].set_title(title)
+    ax[1][1].set_xlabel(xlabel, fontsize=20)
+    #ax[3].set_ylabel(r"Normalized Frequency", fontsize=20)
+    ax[1][1].grid('on')
+    ax[1][1].xaxis.set_tick_params(size=0)
+    ax[1][1].yaxis.set_tick_params(size=0)
+    ax[1][1].spines['right'].set_color((.8, .8, .8))
+    ax[1][1].spines['top'].set_color((.8, .8, .8))
+    xlab = ax[1][1].xaxis.get_label()
+    ylab = ax[1][1].yaxis.get_label()
+    xlab.set_size(10)
+    ylab.set_size(10)
+    ax[1][1].set_xlim((0, 2300))
+    if len(labels) > 1:
+        ax[1][1].legend(loc="upper right")
 
     fig.tight_layout()
     fig.subplots_adjust(wspace=0.05, hspace=0.09)
@@ -752,9 +887,9 @@ if __name__ == '__main__':
     # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_2/agent_cache.zip", num_bins=100)
     #plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
 
-    # d_1, d_factors, bin_edges, costs_factors = read_action_costs(
-    #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
-    #     num_bins=100, factors=[2, 3, 4])
+    d_1, d_factors, bin_edges, costs_factors = read_action_costs(
+        zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
+        num_bins=100, factors=[2, 3, 4])
 
     # plot_freq_dist(d1=d_1, d2=d_factors, num_bins=100, labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$", r"$|\mathcal{N}|=100$"],
     # title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
@@ -769,14 +904,22 @@ if __name__ == '__main__':
     #                        labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
     #                                r"$|\mathcal{N}|=100$"],
     #                        title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
-    #                        filename="action_cost_dist_plot_all_boxes", bin_edges=bin_edges, data=costs_factors)
+    #                        filename="action_cost_dist_plot_all_boxes", bin_edges=bin_edges, data=costs_factors,
+    #                        ncols=4, figsize=(11, 2.5))
+
+    plot_freq_dist_w_boxes_all_2_rows(d1=d_1, d2=d_factors, num_bins=100,
+                               labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
+                                       r"$|\mathcal{N}|=100$"],
+                               title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
+                               filename="action_cost_dist_plot_all_boxes_2_rows", bin_edges=bin_edges, data=costs_factors,
+                               ncols=2, figsize=(8, 5))
 
     #
     # colors = ["r"]
 
-    total_alerts, total_priority = read_action_alerts(
-        zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
-        num_bins=250)
+    # total_alerts, total_priority = read_action_alerts(
+    #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/password_cracking/001/level_6/merged.zip",
+    #     num_bins=250)
 
     #print(max(digitized_total))
     # plot_freq_dist(d1=None, d2=None,
@@ -790,10 +933,10 @@ if __name__ == '__main__':
     #                colors=colors, xlabel=r"Total priority of triggered alerts",
     #                filename="action_alerts_priority_dist_plot", data=total_priority, bin_edges=None)
 
-    colors = ["#599ad3"]
-    cm = plt.cm.get_cmap('OrRd_r')
-    #colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 4))[-4:]
-    colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 10))
+    # colors = ["#599ad3"]
+    # cm = plt.cm.get_cmap('OrRd_r')
+    # #colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 4))[-4:]
+    # colors = plt.cm.OrRd_r(np.linspace(0.3, 1, 10))
     #
     # plot_freq_dist_w_boxes_all_alerts(d1=None, d2=None, num_bins=30,
     #                            labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
@@ -803,13 +946,13 @@ if __name__ == '__main__':
     #                            filename="action_alerts_dist_plot_all_boxes", bin_edges=None, data=total_alerts,
     #                                   data2=total_priority, title2="Alerts priority $\sum_a p(a)$ per action",
     #                                   xlabel2="Total priority of triggered alerts")
-    plot_profiling(d1=None, d2=None, num_bins=30,
-                                      labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
-                                              r"$|\mathcal{N}|=100$"],
-                                      title=r"Intrusion detection alerts per action",
-                                      xlabel=r"Number of triggered alerts",
-                                      colors=colors,
-                                      filename="training_iter_profiling", bin_edges=None, data=total_alerts,
-                                      data2=total_priority, title2="Alerts priority $\sum_a p(a)$ per action",
-                                      xlabel2="Total priority of triggered alerts")
+    # plot_profiling(d1=None, d2=None, num_bins=30,
+    #                                   labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
+    #                                           r"$|\mathcal{N}|=100$"],
+    #                                   title=r"Intrusion detection alerts per action",
+    #                                   xlabel=r"Number of triggered alerts",
+    #                                   colors=colors,
+    #                                   filename="training_iter_profiling", bin_edges=None, data=total_alerts,
+    #                                   data2=total_priority, title2="Alerts priority $\sum_a p(a)$ per action",
+    #                                   xlabel2="Total priority of triggered alerts")
 

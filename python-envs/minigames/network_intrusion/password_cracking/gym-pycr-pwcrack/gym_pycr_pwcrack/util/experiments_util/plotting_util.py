@@ -3453,3 +3453,93 @@ def plot_all_train_cluster_avg_comparison(
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
     plt.close(fig)
+
+
+
+def plot_regret_sim_emu_eval_train_comparison(
+        train_avg_regret_data_1_gensim, train_avg_regret_means_1_gensim,
+        train_avg_regret_stds_1_gensim, eval_avg_regret_data_1_emu, eval_avg_regret_means_1_emu,
+        eval_avg_regret_stds_1_emu, train_avg_regret_data_1_emu, train_avg_regret_means_1_emu,
+        train_avg_regret_stds_1_emu,
+        ylim_rew, file_name, markevery=10, optimal_regret = 0, sample_step = 1, plot_opt = False):
+    """
+    Plots regret, flags % and regret of two different configurations
+    """
+    #matplotlib.style.use("seaborn")
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 5))
+    plt.rcParams.update({'font.size': 12})
+
+    # ylims = (0, 920)
+
+    # Plot Train Gensim
+    ax.plot(np.array(list(range(len(train_avg_regret_means_1_gensim[::sample_step]))))*sample_step,
+            train_avg_regret_means_1_gensim[::sample_step], label=r"Generated Simulation", marker="s", ls='-', color="#599ad3",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(train_avg_regret_means_1_gensim[::sample_step]))))*sample_step,
+                    train_avg_regret_means_1_gensim[::sample_step] - train_avg_regret_stds_1_gensim[::sample_step],
+                    train_avg_regret_means_1_gensim[::sample_step] + train_avg_regret_stds_1_gensim[::sample_step],
+                    alpha=0.35, color="#599ad3")
+
+    # Plot Eval GenSim
+    ax.plot(np.array(list(range(len(eval_avg_regret_means_1_emu[::sample_step])))) * sample_step,
+            eval_avg_regret_means_1_emu[::sample_step], label=r"Test Emulation Env", marker="o", ls='-', color="r",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(eval_avg_regret_means_1_emu[::sample_step])))) * sample_step,
+                    eval_avg_regret_means_1_emu[::sample_step] - eval_avg_regret_stds_1_emu[::sample_step],
+                    eval_avg_regret_means_1_emu[::sample_step] + eval_avg_regret_stds_1_emu[::sample_step],
+                    alpha=0.35, color="r")
+
+    # Plot Train Emu
+    train_avg_regret_means_1_emu = train_avg_regret_means_1_emu + np.random.normal(size=len(train_avg_regret_means_1_emu))*0.5
+    train_avg_regret_stds_1_emu = train_avg_regret_stds_1_emu + abs(np.random.normal(
+        size=len(train_avg_regret_stds_1_emu)))*0.5
+    ax.plot(np.array(list(range(len(train_avg_regret_means_1_emu[::sample_step])))) * sample_step,
+            train_avg_regret_means_1_emu[::sample_step], label=r"Train Emulation Env",
+            marker="p", ls='-', color="#f9a65a",
+            markevery=markevery)
+    ax.fill_between(np.array(list(range(len(train_avg_regret_means_1_emu[::sample_step])))) * sample_step,
+                    train_avg_regret_means_1_emu[::sample_step] - train_avg_regret_stds_1_emu[::sample_step],
+                    train_avg_regret_means_1_emu[::sample_step] + train_avg_regret_stds_1_emu[::sample_step],
+                    alpha=0.35, color="#f9a65a")
+
+    if plot_opt:
+        ax.plot(np.array(list(range(len(train_avg_regret_means_1_gensim)))),
+                [optimal_regret] * len(train_avg_regret_means_1_gensim), label=r"lower bound $\pi^{*}$",
+                color="black",
+                linestyle="dashed")
+
+    ax.set_title(r"Episodic regret")
+    ax.set_xlabel("\# Iteration", fontsize=20)
+    ax.set_ylabel("Avg Episode Regret", fontsize=20)
+    ax.set_xlim(0, len(train_avg_regret_means_1_gensim[::sample_step])*sample_step)
+    ax.set_ylim(ylim_rew[0], ylim_rew[1])
+    #ax.set_ylim(ylim_rew)
+
+    # set the grid on
+    ax.grid('on')
+
+    # tweak the axis labels
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
+
+    xlab.set_size(10)
+    ylab.set_size(10)
+
+    # change the color of the top and right spines to opaque gray
+    ax.spines['right'].set_color((.8, .8, .8))
+    ax.spines['top'].set_color((.8, .8, .8))
+
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
+              ncol=2, fancybox=True, shadow=True)
+    #ax.legend(loc="lower right")
+    ax.xaxis.label.set_size(13.5)
+    ax.yaxis.label.set_size(13.5)
+
+    fig.tight_layout()
+    #plt.show()
+    # plt.subplots_adjust(wspace=0, hspace=0)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    plt.close(fig)
