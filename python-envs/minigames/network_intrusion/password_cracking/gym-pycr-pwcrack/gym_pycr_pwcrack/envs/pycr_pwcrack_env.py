@@ -405,8 +405,15 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
+        print("m_disc:{}, logged_in:{}, root_loing:{}, type:{}".format(machine_discovered, logged_in, root_login, action.type))
+
+        # Privilege escalation only legal if machine discovered and logged in and not root
+        if action.type == ActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not logged_in or root_login):
+            return False
+
         # If IP is discovered, then IP specific action without other prerequisites is legal
-        if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT):
+        if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT
+                                   or action.type == ActionType.PRIVILEGE_ESCALATION):
             if action.subnet and target_machine is None:
                 return True
             if m_index == -1:

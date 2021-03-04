@@ -61,8 +61,8 @@ class PyCrPwCrackLevel7V4:
             actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_1427_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2016_10033_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2010_0426_PRIV_ESC(index=idx))
+            actions.append(ShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet actions
         actions.append(
@@ -138,7 +138,7 @@ class PyCrPwCrackLevel7V4:
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT,
                             ActionId.CVE_2015_1427_EXPLOIT, ActionId.CVE_2016_10033_EXPLOIT,
-                            ActionId.CVE_2010_0426_EXPLOIT, ActionId.CVE_2015_5602_EXPLOIT]
+                            ActionId.CVE_2010_0426_PRIV_ESC, ActionId.CVE_2015_5602_PRIV_ESC]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes, actions=actions,

@@ -321,10 +321,11 @@ class ConnectionUtil:
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -v",
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -l",
                                                                    conn=target_connections[i])
         root = False
-        if not "may not run sudo".format(users[i]) in errdata.decode("utf-8"):
+        if not "may not run sudo".format(users[i]) in errdata.decode("utf-8") \
+                and "(ALL) NOPASSWD: ALL" in outdata.decode("utf-8"):
             root = True
             target_machine.root = True
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
@@ -434,10 +435,12 @@ class ConnectionUtil:
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        target_connections[i].write("sudo -v\n".encode())
+        target_connections[i].write("sudo -l\n".encode())
         response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
         root = False
-        if not "may not run sudo".format(users[i]) in response.decode("utf-8"):
+        if not "may not run sudo".format(users[i]) in response.decode("utf-8") \
+                and "(ALL) NOPASSWD: ALL" in response.decode("utf-8"):
+            #print("errdata:{}".format(outdata.decode()))
             root = True
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME,

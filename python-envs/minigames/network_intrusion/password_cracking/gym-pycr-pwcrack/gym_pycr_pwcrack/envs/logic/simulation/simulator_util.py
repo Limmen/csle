@@ -474,7 +474,7 @@ class SimulatorUtil:
         """
         if env_config.simulate_detection:
             detected = False
-            if a.type == ActionType.EXPLOIT or a.type == ActionType.RECON:
+            if a.type == ActionType.EXPLOIT or a.type == ActionType.RECON or a.type == ActionType.PRIVILEGE_ESCALATION:
                 # Base detection
                 detected = np.random.rand() < (a.noise + env_config.base_detection_p)
             # Alerts detection

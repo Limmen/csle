@@ -648,9 +648,9 @@ class EnvDynamicsUtil:
             m_obs.cve_2015_1427_tried = True
         elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
             m_obs.cve_2016_10033_tried = True
-        elif a.id == ActionId.CVE_2010_0426_EXPLOIT:
+        elif a.id == ActionId.CVE_2010_0426_PRIV_ESC:
             m_obs.cve_2010_0426_tried = True
-        elif a.id == ActionId.CVE_2015_5602_EXPLOIT:
+        elif a.id == ActionId.CVE_2015_5602_PRIV_ESC:
             m_obs.cve_2015_5602_tried = True
         return m_obs
 

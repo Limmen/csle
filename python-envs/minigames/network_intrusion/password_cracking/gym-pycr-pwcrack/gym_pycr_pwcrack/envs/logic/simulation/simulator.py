@@ -27,7 +27,7 @@ class Simulator:
         if a.type == ActionType.RECON:
             EnvDynamicsUtil.cache_action(env_config=env_config,a=a, s=s)
             return Simulator.recon_action(s=s, a=a, env_config=env_config)
-        elif a.type == ActionType.EXPLOIT:
+        elif a.type == ActionType.EXPLOIT or a.type == ActionType.PRIVILEGE_ESCALATION:
             if a.subnet:
                 EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
             return Simulator.exploit_action(s=s, a=a, env_config=env_config)
@@ -145,9 +145,9 @@ class Simulator:
             raise NotImplementedError("CVE-2015-1427 simulation not implemented")
         elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
             raise NotImplementedError("CVE-2016-10033 simulation not implemented")
-        elif a.id == ActionId.CVE_2010_0426_EXPLOIT:
+        elif a.id == ActionId.CVE_2010_0426_PRIV_ESC:
             raise NotImplementedError("CVE-2010-0426 simulation not implemented")
-        elif a.id == ActionId.CVE_2015_5602_EXPLOIT:
+        elif a.id == ActionId.CVE_2015_5602_PRIV_ESC:
             raise NotImplementedError("CVE-2015-5602 simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))

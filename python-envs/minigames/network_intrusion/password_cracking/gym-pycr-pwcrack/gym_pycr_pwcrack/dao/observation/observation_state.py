@@ -98,10 +98,10 @@ class ObservationState:
             if a.id == ActionId.CVE_2016_10033_EXPLOIT:
                 return m.cve_2016_10033_tried
 
-            if a.id == ActionId.CVE_2010_0426_EXPLOIT:
+            if a.id == ActionId.CVE_2010_0426_PRIV_ESC:
                 return m.cve_2010_0426_tried
 
-            if a.id == ActionId.CVE_2015_5602_EXPLOIT:
+            if a.id == ActionId.CVE_2015_5602_PRIV_ESC:
                 return m.cve_2015_5602_tried
 
             return False

@@ -379,6 +379,15 @@ class PyCrPwCrackLevel7Base:
                           NetworkService(protocol=TransportProtocol.TCP, port=30033, name="teamspeak", credentials=[])
                       ],
                       vulnerabilities=[
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        service=constants.SSH.SERVICE_NAME,
+                                        credentials=[
+                                            Credential(username="alan", pw="alan",
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
+                                        ],
+                                        port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
                                         cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, cvss=6,
                                         credentials=[
@@ -403,10 +412,19 @@ class PyCrPwCrackLevel7Base:
                           NetworkService(protocol=TransportProtocol.TCP, port=9160, name="cassandra", credentials=[])
                       ],
                       vulnerabilities=[
-                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
-                                        cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, cvss=6,
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+                                        cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                                        service=constants.SSH.SERVICE_NAME,
                                         credentials=[
-                                            Credential(username="alan", pw="alan", service=None)
+                                            Credential(username="donald", pw="donald",
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
+                                        ],
+                                        port=22, protocol=TransportProtocol.TCP),
+                          Vulnerability(name=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602,
+                                        cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602, cvss=6,
+                                        credentials=[
+                                            Credential(username="donald", pw="donald", service=None)
                                         ], port=None, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip="172.18.7.191", ip_id=191, id=13, type=NodeType.HACKER, flags=[], level=1, services=[],
@@ -575,8 +593,8 @@ class PyCrPwCrackLevel7Base:
             actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_1427_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2016_10033_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2010_0426_PRIV_ESC(index=idx))
+            actions.append(ShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet Nmap actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
@@ -665,8 +683,8 @@ class PyCrPwCrackLevel7Base:
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT, ActionId.CVE_2015_1427_EXPLOIT,
-                            ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_EXPLOIT,
-                            ActionId.CVE_2015_5602_EXPLOIT]
+                            ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_PRIV_ESC,
+                            ActionId.CVE_2015_5602_PRIV_ESC]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,

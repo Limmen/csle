@@ -167,34 +167,34 @@ class ShellActions:
                       ip=None, subnet=False, action_outcome=ActionOutcome.SHELL_ACCESS, alt_cmd=None)
 
     @staticmethod
-    def CVE_2010_0426_EXPLOIT(index: int) -> Action:
+    def CVE_2010_0426_PRIV_ESC(index: int) -> Action:
         """
         Launches the CVE-2010-0426 exploit
 
         :param index: index of the machine to apply the action to
         :return: the action
         """
-        id = ActionId.CVE_2010_0426_EXPLOIT
+        id = ActionId.CVE_2010_0426_PRIV_ESC
         cmd = ["/cve_2010_0426_exploit.sh {}", "/create_backdoor_cve_2010_0426.sh"]
         return Action(id=id, name="CVE-2010-0426 exploit", cmd=cmd,
-                      type=ActionType.EXPLOIT,
+                      type=ActionType.PRIVILEGE_ESCALATION,
                       descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                       alt_cmd=None)
 
     @staticmethod
-    def CVE_2015_5602_EXPLOIT(index: int) -> Action:
+    def CVE_2015_5602_PRIV_ESC(index: int) -> Action:
         """
         Launches the CVE-2015-5602 exploit
 
         :param index: index of the machine to apply the action to
         :return: the action
         """
-        id = ActionId.CVE_2015_5602_EXPLOIT
+        id = ActionId.CVE_2015_5602_PRIV_ESC
         cmd = ["/cve_2015_5602_exploit.sh", "/create_backdoor_cve_2015_5602.sh"]
         return Action(id=id, name="CVE-2015-5602 exploit", cmd=cmd,
-                      type=ActionType.EXPLOIT,
+                      type=ActionType.PRIVILEGE_ESCALATION,
                       descr="Uses the CVE-2015-5602 vulnerability to perform privilege escalation to get root access",
                       cost=0.0, noise=0.0, index=index,
                       ip=None, subnet=False, action_outcome=ActionOutcome.PRIVILEGE_ESCALATION_ROOT,

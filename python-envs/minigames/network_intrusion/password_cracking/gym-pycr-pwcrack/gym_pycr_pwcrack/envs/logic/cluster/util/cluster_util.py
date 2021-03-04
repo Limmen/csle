@@ -177,6 +177,7 @@ class ClusterUtil:
         file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
             action.index) + "_" + ip + \
                     "_" + user + ".txt"
+        print("writing cache file:{}".format(file_name))
         remote_file = sftp_client.file(file_name, mode="w")
         try:
             remote_file.write(result)
@@ -192,7 +193,20 @@ class ClusterUtil:
         :param env_config: environment config
         :return: None
         """
+        ClusterUtil.execute_cmd_interactive_channel(cmd=a.cmd[0], channel=env_config.cluster_config.agent_channel)
         env_config.cluster_config.agent_channel.send(a.cmd[0] + "\n")
+
+    @staticmethod
+    def execute_cmd_interactive_channel(cmd: str, channel) -> None:
+        """
+        Executes an action on the cluster using an interactive shell (non synchronous)
+
+        :param a: action to execute
+        :param env_config: environment config
+        :param channel: the channel to use
+        :return: None
+        """
+        channel.send(cmd + "\n")
 
     @staticmethod
     def read_result_interactive(env_config: EnvConfig) -> str:
@@ -202,9 +216,20 @@ class ClusterUtil:
         :param env_config: the environment config
         :return: the result
         """
-        while not env_config.cluster_config.agent_channel.recv_ready():
-            time.sleep(env_config.shell_read_wait)
-        output = env_config.cluster_config.agent_channel.recv(constants.COMMON.LARGE_RECV_SIZE)
+        return ClusterUtil.read_result_interactive_channel(env_config=env_config, channel=env_config.cluster_config.agent_channel)
+
+    @staticmethod
+    def read_result_interactive_channel(env_config: EnvConfig, channel) -> str:
+        """
+        Reads the result of an action executed in interactive mode
+
+        :param env_config: the environment config
+        :param channel: the channel to use
+        :return: the result
+        """
+        while not channel.recv_ready():
+             time.sleep(env_config.shell_read_wait)
+        output = channel.recv(constants.COMMON.LARGE_RECV_SIZE)
         output_str = output.decode("utf-8")
         output_str = env_config.shell_escape.sub("", output_str)
         return output_str

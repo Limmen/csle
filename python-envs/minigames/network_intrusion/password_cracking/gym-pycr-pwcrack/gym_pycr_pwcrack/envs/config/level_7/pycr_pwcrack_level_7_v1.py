@@ -37,8 +37,8 @@ class PyCrPwCrackLevel7V1:
             actions.append(ShellActions.CVE_2015_3306_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2015_1427_EXPLOIT(index=idx))
             actions.append(ShellActions.CVE_2016_10033_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2010_0426_EXPLOIT(index=idx))
-            actions.append(ShellActions.CVE_2015_5602_EXPLOIT(index=idx))
+            actions.append(ShellActions.CVE_2010_0426_PRIV_ESC(index=idx))
+            actions.append(ShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet actions
         actions.append(NMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes+1, ip=subnet_mask,
@@ -65,8 +65,8 @@ class PyCrPwCrackLevel7V1:
         network_service_action_ids = [ActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT, ActionId.CVE_2015_1427_EXPLOIT,
-                            ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_EXPLOIT,
-                            ActionId.CVE_2015_5602_EXPLOIT]
+                            ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_PRIV_ESC,
+                            ActionId.CVE_2015_5602_PRIV_ESC]
         nikto_action_ids = []
         masscan_action_ids = []
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,

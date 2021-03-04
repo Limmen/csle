@@ -611,6 +611,7 @@ class NmapUtil:
         # If cache miss, then execute cmd
         if cache_result is None:
             cmd = a.nmap_cmd()
+            print("cmd:{}".format(cmd))
             if masscan:
                 cmd = a.masscan_cmd()
             if env_config.ids_router:

@@ -374,13 +374,13 @@ class SAMBA:
 
 class CVE_2010_0426:
     SERVICE_NAME = "sudoedit"
-    BACKDOOR_USER="ssh_backdoor_cve2010_0426_pwned"
-    BACKDOOR_PW="cve2010_0426_pwnedpw"
+    BACKDOOR_USER="ssh_backdoor_cve10_0426pwn"
+    BACKDOOR_PW="cve_2010_0426_pwnedpw"
 
 class CVE_2015_5602:
     SERVICE_NAME = "sudoedit"
-    BACKDOOR_USER="ssh_backdoor_cve2015_5602_pwned"
-    BACKDOOR_PW="cve2015_5602_pwnedpw"
+    BACKDOOR_USER="ssh_backdoor_cve15_5602pwn"
+    BACKDOOR_PW="cve_2015_5602_pwnedpw"
 
 class CVE_2015_3306:
     SERVICE_NAME = "proftpd"
