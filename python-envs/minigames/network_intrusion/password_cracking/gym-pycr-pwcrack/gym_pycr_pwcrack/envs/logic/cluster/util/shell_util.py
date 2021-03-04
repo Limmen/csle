@@ -10,6 +10,7 @@ from gym_pycr_pwcrack.dao.observation.connection_observation_state import Connec
 from gym_pycr_pwcrack.dao.observation.machine_observation_state import MachineObservationState
 from gym_pycr_pwcrack.dao.network.credential import Credential
 from gym_pycr_pwcrack.envs.logic.cluster.util.cluster_util import ClusterUtil
+from gym_pycr_pwcrack.envs.logic.cluster.util.connection_util import ConnectionUtil
 
 class ShellUtil:
     """
@@ -811,17 +812,17 @@ class ShellUtil:
             a.ip = machine.ip
             s_1, t_n_p_1, t_n_os_1, t_n_v_1, t_n_m_1, \
             t_n_s_a_1, t_n_f_p_1, t_n_r_1, t_n_o_v_1, t_n_l_i_1, t_n_t_i_1, t_n_b_i_1, ssh_cost, \
-            new_conn_ssh = ClusterUtil.login_service_helper(
+            new_conn_ssh = ConnectionUtil.login_service_helper(
                 s=s_prime, a=a, alive_check=EnvDynamicsUtil.check_if_ssh_connection_is_alive,
                 service_name=constants.SSH.SERVICE_NAME, env_config=env_config)
             s_2, t_n_p_2, t_n_os_2, t_n_v_2, t_n_m_2, \
             t_n_s_a_2, t_n_f_p_2, t_n_r_2, t_n_o_v_2, t_n_l_i_2, t_n_t_i_2, t_n_b_i_2, ftp_cost, \
-            new_conn_ftp = ClusterUtil.login_service_helper(
+            new_conn_ftp = ConnectionUtil.login_service_helper(
                 s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
                 service_name=constants.FTP.SERVICE_NAME, env_config=env_config)
             s_3, t_n_p_3, t_n_os_3, t_n_v_3, t_n_m_3, \
             t_n_s_a_3, t_n_f_p_3, t_n_r_3, t_n_o_v_3, t_n_l_i_3, t_n_t_i_3, t_n_b_i_3, telnet_cost, \
-            new_conn_telnet = ClusterUtil.login_service_helper(
+            new_conn_telnet = ConnectionUtil.login_service_helper(
                 s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
                 service_name=constants.TELNET.SERVICE_NAME, env_config=env_config)
             total_cost = total_cost + ssh_cost + ftp_cost + telnet_cost
