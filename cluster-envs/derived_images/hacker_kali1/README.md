@@ -1,6 +1,6 @@
-# Ubuntu 14 Base
+# Hacker_kali1
 
-A base image with Ubuntu 14
+A Kali image, used to generate containers with tools for penetration testing.
 
 ## Useful commands
 
@@ -20,4 +20,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

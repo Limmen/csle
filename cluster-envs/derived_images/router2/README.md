@@ -1,6 +1,6 @@
-# Ubuntu 14 Base
+# Router2
 
-A base image with Ubuntu 14
+Image with the Snort IDS that can be used to generate containers acting as gateways.
 
 ## Useful commands
 
@@ -9,6 +9,10 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- Snort
 
 ## Author & Maintainer
 
@@ -20,4 +24,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

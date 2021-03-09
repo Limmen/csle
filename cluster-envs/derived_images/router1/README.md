@@ -1,6 +1,6 @@
-# Ubuntu 14 Base
+# Router1
 
-A base image with Ubuntu 14
+Image without any particular services that can be used to generate containers acting as gateways
 
 ## Useful commands
 
@@ -20,4 +20,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

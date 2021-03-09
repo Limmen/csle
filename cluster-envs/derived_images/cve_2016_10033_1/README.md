@@ -1,6 +1,10 @@
-# Ubuntu 14 Base
+# CVE 2016-10033 Image
 
-A base image with Ubuntu 14
+Docker image with the CVE 2010-10033 vulnerability.
+
+## Description
+
+PHPMailer before its version 5.2.18 suffer from a vulnerability that could lead to remote code execution (RCE).
 
 ## Useful commands
 
@@ -9,6 +13,12 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- SSH
+- Apache2
+- SMTPD
 
 ## Author & Maintainer
 
@@ -20,4 +30,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

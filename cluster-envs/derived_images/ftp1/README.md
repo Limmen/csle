@@ -1,6 +1,6 @@
-# Ubuntu 14 Base
+# FTP1
 
-A base image with Ubuntu 14
+FTP server that can be used to generate containers vulnerable to brute-force attacks
 
 ## Useful commands
 
@@ -9,6 +9,15 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- VSFTPD
+- MongoDB
+- SMTP
+- Tomcat
+- Teamspeak3
+- SSH
 
 ## Author & Maintainer
 
@@ -20,4 +29,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

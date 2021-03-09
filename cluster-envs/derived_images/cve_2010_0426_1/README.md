@@ -1,10 +1,9 @@
-# CVE 2010-0426 Base Image
+# CVE 2010-0426 Image
 
-Base docker image with the CVE 2010-0426 vulnerability.
+Docker image with the CVE 2010-0426 vulnerability.
 
 ## Description
 The bug was found in sudoedit, which does not handle the 'sudoedit' command correctly, this allows a malicious user to replace the real sudoedit command with an arbitrary command.
-
 Local attackers could exploit this issue to run arbitrary commands as the 'root' user. Successful exploits can completely compromise an affected computer.    
 
 ## Useful commands
@@ -14,6 +13,12 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- Teamspeak3
+- Tomcat
+- SSH
 
 ## Author & Maintainer
 

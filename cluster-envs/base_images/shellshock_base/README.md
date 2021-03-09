@@ -1,22 +1,17 @@
 # Shellshock Base Image
 
-Shellshock base docker image, used for implementing Shellshock cve-2014-6271 vulnerabilities  
+Shellshock base docker image, used for implementing Shellshock cve-2014-6271 vulnerabilities
+
+## Description
+
+GNU Bash through 4.3 processes trailing strings after function definitions in the values of environment variables, which allows remote attackers to execute arbitrary code via a crafted environment, as demonstrated by vectors involving the ForceCommand feature in OpenSSH sshd, the mod_cgi and mod_cgid modules in the Apache HTTP Server, scripts executed by unspecified DHCP clients, and other situations in which setting the environment occurs across a privilege boundary from Bash execution, aka "ShellShock.  
 
 ## Useful commands
 
 ```bash
-make rm-image # Delete built image
-make build # Build docker image
-make clean # Stop running container
-make run # Run container
-make net # Create Docker sub-network
-make rm-net # Remove Docker sub-network
-docker container ls --all # list all running containers
-docker image ls --all # list all images
-docker system prune # remove unused images and containers
-docker container prune # remove stopped containers
-sudo nmap -sU -p 161 <ip> # UDP scan to test that SNMP port is open
-nmap -p- <ip> # Scan TCP ports   
+make all # Deletes the current image and re-builds it
+make build # Builds the image
+make rm-image # Deletes the image   
 ```
 
 ## Author & Maintainer

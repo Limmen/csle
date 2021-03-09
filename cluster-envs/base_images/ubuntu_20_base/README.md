@@ -5,17 +5,9 @@ A base image with Ubuntu 20
 ## Useful commands
 
 ```bash
-make rm-image # Delete built image
-make build # Build docker image
-make clean # Stop running container
-make run # Run container
-make net # Create Docker sub-network
-make rm-net # Remove Docker sub-network
-docker container ls --all # list all running containers
-docker image ls --all # list all images
-docker system prune # remove unused images and containers
-docker container prune # remove stopped containers
-nmap -p- <ip> # Scan TCP ports   
+make all # Deletes the current image and re-builds it
+make build # Builds the image
+make rm-image # Deletes the image   
 ```
 
 ## Author & Maintainer

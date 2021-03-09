@@ -1,6 +1,6 @@
-# SambaCry Base Image
+# SambaCry Image
 
-Samba base docker image, used for implementing sambacry cve-2017-7494 vulnerabilities  
+Docker image with the CVE-2017-7494 vulnerability.
 
 ## Description
 
@@ -14,6 +14,12 @@ make build # Builds the image
 make rm-image # Deletes the image   
 ```
 
+## Services
+
+- SSH
+- NTP
+- Samba
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
@@ -24,4 +30,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

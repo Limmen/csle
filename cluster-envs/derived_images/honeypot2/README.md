@@ -1,6 +1,6 @@
-# Ubuntu 14 Base
+# Honeypot2
 
-A base image with Ubuntu 14
+Image with a set of arbitrary network services that can be used to generate honeypot containers.
 
 ## Useful commands
 
@@ -9,6 +9,13 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- PostgreSQL
+- NTP
+- SNMP
+- SSH
 
 ## Author & Maintainer
 
@@ -20,4 +27,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

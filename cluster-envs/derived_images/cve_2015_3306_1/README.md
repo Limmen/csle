@@ -1,10 +1,9 @@
-# CVE-2015-10033 Base Image
+# CVE 2015-3306 Image
 
-Base docker image with the CVE 2015-10033 vulnerability.
+Docker image with the CVE 2015-3306 vulnerability.
 
 ## Description
-
-PHPMailer before its version 5.2.18 suffer from a vulnerability that could lead to remote code execution (RCE).    
+The mod_copy module in ProFTPD 1.3.5 allows remote attackers to read and write to arbitrary files via the site cpfr and site cpto commands.    
 
 ## Useful commands
 
@@ -13,6 +12,13 @@ make all # Deletes the current image and re-builds it
 make build # Builds the image
 make rm-image # Deletes the image   
 ```
+
+## Services
+
+- SNMP
+- PROFTPD
+- Apache2
+- SSH
 
 ## Author & Maintainer
 

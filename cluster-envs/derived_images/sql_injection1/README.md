@@ -1,6 +1,6 @@
-# SQL Injection Base Image
+# SQL Injection Image
 
-A base Docker image with a webapp that is vulnerable to SQL injection attacks  
+Docker image with a webapp that is vulnerable to SQL injection attacks
 
 ## Description
 
@@ -14,6 +14,12 @@ make build # Builds the image
 make rm-image # Deletes the image   
 ```
 
+## Services
+
+- IRC
+- Apache2
+- SSH
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
@@ -24,4 +30,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar
