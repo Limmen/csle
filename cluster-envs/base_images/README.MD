@@ -8,8 +8,8 @@ more specific Docker images.
 
 - `cve_2010_0426_base` ([cve_2010_0426_base](./cve_2010_0426_base)): a base image with the CVE-2010-0426 vulnerability. OS: Debian:Jessie. Inherits from `debian_jessie_base`.
 - `cve_2015_1427_base` ([cve_2015_1427_base](./cve_2015_1427_base)): a base image with the CVE-2015-1427 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2015_3306_base` ([cve_2015_3306_base](./cve_2015_3306_base)): a base image with the CVE-2015-1427 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2015_5602_base` ([cve_2015_5602_base](./cve_2015_5602_base)): a base image with the CVE-2015-3306 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2015_3306_base` ([cve_2015_3306_base](./cve_2015_3306_base)): a base image with the CVE-2015-3306 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2015_5602_base` ([cve_2015_5602_base](./cve_2015_5602_base)): a base image with the CVE-2015-5602 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
 - `cve_2016_10033_base` ([cve_2016_10033_base](./cve_2016_10033_base)): a base image with the CVE-2016-10033 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
 - `debian_jessie_base` ([debian_jessie_base](./debian_jessie_base)): a base debian image. OS: Debian:Jessie.
 - `kali_base` ([kali_base](./kali_base)): a base Kali image, used to generate containers with tools for penetration testing. OS: Kali (Latest).
