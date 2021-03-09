@@ -191,10 +191,12 @@ class MainFrame(pyglet.window.Window):
                 row = batch_label(".xxx", adj_matrix_x_start -10, y_adj - m*h + w/3, 5,
                                 (0, 0, 0, 255), self.batch,
                                 self.second_foreground)
+                row.font_size = 6
                 self.adj_matrix_rows.append(row)
                 col = batch_label(".xxx", adj_matrix_x_start + m * w + w/2, y_adj+20, 5,
                                   (0, 0, 0, 255), self.batch,
                                   self.second_foreground)
+                col.font_size = 6
                 self.adj_matrix_columns.append(col)
 
             for m in range(self.env_config.num_nodes+1):
@@ -207,6 +209,7 @@ class MainFrame(pyglet.window.Window):
                     l = batch_label("0", adj_matrix_x_start + w / 2 + c * (w), y_temp, 8,
                                     (0, 0, 0, 255), self.batch,
                                     self.second_foreground)
+                    l.font_size = 6
                     row_labels.append(l)
                 self.adj_matrix_labels.append(row_labels)
 
@@ -240,6 +243,7 @@ class MainFrame(pyglet.window.Window):
                     create_circle_fill(x, y, 3, self.batch, self.first_foreground, constants.RENDERING.WHITE)
                     lbl = batch_label("", x -20, y-6, 10, (0, 0, 0, 255), self.batch,
                                 self.second_foreground)
+                    lbl.font_size = 10
                     i=0
                     flag_sprite = pyglet.sprite.Sprite(self.flag_avatar, x=x-(15*(i+1)),
                                                             y=y+2,
@@ -366,7 +370,7 @@ class MainFrame(pyglet.window.Window):
         labels = ["m", "p", "s_id", "udp/tcp", "service"]
         for c in range(len(labels)):
             if c == 0:
-                batch_label(labels[c], int(x_start+15 + c * w), y_s-25, 5, (0, 0, 0, 255), self.batch, self.second_foreground)
+                batch_label(labels[c], int(x_start+10 + c * w), y_s-25, 5, (0, 0, 0, 255), self.batch, self.second_foreground)
             elif c == 2:
                 batch_label(labels[c], int(x_start + 10 + (c+1) * w), y_s - 25, 5, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
@@ -388,16 +392,16 @@ class MainFrame(pyglet.window.Window):
                 batch_rect_border(int(x_start + 3 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
                 batch_rect_border(int(x_start + 4 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
                 batch_rect_border(int(x_start + 5 * w), y_p, w*3, h, constants.RENDERING.BLACK, self.batch, self.background)
-                p_0_l = batch_label(str(self.state.ports_state[p][0]), int(x_start+15 + 0 * w), y_p+w/3, 5, (0, 0, 0, 255),
+                p_0_l = batch_label(str(self.state.ports_state[p][0]), int(x_start+10 + 0 * w), y_p+w/3, 5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                p_1_l = batch_label(str(self.state.ports_state[p][1]), int(x_start+15 + 1.5 * w), y_p + w / 3, 5, (0, 0, 0, 255),
+                p_1_l = batch_label(str(self.state.ports_state[p][1]), int(x_start+10 + 1.5 * w), y_p + w / 3, 5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                p_2_l = batch_label(str(self.state.ports_state[p][2]), int(x_start+15 + 2.5 * w), y_p + w / 3, 5, (0, 0, 0, 255),
+                p_2_l = batch_label(str(self.state.ports_state[p][2]), int(x_start+20 + 2.5 * w), y_p + w / 3, 5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
-                p_3_l = batch_label(str(self.state.ports_state[p][3]), int(x_start + 15 + 3.5 * w), y_p + w / 3, 5,
+                p_3_l = batch_label(str(self.state.ports_state[p][3]), int(x_start + 20 + 3.5 * w), y_p + w / 3, 5,
                                     (0, 0, 0, 255),
                                     self.batch,
                                     self.second_foreground)
@@ -416,7 +420,7 @@ class MainFrame(pyglet.window.Window):
         labels = ["v", "vulnerability", "cvss"]
         for c in range(len(labels)):
             if c == 0:
-                batch_label(labels[c], 215 + 0 * w, y_s - 25, 5, (0, 0, 0, 255), self.batch,
+                batch_label(labels[c], 210 + 0 * w, y_s - 25, 5, (0, 0, 0, 255), self.batch,
                             self.second_foreground)
             elif c == 1:
                 batch_label(labels[c], 250+1*w, y_s - 25, 5, (0, 0, 0, 255), self.batch,
@@ -435,7 +439,7 @@ class MainFrame(pyglet.window.Window):
                                   self.background)
                 batch_rect_border(200 + 6 * w, y_v, w, h, constants.RENDERING.BLACK, self.batch,
                                   self.background)
-                v_lbl_0 = batch_label("-", 215 + 0*w, y_v + w / 2.5,
+                v_lbl_0 = batch_label("-", 210 + 0*w, y_v + w / 2.5,
                             5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
@@ -458,7 +462,7 @@ class MainFrame(pyglet.window.Window):
         labels = ["os_id", "os"]
         for c in range(len(labels)):
             if c != 1:
-                batch_label(labels[c], 375 + 0 * w, y_s - 25, 5, (0, 0, 0, 255),
+                batch_label(labels[c], 370 + 0 * w, y_s - 25, 5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
             else:
@@ -477,7 +481,7 @@ class MainFrame(pyglet.window.Window):
                 batch_rect_border(360 + 1 * w, y_o, w * 5, h, constants.RENDERING.BLACK,
                                   self.batch,
                                   self.background)
-                o_lbl_0 = batch_label("-", 365 + 0 * w, y_o + w / 2.5,
+                o_lbl_0 = batch_label("-", 370 + 0 * w, y_o + w / 2.5,
                             5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
@@ -608,10 +612,9 @@ class MainFrame(pyglet.window.Window):
             for c in range(len(self.state_labels[m])):
                 self.state_labels[m][c].text = str(int(self.state.machines_state[m][c]))
                 if len(str(int(self.state.machines_state[m][c]))) > 3:
-                    self.state_labels[m][c].font_size = 6
+                    self.state_labels[m][c].font_size = 4
                 else:
-                    if self.state_labels[m][c].font_size == 6:
-                        self.state_labels[m][c].font_size = 10
+                    self.state_labels[m][c].font_size = 6
         for p in range(len(self.ports_labels)):
             for c in range(len(self.ports_labels[p])):
                 if c < 4:
@@ -634,7 +637,9 @@ class MainFrame(pyglet.window.Window):
                     self.state.vuln_lookup_inv[int(self.state.vuln_state[v][0])])
                 self.vuln_labels[v][1].text = vuln_name
                 self.vuln_labels[v][2].text = str(int(self.state.vuln_state[v][1]))
-                if len(str(int(self.state.vuln_state[v][0]))) > 3:
+                if len(str(int(self.state.vuln_state[v][0]))) > 4:
+                    self.vuln_labels[v][0].font_size = 4
+                else:
                     self.vuln_labels[v][0].font_size = 6
 
         for o in range(len(self.os_labels)):
@@ -643,6 +648,7 @@ class MainFrame(pyglet.window.Window):
                 os_name = "-" if int(self.state.os_state[o][0]) not in self.state.os_state else str(
                     self.state.os_lookup_inv[int(self.state.os_state[o][0])])
                 self.os_labels[o][1].text = os_name
+                self.os_labels[o][1].font_size = 6
 
     def update_topology(self):
 
@@ -668,8 +674,10 @@ class MainFrame(pyglet.window.Window):
             for i in range(len(self.adj_matrix_labels)):
                 self.adj_matrix_rows[i].text = ".xxx"
                 self.adj_matrix_columns[i].text = ".xxx"
+                self.adj_matrix_columns[i].font_size = 6
                 for lbl in self.adj_matrix_labels[i]:
                     lbl.text = "0"
+                    lbl.font_size = 6
 
         self.node_ip_to_links = {}
 

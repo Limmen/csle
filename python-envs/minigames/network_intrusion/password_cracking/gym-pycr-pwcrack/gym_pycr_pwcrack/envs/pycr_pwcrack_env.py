@@ -409,7 +409,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
                                    or action.type == ActionType.PRIVILEGE_ESCALATION):
             if action.subnet and target_machine is None:
                 return True
-            if m_index == -1:
+            if m_index is not None and m_index == -1:
                 exploit_tried = all(list(map(lambda x: env_state.obs_state.exploit_tried(a=action, m=x), target_machines)))
             else:
                 exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)

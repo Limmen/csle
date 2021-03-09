@@ -700,7 +700,7 @@ class PyCrPwCrackLevel7Base:
         """
         :return: the render config
         """
-        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 12)
+        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 12, render_adj_matrix=True)
         return render_config
 
     @staticmethod
