@@ -2,6 +2,7 @@ from gym_pycr_pwcrack.dao.action.action import Action
 from gym_pycr_pwcrack.dao.action.action_type import ActionType
 from gym_pycr_pwcrack.dao.action.action_id import ActionId
 from gym_pycr_pwcrack.dao.action.action import ActionOutcome
+import gym_pycr_pwcrack.constants.constants as constants
 
 class ShellActions:
     """
@@ -192,7 +193,8 @@ class ShellActions:
         :return: the action
         """
         id = ActionId.CVE_2015_5602_PRIV_ESC
-        cmd = ["/cve_2015_5602_exploit.sh", "/create_backdoor_cve_2015_5602.sh"]
+        cmd = ["/cve_2015_5602_exploit.sh", "su root", constants.CVE_2015_5602.ROOT_PW,
+               "/create_backdoor_cve_2015_5602.sh"]
         return Action(id=id, name="CVE-2015-5602 exploit", cmd=cmd,
                       type=ActionType.PRIVILEGE_ESCALATION,
                       descr="Uses the CVE-2015-5602 vulnerability to perform privilege escalation to get root access",

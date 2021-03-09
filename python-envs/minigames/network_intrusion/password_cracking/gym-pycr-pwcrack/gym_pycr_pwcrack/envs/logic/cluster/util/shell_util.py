@@ -40,7 +40,7 @@ class ShellUtil:
             cache_file = \
                 ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
                                                           service=constants.SSH.SERVICE_NAME,
-                                                          user=c.username)
+                                                          user=c.username, root=c.root)
             if cache_file is not None:
                 flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
                                                               env_config=env_config)
@@ -84,7 +84,7 @@ class ShellUtil:
                 # Persist cache
                 ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                          service=constants.SSH.SERVICE_NAME, user=c.username,
-                                                         files=flag_paths, ip=machine.ip)
+                                                         files=flag_paths, ip=machine.ip, root=c.root)
 
             # Check for flags
             for fp in flag_paths:
@@ -135,7 +135,7 @@ class ShellUtil:
             cache_file = \
                 ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
                                                           service=constants.TELNET.SERVICE_NAME,
-                                                          user=c.username)
+                                                          user=c.username, root=c.root)
             if cache_file is not None:
                 flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
                                                               env_config=env_config)
@@ -176,7 +176,7 @@ class ShellUtil:
                 # Persist cache
                 ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                          service=constants.TELNET.SERVICE_NAME, user=c.username,
-                                                         files=flag_paths, ip=machine.ip)
+                                                         files=flag_paths, ip=machine.ip, root=c.root)
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
@@ -226,7 +226,7 @@ class ShellUtil:
             cache_file = \
                 ClusterUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
                                                           service=constants.FTP.SERVICE_NAME,
-                                                          user=c.username)
+                                                          user=c.username, root=c.root)
             if cache_file is not None:
                 flag_paths = ClusterUtil.parse_file_scan_file(file_name=cache_file,
                                                               env_config=env_config)
@@ -304,7 +304,7 @@ class ShellUtil:
                 # Persist cache
                 ClusterUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                          service=constants.FTP.SERVICE_NAME, user=c.username,
-                                                         files=flag_paths, ip=machine.ip)
+                                                         files=flag_paths, ip=machine.ip, root=c.root)
             new_m_obs.filesystem_searched = True
             # Check for flags
             for fp in flag_paths:

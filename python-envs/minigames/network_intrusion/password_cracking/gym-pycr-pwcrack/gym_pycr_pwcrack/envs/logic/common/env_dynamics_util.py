@@ -133,7 +133,7 @@ class EnvDynamicsUtil:
         n_m, new_root = EnvDynamicsUtil.merge_root(o_m, n_m)
         n_m, new_flag_pts = EnvDynamicsUtil.merge_flags(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_connections(o_m, n_m)
-        n_m = EnvDynamicsUtil.merge_filesystem_scanned(o_m, n_m)
+        n_m = EnvDynamicsUtil.merge_filesystem_scanned(o_m, n_m, new_root)
         n_m = EnvDynamicsUtil.merge_untried_credentials(o_m, n_m, action)
         n_m = EnvDynamicsUtil.merge_trace(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_exploit_tried(o_m, n_m)
@@ -334,16 +334,20 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_filesystem_scanned(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_filesystem_scanned(o_m: MachineObservationState, n_m: MachineObservationState, new_root: int) -> \
+            MachineObservationState:
         """
         Helper function for merging an old machine observation file-system-scanned-flag with new information collected
 
         :param o_os: the old machine observation
         :param n_os: the new machine observation
+        :param new_root: number of new root connections
         :return: the merged machine observation with updated filesystem-scanned flag
         """
         if not n_m.filesystem_searched:
             n_m.filesystem_searched = o_m.filesystem_searched
+        if new_root > 0:
+            n_m.filesystem_searched = False
         return n_m
 
     @staticmethod

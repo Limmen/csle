@@ -509,6 +509,8 @@ class PyCrPwCrackLevel7Base:
         flags_lookup[("172.18.7.37", "/tmp/flag7")] = Flag(name="flag7", path="/tmp", id=7, requires_root=False, score=1)
         flags_lookup[("172.18.7.82", "/tmp/flag8")] = Flag(name="flag8", path="/tmp", id=8, requires_root=False, score=1)
         flags_lookup[("172.18.7.75", "/tmp/flag9")] = Flag(name="flag9", path="/tmp", id=9, requires_root=False, score=1)
+        flags_lookup[("172.18.7.71", "/root/flag10")] = Flag(name="flag10", path="/root", id=10, requires_root=True, score=1)
+        flags_lookup[("172.18.7.11", "/root/flag11")] = Flag(name="flag11", path="/root", id=11, requires_root=True, score=1)
         return flags_lookup
 
     @staticmethod

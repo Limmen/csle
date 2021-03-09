@@ -236,24 +236,12 @@ class PyCRPwCrackEnv(gym.Env, ABC):
 
         :return: initial observation
         """
-        # if self.agent_state.num_episodes % self.env_config.print_cache_details_freq == 0:
-        #     print("[reset], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
-        #           "cache_misses:{}".format(
-        #         len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
-        #         len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
-        #         self.env_config.cache_misses))
-        # print("sott:{},env_mode:{},dr:{},rs:{}".format(soft, self.env_config.env_mode,
-        #                                                self.env_config.domain_randomization,
-        #                                                self.randomization_space))
         if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
                 and self.env_config.domain_randomization and self.randomization_space is not None:
             randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,
                                                                              env_config=self.env_config)
-            # print("randomize env, max num nodes:{}, max num flags:{}, ips:{}".format(
-            #     self.randomization_space.max_num_nodes, self.randomization_space.max_num_flags,
-            #     list(map(lambda x: x.ip, randomized_network_conf.nodes))))
             self.env_config = env_config
             if self.env_config.compute_pi_star:
                 if not self.env_config.use_upper_bound_pi_star:
@@ -373,6 +361,8 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         unscanned_filesystems = False
         untried_credentials = False
         root_login = False
+        machine_root_login = False
+        machine_logged_in = False
         uninstalled_tools = False
         machine_w_tools = False
         uninstalled_backdoor = False
@@ -397,6 +387,10 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             if m.ip == ip:
                 machine_discovered = True
                 target_machine = m
+                if m.logged_in:
+                    machine_logged_in = True
+                    if m.root:
+                        machine_root_login = True
             # if m.shell_access and not m.logged_in:
             #     untried_credentials = True
             if m.untried_credentials:
@@ -405,10 +399,9 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
-        print("m_disc:{}, logged_in:{}, root_loing:{}, type:{}".format(machine_discovered, logged_in, root_login, action.type))
-
         # Privilege escalation only legal if machine discovered and logged in and not root
-        if action.type == ActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not logged_in or root_login):
+        if action.type == ActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
+                                                               or machine_root_login):
             return False
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
@@ -417,7 +410,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
             if action.subnet and target_machine is None:
                 return True
             if m_index == -1:
-                exploit_tried = all(list(map(lambda x: env_state.obs_state.exploit_tried(a=action, m=x))))
+                exploit_tried = all(list(map(lambda x: env_state.obs_state.exploit_tried(a=action, m=x), target_machines)))
             else:
                 exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)
             if exploit_tried:
@@ -469,8 +462,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
-            #self.
-            #self.viewer.mainframe.new_window()
 
     def cleanup(self) -> None:
         """
@@ -482,12 +473,7 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.env_state.cleanup()
         if self.env_config.cluster_config is not None:
             self.env_config.cluster_config.close()
-        # if self.env_config.env_mode == EnvMode.SIMULATION:
-        #     return
-        # else:
-        #     self.env_state.cleanup()
-        #     if self.env_config.cluster_config is not None:
-        #         self.env_config.cluster_config.close()
+
 
     def convert_ar_action(self, machine_idx, action_idx):
         """
@@ -530,7 +516,6 @@ class PyCRPwCrackEnv(gym.Env, ABC):
         self.env_config.render_config.resources_dir = resource_path
         self.viewer = Viewer(env_config=self.env_config, init_state=self.agent_state)
         self.viewer.start()
-
 
     def __checkpoint_log(self) -> None:
         """

@@ -134,7 +134,7 @@ class ClusterUtil:
 
     @staticmethod
     def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str, files: List[str],
-                                     ip: str) \
+                                     ip: str, root: bool = False) \
             -> None:
         """
         Caches the result of a file system scan
@@ -144,12 +144,13 @@ class ClusterUtil:
         :param user: the user
         :param files: the result to cache
         :param ip: the ip
+        :param root: whether root or not
         :return: None
         """
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
         file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
             action.index) + "_" + ip + "_" + service \
-                    + "_" + user + ".txt"
+                    + "_" + user + "_" + str(int(root)) + ".txt"
         remote_file = sftp_client.file(file_name, mode="a")
         try:
             for file in files:
@@ -235,12 +236,14 @@ class ClusterUtil:
         return output_str
 
     @staticmethod
-    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service: str, user: str):
+    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service: str, user: str,
+                                      root: bool = False):
         """
         Checks if a filesystem action is cached or not
 
         :param a: the action
         :param env_config: the environment configuration
+        :param root: whether root or not
         :return: None or the name of the file where the result is cached
         """
         query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + ".txt"

@@ -376,11 +376,14 @@ class CVE_2010_0426:
     SERVICE_NAME = "sudoedit"
     BACKDOOR_USER="ssh_backdoor_cve10_0426pwn"
     BACKDOOR_PW="cve_2010_0426_pwnedpw"
+    EXPLOIT_FILE = "/etc/fstab"
+
 
 class CVE_2015_5602:
     SERVICE_NAME = "sudoedit"
     BACKDOOR_USER="ssh_backdoor_cve15_5602pwn"
     BACKDOOR_PW="cve_2015_5602_pwnedpw"
+    ROOT_PW="cve_2015_5602_temp_root_pw"
 
 class CVE_2015_3306:
     SERVICE_NAME = "proftpd"
