@@ -6,19 +6,37 @@ more specific Docker images.
 
 ## List of Base Images
 
-- `cve_2010_0426_base` ([cve_2010_0426_base](./cve_2010_0426_base)): a base image with the CVE-2010-0426 vulnerability. OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2015_1427_base` ([cve_2015_1427_base](./cve_2015_1427_base)): a base image with the CVE-2015-1427 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2015_3306_base` ([cve_2015_3306_base](./cve_2015_3306_base)): a base image with the CVE-2015-3306 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2015_5602_base` ([cve_2015_5602_base](./cve_2015_5602_base)): a base image with the CVE-2015-5602 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `cve_2016_10033_base` ([cve_2016_10033_base](./cve_2016_10033_base)): a base image with the CVE-2016-10033 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
-- `debian_jessie_base` ([debian_jessie_base](./debian_jessie_base)): a base debian image. OS: Debian:Jessie.
-- `kali_base` ([kali_base](./kali_base)): a base Kali image, used to generate containers with tools for penetration testing. OS: Kali (Latest).
-- `samba_base` ([samba_base](./samba_base)): a base image with the SambaCry CVE-2017-7494 vulnerabilitiy. OS: Debian:Jessie.
-- `shellshock_base` ([shellshock_base](./shellshock_base)): a base image with the ShellShock CVE-2014-6271 vulnerabilitiy. OS: Debian:Wheezy.
-- `sql_injection_base` ([sql_injection_base](./sql_injection_base)): a base image with a webapp that is vulnerable to SQL injections. OS: Debian:9.2.
-- `ssh_base` ([ssh_base](./ssh_base)): a base image with a SSH server that accepts arbitrary login attempts logins. OS: Ubuntu:20.
-- `ubuntu_14_base` ([ubuntu_14_base](./ubuntu_14_base)): a base image with Ubuntu 14. OS: Ubuntu:14.
-- `ubuntu_20_base` ([ubuntu_20_base](./ubuntu_20_base)): a base image with Ubuntu 20. OS: Ubuntu:20.
+- `cve_2010_0426_base` ([cve_2010_0426_base](./cve_2010_0426_base)): a base image with the CVE-2010-0426 vulnerability. 
+     - OS: Debian:Jessie. 
+     - Inherits from `debian_jessie_base`.
+- `cve_2015_1427_base` ([cve_2015_1427_base](./cve_2015_1427_base)): a base image with the CVE-2015-1427 vulnerability. 
+     - OS: Debian:Jessie. 
+     - Inherits from `debian_jessie_base`.
+- `cve_2015_3306_base` ([cve_2015_3306_base](./cve_2015_3306_base)): a base image with the CVE-2015-3306 vulnerability. 
+     - OS: Debian:Jessie. 
+     - Inherits from `debian_jessie_base`.
+- `cve_2015_5602_base` ([cve_2015_5602_base](./cve_2015_5602_base)): a base image with the CVE-2015-5602 vulnerability. 
+     - OS: Debian:Jessie. 
+     - Inherits from `debian_jessie_base`.
+- `cve_2016_10033_base` ([cve_2016_10033_base](./cve_2016_10033_base)): a base image with the CVE-2016-10033 vulnerability.
+     - OS: Debian:Jessie. 
+     - Inherits from `debian_jessie_base`.
+- `debian_jessie_base` ([debian_jessie_base](./debian_jessie_base)): a base debian image. 
+     - OS: Debian:Jessie.
+- `kali_base` ([kali_base](./kali_base)): a base Kali image, used to generate containers with tools for penetration testing. 
+     - OS: Kali (Latest).
+- `samba_base` ([samba_base](./samba_base)): a base image with the SambaCry CVE-2017-7494 vulnerability. 
+     - OS: Debian:Jessie.
+- `shellshock_base` ([shellshock_base](./shellshock_base)): a base image with the ShellShock CVE-2014-6271 vulnerability. 
+     - OS: Debian:Wheezy.
+- `sql_injection_base` ([sql_injection_base](./sql_injection_base)): a base image with a webapp that is vulnerable to SQL injections. 
+     - OS: Debian:9.2.
+- `ssh_base` ([ssh_base](./ssh_base)): a base image with a SSH server that accepts arbitrary login attempts logins. 
+     - OS: Ubuntu:20.
+- `ubuntu_14_base` ([ubuntu_14_base](./ubuntu_14_base)): a base image with Ubuntu 14. 
+     - OS: Ubuntu:14.
+- `ubuntu_20_base` ([ubuntu_20_base](./ubuntu_20_base)): a base image with Ubuntu 20. 
+     - OS: Ubuntu:20.
 
 ## Useful commands
 
