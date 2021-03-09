@@ -1,7 +1,9 @@
 # Derived Images
 
-Derived images used in `pycr` when creating "Mini-game" environments.
-The derived images inherit from the base images  
+This directory contains derived Docker images used in `pycr` when emulating computer infrastructures. 
+These images are derivations of the [base images](../base_images) of `pycr`. The derived images include
+kali images, vulnerable images, and images with general network services. These images can be used to 
+generate containers for emulating various network infrastructures.
 
 ## Useful commands
 
