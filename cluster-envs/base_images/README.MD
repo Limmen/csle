@@ -1,22 +1,46 @@
 # Base Images
 
-Base images used in `pycr` when creating "Mini-game" environments.  
+This directory contains the *base* Docker images used in `pycr` when emulating computer infrastructures. 
+These images contains base configurations of different operating systems and services that are used as base to define 
+more specific Docker images.
+
+## List of Base Images
+
+- `cve_2010_0426_base`: a base image with the CVE-2010-0426 vulnerability. OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2015_1427_base`: a base image with the CVE-2015-1427 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2015_3306_base`: a base image with the CVE-2015-1427 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2015_5602_base`: a base image with the CVE-2015-3306 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `cve_2016_10033_base`: a base image with the CVE-2016-10033 vulnerability OS: Debian:Jessie. Inherits from `debian_jessie_base`.
+- `debian_jessie_base`: a base debian image. OS: Debian:Jessie.
+- `kali_base`: a base Kali image, used to generate containers with tools for penetration testing. OS: Kali (Latest).
+- `samba_base`: a base image with the SambaCry CVE-2017-7494 vulnerabilitiy. OS: Debian:Jessie.
+- `shellshock_base`: a base image with the ShellShock CVE-2014-6271 vulnerabilitiy. OS: Debian:Wheezy.
+- `sql_injection_base`: a base image with a webapp that is vulnerable to SQL injections. OS: Debian:9.2.
+- `ssh_base`: a base image with a SSH server that accepts arbitrary login attempts logins. OS: Ubuntu:20.
+- `ubuntu_14_base`: a base image with Ubuntu 14. OS: Ubuntu:14.
+- `ubuntu_20_base`: a base image with Ubuntu 14. OS: Ubuntu:20.
 
 ## Useful commands
 
 ```bash
-make rm-image # Delete all built images
-make build # Build all docker images
-make clean # Stop all running containers
-make run # Run all containers
-make router # Run router container
-make ssh # Run ssh container
-make telnet # Run telnet container
-make honeypot # Run honeypot container
-make net # Create Docker sub-network
-make rm-net # Remove Docker sub-network
-python run.py --build # build all containers with custom config
-python run.py --run # run all containers with custom config
+make rm-image # Delete all base images
+make build # Build all base images
+make all # Build all base images
+
+make kali_base # Make kali_base
+make ubuntu_20_base # Make ubuntu_20_base
+make ubuntu_14_base # Make ubuntu_14_base
+make ssh_base # Make ssh_base
+make samba_base # Make samba_base
+make shellshock_base # Make shellshock_base
+make sql_injection_base # Make sql_injection_base
+make debian_jessie_base # Make debian_jessie_base
+make cve_2015_3306_base # Make cve_2015_3306_base
+make cve_2015_1427_base # Make cve_2015_1427_base
+make cve_2016_10033_base # Make cve_2016_10033_base
+make cve_2010_0426_base # Make cve_2010_0426_base
+make cve_2015_5602_base # Make cve_2010_0426_base
+
 docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
