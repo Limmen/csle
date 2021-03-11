@@ -2880,7 +2880,10 @@ def plot_all_train_cluster_avg_comparison_eval_only(
         eval_avg_steps_data_1_cluster_1, eval_avg_steps_means_1_cluster_1,
         eval_avg_steps_stds_1_cluster_1,
         ylim_rew, file_name, markevery=10, optimal_reward = 95, sample_step = 1,
-        eval_only=False, plot_opt = False, optimal_regret = 0, ylim_reg=(-0.5,20), ylim_step = (0,1)):
+        eval_only=False, plot_opt = False, optimal_regret = 0, ylim_reg=(-0.5,20), ylim_step = (0,1),
+        label1 = r"Avg Eval 20 Envs \& Domain Randomization",
+        label2 = r"Avg Eval 20 Envs",
+        label3 = r"Avg Eval 2 Envs"):
     """
     Plots rewards, flags % and rewards of two different configurations
     """
@@ -2896,7 +2899,7 @@ def plot_all_train_cluster_avg_comparison_eval_only(
 
     # Plot Avg Eval rewards Gensim
     ax[0].plot(np.array(list(range(len(eval_avg_rewards_means_1_gensim[::sample_step]))))*sample_step,
-            eval_avg_rewards_means_1_gensim[::sample_step], label=r"Avg Eval 20 Envs \& Domain Randomization", marker="s", ls='-', color="r",
+            eval_avg_rewards_means_1_gensim[::sample_step], label=label1, marker="s", ls='-', color="r",
             markevery=markevery, markersize=3.5)
     ax[0].fill_between(np.array(list(range(len(eval_avg_rewards_means_1_gensim[::sample_step]))))*sample_step,
                     eval_avg_rewards_means_1_gensim[::sample_step] - eval_avg_rewards_stds_1_gensim[::sample_step],
@@ -2905,7 +2908,7 @@ def plot_all_train_cluster_avg_comparison_eval_only(
 
     # Plot Avg Eval rewards Cluster20
     ax[0].plot(np.array(list(range(len(eval_avg_rewards_means_1_cluster_20[::sample_step])))) * sample_step,
-            eval_avg_rewards_means_1_cluster_20[::sample_step], label=r"Avg Eval 20 Envs", marker="o",
+            eval_avg_rewards_means_1_cluster_20[::sample_step], label=label2, marker="o",
             ls='-', color="#599ad3",
             markevery=markevery, markersize=3.5)
     ax[0].fill_between(np.array(list(range(len(eval_avg_rewards_means_1_cluster_20[::sample_step])))) * sample_step,
@@ -2915,7 +2918,7 @@ def plot_all_train_cluster_avg_comparison_eval_only(
 
     # Plot Avg Eval rewards Cluster1
     ax[0].plot(np.array(list(range(len(eval_avg_rewards_means_1_cluster_1[::sample_step])))) * sample_step,
-            eval_avg_rewards_means_1_cluster_1[::sample_step], label=r"Avg Eval 2 Envs", marker="^",
+            eval_avg_rewards_means_1_cluster_1[::sample_step], label=label3, marker="^",
             ls='-', color="#f9a65a",
             markevery=markevery, markersize=3.5)
     ax[0].fill_between(np.array(list(range(len(eval_avg_rewards_means_1_cluster_1[::sample_step])))) * sample_step,
