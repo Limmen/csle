@@ -69,7 +69,7 @@ from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
 from gym_pycr_ctf.envs.logic.simulation.find_pi_star import FindPiStar
 
-class PyCRctfEnv(gym.Env, ABC):
+class PyCRCTFEnv(gym.Env, ABC):
     """
     Abstract OpenAI Gym Env for the PyCr ctf minigame
     """
@@ -155,7 +155,7 @@ class PyCRctfEnv(gym.Env, ABC):
             self.reset()
         self.reset()
         actions = list(range(self.num_actions))
-        self.initial_illegal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+        self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                     action, env_config=self.env_config, env_state=self.env_state), actions))
         if (self.env_config.env_mode == EnvMode.SIMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
                 and self.env_config.compute_pi_star:
@@ -184,10 +184,10 @@ class PyCRctfEnv(gym.Env, ABC):
         if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
             print("illegal action:{}, idx:{}".format(action_id, self.idx))
             actions = list(range(len(self.env_config.action_conf.actions)))
-            non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
             print("true illegal actins:{}, idx:{}".format(non_legal_actions, self.idx))
-            legal_actions = list(filter(lambda action: PyCRctfEnv.is_action_legal(
+            legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
             print("true legal actions:{}, idx:{}".format(legal_actions, self.idx))
             print("flags found:{}, idx:{}".format(self.env_state.num_flags, self.idx))
@@ -253,7 +253,7 @@ class PyCRctfEnv(gym.Env, ABC):
                 self.env_config.pi_star_rew = pi_star_rew
                 self.env_config.pi_star_rew_list.append(pi_star_rew)
             actions = list(range(self.num_actions))
-            self.initial_illegal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+            self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
 
         self.__checkpoint_log()
@@ -309,7 +309,7 @@ class PyCRctfEnv(gym.Env, ABC):
                                                                          env_config=self.env_config)
         self.env_config = env_config
         actions = list(range(self.num_actions))
-        self.initial_illegal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+        self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
             action, env_config=self.env_config, env_state=self.env_state), actions))
 
     @staticmethod
@@ -328,10 +328,10 @@ class PyCRctfEnv(gym.Env, ABC):
         """
         # If using AR policy
         if m_selection:
-            return PyCRctfEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,
+            return PyCRCTFEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,
                                                                env_state=env_state)
         elif m_action:
-            return PyCRctfEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config,
+            return PyCRCTFEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config,
                                                             env_state=env_state, machine_index=m_index)
 
         if not env_config.filter_illegal_actions:
@@ -627,7 +627,7 @@ class PyCRctfEnv(gym.Env, ABC):
 # -------- Pre-defined Simulations ------------
 
 # -------- Base Version (for testing) ------------
-class PyCRctfLevel1SimBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel1SimBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -651,7 +651,7 @@ class PyCRctfLevel1SimBaseEnv(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 1 ------------
-class PyCRctfLevel1Sim1Env(PyCRctfEnv):
+class PyCRCTFLevel1Sim1Env(PyCRCTFEnv):
     """
     Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -682,7 +682,7 @@ class PyCRctfLevel1Sim1Env(PyCRctfEnv):
 
 
 # -------- Version 1 with costs ------------
-class PyCRctfLevel1SimWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel1SimWithCosts1Env(PyCRCTFEnv):
     """
     Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -706,7 +706,7 @@ class PyCRctfLevel1SimWithCosts1Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 2 ------------
-class PyCRctfLevel1Sim2Env(PyCRctfEnv):
+class PyCRCTFLevel1Sim2Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
@@ -730,7 +730,7 @@ class PyCRctfLevel1Sim2Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 2, Costs ------------
-class PyCRctfLevel1SimWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel1SimWithCosts2Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V1. Does take action costs into account.
@@ -754,7 +754,7 @@ class PyCRctfLevel1SimWithCosts2Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3 ------------
-class PyCRctfLevel1Sim3Env(PyCRctfEnv):
+class PyCRCTFLevel1Sim3Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
@@ -778,7 +778,7 @@ class PyCRctfLevel1Sim3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Costs ------------
-class PyCRctfLevel1SimWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel1SimWithCosts3Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
@@ -802,7 +802,7 @@ class PyCRctfLevel1SimWithCosts3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
-class PyCRctfLevel1Sim4Env(PyCRctfEnv):
+class PyCRCTFLevel1Sim4Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -826,7 +826,7 @@ class PyCRctfLevel1Sim4Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4, Costs ------------
-class PyCRctfLevel1SimWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel1SimWithCosts4Env(PyCRCTFEnv):
     """
     Simulation.
     Slightly more set of actions than V3. Does take action costs into account.
@@ -852,7 +852,7 @@ class PyCRctfLevel1SimWithCosts4Env(PyCRctfEnv):
 # -------- Generated Simulations ------------
 
 # -------- Version 1 ------------
-class PyCRctfLevel1GeneratedSim1Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSim1Env(PyCRCTFEnv):
     """
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -885,7 +885,7 @@ class PyCRctfLevel1GeneratedSim1Env(PyCRctfEnv):
 
 
 # -------- Version 1, costs ------------
-class PyCRctfLevel1GeneratedSimWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSimWithCosts1Env(PyCRCTFEnv):
     """
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -919,7 +919,7 @@ class PyCRctfLevel1GeneratedSimWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel1GeneratedSim2Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSim2Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
@@ -951,7 +951,7 @@ class PyCRctfLevel1GeneratedSim2Env(PyCRctfEnv):
 
 # -------- Version 2, costs ------------
 
-class PyCRctfLevel1GeneratedSimWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
@@ -983,7 +983,7 @@ class PyCRctfLevel1GeneratedSimWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel1GeneratedSim3Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSim3Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
@@ -1015,7 +1015,7 @@ class PyCRctfLevel1GeneratedSim3Env(PyCRctfEnv):
 
 # -------- Version 3, costs ------------
 
-class PyCRctfLevel1GeneratedSimWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSimWithCosts3Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V2. Does take action costs into account.
@@ -1048,7 +1048,7 @@ class PyCRctfLevel1GeneratedSimWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel1GeneratedSim4Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSim4Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -1080,7 +1080,7 @@ class PyCRctfLevel1GeneratedSim4Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel1GeneratedSimWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel1GeneratedSimWithCosts4Env(PyCRCTFEnv):
     """
     Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -1114,7 +1114,7 @@ class PyCRctfLevel1GeneratedSimWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel1ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel1ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -1139,7 +1139,7 @@ class PyCRctfLevel1ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel1Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel1Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -1165,7 +1165,7 @@ class PyCRctfLevel1Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 No Cache ------------
 
-class PyCRctfLevel1ClusterNoCache1Env(PyCRctfEnv):
+class PyCRCTFLevel1ClusterNoCache1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     No cache
@@ -1191,7 +1191,7 @@ class PyCRctfLevel1ClusterNoCache1Env(PyCRctfEnv):
 
 # -------- Version 1 With costs ------------
 
-class PyCRctfLevel1ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel1ClusterWithCosts1Env(PyCRCTFEnv):
     """
     Uses a minimal set of actions. Does take action costs into account.
     """
@@ -1216,7 +1216,7 @@ class PyCRctfLevel1ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel1Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel1Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does not take action costs into account.
     """
@@ -1242,7 +1242,7 @@ class PyCRctfLevel1Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with Costs ------------
 
-class PyCRctfLevel1ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel1ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -1268,7 +1268,7 @@ class PyCRctfLevel1ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel1Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel1Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -1294,7 +1294,7 @@ class PyCRctfLevel1Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with Costs ------------
 
-class PyCRctfLevel1ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel1ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -1320,7 +1320,7 @@ class PyCRctfLevel1ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel1Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel1Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -1346,7 +1346,7 @@ class PyCRctfLevel1Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs ------------
 
-class PyCRctfLevel1ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel1ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -1375,7 +1375,7 @@ class PyCRctfLevel1ClusterWithCosts4Env(PyCRctfEnv):
 # -------- Simulation ------------
 
 # -------- Base Version (for testing) ------------
-class PyCRctfLevel2SimBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel2SimBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -1401,7 +1401,7 @@ class PyCRctfLevel2SimBaseEnv(PyCRctfEnv):
 # -------- Simulations ------------
 
 # -------- Version 1 ------------
-class PyCRctfLevel2Sim1Env(PyCRctfEnv):
+class PyCRCTFLevel2Sim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -1424,7 +1424,7 @@ class PyCRctfLevel2Sim1Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 1, Costs ------------
-class PyCRctfLevel2SimWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel2SimWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -1449,7 +1449,7 @@ class PyCRctfLevel2SimWithCosts1Env(PyCRctfEnv):
 # -------- Generated Simulations ------------
 
 # -------- Version 1 ------------
-class PyCRctfLevel2GeneratedSim1Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSim1Env(PyCRCTFEnv):
     """
     Generated Simulation
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -1481,7 +1481,7 @@ class PyCRctfLevel2GeneratedSim1Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 1, Costs ------------
-class PyCRctfLevel2GeneratedSimWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSimWithCosts1Env(PyCRCTFEnv):
     """
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -1514,7 +1514,7 @@ class PyCRctfLevel2GeneratedSimWithCosts1Env(PyCRctfEnv):
 
 
 # -------- Version 2 ------------
-class PyCRctfLevel2GeneratedSim2Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSim2Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
@@ -1546,7 +1546,7 @@ class PyCRctfLevel2GeneratedSim2Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 2, Costs ------------
-class PyCRctfLevel2GeneratedSimWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V1. Does take action costs into account.
@@ -1578,7 +1578,7 @@ class PyCRctfLevel2GeneratedSimWithCosts2Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3 ------------
-class PyCRctfLevel2GeneratedSim3Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSim3Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
@@ -1610,7 +1610,7 @@ class PyCRctfLevel2GeneratedSim3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Costs ------------
-class PyCRctfLevel2GeneratedSimWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSimWithCosts3Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V2. Does take action costs into account.
@@ -1642,7 +1642,7 @@ class PyCRctfLevel2GeneratedSimWithCosts3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
-class PyCRctfLevel2GeneratedSim4Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSim4Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -1674,7 +1674,7 @@ class PyCRctfLevel2GeneratedSim4Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
-class PyCRctfLevel2GeneratedSimWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel2GeneratedSimWithCosts4Env(PyCRCTFEnv):
     """
     Generated Simulation.
     Slightly more set of actions than V3. Does take action costs into account.
@@ -1709,7 +1709,7 @@ class PyCRctfLevel2GeneratedSimWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel2ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel2ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -1734,7 +1734,7 @@ class PyCRctfLevel2ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel2Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel2Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -1760,7 +1760,7 @@ class PyCRctfLevel2Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs ------------
 
-class PyCRctfLevel2ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel2ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -1785,7 +1785,7 @@ class PyCRctfLevel2ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel2Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel2Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does not take action costs into account.
     """
@@ -1811,7 +1811,7 @@ class PyCRctfLevel2Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs ------------
 
-class PyCRctfLevel2ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel2ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -1837,7 +1837,7 @@ class PyCRctfLevel2ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel2Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel2Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -1863,7 +1863,7 @@ class PyCRctfLevel2Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs ------------
 
-class PyCRctfLevel2ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel2ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -1888,7 +1888,7 @@ class PyCRctfLevel2ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel2Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel2Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -1913,7 +1913,7 @@ class PyCRctfLevel2Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs ------------
 
-class PyCRctfLevel2ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel2ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -1940,7 +1940,7 @@ class PyCRctfLevel2ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel3ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel3ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -1965,7 +1965,7 @@ class PyCRctfLevel3ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel3Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel3Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -1990,7 +1990,7 @@ class PyCRctfLevel3Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs ------------
 
-class PyCRctfLevel3ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel3ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -2015,7 +2015,7 @@ class PyCRctfLevel3ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel3Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel3Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does not take action costs into account.
     """
@@ -2041,7 +2041,7 @@ class PyCRctfLevel3Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs ------------
 
-class PyCRctfLevel3ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel3ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -2066,7 +2066,7 @@ class PyCRctfLevel3ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel3Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel3Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -2091,7 +2091,7 @@ class PyCRctfLevel3Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel3ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel3ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -2116,7 +2116,7 @@ class PyCRctfLevel3ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel3Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel3Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2141,7 +2141,7 @@ class PyCRctfLevel3Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs------------
 
-class PyCRctfLevel3ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel3ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -2171,7 +2171,7 @@ class PyCRctfLevel3ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel4ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel4ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -2199,7 +2199,7 @@ class PyCRctfLevel4ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel4Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel4Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -2227,7 +2227,7 @@ class PyCRctfLevel4Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs------------
 
-class PyCRctfLevel4ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel4ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -2255,7 +2255,7 @@ class PyCRctfLevel4ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel4Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel4Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2283,7 +2283,7 @@ class PyCRctfLevel4Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs------------
 
-class PyCRctfLevel4ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel4ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -2311,7 +2311,7 @@ class PyCRctfLevel4ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel4Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel4Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -2339,7 +2339,7 @@ class PyCRctfLevel4Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs------------
 
-class PyCRctfLevel4ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel4ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -2367,7 +2367,7 @@ class PyCRctfLevel4ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel4Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel4Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2395,7 +2395,7 @@ class PyCRctfLevel4Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs------------
 
-class PyCRctfLevel4ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel4ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -2427,7 +2427,7 @@ class PyCRctfLevel4ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel5ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel5ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -2455,7 +2455,7 @@ class PyCRctfLevel5ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel5Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel5Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -2483,7 +2483,7 @@ class PyCRctfLevel5Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs------------
 
-class PyCRctfLevel5ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel5ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -2511,7 +2511,7 @@ class PyCRctfLevel5ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel5Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel5Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2539,7 +2539,7 @@ class PyCRctfLevel5Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs------------
 
-class PyCRctfLevel5ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel5ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -2567,7 +2567,7 @@ class PyCRctfLevel5ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel5Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel5Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -2595,7 +2595,7 @@ class PyCRctfLevel5Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs------------
 
-class PyCRctfLevel5ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel5ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -2623,7 +2623,7 @@ class PyCRctfLevel5ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel5Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel5Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2651,7 +2651,7 @@ class PyCRctfLevel5Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs------------
 
-class PyCRctfLevel5ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel5ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -2683,7 +2683,7 @@ class PyCRctfLevel5ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel6ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel6ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -2711,7 +2711,7 @@ class PyCRctfLevel6ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel6Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel6Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -2741,7 +2741,7 @@ class PyCRctfLevel6Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs------------
 
-class PyCRctfLevel6ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel6ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -2769,7 +2769,7 @@ class PyCRctfLevel6ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel6Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel6Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2797,7 +2797,7 @@ class PyCRctfLevel6Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs------------
 
-class PyCRctfLevel6ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel6ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -2825,7 +2825,7 @@ class PyCRctfLevel6ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel6Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel6Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -2853,7 +2853,7 @@ class PyCRctfLevel6Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs------------
 
-class PyCRctfLevel6ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel6ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -2881,7 +2881,7 @@ class PyCRctfLevel6ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel6Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel6Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -2909,7 +2909,7 @@ class PyCRctfLevel6Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs------------
 
-class PyCRctfLevel6ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel6ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -2941,7 +2941,7 @@ class PyCRctfLevel6ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfLevel7ClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFLevel7ClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -2969,7 +2969,7 @@ class PyCRctfLevel7ClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfLevel7Cluster1Env(PyCRctfEnv):
+class PyCRCTFLevel7Cluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -2997,7 +2997,7 @@ class PyCRctfLevel7Cluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs------------
 
-class PyCRctfLevel7ClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFLevel7ClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -3025,7 +3025,7 @@ class PyCRctfLevel7ClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfLevel7Cluster2Env(PyCRctfEnv):
+class PyCRCTFLevel7Cluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3053,7 +3053,7 @@ class PyCRctfLevel7Cluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs------------
 
-class PyCRctfLevel7ClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFLevel7ClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -3081,7 +3081,7 @@ class PyCRctfLevel7ClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfLevel7Cluster3Env(PyCRctfEnv):
+class PyCRCTFLevel7Cluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -3109,7 +3109,7 @@ class PyCRctfLevel7Cluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs------------
 
-class PyCRctfLevel7ClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFLevel7ClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -3137,7 +3137,7 @@ class PyCRctfLevel7ClusterWithCosts3Env(PyCRctfEnv):
 
 # -------- Version 4 ------------
 
-class PyCRctfLevel7Cluster4Env(PyCRctfEnv):
+class PyCRCTFLevel7Cluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3165,7 +3165,7 @@ class PyCRctfLevel7Cluster4Env(PyCRctfEnv):
 
 # -------- Version 4 with costs------------
 
-class PyCRctfLevel7ClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFLevel7ClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -3196,7 +3196,7 @@ class PyCRctfLevel7ClusterWithCosts4Env(PyCRctfEnv):
 
 # -------- Base Version (for testing) ------------
 
-class PyCRctfRandomClusterBaseEnv(PyCRctfEnv):
+class PyCRCTFRandomClusterBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
@@ -3228,7 +3228,7 @@ class PyCRctfRandomClusterBaseEnv(PyCRctfEnv):
 
 # -------- Version 1 ------------
 
-class PyCRctfRandomCluster1Env(PyCRctfEnv):
+class PyCRCTFRandomCluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -3263,7 +3263,7 @@ class PyCRctfRandomCluster1Env(PyCRctfEnv):
 
 # -------- Version 1 with costs------------
 
-class PyCRctfRandomClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFRandomClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -3295,7 +3295,7 @@ class PyCRctfRandomClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 1 Generated Sim ------------
 
-class PyCRctfRandomGeneratedSim1Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -3333,7 +3333,7 @@ class PyCRctfRandomGeneratedSim1Env(PyCRctfEnv):
 
 # -------- Version 1 Generated Sim With Costs ------------
 
-class PyCRctfRandomGeneratedSimWithCosts1Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSimWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -3371,7 +3371,7 @@ class PyCRctfRandomGeneratedSimWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 2 ------------
 
-class PyCRctfRandomCluster2Env(PyCRctfEnv):
+class PyCRCTFRandomCluster2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3406,7 +3406,7 @@ class PyCRctfRandomCluster2Env(PyCRctfEnv):
 
 # -------- Version 2 with costs------------
 
-class PyCRctfRandomClusterWithCosts2Env(PyCRctfEnv):
+class PyCRCTFRandomClusterWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
@@ -3440,7 +3440,7 @@ class PyCRctfRandomClusterWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 2 Generated Sim ------------
 
-class PyCRctfRandomGeneratedSim2Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSim2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3478,7 +3478,7 @@ class PyCRctfRandomGeneratedSim2Env(PyCRctfEnv):
 
 # -------- Version 2 Generated Sim With Costs ------------
 
-class PyCRctfRandomGeneratedSimWithCosts2Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -3516,7 +3516,7 @@ class PyCRctfRandomGeneratedSimWithCosts2Env(PyCRctfEnv):
 
 # -------- Version 3 ------------
 
-class PyCRctfRandomCluster3Env(PyCRctfEnv):
+class PyCRCTFRandomCluster3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -3550,7 +3550,7 @@ class PyCRctfRandomCluster3Env(PyCRctfEnv):
 
 # -------- Version 3 with costs------------
 
-class PyCRctfRandomClusterWithCosts3Env(PyCRctfEnv):
+class PyCRCTFRandomClusterWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -3583,7 +3583,7 @@ class PyCRctfRandomClusterWithCosts3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Generated Simulation ------------
-class PyCRctfRandomGeneratedSim3Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSim3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
@@ -3620,7 +3620,7 @@ class PyCRctfRandomGeneratedSim3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 3, Generated Simulation With Costs ------------
-class PyCRctfRandomGeneratedSimWithCosts3Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSimWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
@@ -3657,7 +3657,7 @@ class PyCRctfRandomGeneratedSimWithCosts3Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4 ------------
-class PyCRctfRandomCluster4Env(PyCRctfEnv):
+class PyCRCTFRandomCluster4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3691,7 +3691,7 @@ class PyCRctfRandomCluster4Env(PyCRctfEnv):
 
 
 # -------- Version 4 with costs------------
-class PyCRctfRandomClusterWithCosts4Env(PyCRctfEnv):
+class PyCRCTFRandomClusterWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -3725,7 +3725,7 @@ class PyCRctfRandomClusterWithCosts4Env(PyCRctfEnv):
 
 
 # -------- Version 4, Generated Simulation ------------
-class PyCRctfRandomGeneratedSim4Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSim4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
@@ -3763,7 +3763,7 @@ class PyCRctfRandomGeneratedSim4Env(PyCRctfEnv):
         super().__init__(env_config=env_config)
 
 # -------- Version 4, Generated Simulation, With Costs------------
-class PyCRctfRandomGeneratedSimWithCosts4Env(PyCRctfEnv):
+class PyCRCTFRandomGeneratedSimWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
@@ -3811,7 +3811,7 @@ class PyCRctfRandomGeneratedSimWithCosts4Env(PyCRctfEnv):
 # -------- Version 1 Cluster ------------
 
 
-class PyCRctfRandomManyCluster1Env(PyCRctfEnv):
+class PyCRCTFRandomManyCluster1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -3854,7 +3854,7 @@ class PyCRctfRandomManyCluster1Env(PyCRctfEnv):
 
 # -------- Version 1 With Costs ------------
 
-class PyCRctfRandomManyClusterWithCosts1Env(PyCRctfEnv):
+class PyCRCTFRandomManyClusterWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
@@ -3895,7 +3895,7 @@ class PyCRctfRandomManyClusterWithCosts1Env(PyCRctfEnv):
 
 # -------- Version 1 Generated Sim ------------
 
-class PyCRctfRandomManyGeneratedSim1Env(PyCRctfEnv):
+class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
@@ -3950,7 +3950,7 @@ class PyCRctfRandomManyGeneratedSim1Env(PyCRctfEnv):
 # -------- Version 1 Cluster ------------
 
 
-class PyCRctfMultiSim1Env(PyCRctfEnv):
+class PyCRCTFMultiSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """

@@ -49,11 +49,10 @@ def test_env(env_name : str, num_steps : int):
         #     action = 21
         # else:
         #     action = 40
-        env.render()
+        #env.render()
         obs, reward, done, info = env.step(action)
         tried_actions.append(action)
         tot_rew += reward
-        #env.render()
         if EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config) and not done:
             print("All flags but done")
         if done:
