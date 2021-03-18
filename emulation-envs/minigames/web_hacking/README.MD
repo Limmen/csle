@@ -1,10 +1,10 @@
 # Web Hacking Mini-Games
 
-This folder contains a set of virtual environments for offensive and defensive web-hacking  
+This folder contains a set of emulated environments for offensive and defensive web-hacking  
 The environments (cyber ranges/emulations) can be used to train/evaluate automatic controllers or reinforcement learning agents on
 attack/defense tasks related to web hacking. 
 
-- [ ] SQL Injection [./sql_injection](./sql_injection) 
+- [ ] SQL Injection [./sql_injection](./sql_injection) (Coming soon) 
 
 ## Author & Maintainer
 

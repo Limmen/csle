@@ -1,6 +1,4 @@
-# Common 
-
-A library of common functionality between all python environments
+# Python Interfaces to emulated "minigames" 
 
 (Coming soon..)
 

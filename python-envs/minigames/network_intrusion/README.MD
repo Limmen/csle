@@ -1,7 +1,7 @@
 # Network Intrusion Mini-Games
 
-This folder contains a set of emulated environments for different intrusion prevention scenarios. The environments 
-(cyber ranges/emulations) can be used to train/evaluate automatic controllers or reinforcement learning agents on
+This folder contains a set of python environments that interfaces to emulations of different intrusion prevention scenarios. The environments 
+can be used to train/evaluate automatic controllers or reinforcement learning agents on
 attack/defense tasks related to network intrusion. 
 
 
@@ -26,4 +26,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar

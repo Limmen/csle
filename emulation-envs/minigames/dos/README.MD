@@ -1,10 +1,10 @@
 # BotNet Mini-Games
 
-This folder contains a set of virtual environments for management of denial of service attacks.  
+This folder contains a set of emulated environments for management of denial of service attacks.  
 The environments (cyber ranges/emulations) can be used to train/evaluate automatic controllers or reinforcement learning agents on
 attack/defense tasks related to DoS. 
 
-- [ ] Botnet [./botnet](./botnet) 
+- [ ] Botnet [./botnet](./botnet)  (Coming soon)
 
 ## Author & Maintainer
 

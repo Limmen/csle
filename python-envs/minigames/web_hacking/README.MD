@@ -1,0 +1,19 @@
+# Python Environments for interfaces to Emulated Web Hacking Mini-Games
+
+This folder contains a set of python environments that interfaces to minigames that emulate scenarios related to offensive and defensive web-hacking  
+The environments can be used to train/evaluate automatic controllers or reinforcement learning agents on
+attack/defense tasks related to web hacking. 
+
+- [ ] SQL Injection [./sql_injection](./sql_injection) (Coming soon) 
+
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+[LICENSE](LICENSE.md)
+
+Creative Commons
+
+(C) 2021, Kim Hammar

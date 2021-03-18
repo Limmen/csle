@@ -1,7 +1,7 @@
 # Supergames
 
 This folder contains a set of virtual environments for various security "supergames"--challenges/environments
-to evaluate automatic controllers and autonomous agents on security-related tasks. The environments are created using docker containers.
+to evaluate automatic controllers and autonomous agents on security-related tasks. 
 The supergames "subsume" several mini-games typically.     
 
 ## Author & Maintainer
