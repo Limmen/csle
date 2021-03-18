@@ -10,14 +10,22 @@ The environment configuration is sampled randomly from the configuration space u
 number of vulnerabilities etc.  
 
 ## Architecture
-<p align="center">
-<img src="env.png" width="600">
-</p>
 
+The architecture is generated randomly using the preferental attachment theory. 
 
 ## Useful commands
 
 ```bash
+make topology # Creates the topology configuration and saves to topology.json
+make users # Creates the users configuration and saves to users.json
+make flags # Creates the flags configuration and saves to flags.json
+make vuln # Creates the vulnerabilities configuration and saves to vuln.json
+make clean_config # Cleans the configuration files
+make gen_config # Generates all of the configuration files
+make clean_fs_cache # Cleans the cache files
+make apply_config # Applies the generated configuration to a running emulation
+
+
 make rm-image # Delete all built images
 make build # Build all docker images
 make clean # Stop all running containers
