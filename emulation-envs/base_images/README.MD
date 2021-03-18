@@ -45,19 +45,19 @@ make rm-image # Delete all base images
 make build # Build all base images
 make all # Build all base images
 
-make kali_base # Make kali_base
-make ubuntu_20_base # Make ubuntu_20_base
-make ubuntu_14_base # Make ubuntu_14_base
-make ssh_base # Make ssh_base
-make samba_base # Make samba_base
-make shellshock_base # Make shellshock_base
-make sql_injection_base # Make sql_injection_base
-make debian_jessie_base # Make debian_jessie_base
-make cve_2015_3306_base # Make cve_2015_3306_base
-make cve_2015_1427_base # Make cve_2015_1427_base
-make cve_2016_10033_base # Make cve_2016_10033_base
-make cve_2010_0426_base # Make cve_2010_0426_base
-make cve_2015_5602_base # Make cve_2010_0426_base
+make kali_base # Build kali_base
+make ubuntu_20_base # Build ubuntu_20_base
+make ubuntu_14_base # Build ubuntu_14_base
+make ssh_base # Build ssh_base
+make samba_base # Build samba_base
+make shellshock_base # Build shellshock_base
+make sql_injection_base # Build sql_injection_base
+make debian_jessie_base # Build debian_jessie_base
+make cve_2015_3306_base # Build cve_2015_3306_base
+make cve_2015_1427_base # Build cve_2015_1427_base
+make cve_2016_10033_base # Build cve_2016_10033_base
+make cve_2010_0426_base # Build cve_2010_0426_base
+make cve_2015_5602_base # Build cve_2010_0426_base
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images
