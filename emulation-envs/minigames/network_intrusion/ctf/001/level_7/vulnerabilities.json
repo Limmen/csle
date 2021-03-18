@@ -1,0 +1,178 @@
+{
+    "py/object": "gym_pycr_ctf.dao.container_config.vulnerabilities_config.VulnerabilitiesConfig",
+    "vulnerabilities": [
+        {
+            "node_ip": "172.18.7.79",
+            "pw": "l_hopital",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": true,
+            "username": "l_hopital",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_ctf.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            0
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "node_ip": "172.18.7.79",
+            "pw": "euler",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": false,
+            "username": "euler",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "node_ip": "172.18.7.79",
+            "pw": "pi",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": true,
+            "username": "pi",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "node_ip": "172.18.7.2",
+            "pw": "puppet",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": false,
+            "username": "puppet",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "node_ip": "172.18.7.3",
+            "pw": "admin",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": true,
+            "username": "admin",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "node_ip": "172.18.7.19",
+            "py/object": "gym_pycr_ctf.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_ctf.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            1
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "node_ip": "172.18.7.31",
+            "py/object": "gym_pycr_ctf.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/id": 9
+            }
+        },
+        {
+            "node_ip": "172.18.7.42",
+            "pw": "0d107d09f5bbe40cade3de5c71e9e9b7",
+            "py/object": "gym_pycr_ctf.dao.container_config.sql_injection_vulnerability_config.SQLInjectionVulnerabilityConfig",
+            "root": true,
+            "username": "pablo",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_ctf.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            2
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "node_ip": "172.18.7.37",
+            "py/object": "gym_pycr_ctf.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/id": 9
+            }
+        },
+        {
+            "node_ip": "172.18.7.82",
+            "py/object": "gym_pycr_ctf.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/id": 9
+            }
+        },
+        {
+            "node_ip": "172.18.7.75",
+            "py/object": "gym_pycr_ctf.dao.container_config.rce_vulnerability_config.RceVulnerabilityConfig",
+            "vuln_type": {
+                "py/id": 9
+            }
+        },
+        {
+            "node_ip": "172.18.7.71",
+            "pw": "alan",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": false,
+            "username": "alan",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "cve": "2010-1427",
+            "node_ip": "172.18.7.71",
+            "pw": "alan",
+            "py/object": "gym_pycr_ctf.dao.container_config.priv_esc_vulnerability_config.PrivEscVulnerabilityConfig",
+            "root": false,
+            "username": "alan",
+            "vuln_type": {
+                "py/reduce": [
+                    {
+                        "py/type": "gym_pycr_ctf.dao.container_config.vulnerability_type.VulnType"
+                    },
+                    {
+                        "py/tuple": [
+                            3
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "node_ip": "172.18.7.11",
+            "pw": "donald",
+            "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
+            "root": false,
+            "username": "donald",
+            "vuln_type": {
+                "py/id": 3
+            }
+        },
+        {
+            "cve": "2015-5602",
+            "node_ip": "172.18.7.11",
+            "pw": "donald",
+            "py/object": "gym_pycr_ctf.dao.container_config.priv_esc_vulnerability_config.PrivEscVulnerabilityConfig",
+            "root": false,
+            "username": "donald",
+            "vuln_type": {
+                "py/id": 18
+            }
+        }
+    ]
+}

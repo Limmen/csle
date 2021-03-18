@@ -1,5 +1,5 @@
 import argparse
-from gym_pycr_pwcrack.envs.config.generator.container_manager import ContainerManager
+from gym_pycr_ctf.envs.config.generator.container_manager import ContainerManager
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Parse flags for command to apply to the containers')

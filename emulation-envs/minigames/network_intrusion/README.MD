@@ -8,7 +8,7 @@ attack/defense tasks related to network intrusion.
 - [ ] MITM [./mitm](./mitm)
 - [ ] Network protocol attack [./network_protocol_attack](./network_protocol_attack)
 - [ ] Network sniffing [./network_sniffing](./network_sniffing)
-- [x] Password cracking [./password_cracking](./password_cracking)
+- [x] Capture the flag [./ctf](./ctf)
 - [ ] Spoofing [./spoofing](./spoofing) 
 
 ## Author & Maintainer

@@ -1,0 +1,262 @@
+{
+  "project": "pycr",
+  "network": "pycr_net",
+  "minigame": "ctf",
+  "version": "0.0.1",
+  "subnet": "172.18.2.0",
+  "level": "1",
+  "subnet_mask_1": "172.18.2.0/24",
+  "subnet_mask_2": "255.255.255.0",
+  "root_users_file": "root_users.txt",
+  "non_root_users_file": "non_root_users.txt",
+  "flag_info_file": "fl_info.txt",
+  "containers": [
+    {
+      "name": "router",
+      "ip": "172.18.2.10",
+      "level": 2,
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "guest",
+          "password": "password"
+        }
+      ],
+      "flags": []
+    },
+    {
+      "name": "ssh1",
+      "ip": "172.18.2.2",
+      "level": 3,
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "test32121"
+        },
+        {
+          "username": "user1",
+          "password": "123123"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "puppet",
+          "password": "puppet"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag2",
+          "path": "/tmp",
+          "id": "2"
+        }
+      ]
+    },
+    {
+      "name": "telnet1",
+      "ip": "172.18.2.3",
+      "level": 3,
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "john",
+          "password": "doe"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "vagrant",
+          "password": "test_pw1"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag1",
+          "path": "/root",
+          "id": "1"
+        }
+      ]
+    },
+    {
+      "name": "honeypot1",
+      "ip": "172.18.2.21",
+      "level": 3,
+      "root_users" : [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "test",
+          "password": "qwerty"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "oracle",
+          "password": "abc123"
+        }
+      ],
+      "flags": []
+    },
+    {
+      "name": "ftp1",
+      "ip": "172.18.2.79",
+      "level": 3,
+      "root_users" : [
+        {
+          "username": "l_hopital",
+          "password": "l_hopital"
+        },
+        {
+          "username": "pi",
+          "password": "pi"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "euler",
+          "password": "euler"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag3",
+          "path": "/tmp",
+          "id": "3"
+        }
+      ]
+    },
+    {
+      "name": "ssh2",
+      "ip": "172.18.2.54",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "vagrant",
+          "password": "vagrant"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "trent",
+          "password": "xe125@41!341"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag4",
+          "path": "/tmp",
+          "id": "4"
+        }
+      ]
+    },
+    {
+      "name": "telnet2",
+      "ip": "172.18.2.61",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "adm",
+          "password": "adm"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": [
+        {
+          "name": "flag5",
+          "path": "/root",
+          "id": "5"
+        }
+      ]
+    },
+    {
+      "name": "ssh3",
+      "ip": "172.18.2.74",
+      "level": 4,
+      "root_users" : [
+        {
+          "username": "administrator",
+          "password": "administrator"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    },
+    {
+      "name": "honeypot2",
+      "ip": "172.18.2.101",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "zidane",
+          "password": "1b12ha9"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    },
+    {
+      "name": "telnet3",
+      "ip": "172.18.2.62",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "guest",
+          "password": "guest"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    },
+    {
+      "name": "ftp2",
+      "ip": "172.18.2.7",
+      "level": 5,
+      "root_users" : [
+        {
+          "username": "ec2-user",
+          "password": "ec2-user"
+        },
+        {
+          "username": "zlatan",
+          "password": "pi12195e"
+        }
+      ],
+      "non_root_users" : [
+        {
+          "username": "kennedy",
+          "password": "eul1145x"
+        }
+      ],
+      "flags": [
+        {
+          "name": "flag6",
+          "path": "/tmp",
+          "id": "6"
+        }
+      ]
+    },
+    {
+      "name": "hacker_kali",
+      "ip": "172.18.2.191",
+      "level": 1,
+      "root_users" : [
+        {
+          "username": "agent",
+          "password": "agent"
+        }
+      ],
+      "non_root_users" : [],
+      "flags": []
+    }
+  ]
+}

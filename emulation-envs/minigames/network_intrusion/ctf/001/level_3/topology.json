@@ -1,0 +1,1515 @@
+{
+    "node_configs": [
+        {
+            "default_forward": "DROP",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": [
+                    "172.18.3.178",
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.9",
+                    "172.18.3.191",
+                    "172.18.3.8",
+                    "172.18.3.4",
+                    "172.18.3.6",
+                    "172.18.3.5",
+                    "172.18.3.3"
+                ]
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.178",
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.9",
+                    "172.18.3.191",
+                    "172.18.3.8",
+                    "172.18.3.4",
+                    "172.18.3.6",
+                    "172.18.3.5",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.10",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.178",
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.9",
+                    "172.18.3.191",
+                    "172.18.3.8",
+                    "172.18.3.4",
+                    "172.18.3.6",
+                    "172.18.3.5",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.54",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.2",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.54",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.101",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.74",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.62",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.61",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.7",
+                            "172.18.3.3"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": [
+                    "172.18.3.54"
+                ]
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.61",
+                    "172.18.3.74",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.101",
+                    "172.18.3.7"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.3",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.61",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.7",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.54",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.101",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.62",
+                            "172.18.3.74"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.21",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.101",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.54",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.74",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.62",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.61",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.7",
+                            "172.18.3.3"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.79",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.101",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.54",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.74",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.62",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.61",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.7",
+                            "172.18.3.3"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": "172.18.3.10",
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.191",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": [
+                    "172.18.3.12",
+                    "172.18.3.11",
+                    "172.18.3.13",
+                    "172.18.3.14"
+                ]
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.11",
+                    "172.18.3.1",
+                    "172.18.3.14",
+                    "172.18.3.12",
+                    "172.18.3.13"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.54",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.11",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.191",
+                    "172.18.3.14",
+                    "172.18.3.12",
+                    "172.18.3.54",
+                    "172.18.3.13",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.191",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.10",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.1",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.3",
+                            "172.18.3.2"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.21",
+                            "172.18.3.2"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": [
+                    "172.18.3.62",
+                    "172.18.3.101",
+                    "172.18.3.61"
+                ]
+            },
+            "forward_drop": {
+                "py/set": [
+                    "172.18.3.62",
+                    "172.18.3.101",
+                    "172.18.3.7"
+                ]
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.62",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.74",
+                    "172.18.3.101",
+                    "172.18.3.7",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.74",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.62",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.191",
+                    "172.18.3.101",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.61",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.7",
+                            "172.18.3.62"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.54",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.10",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.21",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.191",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.2",
+                            "172.18.3.3"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.79",
+                            "172.18.3.3"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": "172.18.3.3",
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": [
+                    "172.18.3.20",
+                    "172.18.3.21",
+                    "172.18.3.28",
+                    "172.18.3.24",
+                    "172.18.3.25",
+                    "172.18.3.22",
+                    "172.18.3.23",
+                    "172.18.3.19"
+                ]
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.62",
+                    "172.18.3.20",
+                    "172.18.3.61",
+                    "172.18.3.21",
+                    "172.18.3.1",
+                    "172.18.3.24",
+                    "172.18.3.74",
+                    "172.18.3.28",
+                    "172.18.3.25",
+                    "172.18.3.22",
+                    "172.18.3.23",
+                    "172.18.3.101",
+                    "172.18.3.7",
+                    "172.18.3.19",
+                    "172.18.3.3"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.61",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.20",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.24",
+                    "172.18.3.28",
+                    "172.18.3.191",
+                    "172.18.3.25",
+                    "172.18.3.22",
+                    "172.18.3.23",
+                    "172.18.3.19",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": [
+                    "172.18.3.18",
+                    "172.18.3.17",
+                    "172.18.3.16",
+                    "172.18.3.15"
+                ]
+            },
+            "forward_drop": {
+                "py/set": [
+                    "172.18.3.7"
+                ]
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.17",
+                    "172.18.3.1",
+                    "172.18.3.74",
+                    "172.18.3.15",
+                    "172.18.3.18",
+                    "172.18.3.101",
+                    "172.18.3.7",
+                    "172.18.3.16"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.62",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.62",
+                    "172.18.3.17",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.191",
+                    "172.18.3.15",
+                    "172.18.3.18",
+                    "172.18.3.101",
+                    "172.18.3.7",
+                    "172.18.3.16",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": [
+                    {
+                        "py/tuple": [
+                            "172.18.3.21",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.79",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.61",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.54",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.10",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.101",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.2",
+                            "172.18.3.74"
+                        ]
+                    },
+                    {
+                        "py/tuple": [
+                            "172.18.3.191",
+                            "172.18.3.74"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": "172.18.3.74",
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.74",
+                    "172.18.3.7",
+                    "172.18.3.62",
+                    "172.18.3.1"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.101",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.62",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.191",
+                    "172.18.3.101",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "DROP",
+            "default_gw": "172.18.3.62",
+            "default_input": "DROP",
+            "default_output": "DROP",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": [
+                    "172.18.3.62",
+                    "172.18.3.1"
+                ]
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.7",
+            "output_accept": {
+                "py/set": [
+                    "172.18.3.2",
+                    "172.18.3.62",
+                    "172.18.3.79",
+                    "172.18.3.21",
+                    "172.18.3.61",
+                    "172.18.3.1",
+                    "172.18.3.10",
+                    "172.18.3.74",
+                    "172.18.3.191",
+                    "172.18.3.101",
+                    "172.18.3.7",
+                    "172.18.3.3"
+                ]
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.4",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.5",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.6",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.8",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.9",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": "172.18.3.10",
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.178",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.11",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.12",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "py/id": 21
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.13",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.14",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.15",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.16",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.17",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.18",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.19",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.20",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.22",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.23",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.24",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.25",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        },
+        {
+            "default_forward": "ACCEPT",
+            "default_gw": null,
+            "default_input": "ACCEPT",
+            "default_output": "ACCEPT",
+            "forward_accept": {
+                "py/set": []
+            },
+            "forward_drop": {
+                "py/set": []
+            },
+            "input_accept": {
+                "py/set": []
+            },
+            "input_drop": {
+                "py/set": []
+            },
+            "ip": "172.18.3.28",
+            "output_accept": {
+                "py/set": []
+            },
+            "output_drop": {
+                "py/set": []
+            },
+            "py/object": "gym_pycr_ctf.dao.container_config.node_firewall_config.NodeFirewallConfig",
+            "routes": {
+                "py/set": []
+            }
+        }
+    ],
+    "py/object": "gym_pycr_ctf.dao.container_config.topology.Topology",
+    "subnetwork": "172.18.3.0/24"
+}

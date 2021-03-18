@@ -1,5 +1,5 @@
 PROJECT=pycr
-MINIGAME=pwcrack
+MINIGAME=ctf
 CONTAINER=kali_base
 VERSION=0.0.1
 ROOT_USERS_FILE=root_users.txt
