@@ -178,7 +178,6 @@ class ClusterUtil:
         file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
             action.index) + "_" + ip + \
                     "_" + user + ".txt"
-        print("writing cache file:{}".format(file_name))
         remote_file = sftp_client.file(file_name, mode="w")
         try:
             remote_file.write(result)
