@@ -14,10 +14,10 @@ attacker.
 - Vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
 
 ## Architecture
+
 <p align="center">
 <img src="env.png" width="600">
 </p>
-
 
 ## Useful commands
 
