@@ -1,8 +1,8 @@
 # `gym-pycr-ctf`
 
-`gym-pycr-ctf` is a reinforcement learning environment for studying the "first line of defense" against
+`gym-pycr-ctf` is a reinforcement learning environment for automating the "first line of defense" against
 network intrusions. Specifically the environment focuses on reconnaissance, password vulnerabilities, RCE vulnerabilities, 
-intrusion detection, and dictionary attacks. The environment provides a MDP or Markov Game interface for 
+intrusion detection, and dictionary attacks. The environment provides a MDP (POMDP) or Markov Game interface for 
 OpenAI Gym that can be used to train reinforcement learning agents. 
 
 Moreover, the repository contains code to reproduce baseline results for various reinforcement learning algorithms, including:
@@ -12,26 +12,73 @@ Moreover, the repository contains code to reproduce baseline results for various
 - PPO
 - AC3
 
-## Useful commands
+## Requirements
+
+- Python 3.5+
+- OpenAI Gym
+- NumPy
+- Pyglet (OpenGL 3D graphics)
+- GPU for 3D graphics acceleration (optional)
+- jsonpickle (for configuration files)
+- torch (for baseline algorithms)
+
+
+## Installation & Tests
 
 ```bash
-make rm-image # Delete all built images
-make build # Build all docker images
-make clean # Stop all running containers
-make run # Run all containers
-make router # Run router container
-make ssh # Run ssh container
-make telnet # Run telnet container
-make honeypot # Run honeypot container
-make net # Create Docker sub-network
-make rm-net # Remove Docker sub-network
-python run.py --build # build all containers with custom config
-python run.py --run # run all containers with custom config
-docker container ls --all # list all running containers
-docker image ls --all # list all images
-docker system prune # remove unused images and containers
-docker container prune # remove stopped containers   
-sudo route add -net 172.18.1.0 netmask 255.255.255.0 gw 172.18.1.1
+# install from pip
+pip install gym-pycr-ctf==1.0.0
+# local install from source
+$ pip install -e gym-pycr-ctf
+# force upgrade deps
+$ pip install -e gym-pycr-ctf --upgrade
+
+# git clone and install from source
+git clone https://github.com/Limmen/pycr
+cd pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf
+pip3 install -e .
+```
+
+## Usage
+The environment can be accessed like any other OpenAI environment with `gym.make`.
+Once the environment has been created, the API functions
+`step()`, `reset()`, `render()`, and `close()` can be used to train any RL algorithm of
+your preference.
+
+```python
+import gym
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+
+# Specify configuration to connect to the emulation
+cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+                                   server_connection=False)
+
+# Create gym interface
+env_name = "pycr-ctf-level-7-cluster-v1"
+env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
+```
+
+## Manual Control
+You can run the environment in a mode of "manual control" as well:
+
+```python
+import gym
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv, PyCRctfLevel1Cluster1Env
+from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
+
+# Specify configuration for connecting to the emulation
+cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+                                   port_forward_next_port=4600,
+                                   server_connection=True, warmup=False, warmup_iterations=500,
+                                   server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                   server_username="kim", server_ip="172.31.212.92"
+                                   )
+
+# Create gym interface
+env = gym.make("pycr-ctf-level-7-cluster-v1", env_config=None, cluster_config=cluster_config)
+ManualAttackerAgent(env=env, env_config=env.env_config)
 ```
 
 ## Author & Maintainer
@@ -40,8 +87,6 @@ Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-[LICENSE](LICENSE.md)
-
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar
