@@ -4,24 +4,27 @@ This directory contains a set of emulated infrastructures with specification con
 The emulated infrastructures also include different control and optimization problems. 
 Generally the control problems implemented in these infrastructures are a subset of all of the control problems
 related to self-learning systems and control of a computer infrastructure. Hence they are referred to as "minigames".
-Thet set of minigames that are planned to be implemented are listed below. Note that some minigames are overlapping;
-for example the CTF minigame subsumes many other minigames.
+Thet set of implemented minigames are listed below.
 
-- **DoS** ([dos](./dos)): 
-     - *BotNet* ([botnet](./dos/botnet)): TODO
-- **Malware** ([malware](./malware)): 
-     - *Self replicating malware* ([self_replicating_malware](./malware/self_replicating_malware)): TODO
 - **Network intrusion** ([network_intrusion](./network_intrusion)):
-     - *Man-in-the-Middle* ([mitm](./network_intrusion/mitm)): TODO
-     - *Network protocol attack* ([network_protocol_attack](./network_intrusion/network_protocol_attack)): TODO
-     - *Network sniffing* ([network_sniffing](./network_intrusion/network_sniffing)): TODO
      - *Capture the flag* ([ctf](./network_intrusion/ctf)): Several CTF's with varying difficulty are implemented, see: [level_1](./network_intrusion/ctf/001/level_1), [level_2](./network_intrusion/ctf/001/level_2), [level_3](./network_intrusion/ctf/001/level_3), [level_4](./network_intrusion/ctf/001/level_4), [level_5](./network_intrusion/ctf/001/level_5), [level_6](./network_intrusion/ctf/001/level_6), [level_7](./network_intrusion/ctf/001/level_7), [random](./network_intrusion/ctf/001/random), [./random_many](./network_intrusion/ctf/001/random_many)
-     - *Spoofing* ([spoofing](./network_intrusion/spoofing)): TODO                    
-- **Server exploit** ([server_exploit](./server_exploit)): TODO
-     - *Advanced persistent threats* ([apt](./server_exploit/apt)): TODO
-     - *Binary exploit* ([binary_exploit](./server_exploit/binary_exploit)): TODO          
-- **Web Hacking** ([web_hacking](./web_hacking)): TODO     
-     - *SQL Injection* ([sql_injection](./web_hacking/sql_injection)): TODO
+          
+## Ideas for future minigames: 
+
+- **DoS**: 
+     - *BotNet* minigame
+- **Malware**: 
+     - *Self replicating malware* minigame
+- **Network intrusion**:
+     - *Man-in-the-Middle* minigame
+     - *Network protocol attack* minigame
+     - *Network sniffing* minigame
+     - *Spoofing* minigame                    
+- **Server exploit**
+     - *Advanced persistent threats* minigame
+     - *Binary exploit* minigame          
+- **Web Hacking**     
+     - *SQL Injection* minigame     
 
 ## Author & Maintainer
 

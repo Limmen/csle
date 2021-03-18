@@ -1,8 +1,10 @@
 # Supergames
 
-This folder contains a set of virtual environments for various security "supergames"--challenges/environments
+This folder contains a set of emulated environments for various security "supergames"--challenges/environments
 to evaluate automatic controllers and autonomous agents on security-related tasks. 
 The supergames "subsume" several mini-games typically.     
+
+Coming soon..
 
 ## Author & Maintainer
 
@@ -14,4 +16,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2021, Kim Hammar
