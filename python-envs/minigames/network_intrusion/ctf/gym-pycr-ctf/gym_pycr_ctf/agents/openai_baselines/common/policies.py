@@ -22,7 +22,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.distributions import (
 )
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
@@ -471,13 +471,13 @@ class ActorCriticPolicy(BasePolicy):
                     if self.agent_config.filter_illegal_actions:
                         if self.agent_config.ar_policy:
                             if self.m_action:
-                                non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                                     action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_action=True, m_index = m_index), actions))
                             elif self.m_selection:
-                                non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                                     action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_selection=True), actions))
                         else:
-                            non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                                 action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
                     non_legal_actions_total.append(non_legal_actions)
                 elif isinstance(env, SubprocVecEnv):
@@ -563,13 +563,13 @@ class ActorCriticPolicy(BasePolicy):
                 if self.agent_config.filter_illegal_actions:
                     if self.agent_config.ar_policy:
                         if self.m_action:
-                            non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                                 action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
                         elif self.m_selection:
-                            non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                                 action, env_config=env_config, env_state=env_state, m_selection=True), actions))
                     else:
-                        non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                        non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                             action, env_config=env_config, env_state=env_state), actions))
                 non_legal_actions = [non_legal_actions]
             elif isinstance(env, SubprocVecEnv):

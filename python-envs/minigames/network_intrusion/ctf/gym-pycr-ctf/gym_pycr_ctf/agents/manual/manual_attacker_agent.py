@@ -6,7 +6,7 @@ try:
 except:
     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.envs import PyCRctfEnv
+from gym_pycr_ctf.envs import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 
 class ManualAttackerAgent:
@@ -14,7 +14,7 @@ class ManualAttackerAgent:
     Class representing a manual attacker agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRctfEnv):
+    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv):
         """
         Sets up the GUI with the manual attacker
 

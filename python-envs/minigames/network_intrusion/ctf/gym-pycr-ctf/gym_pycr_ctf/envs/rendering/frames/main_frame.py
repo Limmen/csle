@@ -10,7 +10,7 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.agent_state import AgentState
 from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
-from gym_pycr_ctf.envs import PyCRctfEnv
+from gym_pycr_ctf.envs import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 class MainFrame(pyglet.window.Window):
     """
@@ -19,7 +19,7 @@ class MainFrame(pyglet.window.Window):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EnvConfig, init_state : AgentState, env: PyCRctfEnv = None):
+    def __init__(self, env_config: EnvConfig, init_state : AgentState, env: PyCRCTFEnv = None):
         """
         Initialize frame
         :param env_config: trhe environment config

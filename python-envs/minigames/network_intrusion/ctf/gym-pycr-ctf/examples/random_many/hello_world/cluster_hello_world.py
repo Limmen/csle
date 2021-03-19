@@ -1,4 +1,5 @@
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfLevel1Sim1Env, PyCRctfLevel1Cluster1Env
+from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
+from gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env import PyCRCTFLevel1Cluster1Env
 from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
 import gym
 import time

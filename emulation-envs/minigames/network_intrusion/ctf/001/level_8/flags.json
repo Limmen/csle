@@ -1,0 +1,357 @@
+{
+    "flags": [
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag3.txt",
+                        "flag3",
+                        "/tmp/",
+                        3,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.79",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag2.txt",
+                        "flag2",
+                        "/tmp/",
+                        2,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.2",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag1.txt",
+                        "flag1",
+                        "/root/",
+                        1,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag4.txt",
+                        "flag4",
+                        "/tmp/",
+                        4,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.19",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag5.txt",
+                        "flag5",
+                        "/tmp/",
+                        5,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.31",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag6.txt",
+                        "flag6",
+                        "/tmp/",
+                        6,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.42",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag7.txt",
+                        "flag7",
+                        "/tmp/",
+                        7,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.37",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag8.txt",
+                        "flag8",
+                        "/tmp/",
+                        8,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.82",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag9.txt",
+                        "flag9",
+                        "/tmp/",
+                        9,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.75",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag10.txt",
+                        "flag10",
+                        "/root/",
+                        10,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.71",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag11.txt",
+                        "flag11",
+                        "/root/",
+                        11,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.11",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag12.txt",
+                        "flag12",
+                        "/tmp/",
+                        12,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.51",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag13.txt",
+                        "flag13",
+                        "/tmp/",
+                        13,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.52",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag14.txt",
+                        "flag14",
+                        "/tmp/",
+                        14,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.54",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag15.txt",
+                        "flag15",
+                        "/tmp/",
+                        15,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.55",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag16.txt",
+                        "flag16",
+                        "/tmp/",
+                        16,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.56",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag17.txt",
+                        "flag17",
+                        "/tmp/",
+                        17,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.57",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag18.txt",
+                        "flag18",
+                        "/tmp/",
+                        18,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.58",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag19.txt",
+                        "flag19",
+                        "/tmp/",
+                        19,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.59",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag60.txt",
+                        "flag20",
+                        "/root/",
+                        20,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.60",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag61.txt",
+                        "flag21",
+                        "/root/",
+                        21,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.61",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag62.txt",
+                        "flag22",
+                        "/tmp/",
+                        22,
+                        false,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.8.62",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        }
+    ],
+    "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+}

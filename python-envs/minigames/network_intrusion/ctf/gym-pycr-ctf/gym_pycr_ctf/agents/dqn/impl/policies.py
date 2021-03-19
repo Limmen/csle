@@ -10,7 +10,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.torch_layers import BaseFeature
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 
 class QNetwork(BasePolicy):
     """
@@ -68,7 +68,7 @@ class QNetwork(BasePolicy):
 
         # Masking legal actions
         actions = list(range(env_config.action_conf.num_actions))
-        legal_actions = list(filter(lambda action: PyCRctfEnv.is_action_legal(
+        legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
             action, env_config=env_config, env_state=env_state), actions))
 
         # Greedy actions

@@ -25,7 +25,7 @@ import sys
 from gym_pycr_ctf.envs.rendering.frames.main_frame import MainFrame
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.agent_state import AgentState
-from gym_pycr_ctf.envs import PyCRctfEnv
+from gym_pycr_ctf.envs import PyCRCTFEnv
 
 class Viewer():
 
@@ -51,7 +51,7 @@ class Viewer():
         if interactive:
             pyglet.app.run()
 
-    def manual_start_attacker(self, env: PyCRctfEnv) -> None:
+    def manual_start_attacker(self, env: PyCRCTFEnv) -> None:
         """
         Starts the PyCr-game app in a manual mode where the actions are controlled with the keyboard
 

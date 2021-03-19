@@ -7,7 +7,7 @@ import logging
 import random
 import torch
 from abc import ABC, abstractmethod
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 

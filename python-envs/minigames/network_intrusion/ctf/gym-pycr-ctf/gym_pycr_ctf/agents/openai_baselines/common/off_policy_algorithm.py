@@ -16,7 +16,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.policies import BasePolicy
 from gym_pycr_ctf.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback, RolloutReturn
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env import VecEnv
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.openai_baselines.common.evaluation import quick_evaluate_policy
 
 class OffPolicyAlgorithm(BaseAlgorithm):
@@ -356,7 +356,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             # Warmup phase
             legal_actions = list(range(self.agent_config.output_dim))
             if self.agent_config.filter_illegal_actions:
-                legal_actions = list(filter(lambda action: PyCRctfEnv.is_action_legal(
+                legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
                     action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), legal_actions))
             unscaled_action = np.array([np.random.choice(legal_actions)])
         else:

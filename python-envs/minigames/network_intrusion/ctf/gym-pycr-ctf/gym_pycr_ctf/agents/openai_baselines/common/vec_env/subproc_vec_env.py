@@ -6,7 +6,7 @@ import gym
 import numpy as np
 import time
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 import gym_pycr_ctf.constants.constants as constants
 
 def _worker(remote, parent_remote, env_fn_wrapper):
@@ -22,7 +22,7 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                     # save final observation where user can get it, then reset
                     info["terminal_observation"] = observation
                     observation = env.reset()
-                non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
                     action, env_config=env.env_config, env_state=env.env_state), actions))
                 info["non_legal_actions"] = non_legal_actions
                 info["idx"] = env.idx

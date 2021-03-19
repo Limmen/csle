@@ -6,7 +6,7 @@ import torch
 import math
 
 from gym_pycr_ctf.envs.rendering.video.pycr_ctf_monitor import PycrctfMonitor
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig

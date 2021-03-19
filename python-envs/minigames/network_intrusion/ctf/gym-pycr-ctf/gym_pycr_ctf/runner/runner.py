@@ -9,7 +9,7 @@ from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.policy_gradient.reinforce.reinforce_agent import ReinforceAgent
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
 from gym_pycr_ctf.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent

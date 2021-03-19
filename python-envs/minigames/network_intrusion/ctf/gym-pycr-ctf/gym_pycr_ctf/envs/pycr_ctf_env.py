@@ -25,7 +25,7 @@ from gym_pycr_ctf.envs.logic.simulation.find_pi_star import FindPiStar
 
 class PyCRCTFEnv(gym.Env, ABC):
     """
-    Abstract OpenAI Gym Env for the PyCr ctf minigame
+    Abstract OpenAI Gym Env for the PyCr CTF minigame
     """
 
     def __init__(self, env_config : EnvConfig, rs = None):

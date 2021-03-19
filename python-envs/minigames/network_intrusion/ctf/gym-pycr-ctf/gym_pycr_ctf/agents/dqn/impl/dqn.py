@@ -11,7 +11,7 @@ from gym_pycr_ctf.agents.dqn.impl.policies import DQNPolicy
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 
 class DQN(OffPolicyAlgorithm):
     """
@@ -213,7 +213,7 @@ class DQN(OffPolicyAlgorithm):
             n_batch = observation.shape[0]
             assert n_batch == 1
             actions = list(range(self.agent_config.output_dim))
-            legal_actions = list(filter(lambda action: PyCRctfEnv.is_action_legal(
+            legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
                 action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), actions))
             action = np.array([np.random.choice(legal_actions)])
             #action = np.array([self.action_space.sample() for _ in range(n_batch)])

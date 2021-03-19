@@ -6,7 +6,7 @@ import logging
 import time
 import numpy as np
 
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
 from gym_pycr_ctf.envs.rendering.video.pycr_ctf_monitor import PycrctfMonitor
@@ -17,7 +17,7 @@ class Simulator:
     A class to orchestrate simulations of pre-defined policies against each other
     """
 
-    def __init__(self, env: PyCRctfEnv, config: SimulationConfig, attacker: PPOAttackerBotAgent):
+    def __init__(self, env: PyCRCTFEnv, config: SimulationConfig, attacker: PPOAttackerBotAgent):
         """
         Class constructor, initializes the class with a given environment and simulation config
 

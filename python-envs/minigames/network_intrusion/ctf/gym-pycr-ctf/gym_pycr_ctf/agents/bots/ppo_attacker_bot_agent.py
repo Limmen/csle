@@ -5,7 +5,7 @@ import torch
 import traceback
 import time
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRctfEnv
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
@@ -16,7 +16,7 @@ class PPOAttackerBotAgent:
     """
 
     def __init__(self, pg_config: AgentConfig, env_config: EnvConfig, model_path: str = None,
-                 env: PyCRctfEnv = None):
+                 env: PyCRCTFEnv = None):
         """
         Constructor, initializes the policy
 
@@ -51,7 +51,7 @@ class PPOAttackerBotAgent:
         """
         try:
             #actions = list(range(self.agent_config.output_dim))
-            # non_legal_actions = list(filter(lambda action: not PyCRctfEnv.is_action_legal(
+            # non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
             #     action, env_config=self.env_config, env_state=s), actions))
             m_obs, p_obs = s.get_observation()
             obs_tensor = torch.as_tensor(m_obs.flatten()).to(self.device)            
