@@ -308,7 +308,7 @@
             "flags": [
                 {
                     "py/tuple": [
-                        "/root/flag60.txt",
+                        "/root/flag20.txt",
                         "flag20",
                         "/root/",
                         20,
@@ -324,7 +324,7 @@
             "flags": [
                 {
                     "py/tuple": [
-                        "/root/flag61.txt",
+                        "/root/flag21.txt",
                         "flag21",
                         "/root/",
                         21,
@@ -340,7 +340,7 @@
             "flags": [
                 {
                     "py/tuple": [
-                        "/tmp/flag62.txt",
+                        "/tmp/flag22.txt",
                         "flag22",
                         "/tmp/",
                         22,

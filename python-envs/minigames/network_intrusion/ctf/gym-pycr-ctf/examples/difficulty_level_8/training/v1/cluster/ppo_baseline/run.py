@@ -38,9 +38,9 @@ def default_config() -> ClientConfig:
                                                 filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                                 n_deterministic_eval_iter=10
                                                 )
-    env_name = "pycr-ctf-level-7-cluster-v1"
-    #env_name = "pycr-ctf-level-7-cluster-costs-v1"
-    cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+    env_name = "pycr-ctf-level-8-cluster-v1"
+    #env_name = "pycr-ctf-level-8-cluster-costs-v1"
+    cluster_config = ClusterConfig(agent_ip="172.18.8.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, warmup=True, warmup_iterations=500,
                                    port_forward_next_port = 3000)
     # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.8.191",
@@ -54,7 +54,7 @@ def default_config() -> ClientConfig:
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO level_7 v1 cluster",
+                                 title="PPO level_8 v1 cluster",
                                  run_many=True, random_seeds=[0, 999, 299],
                                  random_seed=299, cluster_config=cluster_config, mode=RunnerMode.TRAIN_ATTACKER.value)
     #random_seeds = [0, 999, 299, 399, 499],
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO level_7 v1 cluster"
+    experiment_title = "PPO level_8 v1 cluster"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

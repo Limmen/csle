@@ -178,7 +178,7 @@
             "node_ip": "172.18.8.51",
             "pw": "puppet",
             "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
-            "root": false,
+            "root": true,
             "username": "puppet",
             "vuln_type": {
                 "py/id": 3
@@ -188,7 +188,7 @@
             "node_ip": "172.18.8.52",
             "pw": "pi",
             "py/object": "gym_pycr_ctf.dao.container_config.pw_vulnerability_config.PwVulnerabilityConfig",
-            "root": false,
+            "root": true,
             "username": "pi",
             "vuln_type": {
                 "py/id": 3

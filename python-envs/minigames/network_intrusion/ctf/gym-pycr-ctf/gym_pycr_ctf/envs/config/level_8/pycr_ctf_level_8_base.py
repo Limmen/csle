@@ -45,7 +45,7 @@ class PyCrCTFLevel8Base:
                  Node(ip="172.18.8.2", ip_id=2, id=2, type=NodeType.SERVER, reachable_nodes =
                  set(["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191", "172.18.8.10",
                       "172.18.8.19", "172.18.8.31", "172.18.8.42", "172.18.8.37", "172.18.8.82",
-                      "172.18.8.75", "172.18.8.71", "172.18.8.11"]),
+                      "172.18.8.75", "172.18.8.71", "172.18.8.11", "172.18.8.52"]),
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
@@ -164,7 +164,7 @@ class PyCrCTFLevel8Base:
                  Node(ip="172.18.8.79", ip_id=79, id=5, type=NodeType.SERVER,
                       reachable_nodes = set(["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                          "172.18.8.10", "172.18.8.19", "172.18.8.31", "172.18.8.42", "172.18.8.37",
-                                             "172.18.8.82", "172.18.8.75", "172.18.8.71", "172.18.8.11"]),
+                                             "172.18.8.82", "172.18.8.75", "172.18.8.71", "172.18.8.11", "172.18.8.51"]),
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
@@ -319,7 +319,7 @@ class PyCrCTFLevel8Base:
                       reachable_nodes=set(["172.18.8.2", "172.18.8.3", "172.18.8.21",
                                            "172.18.8.79", "172.18.8.191", "172.18.8.10", "172.18.8.19", "172.18.8.21",
                                            "172.18.8.31", "172.18.8.42", "172.18.8.37", "172.18.8.82",
-                                           "172.18.8.75", "172.18.8.71", "172.18.8.11"]),
+                                           "172.18.8.75", "172.18.8.71", "172.18.8.11", "172.18.8.51", "172.18.8.53"]),
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh"),
                           NetworkService(protocol=TransportProtocol.TCP, port=9300, name="vrace", credentials=[]),
@@ -428,7 +428,8 @@ class PyCrCTFLevel8Base:
                                             Credential(username="donald", pw="donald", service=None)
                                         ], port=None, protocol=TransportProtocol.TCP)
                       ]),
-                 Node(ip="172.18.8.51", ip_id=51, id=12, type=NodeType.SERVER, reachable_nodes=set(["172.18.8.79"]),
+                 Node(ip="172.18.8.51", ip_id=51, id=12, type=NodeType.SERVER,
+                      reachable_nodes=set(["172.18.8.79", "172.18.8.82"]),
                       flags=[Flag(name="flag12", path="/tmp", id=12, requires_root=False, score=1)], level=4, os="linux",
                       credentials=[
                           Credential(username="ian", pw="goodwille"),
@@ -837,7 +838,7 @@ class PyCrCTFLevel8Base:
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
