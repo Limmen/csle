@@ -9,6 +9,10 @@ This directory contains scripts, configurations, and tools related to emulation 
 - **Minigames** ([minigames](./minigames)): this directory contains scripts and tools for starting/stopping specific emulation configurations (so called mini-games)
 - **Supergames** ([supergames](./supergames)): this directory contains scripts and tools for starting/stopping combinations of different emulation configurations (so called mini-games)    
 
+<p align="center">
+<img src="docs/config_space.png" width="600">
+</p>
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
