@@ -829,3 +829,68 @@ register(
     entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterWithCosts4Env',
     kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
 )
+
+## Level 8
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Version: Base ------------
+register(
+    id='pycr-ctf-level-8-cluster-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterBaseEnv',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Version: 1 ------------
+register(
+    id='pycr-ctf-level-8-cluster-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 1 ------------
+register(
+    id='pycr-ctf-level-8-cluster-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts1Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Version: 2 ------------
+register(
+    id='pycr-ctf-level-8-cluster-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 2 ------------
+register(
+    id='pycr-ctf-level-8-cluster-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts2Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Version: 3 ------------
+register(
+    id='pycr-ctf-level-8-cluster-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 3 ------------
+register(
+    id='pycr-ctf-level-8-cluster-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts3Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Version: 4 ------------
+register(
+    id='pycr-ctf-level-8-cluster-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 4 ------------
+register(
+    id='pycr-ctf-level-8-cluster-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts4Env',
+    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+)

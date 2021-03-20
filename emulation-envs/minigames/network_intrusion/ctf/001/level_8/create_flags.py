@@ -26,9 +26,9 @@ def default_flags() -> FlagsConfig:
         NodeFlagsConfig(ip="172.18.8.57", flags=[("/tmp/flag17.txt", "flag17", "/tmp/", 17, False, 1)]),
         NodeFlagsConfig(ip="172.18.8.58", flags=[("/tmp/flag18.txt", "flag18", "/tmp/", 18, False, 1)]),
         NodeFlagsConfig(ip="172.18.8.59", flags=[("/tmp/flag19.txt", "flag19", "/tmp/", 19, False, 1)]),
-        NodeFlagsConfig(ip="172.18.8.60", flags=[("/root/flag60.txt", "flag20", "/root/", 20, True, 1)]),
-        NodeFlagsConfig(ip="172.18.8.61", flags=[("/root/flag61.txt", "flag21", "/root/", 21, True, 1)]),
-        NodeFlagsConfig(ip="172.18.8.62", flags=[("/tmp/flag62.txt", "flag22", "/tmp/", 22, False, 1)])
+        NodeFlagsConfig(ip="172.18.8.60", flags=[("/root/flag20.txt", "flag20", "/root/", 20, True, 1)]),
+        NodeFlagsConfig(ip="172.18.8.61", flags=[("/root/flag21.txt", "flag21", "/root/", 21, True, 1)]),
+        NodeFlagsConfig(ip="172.18.8.62", flags=[("/tmp/flag22.txt", "flag22", "/tmp/", 22, False, 1)])
     ]
     flags_config = FlagsConfig(flags=flags)
     return flags_config

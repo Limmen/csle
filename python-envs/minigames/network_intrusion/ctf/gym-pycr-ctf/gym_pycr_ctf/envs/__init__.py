@@ -75,6 +75,13 @@ from gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env i
     PyCRCTFLevel7ClusterWithCosts4Env
 
 
+# ------ Level 8 ----- #
+
+from gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env import PyCRCTFLevel8ClusterBaseEnv, \
+    PyCRCTFLevel8Cluster1Env, PyCRCTFLevel8Cluster2Env, PyCRCTFLevel8Cluster3Env, PyCRCTFLevel8Cluster4Env, \
+    PyCRCTFLevel8ClusterWithCosts1Env, PyCRCTFLevel8ClusterWithCosts2Env, PyCRCTFLevel8ClusterWithCosts3Env, \
+    PyCRCTFLevel8ClusterWithCosts4Env
+
 # ------ Random ----- #
 
 from gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env import PyCRCTFRandomClusterBaseEnv, PyCRCTFRandomCluster1Env, \
