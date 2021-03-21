@@ -147,6 +147,7 @@ class EnvConfig:
         self.pi_star_rew = -1
         self.pi_star_rew_list = []
         self.install_tools_sleep_seconds = 3
+        self.retry_check_root = 3
 
 
     def get_port_forward_port(self) -> int:

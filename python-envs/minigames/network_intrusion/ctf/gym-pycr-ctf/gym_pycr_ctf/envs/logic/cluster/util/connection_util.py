@@ -207,14 +207,15 @@ class ConnectionUtil:
                     if service_name == constants.SSH.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
                                                                             target_connections=target_connections, i=i,
-                                                                            ports=ports, proxies=proxies)
+                                                                            ports=ports, proxies=proxies,
+                                                                            env_config=env_config)
                     elif service_name == constants.TELNET.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._telnet_finalize_connection(target_machine=target_machine,
                                                                                users=users,
                                                                                target_connections=target_connections,
                                                                                i=i, tunnel_threads=tunnel_threads,
                                                                                forward_ports=forward_ports, ports=ports,
-                                                                               proxies=proxies)
+                                                                               proxies=proxies, env_config=env_config)
                     elif service_name == constants.FTP.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
                                                                             target_connections=target_connections,
@@ -308,7 +309,7 @@ class ConnectionUtil:
     @staticmethod
     def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
                                  target_connections: List, i: int, ports: List[int],
-                                 proxies: List) -> Tuple[bool, float]:
+                                 proxies: List, env_config: EnvConfig) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
@@ -318,17 +319,22 @@ class ConnectionUtil:
         :param i: current index
         :param ports: list of ports of the connections
         :param proxies: proxy connections
+        :param env_config: environment config
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -l",
-                                                                   conn=target_connections[i])
-        #print("Root? {}, {}".format(outdata.decode(), errdata.decode()))
-        root = False
-        if not "may not run sudo".format(users[i]) in errdata.decode("utf-8") \
-                and "(ALL) NOPASSWD: ALL" in outdata.decode("utf-8"):
-            root = True
-            target_machine.root = True
+        for i in range(env_config.retry_check_root):
+            outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -l",
+                                                                       conn=target_connections[i])
+            root = False
+            if not "may not run sudo".format(users[i]) in errdata.decode("utf-8") \
+                    and ("(ALL) NOPASSWD: ALL" in outdata.decode("utf-8") or
+                         "(ALL : ALL) ALL" in outdata.decode("utf-8")):
+                root = True
+                target_machine.root = True
+                break
+            else:
+                time.sleep(1)
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
                                                     root=root,
                                                     service=constants.SSH.SERVICE_NAME,
@@ -420,7 +426,7 @@ class ConnectionUtil:
     def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List,
                                     i: int,
                                     tunnel_threads: List, forward_ports: List[int], ports: List[int],
-                                    proxies: List) \
+                                    proxies: List, env_config: EnvConfig) \
             -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
@@ -433,16 +439,21 @@ class ConnectionUtil:
         :param forward_ports: list of forwarded ports
         :param ports: list of ports of the connections
         :param proxies: proxies
+        :param env_config: environment config
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        target_connections[i].write("sudo -l\n".encode())
-        response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
-        root = False
-        if not "may not run sudo".format(users[i]) in response.decode("utf-8") \
-                and "(ALL) NOPASSWD: ALL" in response.decode("utf-8"):
-            #print("errdata:{}".format(outdata.decode()))
-            root = True
+        for i in range(env_config.retry_check_root):
+            target_connections[i].write("sudo -l\n".encode())
+            response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
+            root = False
+            if not "may not run sudo".format(users[i]) in response.decode("utf-8") \
+                    and ("(ALL) NOPASSWD: ALL" in response.decode("utf-8") or
+                         "(ALL : ALL) ALL" in response.decode("utf-8")):
+                root = True
+                break
+            else:
+                time.sleep(1)
         connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME,
                                                     tunnel_thread=tunnel_threads[i],
