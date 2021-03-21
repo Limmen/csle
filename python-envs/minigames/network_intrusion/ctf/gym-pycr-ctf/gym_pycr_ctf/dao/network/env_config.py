@@ -146,6 +146,7 @@ class EnvConfig:
         self.pi_star_tau = None
         self.pi_star_rew = -1
         self.pi_star_rew_list = []
+        self.install_tools_sleep_seconds = 3
 
 
     def get_port_forward_port(self) -> int:
@@ -270,4 +271,5 @@ class EnvConfig:
         env_config.use_upper_bound_pi_star = self.use_upper_bound_pi_star
         env_config.pi_star_rew = self.pi_star_rew
         env_config.pi_star_rew_list = self.pi_star_rew_list
+        env_config.install_tools_sleep_seconds = self.install_tools_sleep_seconds
         return env_config

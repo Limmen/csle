@@ -400,7 +400,7 @@ class ShellUtil:
                         ClusterUtil.check_user_action_cache(a=a, env_config=env_config, ip=machine.ip,
                                                             user=c.username)
                     if cache_file is not None:
-                        installed = ClusterUtil.parse_tools_installed_file(file_name=cache_file,
+                        installed = ShellUtil.parse_tools_installed_file(file_name=cache_file,
                                                                            env_config=env_config)
                         new_m_obs.tools_installed = installed
                     else:
@@ -409,6 +409,7 @@ class ShellUtil:
                             last_alert_ts = ClusterUtil.get_latest_alert_ts(env_config=env_config)
                         for i in range(env_config.retry_install_tools):
                             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+                            time.sleep(env_config.install_tools_sleep_seconds)
                             outdata = outdata.decode()
                             ssh_cost += float(total_time)
                             if ShellUtil._parse_tools_installed_check_result(result=outdata):
@@ -675,7 +676,7 @@ class ShellUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
-                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
+                            ConnectionUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
                                                               proxy_connections=[c.proxy], s=s)
                         ssh_cost += total_time
 
@@ -690,9 +691,8 @@ class ShellUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        pass
-                        # raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(str(e), a.ip,
-                        #                                                                                c.proxy.ip))
+                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(
+                            str(e), a.ip, c.proxy.ip))
 
                     if backdoor_created:
                         break
@@ -734,7 +734,7 @@ class ShellUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
                         connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
-                            ClusterUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
+                            ConnectionUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
                                                               proxy_connections=[c.proxy], s=s)
                         telnet_cost += total_time
                         connection_dto = ConnectionObservationState(conn=target_connections[0],

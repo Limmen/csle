@@ -18,7 +18,7 @@ def default_vulns():
         PwVulnerabilityConfig(node_ip="172.18.8.79", vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
                               root=True),
         PwVulnerabilityConfig(node_ip="172.18.8.2", vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
-                              root=False),
+                              root=True),
         PwVulnerabilityConfig(node_ip="172.18.8.3", vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True),
         RceVulnerabilityConfig(node_ip="172.18.8.19", vuln_type=VulnType.RCE),

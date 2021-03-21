@@ -62,6 +62,9 @@ class PyCrCTFLevel8V2:
         actions.append(NMAPActions.PING_SCAN(index=num_nodes+1, ip=subnet_mask, subnet=True))
         actions.append(NMAPActions.OS_DETECTION_SCAN(num_nodes+1, ip=subnet_mask, subnet=True))
 
+        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes + 1))
+
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             ActionId.TCP_SYN_STEALTH_SCAN_HOST, ActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
@@ -77,7 +80,8 @@ class PyCrCTFLevel8V2:
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT,
                             ActionId.CVE_2015_1427_EXPLOIT, ActionId.CVE_2016_10033_EXPLOIT,
-                            ActionId.CVE_2010_0426_PRIV_ESC, ActionId.CVE_2015_5602_PRIV_ESC]
+                            ActionId.CVE_2010_0426_PRIV_ESC, ActionId.CVE_2015_5602_PRIV_ESC,
+                            ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,

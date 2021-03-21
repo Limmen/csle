@@ -323,6 +323,7 @@ class ConnectionUtil:
         start = time.time()
         outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -l",
                                                                    conn=target_connections[i])
+        #print("Root? {}, {}".format(outdata.decode(), errdata.decode()))
         root = False
         if not "may not run sudo".format(users[i]) in errdata.decode("utf-8") \
                 and "(ALL) NOPASSWD: ALL" in outdata.decode("utf-8"):

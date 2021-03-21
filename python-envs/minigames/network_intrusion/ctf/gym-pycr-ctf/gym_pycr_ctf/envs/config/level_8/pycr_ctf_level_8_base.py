@@ -52,7 +52,7 @@ class PyCrCTFLevel8Base:
                           Credential(username="puppet", pw="puppet"),
                           Credential(username="user1", pw="123123")
                       ],
-                      root_usernames=["admin", "user1"],
+                      root_usernames=["admin", "user1", "puppet"],
                       services=[
                           NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                                          credentials=[
@@ -1051,6 +1051,8 @@ class PyCrCTFLevel8Base:
         # Shell actions All
         actions.append(ShellActions.FIND_FLAG(index=num_nodes+1))
         actions.append(NetworkServiceActions.SERVICE_LOGIN(index=num_nodes+1))
+        actions.append(ShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        actions.append(ShellActions.SSH_BACKDOOR(index=num_nodes + 1))
 
         actions = sorted(actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
@@ -1082,7 +1084,7 @@ class PyCrCTFLevel8Base:
         shell_action_ids = [ActionId.FIND_FLAG, ActionId.SAMBACRY_EXPLOIT, ActionId.SHELLSHOCK_EXPLOIT,
                             ActionId.DVWA_SQL_INJECTION, ActionId.CVE_2015_3306_EXPLOIT, ActionId.CVE_2015_1427_EXPLOIT,
                             ActionId.CVE_2016_10033_EXPLOIT, ActionId.CVE_2010_0426_PRIV_ESC,
-                            ActionId.CVE_2015_5602_PRIV_ESC]
+                            ActionId.CVE_2015_5602_PRIV_ESC, ActionId.INSTALL_TOOLS, ActionId.SSH_BACKDOOR]
         nikto_action_ids = [ActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [ActionId.MASSCAN_HOST_SCAN, ActionId.MASSCAN_SUBNET_SCAN]
         action_config = ActionConfig(num_indices=num_nodes+1, actions=actions, nmap_action_ids=nmap_action_ids,
@@ -1096,7 +1098,7 @@ class PyCrCTFLevel8Base:
         """
         :return: the render config
         """
-        render_config = RenderConfig(num_levels = 3, num_nodes_per_level = 12, render_adj_matrix=True)
+        render_config = RenderConfig(num_levels = 5, num_nodes_per_level = 12, render_adj_matrix=False)
         return render_config
 
     @staticmethod
