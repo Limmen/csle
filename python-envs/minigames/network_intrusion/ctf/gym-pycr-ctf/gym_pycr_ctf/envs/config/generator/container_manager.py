@@ -134,6 +134,6 @@ if __name__ == '__main__':
     # images_names = ContainerManager.list_all_images()
     # print(images_names)
     ContainerManager.rm_all_images()
-    # containers_config = util.read_containers_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random/containers.json")
+    # containers_config = util.read_containers_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random/containers.json")
     # ContainerManager.run_container_config(containers_config=containers_config)
     #ContainerManager.start_all_stopped_containers()

@@ -21,13 +21,13 @@ def load_model(env, agent_config: AgentConfig, load_path: str, device: str):
 
 def create_env():
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
     max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)

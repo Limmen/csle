@@ -656,21 +656,21 @@ def plot_avg_comparison(avg_train_steps_data_v1_gensim, avg_train_steps_means_v1
 
 if __name__ == '__main__':
     # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/Users/kimham/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/Users/kimham/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/Users/kimham/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/Users/kimham/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/Users/kimham/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/Users/kimham/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/Users/kimham/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/Users/kimham/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # base_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/cluster/ppo_baseline/results/data/"
     # base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/generated_simulation/ppo_baseline/results_backup/data/"
 
@@ -805,7 +805,7 @@ if __name__ == '__main__':
             eval_avg_steps_stds_1_cluster_1=avg_eval_steps_stds_v1_cluster_1,
         ylim_rew=(-0.5, 1.1), file_name="avg_all_comparison_3_emu", markevery=3, sample_step=10,
         plot_opt=True, optimal_reward = 1, optimal_regret=0, ylim_reg=(-0.5,20), ylim_step=(4, 15),
-        label1="Env 1", label2="Env 2", label3="Env 3")
+        label1="Configuration 1", label2="Configuration 2", label3="Configuration 3")
 
     # plotting_util.plot_mega(
     #     avg_train_opt_frac_data_v1_gensim, avg_train_opt_frac_means_v1_gensim, avg_train_opt_frac_stds_v1_gensim,

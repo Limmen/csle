@@ -98,55 +98,55 @@ if __name__ == '__main__':
     #     subnet_mask=PyCrCTFSimpleBase.subnet_mask(),
     #     hacker_ip=PyCrCTFSimpleBase.hacker_ip()
     # ))
-    # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip", num_bins=100)
-    # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip", num_bins=100)
+    # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip", num_bins=100)
+    # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip", num_bins=100)
     #plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
     d_1 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip",
         num_bins=100)
     d_2 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/ssh1_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/ssh1_cache.zip",
         num_bins=100)
     d_3 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/ssh2_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/ssh2_cache.zip",
         num_bins=100)
     d_4 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/ssh3_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/ssh3_cache.zip",
         num_bins=100)
     d_5 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/telnet1_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/telnet1_cache.zip",
         num_bins=100)
     d_6 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/telnet2_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/telnet2_cache.zip",
         num_bins=100)
     d_7 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/telnet3_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/telnet3_cache.zip",
         num_bins=100)
 
     # d_8 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/agent_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/agent_cache.zip",
     #     num_bins=100)
     # d_9 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/ssh1_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/ssh1_cache.zip",
     #     num_bins=100)
     # d_10 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/ssh2_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/ssh2_cache.zip",
     #     num_bins=100)
     # d_11 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/ssh3_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/ssh3_cache.zip",
     #     num_bins=100)
     # d_12 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/telnet1_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/telnet1_cache.zip",
     #     num_bins=100)
     # d_13 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/telnet2_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/telnet2_cache.zip",
     #     num_bins=100)
     # d_14 = read_action_costs(
-    #     zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_3/telnet3_cache.zip",
+    #     zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_3/telnet3_cache.zip",
     #     num_bins=100)
 
     d_15 = read_action_costs(
-        zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip",
+        zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip",
         num_bins=100)
     #print(d_1.shape)
     total = list(d_1) + list(d_2) + list(d_3) + list(d_4) + list(d_5) + list(d_6) + list(d_7) + list(d_15)

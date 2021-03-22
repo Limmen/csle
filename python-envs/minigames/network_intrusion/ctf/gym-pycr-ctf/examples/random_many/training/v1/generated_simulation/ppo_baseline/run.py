@@ -15,29 +15,29 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
     # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
@@ -83,8 +83,8 @@ def default_config() -> ClientConfig:
     print("max num nodes:{}".format(max_num_nodes))
     # eval_env_name = "pycr-ctf-random-cluster-v1"
     # eval_env_containers_config = util.read_containers_config(
-    #     "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_1/containers.json")
-    # eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_1/flags.json")
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/containers.json")
+    # eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/flags.json")
     eval_env_name = "pycr-ctf-random-many-cluster-v1"
     eval_n_envs = 1
 

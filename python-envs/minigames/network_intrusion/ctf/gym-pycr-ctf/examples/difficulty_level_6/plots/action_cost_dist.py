@@ -883,12 +883,12 @@ if __name__ == '__main__':
     print(colors[0])
     print(len(colors))
 
-    # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip", num_bins=100)
-    # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip", num_bins=100)
+    # d_1 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/agent_cache.zip", num_bins=100)
+    # d_2 = read_action_costs(zip_file="/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_2/agent_cache.zip", num_bins=100)
     #plot_freq_dist(d1=d_1,d2=d_2, num_bins=100)
 
     d_1, d_factors, bin_edges, costs_factors = read_action_costs(
-        zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_6/merged.zip",
+        zip_file="/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_6/merged.zip",
         num_bins=100, factors=[2, 3, 4])
 
     # plot_freq_dist(d1=d_1, d2=d_factors, num_bins=100, labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$", r"$|\mathcal{N}|=100$"],
@@ -918,7 +918,7 @@ if __name__ == '__main__':
     # colors = ["r"]
 
     # total_alerts, total_priority = read_action_alerts(
-    #     zip_file="/home/kim/pycr/cluster-envs/minigames/network_intrusion/ctf/001/level_6/merged.zip",
+    #     zip_file="/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_6/merged.zip",
     #     num_bins=250)
 
     #print(max(digitized_total))

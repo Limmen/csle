@@ -14,18 +14,18 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/backup/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/backup/random_many/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many_2/backup/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/backup/random_many/")
     eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/backup/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/backup/random_many_2/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random_many/backup/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/backup/random_many_2/")
 
     containers_config = util.read_containers_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random/containers.json")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random/containers.json")
     flags_config = util.read_flags_config(
-        "/home/kim/storage/workspace/pycr/cluster-envs/minigames/network_intrusion/ctf/001/random/flags.json")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random/flags.json")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
