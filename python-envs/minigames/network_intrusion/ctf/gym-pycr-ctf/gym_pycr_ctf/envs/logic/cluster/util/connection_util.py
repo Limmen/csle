@@ -614,7 +614,7 @@ class ConnectionUtil:
         """
         Utility function for testing if a connection is alive or not
 
-        :param c:
+        :param c: the connection to test
         :return: True if the connection is alive, otherwise false
         """
         cmd = "whoami"
