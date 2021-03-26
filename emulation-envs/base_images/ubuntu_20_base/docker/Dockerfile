@@ -149,7 +149,7 @@ RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip
     unzip latest-glassfish.zip
 
 # Setup Snort
-RUN wget https://www.snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz &&\
+RUN wget https://www.snort.org/downloads/community/snort3-community-rules.tar.gz -O community-rules.tar.gz &&\
     tar -xvzf community-rules.tar.gz -C /etc/snort/rules &&\
     mkdir /var/snort &&\
     chmod 777 /var/snort &&\

@@ -12,10 +12,6 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget
 
-# Install NMAP manually since the version in wheezy repos is too old
-RUN git clone https://github.com/nmap/nmap
-RUN cd nmap && ./configure && make && make install
-
 # Setup DVWA
 RUN mv /var/www/html/login.php /var/www/html/login_bak.php
 ADD docker/login.php /var/www/html/login.php
@@ -77,6 +73,10 @@ RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
 RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
+
+# Install NMAP manually since the version in wheezy repos is too old
+RUN git clone https://github.com/nmap/nmap
+RUN cd nmap && ./configure && make && make install
 
 # Setup Tomcat
 RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\

@@ -4,7 +4,8 @@ FROM pycr/debian_jessie_base:0.0.1
 USER root
 
 # configure vuln application
-RUN wget https://www.sudo.ws/dist/sudo-1.8.13.tar.gz -O /tmp/sudo.tar.gz && \
+#https://www.sudo.ws/dist/sudo-1.8.13.tar.gz
+RUN wget http://repository.timesys.com/buildsources/s/sudo/sudo-1.8.13/sudo-1.8.13.tar.gz -O /tmp/sudo.tar.gz && \
     tar xfz /tmp/sudo.tar.gz -C /tmp/ && \
     cd /tmp/sudo-1.8.13 && \
     ./configure && \

@@ -15,10 +15,6 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         apt-get clean &&\
         rm -rf /var/lib/apt/lists/*
 
-# Install NMAP manually since the version in wheezy repos is too old
-RUN git clone https://github.com/nmap/nmap
-RUN cd nmap && ./configure && make && make install
-
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
 ADD docker/root_users.txt /root_users.txt
@@ -81,6 +77,10 @@ RUN git clone https://github.com/Limmen/vulscan scipag_vulscan &&\
 RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
+
+# Install NMAP manually since the version in wheezy repos is too old
+RUN git clone https://github.com/nmap/nmap
+RUN cd nmap && ./configure && make && make install
 
 # Cockroach DB
 RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
