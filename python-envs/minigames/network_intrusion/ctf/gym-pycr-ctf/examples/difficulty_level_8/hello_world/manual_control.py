@@ -21,12 +21,8 @@ def manual_control():
     #                                )
     cluster_config = ClusterConfig(agent_ip="172.18.8.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=9600)
-
     env = gym.make("pycr-ctf-level-8-cluster-v1", env_config=None, cluster_config=cluster_config)
-
     ManualAttackerAgent(env=env, env_config=env.env_config)
-
-
 
 
 if __name__ == '__main__':

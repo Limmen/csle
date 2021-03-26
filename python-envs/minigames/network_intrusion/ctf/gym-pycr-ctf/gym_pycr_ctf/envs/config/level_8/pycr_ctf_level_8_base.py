@@ -907,6 +907,17 @@ class PyCrCTFLevel8Base:
         flags_lookup[("172.18.8.75", "/tmp/flag9")] = Flag(name="flag9", path="/tmp", id=9, requires_root=False, score=1)
         flags_lookup[("172.18.8.71", "/root/flag10")] = Flag(name="flag10", path="/root", id=10, requires_root=True, score=1)
         flags_lookup[("172.18.8.11", "/root/flag11")] = Flag(name="flag11", path="/root", id=11, requires_root=True, score=1)
+        flags_lookup[("172.18.8.51", "/tmp/flag12")] = Flag(name="flag12", path="/tmp", id=12, requires_root=False, score=1)
+        flags_lookup[("172.18.8.52", "/tmp/flag13")] = Flag(name="flag13", path="/tmp", id=13, requires_root=False, score=1)
+        flags_lookup[("172.18.8.54", "/tmp/flag14")] = Flag(name="flag14", path="/tmp", id=14, requires_root=False, score=1)
+        flags_lookup[("172.18.8.55", "/tmp/flag15")] = Flag(name="flag15", path="/tmp", id=15, requires_root=False, score=1)
+        flags_lookup[("172.18.8.56", "/tmp/flag16")] = Flag(name="flag16", path="/tmp", id=16, requires_root=False, score=1)
+        flags_lookup[("172.18.8.57", "/tmp/flag17")] = Flag(name="flag17", path="/tmp", id=17, requires_root=False, score=1)
+        flags_lookup[("172.18.8.58", "/tmp/flag18")] = Flag(name="flag18", path="/tmp", id=18, requires_root=False, score=1)
+        flags_lookup[("172.18.8.59", "/tmp/flag19")] = Flag(name="flag19", path="/tmp", id=19, requires_root=False, score=1)
+        flags_lookup[("172.18.8.60", "/tmp/flag20")] = Flag(name="flag20", path="/root", id=20, requires_root=True, score=1)
+        flags_lookup[("172.18.8.61", "/tmp/flag21")] = Flag(name="flag21", path="/root", id=21, requires_root=True, score=1)
+        flags_lookup[("172.18.8.62", "/tmp/flag22")] = Flag(name="flag22", path="/tmp", id=22, requires_root=False, score=1)
         return flags_lookup
 
     @staticmethod

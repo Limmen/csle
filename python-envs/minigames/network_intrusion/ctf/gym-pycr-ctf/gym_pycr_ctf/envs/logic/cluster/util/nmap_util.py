@@ -586,6 +586,7 @@ class NmapUtil:
             ips_str = "_".join(ips)
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + ips + ".xml"
             cache_id = (a.id, a.index, ips_str, a.subnet)
+
         # Host action
         else:
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
@@ -625,9 +626,6 @@ class NmapUtil:
                     fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
                 sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                 num_alerts = len(fast_logs)
-                # for i in range(len(alerts)):
-                #     if alerts[i].timestamp == fast_logs[i][1]:
-                #         alerts[i].priority = fast_logs[i][0]
                 ClusterUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                   action=a, env_config=env_config)
                 env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
@@ -879,9 +877,6 @@ class NmapUtil:
                             break
 
                     # Check On-disk cache
-                    # cwd, _, total_time = ClusterUtil.execute_ssh_cmd(cmd="pwd", conn=c.conn)
-                    # cwd = cwd.decode().replace("\n", "") + "/"
-                    # total_cost += total_time
                     cwd = "/home/" + c.username + "/"
                     if env_config.use_nmap_cache:
                         cache_result = NmapUtil.check_nmap_action_cache(a=a, env_config=env_config, conn=c.conn,

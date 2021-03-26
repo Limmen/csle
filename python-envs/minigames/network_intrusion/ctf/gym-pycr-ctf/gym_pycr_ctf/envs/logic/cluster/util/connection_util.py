@@ -323,7 +323,7 @@ class ConnectionUtil:
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        for i in range(env_config.retry_check_root):
+        for j in range(env_config.retry_check_root):
             outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd="sudo -l",
                                                                        conn=target_connections[i])
             root = False
@@ -577,3 +577,49 @@ class ConnectionUtil:
                                                     proxy=proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
+
+
+    @staticmethod
+    def find_jump_host_connection(ip, s: MachineObservationState, env_config: EnvConfig) -> ConnectionObservationState:
+        """
+        Utility function for finding a jump-host from the set of compromised machines to reach a target IP
+
+        :param ip: the ip to reach
+        :param s: the current state
+        :param env_config: the environment configuration
+        :return: a connection DTO
+        """
+
+        if ip in s.obs_state.agent_reachable:
+            return env_config.cluster_config.agent_conn
+        s.obs_state.sort_machines()
+
+        for m in s.obs_state.machines:
+            if m.logged_in and m.tools_installed and m.backdoor_installed and ip in m.reachable:
+
+                # Start with ssh connections
+                ssh_connections_sorted_by_root = sorted(
+                    m.ssh_connections,
+                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                    reverse=True)
+
+                for c in ssh_connections_sorted_by_root:
+                    alive = ConnectionUtil.test_connection(c)
+                    if alive:
+                        return c
+
+
+    @staticmethod
+    def test_connection(c: ConnectionObservationState) -> bool:
+        """
+        Utility function for testing if a connection is alive or not
+
+        :param c:
+        :return: True if the connection is alive, otherwise false
+        """
+        cmd = "whoami"
+        outdata, errdata, total_time = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
+        if outdata is not None and outdata != "":
+            return True
+        else:
+            return False

@@ -13,8 +13,10 @@ class NetworkService:
         self.credentials = credentials
 
     def __str__(self):
-        return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name,
-                                                                       list(map(lambda x: str(x), self.credentials)))
+        cr = []
+        if self.credentials is not None:
+            list(map(lambda x: str(x), self.credentials))
+        return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name, cr)
 
 
     def copy(self):

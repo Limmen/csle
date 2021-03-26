@@ -162,8 +162,7 @@ class ClusterUtil:
 
     @staticmethod
     def write_user_command_cache(action: Action, env_config: EnvConfig, user: str, result: str,
-                                 ip: str) \
-            -> None:
+                                 ip: str, jumphost: str = None) -> None:
         """
         Caches the result of a user command action
 
@@ -172,12 +171,16 @@ class ClusterUtil:
         :param user: the user
         :param result: the result to cache
         :param ip: the ip
+        :param jumphost: the jumphost
         :return: None
         """
+        if jumphost is None:
+            jumphost = str(env_config.cluster_config.agent_ip)
+
         sftp_client = env_config.cluster_config.agent_conn.open_sftp()
         file_name = env_config.nmap_cache_dir + str(action.id.value) + "_" + str(
             action.index) + "_" + ip + \
-                    "_" + user + ".txt"
+                    "_" + user + "_" + jumphost + ".txt"
         remote_file = sftp_client.file(file_name, mode="w")
         try:
             remote_file.write(result)
@@ -267,7 +270,7 @@ class ClusterUtil:
         return None
 
     @staticmethod
-    def check_user_action_cache(a: Action, env_config: EnvConfig, ip: str, user: str):
+    def check_user_action_cache(a: Action, env_config: EnvConfig, ip: str, user: str, jumphost: str = None):
         """
         Checks if a user-specific action is cached or not
 
@@ -275,7 +278,10 @@ class ClusterUtil:
         :param env_config: the environment configuration
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + user + ".txt"
+        if jumphost is None:
+            jumphost = str(env_config.cluster_config.agent_ip)
+
+        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + user + "_" + jumphost + ".txt"
 
         # Search through cache
         if query in env_config.user_command_cache_files_cache:
@@ -317,12 +323,13 @@ class ClusterUtil:
         return files
 
     @staticmethod
-    def parse_user_command_file(file_name: str, env_config: EnvConfig, conn) -> List[str]:
+    def parse_user_command_file(file_name: str, env_config: EnvConfig, conn, jumphost: str = None) -> List[str]:
         """
         Parses a file containing cached results of a user command file on a server
 
         :param file_name: name of the file to parse
         :param env_config: environment config
+        :param conn: the connection to use
         :return: a list of files
         """
         sftp_client = conn.open_sftp()

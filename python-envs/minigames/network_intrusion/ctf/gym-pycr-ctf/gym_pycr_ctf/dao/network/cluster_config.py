@@ -292,7 +292,7 @@ class ClusterConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
-                    user = parts[4]
+                    user = self.extract_username(parts=parts, idx=4, terminal_key="_cost")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
@@ -323,6 +323,7 @@ class ClusterConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
+                    user = self.extract_username(parts=parts, idx=4, terminal_key="_cost")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
@@ -404,7 +405,7 @@ class ClusterConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
-                    user = parts[4]
+                    user = self.extract_username(parts=parts, idx=4, terminal_key="_alerts")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     alerts_str = remote_file.read().decode()
@@ -426,3 +427,9 @@ class ClusterConfig:
                                                                         len(action_alerts.pivot_scan_alerts)))
 
         return action_alerts
+
+
+    def extract_username(self, parts : List[str], idx :int, terminal_key: str) -> str:
+        rest = "_".join(parts[idx:])
+        parts2 = rest.split(terminal_key)
+        return parts2[0]
