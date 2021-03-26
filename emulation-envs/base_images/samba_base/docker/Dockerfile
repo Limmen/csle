@@ -12,6 +12,10 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget
 
+# Install NMAP manually since the version in wheezy repos is too old
+RUN git clone https://github.com/nmap/nmap
+RUN cd nmap && ./configure && make && make install
+
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
 ADD docker/root_users.txt /root_users.txt
