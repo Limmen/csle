@@ -28,3 +28,14 @@ then you can access Grafana at `localhost:2382`, Prometheus at `localhost:2383`,
 Note that if you have started the pycr_monitor but cannot access the app from a SSH tunnel, you may need to
 edit `pycr_monitor/server/server.py` and update the hostname (e.g. `0.0.0.0` instead of `localhost`).
 
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+[LICENSE](../../LICENSE.md)
+
+Creative Commons
+
+(C) 2020, Kim Hammar

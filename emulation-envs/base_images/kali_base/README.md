@@ -16,7 +16,7 @@ Kim Hammar <kimham@kth.se>
 
 ## Copyright and license
 
-[LICENSE](LICENSE.md)
+[LICENSE](../../../LICENSE.md)
 
 Creative Commons
 
