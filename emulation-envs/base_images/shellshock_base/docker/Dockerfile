@@ -78,9 +78,9 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-# Install NMAP manually since the version in wheezy repos is too old
-RUN git clone https://github.com/nmap/nmap
-RUN cd nmap && ./configure && make && make install
+## Install NMAP manually since the version in wheezy repos is too old
+#RUN git clone https://github.com/nmap/nmap
+#RUN cd nmap && ./configure && make && make install
 
 # Cockroach DB
 RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\

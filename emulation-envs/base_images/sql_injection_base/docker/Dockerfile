@@ -74,9 +74,9 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-# Install NMAP manually since the version in wheezy repos is too old
-RUN git clone https://github.com/nmap/nmap
-RUN cd nmap && ./configure && make && make install
+## Install NMAP manually since the version in wheezy repos is too old
+#RUN git clone https://github.com/nmap/nmap
+#RUN cd nmap && ./configure && make && make install
 
 # Setup Tomcat
 RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
