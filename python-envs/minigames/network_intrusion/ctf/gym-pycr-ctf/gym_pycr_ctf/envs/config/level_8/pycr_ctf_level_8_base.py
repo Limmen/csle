@@ -915,8 +915,8 @@ class PyCrCTFLevel8Base:
         flags_lookup[("172.18.8.57", "/tmp/flag17")] = Flag(name="flag17", path="/tmp", id=17, requires_root=False, score=1)
         flags_lookup[("172.18.8.58", "/tmp/flag18")] = Flag(name="flag18", path="/tmp", id=18, requires_root=False, score=1)
         flags_lookup[("172.18.8.59", "/tmp/flag19")] = Flag(name="flag19", path="/tmp", id=19, requires_root=False, score=1)
-        flags_lookup[("172.18.8.60", "/tmp/flag20")] = Flag(name="flag20", path="/root", id=20, requires_root=True, score=1)
-        flags_lookup[("172.18.8.61", "/tmp/flag21")] = Flag(name="flag21", path="/root", id=21, requires_root=True, score=1)
+        flags_lookup[("172.18.8.60", "/root/flag20")] = Flag(name="flag20", path="/root", id=20, requires_root=True, score=1)
+        flags_lookup[("172.18.8.61", "/root/flag21")] = Flag(name="flag21", path="/root", id=21, requires_root=True, score=1)
         flags_lookup[("172.18.8.62", "/tmp/flag22")] = Flag(name="flag22", path="/tmp", id=22, requires_root=False, score=1)
         return flags_lookup
 
