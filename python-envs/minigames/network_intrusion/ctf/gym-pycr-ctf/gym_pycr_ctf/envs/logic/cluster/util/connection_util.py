@@ -591,7 +591,12 @@ class ConnectionUtil:
         """
 
         if ip in s.obs_state.agent_reachable:
-            return env_config.cluster_config.agent_conn
+            c = ConnectionObservationState(conn=env_config.cluster_config.agent_conn,
+                                       username=env_config.cluster_config.agent_username,
+                                       root=True, port=22,
+                                       service=constants.SSH.SERVICE_NAME,
+                                       proxy=None, ip=env_config.cluster_config.agent_ip)
+            return c
         s.obs_state.sort_machines()
 
         for m in s.obs_state.machines:
@@ -607,6 +612,7 @@ class ConnectionUtil:
                     alive = ConnectionUtil.test_connection(c)
                     if alive:
                         return c
+        raise ValueError("No JumpHost found")
 
 
     @staticmethod
