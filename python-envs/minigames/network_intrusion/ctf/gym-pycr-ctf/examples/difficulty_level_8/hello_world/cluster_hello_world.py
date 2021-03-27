@@ -50,7 +50,7 @@ def test_env(env_name : str, num_steps : int):
         #     action = 21
         # else:
         #     action = 40
-        env.render()
+        #env.render()
         obs, reward, done, info = env.step(action)
         tried_actions.append(action)
         tot_rew += reward
