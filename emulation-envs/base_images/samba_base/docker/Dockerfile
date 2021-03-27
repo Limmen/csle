@@ -3,14 +3,21 @@
 FROM vulnerables/cve-2017-7494
 USER root
 
+# Setup jessie packet repos
+RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list &&\
+    sed -i '/jessie-updates/d' /etc/apt/sources.list &&\
+    echo "deb [check-valid-until=no] http://archive.debian.org/debian/ jessie-backports main" >> /etc/apt/sources.list &&\
+    apt-get -o Acquire::Check-Valid-Until=false update
+
 # Install dependencies
-RUN apt-get update
 RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget
+
+RUN apt-get install -y openssl libssl-dev -t jessie-backports
 
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
@@ -62,9 +69,12 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-# Install NMAP manually since the version in wheezy repos is too old
+# Install NMAP manually since the version in jessie repos is too old
 #RUN git clone https://github.com/nmap/nmap
 #RUN cd nmap && ./configure && make && make install
+
+RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
+     ./configure && make && make install
 
 # Setup Tomcat
 RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\

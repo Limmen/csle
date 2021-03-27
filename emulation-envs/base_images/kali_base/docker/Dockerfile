@@ -9,7 +9,7 @@ RUN apt-get -y install apt-utils openssl net-tools iputils-ping sudo emacs curl 
                        iptables proxychains zip unzip arptables
 
 #RUN apt-get -y install man-db
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y kali-tools-top10
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10
 
 # Setup users
 

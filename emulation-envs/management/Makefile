@@ -43,4 +43,5 @@ rm_images:
 start_stopped:
 	python manage_containers.py --c start_stopped
 
-
+clean_docker:
+	docker system prune

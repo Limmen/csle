@@ -3,13 +3,13 @@
 FROM debian:jessie
 USER root
 
-RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
-RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
-RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian/ jessie-backports main" >> /etc/apt/sources.list
-RUN apt-get -o Acquire::Check-Valid-Until=false update
+# Setup jessie packet repos
+RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list &&\
+    sed -i '/jessie-updates/d' /etc/apt/sources.list &&\
+    echo "deb [check-valid-until=no] http://archive.debian.org/debian/ jessie-backports main" >> /etc/apt/sources.list &&\
+    apt-get -o Acquire::Check-Valid-Until=false update
 
 # Install dependencies
-#RUN apt-get update
 RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
@@ -17,9 +17,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget openjdk-7-jre-headless &&\
          DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 build-essential gcc make \
-         php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev &&\
-         apt-get clean &&\
-         rm -rf /var/lib/apt/lists/*
+         php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev
 
 RUN apt-get install -y openssl libssl-dev -t jessie-backports
 
@@ -80,7 +78,7 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
 #RUN git clone https://github.com/nmap/nmap
 #RUN cd nmap && ./configure && make && make install
 
-RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-6.47/ &&\
+RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
      ./configure && make && make install
 
 # Setup Tomcat

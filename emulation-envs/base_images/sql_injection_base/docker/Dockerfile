@@ -10,7 +10,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
-                       wget
+                       wget openssl libssl-dev
 
 # Setup DVWA
 RUN mv /var/www/html/login.php /var/www/html/login_bak.php
@@ -74,9 +74,12 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     cp nmap-vulners/vulners.nse /usr/share/nmap/scripts/ &&\
     nmap --script-updatedb
 
-## Install NMAP manually since the version in wheezy repos is too old
+## Install NMAP manually since the version in debian 9:2 repos is too old
 #RUN git clone https://github.com/nmap/nmap
 #RUN cd nmap && ./configure && make && make install
+
+RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
+     ./configure && make && make install
 
 # Setup Tomcat
 RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\

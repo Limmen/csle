@@ -8,13 +8,21 @@ for keeping track of the emulation configurations.
 
 ## Useful scripts
 ```bash
-./install.sh 
-./pycr_monitor.sh 
-./run_c_advisor.sh
-./run_grafana.sh
-./run_node_exporter.sh
-./run_prometheus.sh
-make all
+./install.sh   # Installs prometheus, grafana, PyCRMonitor, NodeExporter, Dashboards, C_Advisor etc.
+./pycr_monitor.sh  # Installs PyCRMonitor
+./run_c_advisor.sh # Installs C_Advisor
+./run_grafana.sh  # Installs Grafana
+./run_node_exporter.sh # Installs node exporter
+./run_prometheus.sh # Installs Prometheus
+
+make list_stopped # list stopped PyCR containers
+make list_running # list running PyCR containers
+make list_images # list images used by PyCR containers
+make stop_running # stop running PyCR containers
+make rm_stopped # remove stopped PyCR containers
+make rm_images # remove images used by PyCR containers
+make start_stopped # start stopped PyCR containers
+make clean_docker # clean docker (delete unused networks, containers, images, cache, etc.)
 ```
 
 When everything is running, use the following command to setup tunnels:
