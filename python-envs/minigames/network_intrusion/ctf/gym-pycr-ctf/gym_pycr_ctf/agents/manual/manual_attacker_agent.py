@@ -48,9 +48,10 @@ class ManualAttackerAgent:
             actions = np.array(list(range(num_actions)))
             history = []
             while True:
-                raw_input = input("Enter the action to execute or a comma-separated list of actions:")
+                raw_input = input(">")
                 if raw_input == "help":
-                    print("Press R to reset, press S to print the state, press A to print the actions, "
+                    print("Enter an action id to execute the action, "
+                          "press R to reset, press S to print the state, press A to print the actions, "
                           "press L to print the legal actions, press x to select a random legal action,"
                           "press H to print the history of actions")
                 elif raw_input == "R":
