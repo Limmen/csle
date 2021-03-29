@@ -509,29 +509,18 @@ class IDS_ROUTER:
 class SUB_PROC_ENV:
     SLEEP_TIME_STARTUP = 10
 
-#/usr/sbin/netdiscover -r 172.18.1.0/24 -PN -i eth0 > output.txt
-#crackmapexec --verbose --timeout 10 -t 200 ssh 172.18.1.0/24
-#
-# /usr/sbin/hping3 --scan known 172.18.1.2 --flood > output.txt
-# netcat -nvz 172.18.1.2 1-65535 > ncat.txt 2>&1
-# freevulnsearch https://github.com/OCSAF/freevulnsearch
-# https://github.com/xvass/vscan
-# get recon-ng with recon-cli working to analyze web vulnerabilities
-# https://nmap.org/nsedoc/scripts/finger.html
-# https://nmap.org/nsedoc/scripts/ip-forwarding.html
-# https://nmap.org/nsedoc/scripts/broadcast-avahi-dos.html
-# https://nmap.org/nsedoc/scripts/http-slowloris.html
-# nmap -p 80 --script hostmap-bfk.nse nmap.org
-# sudo nmap --traceroute --script traceroute-geolocation.nse -p 80 hackertarget.com
-# ssl-heartbleed.nse
-# https://www.ryanschulze.net/archives/2148 VULNERS CVE, https://vulners.com/ info
-
-# http-sql-injection.nse
-# whois-domain.nse
-# dns-fuzz.nse
-
-# Post exploitation scans, e.g. install backdoor actions, collect more information about the host (e.g. OS, etc), more vulnerabilities,
-# more usernames etc
-# Collect hostnames after nmap scans: cat 19_6.xml | grep "hostname", show in UI
-# More features, e.g. when logging on server do "netscan" to figure out running services. Also check running processes
-#
+class TRAFFIC_COMMANDS:
+    DEFAULT_COMMANDS = {
+        "ftp1": ["ftp {}", "mongo --host {} --port 27017", "ssh {}", "curl {}:8080"],
+        "ssh1": ["ssh {}", "curl {}:80"],
+        "telnet1": ["ssh {}", "curl {}", "telnet {}"],
+        "honeypot1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234", "irssi && /connect {}", "psql -h {} -p 5432"],
+        "samba1": ["ssh {}", "smbclient -L {}"],
+        "shellshock1": ["ssh {}", "curl {}", "snmpwalk -v2c {} -c pycr_ctf1234"],
+        "sql_injection1": ["ssh {}", "curl {}/login.php", "irssi && /connect {}"],
+        "cve_2010_0426_1": ["ssh {}", "curl {}:8080"],
+        "cve_2015_1427_1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234"],
+        "cve_2015_3306_1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234", "curl {}"],
+        "cve_2015_5602_1": ["ssh {}"],
+        "cve_2015_10033_1": ["ssh {}", "curl {}"],
+    }

@@ -10,7 +10,8 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
-                       wget openssl libssl-dev
+                       wget openssl libssl-dev irssi irssi-scripts screen postgresql-client-common \
+                       postgresql-client-common snmp mongodb-clients postgresql-client smbclient
 
 # Setup DVWA
 RUN mv /var/www/html/login.php /var/www/html/login_bak.php

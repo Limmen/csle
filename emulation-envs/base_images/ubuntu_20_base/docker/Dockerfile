@@ -9,7 +9,8 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
         apt-get -y install lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git \
-        swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip snort arptables
+        swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip snort arptables \
+        irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client smbclient
 
 # Add users script
 ADD docker/make_root_users.sh /make_root_users.sh
