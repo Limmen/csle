@@ -148,6 +148,22 @@ class EnvConfig:
         self.pi_star_rew_list = []
         self.install_tools_sleep_seconds = 3
         self.retry_check_root = 3
+        self.retry_sambacry = 2
+        self.retry_shellshock = 2
+        self.retry_dvwa_sql_injection = 2
+        self.retry_cve_2015_3306 = 2
+        self.retry_cve_2015_1427 = 2
+        self.retry_cve_2016_10033 = 2
+        self.retry_cve_2010_0426 = 2
+        self.retry_cve_2015_5602 = 2
+        self.sambacry_sleep_retry = 2
+        self.shellshock_sleep_retry = 2
+        self.dvwa_sql_injection_sleep_retry = 2
+        self.cve_2015_3306_sleep_retry = 2
+        self.cve_2015_1427_sleep_retry = 2
+        self.cve_2016_10033_sleep_retry = 2
+        self.cve_2010_0426_sleep_retry = 2
+        self.cve_2015_5602_sleep_retry = 2
 
 
     def get_port_forward_port(self) -> int:
@@ -273,4 +289,21 @@ class EnvConfig:
         env_config.pi_star_rew = self.pi_star_rew
         env_config.pi_star_rew_list = self.pi_star_rew_list
         env_config.install_tools_sleep_seconds = self.install_tools_sleep_seconds
+        env_config.retry_check_root = self.retry_check_root
+        env_config.retry_sambacry = self.retry_sambacry
+        env_config.retry_shellshock = self.retry_shellshock
+        env_config.retry_dvwa_sql_injection = self.retry_dvwa_sql_injection
+        env_config.retry_cve_2015_3306 = self.retry_cve_2015_3306
+        env_config.retry_cve_2015_1427 = self.retry_cve_2015_1427
+        env_config.retry_cve_2016_10033 = self.retry_cve_2016_10033
+        env_config.retry_cve_2010_0426 = self.retry_cve_2010_0426
+        env_config.retry_cve_2015_5602 = self.retry_cve_2015_5602
+        env_config.sambacry_sleep_retry = self.sambacry_sleep_retry
+        env_config.shellshock_sleep_retry = self.shellshock_sleep_retry
+        env_config.dvwa_sql_injection_sleep_retry = self.dvwa_sql_injection_sleep_retry
+        env_config.cve_2015_3306_sleep_retry = self.cve_2015_3306_sleep_retry
+        env_config.cve_2015_1427_sleep_retry = self.cve_2015_1427_sleep_retry
+        env_config.cve_2016_10033_sleep_retry = self.cve_2016_10033_sleep_retry
+        env_config.cve_2010_0426_sleep_retry = self.cve_2010_0426_sleep_retry
+        env_config.cve_2015_5602_sleep_retry = self.cve_2015_5602_sleep_retry
         return env_config
