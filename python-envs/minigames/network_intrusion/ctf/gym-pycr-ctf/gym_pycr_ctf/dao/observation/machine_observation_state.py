@@ -55,15 +55,16 @@ class MachineObservationState:
 
 
     def __str__(self):
-        return "ip:{},os:{},shell_access:{},num_ports:{},num_cve_vuln:{},num_cred{},num_ssh_connections:{}," \
-               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{}, hostnames:{}, trace:{}, " \
+        return "ip:{},os:{},shell_access:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{},num_ssh_connections:{}," \
+               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{},hostnames:{},trace:{}, " \
                "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
                "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
                "smtp_brute_tried:{},postgres_brute_tried:{},tools_installed:{},backdoor_installed:{}," \
                "num_backdoor_credentials:{},num_reachable_nodes:{},backdoor_tried:{},install_tools_tried:{}," \
                "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
-               "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}".format(
-            self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
+               "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}," \
+               "flags_found:{}".format(
+            self.ip, self.os,  self.shell_access, self.root, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
             self.telnet_brute_tried, self.ssh_brute_tried, self.ftp_brute_tried, self.cassandra_brute_tried,
@@ -71,7 +72,7 @@ class MachineObservationState:
             self.postgres_brute_tried, self.tools_installed, self.backdoor_installed, len(self.backdoor_credentials),
             len(self.reachable), self.backdoor_tried, self.install_tools_tried, self.sambacry_tried,
             self.shellshock_tried, self.dvwa_sql_injection_tried, self.cve_2015_3306_tried, self.cve_2015_1427_tried,
-            self.cve_2016_10033_tried, self.cve_2010_0426_tried, self.cve_2015_5602_tried)
+            self.cve_2016_10033_tried, self.cve_2010_0426_tried, self.cve_2015_5602_tried, self.flags_found)
 
     def sort_ports(self):
         for p in self.ports:

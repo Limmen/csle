@@ -49,6 +49,7 @@ your preference.
 import gym
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration to connect to the emulation
 cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
@@ -57,6 +58,9 @@ cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", 
 # Create gym interface
 env_name = "pycr-ctf-level-7-cluster-v1"
 env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
+
+# Manual Control with GUI
+ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
 ```
 
 ## Manual Control

@@ -49,6 +49,9 @@ class ManualAttackerAgent:
             history = []
             while True:
                 raw_input = input(">")
+                raw_input = raw_input.strip()
+                legal_actions = list(
+                    filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
                 if raw_input == "help":
                     print("Enter an action id to execute the action, "
                           "press R to reset, press S to print the state, press A to print the actions, "
@@ -59,12 +62,8 @@ class ManualAttackerAgent:
                 elif raw_input == "S":
                     print(str(env.env_state.obs_state))
                 elif raw_input == "L":
-                    legal_actions = list(
-                        filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
                     print(legal_actions)
                 elif raw_input == "x":
-                    legal_actions = list(
-                        filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
                     a = np.random.choice(legal_actions)
                     _, _, done, _ = self.env.step(a)
                     history.append(a)
@@ -73,9 +72,17 @@ class ManualAttackerAgent:
                 elif raw_input == "H":
                     print(history)
                 else:
-                    actions = list(map(lambda x: int(x), raw_input.split(",")))
-                    for a in actions:
-                        _, _, done, _ = self.env.step(a)
-                        history.append(a)
-                        if done:
-                            print("done:{}".format(done))
+                    actions_str = raw_input.split(",")
+                    digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
+                    if not digits_only:
+                        print("Invalid action. Actions must be integers.")
+                    else:
+                        actions = list(map(lambda x: int(x), actions_str))
+                        for a in actions:
+                            if env.is_action_legal(a, env.env_config, env.env_state):
+                                _, _, done, _ = self.env.step(a)
+                                history.append(a)
+                                if done:
+                                    print("done:{}".format(done))
+                            else:
+                                print("action:{} is illegal".format(a))
