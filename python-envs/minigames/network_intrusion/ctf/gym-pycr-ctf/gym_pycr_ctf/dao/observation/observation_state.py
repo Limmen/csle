@@ -124,3 +124,7 @@ class ObservationState:
         for m in self.machines:
             c.machines.append(m.copy())
         return c
+
+
+    def __str__(self):
+        return "\n".join([str(x) for x in self.machines])

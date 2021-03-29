@@ -62,7 +62,7 @@ class MachineObservationState:
                "smtp_brute_tried:{},postgres_brute_tried:{},tools_installed:{},backdoor_installed:{}," \
                "num_backdoor_credentials:{},num_reachable_nodes:{},backdoor_tried:{},install_tools_tried:{}," \
                "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
-               "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:.{}".format(
+               "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}".format(
             self.ip, self.os,  self.shell_access, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
