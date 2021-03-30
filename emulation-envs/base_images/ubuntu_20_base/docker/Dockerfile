@@ -181,3 +181,7 @@ RUN chmod 777 /cve_2010_0426_exploit.sh
 # CVE-2015-5602 Exploit
 ADD docker/cve_2015_5602_exploit.sh /cve_2015_5602_exploit.sh
 RUN chmod 777 /cve_2015_5602_exploit.sh
+
+# IRC Test Login
+ADD docker/irc_login_test.sh /irc_login_test.sh
+RUN chmod 777 /irc_login_test.sh

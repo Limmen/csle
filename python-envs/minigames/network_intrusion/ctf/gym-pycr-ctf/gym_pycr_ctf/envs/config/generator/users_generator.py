@@ -12,11 +12,19 @@ from gym_pycr_ctf.util.experiments_util import util
 import secrets
 import string
 
-class UsersGenerator:
 
+class UsersGenerator:
 
     @staticmethod
     def generate(max_num_users: int, topology: Topology, agent_ip: str):
+        """
+        Generates a random user configuration for a emulation environment
+
+        :param max_num_users: the maximum number of users
+        :param topology: the topology of the emulation
+        :param agent_ip: the agent ip
+        :return: the created users configuration
+        """
         alphabet = string.ascii_letters + string.digits
         user_configs = []
         for node in topology.node_configs:
@@ -41,6 +49,13 @@ class UsersGenerator:
 
     @staticmethod
     def create_users(users_config: UsersConfig, cluster_config: ClusterConfig):
+        """
+        Creates users in an emulation environment according to a specified users-configuration
+
+        :param users_config: the users configuration
+        :param cluster_config: the cluster configuration
+        :return: None
+        """
         for users_conf in users_config.users:
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=users_conf.ip)
 

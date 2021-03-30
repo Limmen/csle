@@ -1,9 +1,6 @@
 from typing import List
-import random
-import numpy as np
 from gym_pycr_ctf.dao.container_config.topology import Topology
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
 from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
 from gym_pycr_ctf.envs.logic.cluster.util.cluster_util import ClusterUtil
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
@@ -12,10 +9,18 @@ from gym_pycr_ctf.dao.container_config.node_traffic_config import NodeTrafficCon
 from gym_pycr_ctf.util.experiments_util import util
 import gym_pycr_ctf.constants.constants as constants
 
+
 class TrafficGenerator:
 
     @staticmethod
     def generate(topology: Topology, containers_config: ContainersConfig) -> TrafficConfig:
+        """
+        Generates a traffic configuration
+
+        :param topology: topology of the environment
+        :param containers_config: container configuration of the envirinment
+        :return: the created traffic configuration
+        """
         jumphosts_dict = {}
         targethosts_dict = {}
         containers_dict = {}
@@ -36,7 +41,12 @@ class TrafficGenerator:
 
         node_traffic_configs = []
         for node in topology.node_configs:
-            commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[node.ip]]
+            commands = []
+            for target in targethosts_dict[node.ip]:
+                template_commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[target]]
+                for tc in template_commands:
+                    commands.append(tc.format(target))
+
             node_traffic_config = NodeTrafficConfig(ip=node.ip, jumphosts=targethosts_dict[node.ip],
                                                     target_hosts=targethosts_dict[node.ip], commands=commands)
             node_traffic_configs.append(node_traffic_config)
@@ -47,7 +57,45 @@ class TrafficGenerator:
 
     @staticmethod
     def create_traffic_scripts(traffic_config: TrafficConfig, cluster_config: ClusterConfig):
-        #GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
+        """
+        Installs the traffic generation scripts at each node
+
+        :param traffic_config: the traffic configuration
+        :param cluster_config: the cluster configuration
+        :return: None
+        """
+        for node in traffic_config.node_traffic_configs:
+            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
+
+            # Remove old file if exists
+            sftp_client = cluster_config.agent_conn.open_sftp()
+            sftp_client.remove("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME)
+
+            # File contents
+            script_file = ""
+            script_file = script_file + "#!/bin/bash\n"
+            script_file = script_file + "while [ 1 ]\n"
+            script_file = script_file + "do\n"
+            for cmd in node.commands:
+                script_file = script_file + "    sleep 2\n"
+                script_file = script_file + "    " + cmd + "\n"
+                script_file = script_file + "    sleep 2\n"
+            script_file = script_file + "done\n"
+
+            # Write traffic generation script file
+            sftp_client = cluster_config.agent_conn.open_sftp()
+            remote_file = sftp_client.open("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME)
+            try:
+                remote_file.write(script_file)
+            except Exception as e:
+                print("exception writing traffic generation file:{}".format(str(e)))
+            finally:
+                remote_file.close()
+
+            # Make executable
+            cmd = "sudo chmod 777 /" + + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
         GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
 
 

@@ -543,7 +543,7 @@ class TRAFFIC_COMMANDS:
         "cve_2015_10033_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                              "timeout 5 curl {} > /dev/null 2>&1"],
     }
-    BACKGROUND_STOP = "sleep {} & SPID=${!}; ({}; kill ${SPID}) & CPID=${!}; fg 1; kill ${CPID}"
+    TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
 
 
