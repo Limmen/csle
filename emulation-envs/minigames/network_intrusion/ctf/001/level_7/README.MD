@@ -38,10 +38,10 @@ make cve_2016_10033_1 # Run container with the CVE-2016-10033 vulnerability
 make samba1 # Run container with th SambaCry vulnerability
 make shellshock1 # Run container with the Shellshock vulnerability
 make sql_injection1 # Run container with a SQL Injection vulnerability 
-
-
 make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
+make traffic # create traffic generators and start them on each node
+make stop_traffic # stop traffic_generators that are running on each node
 python run.py --build # build all containers with custom config
 python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers

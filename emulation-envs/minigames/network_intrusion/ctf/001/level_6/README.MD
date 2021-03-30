@@ -30,6 +30,8 @@ make telnet # Run telnet container
 make honeypot # Run honeypot container
 make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
+make traffic # create traffic generators and start them on each node
+make stop_traffic # stop traffic_generators that are running on each node
 python run.py --build # build all containers with custom config
 python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers

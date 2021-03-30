@@ -50,10 +50,10 @@ make shellshock1_1 # Run 1st container with the Shellshock vulnerability
 make shellshock1_2 # Run 2nd container with the Shellshock vulnerability
 make sql_injection1_1 # Run 1st container with a SQL Injection vulnerability
 make sql_injection1_2 # Run 2nd container with a SQL Injection vulnerability 
-
-
 make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
+make traffic # create traffic generators and start them on each node
+make stop_traffic # stop traffic_generators that are running on each node
 python run.py --build # build all containers with custom config
 python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers

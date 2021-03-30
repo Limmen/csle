@@ -1,0 +1,300 @@
+{
+    "agent_ip": "172.18.3.191",
+    "containers": [
+        {
+            "ip": "172.18.3.79",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "ftp1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.191",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "hacker_kali1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.21",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.10",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "router1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.2",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "ssh1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.3",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "telnet1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.7",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "ftp2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.101",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.54",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "ssh2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.74",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "ssh3",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.61",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "telnet2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.62",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "telnet3",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.4",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.5",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.6",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.8",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.9",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.178",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.11",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.12",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.13",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.14",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.15",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.16",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.17",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.18",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.19",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.22",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.23",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.24",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.25",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.3.28",
+            "level": "3",
+            "minigame": "ctf",
+            "name": "honeypot2",
+            "network": "pycr_net_3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        }
+    ],
+    "ids_enabled": false,
+    "network": "pycr_net_3",
+    "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+    "router_ip": "172.18.3.10",
+    "subnet_mask": "172.18.3.0/24",
+    "subnet_prefix": "172.18.3.",
+    "vulnerable_nodes": null
+}

@@ -46,6 +46,7 @@ class EnvInfo:
             topology_config = None
             flags_config = None
             vulnerabilities_config = None
+            traffic_config = None
 
             if net_containers[0].containers_config_path is not None:
                 try:
@@ -77,11 +78,17 @@ class EnvInfo:
                 except:
                     pass
 
+            if net_containers[0].traffic_config_path is not None:
+                try:
+                    traffic_config = util.read_traffic_config(net_containers[0].traffic_config_path)
+                except:
+                    pass
+
             p_env = RunningEnv(containers=net_containers, name=net, subnet_prefix=subnet_mask, minigame=minigame, id=id,
                                subnet_mask=subnet_mask, level= net_containers[0].level,
                                flags_config=flags_config, containers_config=containers_config,
                                topology_config=topology_config, vulnerabilities_config=vulnerabilities_config,
-                               users_config=users_config)
+                               users_config=users_config, traffic_config=traffic_config)
             parsed_envs.append(p_env)
         return parsed_envs
 
@@ -104,6 +111,7 @@ class EnvInfo:
                 topology_config_path = None
                 users_config_path = None
                 vulnerabilities_config_path = None
+                traffic_config_path = None
                 if "containers_cfg" in labels:
                     containers_config_path = labels["containers_cfg"]
                 if "dir" in labels:
@@ -116,6 +124,8 @@ class EnvInfo:
                     users_config_path = labels["users_cfg"]
                 if "vulnerabilities_cfg" in labels:
                     vulnerabilities_config_path = labels["vulnerabilities_cfg"]
+                if "traffic_cfg" in labels:
+                    traffic_config_path = labels["traffic_cfg"]
                 parsed_c = RunningEnvContainer(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
@@ -129,7 +139,8 @@ class EnvInfo:
                     image_name=inspect_info["Config"]["Image"],
                     net=net, dir=dir_path, containers_config_path=containers_config_path,
                     users_config_path=users_config_path, flags_config_path=flags_config_path,
-                    vulnerabilities_config_path=vulnerabilities_config_path, topology_config_path=topology_config_path
+                    vulnerabilities_config_path=vulnerabilities_config_path, topology_config_path=topology_config_path,
+                    traffic_config_path=traffic_config_path
                 )
                 parsed_containers.append(parsed_c)
         return parsed_containers

@@ -5,7 +5,8 @@ class RunningEnvContainer:
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
                  minigame : str, name2: str, level: str, hostname: str, image_name : str, net: str,
                  dir: str, containers_config_path : str, users_config_path : str, flags_config_path : str,
-                 vulnerabilities_config_path : str, topology_config_path: str):
+                 vulnerabilities_config_path : str, topology_config_path: str,
+                 traffic_config_path: str):
         self.name = name
         self.status = status
         self.short_id = short_id
@@ -30,6 +31,7 @@ class RunningEnvContainer:
         self.flags_config_path = flags_config_path
         self.vulnerabilities_config_path = vulnerabilities_config_path
         self.topology_config_path = topology_config_path
+        self.traffic_config_path = traffic_config_path
 
     def to_dict(self):
         d = {}
@@ -56,4 +58,5 @@ class RunningEnvContainer:
         d["flags_config_path"] = self.flags_config_path
         d["vulnerabilities_config_path"] = self.vulnerabilities_config_path
         d["topology_config_path"] = self.topology_config_path
+        d["traffic_config_path"] = self.traffic_config_path
         return d
