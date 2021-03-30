@@ -18,6 +18,7 @@ from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
+from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
@@ -190,11 +191,24 @@ def write_containers_config_file(containers_cfg: ContainersConfig, path: str) ->
     """
     Writes a config object to a config file
 
-    :param containers_cfg: the vulns_cfg obj to write
+    :param containers_cfg: the containers_cfg obj to write
     :param path: the path to write the file
     :return: None
     """
     json_str = json.dumps(json.loads(jsonpickle.encode(containers_cfg)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
+def write_traffic_config_file(traffic_cfg: TrafficConfig, path: str) -> None:
+    """
+    Writes a traffic config object to a config file
+
+    :param traffic_cfg: the traffic_cfg obj to write
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(traffic_cfg)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -262,17 +276,30 @@ def read_vulns_config(vulns_config_path) -> VulnerabilitiesConfig:
     return vulns_cfg
 
 
-def read_containers_config(containers_config_path) -> VulnerabilitiesConfig:
+def read_containers_config(containers_config_path) -> ContainersConfig:
     """
     Reads containers_config of the experiment from a json file
 
-    :param containers_config_path: the path to the vulns_config file
+    :param containers_config_path: the path to the containers_config file
     :return: the configuration
     """
     with io.open(containers_config_path, 'r', encoding='utf-8') as f:
         json_str = f.read()
     containers_cfg: ContainersConfig = jsonpickle.decode(json_str)
     return containers_cfg
+
+
+def read_traffic_config(traffic_config_path) -> TrafficConfig:
+    """
+    Reads containers_config of the experiment from a json file
+
+    :param containers_config_path: the path to the traffic_config file
+    :return: the configuration
+    """
+    with io.open(traffic_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    traffic_cfg: TrafficConfig = jsonpickle.decode(json_str)
+    return traffic_cfg
 
 
 def parse_args(default_config_path):
@@ -320,6 +347,7 @@ def default_config_path(out_dir : str = None) -> str:
         config_path = os.path.join(out_dir, './config.json')
     return config_path
 
+
 def default_topology_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
@@ -330,6 +358,7 @@ def default_topology_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, './topology.json')
     return config_path
+
 
 def default_users_path(out_dir : str = None) -> str:
     """
@@ -342,6 +371,7 @@ def default_users_path(out_dir : str = None) -> str:
         config_path = os.path.join(out_dir, './users.json')
     return config_path
 
+
 def default_flags_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
@@ -352,6 +382,7 @@ def default_flags_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, './flags.json')
     return config_path
+
 
 def default_vulnerabilities_path(out_dir : str = None) -> str:
     """
@@ -364,6 +395,7 @@ def default_vulnerabilities_path(out_dir : str = None) -> str:
         config_path = os.path.join(out_dir, './vulnerabilities.json')
     return config_path
 
+
 def default_containers_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
@@ -374,6 +406,18 @@ def default_containers_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, './containers.json')
     return config_path
+
+def default_traffic_path(out_dir : str = None) -> str:
+    """
+    :param out_dir: directory to write
+    :return: the default path to traffic config file
+    """
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), './traffic.json')
+    else:
+        config_path = os.path.join(out_dir, './traffic.json')
+    return config_path
+
 
 def default_containers_folders_path(out_dir : str = None) -> str:
     """
@@ -386,6 +430,7 @@ def default_containers_folders_path(out_dir : str = None) -> str:
         config_path = os.path.join(out_dir, 'containers')
     return config_path
 
+
 def default_container_makefile_template_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
@@ -396,6 +441,7 @@ def default_container_makefile_template_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, 'Container_Makefile_template')
     return config_path
+
 
 def default_makefile_template_path(out_dir : str = None) -> str:
     """
@@ -408,6 +454,7 @@ def default_makefile_template_path(out_dir : str = None) -> str:
         config_path = os.path.join(out_dir, './Makefile_template')
     return config_path
 
+
 def default_makefile_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
@@ -418,6 +465,7 @@ def default_makefile_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, './Makefile')
     return config_path
+
 
 def round_batch_size(x: int):
     return x if x % 100 == 0 else x + 100 - x%100
@@ -434,6 +482,7 @@ def running_average(x, N):
         y = np.zeros_like(x)
     return y
 
+
 def running_average(x, N):
     ''' Function used to compute the running average
         of the last N elements of a vector x
@@ -444,6 +493,7 @@ def running_average(x, N):
     else:
         y = [x[-1]]
     return y[-1]
+
 
 def running_average_list(x, N):
     ''' Function used to compute the running average

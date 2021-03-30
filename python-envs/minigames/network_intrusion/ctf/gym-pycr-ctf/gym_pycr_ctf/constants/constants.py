@@ -510,17 +510,46 @@ class SUB_PROC_ENV:
     SLEEP_TIME_STARTUP = 10
 
 class TRAFFIC_COMMANDS:
+    #"ftp1": ["ftp {}", "mongo --host {} --port 27017", "ssh {}", "curl {}:8080"],
     DEFAULT_COMMANDS = {
-        "ftp1": ["ftp {}", "mongo --host {} --port 27017", "ssh {}", "curl {}:8080"],
-        "ssh1": ["ssh {}", "curl {}:80"],
-        "telnet1": ["ssh {}", "curl {}", "telnet {}"],
-        "honeypot1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234", "irssi && /connect {}", "psql -h {} -p 5432"],
-        "samba1": ["ssh {}", "smbclient -L {}"],
-        "shellshock1": ["ssh {}", "curl {}", "snmpwalk -v2c {} -c pycr_ctf1234"],
-        "sql_injection1": ["ssh {}", "curl {}/login.php", "irssi && /connect {}"],
-        "cve_2010_0426_1": ["ssh {}", "curl {}:8080"],
-        "cve_2015_1427_1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234"],
-        "cve_2015_3306_1": ["ssh {}", "snmpwalk -v2c {} -c pycr_ctf1234", "curl {}"],
-        "cve_2015_5602_1": ["ssh {}"],
-        "cve_2015_10033_1": ["ssh {}", "curl {}"],
+        "ftp1": ["timeout 5 ftp {} > /dev/null 2>&1",
+                 "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                 "timeout 5 curl {}:8080 > /dev/null 2>&1"],
+        "ssh1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                 "timeout 5 curl {}:80 > /dev/null 2>&1"],
+        "telnet1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                    "timeout 5 curl {} > /dev/null 2>&1",
+                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        "honeypot1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                      "timeout 5 snmpwalk -v2c {} -c pycr_ctf1234 > /dev/null 2>&1",
+                      "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
+                      "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
+        "samba1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                   "(sleep 2; echo testpycruser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
+        "shellshock1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                        "timeout 5 curl {} > /dev/null 2>&1",
+                        "timeout 5 snmpwalk -v2c {} -c pycr_ctf1234 > /dev/null 2>&1"],
+        "sql_injection1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                           "timeout 5 curl {}/login.php > /dev/null 2>&1",
+                           "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"],
+        "cve_2010_0426_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                            "timeout 5 curl {}:8080 > /dev/null 2>&1"],
+        "cve_2015_1427_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                            "snmpwalk -v2c {} -c pycr_ctf1234"],
+        "cve_2015_3306_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                            "snmpwalk -v2c {} -c pycr_ctf1234",
+                            "timeout 5 curl {} > /dev/null 2>&1"],
+        "cve_2015_5602_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        "cve_2015_10033_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                             "timeout 5 curl {} > /dev/null 2>&1"],
     }
+    BACKGROUND_STOP = "sleep {} & SPID=${!}; ({}; kill ${SPID}) & CPID=${!}; fg 1; kill ${CPID}"
+    BASH_PREAMBLE = "#!/bin/bash"
+
+
+# Log files:
+# /var/log/vsftpd.log
+# /var/log/auth.log
+# lastb -a | more
+# ls /var/log/btmp
+# tail -444f /var/log/apache2/access.log

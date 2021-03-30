@@ -8,4 +8,5 @@ service snmpd restart
 service postfix restart
 service postgresql restart
 service ntp restart
+service rsyslog restart
 tail -f /dev/null

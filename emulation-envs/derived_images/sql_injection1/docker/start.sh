@@ -1,6 +1,7 @@
 #!/bin/bash
 
 /usr/sbin/sshd -D &
+service rsyslog restart
 /main.sh &
 nohup /usr/sbin/inspircd --runasroot --debug --nopid & > irc.log
 sleep 5

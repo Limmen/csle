@@ -3,11 +3,16 @@ FROM kalilinux/kali-rolling
 USER root
 
 # Install dependencies
+#RUN apt-get update --fix-missing
+#RUN apt-get -y install wget gnupg
+#RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
+#RUN echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+
 RUN apt-get update --fix-missing
 RUN apt-get -y install apt-utils openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 netcat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp mongodb-clients postgresql-client smbclient
+                       snmp postgresql-client smbclient tcpdump netcat
 
 #RUN apt-get -y install man-db
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10

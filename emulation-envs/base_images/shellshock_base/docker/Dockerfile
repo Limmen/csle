@@ -17,7 +17,8 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         emacs curl htop ssh openssh-server build-essential \
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
         dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
-        wget apache2 irssi irssi-scripts screen openssh-server snmp mongodb-clients postgresql-client smbclient
+        wget apache2 irssi irssi-scripts screen openssh-server snmp mongodb-clients postgresql-client smbclient \
+        fail2ban rsyslog netcat
 
 RUN apt-get install -y openssl libssl-dev -t wheezy-backports
 

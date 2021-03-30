@@ -6,7 +6,9 @@ Scripts used to create virtual subnetworks of Docker containers
 
 ```bash
 python create_networks.py -n 40 # Creates 40 subnetworks
-python create_networks.py -d 40 # Deletes 40 subnetworks      
+python create_networks.py -d 40 # Deletes 40 subnetworks
+
+sudo route add -net 172.18.8.0 netmask 255.255.255.0 gw 172.18.8.1 # If you have trouble with network connectivity      
 ```
 
 ## Author & Maintainer
