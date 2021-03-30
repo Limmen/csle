@@ -248,7 +248,7 @@ class ClusterUtil:
         :param root: whether root or not
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + ".txt"
+        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + "_" + str(int(root)) + ".txt"
 
         # Search through cache
         if query in env_config.filesystem_file_cache:
@@ -256,6 +256,8 @@ class ClusterUtil:
 
         stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
                                                                                   + env_config.nmap_cache_dir)
+        if ip == "172.18.8.2":
+            print("searching cache, query:{}, cache list:{}".format(query, stdout))
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))
