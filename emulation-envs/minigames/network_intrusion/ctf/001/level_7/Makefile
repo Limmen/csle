@@ -1,4 +1,4 @@
-all: run users topology vuln gen_containers_config flags
+all: run users topology vuln gen_containers_config flags traffic
 
 .PHONY: run
 
@@ -68,7 +68,7 @@ clean:
 	cd containers/cve_2015_5602_1/ && $(MAKE) clean
 
 
-apply_config: users vuln flags topology gen_containers_config
+apply_config: users vuln flags topology gen_containers_config traffic
 
 topology: ./create_topology.py
 	python create_topology.py
@@ -88,6 +88,11 @@ gen_containers_config: ./gen_containers_config.py
 clean_fs_cache:
 	python clean_fs_cache.py
 
+traffic: ./create_traffic_generators.py
+	python create_traffic_generators.py
+
+stop_traffic: ./stop_traffic_generators.py
+	python stop_traffic_generators.py
 
 clean_config:
 	rm -rf ./users.json
@@ -96,3 +101,4 @@ clean_config:
 	rm -rf ./containers.json
 	rm -rf ./topology.json
 	rm -rf ./containers.json
+	rm -rf ./traffic.json

@@ -542,6 +542,24 @@ class TRAFFIC_COMMANDS:
         "cve_2015_5602_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         "cve_2015_10033_1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                              "timeout 5 curl {} > /dev/null 2>&1"],
+        "honeypot2": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                      "timeout 5 snmpwalk -v2c {} -c pycr_ctf1234 > /dev/null 2>&1",
+                      "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
+                      "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
+        "ssh2": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                 "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
+        "ssh3": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                 "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
+                 ],
+        "telnet2": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                    "timeout 5 curl {}:8080 > /dev/null 2>&1",
+                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        "telnet3": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                    "timeout 5 curl {}:8080 > /dev/null 2>&1",
+                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        "ftp2": ["timeout 5 ftp {} > /dev/null 2>&1",
+                 "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                 "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"]
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"

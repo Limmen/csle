@@ -65,11 +65,17 @@ class TrafficGenerator:
         :return: None
         """
         for node in traffic_config.node_traffic_configs:
+
+            # Connect
             GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
 
+            # Stop old background job if running
+            cmd = "sudo pkill -f " + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            
             # Remove old file if exists
-            sftp_client = cluster_config.agent_conn.open_sftp()
-            sftp_client.remove("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME)
+            cmd = "sudo rm -f /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
             # File contents
             script_file = ""
@@ -82,9 +88,18 @@ class TrafficGenerator:
                 script_file = script_file + "    sleep 2\n"
             script_file = script_file + "done\n"
 
-            # Write traffic generation script file
+
+            # Create file
             sftp_client = cluster_config.agent_conn.open_sftp()
-            remote_file = sftp_client.open("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME)
+            cmd = "sudo touch /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
+            # Make executable
+            cmd = "sudo chmod 777 /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
+            # Write traffic generation script file
+            remote_file = sftp_client.open("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME, mode="w")
             try:
                 remote_file.write(script_file)
             except Exception as e:
@@ -92,11 +107,33 @@ class TrafficGenerator:
             finally:
                 remote_file.close()
 
-            # Make executable
-            cmd = "sudo chmod 777 /" + + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            # Start background job
+            cmd = "sudo nohup /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME + " &"
             o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
 
-        GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+            # Disconnect
+            GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+
+    @staticmethod
+    def stop_traffic_generators(traffic_config: TrafficConfig, cluster_config: ClusterConfig):
+        """
+        Stops running traffic generators at each node
+
+        :param traffic_config: the traffic configuration
+        :param cluster_config: the cluster configuration
+        :return: None
+        """
+        for node in traffic_config.node_traffic_configs:
+
+            # Connect
+            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
+
+            # Stop old background job if running
+            cmd = "sudo pkill -f " + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+
+            # Disconnect
+            GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
 
 
     @staticmethod
