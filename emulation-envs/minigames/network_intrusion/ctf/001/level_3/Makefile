@@ -34,6 +34,7 @@ run: gen_containers_config
 	cd containers/ftp1/ && $(MAKE) run
 	cd containers/ftp2/ && $(MAKE) run
 	cd containers/hacker_kali1/ && $(MAKE) run
+	cd containers/client1/ && $(MAKE) run
 
 stop:
 	cd containers/router1/ && $(MAKE) stop
@@ -69,6 +70,7 @@ stop:
 	cd containers/ftp1/ && $(MAKE) stop
 	cd containers/ftp2/ && $(MAKE) stop
 	cd containers/hacker_kali1/ && $(MAKE) stop
+	cd containers/client1/ && $(MAKE) stop
 
 start:
 	cd containers/router1/ && $(MAKE) start
@@ -104,6 +106,7 @@ start:
 	cd containers/ftp1/ && $(MAKE) start
 	cd containers/ftp2/ && $(MAKE) start
 	cd containers/hacker_kali1/ && $(MAKE) start
+	cd containers/client1/ && $(MAKE) start
 	python create_topology.py
 
 clean: stop
@@ -140,6 +143,7 @@ clean: stop
 	cd containers/ftp1/ && $(MAKE) clean
 	cd containers/ftp2/ && $(MAKE) clean
 	cd containers/hacker_kali1/ && $(MAKE) clean
+	cd containers/client1/ && $(MAKE) clean
 
 apply_config: users vuln flags topology gen_containers_config traffic
 

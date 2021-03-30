@@ -22,6 +22,7 @@ build:
 	cd cve_2016_10033_1/ && $(MAKE) build
 	cd cve_2010_0426_1/ && $(MAKE) build
 	cd cve_2015_5602_1/ && $(MAKE) build
+	cd client1/ && $(MAKE) build
 
 rm-image:
 	cd ftp1/ && $(MAKE) rm-image
@@ -45,3 +46,4 @@ rm-image:
 	cd cve_2016_10033_1/ && $(MAKE) rm-image
 	cd cve_2010_0426_1/ && $(MAKE) rm-image
 	cd cve_2015_5602_1/ && $(MAKE) rm-image
+	cd client1/ && $(MAKE) rm-image

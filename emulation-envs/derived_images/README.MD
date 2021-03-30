@@ -91,6 +91,10 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Snort
+- `client1` ([router1](./router1)): an image without any particular services that can be used to generate containers acting as clients. 
+     - OS: Ubuntu:20. 
+     - Inherits from `ubuntu_20_base`.
+     - Services: ssh     
 
 ## Useful commands
 
@@ -121,6 +125,7 @@ make ssh3 # Build ssh3
 make telnet1 # Build telnet1
 make telnet2 # Build telnet2
 make telnet3 # Build telnet3
+make client1 # Build client1
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

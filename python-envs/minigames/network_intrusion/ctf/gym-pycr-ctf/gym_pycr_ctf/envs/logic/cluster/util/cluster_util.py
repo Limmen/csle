@@ -256,8 +256,6 @@ class ClusterUtil:
 
         stdin, stdout, stderr = env_config.cluster_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
                                                                                   + env_config.nmap_cache_dir)
-        if ip == "172.18.8.2":
-            print("searching cache, query:{}, cache list:{}".format(query, stdout))
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))

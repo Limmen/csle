@@ -6,6 +6,8 @@ from gym_pycr_ctf.util.experiments_util import util
 
 def default_containers_config():
     containers = [
+        NodeContainerConfig(name="client1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
+                            ip="172.18.6.254"),
         NodeContainerConfig(name="ftp1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6", ip="172.18.6.79"),
         NodeContainerConfig(name="hacker_kali1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
                             ip="172.18.6.191"),

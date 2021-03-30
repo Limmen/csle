@@ -76,7 +76,12 @@ class ShellUtil:
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
                     flag_paths = list(filter(lambda x: x != '', flag_paths))
-                    if len(flag_paths) > 0:
+                    num_flags = 0
+                    for fp in flag_paths:
+                        fp = fp.replace(".txt", "")
+                        if (machine.ip, fp) in env_config.flag_lookup:
+                            num_flags += 1
+                    if len(flag_paths) > 0 and num_flags > 0:
                         break
                     else:
                         time.sleep(1)

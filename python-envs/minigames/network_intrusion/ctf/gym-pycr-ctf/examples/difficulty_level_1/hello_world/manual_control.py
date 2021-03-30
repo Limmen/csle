@@ -18,13 +18,13 @@ def manual_control():
 
     #env = gym.make("pycr-ctf-level-1-cluster-v4", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-ctf-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
-    #env = gym.make("pycr-ctf-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
+    env = gym.make("pycr-ctf-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-ctf-level-1-cluster-costs-v1", env_config=None, cluster_config=cluster_config)
-    env = gym.make("pycr-ctf-level-1-sim-v1", env_config=None, cluster_config=cluster_config)
+    #env = gym.make("pycr-ctf-level-1-sim-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-ctf-level-1-generated-sim-v1", env_config=None, cluster_config=cluster_config)
     #env = gym.make("pycr-ctf-level-1-cluster-v1", env_config=None, cluster_config=cluster_config)
 
-    ManualAttackerAgent(env=env, env_config=env.env_config)
+    ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
 
 
 

@@ -2,6 +2,15 @@
     "agent_ip": "172.18.1.191",
     "containers": [
         {
+            "ip": "172.18.1.254",
+            "level": "1",
+            "minigame": "ctf",
+            "name": "client1",
+            "network": "pycr_net_1",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
             "ip": "172.18.1.79",
             "level": "1",
             "minigame": "ctf",
