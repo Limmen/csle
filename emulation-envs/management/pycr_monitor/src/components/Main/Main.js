@@ -128,6 +128,15 @@ const Main = () => {
                                         </td>
                                     </tr>
 
+                                    <tr>
+                                        <td> Traffic configuration file</td>
+                                        <td>
+                                            <Button variant="link" onClick={() => fileDownload(JSON.stringify(env.traffic_config), "traffic.json")}>
+                                                traffic.json
+                                            </Button>
+                                        </td>
+                                    </tr>
+
                                     </tbody>
                                 </Table>
 
