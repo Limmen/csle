@@ -25,3 +25,10 @@ class PortObservationState:
     def to_network_service(self) -> NetworkService:
         service = NetworkService(protocol=self.protocol, port=self.port, name=self.service, credentials=[])
         return service
+
+    @staticmethod
+    def from_network_service(network_service: NetworkService, service_lookup: dict):
+        port = PortObservationState(port=network_service.port, open=True,
+                                    service=service_lookup[network_service.name],
+                                    protocol=network_service.protocol)
+        return port

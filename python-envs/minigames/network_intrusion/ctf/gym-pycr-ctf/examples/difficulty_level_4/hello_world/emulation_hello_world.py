@@ -27,9 +27,10 @@ def test_env(env_name : str, num_steps : int):
     print("num actions:{}".format(num_actions))
     tot_rew = 0
     for i in range(num_steps):
+        print(i)
         legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         action = np.random.choice(legal_actions)
-        obs, reward, done, info = env.step(action)
+        obs, reward, done, info = env.step(action, attacker=False)
         tot_rew += reward
         env.render()
         if done:
@@ -43,10 +44,10 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    #test_env("pycr-ctf-level-4-emulation-v1", num_steps=1000000000)
+    test_env("pycr-ctf-level-4-emulation-v1", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v2", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v3", num_steps=1000000000)
-    test_env("pycr-ctf-level-4-emulation-v4", num_steps=1000000000)
+    #test_env("pycr-ctf-level-4-emulation-v4", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

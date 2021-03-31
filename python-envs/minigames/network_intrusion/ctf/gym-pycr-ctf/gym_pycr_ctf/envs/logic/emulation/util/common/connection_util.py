@@ -12,7 +12,7 @@ from gym_pycr_ctf.dao.observation.common.connection_observation_state import Con
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_ctf.dao.network.credential import Credential
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 
 class ConnectionUtil:
     """

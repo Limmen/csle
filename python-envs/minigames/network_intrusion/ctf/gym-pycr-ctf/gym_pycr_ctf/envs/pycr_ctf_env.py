@@ -34,7 +34,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             raise ValueError("Must provide a simulation model to run in simulation mode")
 
         # Initialize environment state
-        self.env_state = EnvState(network_config=self.env_config.network_conf, num_ports=self.env_config.attacker_num_ports_obs,
+        self.env_state = EnvState(env_config=self.env_config, num_ports=self.env_config.attacker_num_ports_obs,
                                   num_vuln=self.env_config.attacker_num_vuln_obs, num_sh=self.env_config.attacker_num_sh_obs,
                                   num_nodes=env_config.num_nodes,
                                   service_lookup=constants.SERVICES.service_lookup,
@@ -73,7 +73,13 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # System Identification
         if self.env_config.env_mode == EnvMode.emulation or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+
+            # Connect to emulation
             self.env_config.emulation_config.connect_agent()
+
+            # Initialize Defender's state
+            self.env_state.initialize_defender_state()
+
             if self.env_config.load_services_from_server:
                 self.env_config.emulation_config.download_emulation_services()
             self.env_state.merge_services_with_emulation(self.env_config.emulation_config.emulation_services)
@@ -169,6 +175,10 @@ class PyCRCTFEnv(gym.Env, ABC):
             return self.step_attacker(attacker_action_id=action_id)
         else:
             print("Step defender")
+            print("Defener state:")
+            print(self.env_state.defender_obs_state)
+            print(self.env_state.defender_obs_state.machines)
+            sys.exit(0)
             return self.step_defender(defender_action_id=action_id)
 
     def step_attacker(self, attacker_action_id) -> Tuple[np.ndarray, int, bool, dict]:

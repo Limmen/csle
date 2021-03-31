@@ -22,7 +22,7 @@ from gym_pycr_ctf.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_ctf.dao.action_results.nmap_http_enum import NmapHttpEnum
 from gym_pycr_ctf.dao.action_results.nmap_http_grep import NmapHttpGrep
 from gym_pycr_ctf.dao.action_results.nmap_vulscan import NmapVulscan
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 
 class NmapUtil:
     """

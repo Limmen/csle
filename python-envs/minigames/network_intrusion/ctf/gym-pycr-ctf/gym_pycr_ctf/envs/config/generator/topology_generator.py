@@ -4,7 +4,7 @@ import numpy as np
 from gym_pycr_ctf.dao.container_config.topology import Topology
 from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
 from gym_pycr_ctf.util.experiments_util import util
 

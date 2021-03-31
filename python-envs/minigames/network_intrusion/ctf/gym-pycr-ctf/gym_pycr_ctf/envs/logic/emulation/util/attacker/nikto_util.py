@@ -8,8 +8,8 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
-from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.attacker.nmap_util import NmapUtil
 
 class NiktoUtil:
     """

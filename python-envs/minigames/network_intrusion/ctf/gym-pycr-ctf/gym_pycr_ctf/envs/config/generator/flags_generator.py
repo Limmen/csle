@@ -5,7 +5,7 @@ from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
 
 class FlagsGenerator:

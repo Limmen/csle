@@ -2,7 +2,7 @@ import random
 import numpy as np
 from gym_pycr_ctf.dao.container_config.topology import Topology
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
 from gym_pycr_ctf.dao.container_config.node_users_config import NodeUsersConfig
 from gym_pycr_ctf.envs.config.generator.topology_generator import TopologyGenerator

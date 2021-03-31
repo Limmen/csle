@@ -433,3 +433,12 @@ class EmulationConfig:
         rest = "_".join(parts[idx:])
         parts2 = rest.split(terminal_key)
         return parts2[0]
+
+
+    def copy(self, ip: str, username: str, pw: str):
+        c = EmulationConfig(agent_ip=ip, agent_username=username, agent_pw=pw, server_ip=self.server_ip,
+                            server_connection=self.server_connection, server_private_key_file=self.server_private_key_file,
+                            server_username=self.server_username, warmup=self.warmup,
+                            warmup_iterations=self.warmup_iterations,
+                            port_forward_next_port=self.port_forward_next_port)
+        return c

@@ -2,7 +2,7 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
+from gym_pycr_ctf.envs.logic.emulation.util.attacker.nmap_util import NmapUtil
 
 class DefenseSensorMiddleware:
     """

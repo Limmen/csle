@@ -8,6 +8,8 @@ from gym_pycr_ctf.dao.network.flag import Flag
 from gym_pycr_ctf.dao.network.vulnerability import Vulnerability
 from gym_pycr_ctf.dao.network.network_service import NetworkService
 from gym_pycr_ctf.dao.network.credential import Credential
+from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
+from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 
 class Node:
 
@@ -38,3 +40,11 @@ class Node:
             self.os, list(map(lambda x: str(x), self.credentials)), self.root_usernames, self.visible,
             self.reachable_nodes, self.firewall
         )
+
+    def to_defender_machine_obs(self, service_lookup: dict):
+        d_obs = DefenderMachineObservationState(self.ip)
+        d_obs.os = self.os
+        d_obs.num_flags = len(self.flags)
+        d_obs.ports = list(map(lambda x: PortObservationState.from_network_service(x, service_lookup), self.services))
+        return d_obs
+

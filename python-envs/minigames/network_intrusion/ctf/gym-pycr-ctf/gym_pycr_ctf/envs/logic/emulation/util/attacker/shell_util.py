@@ -9,8 +9,8 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
-from gym_pycr_ctf.envs.logic.emulation.util.connection_util import ConnectionUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.connection_util import ConnectionUtil
 
 class ShellUtil:
     """

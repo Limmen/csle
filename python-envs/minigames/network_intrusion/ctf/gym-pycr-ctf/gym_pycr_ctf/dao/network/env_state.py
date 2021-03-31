@@ -1,6 +1,6 @@
 from typing import List, Tuple
 import numpy as np
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
+from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
 from gym_pycr_ctf.envs.state_representation.attacker_state_representation import AttackerStateRepresentation
@@ -12,11 +12,11 @@ class EnvState:
     Represents the combined state of the environment, including both the attacker's and the defender's belief states.
     """
 
-    def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int, num_sh : int,
+    def __init__(self, env_config : EnvConfig, num_ports : int, num_vuln : int, num_sh : int,
                  num_flags : int, num_nodes : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None,
                  state_type: StateType = StateType.BASE, ids : bool = False):
-        self.network_config = network_config
+        self.env_config = env_config
         self.state_type = state_type
         self.reward_range = (float(0), float(1))
         self.num_ports = num_ports
@@ -34,6 +34,12 @@ class EnvState:
         self.attacker_obs_state : AttackerObservationState = None
         self.defender_obs_state : DefenderObservationState = None
 
+        self.attacker_cached_ssh_connections = {}
+        self.attacker_cached_telnet_connections = {}
+        self.attacker_cached_ftp_connections = {}
+        self.attacker_cached_backdoor_credentials = {}
+        self.defender_cached_ssh_connections = {}
+
         self.reset_state() # Init obs state
 
         self.attacker_observation_space = None
@@ -45,12 +51,6 @@ class EnvState:
 
         self.defender_observation_space = None
         self.setup_defender_spaces()
-
-        self.attacker_cached_ssh_connections = {}
-        self.attacker_cached_telnet_connections = {}
-        self.attacker_cached_ftp_connections = {}
-        self.attacker_cached_backdoor_credentials = {}
-        self.defender_cached_ssh_connections = {}
 
     def get_attacker_observation(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -93,9 +93,15 @@ class EnvState:
                                                                 obs_state=self.defender_obs_state,
                                                                 os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.COMPACT:
-            raise ValueError("COMPACT State Representation not implemented for the defender")
+            machines_obs, network_obs = \
+                DefenderStateRepresentation.essential_representation(num_machines=self.defender_obs_state.num_machines,
+                                                                     obs_state=self.defender_obs_state,
+                                                                     os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.ESSENTIAL:
-            raise ValueError("ESSENTIAL State Representation not implemented for the defender")
+            machines_obs, network_obs = \
+                DefenderStateRepresentation.essential_representation(num_machines=self.defender_obs_state.num_machines,
+                                                                obs_state=self.defender_obs_state,
+                                                                os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.SIMPLE:
             raise ValueError("SIMPLE State Representation not implemented for the defender")
         else:
@@ -143,9 +149,11 @@ class EnvState:
             defender_observation_space = DefenderStateRepresentation.base_representation_spaces(
                 obs_state=self.defender_obs_state)
         elif self.state_type == StateType.COMPACT:
-            raise ValueError("COMPACT State Representation not implemented for the defender")
+            defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
+                obs_state=self.defender_obs_state)
         elif self.state_type == StateType.ESSENTIAL:
-            raise ValueError("ESSENTIAL State Representation not implemented for the defender")
+            defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
+                obs_state=self.defender_obs_state)
         elif self.state_type == StateType.SIMPLE:
             raise ValueError("SIMPLE State Representation not implemented for the defender")
         else:
@@ -178,8 +186,13 @@ class EnvState:
         if self.defender_obs_state is not None:
             for m in self.defender_obs_state.machines:
                 for c in m.ssh_connections:
-                    self.defender_cached_ssh_connections[(m.ip, c.username, c.port)] = c
+                    self.defender_cached_ssh_connections[m.ip] = (c, m.emulation_config)
         self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
+
+    def initialize_defender_state(self):
+        self.defender_obs_state.initialize_state(self.service_lookup,
+                                                 self.defender_cached_ssh_connections,
+                                                 self.env_config)
 
     def merge_services_with_emulation(self, emulation_services : List[str]) -> None:
         """
@@ -242,7 +255,7 @@ class EnvState:
         return None
 
     def copy(self):
-        copy = EnvState(network_config=self.network_config, num_ports=self.num_ports, num_vuln=self.num_vuln,
+        copy = EnvState(env_config=self.env_config, num_ports=self.num_ports, num_vuln=self.num_vuln,
                         num_sh=self.num_sh, num_flags=self.num_flags, num_nodes=self.num_nodes, vuln_lookup=self.vuln_lookup,
                         service_lookup=self.service_lookup, os_lookup=self.os_lookup, state_type=self.state_type,
                         ids=self.ids)

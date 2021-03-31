@@ -580,6 +580,15 @@ class TRAFFIC_COMMANDS:
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
 
+class PYCR_ADMIN:
+    user="pycr_admin"
+    pw="pycr@admin-pw_191"
+
+class DEFENDER:
+    LIST_LOGGED_IN_USERS_CMD = "users"
+    LIST_OPEN_CONNECTIONS_CMD = "netstat -n"
+    LIST_USER_ACCOUNTS = "cat /etc/passwd"
+    LIST_FAILED_LOGIN_ATTEMPTS = "sudo cat /var/log/auth.log"
 
 # Log files:
 # /var/log/vsftpd.log

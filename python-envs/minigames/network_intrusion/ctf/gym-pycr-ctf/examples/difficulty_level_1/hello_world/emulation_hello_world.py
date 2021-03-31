@@ -32,7 +32,7 @@ def test_env(env_name : str, num_steps : int):
         print(i)
         legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         action = np.random.choice(legal_actions)
-        obs, reward, done, info = env.step(action, attacker=True)
+        obs, reward, done, info = env.step(action, attacker=False)
         tot_rew += reward
         #env.render()
         if done:

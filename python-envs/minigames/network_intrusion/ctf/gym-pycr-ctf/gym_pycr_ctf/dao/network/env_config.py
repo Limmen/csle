@@ -180,6 +180,9 @@ class EnvConfig:
         self.attacker_cve_2010_0426_sleep_retry = 2
         self.attacker_cve_2015_5602_sleep_retry = 2
 
+        self.defender_ids_severity_threshold=3
+        self.defender_ids_recent_threshold_seconds = 30
+
 
     def get_port_forward_port(self) -> int:
         """
@@ -330,4 +333,6 @@ class EnvConfig:
         env_config.attacker_cve_2016_10033_sleep_retry = self.attacker_cve_2016_10033_sleep_retry
         env_config.attacker_cve_2010_0426_sleep_retry = self.attacker_cve_2010_0426_sleep_retry
         env_config.attacker_cve_2015_5602_sleep_retry = self.attacker_cve_2015_5602_sleep_retry
+        env_config.defender_ids_severity_threshold = self.defender_ids_severity_threshold
+        env_config.defender_ids_recent_threshold_seconds = self.defender_ids_recent_threshold_seconds
         return env_config

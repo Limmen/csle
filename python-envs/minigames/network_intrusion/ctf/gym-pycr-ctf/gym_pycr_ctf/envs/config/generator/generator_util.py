@@ -1,7 +1,7 @@
-from scp import SCPClient, SCPException
+from scp import SCPClient
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
 
 
 class GeneratorUtil:
