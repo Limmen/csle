@@ -22,9 +22,9 @@ class PyCRCTFLevel5EmulationBaseEnv(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5Base.all_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                                 subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                                 hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5Base.attacker_all_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                      subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                      hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5Base.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                       emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -50,9 +50,9 @@ class PyCRCTFLevel5Emulation1Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V1.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V1.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V1.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -78,9 +78,9 @@ class PyCRCTFLevel5EmulationWithCosts1Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V1.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V1.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V1.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -106,9 +106,9 @@ class PyCRCTFLevel5Emulation2Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V2.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V2.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V2.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -134,9 +134,9 @@ class PyCRCTFLevel5EmulationWithCosts2Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V2.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V2.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V2.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -162,9 +162,9 @@ class PyCRCTFLevel5Emulation3Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V3.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V3.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V3.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -190,9 +190,9 @@ class PyCRCTFLevel5EmulationWithCosts3Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V3.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V3.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V3.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -218,9 +218,9 @@ class PyCRCTFLevel5Emulation4Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V4.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V4.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V4.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
@@ -246,9 +246,9 @@ class PyCRCTFLevel5EmulationWithCosts4Env(PyCRCTFEnv):
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel5Base.router_ip()
             network_conf = PyCrCTFLevel5Base.network_conf()
-            action_conf = PyCrCTFLevel5V4.actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
-                                                           subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
-                                                           hacker_ip=PyCrCTFLevel5Base.hacker_ip())
+            action_conf = PyCrCTFLevel5V4.attacker_actions_conf(num_nodes=PyCrCTFLevel5Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel5Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel5Base.hacker_ip())
             env_config = PyCrCTFLevel5V4.env_config(network_conf=network_conf, attacker_action_conf=action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1

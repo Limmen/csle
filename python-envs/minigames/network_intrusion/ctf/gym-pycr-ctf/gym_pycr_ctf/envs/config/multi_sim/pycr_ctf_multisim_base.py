@@ -39,7 +39,7 @@ class PyCrCTFMultiSimBase:
         return render_config
 
     @staticmethod
-    def all_actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str) -> AttackerActionConfig:
+    def attacker_all_actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str) -> AttackerActionConfig:
         """
         :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
         :param subnet_mask: subnet mask of the network

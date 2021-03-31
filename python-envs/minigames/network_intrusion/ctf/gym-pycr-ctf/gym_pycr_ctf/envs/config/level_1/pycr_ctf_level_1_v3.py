@@ -20,58 +20,58 @@ class PyCrCTFLevel1V3:
     """
 
     @staticmethod
-    def actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
+    def attacker_actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
         """
         :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
         :param subnet_mask: subnet mask of the network
         :param hacker_ip: ip of the agent
         :return: the action config
         """
-        actions = []
+        attack_actions = []
 
         # Host actions
         for idx in range(num_nodes):
-            actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.NMAP_VULNERS(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.PING_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.TCP_FIN_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.TCP_NULL_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.TCP_XMAS_TREE_SCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.VULSCAN(index=idx, subnet=False))
-            actions.append(AttackerNMAPActions.FINGER(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.NMAP_VULNERS(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.PING_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TCP_FIN_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TCP_NULL_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.TCP_XMAS_TREE_SCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.VULSCAN(index=idx, subnet=False))
+            attack_actions.append(AttackerNMAPActions.FINGER(index=idx, subnet=False))
 
         # Subnet actions
-        actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
+        attack_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                                 subnet=True))
-        actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
-        actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        actions.append(
+        attack_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
+        attack_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
+        attack_actions.append(
             AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                  subnet=True))
-        actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
-        actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
-        actions.append(AttackerNMAPActions.UDP_PORT_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(
+        attack_actions.append(AttackerNMAPActions.UDP_PORT_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(
             AttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.TCP_FIN_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.TCP_NULL_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(
+        attack_actions.append(AttackerNMAPActions.TCP_FIN_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerNMAPActions.TCP_NULL_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(
             AttackerNMAPActions.TCP_XMAS_TREE_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.VULSCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        actions.append(AttackerNMAPActions.FINGER(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerNMAPActions.VULSCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attack_actions.append(AttackerNMAPActions.FINGER(num_nodes + 1, ip=subnet_mask, subnet=True))
 
-        actions = sorted(actions, key=lambda x: (x.id.value, x.index))
+        attack_actions = sorted(attack_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_HOST, AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
             AttackerActionId.NMAP_VULNERS_HOST, AttackerActionId.NMAP_VULNERS_SUBNET,
@@ -92,11 +92,11 @@ class PyCrCTFLevel1V3:
         shell_action_ids = [AttackerActionId.FIND_FLAG]
         nikto_action_ids = []
         masscan_action_ids = []
-        action_config = AttackerActionConfig(num_indices=num_nodes, actions=actions, nmap_action_ids=nmap_action_ids,
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes, actions=attack_actions, nmap_action_ids=nmap_action_ids,
                                              network_service_action_ids=network_service_action_ids,
                                              shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
                                              masscan_action_ids=masscan_action_ids)
-        return action_config
+        return attacker_action_config
 
     @staticmethod
     def defender_actions_conf(num_nodes: int, subnet_mask: str) -> AttackerActionConfig:

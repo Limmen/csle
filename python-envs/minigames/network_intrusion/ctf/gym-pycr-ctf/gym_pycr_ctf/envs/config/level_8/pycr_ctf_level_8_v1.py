@@ -20,7 +20,7 @@ class PyCrCTFLevel8V1:
     """
 
     @staticmethod
-    def actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
+    def attacker_actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
         """
         :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
         :param subnet_mask: subnet mask of the network

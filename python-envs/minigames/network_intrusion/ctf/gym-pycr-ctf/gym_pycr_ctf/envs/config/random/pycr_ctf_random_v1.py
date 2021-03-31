@@ -22,7 +22,7 @@ class PyCrCTFRandomV1:
     """
 
     @staticmethod
-    def actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
+    def attacker_actions_conf(num_nodes : int, subnet_mask: str, hacker_ip: str = None) -> AttackerActionConfig:
         """
         Generates the action config
 
