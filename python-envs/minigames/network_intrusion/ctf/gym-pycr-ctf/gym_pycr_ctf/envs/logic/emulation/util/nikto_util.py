@@ -1,13 +1,13 @@
 from typing import Tuple
 import xml.etree.ElementTree as ET
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action_results.nikto_scan_result import NiktoScanResult
 from gym_pycr_ctf.dao.action_results.nikto_vuln import NiktoVuln
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
 
@@ -35,7 +35,7 @@ class NiktoUtil:
         return xml_data
 
     @staticmethod
-    def nikto_scan_action_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def nikto_scan_action_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Helper function for executing a NIKTO web scan action on the emulation. Implements caching.
 
@@ -48,8 +48,8 @@ class NiktoUtil:
         cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
 
         # Check in-memory cache
-        if env_config.use_nikto_cache:
-            cache_value = env_config.nikto_scan_cache.get(cache_id)
+        if env_config.attacker_use_nikto_cache:
+            cache_value = env_config.attacker_nikto_scan_cache.get(cache_id)
             if cache_value is not None:
                 s_prime, reward = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
                                                                                  env_config=env_config)
@@ -57,7 +57,7 @@ class NiktoUtil:
                 return s_prime, reward, False
 
         # Check On-disk cache
-        if env_config.use_nmap_cache:
+        if env_config.attacker_use_nmap_cache:
             cache_result = NmapUtil.check_nmap_action_cache(a=a, env_config=env_config)
 
         # If cache miss, then execute cmd
@@ -74,10 +74,10 @@ class NiktoUtil:
                 num_alerts = len(fast_logs)
                 EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                     action=a, env_config=env_config)
-                env_config.action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
 
             EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
             cache_result = cache_id
 
         # Read result
@@ -91,14 +91,14 @@ class NiktoUtil:
                 scan_result = NiktoScanResult(ip=a.ip, vulnerabilities=[], port=80, sitename=a.ip)
                 break
 
-        if env_config.use_nikto_cache:
-            env_config.nikto_scan_cache.add(cache_id, scan_result)
+        if env_config.attacker_use_nikto_cache:
+            env_config.attacker_nikto_scan_cache.add(cache_id, scan_result)
         s_prime, reward = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
                                                                          env_config=env_config)
         return s_prime, reward, False
 
     @staticmethod
-    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: Action, env_config: EnvConfig) \
+    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: AttackerAction, env_config: EnvConfig) \
             -> Tuple[EnvState, float]:
         """
         Merges a Nikto scan result with an existing observation state
@@ -115,7 +115,7 @@ class NiktoUtil:
 
         for m in s.attacker_obs_state.machines:
             if m.ip == scan_result.ip:
-                m_obs = MachineObservationState(ip=m.ip)
+                m_obs = AttackerMachineObservationState(ip=m.ip)
 
         for vuln in scan_result.vulnerabilities:
             vuln_obs = vuln.to_obs()
@@ -130,12 +130,12 @@ class NiktoUtil:
         s_prime.attacker_obs_state.machines = new_machines_obs
 
         # Use measured cost
-        if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
-            a.cost = env_config.action_costs.get_cost(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ip):
+            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ip)
 
         # Use measured # alerts
-        if env_config.action_alerts.exists(action_id=a.id, ip=a.ip):
-            a.alerts = env_config.action_alerts.get_alert(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ip):
+            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
 
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_vuln,

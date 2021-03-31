@@ -1,9 +1,9 @@
 from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_type import ActionType
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.envs.logic.simulation.recon_simulator import ReconSimulator
 from gym_pycr_ctf.envs.logic.simulation.exploit_simulator import ExploitSimulator
 from gym_pycr_ctf.envs.logic.simulation.post_exploit_simulator import PostExploitSimulator
@@ -15,7 +15,7 @@ class Simulator:
     real actions in the emulation environment.
     """
     @staticmethod
-    def attacker_transition(s: EnvState, attacker_action: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Simulates a state transition in the MDP or Markov Game
 
@@ -24,20 +24,20 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        if attacker_action.type == ActionType.RECON:
+        if attacker_action.type == AttackerActionType.RECON:
             EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
             return Simulator.attacker_recon_action(s=s, a=attacker_action, env_config=env_config)
-        elif attacker_action.type == ActionType.EXPLOIT or attacker_action.type == ActionType.PRIVILEGE_ESCALATION:
+        elif attacker_action.type == AttackerActionType.EXPLOIT or attacker_action.type == AttackerActionType.PRIVILEGE_ESCALATION:
             if attacker_action.subnet:
                 EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
             return Simulator.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
-        elif attacker_action.type == ActionType.POST_EXPLOIT:
+        elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return Simulator.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
         else:
             raise ValueError("Action type:{} not recognized".format(attacker_action.type))
 
     @staticmethod
-    def attacker_recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a reconnaissance action
 
@@ -46,58 +46,58 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        if a.id == ActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_SYN_STEALTH_SCAN_HOST \
-                or a.id == ActionId.TCP_SYN_STEALTH_SCAN_ALL:
+        if a.id == AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET or a.id == AttackerActionId.TCP_SYN_STEALTH_SCAN_HOST \
+                or a.id == AttackerActionId.TCP_SYN_STEALTH_SCAN_ALL:
             return ReconSimulator.simulate_tcp_syn_stealth_scan(s=s,a=a,env_config=env_config)
-        elif a.id == ActionId.PING_SCAN_SUBNET or a.id == ActionId.PING_SCAN_HOST\
-                or a.id == ActionId.PING_SCAN_ALL:
+        elif a.id == AttackerActionId.PING_SCAN_SUBNET or a.id == AttackerActionId.PING_SCAN_HOST\
+                or a.id == AttackerActionId.PING_SCAN_ALL:
             return ReconSimulator.simulate_ping_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.UDP_PORT_SCAN_SUBNET or a.id == ActionId.UDP_PORT_SCAN_HOST\
-                or a.id == ActionId.UDP_PORT_SCAN_ALL:
+        elif a.id == AttackerActionId.UDP_PORT_SCAN_SUBNET or a.id == AttackerActionId.UDP_PORT_SCAN_HOST\
+                or a.id == AttackerActionId.UDP_PORT_SCAN_ALL:
             return ReconSimulator.simulate_udp_port_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_HOST\
-                or a.id == ActionId.TCP_CON_NON_STEALTH_SCAN_ALL:
+        elif a.id == AttackerActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET or a.id == AttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST\
+                or a.id == AttackerActionId.TCP_CON_NON_STEALTH_SCAN_ALL:
             return ReconSimulator.simulate_con_non_stealth_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_FIN_SCAN_SUBNET or a.id == ActionId.TCP_FIN_SCAN_HOST\
-                or a.id == ActionId.TCP_FIN_SCAN_ALL:
+        elif a.id == AttackerActionId.TCP_FIN_SCAN_SUBNET or a.id == AttackerActionId.TCP_FIN_SCAN_HOST\
+                or a.id == AttackerActionId.TCP_FIN_SCAN_ALL:
             return ReconSimulator.simulate_fin_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_NULL_SCAN_SUBNET or a.id == ActionId.TCP_NULL_SCAN_HOST\
-                or a.id == ActionId.TCP_NULL_SCAN_ALL:
+        elif a.id == AttackerActionId.TCP_NULL_SCAN_SUBNET or a.id == AttackerActionId.TCP_NULL_SCAN_HOST\
+                or a.id == AttackerActionId.TCP_NULL_SCAN_ALL:
             return ReconSimulator.simulate_tcp_null_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == ActionId.TCP_XMAS_TREE_SCAN_SUBNET\
-                or a.id == ActionId.TCP_XMAS_TREE_SCAN_ALL:
+        elif a.id == AttackerActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == AttackerActionId.TCP_XMAS_TREE_SCAN_SUBNET\
+                or a.id == AttackerActionId.TCP_XMAS_TREE_SCAN_ALL:
             return ReconSimulator.simulate_tcp_xmas_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.OS_DETECTION_SCAN_HOST or a.id == ActionId.OS_DETECTION_SCAN_SUBNET\
-                or a.id == ActionId.OS_DETECTION_SCAN_ALL:
+        elif a.id == AttackerActionId.OS_DETECTION_SCAN_HOST or a.id == AttackerActionId.OS_DETECTION_SCAN_SUBNET\
+                or a.id == AttackerActionId.OS_DETECTION_SCAN_ALL:
             return ReconSimulator.simulate_os_detection_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.VULSCAN_HOST or a.id == ActionId.VULSCAN_SUBNET\
-                or a.id == ActionId.VULSCAN_ALL:
+        elif a.id == AttackerActionId.VULSCAN_HOST or a.id == AttackerActionId.VULSCAN_SUBNET\
+                or a.id == AttackerActionId.VULSCAN_ALL:
             return ReconSimulator.simulate_vulscan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.NMAP_VULNERS_HOST or a.id == ActionId.NMAP_VULNERS_SUBNET\
-                or a.id == ActionId.NMAP_VULNERS_ALL:
+        elif a.id == AttackerActionId.NMAP_VULNERS_HOST or a.id == AttackerActionId.NMAP_VULNERS_SUBNET\
+                or a.id == AttackerActionId.NMAP_VULNERS_ALL:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.NIKTO_WEB_HOST_SCAN:
+        elif a.id == AttackerActionId.NIKTO_WEB_HOST_SCAN:
             return ReconSimulator.simulate_nikto_web_host_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MASSCAN_HOST_SCAN or a.id == ActionId.MASSCAN_SUBNET_SCAN\
-                or a.id == ActionId.MASSCAN_SUBNET_ALL:
+        elif a.id == AttackerActionId.MASSCAN_HOST_SCAN or a.id == AttackerActionId.MASSCAN_SUBNET_SCAN\
+                or a.id == AttackerActionId.MASSCAN_SUBNET_ALL:
             return ReconSimulator.simulate_masscan_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FIREWALK_HOST or a.id == ActionId.FIREWALK_SUBNET\
-                or a.id == ActionId.FIREWALK_ALL:
+        elif a.id == AttackerActionId.FIREWALK_HOST or a.id == AttackerActionId.FIREWALK_SUBNET\
+                or a.id == AttackerActionId.FIREWALK_ALL:
             return ReconSimulator.simulate_firewalk_scan(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.HTTP_ENUM_HOST or a.id == ActionId.HTTP_ENUM_SUBNET\
-                or a.id == ActionId.HTTP_ENUM_ALL:
+        elif a.id == AttackerActionId.HTTP_ENUM_HOST or a.id == AttackerActionId.HTTP_ENUM_SUBNET\
+                or a.id == AttackerActionId.HTTP_ENUM_ALL:
             return ReconSimulator.simulate_http_enum(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.HTTP_GREP_HOST or a.id == ActionId.HTTP_GREP_SUBNET\
-                or a.id == ActionId.HTTP_GREP_ALL:
+        elif a.id == AttackerActionId.HTTP_GREP_HOST or a.id == AttackerActionId.HTTP_GREP_SUBNET\
+                or a.id == AttackerActionId.HTTP_GREP_ALL:
             return ReconSimulator.simulate_http_grep(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FINGER_HOST or a.id == ActionId.FINGER_SUBNET\
-                or a.id == ActionId.FINGER_ALL:
+        elif a.id == AttackerActionId.FINGER_HOST or a.id == AttackerActionId.FINGER_SUBNET\
+                or a.id == AttackerActionId.FINGER_ALL:
             return ReconSimulator.simulate_finger(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs an exploit action
 
@@ -106,54 +106,54 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        if a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL:
+        if a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_telnet_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_ssh_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_ftp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_cassandra_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_irc_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_mongo_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_mysql_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_smtp_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET\
-                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL:
+        elif a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET\
+                or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
-        elif a.id == ActionId.SAMBACRY_EXPLOIT:
+        elif a.id == AttackerActionId.SAMBACRY_EXPLOIT:
             raise NotImplementedError("Sambacry simulation not implemented")
-        elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
+        elif a.id == AttackerActionId.SHELLSHOCK_EXPLOIT:
             raise NotImplementedError("Shellshock simulation not implemented")
-        elif a.id == ActionId.DVWA_SQL_INJECTION:
+        elif a.id == AttackerActionId.DVWA_SQL_INJECTION:
             raise NotImplementedError("DVWA SQL Injection simulation not implemented")
-        elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2015_3306_EXPLOIT:
             raise NotImplementedError("CVE-2015-3306 simulation not implemented")
-        elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2015_1427_EXPLOIT:
             raise NotImplementedError("CVE-2015-1427 simulation not implemented")
-        elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2016_10033_EXPLOIT:
             raise NotImplementedError("CVE-2016-10033 simulation not implemented")
-        elif a.id == ActionId.CVE_2010_0426_PRIV_ESC:
+        elif a.id == AttackerActionId.CVE_2010_0426_PRIV_ESC:
             raise NotImplementedError("CVE-2010-0426 simulation not implemented")
-        elif a.id == ActionId.CVE_2015_5602_PRIV_ESC:
+        elif a.id == AttackerActionId.CVE_2015_5602_PRIV_ESC:
             raise NotImplementedError("CVE-2015-5602 simulation not implemented")
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Simulates a post-exploit action
 
@@ -162,7 +162,7 @@ class Simulator:
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == ActionId.NETWORK_SERVICE_LOGIN:
+        if a.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
             s_1, r_1, _ = PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
             s_2, r_2, _ = PostExploitSimulator.simulate_ftp_login(s=s_1, a=a, env_config=env_config)
             s_3, r_3, done = PostExploitSimulator.simulate_telnet_login(s=s_2, a=a, env_config=env_config)
@@ -172,11 +172,11 @@ class Simulator:
             else:
                 reward = r_3
             return s_3, reward, done
-        if a.id == ActionId.FIND_FLAG:
+        if a.id == AttackerActionId.FIND_FLAG:
             return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.INSTALL_TOOLS:
+        if a.id == AttackerActionId.INSTALL_TOOLS:
             return PostExploitSimulator.execute_install_tools(s=s, a=a, env_config=env_config)
-        if a.id == ActionId.SSH_BACKDOOR:
+        if a.id == AttackerActionId.SSH_BACKDOOR:
             return PostExploitSimulator.execute_ssh_backdoor(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))

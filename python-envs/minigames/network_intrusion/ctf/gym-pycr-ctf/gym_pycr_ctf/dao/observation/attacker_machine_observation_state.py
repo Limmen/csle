@@ -7,7 +7,11 @@ from gym_pycr_ctf.dao.observation.connection_observation_state import Connection
 from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.network.node_type import NodeType
 
-class MachineObservationState:
+
+class AttackerMachineObservationState:
+    """
+    Represent's the attacker's belief state of a component in the infrastructure
+    """
 
     def __init__(self, ip : str):
         self.ip = ip
@@ -113,7 +117,7 @@ class MachineObservationState:
 
 
     def copy(self):
-        m_copy = MachineObservationState(ip=self.ip)
+        m_copy = AttackerMachineObservationState(ip=self.ip)
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
         m_copy.cve_vulns = copy.deepcopy(self.cve_vulns)

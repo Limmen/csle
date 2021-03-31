@@ -3,8 +3,8 @@ import paramiko
 import time
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action_results.action_costs import ActionCosts
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
 
 class EmulationConfig:
@@ -203,9 +203,9 @@ class EmulationConfig:
             self.server_conn = None
 
 
-    def load_action_costs(self, actions: List[Action], dir: str, nmap_ids: List[ActionId],
-                          network_service_ids: List[ActionId], shell_ids: List[ActionId],
-                          nikto_ids: List[ActionId], masscan_ids: List[ActionId],
+    def load_action_costs(self, actions: List[AttackerAction], dir: str, nmap_ids: List[AttackerActionId],
+                          network_service_ids: List[AttackerActionId], shell_ids: List[AttackerActionId],
+                          nikto_ids: List[AttackerActionId], masscan_ids: List[AttackerActionId],
                           action_lookup_d_val: dict) -> ActionCosts:
         """
         Loads measured action costs from the emulation
@@ -343,9 +343,9 @@ class EmulationConfig:
                                                                         len(action_costs.pivot_scan_costs)))
         return action_costs
 
-    def load_action_alerts(self, actions: List[Action], dir: str, action_ids: List[ActionId],
-                           shell_ids: List[ActionId],
-                          action_lookup_d_val: dict) -> ActionCosts:
+    def load_action_alerts(self, actions: List[AttackerAction], dir: str, action_ids: List[AttackerActionId],
+                           shell_ids: List[AttackerActionId],
+                           action_lookup_d_val: dict) -> ActionCosts:
         print("Loading action alerts from emulation..")
         action_alerts = ActionAlerts()
         sftp_client = self.agent_conn.open_sftp()

@@ -83,9 +83,9 @@ def default_topology() -> Topology:
 
     node_6 = NodeFirewallConfig(ip="172.18.3.191",
                                 output_accept=set(["172.18.3.2", "172.18.3.3", "172.18.3.21",
-                                                   "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
+                                                   "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1"]),
                                 input_accept=set(["172.18.3.2", "172.18.3.3", "172.18.3.21",
-                                                  "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
+                                                  "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
                                 default_input="DROP", default_output="DROP", default_forward="DROP",
@@ -283,9 +283,9 @@ def default_topology() -> Topology:
                                  default_gw=None)
     node_34 = NodeFirewallConfig(ip="172.18.3.254",
                                 output_accept=set(["172.18.3.2", "172.18.3.3", "172.18.3.21",
-                                                   "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
+                                                   "172.18.3.79", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
                                 input_accept=set(["172.18.3.2", "172.18.3.3", "172.18.3.21",
-                                                  "172.18.3.79", "172.18.3.191", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
+                                                  "172.18.3.79", "172.18.3.10", "172.18.3.1", "172.18.3.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
                                 default_input="DROP", default_output="DROP", default_forward="DROP",

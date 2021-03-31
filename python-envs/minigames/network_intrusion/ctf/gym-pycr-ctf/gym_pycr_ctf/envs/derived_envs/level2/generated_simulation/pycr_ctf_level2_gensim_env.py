@@ -26,18 +26,18 @@ class PyCRCTFLevel2GeneratedSim1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -58,18 +58,18 @@ class PyCRCTFLevel2GeneratedSimWithCosts1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -91,18 +91,18 @@ class PyCRCTFLevel2GeneratedSim2Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -123,18 +123,18 @@ class PyCRCTFLevel2GeneratedSimWithCosts2Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -155,18 +155,18 @@ class PyCRCTFLevel2GeneratedSim3Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -187,18 +187,18 @@ class PyCRCTFLevel2GeneratedSimWithCosts3Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -219,18 +219,18 @@ class PyCRCTFLevel2GeneratedSim4Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)
 
@@ -251,17 +251,17 @@ class PyCRCTFLevel2GeneratedSimWithCosts4Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_policy = exp_policy
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.max_exploration_steps = 100
-            env_config.max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
 
         super().__init__(env_config=env_config)

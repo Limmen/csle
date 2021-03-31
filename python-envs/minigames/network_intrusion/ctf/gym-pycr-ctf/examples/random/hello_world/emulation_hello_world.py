@@ -62,13 +62,13 @@ def test_env(env_name : str, num_steps : int):
 
     env.reset()
 
-    num_actions = env.env_config.action_conf.num_actions
+    num_actions = env.env_config.attacker_action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tot_rew = 0
     for i in range(num_steps):
         print(i)
-        legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+        legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         action = np.random.choice(legal_actions)
         obs, reward, done, info = env.step(action)
         tot_rew += reward

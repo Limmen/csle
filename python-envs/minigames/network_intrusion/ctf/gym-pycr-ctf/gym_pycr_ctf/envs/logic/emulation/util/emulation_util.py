@@ -2,7 +2,7 @@ from typing import Tuple, List
 import time
 import paramiko
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
 from gym_pycr_ctf.dao.action_results.ids_alert import IdsAlert
@@ -44,7 +44,7 @@ class EmulationUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: Action, env_config: EnvConfig, ip: str = None,
+    def write_estimated_cost(total_time, action: AttackerAction, env_config: EnvConfig, ip: str = None,
                              user: str = None, service: str = None, conn=None, dir: str = None,
                              machine_ip: str = None) -> None:
         """
@@ -88,7 +88,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_alerts_response(sum_priorities, num_alerts, action: Action, env_config: EnvConfig, ip: str = None,
+    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: EnvConfig, ip: str = None,
                               user: str = None, service: str = None, conn=None, dir: str = None,
                               machine_ip: str = None) -> None:
         """
@@ -133,7 +133,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_file_system_scan_cache(action: Action, env_config: EnvConfig, service: str, user: str, files: List[str],
+    def write_file_system_scan_cache(action: AttackerAction, env_config: EnvConfig, service: str, user: str, files: List[str],
                                      ip: str, root: bool = False) \
             -> None:
         """
@@ -161,7 +161,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_user_command_cache(action: Action, env_config: EnvConfig, user: str, result: str,
+    def write_user_command_cache(action: AttackerAction, env_config: EnvConfig, user: str, result: str,
                                  ip: str, jumphost: str = None) -> None:
         """
         Caches the result of a user command action
@@ -188,7 +188,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def execute_cmd_interactive(a: Action, env_config: EnvConfig) -> None:
+    def execute_cmd_interactive(a: AttackerAction, env_config: EnvConfig) -> None:
         """
         Executes an action on the emulation using an interactive shell (non synchronous)
 
@@ -238,7 +238,7 @@ class EmulationUtil:
         return output_str
 
     @staticmethod
-    def check_filesystem_action_cache(a: Action, env_config: EnvConfig, ip: str, service: str, user: str,
+    def check_filesystem_action_cache(a: AttackerAction, env_config: EnvConfig, ip: str, service: str, user: str,
                                       root: bool = False):
         """
         Checks if a filesystem action is cached or not
@@ -251,7 +251,7 @@ class EmulationUtil:
         query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + "_" + str(int(root)) + ".txt"
 
         # Search through cache
-        if query in env_config.filesystem_file_cache:
+        if query in env_config.attacker_filesystem_file_cache:
             return query
 
         stdin, stdout, stderr = env_config.emulation_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
@@ -259,10 +259,10 @@ class EmulationUtil:
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))
-        env_config.filesystem_file_cache = cache_list
+        env_config.attacker_filesystem_file_cache = cache_list
 
         # Search through updated cache
-        if query in env_config.filesystem_file_cache:
+        if query in env_config.attacker_filesystem_file_cache:
             return query
 
         env_config.cache_misses += 1
@@ -270,7 +270,7 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def check_user_action_cache(a: Action, env_config: EnvConfig, ip: str, user: str, jumphost: str = None):
+    def check_user_action_cache(a: AttackerAction, env_config: EnvConfig, ip: str, user: str, jumphost: str = None):
         """
         Checks if a user-specific action is cached or not
 
@@ -284,7 +284,7 @@ class EmulationUtil:
         query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + user + "_" + jumphost + ".txt"
 
         # Search through cache
-        if query in env_config.user_command_cache_files_cache:
+        if query in env_config.attacker_user_command_cache_files_cache:
             return query
 
         stdin, stdout, stderr = env_config.emulation_config.agent_conn.exec_command(constants.COMMANDS.LIST_CACHE
@@ -292,10 +292,10 @@ class EmulationUtil:
         cache_list = []
         for line in stdout:
             cache_list.append(line.replace("\n", ""))
-        env_config.user_command_cache_files_cache = cache_list
+        env_config.attacker_user_command_cache_files_cache = cache_list
 
         # Search through updated cache
-        if query in env_config.user_command_cache_files_cache:
+        if query in env_config.attacker_user_command_cache_files_cache:
             return query
 
         env_config.cache_misses += 1
@@ -388,8 +388,8 @@ class EmulationUtil:
         cache_file_name = "list_users_" + c.ip + "_" + str(c.root)
 
         # check in-memory cache
-        if env_config.filesystem_scan_cache.get(cache_id) is not None:
-            return env_config.filesystem_scan_cache.get(cache_id)
+        if env_config.attacker_filesystem_scan_cache.get(cache_id) is not None:
+            return env_config.attacker_filesystem_scan_cache.get(cache_id)
 
         if not telnet:
             # check file cache
@@ -405,7 +405,7 @@ class EmulationUtil:
                 users = list(filter(lambda x: x != '', users))
                 if len(users) > 0:
                     # cache result
-                    env_config.filesystem_scan_cache.add(cache_id, users)
+                    env_config.attacker_filesystem_scan_cache.add(cache_id, users)
                     return users
             except Exception as e:
                 pass
@@ -414,7 +414,7 @@ class EmulationUtil:
                     remote_file.close()
 
         cmd = constants.SHELL.LIST_ALL_USERS
-        for i in range(env_config.retry_find_users):
+        for i in range(env_config.attacker_retry_find_users):
             if not telnet:
                 outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                 outdata = outdata.decode()
@@ -444,7 +444,7 @@ class EmulationUtil:
 
         if backdoor_exists:
             # cache result in-memory
-            env_config.filesystem_scan_cache.add(cache_id, users)
+            env_config.attacker_filesystem_scan_cache.add(cache_id, users)
 
         if not telnet and backdoor_exists:
             # cache result on-disk

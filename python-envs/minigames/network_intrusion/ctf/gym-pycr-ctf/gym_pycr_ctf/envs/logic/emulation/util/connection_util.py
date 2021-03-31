@@ -4,12 +4,12 @@ import paramiko
 import telnetlib
 from ftplib import FTP
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
@@ -20,7 +20,7 @@ class ConnectionUtil:
     """
 
     @staticmethod
-    def login_service_helper(s: EnvState, a: Action, alive_check, service_name: str,
+    def login_service_helper(s: EnvState, a: AttackerAction, alive_check, service_name: str,
                              env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int,
                                                              int, float, bool]:
         """
@@ -103,8 +103,8 @@ class ConnectionUtil:
         for cr in non_used_credentials:
             if cr.service == constants.SSH.SERVICE_NAME:
                 key = (target_machine.ip, cr.username, cr.port)
-                if key in s.cached_ssh_connections:
-                    c = s.cached_ssh_connections[key]
+                if key in s.attacker_cached_ssh_connections:
+                    c = s.attacker_cached_ssh_connections[key]
                     target_machine.ssh_connections.append(c)
                     target_machine.logged_in = True
                     target_machine.root = c.root
@@ -116,8 +116,8 @@ class ConnectionUtil:
                     non_used_nor_cached_credentials.append(cr)
             elif cr.service == constants.TELNET.SERVICE_NAME:
                 key = (target_machine.ip, cr.username, cr.port)
-                if key in s.cached_telnet_connections:
-                    c = s.cached_telnet_connections[key]
+                if key in s.attacker_cached_telnet_connections:
+                    c = s.attacker_cached_telnet_connections[key]
                     target_machine.telnet_connections.append(c)
                     target_machine.logged_in = True
                     target_machine.root = c.root
@@ -129,8 +129,8 @@ class ConnectionUtil:
                     non_used_nor_cached_credentials.append(cr)
             elif cr.service == constants.FTP.SERVICE_NAME:
                 key = (target_machine.ip, cr.username, cr.port)
-                if key in s.cached_ftp_connections:
-                    c = s.cached_ftp_connections[key]
+                if key in s.attacker_cached_ftp_connections:
+                    c = s.attacker_cached_ftp_connections[key]
                     target_machine.ftp_connections.append(c)
                     target_machine.logged_in = True
                     target_machine.root = c.root
@@ -242,7 +242,7 @@ class ConnectionUtil:
                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, True
 
     @staticmethod
-    def _ssh_setup_connection(a: Action, env_config: EnvConfig,
+    def _ssh_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List[ConnectionObservationState],
                               s: EnvState) \
             -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
@@ -266,7 +266,7 @@ class ConnectionUtil:
         non_failed_credentials = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
-                m = s.get_machine(proxy_conn.ip)
+                m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
@@ -307,7 +307,7 @@ class ConnectionUtil:
         return connected, users, target_connections, ports, total_time, non_failed_credentials, proxies
 
     @staticmethod
-    def _ssh_finalize_connection(target_machine: MachineObservationState, users: List[str],
+    def _ssh_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str],
                                  target_connections: List, i: int, ports: List[int],
                                  proxies: List, env_config: EnvConfig) -> Tuple[bool, float]:
         """
@@ -323,7 +323,7 @@ class ConnectionUtil:
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        for j in range(env_config.retry_check_root):
+        for j in range(env_config.attacker_retry_check_root):
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd="sudo -l",
                                                                          conn=target_connections[i])
             root = False
@@ -345,7 +345,7 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _telnet_setup_connection(a: Action, env_config: EnvConfig,
+    def _telnet_setup_connection(a: AttackerAction, env_config: EnvConfig,
                                  credentials: List[Credential], proxy_connections: List,
                                  s: EnvState) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
@@ -371,7 +371,7 @@ class ConnectionUtil:
         proxies = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
-                m = s.get_machine(proxy_conn.ip)
+                m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
@@ -423,7 +423,7 @@ class ConnectionUtil:
                total_time, non_failed_credentials, proxies
 
     @staticmethod
-    def _telnet_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List,
+    def _telnet_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str], target_connections: List,
                                     i: int,
                                     tunnel_threads: List, forward_ports: List[int], ports: List[int],
                                     proxies: List, env_config: EnvConfig) \
@@ -443,7 +443,7 @@ class ConnectionUtil:
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
-        for i in range(env_config.retry_check_root):
+        for i in range(env_config.attacker_retry_check_root):
             target_connections[i].write("sudo -l\n".encode())
             response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
             root = False
@@ -465,7 +465,7 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _ftp_setup_connection(a: Action, env_config: EnvConfig,
+    def _ftp_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List,
                               s: EnvState) \
             -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
@@ -492,7 +492,7 @@ class ConnectionUtil:
         proxies = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
-                m = s.get_machine(proxy_conn.ip)
+                m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
@@ -550,7 +550,7 @@ class ConnectionUtil:
                non_failed_credentials, proxies
 
     @staticmethod
-    def _ftp_finalize_connection(target_machine: MachineObservationState, users: List[str], target_connections: List,
+    def _ftp_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str], target_connections: List,
                                  i: int,
                                  tunnel_threads: List, forward_ports: List[int], ports: List[int],
                                  interactive_shells: List, proxies: List) -> Tuple[bool, float]:
@@ -580,7 +580,7 @@ class ConnectionUtil:
 
 
     @staticmethod
-    def find_jump_host_connection(ip, s: MachineObservationState, env_config: EnvConfig) -> ConnectionObservationState:
+    def find_jump_host_connection(ip, s: AttackerMachineObservationState, env_config: EnvConfig) -> ConnectionObservationState:
         """
         Utility function for finding a jump-host from the set of compromised machines to reach a target IP
 
@@ -590,16 +590,16 @@ class ConnectionUtil:
         :return: a connection DTO
         """
 
-        if ip in s.obs_state.agent_reachable:
+        if ip in s.attacker_obs_state.agent_reachable:
             c = ConnectionObservationState(conn=env_config.emulation_config.agent_conn,
                                        username=env_config.emulation_config.agent_username,
                                        root=True, port=22,
                                        service=constants.SSH.SERVICE_NAME,
                                        proxy=None, ip=env_config.emulation_config.agent_ip)
             return c
-        s.obs_state.sort_machines()
+        s.attacker_obs_state.sort_machines()
 
-        for m in s.obs_state.machines:
+        for m in s.attacker_obs_state.machines:
             if m.logged_in and m.tools_installed and m.backdoor_installed and ip in m.reachable:
 
                 # Start with ssh connections

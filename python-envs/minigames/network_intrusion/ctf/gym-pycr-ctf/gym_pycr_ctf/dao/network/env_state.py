@@ -30,11 +30,11 @@ class EnvState:
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.attacker_obs_state : AttackerObservationState = None
         self.reset_state() # Init obs state
-        self.setup_spaces()
-        self.cached_ssh_connections = {}
-        self.cached_telnet_connections = {}
-        self.cached_ftp_connections = {}
-        self.cached_backdoor_credentials = {}
+        self.setup_attacker_spaces()
+        self.attacker_cached_ssh_connections = {}
+        self.attacker_cached_telnet_connections = {}
+        self.attacker_cached_ftp_connections = {}
+        self.attacker_cached_backdoor_credentials = {}
 
     def get_attacker_observation(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -65,35 +65,35 @@ class EnvState:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, ports_protocols_obs
 
-    def setup_spaces(self) -> None:
+    def setup_attacker_spaces(self) -> None:
         """
-        Sets up the observation spaces used by RL agents
+        Sets up the observation spaces used by RL attacker agents
 
         :return: None
         """
         if self.state_type == StateType.BASE:
-            observation_space, m_selection_observation_space, network_orig_shape, \
-            machine_orig_shape, m_action_observation_space = \
+            attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
+            attacker_machine_orig_shape, attacker_m_action_observation_space = \
                 AttackerStateRepresentation.base_representation_spaces(obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.COMPACT:
-            observation_space, m_selection_observation_space, network_orig_shape, \
-            machine_orig_shape, m_action_observation_space = \
+            attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
+            attacker_machine_orig_shape, attacker_m_action_observation_space = \
                 AttackerStateRepresentation.compact_representation_spaces(obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.ESSENTIAL:
-            observation_space, m_selection_observation_space, network_orig_shape, \
-            machine_orig_shape, m_action_observation_space = \
+            attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
+            attacker_machine_orig_shape, attacker_m_action_observation_space = \
                 AttackerStateRepresentation.essential_representation_spaces(obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.SIMPLE:
-            observation_space, m_selection_observation_space, network_orig_shape, \
-            machine_orig_shape, m_action_observation_space = \
+            attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
+            attacker_machine_orig_shape, attacker_m_action_observation_space = \
                 AttackerStateRepresentation.simple_representation_spaces(obs_state=self.attacker_obs_state)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type.BASE))
-        self.observation_space = observation_space
-        self.m_selection_observation_space = m_selection_observation_space
-        self.network_orig_shape = network_orig_shape
-        self.machine_orig_shape = machine_orig_shape
-        self.m_action_observation_space = m_action_observation_space
+        self.attacker_observation_space = attacker_observation_space
+        self.attacker_m_selection_observation_space = attacker_m_selection_observation_space
+        self.attacker_network_orig_shape = attacker_network_orig_shape
+        self.attacker_machine_orig_shape = attacker_machine_orig_shape
+        self.attacker_m_action_observation_space = attacker_m_action_observation_space
 
     def reset_state(self) -> None:
         """
@@ -106,13 +106,13 @@ class EnvState:
             agent_reachable = self.attacker_obs_state.agent_reachable
             for m in self.attacker_obs_state.machines:
                 for c in m.ssh_connections:
-                    self.cached_ssh_connections[(m.ip, c.username, c.port)] = c
+                    self.attacker_cached_ssh_connections[(m.ip, c.username, c.port)] = c
                 for c in m.telnet_connections:
-                    self.cached_telnet_connections[(m.ip, c.username, c.port)] = c
+                    self.attacker_cached_telnet_connections[(m.ip, c.username, c.port)] = c
                 for c in m.ftp_connections:
-                    self.cached_ftp_connections[(m.ip, c.username, c.port)] = c
+                    self.attacker_cached_ftp_connections[(m.ip, c.username, c.port)] = c
                 for cr in m.backdoor_credentials:
-                    self.cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
+                    self.attacker_cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
         self.attacker_obs_state = AttackerObservationState(num_machines=self.num_nodes, num_ports=self.num_ports,
                                                            num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
                                                            catched_flags=0, agent_reachable=agent_reachable)
@@ -151,17 +151,17 @@ class EnvState:
 
         :return: None
         """
-        for _, c in self.cached_ssh_connections.items():
+        for _, c in self.attacker_cached_ssh_connections.items():
             c.cleanup()
-        for _, c in self.cached_ftp_connections.items():
+        for _, c in self.attacker_cached_ftp_connections.items():
             c.cleanup()
-        for _, c in self.cached_telnet_connections.items():
+        for _, c in self.attacker_cached_telnet_connections.items():
             c.cleanup()
 
         self.attacker_obs_state.cleanup()
 
 
-    def get_machine(self, ip: str):
+    def get_attacker_machine(self, ip: str):
         for m in self.attacker_obs_state.machines:
             if m.ip == ip:
                 return m

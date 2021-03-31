@@ -279,8 +279,8 @@ class ReinforceAgent(TrainAgent):
 
         # Calculate legal actions
         actions = list(range(self.env.num_actions))
-        legal_actions = list(filter(lambda action: self.env.is_action_legal(action), actions))
-        non_legal_actions = list(filter(lambda action: not self.env.is_action_legal(action), actions))
+        legal_actions = list(filter(lambda action: self.env.is_attack_action_legal(action), actions))
+        non_legal_actions = list(filter(lambda action: not self.env.is_attack_action_legal(action), actions))
 
         # Forward pass using the current policy network to predict P(a|s)
         action_probs = self.policy_network(state)

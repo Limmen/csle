@@ -3,7 +3,7 @@ Type of actions in the pycr-ctf environment
 """
 from enum import Enum
 
-class ActionType(Enum):
+class AttackerActionType(Enum):
     """
     Enum representing the different attack types in the network.
     """

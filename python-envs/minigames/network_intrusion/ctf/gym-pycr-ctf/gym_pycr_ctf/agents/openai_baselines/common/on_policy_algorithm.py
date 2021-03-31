@@ -566,7 +566,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.m_action_policy.forward(machine_obs_tensor, env_config=env.envs[0].env_config,
                                                 env_state=env.envs[0].env_state, m_index=m_selection_actions[0])
             m_actions = m_actions.cpu().numpy()
-            actions = env.envs[0].convert_ar_action(m_selection_actions[0], m_actions[0])
+            actions = env.envs[0].attacker_convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
 
         new_obs, rewards, dones, infos = env.step(actions)

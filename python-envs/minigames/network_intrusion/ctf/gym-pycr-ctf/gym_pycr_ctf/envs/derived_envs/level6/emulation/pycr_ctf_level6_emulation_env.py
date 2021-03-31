@@ -26,8 +26,8 @@ class PyCRCTFLevel6EmulationBaseEnv(PyCRCTFEnv):
                                                                  hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -54,13 +54,13 @@ class PyCRCTFLevel6Emulation1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 100
         super().__init__(env_config=env_config)
 
@@ -84,8 +84,8 @@ class PyCRCTFLevel6EmulationWithCosts1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -112,8 +112,8 @@ class PyCRCTFLevel6Emulation2Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -140,8 +140,8 @@ class PyCRCTFLevel6EmulationWithCosts2Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V2.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -168,8 +168,8 @@ class PyCRCTFLevel6Emulation3Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -196,8 +196,8 @@ class PyCRCTFLevel6EmulationWithCosts3Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V3.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -224,8 +224,8 @@ class PyCRCTFLevel6Emulation4Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -252,8 +252,8 @@ class PyCRCTFLevel6EmulationWithCosts4Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel6Base.hacker_ip())
             env_config = PyCrCTFLevel6V4.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir

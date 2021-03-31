@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple
 import gym
 import pickle
 from abc import ABC
@@ -6,15 +6,15 @@ import numpy as np
 import os
 import sys
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.agent.agent_state import AgentState
+from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.agent.agent_log import AgentLog
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.envs.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_type import ActionType
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs.logic.common.util as util
 from gym_pycr_ctf.envs.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -39,16 +39,16 @@ class PyCRCTFEnv(gym.Env, ABC):
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                   os_lookup=constants.OS.os_lookup, num_flags=self.env_config.num_flags,
                                   state_type=self.env_config.state_type)
-        self.observation_space = self.env_state.observation_space
-        self.m_selection_observation_space = self.env_state.m_selection_observation_space
-        self.m_action_observation_space = self.env_state.m_action_observation_space
-        self.action_space = self.env_config.action_conf.action_space
-        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.attacker_obs_state.num_machines + 1)
-        self.m_action_space = self.env_config.action_conf.m_action_space
-        self.num_actions = self.env_config.action_conf.num_actions
-        self.network_orig_shape = self.env_state.network_orig_shape
-        self.machine_orig_shape = self.env_state.machine_orig_shape
-        self.env_config.pi_star_rew_list = []
+        self.attacker_observation_space = self.env_state.attacker_observation_space
+        self.attacker_m_selection_observation_space = self.env_state.attacker_m_selection_observation_space
+        self.attacker_m_action_observation_space = self.env_state.attacker_m_action_observation_space
+        self.attacker_action_space = self.env_config.attacker_action_conf.action_space
+        self.attacker_m_selection_action_space = gym.spaces.Discrete(self.env_state.attacker_obs_state.num_machines + 1)
+        self.attacker_m_action_space = self.env_config.attacker_action_conf.m_action_space
+        self.attacker_num_actions = self.env_config.attacker_action_conf.num_actions
+        self.attacker_network_orig_shape = self.env_state.attacker_network_orig_shape
+        self.attacker_machine_orig_shape = self.env_state.attacker_machine_orig_shape
+        self.env_config.pi_star_rew_list_attacker = []
         self.reward_range = (float(0), float(1))
         self.num_states = 100
         self.idx = self.env_config.idx
@@ -68,89 +68,107 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.load_cves_from_server:
                 self.env_config.emulation_config.download_cves()
             self.env_state.merge_cves_with_emulation(self.env_config.emulation_config.emulation_cves)
-            self.env_config.action_costs = self.env_config.emulation_config.load_action_costs(
-                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
-                nmap_ids=self.env_config.action_conf.nmap_action_ids,
-                network_service_ids=self.env_config.action_conf.network_service_action_ids,
-                shell_ids=self.env_config.action_conf.shell_action_ids,
-                nikto_ids=self.env_config.action_conf.nikto_action_ids,
-                masscan_ids=self.env_config.action_conf.masscan_action_ids,
-                action_lookup_d_val = self.env_config.action_conf.action_lookup_d_val)
-            self.env_config.action_alerts = self.env_config.emulation_config.load_action_alerts(
-                actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
-                action_ids=self.env_config.action_conf.action_ids,
-                action_lookup_d_val=self.env_config.action_conf.action_lookup_d_val,
-                shell_ids=self.env_config.action_conf.shell_action_ids)
+            self.env_config.attacker_action_costs = self.env_config.emulation_config.load_action_costs(
+                actions=self.env_config.attacker_action_conf.actions, dir=self.env_config.nmap_cache_dir,
+                nmap_ids=self.env_config.attacker_action_conf.nmap_action_ids,
+                network_service_ids=self.env_config.attacker_action_conf.network_service_action_ids,
+                shell_ids=self.env_config.attacker_action_conf.shell_action_ids,
+                nikto_ids=self.env_config.attacker_action_conf.nikto_action_ids,
+                masscan_ids=self.env_config.attacker_action_conf.masscan_action_ids,
+                action_lookup_d_val = self.env_config.attacker_action_conf.action_lookup_d_val)
+            self.env_config.attacker_action_alerts = self.env_config.emulation_config.load_action_alerts(
+                actions=self.env_config.attacker_action_conf.actions, dir=self.env_config.nmap_cache_dir,
+                action_ids=self.env_config.attacker_action_conf.action_ids,
+                action_lookup_d_val=self.env_config.attacker_action_conf.action_lookup_d_val,
+                shell_ids=self.env_config.attacker_action_conf.shell_action_ids)
 
         self.env_config.scale_rewards_prep()
-        self.agent_state = AgentState(obs_state=self.env_state.attacker_obs_state, env_log=AgentLog(),
-                                      service_lookup=self.env_state.service_lookup,
-                                      vuln_lookup=self.env_state.vuln_lookup,
-                                      os_lookup=self.env_state.os_lookup)
-        self.last_obs = self.env_state.get_attacker_observation()
-        self.trajectory = []
-        self.trajectories = []
+        self.attacker_agent_state = AttackerAgentState(attacker_obs_state=self.env_state.attacker_obs_state, env_log=AgentLog(),
+                                                       service_lookup=self.env_state.service_lookup,
+                                                       vuln_lookup=self.env_state.vuln_lookup,
+                                                       os_lookup=self.env_state.os_lookup)
+        self.attacker_last_obs = self.env_state.get_attacker_observation()
+        self.attacker_trajectory = []
+        self.attacker_trajectories = []
+        self.defender_last_obs = self.env_state.get_attacker_observation()
+        self.defender_trajectory = []
+        self.defender_trajectories = []
         if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
                 and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.emulation):
-            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions),
+            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions),
                                    num_warmup_steps=env_config.emulation_config.warmup_iterations,
                                    env=self, render = False)
             print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
                   "cache_misses:{}".format(
-                len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
-                len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
+                len(self.env_config.attacker_nmap_scan_cache.cache),
+                len(self.env_config.attacker_filesystem_scan_cache.cache),
+                len(self.env_config.attacker_user_command_cache.cache),
+                len(self.env_config.attacker_nikto_scan_cache.cache),
                 self.env_config.cache_misses))
-        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION and not self.env_config.emulation_config.skip_exploration:
-            self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
-                                                           env_config=self.env_config, env=self)
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
+                and not self.env_config.emulation_config.skip_exploration:
+            self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
+                exp_policy=env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
             self.env_state.attacker_obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
             self.reset()
         self.reset()
-        actions = list(range(self.num_actions))
-        self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
+        actions = list(range(self.attacker_num_actions))
+        self.attacker_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                     action, env_config=self.env_config, env_state=self.env_state), actions))
-        if (self.env_config.env_mode == EnvMode.SIMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
-                and self.env_config.compute_pi_star:
-            if not self.env_config.use_upper_bound_pi_star:
-                pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
-                self.env_config.pi_star_tau = pi_star_tau
-                self.env_config.pi_star_rew = pi_star_rew
-                self.env_config.pi_star_rew_list.append(pi_star_rew)
-        if self.env_config.use_upper_bound_pi_star:
-            self.env_config.pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
-            self.env_config.pi_star_tau = None
-            self.env_config.pi_star_rew_list.append(self.env_config.pi_star_rew)
+        if (self.env_config.env_mode == EnvMode.SIMULATION
+            or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
+                and self.env_config.compute_pi_star_attacker:
+            if not self.env_config.use_upper_bound_pi_star_attacker:
+                pi_star_tau_attacker, pi_star_rew_attacker = FindPiStar.brute_force(self.env_config, self)
+                self.env_config.pi_star_tau_attacker = pi_star_tau_attacker
+                self.env_config.pi_star_rew_attacker = pi_star_rew_attacker
+                self.env_config.pi_star_rew_list_attacker.append(pi_star_rew_attacker)
+        if self.env_config.use_upper_bound_pi_star_attacker:
+            self.env_config.pi_star_rew_attacker = FindPiStar.upper_bound_pi(self.env_config)
+            self.env_config.pi_star_tau_attacker = None
+            self.env_config.pi_star_rew_list_attacker.append(self.env_config.pi_star_rew_attacker)
 
     # -------- API ------------
-    def step(self, action_id : int) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, action_id : int, attacker=True) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
-        self.trajectory = []
-        self.trajectory.append(self.last_obs)
-        self.trajectory.append(action_id)
+        if attacker:
+            return self.step_attacker(attacker_action_id=action_id)
+
+    def step_attacker(self, attacker_action_id) -> Tuple[np.ndarray, int, bool, dict]:
+        """
+        Takes a step in the environment as the attacker by executing the given action
+
+        :param attacker_action_id: the action to take
+        :return: (obs, reward, done, info)
+        """
+        self.attacker_trajectory = []
+        self.attacker_trajectory.append(self.attacker_last_obs)
+        self.attacker_trajectory.append(attacker_action_id)
         info = {"idx": self.idx}
-        if not self.is_action_legal(action_id, env_config=self.env_config, env_state=self.env_state):
-            print("illegal action:{}, idx:{}".format(action_id, self.idx))
-            actions = list(range(len(self.env_config.action_conf.actions)))
-            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
+        if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
+            print("illegal attack action:{}, idx:{}".format(attacker_action_id, self.idx))
+            actions = list(range(len(self.env_config.attacker_action_conf.actions)))
+            attacker_non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true illegal actins:{}, idx:{}".format(non_legal_actions, self.idx))
-            legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
+            print("true illegal attack actions:{}, idx:{}".format(attacker_non_legal_actions, self.idx))
+            attacker_legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
                 action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true legal actions:{}, idx:{}".format(legal_actions, self.idx))
+            print("true legal attack actions:{}, idx:{}".format(attacker_legal_actions, self.idx))
             print("flags found:{}, idx:{}".format(self.env_state.num_flags, self.idx))
-            print("flags found:{}, idx:{}".format(list(map(lambda x: x.flags_found, self.env_state.attacker_obs_state.machines)), self.idx))
+            print("flags found:{}, idx:{}".format(
+                list(map(lambda x: x.flags_found, self.env_state.attacker_obs_state.machines)), self.idx))
             print("flags found:{}, idx:{}".format(self.env_state.attacker_obs_state.catched_flags, self.idx))
             print("total flags:{}, idx:{}".format(self.env_config.network_conf.flags_lookup, self.idx))
             print(self.env_config.network_conf)
             print("Idx:{}".format(self.idx))
-            #self.env_config.network_conf.save("./netconf" + str(self.idx) + ".pkl")
+            # self.env_config.network_conf.save("./netconf" + str(self.idx) + ".pkl")
             raise ValueError("Test")
             sys.exit(0)
             done = False
@@ -158,31 +176,79 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.agent_state.time_step += 1
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True
-            return self.last_obs, self.env_config.illegal_reward_action, done, info
-        if action_id > len(self.env_config.action_conf.actions)-1:
-            raise ValueError("Action ID: {} not recognized".format(action_id))
-        action = self.env_config.action_conf.actions[action_id]
-        action.ip = self.env_state.attacker_obs_state.get_action_ip(action)
-        s_prime, reward, done = TransitionOperator.attacker_transition(s=self.env_state, attacker_action=action, env_config=self.env_config)
+            return self.attacker_last_obs, self.env_config.illegal_reward_action, done, info
+        if attacker_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
+            raise ValueError("Action ID: {} not recognized".format(attacker_action_id))
+        attack_action = self.env_config.attacker_action_conf.actions[attacker_action_id]
+        attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
+        s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
+            s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
         if done:
-            reward = reward - self.env_config.final_steps_reward_coefficient*self.agent_state.time_step
-        if self.agent_state.time_step > self.env_config.max_episode_length:
+            attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient * self.attacker_agent_state.time_step
+        if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
             done = True
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
-            reward = reward - self.env_config.detection_reward
-        m_obs, p_obs = self.env_state.get_attacker_observation()
-        self.last_obs = m_obs
-        self.agent_state.time_step += 1
-        self.agent_state.episode_reward += reward
-        self.__update_log(action)
-        self.trajectory.append(m_obs)
-        self.trajectory.append(reward)
+            attacker_reward = attacker_reward - self.env_config.attacker_detection_reward
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        self.attacker_last_obs = attacker_m_obs
+        self.attacker_agent_state.time_step += 1
+        self.attacker_agent_state.episode_reward += attacker_reward
+        self.__update_log(attack_action)
+        self.attacker_trajectory.append(attacker_m_obs)
+        self.attacker_trajectory.append(attacker_reward)
         info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
-            self.trajectories.append(self.trajectory)
+            self.attacker_trajectories.append(self.attacker_trajectory)
 
-        return m_obs, reward, done, info
+        return attacker_m_obs, attacker_reward, done, info
+
+
+    def step_defender(self, defender_action_id) -> Tuple[np.ndarray, int, bool, dict]:
+        """
+        Takes a step in the environment as the defender by executing the given action
+
+        :param defender_action_id: the action to take
+        :return: (obs, reward, done, info)
+        """
+        self.defender_trajectory = []
+        self.defender_trajectory.append(self.defender_last_obs)
+        self.defender_trajectory.append(defender_action_id)
+        info = {"idx": self.idx}
+        if not self.is_defense_action_legal(defender_action_id, env_config=self.env_config, env_state=self.env_state):
+            print("illegal defense action:{}, idx:{}".format(defender_action_id, self.idx))
+            sys.exit(0)
+            done = False
+            info["flags"] = self.env_state.attacker_obs_state.catched_flags
+            self.agent_state.time_step += 1
+            if self.agent_state.time_step > self.env_config.max_episode_length:
+                done = True
+            return self.attacker_last_obs, self.env_config.illegal_reward_action, done, info
+        if defender_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
+            raise ValueError("Action ID: {} not recognized".format(defender_action_id))
+        attack_action = self.env_config.attacker_action_conf.actions[defender_action_id]
+        attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
+        s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
+            s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
+        if done:
+            attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient * self.attacker_agent_state.time_step
+        if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
+            done = True
+        self.env_state = s_prime
+        if self.env_state.attacker_obs_state.detected:
+            attacker_reward = attacker_reward - self.env_config.attacker_detection_reward
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        self.attacker_last_obs = attacker_m_obs
+        self.attacker_agent_state.time_step += 1
+        self.attacker_agent_state.episode_reward += attacker_reward
+        self.__update_log(attack_action)
+        self.attacker_trajectory.append(attacker_m_obs)
+        self.attacker_trajectory.append(attacker_reward)
+        info["flags"] = self.env_state.attacker_obs_state.catched_flags
+        if self.env_config.save_trajectories:
+            self.attacker_trajectories.append(self.attacker_trajectory)
+
+        return attacker_m_obs, attacker_reward, done, info
 
     def reset(self, soft : bool = False) -> np.ndarray:
         """
@@ -199,32 +265,33 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_config = env_config
             if self.env_config.compute_pi_star:
                 if not self.env_config.use_upper_bound_pi_star:
-                    pi_star_tau, pi_star_rew = FindPiStar.brute_force(self.env_config, self)
+                    attacker_pi_star_tau, attacker_pi_star_rew = FindPiStar.brute_force(self.env_config, self)
                 else:
-                    pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
-                    pi_star_tau = None
-                self.env_config.pi_star_tau = pi_star_tau
-                self.env_config.pi_star_rew = pi_star_rew
-                self.env_config.pi_star_rew_list.append(pi_star_rew)
-            actions = list(range(self.num_actions))
-            self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
-                action, env_config=self.env_config, env_state=self.env_state), actions))
+                    attacker_pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
+                    attacker_pi_star_tau = None
+                self.env_config.pi_star_tau = attacker_pi_star_tau
+                self.env_config.pi_star_rew = attacker_pi_star_rew
+                self.env_config.pi_star_rew_list.append(attacker_pi_star_rew)
+            total_attacker_actions = list(range(self.attacker_num_actions))
+            self.attacker_initial_illegal_actions = list(filter(lambda attack_action: not PyCRCTFEnv.is_attack_action_legal(
+                attack_action, env_config=self.env_config,
+                env_state=self.env_state), total_attacker_actions))
 
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.attacker_obs_state.detected:
-            self.agent_state.num_detections += 1
+            self.attacker_agent_state.num_detections += 1
         elif self.env_state.attacker_obs_state.all_flags:
-            self.agent_state.num_all_flags += 1
+            self.attacker_agent_state.num_all_flags += 1
         self.env_state.reset_state()
-        m_obs, p_obs = self.env_state.get_attacker_observation()
-        self.last_obs = m_obs
-        self.agent_state.num_episodes += 1
-        self.agent_state.cumulative_reward += self.agent_state.episode_reward
-        self.agent_state.time_step = 0
-        self.agent_state.episode_reward = 0
-        self.agent_state.env_log.reset()
-        self.agent_state.obs_state = self.env_state.attacker_obs_state
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        self.attacker_last_obs = attacker_m_obs
+        self.attacker_agent_state.num_episodes += 1
+        self.attacker_agent_state.cumulative_reward += self.attacker_agent_state.episode_reward
+        self.attacker_agent_state.time_step = 0
+        self.attacker_agent_state.episode_reward = 0
+        self.attacker_agent_state.env_log.reset()
+        self.attacker_agent_state.attacker_obs_state = self.env_state.attacker_obs_state
         #self.viewer.mainframe.set_state(self.agent_state)
         if self.viewer is not None and self.viewer.mainframe is not None:
             self.viewer.mainframe.reset_state()
@@ -232,7 +299,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         self.env_config.cache_misses = 0
         sys.stdout.flush()
-        return m_obs
+        return attacker_m_obs
 
     def render(self, mode: str = 'human'):
         """
@@ -246,13 +313,13 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
-        #self.agent_state.obs_state = self.env_state.obs_state.copy()
-        self.agent_state.obs_state = self.env_state.attacker_obs_state
+        #self.agent_state.attacker_obs_state = self.env_state.attacker_obs_state.copy()
+        self.attacker_agent_state.attacker_obs_state = self.env_state.attacker_obs_state
         if mode not in self.metadata["render.modes"]:
             raise NotImplemented("mode: {} is not supported".format(mode))
         if self.viewer is None:
             self.__setup_viewer()
-        self.viewer.mainframe.set_state(self.agent_state)
+        self.viewer.mainframe.set_state(self.attacker_agent_state)
         arr = self.viewer.render(return_rgb_array=mode == 'rgb_array')
         return arr
 
@@ -262,17 +329,29 @@ class PyCRCTFEnv(gym.Env, ABC):
                                                                          r_space=self.randomization_space,
                                                                          env_config=self.env_config)
         self.env_config = env_config
-        actions = list(range(self.num_actions))
-        self.initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
-            action, env_config=self.env_config, env_state=self.env_state), actions))
+        attacker_total_actions = list(range(self.attacker_num_actions))
+        self.attacker_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+            action, env_config=self.env_config, env_state=self.env_state), attacker_total_actions))
 
     @staticmethod
-    def is_action_legal(action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
-                        m_action: bool = False, m_index : int = None) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
         """
-        Checks if a given action is legal in the current state of the environment
+        Checks if a given defense action is legal in the current state of the environment
 
-        :param action_id: the id of the action to check
+        :param defense_action_id: the id of the action to check
+        :param env_config: the environment config
+        :param env_state: the environment state
+        :return: True if legal, else false
+        """
+        return True
+
+    @staticmethod
+    def is_attack_action_legal(attack_action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
+                               m_action: bool = False, m_index : int = None) -> bool:
+        """
+        Checks if a given attack action is legal in the current state of the environment
+
+        :param attack_action_id: the id of the action to check
         :param env_config: the environment config
         :param env_state: the environment state
         :param m_selection: boolean flag whether using AR policy m_selection or not
@@ -282,18 +361,18 @@ class PyCRCTFEnv(gym.Env, ABC):
         """
         # If using AR policy
         if m_selection:
-            return PyCRCTFEnv._is_action_legal_m_selection(action_id=action_id,env_config=env_config,
-                                                               env_state=env_state)
+            return PyCRCTFEnv._is_attack_action_legal_m_selection(action_id=attack_action_id, env_config=env_config,
+                                                                  env_state=env_state)
         elif m_action:
-            return PyCRCTFEnv._is_action_legal_m_action(action_id=action_id, env_config=env_config,
-                                                            env_state=env_state, machine_index=m_index)
+            return PyCRCTFEnv._is_attack_action_legal_m_action(action_id=attack_action_id, env_config=env_config,
+                                                               env_state=env_state, machine_index=m_index)
 
-        if not env_config.filter_illegal_actions:
+        if not env_config.attacker_filter_illegal_actions:
             return True
-        if action_id > len(env_config.action_conf.actions) - 1:
+        if attack_action_id > len(env_config.attacker_action_conf.actions) - 1:
             return False
 
-        action = env_config.action_conf.actions[action_id]
+        action = env_config.attacker_action_conf.actions[attack_action_id]
         ip = env_state.attacker_obs_state.get_action_ip(action)
 
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=action, s=env_state)
@@ -301,11 +380,11 @@ class PyCRCTFEnv(gym.Env, ABC):
             return False
 
         # Recon on subnet is always possible
-        if action.type == ActionType.RECON and action.subnet:
+        if action.type == AttackerActionType.RECON and action.subnet:
             return True
 
         # Recon on set of all found machines is always possible if there exists such machiens
-        if action.type == ActionType.RECON and action.index == -1 and len(env_state.attacker_obs_state.machines) > 0:
+        if action.type == AttackerActionType.RECON and action.index == -1 and len(env_state.attacker_obs_state.machines) > 0:
             return True
 
         machine_discovered = False
@@ -350,17 +429,17 @@ class PyCRCTFEnv(gym.Env, ABC):
             if m.untried_credentials:
                 untried_credentials = m.untried_credentials
 
-        if action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN:
+        if action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
         # Privilege escalation only legal if machine discovered and logged in and not root
-        if action.type == ActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
-                                                               or machine_root_login):
+        if action.type == AttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
+                                                                       or machine_root_login):
             return False
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
-        if machine_discovered and (action.type == ActionType.RECON or action.type == ActionType.EXPLOIT
-                                   or action.type == ActionType.PRIVILEGE_ESCALATION):
+        if machine_discovered and (action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT
+                                   or action.type == AttackerActionType.PRIVILEGE_ESCALATION):
             if action.subnet and target_machine is None:
                 return True
             if m_index is not None and m_index == -1:
@@ -372,38 +451,38 @@ class PyCRCTFEnv(gym.Env, ABC):
             return True
 
         # If nothing new to scan, find-flag is illegal
-        if action.id == ActionId.FIND_FLAG and not unscanned_filesystems:
+        if action.id == AttackerActionId.FIND_FLAG and not unscanned_filesystems:
             return False
 
         # If nothing new to backdoor, install backdoor is illegal
-        if action.id == ActionId.SSH_BACKDOOR and not uninstalled_backdoor:
+        if action.id == AttackerActionId.SSH_BACKDOOR and not uninstalled_backdoor:
             return False
 
         # If no new credentials, login to service is illegal
-        if action.id == ActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
+        if action.id == AttackerActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
             return False
 
         # Pivot recon possible if logged in on pivot machine with tools installed
-        if machine_discovered and action.type == ActionType.POST_EXPLOIT and logged_in and machine_w_tools:
+        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT and logged_in and machine_w_tools:
             return True
 
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
-        if machine_discovered and action.type == ActionType.POST_EXPLOIT \
+        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT \
                 and ((target_machine is not None and target_machine.shell_access
                       and len(target_machine.shell_access_credentials) > 0)
-                     or action.subnet or action.id == ActionId.NETWORK_SERVICE_LOGIN):
+                     or action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN):
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in
-        if action.id == ActionId.FIND_FLAG and logged_in and unscanned_filesystems:
+        if action.id == AttackerActionId.FIND_FLAG and logged_in and unscanned_filesystems:
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == ActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
+        if action.id == AttackerActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == ActionId.SSH_BACKDOOR and logged_in and root_login and machine_w_tools and uninstalled_backdoor:
+        if action.id == AttackerActionId.SSH_BACKDOOR and logged_in and root_login and machine_w_tools and uninstalled_backdoor:
             return True
 
         return False
@@ -429,7 +508,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_config.emulation_config.close()
 
 
-    def convert_ar_action(self, machine_idx, action_idx):
+    def attacker_convert_ar_action(self, machine_idx, action_idx):
         """
         Converts an AR action id into a global action id
 
@@ -438,12 +517,12 @@ class PyCRCTFEnv(gym.Env, ABC):
         :return: the global action id
         """
         key = (machine_idx, action_idx)
-        print(self.env_config.action_conf.ar_action_converter)
-        return self.env_config.action_conf.ar_action_converter[key]
+        print(self.env_config.attacker_action_conf.ar_action_converter)
+        return self.env_config.attacker_action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
 
-    def __update_log(self, action : Action) -> None:
+    def __update_log(self, action : AttackerAction) -> None:
         """
         Updates the log for rendering with a new action
 
@@ -456,7 +535,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 tag = str(action.ip.rsplit(".", 1)[-1])
         else:
             tag = "*"
-        self.agent_state.env_log.add_entry(action.name + "[." + tag + "]" + " c:" + str(action.cost))
+        self.attacker_agent_state.env_log.add_entry(action.name + "[." + tag + "]" + " c:" + str(action.cost))
 
     def __setup_viewer(self):
         """
@@ -468,7 +547,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path
-        self.viewer = Viewer(env_config=self.env_config, init_state=self.agent_state)
+        self.viewer = Viewer(env_config=self.env_config, init_state=self.attacker_agent_state)
         self.viewer.start()
 
     def __checkpoint_log(self) -> None:
@@ -478,10 +557,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         :return: None
         """
         if not self.env_config.checkpoint_dir == None \
-                and self.agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
-            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_agent.log"
+                and self.attacker_agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
+            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.attacker_agent_state.num_episodes) + "_agent.log"
             with open(file_path, "w") as outfile:
-                outfile.write("\n".join(self.agent_state.env_log.log))
+                outfile.write("\n".join(self.attacker_agent_state.env_log.log))
 
     def __checkpoint_trajectories(self) -> None:
         """
@@ -490,14 +569,14 @@ class PyCRCTFEnv(gym.Env, ABC):
         :return: None
         """
         if self.env_config.save_trajectories and not self.env_config.checkpoint_dir == None \
-                and self.agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
-            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.agent_state.num_episodes) + "_trajectories.pickle"
+                and self.attacker_agent_state.num_episodes % self.env_config.checkpoint_freq == 0:
+            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.attacker_agent_state.num_episodes) + "_trajectories.pickle"
             with open(file_path, "wb") as outfile:
-                pickle.dump(self.trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
-                self.trajectories = []
+                pickle.dump(self.attacker_trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
+                self.attacker_trajectories = []
 
     @staticmethod
-    def _is_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
+    def _is_attack_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
         """
         Utility method to check if a m_selection action is legal for AR policies
 
@@ -519,7 +598,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         return False
 
     @staticmethod
-    def _is_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int) \
+    def _is_attack_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int) \
             -> bool:
         """
         Utility method to check if a machine-specific action is legal or not for AR-policies
@@ -530,11 +609,11 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param machine_index: index of the machine to apply the action to
         :return: True if legal else False
         """
-        action_id_id = env_config.action_conf.action_ids[action_id]
+        action_id_id = env_config.attacker_action_conf.action_ids[action_id]
         key = (action_id_id, machine_index)
-        if key not in env_config.action_conf.action_lookup_d:
+        if key not in env_config.attacker_action_conf.action_lookup_d:
             return False
-        action = env_config.action_conf.action_lookup_d[(action_id_id, machine_index)]
+        action = env_config.attacker_action_conf.action_lookup_d[(action_id_id, machine_index)]
         logged_in = False
         for m in env_state.attacker_obs_state.machines:
             if m.logged_in:
@@ -543,10 +622,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         if machine_index == env_config.num_nodes:
             if action.subnet or action.index == env_config.num_nodes:
                 # Recon an exploits are always legal
-                if action.type == ActionType.RECON or action.type == ActionType.EXPLOIT:
+                if action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT:
                     return True
                 # Bash action not tied to specific IP only possible when having shell access and being logged in
-                if action.id == ActionId.FIND_FLAG and logged_in:
+                if action.id == AttackerActionId.FIND_FLAG and logged_in:
                     return True
                 return False
             else:
@@ -556,7 +635,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 return False
             else:
                 # Recon an exploits are always legal
-                if action.type == ActionType.RECON or action.type == ActionType.EXPLOIT:
+                if action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT:
                     return True
 
                 if machine_index < len(env_state.attacker_obs_state.machines):
@@ -564,11 +643,11 @@ class PyCRCTFEnv(gym.Env, ABC):
                     target_machine = env_state.attacker_obs_state.machines[machine_index]
 
                     # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
-                    if action.type == ActionType.POST_EXPLOIT and target_machine.shell_access \
+                    if action.type == AttackerActionType.POST_EXPLOIT and target_machine.shell_access \
                             and len(target_machine.shell_access_credentials) > 0:
                         return True
 
                     # Bash action not tied to specific IP only possible when having shell access and being logged in
-                    if action.id == ActionId.FIND_FLAG and logged_in:
+                    if action.id == AttackerActionId.FIND_FLAG and logged_in:
                         return True
         return False

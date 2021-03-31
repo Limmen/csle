@@ -24,12 +24,12 @@ import numpy as np
 import sys
 from gym_pycr_ctf.envs.rendering.frames.main_frame import MainFrame
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.agent.agent_state import AgentState
+from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.envs import PyCRCTFEnv
 
 class Viewer():
 
-    def __init__(self, env_config: EnvConfig, init_state : AgentState):
+    def __init__(self, env_config: EnvConfig, init_state : AttackerAgentState):
         """
         Initialize the viewer
 

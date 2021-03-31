@@ -67,8 +67,8 @@ class QNetwork(BasePolicy):
         q_values = self.forward(observation)
 
         # Masking legal actions
-        actions = list(range(env_config.action_conf.num_actions))
-        legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
+        actions = list(range(env_config.attacker_action_conf.num_actions))
+        legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
             action, env_config=env_config, env_state=env_state), actions))
 
         # Greedy actions

@@ -155,7 +155,7 @@ class DomainRandomizer:
         env_config.num_flags = len(flags_lookup)
         env_config.blacklist_ips = [subnet_prefix + ".1"]
         #env_config.num_nodes = len(randomized_nodes)
-        for a in env_config.action_conf.actions:
+        for a in env_config.attacker_action_conf.actions:
             if a.subnet:
                 a.ip = subnet_mask
         return randomized_network_conf, env_config

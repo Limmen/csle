@@ -209,16 +209,16 @@ def check_for_correct_spaces(env: GymEnv, observation_space: gym.spaces.Space, a
     :param action_space: (gym.spaces.Space) Action space to check against
     """
     if (
-        observation_space != env.observation_space
+        observation_space != env.attacker_observation_space
         # Special cases for images that need to be transposed
         and not (
-            is_image_space(env.observation_space)
-            and observation_space == VecTransposeImage.transpose_space(env.observation_space)
+            is_image_space(env.attacker_observation_space)
+            and observation_space == VecTransposeImage.transpose_space(env.attacker_observation_space)
         )
     ):
-        raise ValueError(f"Observation spaces do not match: {observation_space} != {env.observation_space}")
-    if action_space != env.action_space:
-        raise ValueError(f"Action spaces do not match: {action_space} != {env.action_space}")
+        raise ValueError(f"Observation spaces do not match: {observation_space} != {env.attacker_observation_space}")
+    if action_space != env.attacker_action_space:
+        raise ValueError(f"Action spaces do not match: {action_space} != {env.attacker_action_space}")
 
 
 def is_vectorized_observation(observation: np.ndarray, observation_space: gym.spaces.Space) -> bool:

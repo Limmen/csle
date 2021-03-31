@@ -17,7 +17,7 @@ def test_env(env_name : str, num_steps : int):
     env.reset()
     FindPiStar.brute_force(env.env_config, env)
 
-    # num_actions = env.env_config.action_conf.num_actions
+    # num_actions = env.env_config.attacker_action_conf.num_actions
     # actions = np.array(list(range(num_actions)))
     # print("num actions:{}".format(num_actions))
     # tot_rew = 0

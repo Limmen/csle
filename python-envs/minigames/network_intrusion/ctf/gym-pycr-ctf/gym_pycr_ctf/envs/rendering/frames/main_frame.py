@@ -8,8 +8,8 @@ from gym_pycr_ctf.envs.rendering.util.render_util import batch_rect_fill, batch_
     create_circle_fill, batch_rect_border
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.agent.agent_state import AgentState
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 class MainFrame(pyglet.window.Window):
@@ -19,7 +19,7 @@ class MainFrame(pyglet.window.Window):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EnvConfig, init_state : AgentState, env: PyCRCTFEnv = None):
+    def __init__(self, env_config: EnvConfig, init_state : AttackerAgentState, env: PyCRCTFEnv = None):
         """
         Initialize frame
         :param env_config: trhe environment config
@@ -88,7 +88,7 @@ class MainFrame(pyglet.window.Window):
         nodes_to_coords[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = (self.width/2+20,self.height-35)
         coords.append((self.width/2+20,self.height-35))
         self.node_ip_to_coords[self.env_config.hacker_ip] = (self.width / 2 + 20, self.height - 35)
-        hacker_m = MachineObservationState(ip=self.env_config.hacker_ip)
+        hacker_m = AttackerMachineObservationState(ip=self.env_config.hacker_ip)
         self.node_ip_to_node[self.env_config.hacker_ip] = hacker_m
         self.id_to_node[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = hacker_m
         self.node_ip_to_idx[self.env_config.hacker_ip] = self.node_idx
@@ -165,7 +165,7 @@ class MainFrame(pyglet.window.Window):
         nodes_to_coords[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = (self.width / 2 + 20, self.height - 60)
         coords.append((self.width / 2 + 20, self.height - 60))
         self.node_ip_to_coords[self.env_config.router_ip] = (self.width / 2 + 20, self.height - 60)
-        machine = MachineObservationState(ip=self.env_config.router_ip)
+        machine = AttackerMachineObservationState(ip=self.env_config.router_ip)
         self.node_ip_to_node[self.env_config.router_ip] = machine
         self.id_to_node[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = machine
         self.node_ip_to_idx[self.env_config.router_ip] = self.node_idx
@@ -314,9 +314,9 @@ class MainFrame(pyglet.window.Window):
 
         y = y-15
         labels = ["m", "ip", "os"]
-        for i in range(self.state.obs_state.num_ports):
+        for i in range(self.state.attacker_obs_state.num_ports):
             labels.append("p" + str(i))
-        for i in range(self.state.obs_state.num_vuln):
+        for i in range(self.state.attacker_obs_state.num_vuln):
             labels.append("v" + str(i))
 
         labels.append("#o_p")
@@ -327,7 +327,7 @@ class MainFrame(pyglet.window.Window):
         labels.append("root")
         labels.append("flags")
 
-        for i in range(self.state.obs_state.num_sh):
+        for i in range(self.state.attacker_obs_state.num_sh):
             labels.append("sh_" + str(i))
 
         labels.append("tools")
@@ -567,7 +567,7 @@ class MainFrame(pyglet.window.Window):
                 self.env.reset()
         elif symbol == pyglet.window.key.TAB:
             if self.env is not None:
-                self.env.env_config.action_conf.print_actions()
+                self.env.env_config.attacker_action_conf.print_actions()
         elif modifiers is 18 and pyglet.window.key.MOD_CTRL and int(symbol) is pyglet.window.key.V:
             self.state.manual_action = pyperclip.paste()
 
@@ -590,7 +590,7 @@ class MainFrame(pyglet.window.Window):
     def update_flags(self):
         for sp_fl in self.flags_sprites:
             match = False
-            for machine in self.state.obs_state.machines:
+            for machine in self.state.attacker_obs_state.machines:
                 if sp_fl[1] == machine.ip and len(machine.flags_found) > 0:
                     match = True
             sp_fl[0].visible = match
@@ -686,7 +686,7 @@ class MainFrame(pyglet.window.Window):
 
         drawn_links = set()
         new_machine_links = False
-        for x in self.state.obs_state.machines:
+        for x in self.state.attacker_obs_state.machines:
             if x.ip not in self.node_ip_to_coords:
                 self.add_new_node_to_gui(x)
             if x.ip not in self.node_ip_to_links:
@@ -695,7 +695,7 @@ class MainFrame(pyglet.window.Window):
         if new_machine_links:
             self.add_new_links_to_gui()
 
-        for x in self.state.obs_state.machines:
+        for x in self.state.attacker_obs_state.machines:
             machine = self.node_ip_to_node[x.ip]
             if machine.ip == self.env_config.hacker_ip:
                 continue
@@ -723,7 +723,7 @@ class MainFrame(pyglet.window.Window):
                 self.adj_matrix_rows[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
                 reachable = machine.reachable.copy()
                 if machine.ip == self.env_config.router_ip:
-                    reachable = machine.reachable.union(self.state.obs_state.agent_reachable)
+                    reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
                 for machine2 in reachable:
                     if machine.ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
                         self.adj_matrix_labels[self.node_ip_to_idx[machine.ip]][self.node_ip_to_idx[machine2]].text = "1"
@@ -750,15 +750,15 @@ class MainFrame(pyglet.window.Window):
         # Make this window the current OpenGL rendering context
         self.switch_to()
 
-    def set_state(self, state : AgentState) -> None:
+    def set_state(self, state : AttackerAgentState) -> None:
         """
         Sets the render state
 
         :param state: the new state
         :return: None
         """
-        num_nodes = len(state.obs_state.machines)
-        num_nodes_prev = len(self.state.obs_state.machines)
+        num_nodes = len(state.attacker_obs_state.machines)
+        num_nodes_prev = len(self.state.attacker_obs_state.machines)
         self.state = state
         self.state.initialize_render_state()
 
@@ -781,7 +781,7 @@ class MainFrame(pyglet.window.Window):
         :return: None
         """
         if self.env_config.manual_play and self.env is not None:
-            self.set_state(self.env.agent_state)
+            self.set_state(self.env.attacker_agent_state)
         else:
             self.set_state(self.state)
         self.on_draw()
@@ -789,7 +789,7 @@ class MainFrame(pyglet.window.Window):
     def reset_state(self):
         self.node_ip_to_links = {}
 
-    def add_new_node_to_gui(self, machine: MachineObservationState):
+    def add_new_node_to_gui(self, machine: AttackerMachineObservationState):
         try:
             lbl, flag_sprite, (x, y) = self.gui_queue.pop()
             self.node_ip_to_ip_lbl[machine.ip] = lbl
@@ -821,13 +821,13 @@ class MainFrame(pyglet.window.Window):
                             machine.reachable.add(self.env_config.hacker_ip)
                             machine.reachable.add(self.env_config.router_ip)
 
-        for machine in self.state.obs_state.machines:
+        for machine in self.state.attacker_obs_state.machines:
             machine1_links = []
             #print("self.node_ip_to_coords:{}".format(self.node_ip_to_coords))
             coords1 = self.node_ip_to_coords[machine.ip]
             reachable = machine.reachable.copy()
             if machine.ip == self.env_config.router_ip:
-                reachable = machine.reachable.union(self.state.obs_state.agent_reachable)
+                reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
             for machine2 in reachable:
                 if machine2 not in self.node_ip_to_node:
                     continue

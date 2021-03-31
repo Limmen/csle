@@ -1,11 +1,8 @@
 import numpy as np
 import zipfile
 import matplotlib.pyplot as plt
-import sys
-from scipy import *
-from gym_pycr_ctf.envs.config.level_1.pycr_ctf_level_1_base import PyCrCTFLevel1Base
-from gym_pycr_ctf.dao.action.action_type import ActionType
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 import glob
 import pandas as pd
 
@@ -45,7 +42,7 @@ def read_action_costs(zip_file: str, num_bins = 100, factors = None):
         num_nodes = len(cf.rsplit('/', 1)[1].rsplit("_"))-3
         if num_nodes < 1:
             num_nodes = 1
-        action_id = ActionId(action_id_value)
+        action_id = AttackerActionId(action_id_value)
         cost_txt = archive.read(cf)
         try:
             cost=float(cost_txt.decode().replace("\n",""))
@@ -73,7 +70,7 @@ def read_action_alerts(zip_file: str, num_bins = 100):
     total_priority = []
     for af in alerts_files:
         action_id_value = int(af.rsplit('/', 1)[1].rsplit("_")[0])
-        action_id = ActionId(action_id_value)
+        action_id = AttackerActionId(action_id_value)
         alert_txt = archive.read(af)
         try:
             alert_txt = alert_txt.decode().replace("\n", "")
@@ -89,9 +86,9 @@ def read_action_alerts(zip_file: str, num_bins = 100):
 def plot_action_types_pie(action_conf):
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
-    num_recon_actions = len(list(filter(lambda x: x.type == ActionType.RECON, action_conf.actions)))
-    num_exploit_actions = len(list(filter(lambda x: x.type == ActionType.EXPLOIT or x.type == ActionType.PRIVILEGE_ESCALATION, action_conf.actions)))
-    num_post_exp_actions = len(list(filter(lambda x: x.type == ActionType.POST_EXPLOIT, action_conf.actions)))
+    num_recon_actions = len(list(filter(lambda x: x.type == AttackerActionType.RECON, action_conf.actions)))
+    num_exploit_actions = len(list(filter(lambda x: x.type == AttackerActionType.EXPLOIT or x.type == AttackerActionType.PRIVILEGE_ESCALATION, action_conf.actions)))
+    num_post_exp_actions = len(list(filter(lambda x: x.type == AttackerActionType.POST_EXPLOIT, action_conf.actions)))
     labels = 'Reconnaissance', 'Exploits', 'Post-Exploits'
     sizes = [num_recon_actions, num_exploit_actions, num_post_exp_actions]
 

@@ -1,6 +1,6 @@
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs.logic.transition_operator import TransitionOperator
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
 class FindPiStar:
 
@@ -16,7 +16,7 @@ class FindPiStar:
         env.reset(soft=True)
         p = p[0]
         for n in p:
-            for a in env_config.action_conf.actions:
+            for a in env_config.attacker_action_conf.actions:
                 a.ip = env.env_state.attacker_obs_state.get_action_ip(a)
                 s_prime, reward, done = TransitionOperator.attacker_transition(s=env.env_state, attacker_action=a, env_config=env_config)
                 if n in list(map(lambda x: x.ip, s_prime.attacker_obs_state.machines)):
@@ -37,16 +37,16 @@ class FindPiStar:
         paths = []
         shell_access = False
         old_state = env.env_state.copy()
-        for k in env.env_state.obs_state.machines:
+        for k in env.env_state.attacker_obs_state.machines:
             if k.ip == current_node and k.shell_access:
                 shell_access = True
         if not shell_access:
-            for a in env_config.action_conf.actions:
+            for a in env_config.attacker_action_conf.actions:
                 env.reset(soft=True)
                 env.env_state = old_state.copy()
                 k_path = path
                 a_rew = rew
-                a.ip = env.env_state.obs_state.get_action_ip(a)
+                a.ip = env.env_state.attacker_obs_state.get_action_ip(a)
                 s_prime, reward, done = TransitionOperator.attacker_transition(s=env.env_state, attacker_action=a, env_config=env_config)
                 for k in s_prime.attacker_obs_state.machines:
                     if k.ip == current_node:
@@ -70,12 +70,12 @@ class FindPiStar:
                                     env.reset(soft=True)
                                     env.env_state = old_state2.copy()
                                     a_rew2 = a_rew
-                                    if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
+                                    if n not in list(map(lambda x: x.ip, env.env_state.attacker_obs_state.machines)):
                                         old_state3 = env.env_state.copy()
-                                        for a in env_config.action_conf.actions:
+                                        for a in env_config.attacker_action_conf.actions:
                                             env.reset(soft=True)
                                             env.env_state = old_state3.copy()
-                                            a.ip = env.env_state.obs_state.get_action_ip(a)
+                                            a.ip = env.env_state.attacker_obs_state.get_action_ip(a)
                                             s_prime, reward, done = TransitionOperator.attacker_transition(s=env.env_state, attacker_action=a,
                                                                                                            env_config=env_config)
                                             if n in list(map(lambda x: x.ip, s_prime.attacker_obs_state.machines)):
@@ -116,12 +116,12 @@ class FindPiStar:
                     env.reset(soft=True)
                     env.env_state = old_state.copy()
                     a_rew2 = a_rew
-                    if n not in list(map(lambda x: x.ip, env.env_state.obs_state.machines)):
+                    if n not in list(map(lambda x: x.ip, env.env_state.attacker_obs_state.machines)):
                         old_state2 = env.env_state.copy()
-                        for a in env_config.action_conf.actions:
+                        for a in env_config.attacker_action_conf.actions:
                             env.reset(soft=True)
                             env.env_state = old_state2.copy()
-                            a.ip = env.env_state.obs_state.get_action_ip(a)
+                            a.ip = env.env_state.attacker_obs_state.get_action_ip(a)
                             s_prime, reward, done = TransitionOperator.attacker_transition(s=env.env_state, attacker_action=a,
                                                                                            env_config=env_config)
                             if n in list(map(lambda x: x.ip, s_prime.attacker_obs_state.machines)):
@@ -150,20 +150,20 @@ class FindPiStar:
     def pivot_actions(env_config):
         pivot_actions = []
 
-        for a in env_config.action_conf.actions:
-            if a.id == ActionId.NETWORK_SERVICE_LOGIN:
+        for a in env_config.attacker_action_conf.actions:
+            if a.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
                 pivot_actions.append(a)
 
-        for a in env_config.action_conf.actions:
-            if a.id == ActionId.FIND_FLAG:
+        for a in env_config.attacker_action_conf.actions:
+            if a.id == AttackerActionId.FIND_FLAG:
                 pivot_actions.append(a)
 
-        for a in env_config.action_conf.actions:
-            if a.id == ActionId.INSTALL_TOOLS:
+        for a in env_config.attacker_action_conf.actions:
+            if a.id == AttackerActionId.INSTALL_TOOLS:
                 pivot_actions.append(a)
 
-        for a in env_config.action_conf.actions:
-            if a.id == ActionId.SSH_BACKDOOR:
+        for a in env_config.attacker_action_conf.actions:
+            if a.id == AttackerActionId.SSH_BACKDOOR:
                 pivot_actions.append(a)
         return pivot_actions
 

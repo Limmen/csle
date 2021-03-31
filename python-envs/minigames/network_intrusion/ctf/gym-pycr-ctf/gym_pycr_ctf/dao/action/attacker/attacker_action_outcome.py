@@ -3,7 +3,7 @@ Type of action outcomes in the pycr-ctf environment
 """
 from enum import Enum
 
-class ActionOutcome(Enum):
+class AttackerActionOutcome(Enum):
     """
     Enum representing the different attack outcomes in the network.
     """

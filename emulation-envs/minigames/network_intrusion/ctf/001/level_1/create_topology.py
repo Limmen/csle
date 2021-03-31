@@ -50,9 +50,9 @@ def default_topology() -> Topology:
                            default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
     node_6 = NodeFirewallConfig(ip="172.18.1.191",
                        output_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                          "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1", "172.18.1.254"]),
+                                          "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                        input_accept=set(["172.18.1.2", "172.18.1.3", "172.18.1.21",
-                                         "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1", "172.18.1.254"]),
+                                         "172.18.1.79", "172.18.1.191", "172.18.1.10", "172.18.1.1"]),
                        forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                        default_input="DROP", default_output="DROP", default_forward="DROP", default_gw="172.18.1.10")
     node_7 = NodeFirewallConfig(ip="172.18.1.254",
@@ -62,7 +62,7 @@ def default_topology() -> Topology:
                                                   "172.18.1.79", "172.18.1.10", "172.18.1.1"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input="ACCEPT", default_output="ACCEPT", default_forward="ACCEPT",
+                                default_input="DROP", default_output="DROP", default_forward="DROP",
                                 default_gw="172.18.1.10")
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7]
     topology = Topology(node_configs=node_configs, subnetwork = "172.18.1.0/24")

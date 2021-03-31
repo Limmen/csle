@@ -4,7 +4,7 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.envs.logic.emulation.emulation_middleware import EmulationMiddleware
 from gym_pycr_ctf.envs.logic.simulation.simulator import Simulator
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
 class TransitionOperator:
     """
@@ -14,7 +14,7 @@ class TransitionOperator:
     """
 
     @staticmethod
-    def attacker_transition(s : EnvState, attacker_action : Action, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for attack actions,
         supporting both simulation and emulation mode

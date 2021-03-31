@@ -1,16 +1,16 @@
 from typing import List
-from gym_pycr_ctf.dao.action.action_type import ActionType
-from gym_pycr_ctf.dao.action.action_id import ActionId
-from gym_pycr_ctf.dao.action.action_outcome import ActionOutcome
+from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 import gym_pycr_ctf.constants.constants as constants
 
-class Action:
+class AttackerAction:
     """
-    Class representing an action in the environment
+    Class representing an action of the attacker in the environment
     """
-    def __init__(self, id : ActionId, name :str, cmd : List[str], type: ActionType, descr: str, cost: float,
+    def __init__(self, id : AttackerActionId, name :str, cmd : List[str], type: AttackerActionType, descr: str, cost: float,
                  noise : float, ip :str, index: int, subnet : bool = False,
-                 action_outcome: ActionOutcome = ActionOutcome.INFORMATION_GATHERING,
+                 action_outcome: AttackerActionOutcome = AttackerActionOutcome.INFORMATION_GATHERING,
                  vulnerability: str = None, alt_cmd = List[str], alerts = None):
         """
         Class constructor

@@ -1,7 +1,7 @@
 from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
 
 class DefenseSensorMiddleware:
@@ -11,7 +11,7 @@ class DefenseSensorMiddleware:
     """
 
     @staticmethod
-    def get_observation(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def get_observation(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Extract the latest defender-observation from the emulation and combines it with the current belief state
 

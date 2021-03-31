@@ -1,7 +1,7 @@
 from typing import List
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
 class AttackerObservationState:
     """
@@ -13,7 +13,7 @@ class AttackerObservationState:
         self.num_machines = num_machines
         self.num_ports = num_ports
         self.num_vuln = num_vuln
-        self.machines : List[MachineObservationState] = []
+        self.machines : List[AttackerMachineObservationState] = []
         self.detected = False
         self.all_flags = False
         self.num_sh = num_sh
@@ -34,7 +34,7 @@ class AttackerObservationState:
             m.cleanup()
 
 
-    def get_action_ip(self, a : Action):
+    def get_action_ip(self, a : AttackerAction):
         if a.index == -1:
             self.sort_machines()
             ips = list(map(lambda x: x.ip, self.machines))
@@ -44,67 +44,67 @@ class AttackerObservationState:
             return self.machines[a.index].ip
         return a.ip
 
-    def exploit_tried(self, a: Action, m: MachineObservationState):
+    def exploit_tried(self, a: AttackerAction, m: AttackerMachineObservationState):
         # Known issue with subnet attacks and NMAP: https://github.com/nmap/nmap/issues/1321
         if m is not None:
-            if (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ssh_brute_tried
 
-            if (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.telnet_brute_tried
 
-            if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ftp_brute_tried
 
-            if (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.cassandra_brute_tried
 
-            if (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.irc_brute_tried
 
-            if (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mongo_brute_tried
 
-            if (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mysql_brute_tried
 
-            if (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.smtp_brute_tried
 
-            if (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL
+                or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.postgres_brute_tried
 
-            if a.id == ActionId.SAMBACRY_EXPLOIT:
+            if a.id == AttackerActionId.SAMBACRY_EXPLOIT:
                 return m.sambacry_tried
 
-            if a.id == ActionId.SHELLSHOCK_EXPLOIT:
+            if a.id == AttackerActionId.SHELLSHOCK_EXPLOIT:
                 return m.shellshock_tried
 
-            if a.id == ActionId.DVWA_SQL_INJECTION:
+            if a.id == AttackerActionId.DVWA_SQL_INJECTION:
                 return m.dvwa_sql_injection_tried
 
-            if a.id == ActionId.CVE_2015_3306_EXPLOIT:
+            if a.id == AttackerActionId.CVE_2015_3306_EXPLOIT:
                 return m.cve_2015_3306_tried
 
-            if a.id == ActionId.CVE_2015_1427_EXPLOIT:
+            if a.id == AttackerActionId.CVE_2015_1427_EXPLOIT:
                 return m.cve_2015_1427_tried
 
-            if a.id == ActionId.CVE_2016_10033_EXPLOIT:
+            if a.id == AttackerActionId.CVE_2016_10033_EXPLOIT:
                 return m.cve_2016_10033_tried
 
-            if a.id == ActionId.CVE_2010_0426_PRIV_ESC:
+            if a.id == AttackerActionId.CVE_2010_0426_PRIV_ESC:
                 return m.cve_2010_0426_tried
 
-            if a.id == ActionId.CVE_2015_5602_PRIV_ESC:
+            if a.id == AttackerActionId.CVE_2015_5602_PRIV_ESC:
                 return m.cve_2015_5602_tried
 
             return False

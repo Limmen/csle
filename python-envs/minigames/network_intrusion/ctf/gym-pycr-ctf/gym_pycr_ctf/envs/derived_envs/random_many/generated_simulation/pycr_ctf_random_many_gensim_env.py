@@ -36,22 +36,22 @@ class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
                                                           action_conf=action_conf,
                                                           emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = True
+            env_config.attacker_filter_illegal_actions = True
             env_config.max_episode_length = 200
-            exp_policy = RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions)
-            env_config.exploration_filter_illegal = env_config.filter_illegal_actions
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_filter_illegal = env_config.attacker_filter_illegal_actions
             env_config.simulate_detection = False
-            env_config.exploration_policy = exp_policy
+            env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = True
-            env_config.max_exploration_steps = 1000
-            env_config.max_exploration_trajectories = 100
-            env_config.compute_pi_star = True
-            env_config.use_upper_bound_pi_star = True
+            env_config.attacker_max_exploration_steps = 1000
+            env_config.attacker_max_exploration_trajectories = 100
+            env_config.compute_pi_star_attacker = True
+            env_config.use_upper_bound_pi_star_attacker = True
         super().__init__(env_config=env_config)

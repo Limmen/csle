@@ -7,12 +7,12 @@ def test_env(env_name : str, num_steps : int):
     env = gym.make(env_name, env_config=None)
     env.reset()
 
-    num_actions = env.env_config.action_conf.num_actions
+    num_actions = env.env_config.attacker_action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tau = []
     for i in range(num_steps):
-        legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+        legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         if len(legal_actions) == 0:
             print("tau:{}".format(tau))
         action = np.random.choice(legal_actions)

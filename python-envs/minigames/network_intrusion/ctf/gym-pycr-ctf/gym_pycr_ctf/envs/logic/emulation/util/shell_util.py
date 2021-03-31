@@ -2,12 +2,12 @@ from typing import Tuple, List
 import time
 import random
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.logic.emulation.util.connection_util import ConnectionUtil
@@ -18,8 +18,8 @@ class ShellUtil:
     """
 
     @staticmethod
-    def _find_flag_using_ssh(machine: MachineObservationState, env_config: EnvConfig, a: Action,
-                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+    def _find_flag_using_ssh(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
+                             new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing SSH connections to a specific machine to search the file system for flags
 
@@ -50,7 +50,7 @@ class ShellUtil:
                 cmd = a.cmd[0]
                 if c.root:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
-                for i in range(env_config.ssh_retry_find_flag):
+                for i in range(env_config.attacker_ssh_retry_find_flag):
                     outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                     new_m_obs.filesystem_searched = True
                     if env_config.ids_router:
@@ -62,17 +62,17 @@ class ShellUtil:
                         EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                             action=a, env_config=env_config, ip=machine.ip,
                                                             user=c.username, service=constants.SSH.SERVICE_NAME)
-                        env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                   service=constants.SSH.SERVICE_NAME,
-                                                                   alert=(sum_priority_alerts, num_alerts))
+                        env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                            service=constants.SSH.SERVICE_NAME,
+                                                                            alert=(sum_priority_alerts, num_alerts))
 
                     EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
                                                        env_config=env_config, ip=machine.ip,
                                                        user=c.username,
                                                        service=constants.SSH.SERVICE_NAME)
-                    env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                          service=constants.SSH.SERVICE_NAME,
-                                                          cost=float(total_time))
+                    env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                   service=constants.SSH.SERVICE_NAME,
+                                                                   cost=float(total_time))
                     outdata_str = outdata.decode()
                     flag_paths = outdata_str.split("\n")
                     flag_paths = list(filter(lambda x: x != '', flag_paths))
@@ -98,18 +98,18 @@ class ShellUtil:
                     new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
 
             # Update cost
-            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
-                                                   service=constants.SSH.SERVICE_NAME):
-                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                             service=constants.SSH.SERVICE_NAME)
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                            service=constants.SSH.SERVICE_NAME):
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                      service=constants.SSH.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
-                                                                                 user=c.username,
-                                                                                 service=constants.SSH.SERVICE_NAME):
-                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                    service=constants.SSH.SERVICE_NAME)
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                          user=c.username,
+                                                                                          service=constants.SSH.SERVICE_NAME):
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                             service=constants.SSH.SERVICE_NAME)
                 total_alerts = alerts
 
             if c.root:
@@ -118,8 +118,8 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
-    def _find_flag_using_telnet(machine: MachineObservationState, env_config: EnvConfig, a: Action,
-                                new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+    def _find_flag_using_telnet(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
+                                new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing Telnet connections to a specific machine to search the file system for flags
 
@@ -166,17 +166,17 @@ class ShellUtil:
                                                         action=a, env_config=env_config, ip=machine.ip,
                                                         user=c.username,
                                                         service=constants.TELNET.SERVICE_NAME)
-                    env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                               service=constants.TELNET.SERVICE_NAME,
-                                                               alert=(sum_priority_alerts, num_alerts))
+                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                        service=constants.TELNET.SERVICE_NAME,
+                                                                        alert=(sum_priority_alerts, num_alerts))
 
                 EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
                                                    env_config=env_config, ip=machine.ip,
                                                    user=c.username,
                                                    service=constants.TELNET.SERVICE_NAME)
-                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                      service=constants.TELNET.SERVICE_NAME,
-                                                      cost=float(total_time))
+                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                               service=constants.TELNET.SERVICE_NAME,
+                                                               cost=float(total_time))
                 flag_paths = response.decode().strip().split("\r\n")
                 # Persist cache
                 EmulationUtil.write_file_system_scan_cache(action=a, env_config=env_config,
@@ -189,18 +189,18 @@ class ShellUtil:
                     new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
 
             # Update cost
-            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
-                                                   service=constants.TELNET.SERVICE_NAME):
-                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                             service=constants.TELNET.SERVICE_NAME)
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                            service=constants.TELNET.SERVICE_NAME):
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                      service=constants.TELNET.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
-                                                                                 user=c.username,
-                                                                                 service=constants.TELNET.SERVICE_NAME):
-                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                    service=constants.TELNET.SERVICE_NAME)
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                          user=c.username,
+                                                                                          service=constants.TELNET.SERVICE_NAME):
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                             service=constants.TELNET.SERVICE_NAME)
                 total_alerts = alerts
 
             if c.root:
@@ -209,8 +209,8 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
-    def _find_flag_using_ftp(machine: MachineObservationState, env_config: EnvConfig, a: Action,
-                             new_m_obs: MachineObservationState) -> Tuple[MachineObservationState, float, bool]:
+    def _find_flag_using_ftp(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
+                             new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing FTP connections to a specific machine to search the file system for flags
 
@@ -236,7 +236,7 @@ class ShellUtil:
                 flag_paths = EmulationUtil.parse_file_scan_file(file_name=cache_file,
                                                                 env_config=env_config)
             else:
-                for i in range(env_config.ftp_retry_find_flag):
+                for i in range(env_config.attacker_ftp_retry_find_flag):
                     cmd = a.alt_cmd[0] + "\n"
                     if c.root:
                         cmd = constants.COMMANDS.SUDO + " " + cmd
@@ -276,18 +276,18 @@ class ShellUtil:
                                                                         action=a, env_config=env_config, ip=machine.ip,
                                                                         user=c.username,
                                                                         service=constants.FTP.SERVICE_NAME)
-                                    env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip,
-                                                                               user=c.username,
-                                                                               service=constants.FTP.SERVICE_NAME,
-                                                                               alert=(sum_priority_alerts, num_alerts))
+                                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip,
+                                                                                        user=c.username,
+                                                                                        service=constants.FTP.SERVICE_NAME,
+                                                                                        alert=(sum_priority_alerts, num_alerts))
 
                                 EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
                                                                    env_config=env_config, ip=machine.ip,
                                                                    user=c.username,
                                                                    service=constants.FTP.SERVICE_NAME)
-                                env_config.action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                      service=constants.FTP.SERVICE_NAME,
-                                                                      cost=float(total_time))
+                                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                               service=constants.FTP.SERVICE_NAME,
+                                                                               cost=float(total_time))
                         else:
                             break
 
@@ -318,18 +318,18 @@ class ShellUtil:
                     new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
 
             # Update cost
-            if env_config.action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
-                                                   service=constants.FTP.SERVICE_NAME):
-                cost = env_config.action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                             service=constants.FTP.SERVICE_NAME)
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+                                                            service=constants.FTP.SERVICE_NAME):
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                      service=constants.FTP.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
-                                                                                 user=c.username,
-                                                                                 service=constants.FTP.SERVICE_NAME):
-                alerts = env_config.action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                    service=constants.FTP.SERVICE_NAME)
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+                                                                                          user=c.username,
+                                                                                          service=constants.FTP.SERVICE_NAME):
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                             service=constants.FTP.SERVICE_NAME)
                 total_alerts = alerts
 
             if c.root:
@@ -369,7 +369,7 @@ class ShellUtil:
                 "will be installed" in result or "already installed" in result or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EnvState, a: Action, env_config: EnvConfig) -> bool:
+    def install_tools_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> bool:
         """
         Uses compromised machines with root access to install tools
 
@@ -382,7 +382,7 @@ class ShellUtil:
         total_cost = 0
         total_alerts = (0, 0)
         for machine in s.attacker_obs_state.machines:
-            new_m_obs = MachineObservationState(ip=machine.ip)
+            new_m_obs = AttackerMachineObservationState(ip=machine.ip)
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
@@ -391,8 +391,8 @@ class ShellUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     key = (machine.ip, c.username)
-                    if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
-                        cache_m_obs, cost = env_config.user_command_cache.get(key)
+                    if env_config.attacker_use_user_command_cache and env_config.attacker_user_command_cache.get(key) is not None:
+                        cache_m_obs, cost = env_config.attacker_user_command_cache.get(key)
                         new_m_obs.tools_installed = cache_m_obs.tools_installed
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
@@ -412,9 +412,9 @@ class ShellUtil:
                         cmd = a.cmd[0]
                         if env_config.ids_router:
                             last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-                        for i in range(env_config.retry_install_tools):
+                        for i in range(env_config.attacker_retry_install_tools):
                             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
-                            time.sleep(env_config.install_tools_sleep_seconds)
+                            time.sleep(env_config.attacker_install_tools_sleep_seconds)
                             outdata = outdata.decode()
                             ssh_cost += float(total_time)
                             if ShellUtil._parse_tools_installed_check_result(result=outdata):
@@ -442,23 +442,23 @@ class ShellUtil:
                             EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                                 action=a, env_config=env_config, ip=machine.ip,
                                                                 user=c.username)
-                            env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                       service=constants.SSH.SERVICE_NAME,
-                                                                       alert=ssh_alerts)
+                            env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                                service=constants.SSH.SERVICE_NAME,
+                                                                                alert=ssh_alerts)
                             total_alerts = (total_alerts[0] + ssh_alerts[0], total_alerts[1] + ssh_alerts[1])
                         EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
                                                            env_config=env_config, ip=machine.ip,
                                                            user=c.username)
-                        env_config.action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                 cost=float(total_time))
+                        env_config.attacker_action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                          cost=float(total_time))
                         # Persist cache
                         EmulationUtil.write_user_command_cache(action=a, env_config=env_config, user=c.username,
                                                                result=str(int(installed)), ip=machine.ip)
 
                     new_machines_obs.append(new_m_obs)
                     # Update cache
-                    if env_config.use_user_command_cache:
-                        env_config.user_command_cache.add(key, (new_m_obs, total_cost))
+                    if env_config.attacker_use_user_command_cache:
+                        env_config.attacker_user_command_cache.add(key, (new_m_obs, total_cost))
 
                     if installed:
                         break
@@ -473,8 +473,8 @@ class ShellUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     key = (machine.ip, c.username)
-                    if env_config.use_user_command_cache and env_config.user_command_cache.get(key) is not None:
-                        cache_m_obs, cost = env_config.user_command_cache.get(key)
+                    if env_config.attacker_use_user_command_cache and env_config.attacker_user_command_cache.get(key) is not None:
+                        cache_m_obs, cost = env_config.attacker_user_command_cache.get(key)
                         new_m_obs.tools_installed = cache_m_obs.tools_installed
                         new_machines_obs.append(new_m_obs)
                         total_cost += cost
@@ -497,7 +497,7 @@ class ShellUtil:
                         start = time.time()
                         if env_config.ids_router:
                             last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-                        for i in range(env_config.retry_install_tools):
+                        for i in range(env_config.attacker_retry_install_tools):
                             c.conn.write(cmd.encode())
                             response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
                             response = response.decode()
@@ -534,16 +534,16 @@ class ShellUtil:
                             EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                                 action=a, env_config=env_config, ip=machine.ip,
                                                                 user=c.username, service=constants.TELNET.SERVICE_NAME)
-                            env_config.action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                       service=constants.TELNET.SERVICE_NAME,
-                                                                       alert=telnet_alerts)
+                            env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                                service=constants.TELNET.SERVICE_NAME,
+                                                                                alert=telnet_alerts)
                             total_alerts = (total_alerts[0] + telnet_alerts[0], total_alerts[1] + telnet_alerts[1])
 
                         EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
                                                            env_config=env_config, ip=machine.ip,
                                                            user=c.username)
-                        env_config.action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                 cost=float(total_time))
+                        env_config.attacker_action_costs.install_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                                                          cost=float(total_time))
                         # Persist cache
                         EmulationUtil.write_user_command_cache(action=a, env_config=env_config, user=c.username,
                                                                result=str(int(installed)), ip=machine.ip)
@@ -551,8 +551,8 @@ class ShellUtil:
                     new_machines_obs.append(new_m_obs)
 
                     # Update cache
-                    if env_config.use_user_command_cache:
-                        env_config.user_command_cache.add(key, (new_m_obs, total_cost))
+                    if env_config.attacker_use_user_command_cache:
+                        env_config.attacker_user_command_cache.add(key, (new_m_obs, total_cost))
 
                     if installed:
                         break
@@ -610,7 +610,7 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def execute_ssh_backdoor_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Uses compromised machines with root access to setup SSH backdoor
 
@@ -625,14 +625,14 @@ class ShellUtil:
         total_cost = 0
         total_alerts = (0, 0)
         for machine in s.attacker_obs_state.machines:
-            new_m_obs = MachineObservationState(ip=machine.ip)
+            new_m_obs = AttackerMachineObservationState(ip=machine.ip)
             backdoor_created = False
             if machine.logged_in and machine.root and machine.tools_installed and not machine.backdoor_installed:
                 new_m_obs.backdoor_tried = True
                 # Check cached connections
-                for cr in s.cached_backdoor_credentials.values():
-                    if (machine.ip, cr.username, cr.port) in s.cached_ssh_connections:
-                        conn_dto = s.cached_ssh_connections[(machine.ip, cr.username, cr.port)]
+                for cr in s.attacker_cached_backdoor_credentials.values():
+                    if (machine.ip, cr.username, cr.port) in s.attacker_cached_ssh_connections:
+                        conn_dto = s.attacker_cached_ssh_connections[(machine.ip, cr.username, cr.port)]
                         connection_dto = ConnectionObservationState(conn=conn_dto.conn, username=cr.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
@@ -786,7 +786,7 @@ class ShellUtil:
         return s, reward, False
 
     @staticmethod
-    def execute_service_login_helper(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Executes a service login on the emulation using previously found credentials
 
@@ -847,15 +847,15 @@ class ShellUtil:
             if new_conn_ssh or new_conn_ftp or new_conn_telnet:
                 new_conn = True
 
-            for m in s_prime.obs_state.machines:
+            for m in s_prime.attacker_obs_state.machines:
                 if m.ip == a.ip:
                     m.untried_credentials = False
 
         # Update cost cache
         total_cost = round(total_cost, 1)
         if new_conn:
-            env_config.action_costs.service_add_cost(action_id=a.id, ip=env_config.emulation_config.agent_ip,
-                                                     cost=float(total_cost))
+            env_config.attacker_action_costs.service_add_cost(action_id=a.id, ip=env_config.emulation_config.agent_ip,
+                                                              cost=float(total_cost))
 
         # Update alerts cache
         if env_config.ids_router and new_conn:
@@ -864,18 +864,18 @@ class ShellUtil:
                 fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
             sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
             num_alerts = len(fast_logs)
-            env_config.action_alerts.add_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip,
-                                               alert=(sum_priority_alerts, num_alerts))
+            env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip,
+                                                        alert=(sum_priority_alerts, num_alerts))
 
         a.ip = ""
 
         # Use measured cost
-        if env_config.action_costs.service_exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):
-            a.cost = env_config.action_costs.service_get_cost(action_id=a.id, ip=env_config.emulation_config.agent_ip)
+        if env_config.attacker_action_costs.service_exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):
+            a.cost = env_config.attacker_action_costs.service_get_cost(action_id=a.id, ip=env_config.emulation_config.agent_ip)
 
         # Use measured alerts
-        if env_config.action_alerts.exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):
-            a.alerts = env_config.action_alerts.get_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip)
+        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):
+            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip)
 
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_cve_vuln,

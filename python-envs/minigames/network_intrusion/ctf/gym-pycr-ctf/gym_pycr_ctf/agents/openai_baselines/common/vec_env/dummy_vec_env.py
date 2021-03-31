@@ -29,8 +29,8 @@ class DummyVecEnv(VecEnv):
             self.envs.append(fn())
         self.envs = [fn() for fn in env_fns]
         env = self.envs[0]
-        VecEnv.__init__(self, len(env_fns), env.observation_space, env.action_space)
-        obs_space = env.observation_space
+        VecEnv.__init__(self, len(env_fns), env.attacker_observation_space, env.attacker_action_space)
+        obs_space = env.attacker_observation_space
         self.keys, shapes, dtypes = obs_space_info(obs_space)
 
         self.buf_obs = OrderedDict([(k, np.zeros((self.num_envs,) + tuple(shapes[k]), dtype=dtypes[k])) for k in self.keys])

@@ -22,7 +22,7 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                     # save final observation where user can get it, then reset
                     info["terminal_observation"] = observation
                     observation = env.reset()
-                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
+                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                     action, env_config=env.env_config, env_state=env.env_state), actions))
                 info["non_legal_actions"] = non_legal_actions
                 info["idx"] = env.idx

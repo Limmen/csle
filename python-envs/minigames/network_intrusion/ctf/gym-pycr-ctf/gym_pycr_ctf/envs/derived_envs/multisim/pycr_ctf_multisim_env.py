@@ -31,17 +31,17 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
                                                           emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=dr_max_num_nodes-1)
             env_config.domain_randomization = True
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.SIMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.idx=idx
-            env_config.filter_illegal_actions = True
+            env_config.attacker_filter_illegal_actions = True
             env_config.max_episode_length = 200
-            env_config.compute_pi_star = True
-            env_config.use_upper_bound_pi_star = True
+            env_config.compute_pi_star_attacker = True
+            env_config.use_upper_bound_pi_star_attacker = True
             randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,

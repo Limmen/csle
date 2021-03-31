@@ -3,15 +3,14 @@ from typing import List
 import numpy as np
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.action import Action
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
-from gym_pycr_ctf.dao.action.action_outcome import ActionOutcome
+from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_pycr_ctf.dao.network.node import Node
-from gym_pycr_ctf.dao.action.action_type import ActionType
+from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 
 class SimulatorUtil:
     """
@@ -19,7 +18,7 @@ class SimulatorUtil:
     """
 
     @staticmethod
-    def simulate_port_vuln_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
+    def simulate_port_vuln_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float,
                                        protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> Tuple[EnvState, int]:
         """
         Helper function for simulating port-scan and vuln-scan actions
@@ -42,7 +41,7 @@ class SimulatorUtil:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
                 if node.ip == a.ip and node.ip in reachable_nodes:
-                    new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs = AttackerMachineObservationState(ip=node.ip)
                     new_m_obs.reachable = node.reachable_nodes
                     for service in node.services:
                         if service.protocol == protocol and \
@@ -107,7 +106,7 @@ class SimulatorUtil:
             for node in env_config.network_conf.nodes:
                 if not node.ip in reachable_nodes:
                     continue
-                m_obs = MachineObservationState(ip=node.ip)
+                m_obs = AttackerMachineObservationState(ip=node.ip)
                 m_obs.reachable = node.reachable_nodes
                 for service in node.services:
                     if service.protocol == protocol and \
@@ -146,7 +145,7 @@ class SimulatorUtil:
         return s_prime, reward
 
     @staticmethod
-    def simulate_host_scan_helper(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float, os=False) -> \
+    def simulate_host_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float, os=False) -> \
             Tuple[EnvState, int]:
         """
         Helper method for simulating a host-scan (i.e non-port scan) action
@@ -168,7 +167,7 @@ class SimulatorUtil:
 
             for node in env_config.network_conf.nodes:
                 if node.ip == a.ip and node.ip in reachable_nodes and not np.random.rand() < miss_p:
-                    new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs = AttackerMachineObservationState(ip=node.ip)
                     new_m_obs.reachable = node.reachable_nodes
                     if os:
                         new_m_obs.os = node.os
@@ -224,7 +223,7 @@ class SimulatorUtil:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
                 if node.ip in reachable_nodes and not np.random.rand() < miss_p:
-                    m_obs = MachineObservationState(ip=node.ip)
+                    m_obs = AttackerMachineObservationState(ip=node.ip)
                     m_obs.reachable = node.reachable_nodes
                     if os:
                         m_obs.os = node.os
@@ -252,7 +251,7 @@ class SimulatorUtil:
         return s_prime, reward
 
     @staticmethod
-    def simulate_dictionary_pw_exploit_same_user(s: EnvState, a: Action, env_config: EnvConfig, miss_p: float,
+    def simulate_dictionary_pw_exploit_same_user(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float,
                                                  vuln_name : str) -> Tuple[EnvState, int]:
         """
         Helper function for simulating dictionary scans against some service and with the constraint that
@@ -274,7 +273,7 @@ class SimulatorUtil:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
                 if node.ip == a.ip and node.ip in reachable_nodes:
-                    new_m_obs = MachineObservationState(ip=node.ip)
+                    new_m_obs = AttackerMachineObservationState(ip=node.ip)
                     new_m_obs.reachable = node.reachable_nodes
                     vuln_match = False
                     vuln_service = None
@@ -283,7 +282,7 @@ class SimulatorUtil:
                             vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                      protocol=vuln.protocol, cvss=vuln.cvss)
                             new_m_obs.cve_vulns.append(vuln_obs)
-                            if a.action_outcome == ActionOutcome.SHELL_ACCESS:
+                            if a.action_outcome == AttackerActionOutcome.SHELL_ACCESS:
                                 new_m_obs.shell_access = True
                                 new_m_obs.untried_credentials = True
                                 new_m_obs.shell_access_credentials = vuln.credentials
@@ -347,14 +346,14 @@ class SimulatorUtil:
             for node in env_config.network_conf.nodes:
                 if not node.ip in reachable_nodes:
                     continue
-                m_obs = MachineObservationState(ip=node.ip)
+                m_obs = AttackerMachineObservationState(ip=node.ip)
                 m_obs.reachable = node.reachable_nodes
                 vulnerable_services = []
                 for vuln in node.vulnerabilities:
                     if vuln.name == vuln_name and not np.random.rand() < miss_p:
                         vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                  protocol=vuln.protocol, cvss=vuln.cvss)
-                        if a.action_outcome == ActionOutcome.SHELL_ACCESS:
+                        if a.action_outcome == AttackerActionOutcome.SHELL_ACCESS:
                             m_obs.shell_access = True
                             m_obs.untried_credentials = True
                             m_obs.shell_access_credentials = vuln.credentials
@@ -396,7 +395,7 @@ class SimulatorUtil:
 
 
     @staticmethod
-    def simulate_service_login_helper(s: EnvState, a: Action, env_config: EnvConfig, service_name : str = "ssh") \
+    def simulate_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, service_name : str = "ssh") \
             -> Tuple[EnvState, int]:
         """
         Helper function for simulating login to various network services
@@ -417,7 +416,7 @@ class SimulatorUtil:
         for node in env_config.network_conf.nodes:
             if node.ip not in reachable_nodes:
                 continue
-            new_m_obs = MachineObservationState(ip=node.ip)
+            new_m_obs = AttackerMachineObservationState(ip=node.ip)
             new_m_obs.reachable = node.reachable_nodes
             credentials = None
             access = False
@@ -464,7 +463,7 @@ class SimulatorUtil:
 
 
     @staticmethod
-    def simulate_detection(a: Action, env_config: EnvConfig) -> List[str]:
+    def simulate_detection(a: AttackerAction, env_config: EnvConfig) -> List[str]:
         """
         Simulates probability that an attack is detected by a defender
 
@@ -474,13 +473,13 @@ class SimulatorUtil:
         """
         if env_config.simulate_detection:
             detected = False
-            if a.type == ActionType.EXPLOIT or a.type == ActionType.RECON or a.type == ActionType.PRIVILEGE_ESCALATION:
+            if a.type == AttackerActionType.EXPLOIT or a.type == AttackerActionType.RECON or a.type == AttackerActionType.PRIVILEGE_ESCALATION:
                 # Base detection
                 detected = np.random.rand() < (a.noise + env_config.base_detection_p)
             # Alerts detection
             if not detected:
-                detected = np.random.rand() < (a.alerts[0]/env_config.max_alerts)
-            r = env_config.detection_reward
+                detected = np.random.rand() < (a.alerts[0] / env_config.attacker_max_alerts)
+            r = env_config.attacker_detection_reward
             if not detected:
                 r = 0
             return detected, r

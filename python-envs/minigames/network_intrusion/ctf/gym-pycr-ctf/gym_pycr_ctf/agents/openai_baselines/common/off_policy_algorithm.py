@@ -356,7 +356,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             # Warmup phase
             legal_actions = list(range(self.agent_config.output_dim))
             if self.agent_config.filter_illegal_actions:
-                legal_actions = list(filter(lambda action: PyCRCTFEnv.is_action_legal(
+                legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
                     action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), legal_actions))
             unscaled_action = np.array([np.random.choice(legal_actions)])
         else:

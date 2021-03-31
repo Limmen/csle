@@ -1,13 +1,13 @@
 from typing import List
 import gym
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
-class ActionConfig:
+class AttackerActionConfig:
     """
     Configuration of the action space
     """
-    def __init__(self, num_indices : int, actions: List[Action] = None, nmap_action_ids : List[int] = None,
+    def __init__(self, num_indices : int, actions: List[AttackerAction] = None, nmap_action_ids : List[int] = None,
                  network_service_action_ids: List[int] = None,
                  shell_action_ids : List[int] = None, nikto_action_ids : List[int] = None,
                  masscan_action_ids : List[int] = None):
@@ -91,22 +91,22 @@ class ActionConfig:
     @staticmethod
     def dict_brute_same_user_ids():
         return [
-        ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST,
-        ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-        ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+        AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST,
+        AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+        AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
         ]

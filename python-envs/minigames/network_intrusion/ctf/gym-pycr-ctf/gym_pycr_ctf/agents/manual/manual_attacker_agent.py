@@ -33,25 +33,25 @@ class ManualAttackerAgent:
         # env_config.num_flags = len(net.flags_lookup)
         # #env_config.blacklist_ips = [subnet_prefix + ".1"]
         # # env_config.num_nodes = len(randomized_nodes)
-        # for a in env_config.action_conf.actions:
+        # for a in env_config.attacker_action_conf.actions:
         #     if a.subnet:
         #         a.ip = net.subnet_mask
         # self.env.env_config = env_config
 
-        self.env.env_config.action_conf.print_actions()
+        self.env.env_config.attacker_action_conf.print_actions()
         if render:
-            agent_state = self.env.agent_state
+            agent_state = self.env.attacker_agent_state
             viewer = Viewer(self.env_config, init_state=agent_state)
             viewer.manual_start_attacker(env=self.env)
         else:
-            num_actions = env.env_config.action_conf.num_actions
+            num_actions = env.env_config.attacker_action_conf.num_actions
             actions = np.array(list(range(num_actions)))
             history = []
             while True:
                 raw_input = input(">")
                 raw_input = raw_input.strip()
                 legal_actions = list(
-                    filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+                    filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
                 if raw_input == "help":
                     print("Enter an action id to execute the action, "
                           "press R to reset, press S to print the state, press A to print the actions, "
@@ -60,7 +60,7 @@ class ManualAttackerAgent:
                 elif raw_input == "R":
                     env.reset()
                 elif raw_input == "S":
-                    print(str(env.env_state.obs_state))
+                    print(str(env.env_state.attacker_obs_state))
                 elif raw_input == "L":
                     print(legal_actions)
                 elif raw_input == "x":
@@ -79,7 +79,7 @@ class ManualAttackerAgent:
                     else:
                         actions = list(map(lambda x: int(x), actions_str))
                         for a in actions:
-                            if env.is_action_legal(a, env.env_config, env.env_state):
+                            if env.is_attack_action_legal(a, env.env_config, env.env_state):
                                 _, _, done, _ = self.env.step(a)
                                 history.append(a)
                                 if done:

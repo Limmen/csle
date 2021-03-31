@@ -23,18 +23,18 @@ def test_env(env_name : str, num_steps : int):
 
     env.reset()
 
-    num_actions = env.env_config.action_conf.num_actions
+    num_actions = env.env_config.attacker_action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tot_rew = 0
     tried_actions = []
     for i in range(num_steps):
         print("i:{}".format(i))
-        legal_actions = list(filter(lambda x: env.is_action_legal(x, env.env_config, env.env_state), actions))
+        legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         if len(legal_actions) == 0:
             print("no legal actions, {}".format(tried_actions))
-            print(env.env_state.obs_state.actions_tried)
-            for m in env.env_state.obs_state.machines:
+            print(env.env_state.attacker_obs_state.actions_tried)
+            for m in env.env_state.attacker_obs_state.machines:
                 print(
                     "ip: {}, shell access:{}, ssh_brute_t:{}, ftp_brute_t:{}, telnet_brute_t:{}, fs_searched:{},untried_cred:{},logged_in:{},"
                     "tools:{},backdoor:{}, flags found:{}".format(

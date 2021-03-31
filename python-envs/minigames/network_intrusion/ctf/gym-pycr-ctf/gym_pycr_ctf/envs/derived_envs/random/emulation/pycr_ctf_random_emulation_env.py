@@ -33,8 +33,8 @@ class PyCRCTFRandomEmulationBaseEnv(PyCRCTFEnv):
                                                           action_conf=action_conf,
                                                           emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -66,13 +66,13 @@ class PyCRCTFRandomEmulation1Env(PyCRCTFEnv):
                                                           action_conf=action_conf,
                                                           emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -101,8 +101,8 @@ class PyCRCTFRandomEmulationWithCosts1Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -133,13 +133,13 @@ class PyCRCTFRandomEmulation2Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -168,13 +168,13 @@ class PyCRCTFRandomEmulationWithCosts2Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -202,13 +202,13 @@ class PyCRCTFRandomEmulation3Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -236,13 +236,13 @@ class PyCRCTFRandomEmulationWithCosts3Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -270,13 +270,13 @@ class PyCRCTFRandomEmulation4Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 
@@ -304,13 +304,13 @@ class PyCRCTFRandomEmulationWithCosts4Env(PyCRCTFEnv):
                                                         action_conf=action_conf,
                                                         emulation_config=emulation_config, render_conf=render_config,
                                                         num_nodes=num_nodes-1)
-            env_config.cost_coefficient = 1
-            env_config.alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
             env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.filter_illegal_actions = False
+            env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
         super().__init__(env_config=env_config)
 

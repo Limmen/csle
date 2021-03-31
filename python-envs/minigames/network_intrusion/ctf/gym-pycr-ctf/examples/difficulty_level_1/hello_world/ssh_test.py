@@ -36,7 +36,7 @@ def test_env(env_name : str, num_steps : int):
         # if "flag191.txt" not in outdata:
         #     print("error: {}".format(outdata))
 
-    # num_actions = env.env_config.action_conf.num_actions
+    # num_actions = env.env_config.attacker_action_conf.num_actions
     # actions = np.array(list(range(num_actions)))
     # print("num actions:{}".format(num_actions))
     # for i in range(num_steps):

@@ -20,8 +20,8 @@ class PyCRCTFLevel2SimBaseEnv(PyCRCTFEnv):
                                                                  hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2Base.env_config(network_conf=network_conf, action_conf=action_conf,
                                                           emulation_config=None, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.simulate_detection = True
             env_config.save_trajectories = False
             # env_config.simulate_detection = False
@@ -46,8 +46,8 @@ class PyCRCTFLevel2Sim1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=None, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 0
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION
@@ -69,8 +69,8 @@ class PyCRCTFLevel2SimWithCosts1Env(PyCRCTFEnv):
                                                            hacker_ip=PyCrCTFLevel2Base.hacker_ip())
             env_config = PyCrCTFLevel2V1.env_config(network_conf=network_conf, action_conf=action_conf,
                                                         emulation_config=None, render_conf=render_config)
-            env_config.alerts_coefficient = 1
-            env_config.cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.SIMULATION

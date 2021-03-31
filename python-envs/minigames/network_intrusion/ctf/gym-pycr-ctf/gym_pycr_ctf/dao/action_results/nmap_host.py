@@ -2,7 +2,7 @@ from typing import List
 import copy
 from gym_pycr_ctf.dao.action_results.nmap_host_status import NmapHostStatus
 from gym_pycr_ctf.dao.action_results.nmap_port import NmapPort
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.action_results.nmap_os import NmapOs
 from gym_pycr_ctf.dao.action_results.nmap_vuln import NmapVuln
 from gym_pycr_ctf.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
@@ -38,8 +38,8 @@ class NmapHostResult:
             self.trace
         )
 
-    def to_obs(self) -> MachineObservationState:
-        m_obs = MachineObservationState(ip=self.ip_addr)
+    def to_obs(self) -> AttackerMachineObservationState:
+        m_obs = AttackerMachineObservationState(ip=self.ip_addr)
         ports = list(map(lambda x: x.to_obs(), self.ports))
         m_obs.ports = ports
         if self.os is not None:

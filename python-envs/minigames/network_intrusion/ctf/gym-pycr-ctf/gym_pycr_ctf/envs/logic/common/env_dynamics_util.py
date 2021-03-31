@@ -1,14 +1,14 @@
 from typing import List, Tuple
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.dao.action.action_id import ActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
 import gym_pycr_ctf.constants.constants as constants
-from gym_pycr_ctf.dao.action.action_config import ActionConfig
+from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 
 class EnvDynamicsUtil:
     """
@@ -33,10 +33,10 @@ class EnvDynamicsUtil:
         return merged_obs_state
 
     @staticmethod
-    def merge_new_obs_with_old(old_machines_obs: List[MachineObservationState],
-                               new_machines_obs: List[MachineObservationState], env_config: EnvConfig,
-                               action : Action) -> \
-            Tuple[List[MachineObservationState], int, int, int, int, int, int, int, int, int, int]:
+    def merge_new_obs_with_old(old_machines_obs: List[AttackerMachineObservationState],
+                               new_machines_obs: List[AttackerMachineObservationState], env_config: EnvConfig,
+                               action : AttackerAction) -> \
+            Tuple[List[AttackerMachineObservationState], int, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
@@ -105,9 +105,9 @@ class EnvDynamicsUtil:
                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
 
     @staticmethod
-    def merge_new_machine_obs_with_old_machine_obs(o_m: MachineObservationState, n_m: MachineObservationState,
-                                                   action: Action) \
-            -> Tuple[MachineObservationState, int, int, int, int, int, int, int, int, int]:
+    def merge_new_machine_obs_with_old_machine_obs(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState,
+                                                   action: AttackerAction) \
+            -> Tuple[AttackerMachineObservationState, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
 
@@ -163,8 +163,8 @@ class EnvDynamicsUtil:
         return merged_os, new_os
 
     @staticmethod
-    def merge_shell_access(o_m: MachineObservationState, n_m: MachineObservationState) -> \
-            Tuple[MachineObservationState, int]:
+    def merge_shell_access(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> \
+            Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation shell access with new information collected
 
@@ -190,7 +190,7 @@ class EnvDynamicsUtil:
         return n_m, new_access
 
     @staticmethod
-    def merge_reachable(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_reachable(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation reachable nodes with new information collected
 
@@ -202,7 +202,7 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_backdoor_credentials(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_backdoor_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation backdoor credentials nodes with new information collected
 
@@ -214,7 +214,7 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_logged_in(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_logged_in(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation logged in with new information collected
 
@@ -230,7 +230,7 @@ class EnvDynamicsUtil:
         return n_m, num_new_logged_in
 
     @staticmethod
-    def merge_tools_installed(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_tools_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "tools installed flag" with new information collected
 
@@ -246,7 +246,7 @@ class EnvDynamicsUtil:
         return n_m, num_new_tools_installed
 
     @staticmethod
-    def merge_backdoor_installed(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_backdoor_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "backdoor installed" flag with new information collected
 
@@ -262,7 +262,7 @@ class EnvDynamicsUtil:
         return n_m, num_new_backdoor_installed
 
     @staticmethod
-    def merge_backdoor_tried(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_backdoor_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "backdoor tried" flag with new information collected
 
@@ -275,7 +275,7 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_tools_tried(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_tools_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "tools tried" flag with new information collected
 
@@ -288,7 +288,7 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_root(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_root(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation root with new information collected
 
@@ -304,7 +304,7 @@ class EnvDynamicsUtil:
         return n_m, new_root
 
     @staticmethod
-    def merge_flags(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_flags(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation flags with new information collected
 
@@ -320,7 +320,7 @@ class EnvDynamicsUtil:
         return n_m, new_flag_points
 
     @staticmethod
-    def merge_connections(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_connections(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation shell-connections with new information collected
 
@@ -334,8 +334,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_filesystem_scanned(o_m: MachineObservationState, n_m: MachineObservationState, new_root: int) -> \
-            MachineObservationState:
+    def merge_filesystem_scanned(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState, new_root: int) -> \
+            AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation file-system-scanned-flag with new information collected
 
@@ -351,8 +351,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_untried_credentials(o_m: MachineObservationState, n_m: MachineObservationState, action: Action) \
-            -> MachineObservationState:
+    def merge_untried_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState, action: AttackerAction) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation untried-credentials-flag with new information collected
 
@@ -361,7 +361,7 @@ class EnvDynamicsUtil:
         :param action: the action that was done to get n_m
         :return: the merged machine observation with updated untried-credentials flag
         """
-        if action is not None and action.id == ActionId.NETWORK_SERVICE_LOGIN and n_m.shell_access:
+        if action is not None and action.id == AttackerActionId.NETWORK_SERVICE_LOGIN and n_m.shell_access:
             return n_m
         else:
             if not n_m.untried_credentials:
@@ -369,8 +369,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_exploit_tried(o_m: MachineObservationState,
-                            n_m: MachineObservationState) -> MachineObservationState:
+    def merge_exploit_tried(o_m: AttackerMachineObservationState,
+                            n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation tried_brute_flags with new information collected
 
@@ -415,7 +415,7 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_trace(o_m: MachineObservationState, n_m: MachineObservationState) -> MachineObservationState:
+    def merge_trace(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation trace with new information collected
 
@@ -499,7 +499,7 @@ class EnvDynamicsUtil:
                         num_new_logged_in : int = 0, num_new_tools_installed : int = 0,
                         num_new_backdoors_installed : int = 0,
                         cost: float = 0.0, env_config: EnvConfig  = None, alerts: Tuple = None,
-                        action: Action = None) -> int:
+                        action: AttackerAction = None) -> int:
         """
         Implements the reward function
 
@@ -518,24 +518,24 @@ class EnvDynamicsUtil:
         :param alerts: ids alerts
         :return: reward
         """
-        reward = env_config.port_found_reward_mult * num_new_ports_found + \
-                 env_config.os_found_reward_mult * num_new_os_found + \
-                 env_config.cve_vuln_found_reward_mult * num_new_cve_vuln_found + \
-                 env_config.machine_found_reward_mult * num_new_machines + \
-                 env_config.shell_access_found_reward_mult * num_new_shell_access + \
-                 env_config.root_found_reward_mult * num_new_root + \
-                 env_config.flag_found_reward_mult * num_new_flag_pts + \
-                 env_config.osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found + \
-                 env_config.new_login_reward_mult * num_new_logged_in + \
-                 env_config.new_tools_installed_reward_mult * num_new_tools_installed + \
-                 env_config.new_backdoors_installed_reward_mult * num_new_backdoors_installed
+        reward = env_config.attacker_port_found_reward_mult * num_new_ports_found + \
+                 env_config.attacker_os_found_reward_mult * num_new_os_found + \
+                 env_config.attacker_cve_vuln_found_reward_mult * num_new_cve_vuln_found + \
+                 env_config.attacker_machine_found_reward_mult * num_new_machines + \
+                 env_config.attacker_shell_access_found_reward_mult * num_new_shell_access + \
+                 env_config.attacker_root_found_reward_mult * num_new_root + \
+                 env_config.attacker_flag_found_reward_mult * num_new_flag_pts + \
+                 env_config.attacker_osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found + \
+                 env_config.attacker_new_login_reward_mult * num_new_logged_in + \
+                 env_config.attacker_new_tools_installed_reward_mult * num_new_tools_installed + \
+                 env_config.attacker_new_backdoors_installed_reward_mult * num_new_backdoors_installed
         new_info = [num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, num_new_machines,
                     num_new_shell_access, num_new_root, num_new_flag_pts, num_new_osvdb_vuln_found,
                     num_new_logged_in, num_new_tools_installed, num_new_backdoors_installed]
-        cost = ((cost*env_config.cost_coefficient)/env_config.max_costs)*10 # normalize between 0-10
+        cost = ((cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) * 10 # normalize between 0-10
         alerts_pts = 0
         if env_config.ids_router and alerts is not None:
-            alerts_pts = ((alerts[0] * env_config.alerts_coefficient) / env_config.max_alerts) * 10  # normalize between 0-10
+            alerts_pts = ((alerts[0] * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) * 10  # normalize between 0-10
 
         #reward = (-env_config.base_step_reward) * reward - cost - alerts_pts
         # if reward == 0:
@@ -555,9 +555,9 @@ class EnvDynamicsUtil:
             if sum(new_info) > 0:
                 reward = - cost - alerts_pts
             else:
-                reward = env_config.base_step_reward - cost - alerts_pts
+                reward = env_config.attacker_base_step_reward - cost - alerts_pts
         else:
-            reward = (-env_config.base_step_reward)*reward - cost - alerts_pts
+            reward = (-env_config.attacker_base_step_reward) * reward - cost - alerts_pts
         return reward
 
     @staticmethod
@@ -611,72 +611,72 @@ class EnvDynamicsUtil:
         return True
 
     @staticmethod
-    def exploit_tried_flags(a: Action, m_obs: MachineObservationState):
+    def exploit_tried_flags(a: AttackerAction, m_obs: AttackerMachineObservationState):
         # Subnet scans sometimes fail due to stagnation, https://github.com/nmap/nmap/issues/1321
-        if (a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+        if (a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ftp_brute_tried = True
-        elif (a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ssh_brute_tried = True
-        elif (a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.telnet_brute_tried = True
-        elif (a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.irc_brute_tried = True
-        elif (a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.postgres_brute_tried = True
-        elif (a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.smtp_brute_tried = True
-        elif (a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mysql_brute_tried = True
-        elif (a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials)\
-                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials)\
+                or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mongo_brute_tried = True
-        elif (a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
-                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+        elif (a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+                or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.cassandra_brute_tried = True
-        elif a.id == ActionId.SAMBACRY_EXPLOIT:
+        elif a.id == AttackerActionId.SAMBACRY_EXPLOIT:
             m_obs.sambacry_tried = True
-        elif a.id == ActionId.SHELLSHOCK_EXPLOIT:
+        elif a.id == AttackerActionId.SHELLSHOCK_EXPLOIT:
             m_obs.shellshock_tried = True
-        elif a.id == ActionId.DVWA_SQL_INJECTION:
+        elif a.id == AttackerActionId.DVWA_SQL_INJECTION:
             m_obs.dvwa_sql_injection_tried = True
-        elif a.id == ActionId.CVE_2015_3306_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2015_3306_EXPLOIT:
             m_obs.cve_2015_3306_tried = True
-        elif a.id == ActionId.CVE_2015_1427_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2015_1427_EXPLOIT:
             m_obs.cve_2015_1427_tried = True
-        elif a.id == ActionId.CVE_2016_10033_EXPLOIT:
+        elif a.id == AttackerActionId.CVE_2016_10033_EXPLOIT:
             m_obs.cve_2016_10033_tried = True
-        elif a.id == ActionId.CVE_2010_0426_PRIV_ESC:
+        elif a.id == AttackerActionId.CVE_2010_0426_PRIV_ESC:
             m_obs.cve_2010_0426_tried = True
-        elif a.id == ActionId.CVE_2015_5602_PRIV_ESC:
+        elif a.id == AttackerActionId.CVE_2015_5602_PRIV_ESC:
             m_obs.cve_2015_5602_tried = True
         return m_obs
 
     @staticmethod
-    def ssh_backdoor_tried_flags(a: Action, m_obs: MachineObservationState):
-        if a.id == ActionId.SSH_BACKDOOR:
+    def ssh_backdoor_tried_flags(a: AttackerAction, m_obs: AttackerMachineObservationState):
+        if a.id == AttackerActionId.SSH_BACKDOOR:
             m_obs.backdoor_tried = True
         return m_obs
 
     @staticmethod
-    def install_tools_tried(a: Action, m_obs: MachineObservationState):
-        if a.id == ActionId.INSTALL_TOOLS:
+    def install_tools_tried(a: AttackerAction, m_obs: AttackerMachineObservationState):
+        if a.id == AttackerActionId.INSTALL_TOOLS:
             m_obs.install_tools_tried = True
         return m_obs
 
     @staticmethod
-    def cache_action(env_config: EnvConfig, a: Action, s: EnvState):
+    def cache_action(env_config: EnvConfig, a: AttackerAction, s: EnvState):
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=a, s=s)
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
-    def logged_in_ips_str(env_config: EnvConfig, a: Action, s: EnvState):
+    def logged_in_ips_str(env_config: EnvConfig, a: AttackerAction, s: EnvState):
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
@@ -688,76 +688,76 @@ class EnvDynamicsUtil:
 
 
     @staticmethod
-    def exploit_get_vuln_name(a: Action):
-        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+    def exploit_get_vuln_name(a: AttackerAction):
+        if a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS
-        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
             return constants.EXPLOIT_VULNERABILITES.IRC_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.POSTGRES_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.SMTP_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.MYSQL_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.MONGO_DICTS_SAME_USER_PASS
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.CASSANDRA_DICTS_SAME_USER_PASS
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN
 
     @staticmethod
-    def exploit_get_vuln_cvss(a: Action) -> float:
-        if a.id in ActionConfig.dict_brute_same_user_ids():
+    def exploit_get_vuln_cvss(a: AttackerAction) -> float:
+        if a.id in AttackerActionConfig.dict_brute_same_user_ids():
             return constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS
         return 0.0
 
     @staticmethod
-    def exploit_get_service_name(a: Action):
-        if a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
+    def exploit_get_service_name(a: AttackerAction):
+        if a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.FTP.SERVICE_NAME
-        elif a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.SSH.SERVICE_NAME
-        elif a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.TELNET.SERVICE_NAME
-        elif a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
             return constants.IRC.SERVICE_NAME
-        elif a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.POSTGRES.SERVICE_NAME
-        elif a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.SMTP.SERVICE_NAME
-        elif a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.MYSQL.SERVICE_NAME
-        elif a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.MONGO.SERVICE_NAME
-        elif a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == ActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
+        elif a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+                or a.id == AttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.CASSANDRA.SERVICE_NAME
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN
 
 
     @staticmethod
-    def merge_duplicate_machines(machines : List[MachineObservationState], action: Action):
+    def merge_duplicate_machines(machines : List[AttackerMachineObservationState], action: AttackerAction):
         merged_machines = []
         ips = set()
         for m in machines:

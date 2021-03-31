@@ -1,6 +1,6 @@
 from enum import Enum
 
-class ActionId(Enum):
+class AttackerActionId(Enum):
     """
     Enum representing the different attacks
     """
