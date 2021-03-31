@@ -559,7 +559,8 @@ class TRAFFIC_COMMANDS:
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
         "ftp2": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"]
+                 "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        "client1": []
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"

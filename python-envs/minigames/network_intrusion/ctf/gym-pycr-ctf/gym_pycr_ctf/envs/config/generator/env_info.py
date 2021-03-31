@@ -5,9 +5,17 @@ from gym_pycr_ctf.dao.env_info.running_env import RunningEnv
 from gym_pycr_ctf.util.experiments_util import util
 
 class EnvInfo:
+    """
+    Utility class for extracting information from running emulation environments
+    """
 
     @staticmethod
     def parse_env_infos() -> List[RunningEnv]:
+        """
+        Queries docker to get a list of all running emulation environments
+
+        :return: a list of environment DTOs
+        """
         client1 = docker.from_env()
         client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
         parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
@@ -17,14 +25,28 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_running_containers(client1, client2):
+    def parse_running_containers(client1, client2) -> List[RunningEnvContainer]:
+        """
+        Queries docker to get a list of all running containers
+
+        :param client1: docker client 1
+        :param client2:  docker client 2
+        :return: list of parsed running containers
+        """
         containers = client1.containers.list()
         parsed_containers = EnvInfo.parse_containers(containers=containers, client2=client2)
         return parsed_containers
 
 
     @staticmethod
-    def parse_stopped_containers(client1, client2):
+    def parse_stopped_containers(client1, client2) -> List[RunningEnvContainer]:
+        """
+        Queries docker to get a list of all stopped pycr containers
+
+        :param client1: docker client 1
+        :param client2: docker client 2
+        :return: list of parsed containers
+        """
         containers = client1.containers.list(all=True)
         stopped_containers = list(filter(lambda x: x.status == "exited" or x.status == "created", containers))
         parsed_containers = EnvInfo.parse_containers(containers=stopped_containers, client2=client2)
@@ -33,6 +55,13 @@ class EnvInfo:
 
     @staticmethod
     def parse_envs(networks: List[str], containers: List[RunningEnvContainer]) -> List[RunningEnv]:
+        """
+        Queries docker to get a list of all active emulation environments
+
+        :param networks: list of pycr networks
+        :param containers: list of running pycr containers
+        :return: list of parsed emulation environments
+        """
         parsed_envs = []
         for net in networks:
             net_containers = list(filter(lambda x: x.net == net, containers))
@@ -95,6 +124,13 @@ class EnvInfo:
 
     @staticmethod
     def parse_containers(containers, client2) -> List[RunningEnvContainer]:
+        """
+        Queries docker to get a list of running pycr containers
+
+        :param containers: list of containers to parse
+        :param client2: docker client
+        :return: List of parsed container DTOs
+        """
         parsed_containers = []
         for c in containers:
             if "pycr-" in c.name:

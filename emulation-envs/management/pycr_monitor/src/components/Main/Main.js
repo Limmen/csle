@@ -11,7 +11,8 @@ const Main = () => {
     // Declare a new state variable, which we'll call "count"
     const [count, setCount] = useState(0);
     const [envs, setEnvs] = useState([]);
-    const ip = localIpUrl('public', 'ipv4')
+    //const ip = localIpUrl('public', 'ipv4')
+    const ip = "172.31.212.92"
 
 
     useEffect(() => {
@@ -28,7 +29,7 @@ const Main = () => {
             .then(response => {
                 setEnvs(response);
             })
-            .catch(error => console.log(error));
+            .catch(error => console.log("error:"+ error));
     }, []);
 
     const wrapper = createRef();
