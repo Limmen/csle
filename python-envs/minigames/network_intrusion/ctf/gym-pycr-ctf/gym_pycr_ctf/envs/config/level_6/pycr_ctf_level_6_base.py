@@ -227,7 +227,7 @@ class PyCrCTFLevel6Base:
         return attacker_action_config
 
     @staticmethod
-    def defender_all_actions_conf(num_nodes: int, subnet_mask: str) -> AttackerActionConfig:
+    def defender_all_actions_conf(num_nodes: int, subnet_mask: str) -> DefenderActionConfig:
         """
         :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
         :param subnet_mask: subnet mask of the network

@@ -27,12 +27,15 @@ class PyCRCTFRandomManyEmulation1Env(PyCRCTFEnv):
                 raise ValueError("emulation config cannot be None")
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrCTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
+            attacker_action_conf = PyCrCTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
                                                                 subnet_mask=containers_config.subnet_mask,
                                                                 hacker_ip=containers_config.agent_ip)
+            defender_action_conf = PyCrCTFRandomV1.defender_actions_conf(
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask,)
             env_config = PyCrCTFRandomV1.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
-                                                    attacker_action_conf=action_conf,
+                                                    attacker_action_conf=attacker_action_conf,
+                                                    defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config,
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
@@ -70,12 +73,15 @@ class PyCRCTFRandomManyEmulationWithCosts1Env(PyCRCTFEnv):
                 raise ValueError("emulation config cannot be None")
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
-            action_conf = PyCrCTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
+            attacker_action_conf = PyCrCTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
                                                                 subnet_mask=containers_config.subnet_mask,
                                                                 hacker_ip=containers_config.agent_ip)
+            defender_action_conf = PyCrCTFRandomV1.defender_actions_conf(
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask, )
             env_config = PyCrCTFRandomV1.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
-                                                    attacker_action_conf=action_conf,
+                                                    attacker_action_conf=attacker_action_conf,
+                                                    defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config,
                                                     num_nodes=num_nodes-1)
             env_config.attacker_cost_coefficient = 1
