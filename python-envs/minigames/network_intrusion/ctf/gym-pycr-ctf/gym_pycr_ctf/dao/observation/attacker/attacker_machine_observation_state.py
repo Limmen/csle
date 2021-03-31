@@ -1,9 +1,9 @@
 from typing import List
 import copy
-from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
+from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
-from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
+from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
 from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.network.node_type import NodeType
 

@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 import gym
-from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 
 class AttackerStateRepresentation:
     """

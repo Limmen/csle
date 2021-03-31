@@ -1,8 +1,10 @@
 from typing import List, Tuple
 import numpy as np
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
-from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
+from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
 from gym_pycr_ctf.envs.state_representation.attacker_state_representation import AttackerStateRepresentation
+from gym_pycr_ctf.envs.state_representation.defender_state_representation import DefenderStateRepresentation
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 
 class EnvState:
@@ -13,7 +15,7 @@ class EnvState:
     def __init__(self, network_config : NetworkConfig, num_ports : int, num_vuln : int, num_sh : int,
                  num_flags : int, num_nodes : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None,
-                 state_type: StateType = StateType.BASE):
+                 state_type: StateType = StateType.BASE, ids : bool = False):
         self.network_config = network_config
         self.state_type = state_type
         self.reward_range = (float(0), float(1))
@@ -28,13 +30,27 @@ class EnvState:
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
         self.os_lookup = os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
+        self.ids = ids
         self.attacker_obs_state : AttackerObservationState = None
+        self.defender_obs_state : DefenderObservationState = None
+
         self.reset_state() # Init obs state
+
+        self.attacker_observation_space = None
+        self.attacker_m_selection_observation_space = None
+        self.attacker_network_orig_shape = None
+        self.attacker_machine_orig_shape = None
+        self.attacker_m_action_observation_space = None
         self.setup_attacker_spaces()
+
+        self.defender_observation_space = None
+        self.setup_defender_spaces()
+
         self.attacker_cached_ssh_connections = {}
         self.attacker_cached_telnet_connections = {}
         self.attacker_cached_ftp_connections = {}
         self.attacker_cached_backdoor_credentials = {}
+        self.defender_cached_ssh_connections = {}
 
     def get_attacker_observation(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -65,6 +81,27 @@ class EnvState:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, ports_protocols_obs
 
+    def get_defender_observation(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Gets a numerical observation of the current defender's state
+
+        :return: machines_obs, ports_protocols_obs
+        """
+        if self.state_type == StateType.BASE:
+            machines_obs, network_obs =  \
+                DefenderStateRepresentation.base_representation(num_machines=self.defender_obs_state.num_machines,
+                                                                obs_state=self.defender_obs_state,
+                                                                os_lookup=self.os_lookup, ids=self.ids)
+        elif self.state_type == StateType.COMPACT:
+            raise ValueError("COMPACT State Representation not implemented for the defender")
+        elif self.state_type == StateType.ESSENTIAL:
+            raise ValueError("ESSENTIAL State Representation not implemented for the defender")
+        elif self.state_type == StateType.SIMPLE:
+            raise ValueError("SIMPLE State Representation not implemented for the defender")
+        else:
+            raise ValueError("State type:{} not recognized".format(self.state_type))
+        return machines_obs, network_obs
+
     def setup_attacker_spaces(self) -> None:
         """
         Sets up the observation spaces used by RL attacker agents
@@ -88,12 +125,33 @@ class EnvState:
             attacker_machine_orig_shape, attacker_m_action_observation_space = \
                 AttackerStateRepresentation.simple_representation_spaces(obs_state=self.attacker_obs_state)
         else:
-            raise ValueError("State type:{} not recognized".format(self.state_type.BASE))
+            raise ValueError("State type:{} not recognized".format(self.state_type))
         self.attacker_observation_space = attacker_observation_space
         self.attacker_m_selection_observation_space = attacker_m_selection_observation_space
         self.attacker_network_orig_shape = attacker_network_orig_shape
         self.attacker_machine_orig_shape = attacker_machine_orig_shape
         self.attacker_m_action_observation_space = attacker_m_action_observation_space
+
+
+    def setup_defender_spaces(self) -> None:
+        """
+        Sets up the observation spaces used by RL defender agents
+
+        :return: None
+        """
+        if self.state_type == StateType.BASE:
+            defender_observation_space = DefenderStateRepresentation.base_representation_spaces(
+                obs_state=self.defender_obs_state)
+        elif self.state_type == StateType.COMPACT:
+            raise ValueError("COMPACT State Representation not implemented for the defender")
+        elif self.state_type == StateType.ESSENTIAL:
+            raise ValueError("ESSENTIAL State Representation not implemented for the defender")
+        elif self.state_type == StateType.SIMPLE:
+            raise ValueError("SIMPLE State Representation not implemented for the defender")
+        else:
+            raise ValueError("State type:{} not recognized".format(self.state_type))
+
+        self.defender_observation_space = defender_observation_space
 
     def reset_state(self) -> None:
         """
@@ -116,6 +174,12 @@ class EnvState:
         self.attacker_obs_state = AttackerObservationState(num_machines=self.num_nodes, num_ports=self.num_ports,
                                                            num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
                                                            catched_flags=0, agent_reachable=agent_reachable)
+
+        if self.defender_obs_state is not None:
+            for m in self.defender_obs_state.machines:
+                for c in m.ssh_connections:
+                    self.defender_cached_ssh_connections[(m.ip, c.username, c.port)] = c
+        self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
 
     def merge_services_with_emulation(self, emulation_services : List[str]) -> None:
         """
@@ -160,6 +224,10 @@ class EnvState:
 
         self.attacker_obs_state.cleanup()
 
+        for _, c in self.defender_cached_ssh_connections.items():
+            c.cleanup()
+
+        self.defender_obs_state.cleanup()
 
     def get_attacker_machine(self, ip: str):
         for m in self.attacker_obs_state.machines:
@@ -167,10 +235,17 @@ class EnvState:
                 return m
         return None
 
+    def get_defender_machine(self, ip: str):
+        for m in self.defender_obs_state.machines:
+            if m.ip == ip:
+                return m
+        return None
 
     def copy(self):
         copy = EnvState(network_config=self.network_config, num_ports=self.num_ports, num_vuln=self.num_vuln,
                         num_sh=self.num_sh, num_flags=self.num_flags, num_nodes=self.num_nodes, vuln_lookup=self.vuln_lookup,
-                        service_lookup=self.service_lookup, os_lookup=self.os_lookup, state_type=self.state_type)
+                        service_lookup=self.service_lookup, os_lookup=self.os_lookup, state_type=self.state_type,
+                        ids=self.ids)
         copy.attacker_obs_state = self.attacker_obs_state.copy()
+        copy.defender_obs_state = self.defender_obs_state.copy()
         return copy

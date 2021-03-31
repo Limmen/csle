@@ -1,5 +1,5 @@
 """
-Type of action outcomes in the pycr-ctf environment
+Type of attack action outcomes in the pycr-ctf environment
 """
 from enum import Enum
 

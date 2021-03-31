@@ -1,6 +1,7 @@
 import re
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
@@ -18,8 +19,9 @@ class EnvConfig:
     """
 
     def __init__(self, network_conf : NetworkConfig, attacker_action_conf : AttackerActionConfig,
-                 num_ports : int, num_vuln : int,
-                 num_sh : int, num_nodes : int, hacker_ip : str, router_ip : str,
+                 defender_action_conf: DefenderActionConfig,
+                 attacker_num_ports_obs : int, attacker_num_vuln_obs : int,
+                 attacker_num_sh_obs : int, num_nodes : int, hacker_ip : str, router_ip : str,
                  render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
                  emulation_config : EmulationConfig = None, simulate_detection : bool = True,
                  detection_reward : int = 10,
@@ -28,10 +30,11 @@ class EnvConfig:
         Initialize the config
 
         :param network_conf: the network config
-        :param attacker_action_conf: the action config
-        :param num_ports: number of ports per machine in the state
-        :param num_vuln: number of vuln per machine to keep in state
-        :param num_sh: number of shell connections per machine to keep in state
+        :param attacker_action_conf: the action config for the attacker
+        :param defender_action_conf: the action config for the defender
+        :param attacker_num_ports_obs: number of ports per machine in the state
+        :param attacker_num_vuln_obs: number of vuln per machine to keep in state
+        :param attacker_num_sh_obs: number of shell connections per machine to keep in state
         :param num_nodes: number of nodes
         :param hacker_ip: ip of the hacker
         :param router_ip: ip of the default gw for the hacker
@@ -45,9 +48,10 @@ class EnvConfig:
         """
         self.network_conf = network_conf
         self.attacker_action_conf = attacker_action_conf
-        self.num_ports = num_ports
-        self.num_vuln = num_vuln
-        self.num_sh = num_sh
+        self.defender_action_conf = defender_action_conf
+        self.attacker_num_ports_obs = attacker_num_ports_obs
+        self.attacker_num_vuln_obs = attacker_num_vuln_obs
+        self.attacker_num_sh_obs = attacker_num_sh_obs
         self.num_nodes = num_nodes
         self.env_mode = env_mode
         self.emulation_config = emulation_config
@@ -116,6 +120,13 @@ class EnvConfig:
         self.attacker_base_step_reward = -1
         self.attacker_illegal_reward_action = 0
         self.attacker_final_steps_reward_coefficient = 1
+
+        self.defender_final_steps_reward_coefficient = 0
+        self.defender_caught_attacker_reward = 50
+        self.defender_early_stopping = -50
+
+        self.defender_sum_costs = 1
+        self.defender_max_costs = 1
 
         self.attacker_filter_illegal_actions = True
         self.checkpoint_dir = None
@@ -189,7 +200,7 @@ class EnvConfig:
         else:
             return None
 
-    def scale_rewards_prep(self):
+    def scale_rewards_prep_attacker(self):
         sum_costs = sum(list(map(lambda x: x.cost, self.attacker_action_conf.actions)))
         max_costs = max(max(list(map(lambda x: x.cost, self.attacker_action_conf.actions))), 1)
         self.attacker_sum_costs = sum_costs
@@ -201,10 +212,19 @@ class EnvConfig:
             self.attacker_max_alerts = max_alerts
 
 
+    def scale_rewards_prep_defender(self):
+        sum_costs = sum(list(map(lambda x: x.cost, self.attacker_action_conf.actions)))
+        max_costs = max(max(list(map(lambda x: x.cost, self.attacker_action_conf.actions))), 1)
+        self.defender_sum_costs = sum_costs
+        self.defender_max_costs = max_costs
+
+
     def copy(self):
         env_config = EnvConfig(
-            network_conf=self.network_conf, attacker_action_conf=self.attacker_action_conf, num_ports=self.num_ports,
-            num_vuln=self.num_vuln, num_sh=self.num_sh, num_nodes=self.num_nodes, hacker_ip=self.hacker_ip,
+            network_conf=self.network_conf, attacker_action_conf=self.attacker_action_conf,
+            defender_action_conf=self.defender_action_conf,
+            attacker_num_ports_obs=self.attacker_num_ports_obs,
+            attacker_num_vuln_obs=self.attacker_num_vuln_obs, attacker_num_sh_obs=self.attacker_num_sh_obs, num_nodes=self.num_nodes, hacker_ip=self.hacker_ip,
             router_ip=self.router_ip, render_config=self.render_config, env_mode=self.env_mode,
             emulation_config=self.emulation_config, simulate_detection=self.simulate_detection,
             detection_reward=self.attacker_detection_reward, base_detection_p=self.base_detection_p, manual_play=self.manual_play,

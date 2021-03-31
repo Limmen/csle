@@ -1,6 +1,6 @@
 from typing import List
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
 
 class NmapVuln:

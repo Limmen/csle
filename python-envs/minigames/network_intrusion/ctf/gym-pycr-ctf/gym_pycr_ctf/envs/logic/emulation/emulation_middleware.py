@@ -2,7 +2,9 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+from gym_pycr_ctf.dao.action.defender.defender_action_type import DefenderActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.envs.logic.emulation.recon_middleware import ReconMiddleware
 from gym_pycr_ctf.envs.logic.emulation.exploit_middleware import ExploitMiddleware
@@ -20,7 +22,7 @@ class EmulationMiddleware:
         Implements the transition operator T: (s,a) -> (s',r)
 
         :param s: the current state
-        :param attacker_action: the action
+        :param attacker_action: the attacker action
         :param env_config: the environment configuration
         :return: s', r, done
         """
@@ -33,6 +35,22 @@ class EmulationMiddleware:
             return EmulationMiddleware.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return EmulationMiddleware.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
+        else:
+            raise ValueError("Action type not recognized")
+
+    @staticmethod
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[
+        EnvState, int, bool]:
+        """
+        Implements the transition operator T: (s,a) -> (s',r)
+
+        :param s: the current state
+        :param defender_action: the defender action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
+            raise NotImplemented("Action not implemented")
         else:
             raise ValueError("Action type not recognized")
 

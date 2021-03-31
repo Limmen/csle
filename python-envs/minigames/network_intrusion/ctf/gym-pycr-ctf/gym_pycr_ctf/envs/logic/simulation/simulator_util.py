@@ -5,9 +5,9 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
-from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
+from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType

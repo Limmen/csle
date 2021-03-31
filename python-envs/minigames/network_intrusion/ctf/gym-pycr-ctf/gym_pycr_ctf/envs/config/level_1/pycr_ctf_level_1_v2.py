@@ -10,6 +10,9 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.envs.config.level_1.pycr_ctf_level_1_base import PyCrCTFLevel1Base
+from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
+from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 
 class PyCrCTFLevel1V2:
     """
@@ -76,17 +79,48 @@ class PyCrCTFLevel1V2:
         return action_config
 
     @staticmethod
-    def env_config(network_conf : NetworkConfig, action_conf: AttackerActionConfig, emulation_config: EmulationConfig,
+    def defender_actions_conf(num_nodes: int, subnet_mask: str) -> AttackerActionConfig:
+        """
+        :param num_nodes: max number of nodes to consider (whole subnetwork in most general case)
+        :param subnet_mask: subnet mask of the network
+        :return: the action config
+        """
+        defender_actions = []
+
+        # Host actions
+        for idx in range(num_nodes):
+            # actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
+            pass
+
+        # Subnet actions
+        defender_actions.append(DefenderStoppingActions.STOP(index=num_nodes + 1))
+        defender_actions.append(DefenderStoppingActions.CONTINUE(index=num_nodes + 1))
+
+        defender_actions = sorted(defender_actions, key=lambda x: (x.id.value, x.index))
+        stopping_action_ids = [
+            DefenderActionId.STOP, DefenderActionId.CONTINUE
+        ]
+        defender_action_config = DefenderActionConfig(
+            num_indices=num_nodes + 1, actions=defender_actions, stopping_action_ids=stopping_action_ids)
+        return defender_action_config
+
+    @staticmethod
+    def env_config(network_conf : NetworkConfig, attacker_action_conf: AttackerActionConfig,
+                   defender_action_conf: DefenderActionConfig,
+                   emulation_config: EmulationConfig,
                    render_conf: RenderConfig) -> EnvConfig:
         """
         :param network_conf: the network config
-        :param action_conf: the action config
+        :param attacker_action_conf: the attacker action config
+        :param defender_action_conf: the defender action config
         :param emulation_config: the emulation config
         :param render_conf: the render config
         :return: The complete environment config
         """
-        env_config = EnvConfig(network_conf=network_conf, attacker_action_conf=action_conf, num_ports=10, num_vuln=10,
-                               num_sh=3, num_nodes = PyCrCTFLevel1Base.num_nodes(), render_config=render_conf, env_mode=EnvMode.SIMULATION,
+        env_config = EnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+                               defender_action_conf=defender_action_conf,
+                               attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
+                               attacker_num_sh_obs=3, num_nodes = PyCrCTFLevel1Base.num_nodes(), render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrCTFLevel1Base.hacker_ip(), state_type=StateType.COMPACT,

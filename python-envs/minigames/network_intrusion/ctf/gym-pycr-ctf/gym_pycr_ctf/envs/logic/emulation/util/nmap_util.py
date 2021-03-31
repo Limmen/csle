@@ -16,7 +16,7 @@ from gym_pycr_ctf.dao.action_results.nmap_os import NmapOs
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action_results.nmap_vuln import NmapVuln
 from gym_pycr_ctf.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.action_results.nmap_hop import NmapHop
 from gym_pycr_ctf.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_ctf.dao.action_results.nmap_http_enum import NmapHttpEnum

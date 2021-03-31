@@ -6,8 +6,8 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
-from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.logic.emulation.util.connection_util import ConnectionUtil

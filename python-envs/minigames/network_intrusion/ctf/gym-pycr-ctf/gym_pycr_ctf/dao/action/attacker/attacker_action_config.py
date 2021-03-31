@@ -3,9 +3,10 @@ import gym
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
+
 class AttackerActionConfig:
     """
-    Configuration of the action space
+    Configuration of the action space for the attacker
     """
     def __init__(self, num_indices : int, actions: List[AttackerAction] = None, nmap_action_ids : List[int] = None,
                  network_service_action_ids: List[int] = None,
@@ -77,7 +78,7 @@ class AttackerActionConfig:
 
         :return: None
         """
-        print("Actions:")
+        print("Attacker Actions:")
         for i, action in enumerate(self.actions):
             tag = "-"
             if not action.subnet:

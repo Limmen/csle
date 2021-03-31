@@ -1,5 +1,5 @@
 from typing import List
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 

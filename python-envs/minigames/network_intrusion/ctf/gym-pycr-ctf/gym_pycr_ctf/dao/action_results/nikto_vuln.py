@@ -1,4 +1,4 @@
-from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 
 class NiktoVuln:
 

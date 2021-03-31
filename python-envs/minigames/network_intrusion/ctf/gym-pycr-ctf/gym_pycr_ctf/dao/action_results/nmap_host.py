@@ -2,7 +2,7 @@ from typing import List
 import copy
 from gym_pycr_ctf.dao.action_results.nmap_host_status import NmapHostStatus
 from gym_pycr_ctf.dao.action_results.nmap_port import NmapPort
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.action_results.nmap_os import NmapOs
 from gym_pycr_ctf.dao.action_results.nmap_vuln import NmapVuln
 from gym_pycr_ctf.dao.action_results.nmap_brute_credentials import NmapBruteCredentials

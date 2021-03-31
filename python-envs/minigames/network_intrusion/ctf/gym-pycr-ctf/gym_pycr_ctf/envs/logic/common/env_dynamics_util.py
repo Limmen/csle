@@ -1,12 +1,12 @@
 from typing import List, Tuple
-from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import AttackerMachineObservationState
-from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
+from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 

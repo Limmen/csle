@@ -30,10 +30,10 @@ class PyCRCTFRandomGeneratedSim1Env(PyCRCTFEnv):
                                                                  subnet_mask=containers_config.subnet_mask,
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV1.env_config(containers_config=containers_config,
-                                                          flags_config=flags_config,
-                                                          action_conf=action_conf,
-                                                          emulation_config=emulation_config, render_conf=render_config,
-                                                          num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -68,10 +68,10 @@ class PyCRCTFRandomGeneratedSimWithCosts1Env(PyCRCTFEnv):
                                                                  subnet_mask=containers_config.subnet_mask,
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV1.env_config(containers_config=containers_config,
-                                                          flags_config=flags_config,
-                                                          action_conf=action_conf,
-                                                          emulation_config=emulation_config, render_conf=render_config,
-                                                          num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -106,10 +106,10 @@ class PyCRCTFRandomGeneratedSim2Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV2.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -144,10 +144,10 @@ class PyCRCTFRandomGeneratedSimWithCosts2Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV2.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -182,10 +182,10 @@ class PyCRCTFRandomGeneratedSim3Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV3.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -219,10 +219,10 @@ class PyCRCTFRandomGeneratedSimWithCosts3Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV3.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes-1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes-1)
             env_config.attacker_cost_coefficient = 1
             env_config.attacker_alerts_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -258,10 +258,10 @@ class PyCRCTFRandomGeneratedSim4Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV4.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes - 1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes - 1)
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
@@ -296,10 +296,10 @@ class PyCRCTFRandomGeneratedSimWithCosts4Env(PyCRCTFEnv):
                                                            subnet_mask=containers_config.subnet_mask,
                                                            hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV4.env_config(containers_config=containers_config,
-                                                        flags_config=flags_config,
-                                                        action_conf=action_conf,
-                                                        emulation_config=emulation_config, render_conf=render_config,
-                                                        num_nodes=num_nodes - 1)
+                                                    flags_config=flags_config,
+                                                    attacker_action_conf=action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config,
+                                                    num_nodes=num_nodes - 1)
             env_config.attacker_cost_coefficient = 1
             env_config.attacker_alerts_coefficient = 1
             env_config.env_mode = EnvMode.GENERATED_SIMULATION

@@ -27,9 +27,9 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
             action_conf = PyCrCTFMultiSimV1.actions_conf(num_nodes=dr_max_num_nodes-1,
                                                                  subnet_mask="172.18.2.0/24",
                                                                  hacker_ip="172.18.2.191")
-            env_config = PyCrCTFMultiSimV1.env_config(action_conf=action_conf,
-                                                          emulation_config=emulation_config, render_conf=render_config,
-                                                          num_nodes=dr_max_num_nodes-1)
+            env_config = PyCrCTFMultiSimV1.env_config(attacker_action_conf=action_conf,
+                                                      emulation_config=emulation_config, render_conf=render_config,
+                                                      num_nodes=dr_max_num_nodes-1)
             env_config.domain_randomization = True
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
