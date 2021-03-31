@@ -1,12 +1,12 @@
 from typing import List, Tuple
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.action.action import Action
 from gym_pycr_ctf.dao.action.action_id import ActionId
-from gym_pycr_ctf.dao.observation.observation_state import ObservationState
+from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.action_config import ActionConfig
 
@@ -16,7 +16,7 @@ class EnvDynamicsUtil:
     """
 
     @staticmethod
-    def merge_complete_obs_state(old_obs_state: ObservationState, new_obs_state : ObservationState,
+    def merge_complete_obs_state(old_obs_state: AttackerObservationState, new_obs_state : AttackerObservationState,
                                  env_config: EnvConfig):
         merged_obs_state = old_obs_state.copy()
         merged_obs_state.num_machines = max(old_obs_state.num_machines, new_obs_state.num_machines)
@@ -573,7 +573,7 @@ class EnvDynamicsUtil:
         for key, flag in env_config.network_conf.flags_lookup.items():
             total_flags.add(flag)
         found_flags = set()
-        for node in s.obs_state.machines:
+        for node in s.attacker_obs_state.machines:
             found_flags = found_flags.union(node.flags_found)
         return total_flags == found_flags
 
@@ -673,14 +673,14 @@ class EnvDynamicsUtil:
     @staticmethod
     def cache_action(env_config: EnvConfig, a: Action, s: EnvState):
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=a, s=s)
-        s.obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
+        s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
     def logged_in_ips_str(env_config: EnvConfig, a: Action, s: EnvState):
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
-                                 filter(lambda x: x.logged_in, s.obs_state.machines)))
+                                 filter(lambda x: x.logged_in, s.attacker_obs_state.machines)))
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)

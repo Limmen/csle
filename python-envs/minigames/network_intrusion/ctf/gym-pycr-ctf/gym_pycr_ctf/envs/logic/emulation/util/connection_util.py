@@ -9,7 +9,7 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.envs.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
@@ -42,7 +42,7 @@ class ConnectionUtil:
         target_machine = None
         non_used_credentials = []
         root = False
-        for m in s.obs_state.machines:
+        for m in s.attacker_obs_state.machines:
             if m.ip == a.ip:
                 target_machine = m
                 target_machine = target_machine.copy()
@@ -147,9 +147,9 @@ class ConnectionUtil:
                 new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                 total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
                 total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                    EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine],
+                    EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
                                                            env_config=env_config, action=a)
-                s_prime.obs_state.machines = new_machines_obs
+                s_prime.attacker_obs_state.machines = new_machines_obs
 
             return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
                    total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
@@ -164,7 +164,7 @@ class ConnectionUtil:
                                                         username=env_config.emulation_config.agent_username,
                                                         root=True, port=22, service=constants.SSH.SERVICE_NAME,
                                                         proxy=None, ip=env_config.emulation_config.agent_ip)]
-        for m in s.obs_state.machines:
+        for m in s.attacker_obs_state.machines:
             ssh_connections_sorted_by_root = sorted(
                 m.ssh_connections,
                 key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
@@ -230,9 +230,9 @@ class ConnectionUtil:
             new_machines_obs, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [target_machine], env_config=env_config,
+                EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine], env_config=env_config,
                                                        action=a)
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
         else:
             target_machine.shell_access = False
             target_machine.shell_access_credentials = []
@@ -270,7 +270,7 @@ class ConnectionUtil:
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
-                if not a.ip in s.obs_state.agent_reachable:
+                if not a.ip in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.SSH.SERVICE_NAME:
@@ -295,8 +295,8 @@ class ConnectionUtil:
                         print("SSH exception :{}".format(str(e)))
                         print("user:{}, pw:{}".format(cr.username, cr.pw))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
-                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                         print("Action:{}, {}, {}".format(a.id, a.ip, a.descr))
                 else:
                     non_failed_credentials.append(cr)
@@ -375,7 +375,7 @@ class ConnectionUtil:
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
-                if not a.ip in s.obs_state.agent_reachable:
+                if not a.ip in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.TELNET.SERVICE_NAME:
@@ -411,8 +411,8 @@ class ConnectionUtil:
                         print("telnet exception:{}".format(str(e)))
                         print("Target:{} reachable from {}, {}".format(a.ip, m.ip, a.ip in m.reachable))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
-                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:
@@ -496,7 +496,7 @@ class ConnectionUtil:
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
-                if not a.ip in s.obs_state.agent_reachable:
+                if not a.ip in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.FTP.SERVICE_NAME:
@@ -538,8 +538,8 @@ class ConnectionUtil:
                     except Exception as e:
                         print("FTP exception: {}".format(str(e)))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.obs_state.agent_reachable))
-                        print("Agent reachable:{}".format(s.obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
                     non_failed_credentials.append(cr)
             if connected:

@@ -15,29 +15,29 @@ class Simulator:
     real actions in the emulation environment.
     """
     @staticmethod
-    def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s: EnvState, attacker_action: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Simulates a state transition in the MDP or Markov Game
 
         :param s: the current state
-        :param a: the action to take
+        :param attacker_action: the action to take
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        if a.type == ActionType.RECON:
-            EnvDynamicsUtil.cache_action(env_config=env_config,a=a, s=s)
-            return Simulator.recon_action(s=s, a=a, env_config=env_config)
-        elif a.type == ActionType.EXPLOIT or a.type == ActionType.PRIVILEGE_ESCALATION:
-            if a.subnet:
-                EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
-            return Simulator.exploit_action(s=s, a=a, env_config=env_config)
-        elif a.type == ActionType.POST_EXPLOIT:
-            return Simulator.post_exploit_action(s=s, a=a, env_config=env_config)
+        if attacker_action.type == ActionType.RECON:
+            EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+            return Simulator.attacker_recon_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == ActionType.EXPLOIT or attacker_action.type == ActionType.PRIVILEGE_ESCALATION:
+            if attacker_action.subnet:
+                EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+            return Simulator.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == ActionType.POST_EXPLOIT:
+            return Simulator.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
         else:
-            raise ValueError("Action type:{} not recognized".format(a.type))
+            raise ValueError("Action type:{} not recognized".format(attacker_action.type))
 
     @staticmethod
-    def recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a reconnaissance action
 
@@ -97,7 +97,7 @@ class Simulator:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs an exploit action
 
@@ -153,7 +153,7 @@ class Simulator:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Simulates a post-exploit action
 

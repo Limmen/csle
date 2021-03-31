@@ -14,20 +14,21 @@ class TransitionOperator:
     """
 
     @staticmethod
-    def transition(s : EnvState, a : Action, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s : EnvState, attacker_action : Action, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
         """
-        Implements the transition operator of the MDP/Markov Game, supporting both simulation and emulation mode
+        Implements the transition operator of the MDP/Markov Game for attack actions,
+        supporting both simulation and emulation mode
         (s, a) --> (s', r)
 
         :param s: the current state
-        :param a: the action of the transition
+        :param attacker_action: the attacker's action of the transition
         :param env_config: the environment config
         :return: s', r, done
         """
         if env_config.env_mode == EnvMode.SIMULATION:
-            return Simulator.transition(s=s,a=a,env_config=env_config)
+            return Simulator.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
         elif env_config.env_mode == EnvMode.emulation or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
-            return EmulationMiddleware.transition(s=s, a=a, env_config=env_config)
+            return EmulationMiddleware.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
             # try:
             #     return emulationMiddleware.transition(s=s,a=a,env_config=env_config)
             # except Exception as e:

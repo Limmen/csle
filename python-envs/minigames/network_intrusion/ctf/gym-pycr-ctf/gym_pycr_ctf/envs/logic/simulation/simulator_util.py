@@ -5,7 +5,7 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.action import Action
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.dao.observation.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.dao.action.action_outcome import ActionOutcome
@@ -57,11 +57,11 @@ class SimulatorUtil:
                                 vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                          protocol=vuln.protocol, cvss=vuln.cvss)
                                 new_m_obs.cve_vulns.append(vuln_obs)
-            new_machines_obs = s.obs_state.machines
+            new_machines_obs = s.attacker_obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
                 merged = False
-                for o_m in s.obs_state.machines:
+                for o_m in s.attacker_obs_state.machines:
                     # Machine was already known, merge state
                     if o_m.ip == a.ip:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
@@ -87,7 +87,7 @@ class SimulatorUtil:
                     new_machines_obs.append(new_m_obs)
                     total_new_machines +=1
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
                                                    num_new_machines=total_new_machines,
@@ -127,10 +127,10 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed \
-                = EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs, env_config=env_config,
                                                          action=a)
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
                                                    num_new_machines = total_new_machines,
@@ -173,11 +173,11 @@ class SimulatorUtil:
                     if os:
                         new_m_obs.os = node.os
 
-            new_machines_obs = s.obs_state.machines
+            new_machines_obs = s.attacker_obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
                 merged = False
-                for o_m in s.obs_state.machines:
+                for o_m in s.attacker_obs_state.machines:
 
                     # Existing machine, it was already known
                     if o_m.ip == a.ip:
@@ -205,7 +205,7 @@ class SimulatorUtil:
                     total_new_machines += 1
                     new_machines_obs.append(new_m_obs)
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
                                                    num_new_machines=total_new_machines,
@@ -232,10 +232,10 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs, env_config=env_config,
                                                        action=a)
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
 
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
@@ -297,11 +297,11 @@ class SimulatorUtil:
                                                                 protocol=service.protocol)
                                 new_m_obs.ports.append(port_obs)
                     new_m_obs = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=new_m_obs)
-            new_machines_obs = s.obs_state.machines
+            new_machines_obs = s.attacker_obs_state.machines
             if new_m_obs is not None:
                 new_machines_obs = []
                 merged = False
-                for o_m in s.obs_state.machines:
+                for o_m in s.attacker_obs_state.machines:
                     # Machine was already known, merge state
                     if o_m.ip == a.ip:
                         merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
@@ -327,7 +327,7 @@ class SimulatorUtil:
                     total_new_machines += 1
                     new_machines_obs.append(new_m_obs)
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports,
                                                    num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
@@ -376,10 +376,10 @@ class SimulatorUtil:
             new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
             total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
             total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+                EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs, env_config=env_config,
                                                        action=a)
             s_prime = s
-            s_prime.obs_state.machines = new_machines_obs
+            s_prime.attacker_obs_state.machines = new_machines_obs
             reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                    num_new_cve_vuln_found=total_new_vuln,
                                                    num_new_machines=total_new_machines,
@@ -412,7 +412,7 @@ class SimulatorUtil:
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_obs_machines = []
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
-        discovered_nodes = list(map(lambda x: x.ip, s.obs_state.machines))
+        discovered_nodes = list(map(lambda x: x.ip, s.attacker_obs_state.machines))
         reachable_nodes = list(filter(lambda x: x in discovered_nodes, reachable_nodes))
         for node in env_config.network_conf.nodes:
             if node.ip not in reachable_nodes:
@@ -421,7 +421,7 @@ class SimulatorUtil:
             new_m_obs.reachable = node.reachable_nodes
             credentials = None
             access = False
-            for o_m in s.obs_state.machines:
+            for o_m in s.attacker_obs_state.machines:
                 if o_m.ip == node.ip:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
@@ -444,10 +444,10 @@ class SimulatorUtil:
         new_obs_machines, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
         total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_obs_machines, env_config=env_config,
+            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_obs_machines, env_config=env_config,
                                                    action=a)
         s_prime = s
-        s_prime.obs_state.machines = new_obs_machines
+        s_prime.attacker_obs_state.machines = new_obs_machines
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports,
                                                num_new_os_found=total_new_os,
                                                num_new_cve_vuln_found=total_new_vuln,
@@ -499,7 +499,7 @@ class SimulatorUtil:
         :return: True or False
         """
         reachable_nodes = set()
-        logged_in_machines = list(filter(lambda x: x.logged_in and x.tools_installed, state.obs_state.machines))
+        logged_in_machines = list(filter(lambda x: x.logged_in and x.tools_installed, state.attacker_obs_state.machines))
         for node in env_config.network_conf.nodes:
             if node.ip in env_config.network_conf.agent_reachable:
                 reachable_nodes.add(node.ip)

@@ -2,16 +2,7 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.action import Action
-from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
-from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_pycr_ctf.dao.network.credential import Credential
-from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.network.vulnerability import Vulnerability
-import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
-from gym_pycr_ctf.envs.logic.emulation.util.exploit_util import ExploitUtil
-from gym_pycr_ctf.envs.logic.emulation.util.connection_util import ConnectionUtil
 
 class DefenseSensorMiddleware:
     """
@@ -22,7 +13,7 @@ class DefenseSensorMiddleware:
     @staticmethod
     def get_observation(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
-        Performs a Telnet Dictionary Password Attack action
+        Extract the latest defender-observation from the emulation and combines it with the current belief state
 
         :param s: the current state
         :param a: the action to take

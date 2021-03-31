@@ -1,15 +1,15 @@
 from typing import Tuple
 import numpy as np
 import gym
-from gym_pycr_ctf.dao.observation.observation_state import ObservationState
+from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
 
-class StateRepresentation:
+class AttackerStateRepresentation:
     """
     Utility class for configuring state and observation representations for the pycr-ctf env
     """
 
     @staticmethod
-    def base_representation_spaces(obs_state: ObservationState)-> Tuple:
+    def base_representation_spaces(obs_state: AttackerObservationState)-> Tuple:
         """
         Configures observation spaces for the base representation
 
@@ -28,7 +28,7 @@ class StateRepresentation:
                network_orig_shape, machine_orig_shape, m_action_observation_space
 
     @staticmethod
-    def base_representation(num_machines : int, num_ports : int, obs_state :ObservationState,
+    def base_representation(num_machines : int, num_ports : int, obs_state :AttackerObservationState,
                             vuln_lookup: dict, service_lookup: dict, os_lookup: dict) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -134,7 +134,7 @@ class StateRepresentation:
         return machines_obs, ports_protocols_obs
 
     @staticmethod
-    def compact_representation_spaces(obs_state: ObservationState) -> Tuple:
+    def compact_representation_spaces(obs_state: AttackerObservationState) -> Tuple:
         """
         Configures observation spaces for the compact representation
 
@@ -153,7 +153,7 @@ class StateRepresentation:
                network_orig_shape, machine_orig_shape, m_action_observation_space
 
     @staticmethod
-    def compact_representation(num_machines: int, num_ports: int, obs_state: ObservationState) \
+    def compact_representation(num_machines: int, num_ports: int, obs_state: AttackerObservationState) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Compact observation representation, includes only aggregate features, e.g. total num open ports rather than
@@ -197,7 +197,7 @@ class StateRepresentation:
         return machines_obs, ports_protocols_obs
 
     @staticmethod
-    def essential_representation_spaces(obs_state: ObservationState) -> Tuple:
+    def essential_representation_spaces(obs_state: AttackerObservationState) -> Tuple:
         """
         Configures observation spaces for the essential representation
 
@@ -216,7 +216,7 @@ class StateRepresentation:
                network_orig_shape, machine_orig_shape, m_action_observation_space
 
     @staticmethod
-    def essential_representation(num_machines: int, num_ports: int, obs_state: ObservationState) \
+    def essential_representation(num_machines: int, num_ports: int, obs_state: AttackerObservationState) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Essential observation representation
@@ -277,7 +277,7 @@ class StateRepresentation:
         return machines_obs, ports_protocols_obs
 
     @staticmethod
-    def simple_representation_spaces(obs_state: ObservationState) -> Tuple:
+    def simple_representation_spaces(obs_state: AttackerObservationState) -> Tuple:
         """
         Configures observation spaces for the level_1 representation
 
@@ -294,7 +294,7 @@ class StateRepresentation:
                network_orig_shape, machine_orig_shape, m_action_observation_space
 
     @staticmethod
-    def simple_representation(num_machines: int, num_ports: int, obs_state: ObservationState) \
+    def simple_representation(num_machines: int, num_ports: int, obs_state: AttackerObservationState) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Compact observation representation, includes only aggregate features, e.g. total num open ports rather than

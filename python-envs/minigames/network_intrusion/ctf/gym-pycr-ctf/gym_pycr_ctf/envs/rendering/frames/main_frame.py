@@ -9,7 +9,7 @@ from gym_pycr_ctf.envs.rendering.util.render_util import batch_rect_fill, batch_
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.agent_state import AgentState
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.envs import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 class MainFrame(pyglet.window.Window):

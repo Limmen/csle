@@ -53,7 +53,7 @@ class PPOAttackerBotAgent:
             #actions = list(range(self.agent_config.output_dim))
             # non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_action_legal(
             #     action, env_config=self.env_config, env_state=s), actions))
-            m_obs, p_obs = s.get_observation()
+            m_obs, p_obs = s.get_attacker_observation()
             obs_tensor = torch.as_tensor(m_obs.flatten()).to(self.device)            
             actions, values = self.model.predict(observation=obs_tensor, deterministic = True,
                                                             state=obs_tensor)

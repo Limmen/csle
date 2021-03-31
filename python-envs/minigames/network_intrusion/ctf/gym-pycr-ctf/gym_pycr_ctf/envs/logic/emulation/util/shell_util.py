@@ -7,7 +7,7 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.logic.emulation.util.connection_util import ConnectionUtil
@@ -381,7 +381,7 @@ class ShellUtil:
         new_machines_obs = []
         total_cost = 0
         total_alerts = (0, 0)
-        for machine in s.obs_state.machines:
+        for machine in s.attacker_obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
@@ -563,10 +563,10 @@ class ShellUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config,
+            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs, env_config=env_config,
                                                    action=a)
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = new_machines_obs
 
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_vuln,
@@ -624,7 +624,7 @@ class ShellUtil:
         new_machines_obs = []
         total_cost = 0
         total_alerts = (0, 0)
-        for machine in s.obs_state.machines:
+        for machine in s.attacker_obs_state.machines:
             new_m_obs = MachineObservationState(ip=machine.ip)
             backdoor_created = False
             if machine.logged_in and machine.root and machine.tools_installed and not machine.backdoor_installed:
@@ -765,10 +765,10 @@ class ShellUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_machines_obs, env_config=env_config,
+            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs, env_config=env_config,
                                                    action=a)
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = new_machines_obs
 
         reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
                                                  num_new_cve_vuln_found=total_new_vuln,
@@ -813,7 +813,7 @@ class ShellUtil:
         if env_config.ids_router:
             last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
-        for machine in s.obs_state.machines:
+        for machine in s.attacker_obs_state.machines:
             a.ip = machine.ip
             s_1, t_n_p_1, t_n_os_1, t_n_v_1, t_n_m_1, \
             t_n_s_a_1, t_n_f_p_1, t_n_r_1, t_n_o_v_1, t_n_l_i_1, t_n_t_i_1, t_n_b_i_1, ssh_cost, \

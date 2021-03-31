@@ -15,29 +15,29 @@ class EmulationMiddleware:
     """
 
     @staticmethod
-    def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s: EnvState, attacker_action: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
 
         :param s: the current state
-        :param a: the action
+        :param attacker_action: the action
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.type == ActionType.RECON:
-            EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
-            return EmulationMiddleware.recon_action(s=s, a=a, env_config=env_config)
-        elif a.type == ActionType.EXPLOIT or a.type == ActionType.PRIVILEGE_ESCALATION:
-            if a.subnet:
-                EnvDynamicsUtil.cache_action(env_config=env_config, a=a, s=s)
-            return EmulationMiddleware.exploit_action(s=s, a=a, env_config=env_config)
-        elif a.type == ActionType.POST_EXPLOIT:
-            return EmulationMiddleware.post_exploit_action(s=s, a=a, env_config=env_config)
+        if attacker_action.type == ActionType.RECON:
+            EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+            return EmulationMiddleware.attacker_recon_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == ActionType.EXPLOIT or attacker_action.type == ActionType.PRIVILEGE_ESCALATION:
+            if attacker_action.subnet:
+                EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+            return EmulationMiddleware.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == ActionType.POST_EXPLOIT:
+            return EmulationMiddleware.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
 
     @staticmethod
-    def recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_recon_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition of a reconnaissance action
 
@@ -90,7 +90,7 @@ class EmulationMiddleware:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements transition of an exploit action
 
@@ -146,7 +146,7 @@ class EmulationMiddleware:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements the transition of a post-exploit action
 

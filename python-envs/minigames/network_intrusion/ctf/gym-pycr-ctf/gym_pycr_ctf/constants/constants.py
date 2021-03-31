@@ -588,3 +588,5 @@ class TRAFFIC_COMMANDS:
 # ls /var/log/btmp
 # tail -444f /var/log/apache2/access.log
 # netstat -a
+# who
+# last

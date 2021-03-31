@@ -1,12 +1,12 @@
 import numpy as np
 from gym_pycr_ctf.dao.agent.agent_log import AgentLog
-from gym_pycr_ctf.dao.observation.observation_state import ObservationState
+from gym_pycr_ctf.dao.observation.attacker_observation_state import AttackerObservationState
 
 class AgentState:
     """
     DTO with agent's state information for rendering
     """
-    def __init__(self, obs_state : ObservationState, env_log: AgentLog,
+    def __init__(self, obs_state : AttackerObservationState, env_log: AgentLog,
                  episode_reward : int = 0,
                  cumulative_reward : int = 0, time_step : int = 0, num_episodes: int = 0,
                  vuln_lookup : dict = None,

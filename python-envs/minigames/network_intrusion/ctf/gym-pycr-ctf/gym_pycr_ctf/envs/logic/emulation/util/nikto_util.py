@@ -7,7 +7,7 @@ from gym_pycr_ctf.dao.action_results.nikto_vuln import NiktoVuln
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.constants.constants as constants
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.logic.emulation.util.nmap_util import NmapUtil
 
@@ -113,7 +113,7 @@ class NiktoUtil:
         total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         m_obs = None
 
-        for m in s.obs_state.machines:
+        for m in s.attacker_obs_state.machines:
             if m.ip == scan_result.ip:
                 m_obs = MachineObservationState(ip=m.ip)
 
@@ -124,10 +124,10 @@ class NiktoUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, [m_obs], env_config=env_config,
+            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [m_obs], env_config=env_config,
                                                    action=a)
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = new_machines_obs
 
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):

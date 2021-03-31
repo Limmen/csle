@@ -16,7 +16,7 @@ from gym_pycr_ctf.dao.action_results.nmap_os import NmapOs
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action_results.nmap_vuln import NmapVuln
 from gym_pycr_ctf.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.dao.action_results.nmap_hop import NmapHop
 from gym_pycr_ctf.dao.action_results.nmap_trace import NmapTrace
 from gym_pycr_ctf.dao.action_results.nmap_http_enum import NmapHttpEnum
@@ -538,11 +538,11 @@ class NmapUtil:
         new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
         total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
         total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.obs_state.machines, new_m_obs, env_config=env_config,
+            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs, env_config=env_config,
                                                    action=a)
 
         s_prime = s
-        s_prime.obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = new_machines_obs
 
         # Use measured cost
         if env_config.action_costs.exists(action_id=a.id, ip=a.ip):
@@ -581,8 +581,8 @@ class NmapUtil:
         """
         # ALL action
         if a.index == -1:
-            s.obs_state.sort_machines()
-            ips = list(map(lambda x: x.ip, s.obs_state.machines))
+            s.attacker_obs_state.sort_machines()
+            ips = list(map(lambda x: x.ip, s.attacker_obs_state.machines))
             ips_str = "_".join(ips)
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + ips + ".xml"
             cache_id = (a.id, a.index, ips_str, a.subnet)
@@ -600,7 +600,7 @@ class NmapUtil:
         if env_config.use_nmap_cache:
             cache_value = env_config.nmap_scan_cache.get(cache_id)
             if cache_value is not None:
-                s.obs_state.agent_reachable.update(cache_value.reachable)
+                s.attacker_obs_state.agent_reachable.update(cache_value.reachable)
                 return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
                                                                  partial_result=cache_value.copy(), masscan=masscan)
 
@@ -639,7 +639,7 @@ class NmapUtil:
             try:
                 xml_data = NmapUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
                 scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ip=env_config.hacker_ip, action=a)
-                s.obs_state.agent_reachable.update(scan_result.reachable)
+                s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
                 break
             except Exception as e:
                 scan_result = NmapScanResult(hosts=[], ip=env_config.hacker_ip)
@@ -792,7 +792,7 @@ class NmapUtil:
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
                                                                   and x.backdoor_installed,
-                                                        s.obs_state.machines)))
+                                                        s.attacker_obs_state.machines)))
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
@@ -814,7 +814,7 @@ class NmapUtil:
                                                                                 env_config=env_config)
                 for res in total_results:
                     if res.ip == env_config.hacker_ip:
-                        s_prime.obs_state.agent_reachable.update(res.reachable)
+                        s_prime.attacker_obs_state.agent_reachable.update(res.reachable)
                     else:
                         machine = s_prime.get_machine(res.ip)
                         if machine is None:
@@ -829,21 +829,21 @@ class NmapUtil:
                         else:
                             machine.reachable.update(res.reachable)
                 new_machines_obs_1 = []
-                reachable = s.obs_state.agent_reachable
+                reachable = s.attacker_obs_state.agent_reachable
                 reachable.add(env_config.router_ip)
 
-                for machine in s_prime.obs_state.machines:
+                for machine in s_prime.attacker_obs_state.machines:
                     if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
                         reachable = reachable.union(machine.reachable)
 
-                for machine in s_prime.obs_state.machines:
+                for machine in s_prime.attacker_obs_state.machines:
                     if machine.logged_in and machine.tools_installed:
                         machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
                     if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
                         machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
                     new_machines_obs_1.append(machine)
-                s_prime.obs_state.machines = new_machines_obs_1
+                s_prime.attacker_obs_state.machines = new_machines_obs_1
 
                 return s_prime, reward, False
 
@@ -852,7 +852,7 @@ class NmapUtil:
         merged_scan_result = partial_result
         total_results = []
 
-        for machine in s.obs_state.machines:
+        for machine in s.attacker_obs_state.machines:
             scan_result = None
             new_m_obs = MachineObservationState(ip=machine.ip)
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
@@ -939,20 +939,20 @@ class NmapUtil:
         s_prime, reward = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
         new_machines_obs_1 = []
-        reachable = s.obs_state.agent_reachable
+        reachable = s.attacker_obs_state.agent_reachable
         reachable.add(env_config.router_ip)
 
-        for machine in s_prime.obs_state.machines:
+        for machine in s_prime.attacker_obs_state.machines:
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
                 reachable = reachable.union(machine.reachable)
 
-        for machine in s_prime.obs_state.machines:
+        for machine in s_prime.attacker_obs_state.machines:
             if machine.logged_in and machine.tools_installed:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
             if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
                 machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
             new_machines_obs_1.append(machine)
-        s_prime.obs_state.machines = new_machines_obs_1
+        s_prime.attacker_obs_state.machines = new_machines_obs_1
 
         return s_prime, reward, False

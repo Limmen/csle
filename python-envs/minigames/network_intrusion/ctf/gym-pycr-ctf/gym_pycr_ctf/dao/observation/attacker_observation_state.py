@@ -1,9 +1,12 @@
 from typing import List
-from gym_pycr_ctf.dao.observation.machine_observation_state import MachineObservationState
+from gym_pycr_ctf.dao.observation.attacker_machine_observation_state import MachineObservationState
 from gym_pycr_ctf.dao.action.action import Action
 from gym_pycr_ctf.dao.action.action_id import ActionId
 
-class ObservationState:
+class AttackerObservationState:
+    """
+    Represents the attacker's agent's current belief state of the environment
+    """
 
     def __init__(self, num_machines : int, num_ports : int, num_vuln : int, num_sh : int,
                  num_flags : int, catched_flags : int, agent_reachable = None):
@@ -115,9 +118,9 @@ class ObservationState:
             return exploit_tried
 
     def copy(self):
-        c = ObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,
-                                    num_flags = self.num_flags, catched_flags = self.catched_flags,
-                                    agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
+        c = AttackerObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,
+                                     num_flags = self.num_flags, catched_flags = self.catched_flags,
+                                     agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
         c.detected = self.detected
         c.all_flags = self.all_flags
         c.actions_tried = self.actions_tried.copy()

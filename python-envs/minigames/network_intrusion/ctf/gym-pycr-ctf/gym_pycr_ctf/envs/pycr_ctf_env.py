@@ -43,7 +43,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.m_selection_observation_space = self.env_state.m_selection_observation_space
         self.m_action_observation_space = self.env_state.m_action_observation_space
         self.action_space = self.env_config.action_conf.action_space
-        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.obs_state.num_machines+1)
+        self.m_selection_action_space = gym.spaces.Discrete(self.env_state.attacker_obs_state.num_machines + 1)
         self.m_action_space = self.env_config.action_conf.m_action_space
         self.num_actions = self.env_config.action_conf.num_actions
         self.network_orig_shape = self.env_state.network_orig_shape
@@ -83,11 +83,11 @@ class PyCRCTFEnv(gym.Env, ABC):
                 shell_ids=self.env_config.action_conf.shell_action_ids)
 
         self.env_config.scale_rewards_prep()
-        self.agent_state = AgentState(obs_state=self.env_state.obs_state, env_log=AgentLog(),
+        self.agent_state = AgentState(obs_state=self.env_state.attacker_obs_state, env_log=AgentLog(),
                                       service_lookup=self.env_state.service_lookup,
                                       vuln_lookup=self.env_state.vuln_lookup,
                                       os_lookup=self.env_state.os_lookup)
-        self.last_obs = self.env_state.get_observation()
+        self.last_obs = self.env_state.get_attacker_observation()
         self.trajectory = []
         self.trajectories = []
         if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
@@ -103,7 +103,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION and not self.env_config.emulation_config.skip_exploration:
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
                                                            env_config=self.env_config, env=self)
-            self.env_state.obs_state = obs_state
+            self.env_state.attacker_obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
             self.reset()
@@ -145,8 +145,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                 action, env_config=self.env_config, env_state=self.env_state), actions))
             print("true legal actions:{}, idx:{}".format(legal_actions, self.idx))
             print("flags found:{}, idx:{}".format(self.env_state.num_flags, self.idx))
-            print("flags found:{}, idx:{}".format(list(map(lambda x: x.flags_found, self.env_state.obs_state.machines)), self.idx))
-            print("flags found:{}, idx:{}".format(self.env_state.obs_state.catched_flags, self.idx))
+            print("flags found:{}, idx:{}".format(list(map(lambda x: x.flags_found, self.env_state.attacker_obs_state.machines)), self.idx))
+            print("flags found:{}, idx:{}".format(self.env_state.attacker_obs_state.catched_flags, self.idx))
             print("total flags:{}, idx:{}".format(self.env_config.network_conf.flags_lookup, self.idx))
             print(self.env_config.network_conf)
             print("Idx:{}".format(self.idx))
@@ -154,7 +154,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             raise ValueError("Test")
             sys.exit(0)
             done = False
-            info["flags"] = self.env_state.obs_state.catched_flags
+            info["flags"] = self.env_state.attacker_obs_state.catched_flags
             self.agent_state.time_step += 1
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True
@@ -162,23 +162,23 @@ class PyCRCTFEnv(gym.Env, ABC):
         if action_id > len(self.env_config.action_conf.actions)-1:
             raise ValueError("Action ID: {} not recognized".format(action_id))
         action = self.env_config.action_conf.actions[action_id]
-        action.ip = self.env_state.obs_state.get_action_ip(action)
-        s_prime, reward, done = TransitionOperator.transition(s=self.env_state, a=action, env_config=self.env_config)
+        action.ip = self.env_state.attacker_obs_state.get_action_ip(action)
+        s_prime, reward, done = TransitionOperator.attacker_transition(s=self.env_state, attacker_action=action, env_config=self.env_config)
         if done:
             reward = reward - self.env_config.final_steps_reward_coefficient*self.agent_state.time_step
         if self.agent_state.time_step > self.env_config.max_episode_length:
             done = True
         self.env_state = s_prime
-        if self.env_state.obs_state.detected:
+        if self.env_state.attacker_obs_state.detected:
             reward = reward - self.env_config.detection_reward
-        m_obs, p_obs = self.env_state.get_observation()
+        m_obs, p_obs = self.env_state.get_attacker_observation()
         self.last_obs = m_obs
         self.agent_state.time_step += 1
         self.agent_state.episode_reward += reward
         self.__update_log(action)
         self.trajectory.append(m_obs)
         self.trajectory.append(reward)
-        info["flags"] = self.env_state.obs_state.catched_flags
+        info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.trajectories.append(self.trajectory)
 
@@ -212,24 +212,24 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
-        if self.env_state.obs_state.detected:
+        if self.env_state.attacker_obs_state.detected:
             self.agent_state.num_detections += 1
-        elif self.env_state.obs_state.all_flags:
+        elif self.env_state.attacker_obs_state.all_flags:
             self.agent_state.num_all_flags += 1
         self.env_state.reset_state()
-        m_obs, p_obs = self.env_state.get_observation()
+        m_obs, p_obs = self.env_state.get_attacker_observation()
         self.last_obs = m_obs
         self.agent_state.num_episodes += 1
         self.agent_state.cumulative_reward += self.agent_state.episode_reward
         self.agent_state.time_step = 0
         self.agent_state.episode_reward = 0
         self.agent_state.env_log.reset()
-        self.agent_state.obs_state = self.env_state.obs_state
+        self.agent_state.obs_state = self.env_state.attacker_obs_state
         #self.viewer.mainframe.set_state(self.agent_state)
         if self.viewer is not None and self.viewer.mainframe is not None:
             self.viewer.mainframe.reset_state()
         if self.env_config.env_mode == EnvMode.SIMULATION:
-            self.env_state.obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
+            self.env_state.attacker_obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         self.env_config.cache_misses = 0
         sys.stdout.flush()
         return m_obs
@@ -247,7 +247,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         :return: True (if human mode) otherwise an rgb array
         """
         #self.agent_state.obs_state = self.env_state.obs_state.copy()
-        self.agent_state.obs_state = self.env_state.obs_state
+        self.agent_state.obs_state = self.env_state.attacker_obs_state
         if mode not in self.metadata["render.modes"]:
             raise NotImplemented("mode: {} is not supported".format(mode))
         if self.viewer is None:
@@ -294,10 +294,10 @@ class PyCRCTFEnv(gym.Env, ABC):
             return False
 
         action = env_config.action_conf.actions[action_id]
-        ip = env_state.obs_state.get_action_ip(action)
+        ip = env_state.attacker_obs_state.get_action_ip(action)
 
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=action, s=env_state)
-        if (action.id, action.index, logged_in_ips_str) in env_state.obs_state.actions_tried:
+        if (action.id, action.index, logged_in_ips_str) in env_state.attacker_obs_state.actions_tried:
             return False
 
         # Recon on subnet is always possible
@@ -305,7 +305,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             return True
 
         # Recon on set of all found machines is always possible if there exists such machiens
-        if action.type == ActionType.RECON and action.index == -1 and len(env_state.obs_state.machines) > 0:
+        if action.type == ActionType.RECON and action.index == -1 and len(env_state.attacker_obs_state.machines) > 0:
             return True
 
         machine_discovered = False
@@ -321,7 +321,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         machine_w_tools = False
         uninstalled_backdoor = False
 
-        for m in env_state.obs_state.machines:
+        for m in env_state.attacker_obs_state.machines:
             if m_index == -1:
                 target_machines.append(m)
                 machine_discovered = True
@@ -364,9 +364,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             if action.subnet and target_machine is None:
                 return True
             if m_index is not None and m_index == -1:
-                exploit_tried = all(list(map(lambda x: env_state.obs_state.exploit_tried(a=action, m=x), target_machines)))
+                exploit_tried = all(list(map(lambda x: env_state.attacker_obs_state.exploit_tried(a=action, m=x), target_machines)))
             else:
-                exploit_tried = env_state.obs_state.exploit_tried(a=action, m=target_machine)
+                exploit_tried = env_state.attacker_obs_state.exploit_tried(a=action, m=target_machine)
             if exploit_tried:
                 return False
             return True
@@ -511,8 +511,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             return True
 
         # If machine is discovered then it is a legal action
-        if action_id < len(env_state.obs_state.machines):
-            m = env_state.obs_state.machines[action_id]
+        if action_id < len(env_state.attacker_obs_state.machines):
+            m = env_state.attacker_obs_state.machines[action_id]
             if m is not None:
                 return True
 
@@ -536,7 +536,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             return False
         action = env_config.action_conf.action_lookup_d[(action_id_id, machine_index)]
         logged_in = False
-        for m in env_state.obs_state.machines:
+        for m in env_state.attacker_obs_state.machines:
             if m.logged_in:
                 logged_in = True
 
@@ -559,9 +559,9 @@ class PyCRCTFEnv(gym.Env, ABC):
                 if action.type == ActionType.RECON or action.type == ActionType.EXPLOIT:
                     return True
 
-                if machine_index < len(env_state.obs_state.machines):
-                    env_state.obs_state.sort_machines()
-                    target_machine = env_state.obs_state.machines[machine_index]
+                if machine_index < len(env_state.attacker_obs_state.machines):
+                    env_state.attacker_obs_state.sort_machines()
+                    target_machine = env_state.attacker_obs_state.machines[machine_index]
 
                     # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
                     if action.type == ActionType.POST_EXPLOIT and target_machine.shell_access \

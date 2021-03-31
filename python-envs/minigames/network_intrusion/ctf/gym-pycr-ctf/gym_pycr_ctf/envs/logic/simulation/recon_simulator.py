@@ -26,7 +26,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -45,7 +45,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -64,7 +64,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -83,7 +83,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -102,7 +102,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -121,7 +121,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -140,7 +140,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -158,7 +158,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -178,7 +178,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
@@ -198,7 +198,7 @@ class ReconSimulator:
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
             reward = d_reward
-        s_prime.obs_state.detected = done
+        s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
