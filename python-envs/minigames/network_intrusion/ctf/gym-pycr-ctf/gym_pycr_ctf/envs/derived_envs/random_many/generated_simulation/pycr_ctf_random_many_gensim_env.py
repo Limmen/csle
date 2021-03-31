@@ -1,7 +1,7 @@
 from typing import List
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
@@ -15,7 +15,7 @@ class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_configs: List[ContainersConfig], flags_configs: List[FlagsConfig], idx : int,
                  num_nodes : int = -1):
         if num_nodes == -1:
@@ -24,17 +24,17 @@ class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
         flags_config = flags_configs[idx]
         if env_config is None:
             render_config = PyCrCTFRandomBase.render_conf(containers_config=containers_config)
-            if cluster_config is None:
-                raise ValueError("Cluster config cannot be None")
-            cluster_config.ids_router = containers_config.ids_enabled
-            cluster_config.ids_router_ip = containers_config.router_ip
+            if emulation_config is None:
+                raise ValueError("emulation config cannot be None")
+            emulation_config.ids_router = containers_config.ids_enabled
+            emulation_config.ids_router_ip = containers_config.router_ip
             action_conf = PyCrCTFRandomV1.actions_conf(num_nodes=num_nodes-1,
                                                                  subnet_mask=containers_config.subnet_mask,
                                                                  hacker_ip=containers_config.agent_ip)
             env_config = PyCrCTFRandomV1.env_config(containers_config=containers_config,
                                                           flags_config=flags_config,
                                                           action_conf=action_conf,
-                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=num_nodes-1)
             env_config.alerts_coefficient = 1
             env_config.cost_coefficient = 0

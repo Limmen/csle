@@ -16,7 +16,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client \
-                       smbclient fail2ban rsyslog netcat
+                       smbclient fail2ban rsyslog netcat traceroute
 
 RUN apt-get install -y openssl libssl-dev -t jessie-backports
 

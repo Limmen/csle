@@ -5,9 +5,9 @@
 #   full explanations of configuration directives
 # /NOTE
 
-# The name of the cluster. This is mainly used to prevent machines in
-# one logical cluster from joining another.
-cluster_name: 'Test Cluster'
+# The name of the emulation. This is mainly used to prevent machines in
+# one logical emulation from joining another.
+emulation_name: 'Test emulation'
 
 # This defines the number of tokens randomly assigned to this node on the ring
 # The more tokens, relative to other nodes, the larger the proportion of data
@@ -20,13 +20,13 @@ cluster_name: 'Test Cluster'
 # Specifying initial_token will override this setting on the node's initial start,
 # on subsequent starts, this setting will apply even if initial token is set.
 #
-# If you already have a cluster with 1 token per node, and wish to migrate to
+# If you already have a emulation with 1 token per node, and wish to migrate to
 # multiple tokens per node, see http://wiki.apache.org/cassandra/Operations
 num_tokens: 256
 
 # initial_token allows you to specify tokens manually.  While you can use # it with
 # vnodes (num_tokens > 1, above) -- in which case you should provide a
-# comma-separated list -- it's primarily used when adding nodes # to legacy clusters
+# comma-separated list -- it's primarily used when adding nodes # to legacy emulations
 # that do not have vnodes enabled.
 # initial_token:
 
@@ -40,8 +40,8 @@ hinted_handoff_enabled: true
 # created until it has been seen alive and gone down again.
 max_hint_window_in_ms: 10800000 # 3 hours
 # Maximum throttle in KBs per second, per delivery thread.  This will be
-# reduced proportionally to the number of nodes in the cluster.  (If there
-# are two nodes in the cluster, each delivery thread will use the maximum
+# reduced proportionally to the number of nodes in the emulation.  (If there
+# are two nodes in the emulation, each delivery thread will use the maximum
 # rate; if there are three, each will throttle to half of the maximum,
 # since we expect two nodes to be delivering hints simultaneously.)
 hinted_handoff_throttle_in_kb: 1024
@@ -51,7 +51,7 @@ hinted_handoff_throttle_in_kb: 1024
 max_hints_delivery_threads: 2
 
 # Maximum throttle in KBs per second, total. This will be
-# reduced proportionally to the number of nodes in the cluster.
+# reduced proportionally to the number of nodes in the emulation.
 batchlog_replay_throttle_in_kb: 1024
 
 # Authentication backend, implementing IAuthenticator; used to identify users
@@ -88,8 +88,8 @@ permissions_validity_in_ms: 2000
 # permissions_update_interval_in_ms: 1000
 
 # The partitioner is responsible for distributing groups of rows (by
-# partition key) across nodes in the cluster.  You should leave this
-# alone for new clusters.  The partitioner can NOT be changed without
+# partition key) across nodes in the emulation.  You should leave this
+# alone for new emulations.  The partitioner can NOT be changed without
 # reloading all data, so when upgrading you should set this to the
 # same partitioner you were already using.
 #
@@ -650,14 +650,14 @@ cross_node_timeout: false
 # IEndpointSnitch.  The snitch has two functions:
 # - it teaches Cassandra enough about your network topology to route
 #   requests efficiently
-# - it allows Cassandra to spread replicas around your cluster to avoid
+# - it allows Cassandra to spread replicas around your emulation to avoid
 #   correlated failures. It does this by grouping machines into
 #   "datacenters" and "racks."  Cassandra will do its best not to have
 #   more than one replica on the same "rack" (which may not actually
 #   be a physical location)
 #
 # CASSANDRA WILL NOT ALLOW YOU TO SWITCH TO AN INCOMPATIBLE SNITCH
-# ONCE DATA IS INSERTED INTO THE CLUSTER.  This would cause data loss.
+# ONCE DATA IS INSERTED INTO THE emulation.  This would cause data loss.
 # This means that if you start with the default SimpleSnitch, which
 # locates every node on "rack1" in "datacenter1", your only options
 # if you need to add another datacenter are GossipingPropertyFileSnitch
@@ -722,7 +722,7 @@ dynamic_snitch_badness_threshold: 0.1
 # request_scheduler -- Set this to a class that implements
 # RequestScheduler, which will schedule incoming client requests
 # according to the specific policy. This is useful for multi-tenancy
-# with a single Cassandra cluster.
+# with a single Cassandra emulation.
 # NOTE: This is specifically for requests from the client and does
 # not affect inter node communication.
 # org.apache.cassandra.scheduler.NoScheduler - No scheduling takes place

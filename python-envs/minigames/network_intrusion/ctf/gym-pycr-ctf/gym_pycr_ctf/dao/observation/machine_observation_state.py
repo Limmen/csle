@@ -99,7 +99,7 @@ class MachineObservationState:
 
     def cleanup(self):
         """
-        Cleans up environment state. This method is particularly useful in cluster mode where there are
+        Cleans up environment state. This method is particularly useful in emulation mode where there are
         SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.
 
         :return: None

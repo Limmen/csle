@@ -1,6 +1,6 @@
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env import PyCRCTFLevel1Cluster1Env
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.logic.simulation.find_pi_star import FindPiStar
 import gym
 import time
@@ -8,9 +8,9 @@ import numpy as np
 
 def test_env(env_name : str, num_steps : int):
 
-    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False)
-    env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
+    emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+                                     server_connection=False)
+    env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = True
 

@@ -17,9 +17,9 @@ from gym_pycr_ctf.dao.action.action_type import ActionType
 from gym_pycr_ctf.dao.action.action_id import ActionId
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs.logic.common.util as util
-from gym_pycr_ctf.envs.logic.cluster.system_id.simulation_generator import SimulationGenerator
+from gym_pycr_ctf.envs.logic.emulation.system_id.simulation_generator import SimulationGenerator
 from gym_pycr_ctf.envs.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_pycr_ctf.envs.logic.cluster.warmup.cluster_warmup import ClusterWarmup
+from gym_pycr_ctf.envs.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
 from gym_pycr_ctf.envs.logic.simulation.find_pi_star import FindPiStar
 
@@ -60,15 +60,15 @@ class PyCRCTFEnv(gym.Env, ABC):
             'video.frames_per_second': 50  # Video rendering speed
         }
         self.step_outcome = None
-        if self.env_config.env_mode == EnvMode.CLUSTER or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
-            self.env_config.cluster_config.connect_agent()
+        if self.env_config.env_mode == EnvMode.emulation or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+            self.env_config.emulation_config.connect_agent()
             if self.env_config.load_services_from_server:
-                self.env_config.cluster_config.download_cluster_services()
-            self.env_state.merge_services_with_cluster(self.env_config.cluster_config.cluster_services)
+                self.env_config.emulation_config.download_emulation_services()
+            self.env_state.merge_services_with_emulation(self.env_config.emulation_config.emulation_services)
             if self.env_config.load_cves_from_server:
-                self.env_config.cluster_config.download_cves()
-            self.env_state.merge_cves_with_cluster(self.env_config.cluster_config.cluster_cves)
-            self.env_config.action_costs = self.env_config.cluster_config.load_action_costs(
+                self.env_config.emulation_config.download_cves()
+            self.env_state.merge_cves_with_emulation(self.env_config.emulation_config.emulation_cves)
+            self.env_config.action_costs = self.env_config.emulation_config.load_action_costs(
                 actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
                 nmap_ids=self.env_config.action_conf.nmap_action_ids,
                 network_service_ids=self.env_config.action_conf.network_service_action_ids,
@@ -76,7 +76,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 nikto_ids=self.env_config.action_conf.nikto_action_ids,
                 masscan_ids=self.env_config.action_conf.masscan_action_ids,
                 action_lookup_d_val = self.env_config.action_conf.action_lookup_d_val)
-            self.env_config.action_alerts = self.env_config.cluster_config.load_action_alerts(
+            self.env_config.action_alerts = self.env_config.emulation_config.load_action_alerts(
                 actions=self.env_config.action_conf.actions, dir=self.env_config.nmap_cache_dir,
                 action_ids=self.env_config.action_conf.action_ids,
                 action_lookup_d_val=self.env_config.action_conf.action_lookup_d_val,
@@ -90,17 +90,17 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.last_obs = self.env_state.get_observation()
         self.trajectory = []
         self.trajectories = []
-        if self.env_config.cluster_config is not None and self.env_config.cluster_config.warmup \
-                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.CLUSTER):
-            ClusterWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions),
-                                 num_warmup_steps=env_config.cluster_config.warmup_iterations,
-                                 env=self, render = False)
+        if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
+                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.emulation):
+            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.action_conf.num_actions),
+                                   num_warmup_steps=env_config.emulation_config.warmup_iterations,
+                                   env=self, render = False)
             print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
                   "cache_misses:{}".format(
                 len(self.env_config.nmap_scan_cache.cache), len(self.env_config.filesystem_scan_cache.cache),
                 len(self.env_config.user_command_cache.cache), len(self.env_config.nikto_scan_cache.cache),
                 self.env_config.cache_misses))
-        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION and not self.env_config.cluster_config.skip_exploration:
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION and not self.env_config.emulation_config.skip_exploration:
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(exp_policy=env_config.exploration_policy,
                                                            env_config=self.env_config, env=self)
             self.env_state.obs_state = obs_state
@@ -419,14 +419,14 @@ class PyCRCTFEnv(gym.Env, ABC):
 
     def cleanup(self) -> None:
         """
-        Cleans up environment state. This method is particularly useful in cluster mode where there are
+        Cleans up environment state. This method is particularly useful in emulation mode where there are
         SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.
 
         :return: None
         """
         self.env_state.cleanup()
-        if self.env_config.cluster_config is not None:
-            self.env_config.cluster_config.close()
+        if self.env_config.emulation_config is not None:
+            self.env_config.emulation_config.close()
 
 
     def convert_ar_action(self, machine_idx, action_idx):

@@ -8,7 +8,7 @@ from gym_pycr_ctf.dao.action.nikto_actions import NIKTOActions
 from gym_pycr_ctf.dao.action.masscan_actions import MasscanActions
 from gym_pycr_ctf.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_ctf.dao.action.shell_actions import ShellActions
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.action.action_id import ActionId
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.network.node import Node
@@ -142,14 +142,14 @@ class PyCrCTFMultiSimBase:
 
     @staticmethod
     def env_config(action_conf: ActionConfig, render_conf: RenderConfig,
-                   cluster_conf: ClusterConfig, num_nodes : int
+                   emulation_config: EmulationConfig, num_nodes : int
                    ) -> EnvConfig:
         """
         :param containers_config: the containers config of the generated env
         :param num_nodes: max number of nodes (defines obs space size and action space size)
         :param network_conf: the network config
         :param action_conf: the action config
-        :param cluster_conf: the cluster config
+        :param emulation_config: the emulation config
         :param render_conf: the render config
         :return: The complete environment config
         """
@@ -157,7 +157,7 @@ class PyCrCTFMultiSimBase:
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
                                num_sh=3, num_nodes = num_nodes, render_config=render_conf,
                                env_mode=EnvMode.SIMULATION,
-                               cluster_config=cluster_conf,
+                               emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=None, state_type=StateType.BASE,
                                router_ip=None)

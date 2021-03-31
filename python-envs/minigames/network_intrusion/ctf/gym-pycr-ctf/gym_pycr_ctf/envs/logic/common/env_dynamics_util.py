@@ -12,7 +12,7 @@ from gym_pycr_ctf.dao.action.action_config import ActionConfig
 
 class EnvDynamicsUtil:
     """
-    Class containing common utilities that are used both in simulation-mode and in cluster-mode.
+    Class containing common utilities that are used both in simulation-mode and in emulation-mode.
     """
 
     @staticmethod

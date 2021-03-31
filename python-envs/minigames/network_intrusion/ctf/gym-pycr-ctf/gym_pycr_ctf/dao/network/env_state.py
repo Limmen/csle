@@ -117,29 +117,29 @@ class EnvState:
                                           num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
                                           catched_flags=0, agent_reachable=agent_reachable)
 
-    def merge_services_with_cluster(self, cluster_services : List[str]) -> None:
+    def merge_services_with_emulation(self, emulation_services : List[str]) -> None:
         """
-        Merges pre-defined lookup table of services with services downloaded from the cluster
+        Merges pre-defined lookup table of services with services downloaded from the emulation
 
-        :param cluster_services: services downloaded from the cluster
+        :param emulation_services: services downloaded from the emulation
         :return: None
         """
         max_id = max(self.service_lookup.values())
-        for service in cluster_services:
+        for service in emulation_services:
             if service not in self.service_lookup:
                 max_id += 1
                 self.service_lookup[service] = max_id
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
 
-    def merge_cves_with_cluster(self, cluster_cves : List[str]) -> None:
+    def merge_cves_with_emulation(self, emulation_cves : List[str]) -> None:
         """
-        Merges pre-defined lookup table of CVEs with CVEs downloaded from the cluster
+        Merges pre-defined lookup table of CVEs with CVEs downloaded from the emulation
 
-        :param cluster_cves: list of CVEs downloaded from the cluster
+        :param emulation_cves: list of CVEs downloaded from the emulation
         :return: None
         """
         max_id = max(self.vuln_lookup.values())
-        for cve in cluster_cves:
+        for cve in emulation_cves:
             if cve not in self.vuln_lookup:
                 max_id += 1
                 self.vuln_lookup[cve] = max_id

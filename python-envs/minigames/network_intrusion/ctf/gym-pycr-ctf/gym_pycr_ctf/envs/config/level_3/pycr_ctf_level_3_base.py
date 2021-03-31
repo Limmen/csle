@@ -10,7 +10,7 @@ from gym_pycr_ctf.dao.action.nikto_actions import NIKTOActions
 from gym_pycr_ctf.dao.action.masscan_actions import MasscanActions
 from gym_pycr_ctf.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_ctf.dao.action.shell_actions import ShellActions
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.action.action_id import ActionId
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.network.node import Node
@@ -108,15 +108,15 @@ class PyCrCTFLevel3Base:
         return reachable
 
     @staticmethod
-    def cluster_conf() -> ClusterConfig:
+    def emulation_config() -> EmulationConfig:
         """
-        :return: the default cluster config
+        :return: the default emulation config
         """
-        cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.3.191",
-                                       agent_username="agent", agent_pw="agent", server_connection=True,
-                                       server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                       server_username="kim")
-        return cluster_config
+        emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.3.191",
+                                         agent_username="agent", agent_pw="agent", server_connection=True,
+                                         server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                         server_username="kim")
+        return emulation_config
 
     @staticmethod
     def all_actions_conf(num_nodes: int, subnet_mask: str, hacker_ip: str) -> ActionConfig:
@@ -232,19 +232,19 @@ class PyCrCTFLevel3Base:
         return render_config
 
     @staticmethod
-    def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
+    def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, emulation_config: EmulationConfig,
                    render_conf: RenderConfig) -> EnvConfig:
         """
         :param network_conf: the network config
         :param action_conf: the action config
-        :param cluster_conf: the cluster config
+        :param emulation_config: the emulation config
         :param render_conf: the render config
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
                                num_sh=3, num_nodes = PyCrCTFLevel3Base.num_nodes(), render_config=render_conf,
                                env_mode=EnvMode.SIMULATION,
-                               cluster_config=cluster_conf,
+                               emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrCTFLevel3Base.hacker_ip(), state_type=StateType.BASE,
                                router_ip=PyCrCTFLevel3Base.router_ip())

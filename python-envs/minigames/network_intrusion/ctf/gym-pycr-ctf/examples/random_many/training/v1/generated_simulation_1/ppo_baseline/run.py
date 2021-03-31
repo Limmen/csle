@@ -5,7 +5,7 @@ from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
@@ -81,87 +81,87 @@ def default_config() -> ClientConfig:
                                                 dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
                                                 dr_use_base=True, log_regret=True, running_avg=10
                                                 )
-    # eval_env_name = "pycr-ctf-random-cluster-v1"
+    # eval_env_name = "pycr-ctf-random-emulation-v1"
     # eval_env_containers_config = util.read_containers_config(
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/containers.json")
     # eval_env_flags_config = util.read_flags_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/level_1/flags.json")
-    eval_env_name = "pycr-ctf-random-many-cluster-v1"
+    eval_env_name = "pycr-ctf-random-many-emulation-v1"
     eval_n_envs = 1
 
-    #env_name = "pycr-ctf-random-many-cluster-v1"
+    #env_name = "pycr-ctf-random-many-emulation-v1"
     env_name="pycr-ctf-random-many-generated-sim-v1"
     idx = 0
-    # cluster_configs = [
-    #     ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+    # emulation_configs = [
+    #     emulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
     #                                    server_connection=False, port_forward_next_port=2001 + idx*150,
     #                                    warmup=True, warmup_iterations=500),
-    #     ClusterConfig(agent_ip=containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
+    #     emulationConfig(agent_ip=containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=False, port_forward_next_port=2001 + (idx+1) * 150,
     #                   warmup=True, warmup_iterations=500),
-    #     ClusterConfig(agent_ip=containers_configs[idx + 2].agent_ip, agent_username="agent", agent_pw="agent",
+    #     emulationConfig(agent_ip=containers_configs[idx + 2].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=False, port_forward_next_port=2001 + (idx + 2) * 150,
     #                   warmup=True, warmup_iterations=500),
-    #     ClusterConfig(agent_ip=containers_configs[idx + 3].agent_ip, agent_username="agent", agent_pw="agent",
+    #     emulationConfig(agent_ip=containers_configs[idx + 3].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=False, port_forward_next_port=2001 + (idx + 3) * 150,
     #                   warmup=True, warmup_iterations=500)
     # ]
-    cluster_configs = [
-        ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=2001 + idx * 150,
-                      warmup=True, warmup_iterations=500),
-        ClusterConfig(agent_ip=containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=2001 + (idx+1) * 150,
-                      warmup=True, warmup_iterations=500)
+    emulation_configs = [
+        EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=2001 + idx * 150,
+                        warmup=True, warmup_iterations=500),
+        EmulationConfig(agent_ip=containers_configs[idx + 1].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=2001 + (idx+1) * 150,
+                        warmup=True, warmup_iterations=500)
     ]
 
-    # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    # eval_emulation_config = emulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
-    # eval_env_cluster_configs = [
-    #     ClusterConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+    # eval_env_emulation_configs = [
+    #     emulationConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=False, port_forward_next_port=8001 + idx * 150,
     #                   warmup=True, warmup_iterations=500),
-    #     ClusterConfig(agent_ip=eval_env_containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
+    #     emulationConfig(agent_ip=eval_env_containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=False, port_forward_next_port=8001 + (idx+1) * 150,
     #                   warmup=True, warmup_iterations=500)
     # ]
 
-    eval_env_cluster_configs = [
-        ClusterConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=8001 + idx * 150,
-                      warmup=True, warmup_iterations=500),
-        ClusterConfig(agent_ip=eval_env_containers_configs[idx+1].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=8001 + (idx+1) * 150,
-                      warmup=True, warmup_iterations=500),
-        ClusterConfig(agent_ip=eval_env_containers_configs[idx + 2].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=8001 + (idx + 2) * 150,
-                      warmup=True, warmup_iterations=500),
-        ClusterConfig(agent_ip=eval_env_containers_configs[idx + 3].agent_ip, agent_username="agent", agent_pw="agent",
-                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-                      server_username="kim", server_ip="172.31.212.92",
-                      port_forward_next_port=8001 + (idx + 3) * 150,
-                      warmup=True, warmup_iterations=500)
+    eval_env_emulation_configs = [
+        EmulationConfig(agent_ip=eval_env_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=8001 + idx * 150,
+                        warmup=True, warmup_iterations=500),
+        EmulationConfig(agent_ip=eval_env_containers_configs[idx + 1].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=8001 + (idx+1) * 150,
+                        warmup=True, warmup_iterations=500),
+        EmulationConfig(agent_ip=eval_env_containers_configs[idx + 2].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=8001 + (idx + 2) * 150,
+                        warmup=True, warmup_iterations=500),
+        EmulationConfig(agent_ip=eval_env_containers_configs[idx + 3].agent_ip, agent_username="agent", agent_pw="agent",
+                        server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                        server_username="kim", server_ip="172.31.212.92",
+                        port_forward_next_port=8001 + (idx + 3) * 150,
+                        warmup=True, warmup_iterations=500)
     ]
 
-    # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim", warmup=True, warmup_iterations=500,
     #                                port_forward_next_port=4000)
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
@@ -170,7 +170,7 @@ def default_config() -> ClientConfig:
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline random many v1",
                                  run_many=True, random_seeds=[0, 999],
-                                 random_seed=399, cluster_configs=cluster_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
+                                 random_seed=399, emulation_configs=emulation_configs, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  containers_configs=[containers_configs[idx], containers_configs[idx+1],
                                                      containers_configs[idx+2], containers_configs[idx+3]],
                                  flags_configs=[flags_configs[idx], flags_configs[idx+1], flags_configs[idx+2],
@@ -178,7 +178,7 @@ def default_config() -> ClientConfig:
                                  dummy_vec_env=False, sub_proc_env=True, n_envs=n_envs,
                                  randomized_env=False, multi_env=True,
                                  eval_env=True,
-                                 eval_env_name=eval_env_name, eval_env_cluster_configs=eval_env_cluster_configs,
+                                 eval_env_name=eval_env_name, eval_env_emulation_configs=eval_env_emulation_configs,
                                  eval_env_containers_configs=[eval_env_containers_configs[idx], eval_env_containers_configs[idx+1]],
                                  eval_env_flags_configs=[eval_env_flags_configs[idx], eval_env_flags_configs[idx+1]], eval_multi_env=True,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
@@ -208,7 +208,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO random many v1 cluster"
+    experiment_title = "PPO random many v1 emulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

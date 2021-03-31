@@ -6,7 +6,7 @@ from gym_pycr_ctf.dao.action.action_config import ActionConfig
 from gym_pycr_ctf.dao.action.nmap_actions import NMAPActions
 from gym_pycr_ctf.dao.action.network_service_actions import NetworkServiceActions
 from gym_pycr_ctf.dao.action.shell_actions import ShellActions
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.action.action_id import ActionId
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.envs.config.level_2.pycr_ctf_level_2_base import PyCrCTFLevel2Base
@@ -69,21 +69,21 @@ class PyCrCTFLevel2V1:
         return action_config
 
     @staticmethod
-    def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, cluster_conf: ClusterConfig,
+    def env_config(network_conf : NetworkConfig, action_conf: ActionConfig, emulation_config: EmulationConfig,
                    render_conf: RenderConfig) -> EnvConfig:
         """
         Generates the environment configuration
 
         :param network_conf: the network config
         :param action_conf: the action config
-        :param cluster_conf: the cluster config
+        :param emulation_config: the emulation config
         :param render_conf: the render config
         :return: The complete environment config
         """
         env_config = EnvConfig(network_conf=network_conf, action_conf=action_conf, num_ports=10, num_vuln=10,
                                num_sh=3, num_nodes = PyCrCTFLevel2Base.num_nodes(),
-                               render_config=render_conf, env_mode=EnvMode.CLUSTER,
-                               cluster_config=cluster_conf,
+                               render_config=render_conf, env_mode=EnvMode.emulation,
+                               emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrCTFLevel2Base.hacker_ip(), state_type=StateType.ESSENTIAL,
                                router_ip=PyCrCTFLevel2Base.router_ip())

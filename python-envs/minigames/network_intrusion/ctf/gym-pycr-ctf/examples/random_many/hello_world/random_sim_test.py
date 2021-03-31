@@ -1,6 +1,6 @@
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env import PyCRCTFLevel1Cluster1Env
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym
 import time
 import numpy as np
@@ -10,11 +10,11 @@ from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 
 def test_env(env_name : str, num_steps : int):
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
@@ -32,13 +32,13 @@ def test_env(env_name : str, num_steps : int):
 
     idx = 1
     print("ip:{}".format(containers_configs[idx].agent_ip))
-    # cluster_config = ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+    # emulation_config = emulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
     #                                server_connection=False, port_forward_next_port=9800)
-    cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim")
-    env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
+                                     agent_username="agent", agent_pw="agent", server_connection=True,
+                                     server_private_key_file="/home/kim/.ssh/id_rsa",
+                                     server_username="kim")
+    env = gym.make(env_name, env_config=None, emulation_config=emulation_config,
                    containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
                    num_nodes=max_num_nodes)
     env.env_config.max_episode_length = 1000000000
@@ -78,7 +78,7 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    #test_env("pycr-ctf-random-many-cluster-v1", num_steps=1000000000)
+    #test_env("pycr-ctf-random-many-emulation-v1", num_steps=1000000000)
     test_env("pycr-ctf-random-many-generated-sim-v1", num_steps=1000000000)
 
 

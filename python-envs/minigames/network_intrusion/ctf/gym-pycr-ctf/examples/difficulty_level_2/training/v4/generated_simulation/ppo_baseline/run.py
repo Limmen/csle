@@ -5,7 +5,7 @@ from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 
 def default_config() -> ClientConfig:
@@ -39,17 +39,17 @@ def default_config() -> ClientConfig:
                                                 n_deterministic_eval_iter=1
                                                 )
     env_name = "pycr-ctf-level-2-generated-sim-v4"
-    eval_env_name = "pycr-ctf-level-2-cluster-v4"
+    eval_env_name = "pycr-ctf-level-2-emulation-v4"
 
     # env_name = "pycr-ctf-level-2-generated-sim-costs-v4"
-    # eval_env_name = "pycr-ctf-level-2-cluster-costs-v4"
+    # eval_env_name = "pycr-ctf-level-2-emulation-costs-v4"
 
-    # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # eval_emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    eval_cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-                                        server_connection=False)
+    eval_emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+                                          server_connection=False)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
@@ -58,8 +58,8 @@ def default_config() -> ClientConfig:
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
-                                 eval_cluster_config=eval_cluster_config,
-                                 cluster_config=eval_cluster_config)
+                                 eval_emulation_config=eval_emulation_config,
+                                 emulation_config=eval_emulation_config)
     return client_config
 
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO level_2 v4 cluster"
+    experiment_title = "PPO level_2 v4 emulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

@@ -59,47 +59,47 @@ class Runner:
         env = None
         eval_env = None
         if config.multi_env:
-            cluster_conf_temps = None
-            if config.cluster_configs is not None:
-                cluster_conf_temps = deepcopy(config.cluster_configs)
-                for cf in cluster_conf_temps:
+            emulation_config_temps = None
+            if config.emulation_configs is not None:
+                emulation_config_temps = deepcopy(config.emulation_configs)
+                for cf in emulation_config_temps:
                     cf.warmup = False
                     cf.skip_exploration = True
         else:
-            cluster_conf_temp = None
-            if config.cluster_config is not None:
-                cluster_conf_temp = deepcopy(config.cluster_config)
-                cluster_conf_temp.warmup = False
-                cluster_conf_temp.skip_exploration = True
+            emulation_config_temp = None
+            if config.emulation_config is not None:
+                emulation_config_temp = deepcopy(config.emulation_config)
+                emulation_config_temp.warmup = False
+                emulation_config_temp.skip_exploration = True
         if config.eval_multi_env:
-            eval_cluster_conf_temps = None
-            if config.eval_env_cluster_configs is not None:
-                eval_cluster_conf_temps = deepcopy(config.eval_env_cluster_configs)
-                for cf in eval_cluster_conf_temps:
+            eval_emulation_config_temps = None
+            if config.eval_env_emulation_configs is not None:
+                eval_emulation_config_temps = deepcopy(config.eval_env_emulation_configs)
+                for cf in eval_emulation_config_temps:
                     cf.warmup = False
                     cf.skip_exploration = True
 
         if config.multi_env:
-            env, base_envs = Runner.multi_env_creation(config=config, cluster_conf_temps=cluster_conf_temps)
+            env, base_envs = Runner.multi_env_creation(config=config, emulation_config_temps=emulation_config_temps)
         elif config.randomized_env:
-            env, base_env = Runner.randomized_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
+            env, base_env = Runner.randomized_env_creation(config=config, emulation_config_temp=emulation_config_temp)
         elif config.train_multi_sim:
             env, base_envs = Runner.multisim_env_creation(config=config)
         else:
-            env, base_env = Runner.regular_env_creation(config=config, cluster_conf_temp=cluster_conf_temp)
+            env, base_env = Runner.regular_env_creation(config=config, emulation_config_temp=emulation_config_temp)
         if config.eval_env is not None and config.eval_env:
             if config.eval_randomized_env:
-                eval_env = gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=config.eval_cluster_config,
+                eval_env = gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=config.eval_emulation_config,
                                     checkpoint_dir=config.env_checkpoint_dir,
                                     containers_config=config.eval_env_containers_config,
                                     flags_config=config.eval_env_flags_config, num_nodes = config.eval_env_num_nodes)
             elif config.eval_multi_env:
-                eval_env, eval_base_envs = Runner.eval_multi_env_creation(config=config, cluster_conf_temps=eval_cluster_conf_temps)
+                eval_env, eval_base_envs = Runner.eval_multi_env_creation(config=config, emulation_config_temps=eval_emulation_config_temps)
             elif config.eval_multi_sim:
                 eval_env, eval_base_envs = Runner.eval_multisim_env_creation(config=config)
             else:
                 eval_env = gym.make(config.eval_env_name, env_config = config.env_config,
-                                    cluster_config = config.eval_cluster_config,
+                                    emulation_config = config.eval_emulation_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
             if config.eval_multi_env:
                 config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
@@ -169,7 +169,7 @@ class Runner:
         :return: experiment result
         """
         env = None
-        env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+        env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                        checkpoint_dir=config.env_checkpoint_dir)
 
         if config.simulation_config.domain_randomization:
@@ -205,7 +205,7 @@ class Runner:
         :return: experiment result
         """
         env = None
-        env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+        env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                        checkpoint_dir=config.env_checkpoint_dir)
         if config.simulation_config.domain_randomization:
             randomization_space = DomainRandomizer.generate_randomization_space(
@@ -223,12 +223,12 @@ class Runner:
         return env
 
     @staticmethod
-    def multi_env_creation(config: ClientConfig, cluster_conf_temps):
-        base_envs = [gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temps[i],
+    def multi_env_creation(config: ClientConfig, emulation_config_temps):
+        base_envs = [gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temps[i],
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.containers_configs,
                               flags_configs=config.flags_configs, idx=i,
                               num_nodes=config.agent_config.num_nodes) for i in range(len(config.containers_configs))]
-        env_kwargs = [{"env_config": config.env_config, "cluster_config": config.cluster_configs[i],
+        env_kwargs = [{"env_config": config.env_config, "emulation_config": config.emulation_configs[i],
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_configs,
                       "flags_config": config.flags_configs, "idx": i,
                        "num_nodes": config.agent_config.num_nodes} for i in range(len(config.containers_configs))]
@@ -245,11 +245,11 @@ class Runner:
         return env, base_envs
 
     @staticmethod
-    def randomized_env_creation(config: ClientConfig, cluster_conf_temp):
-        base_env = gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temp,
+    def randomized_env_creation(config: ClientConfig, emulation_config_temp):
+        base_env = gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temp,
                             checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
                             flags_config=config.flags_config, num_nodes = config.agent_config.num_nodes)
-        env_kwargs = {"env_config": config.env_config, "cluster_config": config.cluster_config,
+        env_kwargs = {"env_config": config.env_config, "emulation_config": config.emulation_config,
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_config,
                       "flags_config": config.flags_config, "num_nodes": config.agent_config.num_nodes}
         vec_env_kwargs = {"env_config": config.env_config}
@@ -260,17 +260,17 @@ class Runner:
             env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
                                env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls)
         else:
-            env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+            env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                            checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
                            flags_config=config.flags_config, num_nodes=config.agent_config.num_nodes)
         return env, base_env
 
 
     @staticmethod
-    def regular_env_creation(config: ClientConfig, cluster_conf_temp):
-        base_env = gym.make(config.env_name, env_config=config.env_config, cluster_config=cluster_conf_temp,
+    def regular_env_creation(config: ClientConfig, emulation_config_temp):
+        base_env = gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temp,
                             checkpoint_dir=config.env_checkpoint_dir)
-        env_kwargs = {"env_config": config.env_config, "cluster_config": config.cluster_config,
+        env_kwargs = {"env_config": config.env_config, "emulation_config": config.emulation_config,
                       "checkpoint_dir": config.env_checkpoint_dir}
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
@@ -280,7 +280,7 @@ class Runner:
             env = make_vec_env(config.env_name, n_envs=config.n_envs, seed=config.random_seed,
                                env_kwargs=env_kwargs, vec_env_kwargs=vec_env_kwargs, vec_env_cls=vec_env_cls)
         else:
-            env = gym.make(config.env_name, env_config=config.env_config, cluster_config=config.cluster_config,
+            env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                            checkpoint_dir=config.env_checkpoint_dir)
             if config.agent_config.domain_randomization:
                 randomization_space = DomainRandomizer.generate_randomization_space(
@@ -298,12 +298,12 @@ class Runner:
         return env, base_env
 
     @staticmethod
-    def eval_multi_env_creation(config: ClientConfig, cluster_conf_temps):
-        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=cluster_conf_temps[i],
+    def eval_multi_env_creation(config: ClientConfig, emulation_config_temps):
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=emulation_config_temps[i],
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.eval_env_containers_configs,
                               flags_configs=config.eval_env_flags_configs, idx=i) for i in range(len(config.eval_env_containers_configs))]
 
-        env_kwargs = [{"env_config": config.env_config, "cluster_config": config.eval_env_cluster_configs[i],
+        env_kwargs = [{"env_config": config.env_config, "emulation_config": config.eval_env_emulation_configs[i],
                        "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.eval_env_containers_configs,
                        "flags_config": config.eval_env_flags_configs, "idx": i, "num_nodes": config.eval_env_num_nodes
                        } for i in range(len(config.eval_env_containers_configs))]
@@ -321,7 +321,7 @@ class Runner:
 
     @staticmethod
     def multisim_env_creation(config: ClientConfig):
-        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=None,
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=None,
                               idx=i, checkpoint_dir=config.env_checkpoint_dir,
                               dr_max_num_nodes=config.agent_config.dr_max_num_nodes,
                               dr_min_num_nodes=config.agent_config.dr_min_num_nodes,
@@ -330,7 +330,7 @@ class Runner:
                               dr_max_num_flags=config.agent_config.dr_max_num_flags,
                               dr_min_num_flags=config.agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims)]
-        env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
+        env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
                        "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,
@@ -353,7 +353,7 @@ class Runner:
 
     @staticmethod
     def eval_multisim_env_creation(config: ClientConfig):
-        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, cluster_config=None,
+        base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=None,
                               idx=i, checkpoint_dir=config.env_checkpoint_dir,
                               dr_max_num_nodes = config.agent_config.dr_max_num_nodes,
                               dr_min_num_nodes = config.agent_config.dr_min_num_nodes,
@@ -362,7 +362,7 @@ class Runner:
                               dr_max_num_flags = config.agent_config.dr_max_num_flags,
                               dr_min_num_flags = config.agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims_eval)]
-        env_kwargs = [{"env_config": config.env_config, "cluster_config": None,
+        env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
                        "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,

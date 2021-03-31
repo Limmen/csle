@@ -4,8 +4,8 @@ from gym_pycr_ctf.dao.container_config.node_flags_config import NodeFlagsConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
-from gym_pycr_ctf.envs.logic.cluster.util.cluster_util import ClusterUtil
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
 
 class FlagsGenerator:
@@ -38,20 +38,20 @@ class FlagsGenerator:
         return fl_cfg
 
     @staticmethod
-    def create_flags(flags_config: FlagsConfig, cluster_config: ClusterConfig):
+    def create_flags(flags_config: FlagsConfig, emulation_config: EmulationConfig):
         for flags_conf in flags_config.flags:
-            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=flags_conf.ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=flags_conf.ip)
 
             for flag in flags_conf.flags:
                 path, content, dir, id, requires_root, score = flag
                 cmd = "sudo rm -rf {}".format(path)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "sudo touch {}".format(path)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "echo '{}' >> {}".format(content, path)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 
 
     @staticmethod

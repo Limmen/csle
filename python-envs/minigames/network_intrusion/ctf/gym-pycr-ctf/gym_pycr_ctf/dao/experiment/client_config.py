@@ -7,7 +7,7 @@ from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 
 class ClientConfig:
     """
@@ -19,12 +19,12 @@ class ClientConfig:
                  output_dir:str = None, title = None,
                  env_config = None, run_many :bool = False,
                  random_seeds : list = None, random_seed = 0, agent_type : int = 0,
-                 cluster_config = None, env_checkpoint_dir : str = None,
+                 emulation_config = None, env_checkpoint_dir : str = None,
                  mode: RunnerMode = RunnerMode.TRAIN_ATTACKER,
                  simulation_config: SimulationConfig = None,
                  eval_env: bool = None,
                  eval_env_name: str = None,
-                 eval_cluster_config = None,
+                 eval_emulation_config = None,
                  containers_config : ContainersConfig = None,
                  flags_config: FlagsConfig = None,
                  randomized_env :bool = False,
@@ -34,14 +34,14 @@ class ClientConfig:
                  sub_proc_env: bool = False,
                  containers_configs: List[ContainersConfig] = None,
                  flags_configs: List[FlagsConfig] = None,
-                 cluster_configs: List[ClusterConfig] = None,
+                 emulation_configs: List[EmulationConfig] = None,
                  multi_env: bool = False,
                  eval_env_containers_config = None,
                  eval_env_flags_config = None,
                  eval_env_num_nodes : int = 10,
                  eval_env_containers_configs: List[ContainersConfig] = None,
                  eval_env_flags_configs: List[FlagsConfig] = None,
-                 eval_env_cluster_configs: List[ClusterConfig] = None,
+                 eval_env_emulation_configs: List[EmulationConfig] = None,
                  eval_multi_env: bool  = False,
                  eval_n_envs: int = 2,
                  eval_dummy_vec_env: bool = False,
@@ -64,14 +64,14 @@ class ClientConfig:
         :param random_seed: specific random seed
         :param agent_config: policy gradient agent config
         :param agent_type: agent_type
-        :param cluster_config: cluster_config
-        :param eval_cluster_config: eval_cluster_config
+        :param emulation_config: emulation_config
+        :param eval_emulation_config: eval_emulation_config
         :param env_checkpoint_dir: checkpoint dir for env data
         :param mode: the mode for the experiment
         :param simulation_config: the simulation config
         :param eval_env: separate eval env
         :param eval_env_name: separate eval env name
-        :param eval_cluster_config: cluster config for eval env
+        :param eval_emulation_config: emulation config for eval env
         :param containers_config: containers config for the env
         :param flags_config: flags config for the env
         :param randomized_env: boolean flag whether the env is randomized or not
@@ -82,7 +82,7 @@ class ClientConfig:
         :param containers_configs: list of containers config when using multi-env
         :param flags_configs: list of flags config when using multi-env
         :param multi_env: boolean flag whether using a multi-env or not
-        :param cluster_configs: list of cluster configs when using a multi-env
+        :param emulation_configs: list of emulation configs when using a multi-env
         """
         self.env_name = env_name
         self.logger = None
@@ -94,13 +94,13 @@ class ClientConfig:
         self.random_seed = random_seed
         self.agent_config = agent_config
         self.agent_type = agent_type
-        self.cluster_config = cluster_config
+        self.emulation_config = emulation_config
         self.env_checkpoint_dir = env_checkpoint_dir
         self.mode = mode
         self.simulation_config = simulation_config
         self.eval_env = eval_env
         self.eval_env_name = eval_env_name
-        self.eval_cluster_config = eval_cluster_config
+        self.eval_emulation_config = eval_emulation_config
         self.containers_config = containers_config
         self.flags_config = flags_config
         self.randomized_env = randomized_env
@@ -111,13 +111,13 @@ class ClientConfig:
         self.containers_configs = containers_configs
         self.flags_configs = flags_configs
         self.multi_env = multi_env
-        self.cluster_configs = cluster_configs
+        self.emulation_configs = emulation_configs
         self.eval_env_containers_config = eval_env_containers_config
         self.eval_env_flags_config = eval_env_flags_config
         self.eval_env_num_nodes = eval_env_num_nodes
         self.eval_env_containers_configs = eval_env_containers_configs
         self.eval_env_flags_configs = eval_env_flags_configs
-        self.eval_env_cluster_configs = eval_env_cluster_configs
+        self.eval_env_emulation_configs = eval_env_emulation_configs
         self.eval_multi_env = eval_multi_env
         self.eval_n_envs = eval_n_envs
         self.eval_dummy_vec_env = eval_dummy_vec_env

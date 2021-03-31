@@ -4,10 +4,10 @@ from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 
 # ------ Level 1 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env import PyCRCTFLevel1ClusterBaseEnv, \
-    PyCRCTFLevel1Cluster1Env, PyCRCTFLevel1Cluster2Env, PyCRCTFLevel1Cluster3Env, PyCRCTFLevel1Cluster4Env, \
-    PyCRCTFLevel1ClusterWithCosts1Env, PyCRCTFLevel1ClusterWithCosts2Env, PyCRCTFLevel1ClusterWithCosts3Env, \
-    PyCRCTFLevel1ClusterWithCosts4Env, PyCRCTFLevel1ClusterNoCache1Env
+from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1EmulationBaseEnv, \
+    PyCRCTFLevel1Emulation1Env, PyCRCTFLevel1Emulation2Env, PyCRCTFLevel1Emulation3Env, PyCRCTFLevel1Emulation4Env, \
+    PyCRCTFLevel1EmulationWithCosts1Env, PyCRCTFLevel1EmulationWithCosts2Env, PyCRCTFLevel1EmulationWithCosts3Env, \
+    PyCRCTFLevel1EmulationWithCosts4Env, PyCRCTFLevel1EmulationNoCache1Env
 
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1SimBaseEnv, \
     PyCRCTFLevel1Sim1Env, PyCRCTFLevel1Sim2Env, PyCRCTFLevel1Sim3Env, PyCRCTFLevel1Sim4Env, \
@@ -23,10 +23,10 @@ from gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_
 
 # ------ Level 2 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env import PyCRCTFLevel2ClusterBaseEnv, \
-    PyCRCTFLevel2Cluster1Env, PyCRCTFLevel2Cluster2Env, PyCRCTFLevel2Cluster3Env, PyCRCTFLevel2Cluster4Env, \
-    PyCRCTFLevel2ClusterWithCosts1Env, PyCRCTFLevel2ClusterWithCosts2Env, PyCRCTFLevel2ClusterWithCosts3Env, \
-    PyCRCTFLevel2ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env import PyCRCTFLevel2EmulationBaseEnv, \
+    PyCRCTFLevel2Emulation1Env, PyCRCTFLevel2Emulation2Env, PyCRCTFLevel2Emulation3Env, PyCRCTFLevel2Emulation4Env, \
+    PyCRCTFLevel2EmulationWithCosts1Env, PyCRCTFLevel2EmulationWithCosts2Env, PyCRCTFLevel2EmulationWithCosts3Env, \
+    PyCRCTFLevel2EmulationWithCosts4Env
 
 from gym_pycr_ctf.envs.derived_envs.level2.simulation.pycr_ctf_level2_sim_env import PyCRCTFLevel2SimBaseEnv, \
     PyCRCTFLevel2Sim1Env, PyCRCTFLevel2SimWithCosts1Env
@@ -40,54 +40,54 @@ from gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_
 
 # ------ Level 3 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env import PyCRCTFLevel3ClusterBaseEnv, \
-    PyCRCTFLevel3Cluster1Env, PyCRCTFLevel3Cluster2Env, PyCRCTFLevel3Cluster3Env, PyCRCTFLevel3Cluster4Env, \
-    PyCRCTFLevel3ClusterWithCosts1Env, PyCRCTFLevel3ClusterWithCosts2Env, PyCRCTFLevel3ClusterWithCosts3Env, \
-    PyCRCTFLevel3ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env import PyCRCTFLevel3EmulationBaseEnv, \
+    PyCRCTFLevel3Emulation1Env, PyCRCTFLevel3Emulation2Env, PyCRCTFLevel3Emulation3Env, PyCRCTFLevel3Emulation4Env, \
+    PyCRCTFLevel3EmulationWithCosts1Env, PyCRCTFLevel3EmulationWithCosts2Env, PyCRCTFLevel3EmulationWithCosts3Env, \
+    PyCRCTFLevel3EmulationWithCosts4Env
 
 
 # ------ Level 4 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env import PyCRCTFLevel4ClusterBaseEnv, \
-    PyCRCTFLevel4Cluster1Env, PyCRCTFLevel4Cluster2Env, PyCRCTFLevel4Cluster3Env, PyCRCTFLevel4Cluster4Env, \
-    PyCRCTFLevel4ClusterWithCosts1Env, PyCRCTFLevel4ClusterWithCosts2Env, PyCRCTFLevel4ClusterWithCosts3Env, \
-    PyCRCTFLevel4ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCRCTFLevel4EmulationBaseEnv, \
+    PyCRCTFLevel4Emulation1Env, PyCRCTFLevel4Emulation2Env, PyCRCTFLevel4Emulation3Env, PyCRCTFLevel4Emulation4Env, \
+    PyCRCTFLevel4EmulationWithCosts1Env, PyCRCTFLevel4EmulationWithCosts2Env, PyCRCTFLevel4EmulationWithCosts3Env, \
+    PyCRCTFLevel4EmulationWithCosts4Env
 
 # ------ Level 5 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env import PyCRCTFLevel5ClusterBaseEnv, \
-    PyCRCTFLevel5Cluster1Env, PyCRCTFLevel5Cluster2Env, PyCRCTFLevel5Cluster3Env, PyCRCTFLevel5Cluster4Env, \
-    PyCRCTFLevel5ClusterWithCosts1Env, PyCRCTFLevel5ClusterWithCosts2Env, PyCRCTFLevel5ClusterWithCosts3Env, \
-    PyCRCTFLevel5ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env import PyCRCTFLevel5EmulationBaseEnv, \
+    PyCRCTFLevel5Emulation1Env, PyCRCTFLevel5Emulation2Env, PyCRCTFLevel5Emulation3Env, PyCRCTFLevel5Emulation4Env, \
+    PyCRCTFLevel5EmulationWithCosts1Env, PyCRCTFLevel5EmulationWithCosts2Env, PyCRCTFLevel5EmulationWithCosts3Env, \
+    PyCRCTFLevel5EmulationWithCosts4Env
 
 # ------ Level 6 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env import PyCRCTFLevel6ClusterBaseEnv, \
-    PyCRCTFLevel6Cluster1Env, PyCRCTFLevel6Cluster2Env, PyCRCTFLevel6Cluster3Env, PyCRCTFLevel6Cluster4Env, \
-    PyCRCTFLevel6ClusterWithCosts1Env, PyCRCTFLevel6ClusterWithCosts2Env, PyCRCTFLevel6ClusterWithCosts3Env, \
-    PyCRCTFLevel6ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env import PyCRCTFLevel6EmulationBaseEnv, \
+    PyCRCTFLevel6Emulation1Env, PyCRCTFLevel6Emulation2Env, PyCRCTFLevel6Emulation3Env, PyCRCTFLevel6Emulation4Env, \
+    PyCRCTFLevel6EmulationWithCosts1Env, PyCRCTFLevel6EmulationWithCosts2Env, PyCRCTFLevel6EmulationWithCosts3Env, \
+    PyCRCTFLevel6EmulationWithCosts4Env
 
 # ------ Level 7 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env import PyCRCTFLevel7ClusterBaseEnv, \
-    PyCRCTFLevel7Cluster1Env, PyCRCTFLevel7Cluster2Env, PyCRCTFLevel7Cluster3Env, PyCRCTFLevel7Cluster4Env, \
-    PyCRCTFLevel7ClusterWithCosts1Env, PyCRCTFLevel7ClusterWithCosts2Env, PyCRCTFLevel7ClusterWithCosts3Env, \
-    PyCRCTFLevel7ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env import PyCRCTFLevel7EmulationBaseEnv, \
+    PyCRCTFLevel7Emulation1Env, PyCRCTFLevel7Emulation2Env, PyCRCTFLevel7Emulation3Env, PyCRCTFLevel7Emulation4Env, \
+    PyCRCTFLevel7EmulationWithCosts1Env, PyCRCTFLevel7EmulationWithCosts2Env, PyCRCTFLevel7EmulationWithCosts3Env, \
+    PyCRCTFLevel7EmulationWithCosts4Env
 
 
 # ------ Level 8 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env import PyCRCTFLevel8ClusterBaseEnv, \
-    PyCRCTFLevel8Cluster1Env, PyCRCTFLevel8Cluster2Env, PyCRCTFLevel8Cluster3Env, PyCRCTFLevel8Cluster4Env, \
-    PyCRCTFLevel8ClusterWithCosts1Env, PyCRCTFLevel8ClusterWithCosts2Env, PyCRCTFLevel8ClusterWithCosts3Env, \
-    PyCRCTFLevel8ClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env import PyCRCTFLevel8EmulationBaseEnv, \
+    PyCRCTFLevel8Emulation1Env, PyCRCTFLevel8Emulation2Env, PyCRCTFLevel8Emulation3Env, PyCRCTFLevel8Emulation4Env, \
+    PyCRCTFLevel8EmulationWithCosts1Env, PyCRCTFLevel8EmulationWithCosts2Env, PyCRCTFLevel8EmulationWithCosts3Env, \
+    PyCRCTFLevel8EmulationWithCosts4Env
 
 # ------ Random ----- #
 
-from gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env import PyCRCTFRandomClusterBaseEnv, PyCRCTFRandomCluster1Env, \
-    PyCRCTFRandomClusterWithCosts1Env, PyCRCTFRandomCluster2Env, PyCRCTFRandomCluster3Env, \
-    PyCRCTFRandomCluster4Env, PyCRCTFRandomClusterWithCosts2Env, PyCRCTFRandomClusterWithCosts3Env, \
-    PyCRCTFRandomClusterWithCosts4Env
+from gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env import PyCRCTFRandomEmulationBaseEnv, PyCRCTFRandomEmulation1Env, \
+    PyCRCTFRandomEmulationWithCosts1Env, PyCRCTFRandomEmulation2Env, PyCRCTFRandomEmulation3Env, \
+    PyCRCTFRandomEmulation4Env, PyCRCTFRandomEmulationWithCosts2Env, PyCRCTFRandomEmulationWithCosts3Env, \
+    PyCRCTFRandomEmulationWithCosts4Env
 
 from gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env import \
     PyCRCTFRandomGeneratedSim1Env, PyCRCTFRandomGeneratedSimWithCosts1Env, PyCRCTFRandomGeneratedSim2Env, \
@@ -96,8 +96,8 @@ from gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_
 
 # ------ Random Many ----- #
 
-from gym_pycr_ctf.envs.derived_envs.random_many.cluster.pycr_ctf_random_many_cluster_env import \
-    PyCRCTFRandomManyCluster1Env, PyCRCTFRandomManyClusterWithCosts1Env
+from gym_pycr_ctf.envs.derived_envs.random_many.emulation.pycr_ctf_random_many_emulation_env import \
+    PyCRCTFRandomManyEmulation1Env, PyCRCTFRandomManyEmulationWithCosts1Env
 
 from gym_pycr_ctf.envs.derived_envs.random_many.generated_simulation.pycr_ctf_random_many_gensim_env import \
     PyCRCTFRandomManyGeneratedSim1Env

@@ -86,15 +86,15 @@
         "video_frequency": 10
     },
     "agent_type": 1,
-    "cluster_config": {
+    "emulation_config": {
         "agent_conn": null,
         "agent_ip": "172.18.2.191",
         "agent_pw": "agent",
         "agent_username": "agent",
-        "cluster_cves": [],
-        "cluster_services": [],
+        "emulation_cves": [],
+        "emulation_services": [],
         "port_forward_next_port": 3900,
-        "py/object": "gym_pycr_ctf.dao.network.cluster_config.ClusterConfig",
+        "py/object": "gym_pycr_ctf.dao.network.emulation_config.emulationConfig",
         "relay_channel": null,
         "server_conn": null,
         "server_connection": false,
@@ -107,11 +107,11 @@
     "env_checkpoint_dir": null,
     "env_config": null,
     "env_name": "pycr-ctf-medium-generated-sim-v3",
-    "eval_cluster_config": {
+    "eval_emulation_config": {
         "py/id": 2
     },
     "eval_env": true,
-    "eval_env_name": "pycr-ctf-medium-cluster-v3",
+    "eval_env_name": "pycr-ctf-medium-emulation-v3",
     "logger": null,
     "mode": 0,
     "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_2/training/v3/generated_simulation/ppo_baseline",

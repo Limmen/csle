@@ -1,18 +1,18 @@
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs.config.multi_sim.pycr_ctf_multisim_base import PyCrCTFMultiSimBase
 from gym_pycr_ctf.envs.config.multi_sim.pycr_ctf_multisim_v1 import PyCrCTFMultiSimV1
 from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
 
 
-# -------- Version 1 Cluster ------------
+# -------- Version 1 emulation ------------
 class PyCRCTFMultiSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, cluster_config: ClusterConfig, checkpoint_dir : str,
+    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  idx: int = -1, dr_max_num_nodes : int = 10, dr_min_num_nodes : int  = 4, dr_max_num_flags = 3,
                  dr_min_num_flags : int = 1, dr_min_num_users :int = 2, dr_max_num_users : int = 5):
         if env_config is None:
@@ -28,7 +28,7 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
                                                                  subnet_mask="172.18.2.0/24",
                                                                  hacker_ip="172.18.2.191")
             env_config = PyCrCTFMultiSimV1.env_config(action_conf=action_conf,
-                                                          cluster_conf=cluster_config, render_conf=render_config,
+                                                          emulation_config=emulation_config, render_conf=render_config,
                                                           num_nodes=dr_max_num_nodes-1)
             env_config.domain_randomization = True
             env_config.alerts_coefficient = 1

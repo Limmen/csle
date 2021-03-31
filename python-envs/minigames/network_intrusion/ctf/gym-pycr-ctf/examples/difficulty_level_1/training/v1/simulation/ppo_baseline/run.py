@@ -5,7 +5,7 @@ from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym_pycr_ctf.util.experiments_util.plotting_util as plotting_util
 
 
@@ -45,14 +45,14 @@ def default_config() -> ClientConfig:
                                dr_use_base=True, running_avg=50
                                )
     env_name = "pycr-ctf-level-1-sim-v1"
-    #eval_env_name = "pycr-ctf-level-1-cluster-v1"
+    #eval_env_name = "pycr-ctf-level-1-emulation-v1"
     # env_name = "pycr-ctf-level-1-sim-costs-v1"
-    # eval_env_name = "pycr-ctf-level-1-cluster-costs-v1"
-    # eval_cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # eval_env_name = "pycr-ctf-level-1-emulation-costs-v1"
+    # eval_emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    # eval_cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    # eval_emulation_config = emulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                server_connection=False)
 
     # client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
@@ -62,7 +62,7 @@ def default_config() -> ClientConfig:
     #                              run_many=True, random_seeds=[0, 999, 299, 399, 499],
     #                              random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
     #                              eval_env=True, eval_env_name=eval_env_name,
-    #                              eval_cluster_config=eval_cluster_config)
+    #                              eval_emulation_config=eval_emulation_config)
 
     client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,

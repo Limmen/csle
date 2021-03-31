@@ -7,612 +7,612 @@ from gym.envs.registration import register
 register(
     id='pycr-ctf-level-1-sim-base-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1SimBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-1-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Version: 1 ------------
 register(
     id='pycr-ctf-level-1-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1Sim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Costs, Version: 1 ------------
 register(
     id='pycr-ctf-level-1-sim-costs-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1SimWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-1-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, No Cache Version: 1 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, No Cache Version: 1 ------------
 register(
-    id='pycr-ctf-level-1-cluster-nocache-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterNoCache1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-nocache-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationNoCache1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-1-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Costs, Version: 1 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-costs-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSimWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Version: 2 ------------
 register(
     id='pycr-ctf-level-1-sim-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1Sim2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Costs, Version: 2 ------------
 register(
     id='pycr-ctf-level-1-sim-costs-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1SimWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-1-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-1-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Version: 2 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSim2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Costs, Version: 2 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-costs-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSimWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Version: 3 ------------
 register(
     id='pycr-ctf-level-1-sim-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1Sim3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, costs, Version: 3 ------------
 register(
     id='pycr-ctf-level-1-sim-costs-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1SimWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Version: 3 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSim3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Costs, Version: 3 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-costs-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSimWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-1-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-1-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Version: 4 ------------
 register(
     id='pycr-ctf-level-1-sim-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1Sim4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Simulation, Costs, Version: 4 ------------
 register(
     id='pycr-ctf-level-1-sim-costs-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env:PyCRCTFLevel1SimWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Version: 4 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSim4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level1, Mode: Generated Simulation, Costs, Version: 4 ------------
 register(
     id='pycr-ctf-level-1-generated-sim-costs-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level1.generated_simulation.pycr_ctf_level1_gensim_env:PyCRCTFLevel1GeneratedSimWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-1-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level1, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level1, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-1-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env:PyCRCTFLevel1ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-1-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env:PyCRCTFLevel1EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Simulation, Version: Base ------------
 register(
     id='pycr-ctf-level-2-sim-base-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.simulation.pycr_ctf_level2_sim_env:PyCRCTFLevel2SimBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-2-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-2-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-2-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-2-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-2-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-2-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-2-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-2-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level2, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level2, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-2-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level2.cluster.pycr_ctf_level2_cluster_env:PyCRCTFLevel2ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-2-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level2.emulation.pycr_ctf_level2_emulation_env:PyCRCTFLevel2EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Costs, Version: 1 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-costs-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSimWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Simulation, Version: 1 ------------
 register(
     id='pycr-ctf-level-2-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.simulation.pycr_ctf_level2_sim_env:PyCRCTFLevel2Sim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Simulation, Costs, Version: 1 ------------
 register(
     id='pycr-ctf-level-2-sim-costs-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.simulation.pycr_ctf_level2_sim_env:PyCRCTFLevel2SimWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-3-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-3-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-3-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Version: 2 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSim2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Costs, Version: 2 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-costs-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSimWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-3-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-3-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Version: 3 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSim3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Costs, Version: 3 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-costs-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSimWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-3-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-3-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Version: 4 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSim4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 # -------- Difficulty Level: Level2, Mode: Generated Simulation, Costs, Version: 4 ------------
 register(
     id='pycr-ctf-level-2-generated-sim-costs-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level2.generated_simulation.pycr_ctf_level2_gensim_env:PyCRCTFLevel2GeneratedSimWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-3-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level3, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level3, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-3-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level3.cluster.pycr_ctf_level3_cluster_env:PyCRCTFLevel3ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-3-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_env:PyCRCTFLevel3EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 ## Level 4
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-4-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-4-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-4-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-4-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-4-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-4-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-4-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-4-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level4, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level4, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-4-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level4.cluster.pycr_ctf_level4_cluster_env:PyCRCTFLevel4ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-4-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env:PyCRCTFLevel4EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 ## Level 5
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-5-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-5-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-5-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-5-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-5-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-5-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-5-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-5-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level5, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level5, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-5-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level5.cluster.pycr_ctf_level5_cluster_env:PyCRCTFLevel5ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-5-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_env:PyCRCTFLevel5EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 ## Level 6
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-6-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-6-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-6-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-6-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-6-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-6-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-6-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-6-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level6, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level6, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-6-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level6.cluster.pycr_ctf_level6_cluster_env:PyCRCTFLevel6ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-6-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env:PyCRCTFLevel6EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 ## Random
 
-# -------- Difficulty Level: Random, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Random, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-random-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-random-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomCluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-random-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -620,7 +620,7 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -628,23 +628,23 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-costs-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-random-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomCluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-random-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -652,7 +652,7 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -660,23 +660,23 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-costs-v2',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-random-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomCluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-random-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -684,7 +684,7 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -692,23 +692,23 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-costs-v3',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-random-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomCluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
-# -------- Difficulty Level: Random, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Random, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-random-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random.cluster.pycr_ctf_random_cluster_env:PyCRCTFRandomClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env:PyCRCTFRandomEmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -716,7 +716,7 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
@@ -724,25 +724,25 @@ register(
 register(
     id='pycr-ctf-random-generated-sim-costs-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env:PyCRCTFRandomGeneratedSim4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_config": None, "flags_config": None, "num_nodes" : None}
 )
 
 ## Random Many
 
-# -------- Difficulty Level: Random Many, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Random Many, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-random-many-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random_many.cluster.pycr_ctf_random_many_cluster_env:PyCRCTFRandomManyCluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-many-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random_many.emulation.pycr_ctf_random_many_emulation_env:PyCRCTFRandomManyEmulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )
 
-# -------- Difficulty Level: Random Many, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Random Many, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-random-many-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.random_many.cluster.pycr_ctf_random_many_cluster_env:PyCRCTFRandomManyClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    id='pycr-ctf-random-many-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.random_many.emulation.pycr_ctf_random_many_emulation_env:PyCRCTFRandomManyEmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )
 
@@ -750,7 +750,7 @@ register(
 register(
     id='pycr-ctf-random-many-generated-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.random_many.generated_simulation.pycr_ctf_random_many_gensim_env:PyCRCTFRandomManyGeneratedSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "containers_configs": None, "flags_configs": None, "idx": None}
 )
 
@@ -760,137 +760,137 @@ register(
 register(
     id='pycr-ctf-multisim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.multisim.pycr_ctf_multisim_env:PyCRCTFMultiSim1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None,
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None,
             "idx": None, "dr_max_num_nodes": int, "dr_min_num_nodes": int, "dr_max_num_flags": int,
             "dr_min_num_flags": int, "dr_min_num_users": int, "dr_max_num_users": int}
 )
 
 ## Level 7
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-7-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-7-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-7-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-7-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-7-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-7-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-7-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-7-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level7, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level7, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-7-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level7.cluster.pycr_ctf_level7_cluster_env:PyCRCTFLevel7ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-7-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env:PyCRCTFLevel7EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
 ## Level 8
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Version: Base ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Version: Base ------------
 register(
-    id='pycr-ctf-level-8-cluster-base-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterBaseEnv',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Version: 1 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Version: 1 ------------
 register(
-    id='pycr-ctf-level-8-cluster-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 1 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Costs, Version: 1 ------------
 register(
-    id='pycr-ctf-level-8-cluster-costs-v1',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts1Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Version: 2 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Version: 2 ------------
 register(
-    id='pycr-ctf-level-8-cluster-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 2 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Costs, Version: 2 ------------
 register(
-    id='pycr-ctf-level-8-cluster-costs-v2',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts2Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Version: 3 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Version: 3 ------------
 register(
-    id='pycr-ctf-level-8-cluster-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 3 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Costs, Version: 3 ------------
 register(
-    id='pycr-ctf-level-8-cluster-costs-v3',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts3Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Version: 4 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Version: 4 ------------
 register(
-    id='pycr-ctf-level-8-cluster-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8Cluster4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level8, Mode: Cluster, Costs, Version: 4 ------------
+# -------- Difficulty Level: Level8, Mode: emulation, Costs, Version: 4 ------------
 register(
-    id='pycr-ctf-level-8-cluster-costs-v4',
-    entry_point='gym_pycr_ctf.envs.derived_envs.level8.cluster.pycr_ctf_level8_cluster_env:PyCRCTFLevel8ClusterWithCosts4Env',
-    kwargs={'env_config': None, 'cluster_config': None, "checkpoint_dir": None}
+    id='pycr-ctf-level-8-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env:PyCRCTFLevel8EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )

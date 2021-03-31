@@ -17,7 +17,7 @@ class Action:
 
         :param id: id of the action
         :param name: name of the action
-        :param cmd: command-line commands to apply the action on the cluster
+        :param cmd: command-line commands to apply the action on the emulation
         :param type: type of the action
         :param descr: description of the action (documentation)
         :param cost: cost of the action

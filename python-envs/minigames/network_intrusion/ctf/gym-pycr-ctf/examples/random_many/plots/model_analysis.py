@@ -1,7 +1,7 @@
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.util.experiments_util import util
 import gym
@@ -68,14 +68,14 @@ def create_env():
 
     idx = 1
     print("ip:{}".format(containers_configs[idx].agent_ip))
-    # cluster_config = ClusterConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
+    # emulation_config = emulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    cluster_config = ClusterConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
-                                   server_connection=False, port_forward_next_port=9800)
-    env_name = "pycr-ctf-random-many-cluster-v1"
-    env = gym.make(env_name, env_config=None, cluster_config=cluster_config,
+    emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                                     server_connection=False, port_forward_next_port=9800)
+    env_name = "pycr-ctf-random-many-emulation-v1"
+    env = gym.make(env_name, env_config=None, emulation_config=emulation_config,
                    containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
                    num_nodes=max_num_nodes)
     return env, agent_config
@@ -291,7 +291,7 @@ def plot_value_logged_in(agent_config: AgentConfig, model):
 
 if __name__ == '__main__':
     env, agent_config = create_env()
-    load_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/cluster/ppo_baseline/results/data/0/1609769574.4061646_policy_network.zip"
+    load_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/0/1609769574.4061646_policy_network.zip"
     device="cpu"
     model = load_model(env=env, load_path=load_path, device=device, agent_config=agent_config)
     print("model loaded")

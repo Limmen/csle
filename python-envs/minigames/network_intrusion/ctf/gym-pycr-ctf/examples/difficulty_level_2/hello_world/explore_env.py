@@ -1,7 +1,7 @@
 import threading
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.cluster.pycr_ctf_level1_cluster_env import PyCRCTFLevel1Cluster1Env
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np
@@ -15,17 +15,17 @@ class ExploreThread(threading.Thread):
         self.port_start = port_start
 
     def run(self):
-        # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+        # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
         #                                agent_username="agent", agent_pw="agent", server_connection=True,
         #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
         #                                server_username="kim")
-        # cluster_config = ClusterConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+        # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
         #                                agent_username="agent", agent_pw="agent", server_connection=True,
         #                                server_private_key_file="/home/kim/.ssh/id_rsa",
         #                                server_username="kim")
-        cluster_config = ClusterConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=self.port_start)
-        env = gym.make(self.env_name, env_config=None, cluster_config=cluster_config)
+        emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+                                         server_connection=False, port_forward_next_port=self.port_start)
+        env = gym.make(self.env_name, env_config=None, emulation_config=emulation_config)
         env.env_config.max_episode_length = 1000000000
         env.reset()
         num_actions = env.env_config.action_conf.num_actions
@@ -78,4 +78,4 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         t.join()
 
 if __name__ == '__main__':
-    start_explore_threads(num_threads=10, env_name="pycr-ctf-level-2-cluster-v4")
+    start_explore_threads(num_threads=10, env_name="pycr-ctf-level-2-emulation-v4")

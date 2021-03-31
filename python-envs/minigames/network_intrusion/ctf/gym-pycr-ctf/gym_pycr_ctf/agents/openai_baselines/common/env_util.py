@@ -93,10 +93,10 @@ def make_vec_env(
 
 def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor_kwargs):
     def _init():
-        if "cluster_config" in env_kwargs:
-            cluster_config = env_kwargs["cluster_config"]
-            if cluster_config is not None:
-                cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * rank
+        if "emulation_config" in env_kwargs:
+            emulation_config = env_kwargs["emulation_config"]
+            if emulation_config is not None:
+                emulation_config.port_forward_next_port = emulation_config.port_forward_next_port + 200 * rank
         if "num_nodes" in env_kwargs:
             num_nodes = env_kwargs["num_nodes"]
         else:
@@ -106,13 +106,13 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                 containers_config = env_kwargs["containers_config"]
                 flags_config = env_kwargs["flags_config"]
                 if "idx"in env_kwargs:
-                    cluster_config.port_forward_next_port = cluster_config.port_forward_next_port + 200 * env_kwargs["idx"]
-                    env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
+                    emulation_config.port_forward_next_port = emulation_config.port_forward_next_port + 200 * env_kwargs["idx"]
+                    env = gym.make(env_id, env_config=env_kwargs["env_config"], emulation_config=emulation_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_configs=containers_config,
                                    flags_configs=flags_config, idx=env_kwargs["idx"],
                                    num_nodes=num_nodes)
                 else:
-                    env = gym.make(env_id, env_config=env_kwargs["env_config"], cluster_config=cluster_config,
+                    env = gym.make(env_id, env_config=env_kwargs["env_config"], emulation_config=emulation_config,
                                    checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
                                    flags_config=flags_config, num_nodes=num_nodes)
             elif "dr_max_num_nodes" in env_kwargs:
@@ -130,7 +130,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                                dr_min_num_users=dr_min_num_users, idx=idx)
             else:
                 env = gym.make(env_id, env_config=env_kwargs["env_config"],
-                               cluster_config=cluster_config,
+                               emulation_config=emulation_config,
                                checkpoint_dir=env_kwargs["checkpoint_dir"])
         else:
             if "containers_config" in env_kwargs and "flags_config" in env_kwargs:
@@ -138,12 +138,12 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                 flags_config = env_kwargs["flags_config"]
                 if "idx" in env_kwargs:
                     env = env_id(env_config=env_kwargs["env_config"],
-                                 cluster_config=cluster_config,
+                                 emulation_config=emulation_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
                                  flags_config=flags_config, idx=env_kwargs["idx"], num_nodes=num_nodes)
                 else:
                     env = env_id(env_config=env_kwargs["env_config"],
-                                 cluster_config=cluster_config,
+                                 emulation_config=emulation_config,
                                  checkpoint_dir=env_kwargs["checkpoint_dir"], containers_config=containers_config,
                                  flags_config=flags_config, num_nodes=num_nodes)
             elif "dr_max_num_nodes" in env_kwargs:
@@ -161,7 +161,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
                                dr_min_num_users=dr_min_num_users, idx=idx)
             else:
                 env = env_id(env_config=env_kwargs["env_config"],
-                             cluster_config=cluster_config,
+                             emulation_config=emulation_config,
                              checkpoint_dir=env_kwargs["checkpoint_dir"])
 
         if seed is not None:

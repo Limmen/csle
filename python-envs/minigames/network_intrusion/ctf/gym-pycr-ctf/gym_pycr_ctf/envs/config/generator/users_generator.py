@@ -1,8 +1,8 @@
 import random
 import numpy as np
 from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
-from gym_pycr_ctf.envs.logic.cluster.util.cluster_util import ClusterUtil
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
 from gym_pycr_ctf.dao.container_config.node_users_config import NodeUsersConfig
 from gym_pycr_ctf.envs.config.generator.topology_generator import TopologyGenerator
@@ -48,28 +48,28 @@ class UsersGenerator:
         return users_conf
 
     @staticmethod
-    def create_users(users_config: UsersConfig, cluster_config: ClusterConfig):
+    def create_users(users_config: UsersConfig, emulation_config: EmulationConfig):
         """
         Creates users in an emulation environment according to a specified users-configuration
 
         :param users_config: the users configuration
-        :param cluster_config: the cluster configuration
+        :param emulation_config: the emulation configuration
         :return: None
         """
         for users_conf in users_config.users:
-            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=users_conf.ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=users_conf.ip)
 
             cmd="ls /home"
-            o,e,_ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             users_w_home = o.decode().split("\n")
             users_w_home = list(filter(lambda x: x != '', users_w_home))
 
             for user in users_w_home:
                 if user != "pycr_admin":
                     cmd = "sudo deluser {}".format(user)
-                    ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                     cmd = "sudo rm -rf /home/{}".format(user)
-                    ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for user in users_conf.users:
                 username, pw, root = user
@@ -77,9 +77,9 @@ class UsersGenerator:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}".format(username, pw, username)
                 else:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(username,pw,username)
-                o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 
     @staticmethod
     def write_users_config(users_config: UsersConfig, path: str = None) -> None:

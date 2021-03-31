@@ -9,8 +9,8 @@ from gym_pycr_ctf.dao.container_config.pw_vulnerability_config import PwVulnerab
 from gym_pycr_ctf.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_ctf.envs.config.generator.topology_generator import TopologyGenerator
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
-from gym_pycr_ctf.envs.logic.cluster.util.cluster_util import ClusterUtil
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.util.experiments_util import util
 
 class VulnerabilityGenerator:
@@ -106,26 +106,26 @@ class VulnerabilityGenerator:
 
 
     @staticmethod
-    def create_vulns(vuln_cfg: VulnerabilitiesConfig, cluster_config: ClusterConfig):
+    def create_vulns(vuln_cfg: VulnerabilitiesConfig, emulation_config: EmulationConfig):
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
-            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=vuln.node_ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=vuln.node_ip)
             if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION or \
                     vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
                 cmd = "ls /home"
-                o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 users_w_home = o.decode().split("\n")
                 users_w_home = list(filter(lambda x: x != '', users_w_home))
 
                 for user in users_w_home:
                     if user != "pycr_admin" and user == vuln.username:
                         cmd = "sudo deluser {}".format(user)
-                        ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                        EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                         cmd = "sudo rm -rf /home/{}".format(user)
-                        ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                        EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
                 cmd = "sudo deluser {}".format(vuln.username)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
                 if vuln.root:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}".format(
@@ -133,14 +133,14 @@ class VulnerabilityGenerator:
                 else:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(
                         vuln.username, vuln.pw, vuln.username)
-                o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
                 # Update sudoers file
                 if vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
 
                     # Restore/Backup sudoers file
                     cmd = "sudo cp /etc/sudoers.bak /etc/sudoers"
-                    ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
                     # Install sudoers vulnerability
                     if vuln.cve.lower() == "2010-1427":
@@ -150,9 +150,9 @@ class VulnerabilityGenerator:
                     else:
                         raise ValueError("CVE not recognized:{}".format(vuln.cve))
                     cmd = cmd.format(vuln.username)
-                    o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                     cmd = "sudo chmod 440 /etc/sudoers"
-                    o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             elif vuln.vuln_type == VulnType.RCE:
                 pass # Nothing to install

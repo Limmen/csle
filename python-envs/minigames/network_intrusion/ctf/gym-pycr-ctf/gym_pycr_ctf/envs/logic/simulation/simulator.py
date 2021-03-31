@@ -12,7 +12,7 @@ from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
 class Simulator:
     """
     Simulator class. This class is used to simulate actions using a MDP or Markov Game model rather than taking
-    real actions in the cluster environment.
+    real actions in the emulation environment.
     """
     @staticmethod
     def transition(s: EnvState, a: Action, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:

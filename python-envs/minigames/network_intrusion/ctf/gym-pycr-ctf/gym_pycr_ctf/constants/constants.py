@@ -251,7 +251,7 @@ class NMAP:
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
     HTTP_GREP = "--script=http-grep"
-    FINGER = "-sv -sC --script=finger"
+    FINGER = "--script=finger"
 
 class AUXILLARY:
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
@@ -560,7 +560,22 @@ class TRAFFIC_COMMANDS:
         "ftp2": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "client1": []
+        "client1_subnet": [
+            "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sP " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sT -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
+            "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1"
+        ],
+        "client1_host": [
+            "ping {} > /dev/null 2>&1",
+            "traceroute {} > /dev/null 2>&1"
+        ]
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
@@ -572,3 +587,4 @@ class TRAFFIC_COMMANDS:
 # lastb -a | more
 # ls /var/log/btmp
 # tail -444f /var/log/apache2/access.log
+# netstat -a

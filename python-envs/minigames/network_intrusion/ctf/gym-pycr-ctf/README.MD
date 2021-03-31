@@ -48,16 +48,16 @@ your preference.
 ```python
 import gym
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration to connect to the emulation
-cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+emulation_config = emulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
 
 # Create gym interface
-env_name = "pycr-ctf-level-7-cluster-v1"
-env = gym.make(env_name, env_config=None, cluster_config=cluster_config)
+env_name = "pycr-ctf-level-7-emulation-v1"
+env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
 
 # Manual Control with GUI
 ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
@@ -68,12 +68,12 @@ You can run the environment in a mode of "manual control" as well:
 
 ```python
 import gym
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv, PyCRctfLevel1Cluster1Env
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv, PyCRctfLevel1emulation1Env
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration for connecting to the emulation
-cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+emulation_config = emulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
                                    port_forward_next_port=4600,
                                    server_connection=True, warmup=False, warmup_iterations=500,
                                    server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
@@ -81,7 +81,7 @@ cluster_config = ClusterConfig(agent_ip="172.18.7.191", agent_username="agent", 
                                    )
 
 # Create gym interface
-env = gym.make("pycr-ctf-level-7-cluster-v1", env_config=None, cluster_config=cluster_config)
+env = gym.make("pycr-ctf-level-7-emulation-v1", env_config=None, emulation_config=emulation_config)
 ManualAttackerAgent(env=env, env_config=env.env_config)
 ```
 

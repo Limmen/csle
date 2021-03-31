@@ -4,54 +4,54 @@ from gym_pycr_ctf.util.experiments_util import plotting_util
 
 def plot_rewards_steps_v1_v2_v3_v4():
     ppo_v1_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/0/1606087458.877162_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/emulation/ppo_baseline/results/data/0/1606087458.877162_train.csv")
     ppo_v1_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/299/1606097121.050486_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/emulation/ppo_baseline/results/data/299/1606097121.050486_train.csv")
     # ppo_v1_df_399 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/399/1605648257.510173_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/emulation/ppo_baseline/results/data/399/1605648257.510173_train.csv")
     # ppo_v1_df_499 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/499/1605648396.8842435_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/emulation/ppo_baseline/results/data/499/1605648396.8842435_train.csv")
     ppo_v1_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/cluster/ppo_baseline/results/data/999/1606092327.856639_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v1/emulation/ppo_baseline/results/data/999/1606092327.856639_train.csv")
     #ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_299, ppo_v1_df_399, ppo_v1_df_499, ppo_v1_df_999]
     ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_299, ppo_v1_df_999]
 
     ppo_v2_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/0/1606087899.6704764_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/emulation/ppo_baseline/results/data/0/1606087899.6704764_train.csv")
     ppo_v2_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/299/1606105455.4124517_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/emulation/ppo_baseline/results/data/299/1606105455.4124517_train.csv")
     # ppo_v2_df_399 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/399/1605644824.44998_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/emulation/ppo_baseline/results/data/399/1605644824.44998_train.csv")
     # ppo_v2_df_499 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/499/1605644994.556923_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/emulation/ppo_baseline/results/data/499/1605644994.556923_train.csv")
     ppo_v2_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/cluster/ppo_baseline/results/data/999/1606098269.5141356_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v2/emulation/ppo_baseline/results/data/999/1606098269.5141356_train.csv")
     ppo_dfs_v2 = [ppo_v2_df_0, ppo_v2_df_299, ppo_v2_df_999]
     #ppo_dfs_v2 = [ppo_v2_df_0, ppo_v2_df_299, ppo_v2_df_399, ppo_v2_df_499, ppo_v2_df_999]
 
     ppo_v3_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/0/1606114406.460814_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/emulation/ppo_baseline/results/data/0/1606114406.460814_train.csv")
     ppo_v3_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/299/1606133069.7097948_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/emulation/ppo_baseline/results/data/299/1606133069.7097948_train.csv")
     # ppo_v3_df_399 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/399/1605646489.2817347_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/emulation/ppo_baseline/results/data/399/1605646489.2817347_train.csv")
     # ppo_v3_df_499 = pd.read_csv(
-    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/499/1605646692.2049596_train.csv")
+    #     "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/emulation/ppo_baseline/results/data/499/1605646692.2049596_train.csv")
     ppo_v3_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/cluster/ppo_baseline/results/data/999/1606123875.799762_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v3/emulation/ppo_baseline/results/data/999/1606123875.799762_train.csv")
     #ppo_dfs_v3 = [ppo_v3_df_0, ppo_v3_df_299, ppo_v3_df_399, ppo_v3_df_499, ppo_v3_df_999]
     ppo_dfs_v3 = [ppo_v3_df_0, ppo_v3_df_299, ppo_v3_df_999]
 
     ppo_v4_df_0 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/cluster/ppo_baseline/results/data/0/1606114839.3591373_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/emulation/ppo_baseline/results/data/0/1606114839.3591373_train.csv")
     ppo_v4_df_299 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/cluster/ppo_baseline/results/data/299/1606132359.091145_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/emulation/ppo_baseline/results/data/299/1606132359.091145_train.csv")
     # ppo_v4_df_399 = pd.read_csv(
-    #     "./v4/cluster/ppo_baseline/results/data/399/1603194281.0459163_train.csv")
+    #     "./v4/emulation/ppo_baseline/results/data/399/1603194281.0459163_train.csv")
     # ppo_v4_df_499 = pd.read_csv(
-    #     "./v4/cluster/ppo_baseline/results/data/499/1603195265.9069285_train.csv")
+    #     "./v4/emulation/ppo_baseline/results/data/499/1603195265.9069285_train.csv")
     ppo_v4_df_999 = pd.read_csv(
-        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/cluster/ppo_baseline/results/data/999/1606123590.1660752_train.csv")
+        "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_1/training/v4/emulation/ppo_baseline/results/data/999/1606123590.1660752_train.csv")
     #ppo_dfs_v4 = [ppo_v4_df_0, ppo_v4_df_299, ppo_v4_df_399, ppo_v4_df_499, ppo_v4_df_999]
     ppo_dfs_v4 = [ppo_v4_df_0, ppo_v4_df_299, ppo_v4_df_999]
 

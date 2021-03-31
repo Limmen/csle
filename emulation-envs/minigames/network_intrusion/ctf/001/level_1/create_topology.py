@@ -2,7 +2,7 @@ import os
 from gym_pycr_ctf.dao.container_config.topology import Topology
 from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.config.generator.topology_generator import TopologyGenerator
 
 def default_topology() -> Topology:
@@ -62,7 +62,7 @@ def default_topology() -> Topology:
                                                   "172.18.1.79", "172.18.1.10", "172.18.1.1"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input="DROP", default_output="DROP", default_forward="DROP",
+                                default_input="ACCEPT", default_output="ACCEPT", default_forward="ACCEPT",
                                 default_gw="172.18.1.10")
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7]
     topology = Topology(node_configs=node_configs, subnetwork = "172.18.1.0/24")
@@ -73,6 +73,6 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_topology_path()):
         TopologyGenerator.write_topology(default_topology())
     topology = util.read_topology(util.default_topology_path())
-    cluster_config = ClusterConfig(agent_ip="172.18.1.191", agent_username="pycr_admin",
-                                   agent_pw="pycr@admin-pw_191", server_connection=False)
-    TopologyGenerator.create_topology(topology=topology, cluster_config=cluster_config)
+    emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="pycr_admin",
+                                     agent_pw="pycr@admin-pw_191", server_connection=False)
+    TopologyGenerator.create_topology(topology=topology, emulation_config=emulation_config)

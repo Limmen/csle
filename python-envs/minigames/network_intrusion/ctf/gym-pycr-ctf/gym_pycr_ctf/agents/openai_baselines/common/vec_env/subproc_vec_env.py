@@ -49,8 +49,8 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(env.env_config.network_conf)
             elif cmd == "pi_star_rew":
                 id = env.idx
-                if env.env_config.cluster_config is not None:
-                    id = env.env_config.cluster_config.agent_ip
+                if env.env_config.emulation_config is not None:
+                    id = env.env_config.emulation_config.agent_ip
                 # elif env.env_config.network_conf.hacker is not None:
                 #     id = env.env_config.network_conf.hacker.ip
                 remote.send((id, env.env_config.pi_star_rew, env.env_config.pi_star_rew_list))

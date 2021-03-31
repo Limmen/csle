@@ -3,8 +3,8 @@ import random
 import numpy as np
 from gym_pycr_ctf.dao.container_config.topology import Topology
 from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
-from gym_pycr_ctf.envs.logic.cluster.util.cluster_util import ClusterUtil
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.envs.logic.emulation.util.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs.config.generator.generator_util import GeneratorUtil
 from gym_pycr_ctf.util.experiments_util import util
 
@@ -122,74 +122,74 @@ class TopologyGenerator:
         return ip_suffix
 
     @staticmethod
-    def create_topology(topology: Topology, cluster_config: ClusterConfig):
+    def create_topology(topology: Topology, emulation_config: EmulationConfig):
         for node in topology.node_configs:
             print("node:{}".format(node.ip))
-            GeneratorUtil.connect_admin(cluster_config=cluster_config, ip=node.ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
             print("connected")
 
             for route in node.routes:
                 target, gw = route
                 cmd = "sudo route add {} gw {}".format(target, gw)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             if node.default_gw is not None:
                 cmd = "sudo route add -net {} netmask 255.255.255.0 gw {}".format(topology.subnetwork.replace("/24", ""),
                                                                                   node.default_gw)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             cmd="sudo iptables -F"
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
 
             for output_node in node.output_accept:
                 cmd = "sudo iptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "sudo arptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for input_node in node.input_accept:
                 cmd = "sudo iptables -A INPUT -s {} -j ACCEPT".format(input_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "sudo arptables -A INPUT -s {} -j ACCEPT".format(input_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for forward_node in node.forward_accept:
                 cmd = "sudo iptables -A FORWARD -d {} -j ACCEPT".format(forward_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for output_node in node.output_drop:
                 cmd = "sudo iptables -A OUTPUT -d {} -j DROP".format(output_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "sudo arptables -A OUTPUT -d {} -j DROP".format(output_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for input_node in node.input_drop:
                 cmd = "sudo iptables -A INPUT -s {} -j DROP".format(input_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                 cmd = "sudo arptables -A INPUT -s {} -j DROP".format(input_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             for forward_node in node.forward_drop:
                 cmd = "sudo iptables -A FORWARD -d {} -j DROP".format(forward_node)
-                ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             cmd = "sudo iptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
-            o,e,_ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             cmd = "sudo arptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
-            o, e, _ = ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             cmd = "sudo iptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             cmd = "sudo arptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             cmd = "sudo iptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             cmd = "sudo arptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
-            ClusterUtil.execute_ssh_cmd(cmd=cmd, conn=cluster_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            GeneratorUtil.disconnect_admin(cluster_config=cluster_config)
+            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 
 
     @staticmethod

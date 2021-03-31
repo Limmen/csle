@@ -2,7 +2,7 @@ import re
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.dao.action.action_config import ActionConfig
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
-from gym_pycr_ctf.dao.network.cluster_config import ClusterConfig
+from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
 from gym_pycr_ctf.dao.action_results.nmap_scan_cache import NMAPScanCache
 from gym_pycr_ctf.dao.action_results.action_costs import ActionCosts
@@ -20,7 +20,7 @@ class EnvConfig:
     def __init__(self, network_conf : NetworkConfig, action_conf : ActionConfig, num_ports : int, num_vuln : int,
                  num_sh : int, num_nodes : int, hacker_ip : str, router_ip : str,
                  render_config : RenderConfig, env_mode : EnvMode = EnvMode.SIMULATION,
-                 cluster_config : ClusterConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
+                 emulation_config : EmulationConfig = None, simulate_detection : bool = True, detection_reward : int = 10,
                  base_detection_p : float = 0.01, manual_play : bool = False, state_type: StateType = StateType.BASE):
         """
         Initialize the config
@@ -34,8 +34,8 @@ class EnvConfig:
         :param hacker_ip: ip of the hacker
         :param router_ip: ip of the default gw for the hacker
         :param render_config: the render config
-        :param env_mode: the env mode (e.g. cluster or sim)
-        :param cluster_config: the cluster config
+        :param env_mode: the env mode (e.g. emulation or sim)
+        :param emulation_config: the emulation config
         :param simulate_detection: boolean flag whether to simulate detections or not
         :param detection_reward: reward when a detection happens
         :param base_detection_p: base detection probability for simulation
@@ -48,7 +48,7 @@ class EnvConfig:
         self.num_sh = num_sh
         self.num_nodes = num_nodes
         self.env_mode = env_mode
-        self.cluster_config = cluster_config
+        self.emulation_config = emulation_config
         self.render_config = render_config
         self.simulate_detection = simulate_detection
         self.detection_reward = detection_reward
@@ -170,8 +170,8 @@ class EnvConfig:
         """
         :return: Gets the next port to forward
         """
-        p = self.cluster_config.port_forward_next_port
-        self.cluster_config.port_forward_next_port +=1
+        p = self.emulation_config.port_forward_next_port
+        self.emulation_config.port_forward_next_port +=1
         return p
 
     def _create_flags_lookup(self) -> dict:
@@ -202,7 +202,7 @@ class EnvConfig:
             network_conf=self.network_conf, action_conf=self.action_conf, num_ports=self.num_ports,
             num_vuln=self.num_vuln, num_sh=self.num_sh, num_nodes=self.num_nodes, hacker_ip=self.hacker_ip,
             router_ip=self.router_ip, render_config=self.render_config, env_mode=self.env_mode,
-            cluster_config=self.cluster_config, simulate_detection=self.simulate_detection,
+            emulation_config=self.emulation_config, simulate_detection=self.simulate_detection,
             detection_reward=self.detection_reward, base_detection_p=self.base_detection_p, manual_play=self.manual_play,
             state_type=self.state_type)
 

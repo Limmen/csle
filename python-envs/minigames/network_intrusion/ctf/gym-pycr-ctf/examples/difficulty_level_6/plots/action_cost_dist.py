@@ -10,7 +10,7 @@ import glob
 import pandas as pd
 
 def read_data():
-    base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_6/training/v1/cluster/ppo_baseline/results/data/"
+    base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_6/training/v1/emulation/ppo_baseline/results/data/"
     ppo_v1_df_399 = pd.read_csv(glob.glob(base_path + "399/*_train.csv")[0])
     emulation_w_cache_env_response_times = np.mean(np.array(list(filter(lambda x: x  >0.0, ppo_v1_df_399["env_response_times"].values))))
     emulation_w_cache_action_pred_times = np.mean(np.array(list(filter(lambda x: x > 0.0, ppo_v1_df_399["action_pred_times"].values))))
