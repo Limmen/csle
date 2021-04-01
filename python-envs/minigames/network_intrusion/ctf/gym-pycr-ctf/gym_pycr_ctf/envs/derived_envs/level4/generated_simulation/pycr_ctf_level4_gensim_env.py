@@ -7,110 +7,92 @@ from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v1 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v2 import PyCrCTFLevel4V2
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v3 import PyCrCTFLevel4V3
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v4 import PyCrCTFLevel4V4
-from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v5 import PyCrCTFLevel4V5
-
-
-# -------- Base Version (for testing) ------------
-class PyCRCTFLevel4EmulationBaseEnv(PyCRCTFEnv):
-    """
-    Base version with all set of actions
-    """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
-        if env_config is None:
-            render_config = PyCrCTFLevel4Base.render_conf()
-            if emulation_config is None:
-                emulation_config = PyCrCTFLevel4Base.emulation_config()
-            emulation_config.ids_router = True
-            emulation_config.ids_router_ip = PyCrCTFLevel4Base.router_ip()
-            network_conf = PyCrCTFLevel4Base.network_conf()
-            attacker_action_conf = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
-                                                                      subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
-                                                                      hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4Base.defender_all_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
-            env_config = PyCrCTFLevel4Base.env_config(network_conf=network_conf,
-                                                      attacker_action_conf=attacker_action_conf,
-                                                      defender_action_conf=defender_action_conf,
-                                                      emulation_config=emulation_config, render_conf=render_config)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
-            env_config.save_trajectories = False
-            env_config.checkpoint_dir = checkpoint_dir
-            env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
-
+from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 
 # -------- Version 1 ------------
-
-class PyCRCTFLevel4Emulation1Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSim1Env(PyCRCTFEnv):
     """
+    Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
-            render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel4Base.emulation_config()
+            render_config = PyCrCTFLevel4Base.render_conf()
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel4Base.router_ip()
-            network_conf = PyCrCTFLevel4Base.network_conf()
+            network_conf = PyCrCTFLevel4Base.network_conf(generate=True)
             attacker_action_conf = PyCrCTFLevel4V1.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V1.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V1.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V1.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.defender_update_state = False
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
+
         super().__init__(env_config=env_config)
 
 
-# -------- Version 1 with costs------------
-
-class PyCRCTFLevel4EmulationWithCosts1Env(PyCRCTFEnv):
+# -------- Version 1, costs ------------
+class PyCRCTFLevel4GeneratedSimWithCosts1Env(PyCRCTFEnv):
     """
+    Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
-            render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel4Base.emulation_config()
+            render_config = PyCrCTFLevel4Base.render_conf()
             emulation_config.ids_router = True
             emulation_config.ids_router_ip = PyCrCTFLevel4Base.router_ip()
-            network_conf = PyCrCTFLevel4Base.network_conf()
+            network_conf = PyCrCTFLevel4Base.network_conf(generate=True)
             attacker_action_conf = PyCrCTFLevel4V1.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V1.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V1.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V1.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
+
         super().__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
 
-class PyCRCTFLevel4Emulation2Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSim2Env(PyCRCTFEnv):
     """
-    Slightly more set of actions than V3. Does not take action costs into account.
+    Generated simulation.
+    Slightly more set of actions than V1. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
@@ -123,26 +105,32 @@ class PyCRCTFLevel4Emulation2Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V2.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V2.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V2.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V2.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
 
+# -------- Version 2, costs ------------
 
-# -------- Version 2 with costs------------
-
-class PyCRCTFLevel4EmulationWithCosts2Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
-    Slightly more set of actions than V1. Does take action costs into account.
+    Generated simulation.
+    Slightly more set of actions than V1. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
@@ -155,25 +143,31 @@ class PyCRCTFLevel4EmulationWithCosts2Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V2.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V2.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V2.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V2.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
-
 
 # -------- Version 3 ------------
 
-class PyCRCTFLevel4Emulation3Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSim3Env(PyCRCTFEnv):
     """
+    Generated simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
@@ -187,25 +181,31 @@ class PyCRCTFLevel4Emulation3Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V3.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V3.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V3.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V3.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
 
+# -------- Version 3, costs ------------
 
-# -------- Version 3 with costs------------
-
-class PyCRCTFLevel4EmulationWithCosts3Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSimWithCosts3Env(PyCRCTFEnv):
     """
+    Generated simulation.
     Slightly more set of actions than V2. Does take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
@@ -219,25 +219,32 @@ class PyCRCTFLevel4EmulationWithCosts3Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V3.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V3.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V3.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V3.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
 
 
 # -------- Version 4 ------------
 
-class PyCRCTFLevel4Emulation4Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSim4Env(PyCRCTFEnv):
     """
+    Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
@@ -251,26 +258,33 @@ class PyCRCTFLevel4Emulation4Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V4.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V4.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V4.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V4.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
 
+# -------- Version 4 ------------
 
-# -------- Version 4 with costs------------
 
-class PyCRCTFLevel4EmulationWithCosts4Env(PyCRCTFEnv):
+class PyCRCTFLevel4GeneratedSimWithCosts4Env(PyCRCTFEnv):
     """
-    Slightly more set of actions than V3. Does take action costs into account.
+    Generated simulation.
+    Slightly more set of actions than V3. Does not take action costs into account.
     """
     def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
@@ -283,51 +297,22 @@ class PyCRCTFLevel4EmulationWithCosts4Env(PyCRCTFEnv):
             attacker_action_conf = PyCrCTFLevel4V4.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
                                                                 subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
                                                                 hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V4.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
+            defender_action_conf = PyCrCTFLevel4V4.defender_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
+                                                                         subnet_mask=PyCrCTFLevel4Base.subnet_mask())
             env_config = PyCrCTFLevel4V4.env_config(network_conf=network_conf,
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
-
-
-
-# -------- Version 5 ------------
-
-class PyCRCTFLevel4Emulation5Env(PyCRCTFEnv):
-    """
-    An extension of V1 but allows the attacker to peform "no-op" actions and is intended for playing with defender agent.
-    Does not take action costs into account.
-    """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
-        if env_config is None:
-            render_config = PyCrCTFLevel4Base.render_conf()
-            if emulation_config is None:
-                emulation_config = PyCrCTFLevel4Base.emulation_config()
-            emulation_config.ids_router = True
-            emulation_config.ids_router_ip = PyCrCTFLevel4Base.router_ip()
-            network_conf = PyCrCTFLevel4Base.network_conf()
-            attacker_action_conf = PyCrCTFLevel4V5.attacker_actions_conf(num_nodes=PyCrCTFLevel4Base.num_nodes(),
-                                                                subnet_mask=PyCrCTFLevel4Base.subnet_mask(),
-                                                                hacker_ip=PyCrCTFLevel4Base.hacker_ip())
-            defender_action_conf = PyCrCTFLevel4V5.defender_actions_conf(
-                num_nodes=PyCrCTFLevel4Base.num_nodes(), subnet_mask=PyCrCTFLevel4Base.subnet_mask())
-            env_config = PyCrCTFLevel4V5.env_config(network_conf=network_conf,
-                                                    attacker_action_conf=attacker_action_conf,
-                                                    defender_action_conf=defender_action_conf,
-                                                    emulation_config=emulation_config, render_conf=render_config)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
-            env_config.save_trajectories = False
-            env_config.checkpoint_dir = checkpoint_dir
-            env_config.checkpoint_freq = 1000
-            env_config.defender_update_state = False
+            exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            env_config.attacker_exploration_policy = exp_policy
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 100
+            env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)

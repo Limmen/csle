@@ -2,6 +2,7 @@ from typing import List, Union
 import pickle
 from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.network.node_type import NodeType
+from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 import numpy as np
 
 class NetworkConfig:
@@ -19,12 +20,13 @@ class NetworkConfig:
         self.flags_lookup = flags_lookup
         self.agent_reachable = agent_reachable
         self.vulnerable_nodes = vulnerable_nodes
+        self.defender_dynamics_model = DefenderDynamicsModel()
 
     def __str__(self):
         return "subnet_mask:{}, nodes:{}, adj_matrix:{}, hacker:{}, router: {}, flags_lookup: {}, agent_reachable: {}, " \
-               "vulnerable_nodes: {}:".format(
+               "vulnerable_nodes: {}, defender_dynamics_model:{}".format(
             self.subnet_mask, list(map(lambda x: str(x), self.nodes)), self.adj_matrix, self.hacker, self.router, self.flags_lookup,
-            self.agent_reachable, self.vulnerable_nodes)
+            self.agent_reachable, self.vulnerable_nodes, self.defender_dynamics_model)
 
     def create_lookup_dicts(self) -> Union[dict, Node, Node, dict]:
         levels_d = {}

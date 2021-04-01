@@ -139,6 +139,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
+            self.env_config.emulation_config.connect_agent()
             self.reset()
 
         # Reset and setup action spaces
@@ -276,7 +277,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         """
 
         if done_attacker:
-            self.env_state.get_defender_observation()
             defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
             attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
             defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
@@ -368,6 +368,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.attacker_agent_state.num_all_flags += 1
         self.env_state.reset_state()
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+        defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.attacker_last_obs = attacker_m_obs
         self.attacker_agent_state.num_episodes += 1
         self.attacker_agent_state.cumulative_reward += self.attacker_agent_state.episode_reward
@@ -383,7 +385,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         self.env_config.cache_misses = 0
         sys.stdout.flush()
-        return attacker_m_obs
+        return attacker_m_obs, defender_obs
 
     def render(self, mode: str = 'human'):
         """
@@ -469,6 +471,10 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Recon on set of all found machines is always possible if there exists such machiens
         if action.type == AttackerActionType.RECON and action.index == -1 and len(env_state.attacker_obs_state.machines) > 0:
+            return True
+
+        # Optimal Stopping actions are always possible
+        if action.type == AttackerActionType.STOP or action.type == AttackerActionType.CONTINUE:
             return True
 
         machine_discovered = False

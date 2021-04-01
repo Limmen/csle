@@ -120,20 +120,22 @@ class ReadLogsUtil:
             list(filter(lambda x: x[0] < env_config.defender_ids_severity_threshold, fast_logs)))
         sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
 
-        # Compute threshold for recent
-        last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-        recent_threshold = (datetime.datetime.fromtimestamp(last_alert_ts) - datetime.timedelta(
-            seconds=env_config.defender_ids_recent_threshold_seconds)).timestamp()
+        # # Compute threshold for recent
+        # last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+        # recent_threshold = (datetime.datetime.fromtimestamp(last_alert_ts) - datetime.timedelta(
+        #     seconds=env_config.defender_ids_recent_threshold_seconds)).timestamp()
 
-        # Measure recent alerts
-        recent_alerts = list(filter(lambda x: x.timestamp > recent_threshold, alerts))
-        recent_fast_logs = list(filter(lambda x: x[1] > recent_threshold, fast_logs))
-        num_recent_alerts = len(recent_alerts)
-        num_recent_severe_alerts = len(
-            list(filter(lambda x: x[0] >= env_config.defender_ids_severity_threshold, recent_fast_logs)))
-        num_recent_warning_alerts = len(
-            list(filter(lambda x: x[0] < env_config.defender_ids_severity_threshold, recent_fast_logs)))
-        sum_recent_priority_alerts = sum(list(map(lambda x: x[0], recent_fast_logs)))
+        # # Measure recent alerts
+        # recent_alerts = list(filter(lambda x: x.timestamp > recent_threshold, alerts))
+        # recent_fast_logs = list(filter(lambda x: x[1] > recent_threshold, fast_logs))
+        # num_recent_alerts = len(recent_alerts)
+        # num_recent_severe_alerts = len(
+        #     list(filter(lambda x: x[0] >= env_config.defender_ids_severity_threshold, recent_fast_logs)))
+        # num_recent_warning_alerts = len(
+        #     list(filter(lambda x: x[0] < env_config.defender_ids_severity_threshold, recent_fast_logs)))
+        # sum_recent_priority_alerts = sum(list(map(lambda x: x[0], recent_fast_logs)))
 
-        return num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
-               num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts
+        return num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts
+
+        # return num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
+        #        num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts

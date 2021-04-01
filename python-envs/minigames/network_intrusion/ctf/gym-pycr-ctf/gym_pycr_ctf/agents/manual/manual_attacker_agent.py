@@ -76,15 +76,23 @@ class ManualAttackerAgent:
                 else:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
+                    defender_action = None
+                    if defender_opponent is not None:
+                        defender_action = defender_opponent.action(env.env_state)
                     if not digits_only:
                         print("Invalid action. Actions must be integers.")
                     else:
                         actions = list(map(lambda x: int(x), actions_str))
                         for a in actions:
                             if env.is_attack_action_legal(a, env.env_config, env.env_state):
-                                _, _, done, _ = self.env.step(a)
+                                action = (a, defender_action)
+                                _, _, done, _ = self.env.step(action)
                                 history.append(a)
                                 if done:
-                                    print("done:{}".format(done))
+                                    print("done:{}, attacker_caught:{}, stopped:{}, all_flags:{}".format(
+                                        done, env.env_state.defender_obs_state.caught_attacker,
+                                        env.env_state.defender_obs_state.stopped,
+                                        env.env_state.attacker_obs_state.all_flags
+                                    ))
                             else:
                                 print("action:{} is illegal".format(a))

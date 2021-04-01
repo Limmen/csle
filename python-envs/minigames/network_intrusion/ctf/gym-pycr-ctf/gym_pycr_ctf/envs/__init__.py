@@ -46,7 +46,13 @@ from gym_pycr_ctf.envs.derived_envs.level3.emulation.pycr_ctf_level3_emulation_e
 from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCRCTFLevel4EmulationBaseEnv, \
     PyCRCTFLevel4Emulation1Env, PyCRCTFLevel4Emulation2Env, PyCRCTFLevel4Emulation3Env, PyCRCTFLevel4Emulation4Env, \
     PyCRCTFLevel4EmulationWithCosts1Env, PyCRCTFLevel4EmulationWithCosts2Env, PyCRCTFLevel4EmulationWithCosts3Env, \
-    PyCRCTFLevel4EmulationWithCosts4Env
+    PyCRCTFLevel4EmulationWithCosts4Env, PyCRCTFLevel4Emulation5Env
+
+from gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_gensim_env import \
+    PyCRCTFLevel4GeneratedSimWithCosts1Env, PyCRCTFLevel4GeneratedSim2Env, PyCRCTFLevel4GeneratedSim1Env, \
+    PyCRCTFLevel4GeneratedSimWithCosts2Env, PyCRCTFLevel4GeneratedSim3Env, \
+    PyCRCTFLevel4GeneratedSimWithCosts3Env, PyCRCTFLevel4GeneratedSim4Env, \
+    PyCRCTFLevel4GeneratedSimWithCosts4Env
 
 # ------ Level 5 ----- #
 

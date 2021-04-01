@@ -1,16 +1,17 @@
 from typing import Tuple
+import time
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
 
-class DefenderStoppingMiddleware:
+class AttackerStoppingMiddleware:
     """
-    Class that implements optimal stopping actions for the defender.
+    Class that implements optimal stopping actions for the attacker
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def stop_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -19,16 +20,11 @@ class DefenderStoppingMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime = s
-        if s_prime.attacker_obs_state.ongoing_intrusion():
-            s_prime.defender_obs_state.caught_attacker = True
-        else:
-            s_prime.defender_obs_state.stopped = True
-        return s_prime, 0, True
+        raise NotImplemented("Not Implemented yet")
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def continue_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
 
@@ -37,5 +33,6 @@ class DefenderStoppingMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
+        time.sleep(env_config.attacker_continue_action_sleep)
         return s, 0, False
 

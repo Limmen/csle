@@ -79,18 +79,21 @@ class DefenderObservationState:
         # Measure IDS
         if env_config.ids_router:
             self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
-            num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
+            # num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
+            # num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
+            #     ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
+
+            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts = \
                 ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
 
             self.num_alerts_total = num_alerts
             self.num_severe_alerts_total = num_severe_alerts
             self.num_warning_alerts_total = num_warning_alerts
             self.sum_priority_alerts_total = sum_priority_alerts
-            self.num_alerts_recent = num_recent_alerts
-            self.num_severe_alerts_recent = num_recent_severe_alerts
-            self.num_warning_alerts_recent = num_recent_warning_alerts
-            self.sum_priority_alerts_recent = sum_recent_priority_alerts
+            # self.num_alerts_recent = num_recent_alerts
+            # self.num_severe_alerts_recent = num_recent_severe_alerts
+            # self.num_warning_alerts_recent = num_recent_warning_alerts
+            # self.sum_priority_alerts_recent = sum_recent_priority_alerts
 
 
         if state_type == StateType.BASE or state_type == StateType.ESSENTIAL or state_type == StateType.COMPACT:
@@ -132,18 +135,21 @@ class DefenderObservationState:
         # Measure IDS
         if env_config.ids_router:
             self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
-            num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
+            # num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
+            # num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
+            #     ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
+
+            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts = \
                 ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
 
             self.num_alerts_total = num_alerts
             self.num_severe_alerts_total = num_severe_alerts
             self.num_warning_alerts_total = num_warning_alerts
             self.sum_priority_alerts_total = sum_priority_alerts
-            self.num_alerts_recent = num_recent_alerts
-            self.num_severe_alerts_recent = num_recent_severe_alerts
-            self.num_warning_alerts_recent = num_recent_warning_alerts
-            self.sum_priority_alerts_recent = sum_recent_priority_alerts
+            # self.num_alerts_recent = num_recent_alerts
+            # self.num_severe_alerts_recent = num_recent_severe_alerts
+            # self.num_warning_alerts_recent = num_recent_warning_alerts
+            # self.sum_priority_alerts_recent = sum_recent_priority_alerts
 
         # Measure Node specific features
         for node in env_config.network_conf.nodes:

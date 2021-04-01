@@ -10,6 +10,7 @@ from gym_pycr_ctf.envs_model.logic.emulation.recon_middleware import ReconMiddle
 from gym_pycr_ctf.envs_model.logic.emulation.exploit_middleware import ExploitMiddleware
 from gym_pycr_ctf.envs_model.logic.emulation.post_exploit_middleware import PostExploitMiddleware
 from gym_pycr_ctf.envs_model.logic.emulation.defender_stopping_middleware import DefenderStoppingMiddleware
+from gym_pycr_ctf.envs_model.logic.emulation.attacker_stopping_middleware import AttackerStoppingMiddleware
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 
@@ -37,6 +38,8 @@ class EmulationMiddleware:
             return EmulationMiddleware.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return EmulationMiddleware.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == AttackerActionType.STOP or attacker_action.type == AttackerActionType.CONTINUE:
+            return EmulationMiddleware.attacker_stopping_action(s=s, a=attacker_action, env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
 
@@ -200,5 +203,22 @@ class EmulationMiddleware:
             return DefenderStoppingMiddleware.stop_monitor(s=s, a=a, env_config=env_config)
         elif a.id == DefenderActionId.CONTINUE:
             return DefenderStoppingMiddleware.continue_monitor(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+
+    @staticmethod
+    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Implements transition of a stopping action of the attacker
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == AttackerActionId.STOP:
+            return AttackerStoppingMiddleware.stop_intrusion(s=s, a=a, env_config=env_config)
+        elif a.id == AttackerActionId.CONTINUE:
+            return AttackerStoppingMiddleware.continue_intrusion(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))

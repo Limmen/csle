@@ -1,6 +1,7 @@
 from typing import List
 import gym
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 
 
 class DefenderActionConfig:
@@ -45,3 +46,10 @@ class DefenderActionConfig:
             else:
                 tag = "*"
             print(str(i) + ":" + action.name + "[" + tag + "] c:" + str(action.cost))
+
+
+    def get_continue_action_idx(self):
+        for i in range(len(self.actions)):
+            if self.actions[i].id == DefenderActionId.CONTINUE:
+                return i
+        raise ValueError("No Continue Action in the action space")

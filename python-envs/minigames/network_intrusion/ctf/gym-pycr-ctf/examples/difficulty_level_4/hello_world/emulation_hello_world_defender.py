@@ -22,20 +22,20 @@ def test_env(env_name : str, num_steps : int):
 
     env.reset()
 
-    num_actions = env.env_config.attacker_action_conf.num_actions
+    num_actions = env.env_config.defender_action_conf.num_actions
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tot_rew = 0
     for i in range(num_steps):
         print(i)
-        legal_attacker_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
-        attack_action = np.random.choice(legal_attacker_actions)
-        defender_action = None
-        action = (attack_action, defender_action)
+        legal_defender_actions = list(filter(lambda x: env.is_defense_action_legal(x, env.env_config, env.env_state), actions))
+        defender_action = np.random.choice(legal_defender_actions)
+        attacker_action = None
+        action = (attacker_action, defender_action)
         obs, reward, done, info = env.step(action)
         attacker_obs, defender_obs = obs
         attacker_reward, defender_reward = reward
-        tot_rew += attacker_reward
+        tot_rew += defender_reward
         #env.render()
         if done:
             print("tot_rew:{}".format(tot_rew))
@@ -48,12 +48,10 @@ def test_env(env_name : str, num_steps : int):
 
 
 def test_all():
-    #test_env("pycr-ctf-level-4-emulation-v1", num_steps=1000000000)
-    #test_env("pycr-ctf-level-4-generated-sim-v1", num_steps=1000000000)
+    test_env("pycr-ctf-level-4-emulation-v1", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v2", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v3", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v4", num_steps=1000000000)
-    test_env("pycr-ctf-level-4-emulation-v5", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()
