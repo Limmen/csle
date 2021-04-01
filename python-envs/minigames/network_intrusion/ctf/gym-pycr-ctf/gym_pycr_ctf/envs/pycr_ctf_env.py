@@ -77,8 +77,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             # Connect to emulation
             self.env_config.emulation_config.connect_agent()
 
-            # Initialize Defender's state
-            self.env_state.initialize_defender_state()
+            if self.env_config.defender_update_state:
+                # Initialize Defender's state
+                self.env_state.initialize_defender_state()
 
             if self.env_config.load_services_from_server:
                 self.env_config.emulation_config.download_emulation_services()
@@ -231,6 +232,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Step in the environment
         s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
             s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
+
+        # If defender is active, update defender's state
+        if self.env_config.defender_update_state:
+            s_prime.update_defender_state()
 
         # Parse result of action
         if done:

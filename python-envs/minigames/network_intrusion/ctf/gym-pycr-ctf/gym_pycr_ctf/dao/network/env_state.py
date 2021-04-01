@@ -94,7 +94,7 @@ class EnvState:
                                                                 os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.COMPACT:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.essential_representation(num_machines=self.defender_obs_state.num_machines,
+                DefenderStateRepresentation.compact_representation(num_machines=self.defender_obs_state.num_machines,
                                                                      obs_state=self.defender_obs_state,
                                                                      os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.ESSENTIAL:
@@ -152,7 +152,7 @@ class EnvState:
             defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
                 obs_state=self.defender_obs_state)
         elif self.state_type == StateType.ESSENTIAL:
-            defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
+            defender_observation_space = DefenderStateRepresentation.compact_representation_spaces(
                 obs_state=self.defender_obs_state)
         elif self.state_type == StateType.SIMPLE:
             raise ValueError("SIMPLE State Representation not implemented for the defender")
@@ -160,6 +160,14 @@ class EnvState:
             raise ValueError("State type:{} not recognized".format(self.state_type))
 
         self.defender_observation_space = defender_observation_space
+
+    def update_defender_state(self) -> None:
+        """
+        Upate the defender's state
+        :return:
+        """
+        self.defender_obs_state.update_belief_state(env_config=self.env_config, state_type=self.state_type)
+
 
     def reset_state(self) -> None:
         """
@@ -185,11 +193,18 @@ class EnvState:
 
         if self.defender_obs_state is not None:
             for m in self.defender_obs_state.machines:
-                for c in m.ssh_connections:
-                    self.defender_cached_ssh_connections[m.ip] = (c, m.emulation_config)
-        self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
+                if len(m.ssh_connections) > 0:
+                    self.defender_cached_ssh_connections[m.ip] = (m.ssh_connections, m.emulation_config)
+            self.defender_obs_state.reset(env_config=self.env_config, state_type=self.state_type)
+        else:
+            self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
 
-    def initialize_defender_state(self):
+    def initialize_defender_state(self) -> None:
+        """
+        Initialize the defender's state
+
+        :return: None
+        """
         self.defender_obs_state.initialize_state(self.service_lookup,
                                                  self.defender_cached_ssh_connections,
                                                  self.env_config)

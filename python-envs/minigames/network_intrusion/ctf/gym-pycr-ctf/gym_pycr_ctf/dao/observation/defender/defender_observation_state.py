@@ -7,7 +7,9 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
 from gym_pycr_ctf.envs.logic.emulation.util.defender.shell_util import ShellUtil
 from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
+from gym_pycr_ctf.dao.state_representation.state_type import StateType
 import gym_pycr_ctf.constants.constants as constants
+import time
 
 
 class DefenderObservationState:
@@ -33,10 +35,48 @@ class DefenderObservationState:
         self.adj_matrix = np.array(0)
         self.ids_last_alert_ts = None
 
-    def initialize_state(self, service_lookup: dict,
-                         cached_connections: dict, env_config: EnvConfig) -> None:
-        self.adj_matrix = env_config.network_conf.adj_matrix
+    def reset(self, env_config: EnvConfig, state_type: StateType) -> None:
+        """
+        Resets the defender's state
 
+        :param env_config: the environment configuration
+        :param state_type: the type of the belief state
+        :return: None
+        """
+        self.num_alerts_recent = 0
+        self.num_severe_alerts_recent = 0
+        self.num_warning_alerts_recent = 0
+        self.sum_priority_alerts_recent = 0
+        self.num_alerts_total = 0
+        self.sum_priority_alerts_total = 0
+        self.num_severe_alerts_total = 0
+        self.num_warning_alerts_total = 0
+
+        # Update IDS timestamp
+        if env_config.ids_router:
+            self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+
+        # Update logs timestamps
+        for m in self.machines:
+            m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
+            m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
+
+        self.update_belief_state(env_config=env_config, state_type=state_type)
+
+    def update_belief_state(self, env_config: EnvConfig, state_type: StateType) -> None:
+        """
+        Updates the defender's belief state
+
+        :param env_config: the environment config
+        :param state_type: the type of the state
+        :return: None
+        """
+
+        print("-- Updating The Defender's Belief State -- ")
+
+        tstart = time.time()
+
+        # Measure IDS
         if env_config.ids_router:
             self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
             num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
@@ -52,12 +92,69 @@ class DefenderObservationState:
             self.num_warning_alerts_recent = num_recent_warning_alerts
             self.sum_priority_alerts_recent = sum_recent_priority_alerts
 
+
+        if state_type == StateType.BASE or state_type == StateType.ESSENTIAL or state_type == StateType.COMPACT:
+            # Measure Node specific features
+            for m in self.machines:
+
+                # Measure metrics of the node
+                m.num_logged_in_users = ShellUtil.read_logged_in_users(emulation_config=m.emulation_config)
+                m.num_failed_login_attempts = ReadLogsUtil.read_failed_login_attempts(
+                    emulation_config=m.emulation_config, failed_auth_last_ts=m.failed_auth_last_ts)
+                m.num_open_connections = ShellUtil.read_open_connections(emulation_config=m.emulation_config)
+                if state_type != StateType.COMPACT:
+                    m.num_login_events = ReadLogsUtil.read_successful_login_events(
+                        emulation_config=m.emulation_config, login_last_ts=m.login_last_ts)
+                if state_type == StateType.BASE:
+                    m.num_processes = ShellUtil.read_processes(emulation_config=m.emulation_config)
+
+        tend = time.time()
+        total_time = tend - tstart
+
+        print("-- The Defender's Belief State Updated Successfully in {} seconds -- ".format(total_time))
+
+
+    def initialize_state(self, service_lookup: dict,
+                         cached_connections: dict, env_config: EnvConfig) -> None:
+        """
+        Initializes the defender's state by measuring various metrics using root-logins on the servers of
+        the emulation
+
+        :param service_lookup: a dict with numeric ids of services
+        :param cached_connections: cached connections, if connections exist we can reuse them
+        :param env_config: the environment configuraiton
+        :return: None
+        """
+        print("-- Initializing The Defender's Belief State -- ")
+
+        self.adj_matrix = env_config.network_conf.adj_matrix
+
+        # Measure IDS
+        if env_config.ids_router:
+            self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
+            num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
+                ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
+
+            self.num_alerts_total = num_alerts
+            self.num_severe_alerts_total = num_severe_alerts
+            self.num_warning_alerts_total = num_warning_alerts
+            self.sum_priority_alerts_total = sum_priority_alerts
+            self.num_alerts_recent = num_recent_alerts
+            self.num_severe_alerts_recent = num_recent_severe_alerts
+            self.num_warning_alerts_recent = num_recent_warning_alerts
+            self.sum_priority_alerts_recent = sum_recent_priority_alerts
+
+        # Measure Node specific features
         for node in env_config.network_conf.nodes:
             if node.ip == env_config.emulation_config.agent_ip:
                 continue
             d_obs = node.to_defender_machine_obs(service_lookup)
+
+            # Setup connection
             if node.ip in cached_connections:
-                (node_conn, ec) = cached_connections[node.ip]
+                (node_connections, ec) = cached_connections[node.ip]
+                node_conn = node_connections[0]
             else:
                 ec = env_config.emulation_config.copy(ip=node.ip, username=constants.PYCR_ADMIN.user,
                                            pw=constants.PYCR_ADMIN.pw)
@@ -67,16 +164,21 @@ class DefenderObservationState:
                     service=constants.SSH.SERVICE_NAME, proxy=None, ip=node.ip)
             d_obs.ssh_connections.append(node_conn)
             d_obs.emulation_config = ec
+
+            # Measure metrics of the node
             d_obs.num_logged_in_users = ShellUtil.read_logged_in_users(emulation_config=d_obs.emulation_config)
             d_obs.num_open_connections = ShellUtil.read_open_connections(emulation_config=d_obs.emulation_config)
             d_obs.num_users = ShellUtil.read_users(emulation_config=d_obs.emulation_config)
-            ShellUtil.read_users(emulation_config=d_obs.emulation_config)
             d_obs.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=d_obs.emulation_config)
             d_obs.num_failed_login_attempts = ReadLogsUtil.read_failed_login_attempts(
                 emulation_config=d_obs.emulation_config, failed_auth_last_ts=d_obs.failed_auth_last_ts)
-            print(node.ip)
-            print(d_obs.num_failed_login_attempts)
+            d_obs.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=d_obs.emulation_config)
+            d_obs.num_login_events = ReadLogsUtil.read_successful_login_events(
+                emulation_config=d_obs.emulation_config, login_last_ts=d_obs.login_last_ts)
+            d_obs.num_processes = ShellUtil.read_processes(emulation_config=d_obs.emulation_config)
             self.machines.append(d_obs)
+
+        print("-- The Defender's Belief State Initialized Sucessfully -- ")
 
 
     def sort_machines(self):

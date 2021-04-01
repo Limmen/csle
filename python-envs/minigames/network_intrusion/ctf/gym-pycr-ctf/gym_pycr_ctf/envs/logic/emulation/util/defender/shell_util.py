@@ -56,3 +56,18 @@ class ShellUtil:
         users_str = users_str.replace("\n", "")
         users = users_str.split(" ")
         return len(users)
+
+    @staticmethod
+    def read_processes(emulation_config: EmulationConfig) -> int:
+        """
+        Measures the number of processes on the server
+
+        :param emulation_config: configuration to connect to the node in the emulation
+        :return: the number of processes
+        """
+        outdata, errdata, total_time = \
+            EmulationUtil.execute_ssh_cmd(cmd=constants.DEFENDER.LIST_NUMBER_OF_PROCESSES,
+                                          conn=emulation_config.agent_conn)
+        processes_str = outdata.decode()
+        num_processes = int(processes_str)
+        return num_processes

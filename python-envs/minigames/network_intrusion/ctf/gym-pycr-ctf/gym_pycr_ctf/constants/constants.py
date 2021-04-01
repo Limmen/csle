@@ -588,7 +588,10 @@ class DEFENDER:
     LIST_LOGGED_IN_USERS_CMD = "users"
     LIST_OPEN_CONNECTIONS_CMD = "netstat -n"
     LIST_USER_ACCOUNTS = "cat /etc/passwd"
-    LIST_FAILED_LOGIN_ATTEMPTS = "sudo cat /var/log/auth.log"
+    LIST_FAILED_LOGIN_ATTEMPTS = "sudo tail -50 /var/log/auth.log"
+    #LIST_FAILED_LOGIN_ATTEMPTS = "sudo cat 400 /var/log/auth.log"
+    LIST_SUCCESSFUL_LOGIN_ATTEMPTS = "last"
+    LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
 # Log files:
 # /var/log/vsftpd.log
