@@ -36,12 +36,13 @@ class IdsAlert:
 
 
     @staticmethod
-    def parse_from_str(csv_str_record : str):
+    def parse_from_str(csv_str_record : str, year: int):
         a_fields = csv_str_record.split(",")
         alert_dao = IdsAlert()
         alert_dao.timestamp = a_fields[0]
+        alert_dao.timestamp = str(year) + " " + alert_dao.timestamp
         if alert_dao.timestamp is not None and alert_dao.timestamp != "":
-            alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(), '%m/%d-%H:%M:%S.%f').timestamp()
+            alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
         alert_dao.sig_generator = a_fields[1]
         alert_dao.sig_id = a_fields[2]
         alert_dao.sig_rev = a_fields[3]
@@ -75,15 +76,17 @@ class IdsAlert:
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str):
+    def fast_log_parse(fast_log_str: str, year: int):
         priorities = re.findall(constants.IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
         priority = None
         if len(priorities) > 0:
             temp = priorities[0].replace("Priority: ", "")
             priority = int(temp)
         ts = fast_log_str.split(" ")[0]
+        ts = ts.strip()
+        ts = str(year) + " " + ts
         if ts is not None and ts != "":
-            ts = datetime.datetime.strptime(ts.strip(), '%m/%d-%H:%M:%S.%f').timestamp()
+            ts = datetime.datetime.strptime(ts.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
         return priority, ts
 
 

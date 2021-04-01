@@ -39,16 +39,16 @@ class PyCrCTFLevel4V5:
         # Subnet actions
         attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                                 subnet=True))
-        attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+        #attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
         attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
         attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        attacker_actions.append(
-            AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                 subnet=True))
-        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
-        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
+        # attacker_actions.append(
+        #     AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        #                                                          subnet=True))
+        # attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        #                                                                  subnet=True))
+        # attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        #                                                                  subnet=True))
 
         attacker_actions.append(AttackerStoppingActions.CONTINUE(index=num_nodes + 1))
 
@@ -121,7 +121,7 @@ class PyCrCTFLevel4V5:
                                render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrCTFLevel4Base.hacker_ip(), state_type=StateType.SIMPLE,
+                               hacker_ip=PyCrCTFLevel4Base.hacker_ip(), state_type=StateType.BASE,
                                router_ip=PyCrCTFLevel4Base.router_ip())
         env_config.ids_router = True
 

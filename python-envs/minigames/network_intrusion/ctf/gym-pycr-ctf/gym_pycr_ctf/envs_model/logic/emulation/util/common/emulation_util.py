@@ -1,5 +1,6 @@
 from typing import Tuple, List
 import time
+import datetime
 import paramiko
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
@@ -475,9 +476,10 @@ class EmulationUtil:
         stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
         alerts = []
+        year = datetime.datetime.now().year
         for line in stdout:
             a_str = line.replace("\n", "")
-            alerts.append(IdsAlert.parse_from_str(a_str))
+            alerts.append(IdsAlert.parse_from_str(a_str, year=year))
         if len(alerts) == 0:
             # retry once
             stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
@@ -506,9 +508,10 @@ class EmulationUtil:
         stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
         alerts = []
+        year = datetime.datetime.now().year
         for line in stdout:
             a_str = line.replace("\n", "")
-            alerts.append(IdsAlert.parse_from_str(a_str))
+            alerts.append(IdsAlert.parse_from_str(a_str, year=year))
         return alerts
 
     @staticmethod
@@ -524,9 +527,10 @@ class EmulationUtil:
         stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.IDS_ROUTER.FAST_LOG_FILE)
         fast_logs = []
+        year = datetime.datetime.now().year
         for line in stdout:
             a_str = line.replace("\n", "")
-            priority, ts = IdsAlert.fast_log_parse(a_str)
+            priority, ts = IdsAlert.fast_log_parse(a_str, year=year)
             fast_logs.append((priority, ts))
         return fast_logs
 

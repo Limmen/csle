@@ -1,9 +1,11 @@
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
 from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 import gym
 import time
 import numpy as np
+import os
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
@@ -19,34 +21,24 @@ def test_env(env_name : str, num_steps : int):
     emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
                                                "gym-pycr-ctf/examples/difficulty_level_4/hello_world/"
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
-    env.env_config.max_episode_length = 1000000000
-    env.env_config.manual_play = False
 
-    env.reset()
+    defender_dynamics_model = DefenderDynamicsModel()
+    if env.env_config.emulation_config.save_dynamics_model_dir is not None:
+        defender_dynamics_model.read_model(env.env_config)
+        load_dir = env.env_config.emulation_config.save_dynamics_model_dir + "/network_conf.pickle"
+        if os.path.exists(load_dir):
+            env.env_config.network_conf = \
+                env.env_config.network_conf.load(load_dir)
 
-    num_actions = env.env_config.attacker_action_conf.num_actions
-    actions = np.array(list(range(num_actions)))
-    print("num actions:{}".format(num_actions))
-    tot_rew = 0
-    for i in range(num_steps):
-        print(i)
-        legal_attacker_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
-        attack_action = np.random.choice(legal_attacker_actions)
-        defender_action = None
-        action = (attack_action, defender_action)
-        obs, reward, done, info = env.step(action)
-        attacker_obs, defender_obs = obs
-        attacker_reward, defender_reward = reward
-        tot_rew += attacker_reward
-        #env.render()
-        if done:
-            print("tot_rew:{}".format(tot_rew))
-            tot_rew = 0
-            env.reset()
-        #time.sleep(0.001)
-        #time.sleep(0.5)
-    env.reset()
-    env.close()
+    print(defender_dynamics_model)
+    defender_dynamics_model.normalize()
+    print(defender_dynamics_model.norm_num_new_alerts)
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.4.191')].mean())
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.4.191')].std())
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.4.191')].var())
+
+    # env.reset()
+    # env.close()
 
 
 def test_all():
@@ -55,8 +47,8 @@ def test_all():
     #test_env("pycr-ctf-level-4-emulation-v2", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v3", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v4", num_steps=1000000000)
-    #test_env("pycr-ctf-level-4-emulation-v5", num_steps=1000000000)
-    test_env("pycr-ctf-level-4-generated-sim-v5", num_steps=1000000000)
+    test_env("pycr-ctf-level-4-emulation-v5", num_steps=1000000000)
+    #test_env("pycr-ctf-level-4-generated-sim-v5", num_steps=1000000000)
     #
 
 if __name__ == '__main__':

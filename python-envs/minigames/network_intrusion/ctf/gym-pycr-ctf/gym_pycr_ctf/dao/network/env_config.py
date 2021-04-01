@@ -187,7 +187,6 @@ class EnvConfig:
         self.defender_ids_recent_threshold_seconds = 30
         self.explore_defense_states = False
 
-
     def get_port_forward_port(self) -> int:
         """
         :return: Gets the next port to forward

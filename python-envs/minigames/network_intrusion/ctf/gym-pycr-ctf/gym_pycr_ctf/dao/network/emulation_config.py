@@ -36,6 +36,7 @@ class EmulationConfig:
         self.ids_router_ip = ""
         self.router_conn = None
         self.skip_exploration = False
+        self.save_dynamics_model_dir = None
 
     def connect_server(self):
         """
@@ -441,4 +442,5 @@ class EmulationConfig:
                             server_username=self.server_username, warmup=self.warmup,
                             warmup_iterations=self.warmup_iterations,
                             port_forward_next_port=self.port_forward_next_port)
+        c.save_dynamics_model_dir = self.save_dynamics_model_dir
         return c

@@ -140,6 +140,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
             self.env_config.emulation_config.connect_agent()
+            if self.env_config.defender_update_state:
+                # Initialize Defender's state
+                self.env_state.initialize_defender_state()
             self.reset()
 
         # Reset and setup action spaces
@@ -320,6 +323,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
+        # Update defender's state
+        self.env_state.update_defender_state()
+
+        # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
 

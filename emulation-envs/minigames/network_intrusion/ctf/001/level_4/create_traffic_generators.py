@@ -120,4 +120,4 @@ if __name__ == '__main__':
     emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="pycr_admin",
                                      agent_pw="pycr@admin-pw_191", server_connection=False)
     TrafficGenerator.create_traffic_scripts(traffic_config=traffic_config, emulation_config=emulation_config,
-                                            sleep_time=2)
+                                            sleep_time=1)

@@ -52,7 +52,7 @@ from gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_
     PyCRCTFLevel4GeneratedSimWithCosts1Env, PyCRCTFLevel4GeneratedSim2Env, PyCRCTFLevel4GeneratedSim1Env, \
     PyCRCTFLevel4GeneratedSimWithCosts2Env, PyCRCTFLevel4GeneratedSim3Env, \
     PyCRCTFLevel4GeneratedSimWithCosts3Env, PyCRCTFLevel4GeneratedSim4Env, \
-    PyCRCTFLevel4GeneratedSimWithCosts4Env
+    PyCRCTFLevel4GeneratedSimWithCosts4Env, PyCRCTFLevel4GeneratedSim5Env
 
 # ------ Level 5 ----- #
 

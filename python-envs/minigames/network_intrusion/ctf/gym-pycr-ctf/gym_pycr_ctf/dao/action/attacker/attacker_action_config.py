@@ -113,3 +113,9 @@ class AttackerActionConfig:
         AttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
         AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
         ]
+
+    def get_continue_action_idx(self):
+        for i in range(len(self.actions)):
+            if self.actions[i].id == AttackerActionId.CONTINUE:
+                return i
+        raise ValueError("No Continue Action in the action space")

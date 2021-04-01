@@ -17,7 +17,7 @@ def manual_control():
     emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False, port_forward_next_port=9600)
 
-    env = gym.make("pycr-ctf-level-4-emulation-v1", env_config=None, emulation_config=emulation_config)
+    env = gym.make("pycr-ctf-level-4-emulation-v5", env_config=None, emulation_config=emulation_config)
 
     attacker_opponent = RandomAttackerBotAgent(env_config = env.env_config, env=env)
     ManualDefenderAgent(env=env, env_config=env.env_config, attacker_opponent=attacker_opponent)

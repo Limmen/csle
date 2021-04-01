@@ -523,6 +523,13 @@ register(
     kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
+# -------- Difficulty Level: Level4, Mode: Generated Simulation, Version: 5 ------------
+register(
+    id='pycr-ctf-level-4-generated-sim-v5',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_gensim_env:PyCRCTFLevel4GeneratedSim5Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
 ## Level 5
 
 # -------- Difficulty Level: Level5, Mode: emulation, Version: Base ------------

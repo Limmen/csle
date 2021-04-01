@@ -498,7 +498,7 @@ class EXPLOIT_VULNERABILITES:
     WEAK_PASSWORD_CVSS = 10.0
 
 class IDS_ROUTER:
-    MAX_ALERTS = 100
+    MAX_ALERTS = 200
     FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
     TAIL_ALERTS_COMMAND = "tail -" + str(MAX_ALERTS)

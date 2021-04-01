@@ -329,5 +329,7 @@ class PyCRCTFLevel4Emulation5Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.defender_update_state = False
+            env_config.explore_defense_states = True
+            env_config.defender_update_state = True
+            env_config.attacker_continue_action_sleep = 5
         super().__init__(env_config=env_config)

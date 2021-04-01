@@ -69,5 +69,8 @@ class ShellUtil:
             EmulationUtil.execute_ssh_cmd(cmd=constants.DEFENDER.LIST_NUMBER_OF_PROCESSES,
                                           conn=emulation_config.agent_conn)
         processes_str = outdata.decode()
-        num_processes = int(processes_str)
+        try:
+            num_processes = int(processes_str)
+        except:
+            num_processes = 0
         return num_processes

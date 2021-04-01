@@ -9,7 +9,6 @@ from gym_pycr_ctf.envs_model.logic.emulation.util.defender.shell_util import She
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 import gym_pycr_ctf.constants.constants as constants
-import time
 
 
 class DefenderObservationState:
@@ -72,13 +71,8 @@ class DefenderObservationState:
         :return: None
         """
 
-        print("-- Updating The Defender's Belief State -- ")
-
-        tstart = time.time()
-
         # Measure IDS
         if env_config.ids_router:
-            self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
             # num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts, num_recent_alerts, \
             # num_recent_severe_alerts, num_recent_warning_alerts, sum_recent_priority_alerts = \
             #     ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=self.last_alert_ts)
@@ -90,6 +84,9 @@ class DefenderObservationState:
             self.num_severe_alerts_total = num_severe_alerts
             self.num_warning_alerts_total = num_warning_alerts
             self.sum_priority_alerts_total = sum_priority_alerts
+
+            self.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+
             # self.num_alerts_recent = num_recent_alerts
             # self.num_severe_alerts_recent = num_recent_severe_alerts
             # self.num_warning_alerts_recent = num_recent_warning_alerts
@@ -111,10 +108,10 @@ class DefenderObservationState:
                 if state_type == StateType.BASE:
                     m.num_processes = ShellUtil.read_processes(emulation_config=m.emulation_config)
 
-        tend = time.time()
-        total_time = tend - tstart
+                m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
+                m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
 
-        print("-- The Defender's Belief State Updated Successfully in {} seconds -- ".format(total_time))
+
 
 
     def initialize_state(self, service_lookup: dict,
@@ -128,7 +125,6 @@ class DefenderObservationState:
         :param env_config: the environment configuraiton
         :return: None
         """
-        print("-- Initializing The Defender's Belief State -- ")
 
         self.adj_matrix = env_config.network_conf.adj_matrix
 
@@ -184,7 +180,6 @@ class DefenderObservationState:
             d_obs.num_processes = ShellUtil.read_processes(emulation_config=d_obs.emulation_config)
             self.machines.append(d_obs)
 
-        print("-- The Defender's Belief State Initialized Sucessfully -- ")
 
 
     def sort_machines(self):

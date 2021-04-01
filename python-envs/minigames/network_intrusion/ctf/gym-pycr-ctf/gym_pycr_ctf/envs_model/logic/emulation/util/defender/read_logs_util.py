@@ -109,6 +109,7 @@ class ReadLogsUtil:
         alerts = EmulationUtil.check_ids_alerts(env_config=env_config)
         fast_logs = EmulationUtil.check_ids_fast_log(env_config=env_config)
 
+
         # Filter IDS data from beginning of episode
         alerts = list(filter(lambda x: x.timestamp > episode_last_alert_ts, alerts))
         fast_logs = list(filter(lambda x: x[1] > episode_last_alert_ts, fast_logs))
@@ -119,6 +120,9 @@ class ReadLogsUtil:
         num_warning_alerts = len(
             list(filter(lambda x: x[0] < env_config.defender_ids_severity_threshold, fast_logs)))
         sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
+
+        if num_alerts < num_severe_alerts + num_warning_alerts:
+            num_alerts = num_severe_alerts + num_warning_alerts
 
         # # Compute threshold for recent
         # last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
