@@ -23,7 +23,7 @@ from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 from gym_pycr_ctf.agents.openai_baselines.common.env_util import make_vec_env
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
-from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 
 class Runner:
     """

@@ -1,6 +1,5 @@
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.util.experiments_util import util
@@ -9,9 +8,7 @@ import numpy as np
 import random
 import torch
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
+
 
 def load_model(env, agent_config: AgentConfig, load_path: str, device: str):
     model = PPO.load(env=env, load_path=load_path, device=device,

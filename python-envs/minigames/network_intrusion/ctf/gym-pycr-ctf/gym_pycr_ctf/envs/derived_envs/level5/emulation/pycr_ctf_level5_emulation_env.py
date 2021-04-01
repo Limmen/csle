@@ -2,11 +2,11 @@ from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.envs.config.level_5.pycr_ctf_level_5_base import PyCrCTFLevel5Base
-from gym_pycr_ctf.envs.config.level_5.pycr_ctf_level_5_v1 import PyCrCTFLevel5V1
-from gym_pycr_ctf.envs.config.level_5.pycr_ctf_level_5_v2 import PyCrCTFLevel5V2
-from gym_pycr_ctf.envs.config.level_5.pycr_ctf_level_5_v3 import PyCrCTFLevel5V3
-from gym_pycr_ctf.envs.config.level_5.pycr_ctf_level_5_v4 import PyCrCTFLevel5V4
+from gym_pycr_ctf.envs_model.config.level_5.pycr_ctf_level_5_base import PyCrCTFLevel5Base
+from gym_pycr_ctf.envs_model.config.level_5.pycr_ctf_level_5_v1 import PyCrCTFLevel5V1
+from gym_pycr_ctf.envs_model.config.level_5.pycr_ctf_level_5_v2 import PyCrCTFLevel5V2
+from gym_pycr_ctf.envs_model.config.level_5.pycr_ctf_level_5_v3 import PyCrCTFLevel5V3
+from gym_pycr_ctf.envs_model.config.level_5.pycr_ctf_level_5_v4 import PyCrCTFLevel5V4
 
 
 # -------- Base Version (for testing) ------------

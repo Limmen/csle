@@ -10,18 +10,18 @@ from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.agent.agent_log import AgentLog
 import gym_pycr_ctf.constants.constants as constants
-from gym_pycr_ctf.envs.logic.transition_operator import TransitionOperator
+from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
-import gym_pycr_ctf.envs.logic.common.util as util
-from gym_pycr_ctf.envs.logic.emulation.system_id.simulation_generator import SimulationGenerator
-from gym_pycr_ctf.envs.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_pycr_ctf.envs.logic.emulation.warmup.emulation_warmup import EmulationWarmup
-from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
-from gym_pycr_ctf.envs.logic.simulation.find_pi_star import FindPiStar
+from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+import gym_pycr_ctf.envs_model.logic.common.util as util
+from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
+from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
+from gym_pycr_ctf.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
+from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star import FindPiStar
 
 class PyCRCTFEnv(gym.Env, ABC):
     """
@@ -607,7 +607,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         :return: None
         """
-        from gym_pycr_ctf.envs.rendering.viewer import Viewer
+        from gym_pycr_ctf.rendering import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path

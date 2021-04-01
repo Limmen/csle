@@ -1,4 +1,4 @@
-from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.util.experiments_util import util
 
 def generate_config():

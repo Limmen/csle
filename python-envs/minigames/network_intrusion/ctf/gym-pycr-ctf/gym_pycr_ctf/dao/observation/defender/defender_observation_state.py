@@ -4,9 +4,9 @@ from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state im
 from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.envs.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
-from gym_pycr_ctf.envs.logic.emulation.util.defender.shell_util import ShellUtil
-from gym_pycr_ctf.envs.logic.emulation.util.common.emulation_util import EmulationUtil
+from gym_pycr_ctf.envs_model.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
+from gym_pycr_ctf.envs_model.logic.emulation.util.defender.shell_util import ShellUtil
+from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 import gym_pycr_ctf.constants.constants as constants
 import time

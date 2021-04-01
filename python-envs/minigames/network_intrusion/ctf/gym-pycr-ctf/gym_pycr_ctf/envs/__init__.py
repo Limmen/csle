@@ -4,11 +4,6 @@ from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 
 # ------ Level 1 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1EmulationBaseEnv, \
-    PyCRCTFLevel1Emulation1Env, PyCRCTFLevel1Emulation2Env, PyCRCTFLevel1Emulation3Env, PyCRCTFLevel1Emulation4Env, \
-    PyCRCTFLevel1EmulationWithCosts1Env, PyCRCTFLevel1EmulationWithCosts2Env, PyCRCTFLevel1EmulationWithCosts3Env, \
-    PyCRCTFLevel1EmulationWithCosts4Env, PyCRCTFLevel1EmulationNoCache1Env
-
 from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1SimBaseEnv, \
     PyCRCTFLevel1Sim1Env, PyCRCTFLevel1Sim2Env, PyCRCTFLevel1Sim3Env, PyCRCTFLevel1Sim4Env, \
     PyCRCTFLevel1SimWithCosts1Env, \
@@ -62,11 +57,6 @@ from gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_e
 
 # ------ Level 6 ----- #
 
-from gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env import PyCRCTFLevel6EmulationBaseEnv, \
-    PyCRCTFLevel6Emulation1Env, PyCRCTFLevel6Emulation2Env, PyCRCTFLevel6Emulation3Env, PyCRCTFLevel6Emulation4Env, \
-    PyCRCTFLevel6EmulationWithCosts1Env, PyCRCTFLevel6EmulationWithCosts2Env, PyCRCTFLevel6EmulationWithCosts3Env, \
-    PyCRCTFLevel6EmulationWithCosts4Env
-
 # ------ Level 7 ----- #
 
 from gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env import PyCRCTFLevel7EmulationBaseEnv, \
@@ -83,11 +73,6 @@ from gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_e
     PyCRCTFLevel8EmulationWithCosts4Env
 
 # ------ Random ----- #
-
-from gym_pycr_ctf.envs.derived_envs.random.emulation.pycr_ctf_random_emulation_env import PyCRCTFRandomEmulationBaseEnv, PyCRCTFRandomEmulation1Env, \
-    PyCRCTFRandomEmulationWithCosts1Env, PyCRCTFRandomEmulation2Env, PyCRCTFRandomEmulation3Env, \
-    PyCRCTFRandomEmulation4Env, PyCRCTFRandomEmulationWithCosts2Env, PyCRCTFRandomEmulationWithCosts3Env, \
-    PyCRCTFRandomEmulationWithCosts4Env
 
 from gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env import \
     PyCRCTFRandomGeneratedSim1Env, PyCRCTFRandomGeneratedSimWithCosts1Env, PyCRCTFRandomGeneratedSim2Env, \

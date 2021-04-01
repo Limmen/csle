@@ -3,8 +3,8 @@ import numpy as np
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
-from gym_pycr_ctf.envs.state_representation.attacker_state_representation import AttackerStateRepresentation
-from gym_pycr_ctf.envs.state_representation.defender_state_representation import DefenderStateRepresentation
+from gym_pycr_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
+from gym_pycr_ctf.envs_model.state_representation.defender_state_representation import DefenderStateRepresentation
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
 
 class EnvState:
@@ -103,7 +103,10 @@ class EnvState:
                                                                 obs_state=self.defender_obs_state,
                                                                 os_lookup=self.os_lookup, ids=self.ids)
         elif self.state_type == StateType.SIMPLE:
-            raise ValueError("SIMPLE State Representation not implemented for the defender")
+            machines_obs, network_obs = \
+                DefenderStateRepresentation.simple_representation(num_machines=self.defender_obs_state.num_machines,
+                                                                     obs_state=self.defender_obs_state,
+                                                                     os_lookup=self.os_lookup, ids=self.ids)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, network_obs
@@ -149,13 +152,14 @@ class EnvState:
             defender_observation_space = DefenderStateRepresentation.base_representation_spaces(
                 obs_state=self.defender_obs_state)
         elif self.state_type == StateType.COMPACT:
-            defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
-                obs_state=self.defender_obs_state)
-        elif self.state_type == StateType.ESSENTIAL:
             defender_observation_space = DefenderStateRepresentation.compact_representation_spaces(
                 obs_state=self.defender_obs_state)
+        elif self.state_type == StateType.ESSENTIAL:
+            defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
+                obs_state=self.defender_obs_state)
         elif self.state_type == StateType.SIMPLE:
-            raise ValueError("SIMPLE State Representation not implemented for the defender")
+            defender_observation_space = DefenderStateRepresentation.simple_representation_spaces(
+                obs_state=self.defender_obs_state)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
 

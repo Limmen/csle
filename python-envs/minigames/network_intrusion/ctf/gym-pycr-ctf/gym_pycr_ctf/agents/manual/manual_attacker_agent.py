@@ -2,12 +2,11 @@
 Manual attacker agent
 """
 try:
-    from gym_pycr_ctf.envs.rendering.viewer import Viewer
+    from gym_pycr_ctf.rendering import Viewer
 except:
     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 import numpy as np
 
 class ManualAttackerAgent:

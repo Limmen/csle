@@ -1,10 +1,7 @@
-from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 import gym
 
 def manual_control():

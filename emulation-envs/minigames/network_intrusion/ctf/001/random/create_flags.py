@@ -1,4 +1,4 @@
-from gym_pycr_ctf.envs.config.generator.flags_generator import FlagsGenerator
+from gym_pycr_ctf.envs_model.config.generator.flags_generator import FlagsGenerator
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.util.experiments_util import util
 

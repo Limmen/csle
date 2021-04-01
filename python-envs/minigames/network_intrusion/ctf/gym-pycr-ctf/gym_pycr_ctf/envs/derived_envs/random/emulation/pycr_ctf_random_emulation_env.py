@@ -4,11 +4,11 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.envs.config.random.pycr_ctf_random_base import PyCrCTFRandomBase
-from gym_pycr_ctf.envs.config.random.pycr_ctf_random_v1 import PyCrCTFRandomV1
-from gym_pycr_ctf.envs.config.random.pycr_ctf_random_v2 import PyCrCTFRandomV2
-from gym_pycr_ctf.envs.config.random.pycr_ctf_random_v3 import PyCrCTFRandomV3
-from gym_pycr_ctf.envs.config.random.pycr_ctf_random_v4 import PyCrCTFRandomV4
+from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_base import PyCrCTFRandomBase
+from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v1 import PyCrCTFRandomV1
+from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v2 import PyCrCTFRandomV2
+from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v3 import PyCrCTFRandomV3
+from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v4 import PyCrCTFRandomV4
 
 
 # -------- Base Version (for testing) ------------

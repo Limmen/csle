@@ -12,7 +12,7 @@ import numpy as np
 import torch as th
 from torch.utils.tensorboard import SummaryWriter
 
-from stable_baselines3.common import logger, utils
+from stable_baselines3.common import logger
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.preprocessing import is_image_space
@@ -35,7 +35,7 @@ from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-import gym_pycr_ctf.envs.logic.common.util as pycr_util
+import gym_pycr_ctf.envs_model.logic.common.util as pycr_util
 
 
 def maybe_make_env(env: Union[GymEnv, str, None], monitor_wrapper: bool, verbose: int) -> Optional[GymEnv]:

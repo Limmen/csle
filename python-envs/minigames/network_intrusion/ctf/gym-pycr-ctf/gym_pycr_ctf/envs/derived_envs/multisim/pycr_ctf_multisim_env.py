@@ -2,9 +2,9 @@ from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.envs.config.multi_sim.pycr_ctf_multisim_base import PyCrCTFMultiSimBase
-from gym_pycr_ctf.envs.config.multi_sim.pycr_ctf_multisim_v1 import PyCrCTFMultiSimV1
-from gym_pycr_ctf.envs.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_base import PyCrCTFMultiSimBase
+from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_v1 import PyCrCTFMultiSimV1
+from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 
 
 # -------- Version 1 emulation ------------

@@ -7,8 +7,8 @@ from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+
 
 def default_config() -> ClientConfig:
     """

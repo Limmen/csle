@@ -3,7 +3,7 @@ from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.dao.container_config.node_flags_config import NodeFlagsConfig
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.config.generator.flags_generator import FlagsGenerator
+from gym_pycr_ctf.envs_model.config.generator.flags_generator import FlagsGenerator
 
 
 def default_flags() -> FlagsConfig:

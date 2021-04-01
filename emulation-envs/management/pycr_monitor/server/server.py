@@ -1,5 +1,5 @@
-from flask import Flask, request, send_from_directory, jsonify
-from gym_pycr_ctf.envs.config.generator.env_info import EnvInfo
+from flask import Flask, jsonify
+from gym_pycr_ctf.envs_model.config.generator.env_info import EnvInfo
 from waitress import serve
 
 app = Flask(__name__, static_url_path='', static_folder='../build/')

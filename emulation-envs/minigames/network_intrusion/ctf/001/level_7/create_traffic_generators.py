@@ -3,7 +3,7 @@ from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
 from gym_pycr_ctf.dao.container_config.node_traffic_config import NodeTrafficConfig
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.config.generator.traffic_generator import TrafficGenerator
+from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
 
 def default_traffic_generators() -> TrafficConfig:
     traffic_generators = [

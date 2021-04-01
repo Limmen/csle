@@ -1,11 +1,7 @@
-from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym
-import time
 import numpy as np
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.envs.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",

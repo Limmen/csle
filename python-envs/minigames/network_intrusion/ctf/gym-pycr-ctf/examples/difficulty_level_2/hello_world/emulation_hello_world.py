@@ -1,7 +1,5 @@
-from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np
 
