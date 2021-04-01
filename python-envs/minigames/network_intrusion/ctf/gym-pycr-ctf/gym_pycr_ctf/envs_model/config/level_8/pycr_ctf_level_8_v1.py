@@ -27,39 +27,39 @@ class PyCrCTFLevel8V1:
         :param hacker_ip: ip of the agent
         :return: the action config
         """
-        attack_actions = []
+        attacker_actions = []
 
         # Host actions
         for idx in range(num_nodes):
-            attack_actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attack_actions.append(AttackerShellActions.SAMBACRY_EXPLOIT(index=idx))
-            attack_actions.append(AttackerShellActions.SHELLSHOCK_EXPLOIT(index=idx))
-            attack_actions.append(AttackerShellActions.DVWA_SQL_INJECTION(index=idx))
-            attack_actions.append(AttackerShellActions.CVE_2015_3306_EXPLOIT(index=idx))
-            attack_actions.append(AttackerShellActions.CVE_2015_1427_EXPLOIT(index=idx))
-            attack_actions.append(AttackerShellActions.CVE_2016_10033_EXPLOIT(index=idx))
-            attack_actions.append(AttackerShellActions.CVE_2010_0426_PRIV_ESC(index=idx))
-            attack_actions.append(AttackerShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
+            attacker_actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerShellActions.SAMBACRY_EXPLOIT(index=idx))
+            attacker_actions.append(AttackerShellActions.SHELLSHOCK_EXPLOIT(index=idx))
+            attacker_actions.append(AttackerShellActions.DVWA_SQL_INJECTION(index=idx))
+            attacker_actions.append(AttackerShellActions.CVE_2015_3306_EXPLOIT(index=idx))
+            attacker_actions.append(AttackerShellActions.CVE_2015_1427_EXPLOIT(index=idx))
+            attacker_actions.append(AttackerShellActions.CVE_2016_10033_EXPLOIT(index=idx))
+            attacker_actions.append(AttackerShellActions.CVE_2010_0426_PRIV_ESC(index=idx))
+            attacker_actions.append(AttackerShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet actions
-        attack_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                                 subnet=True))
-        attack_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attack_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
-        attack_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        attack_actions.append(
+        attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
+        attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
+        attacker_actions.append(
             AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                  subnet=True))
-        attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
-        attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
-        attack_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
-        attack_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
+        attacker_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        attacker_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
 
-        attack_actions = sorted(attack_actions, key=lambda x: (x.id.value, x.index))
+        attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
             AttackerActionId.NMAP_VULNERS_SUBNET,
@@ -74,10 +74,14 @@ class PyCrCTFLevel8V1:
                             AttackerActionId.CVE_2015_5602_PRIV_ESC, AttackerActionId.INSTALL_TOOLS, AttackerActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attack_actions, nmap_action_ids=nmap_action_ids,
-                                             network_service_action_ids=network_service_action_ids,
-                                             shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
-                                             masscan_action_ids=masscan_action_ids)
+        stopping_action_ids = []
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions,
+                                                      nmap_action_ids=nmap_action_ids,
+                                                      network_service_action_ids=network_service_action_ids,
+                                                      shell_action_ids=shell_action_ids,
+                                                      nikto_action_ids=nikto_action_ids,
+                                                      masscan_action_ids=masscan_action_ids,
+                                                      stopping_action_ids=stopping_action_ids)
         return attacker_action_config
 
     @staticmethod

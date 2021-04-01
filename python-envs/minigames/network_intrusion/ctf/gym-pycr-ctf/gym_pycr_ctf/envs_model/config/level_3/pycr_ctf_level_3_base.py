@@ -17,6 +17,7 @@ from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+from gym_pycr_ctf.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
 
 class PyCrCTFLevel3Base:
     """
@@ -190,6 +191,9 @@ class PyCrCTFLevel3Base:
         attacker_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
         attacker_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
 
+        attacker_actions.append(AttackerStoppingActions.STOP(index=num_nodes + 1))
+        attacker_actions.append(AttackerStoppingActions.CONTINUE(index=num_nodes + 1))
+
         attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_HOST, AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
@@ -220,10 +224,15 @@ class PyCrCTFLevel3Base:
         shell_action_ids = [AttackerActionId.FIND_FLAG, AttackerActionId.INSTALL_TOOLS, AttackerActionId.SSH_BACKDOOR]
         nikto_action_ids = [AttackerActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [AttackerActionId.MASSCAN_HOST_SCAN, AttackerActionId.MASSCAN_SUBNET_SCAN]
-        attacker_action_config = AttackerActionConfig(num_indices=num_nodes, actions=attacker_actions, nmap_action_ids=nmap_action_ids,
-                                             network_service_action_ids=network_service_action_ids,
-                                             shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
-                                             masscan_action_ids=masscan_action_ids)
+        stopping_action_ids = [AttackerActionId.STOP, AttackerActionId.CONTINUE]
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes, actions=attacker_actions,
+                                                      nmap_action_ids=nmap_action_ids,
+                                                      network_service_action_ids=network_service_action_ids,
+                                                      shell_action_ids=shell_action_ids,
+                                                      nikto_action_ids=nikto_action_ids,
+                                                      masscan_action_ids=masscan_action_ids,
+                                                      stopping_action_ids=stopping_action_ids
+                                            )
         return attacker_action_config
 
     @staticmethod

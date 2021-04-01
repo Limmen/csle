@@ -13,3 +13,5 @@ class AttackerActionOutcome(Enum):
     FLAG = 3
     PIVOTING = 4
     PRIVILEGE_ESCALATION_ROOT = 5
+    GAME_END = 6
+    CONTINUE = 7

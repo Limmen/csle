@@ -11,3 +11,5 @@ class AttackerActionType(Enum):
     EXPLOIT = 1
     POST_EXPLOIT = 2
     PRIVILEGE_ESCALATION = 3
+    STOP = 4
+    CONTINUE = 5

@@ -29,31 +29,31 @@ class PyCrCTFLevel5V1:
         :param hacker_ip: ip of the agent
         :return: the action config
         """
-        attack_actions = []
+        attacker_actions = []
 
         # Host actions
         for idx in range(num_nodes):
-            attack_actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
 
         # Subnet actions
-        attack_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                                 subnet=True))
-        attack_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        attack_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
-        attack_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        attack_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
-        attack_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
-        attack_actions.append(
+        attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
+        attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
+        attacker_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
+        attacker_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
+        attacker_actions.append(
             AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                  subnet=True))
-        attack_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
-        attack_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
                                                                          subnet=True))
 
-        attack_actions = sorted(attack_actions, key=lambda x: (x.id.value, x.index))
+        attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
             AttackerActionId.PING_SCAN_SUBNET,
@@ -65,10 +65,14 @@ class PyCrCTFLevel5V1:
         shell_action_ids = [AttackerActionId.FIND_FLAG, AttackerActionId.INSTALL_TOOLS, AttackerActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        attacker_action_config = AttackerActionConfig(num_indices=num_nodes, actions=attack_actions, nmap_action_ids=nmap_action_ids,
-                                             network_service_action_ids=network_service_action_ids,
-                                             shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
-                                             masscan_action_ids=masscan_action_ids)
+        stopping_action_ids = []
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions,
+                                                      nmap_action_ids=nmap_action_ids,
+                                                      network_service_action_ids=network_service_action_ids,
+                                                      shell_action_ids=shell_action_ids,
+                                                      nikto_action_ids=nikto_action_ids,
+                                                      masscan_action_ids=masscan_action_ids,
+                                                      stopping_action_ids=stopping_action_ids)
         return attacker_action_config
 
     @staticmethod

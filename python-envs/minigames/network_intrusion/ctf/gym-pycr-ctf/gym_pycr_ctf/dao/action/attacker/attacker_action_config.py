@@ -11,7 +11,7 @@ class AttackerActionConfig:
     def __init__(self, num_indices : int, actions: List[AttackerAction] = None, nmap_action_ids : List[int] = None,
                  network_service_action_ids: List[int] = None,
                  shell_action_ids : List[int] = None, nikto_action_ids : List[int] = None,
-                 masscan_action_ids : List[int] = None):
+                 masscan_action_ids : List[int] = None, stopping_action_ids: List[int] = None):
         """
         Class constructor
 
@@ -22,6 +22,7 @@ class AttackerActionConfig:
         :param shell_action_ids: list of ids of the actions that are shell actions
         :param nikto_action_ids: list of ids of the actions that are Nikto actions
         :param masscan_action_ids: list of ids of the actions that are Masscan actions
+        :param stopping_action_ids: List of ids of the actions that are actions related to optimal stopping
         """
         self.actions = actions
         self.num_actions = len(self.actions)
@@ -38,8 +39,9 @@ class AttackerActionConfig:
         self.shell_action_ids = shell_action_ids
         self.nikto_action_ids = nikto_action_ids
         self.masscan_action_ids = masscan_action_ids
+        self.stopping_action_ids = stopping_action_ids
         self.action_ids = self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids \
-                          + self.nikto_action_ids + self.masscan_action_ids
+                          + self.nikto_action_ids + self.masscan_action_ids + self.stopping_action_ids
         self.num_node_specific_actions = len(self.action_ids)
         self.m_action_space = gym.spaces.Discrete(self.num_node_specific_actions)
         self.ar_action_converter = {}

@@ -135,12 +135,15 @@ class PyCrCTFLevel3V4:
         shell_action_ids = [AttackerActionId.FIND_FLAG, AttackerActionId.INSTALL_TOOLS, AttackerActionId.SSH_BACKDOOR]
         nikto_action_ids = [AttackerActionId.NIKTO_WEB_HOST_SCAN]
         masscan_action_ids = [AttackerActionId.MASSCAN_HOST_SCAN, AttackerActionId.MASSCAN_SUBNET_SCAN]
-        attacker_action_conf = AttackerActionConfig(num_indices=num_nodes, actions=attacker_actions,
-                                             nmap_action_ids=nmap_action_ids,
-                                             network_service_action_ids=network_service_action_ids,
-                                             shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
-                                             masscan_action_ids=masscan_action_ids)
-        return attacker_action_conf
+        stopping_action_ids = []
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions,
+                                                      nmap_action_ids=nmap_action_ids,
+                                                      network_service_action_ids=network_service_action_ids,
+                                                      shell_action_ids=shell_action_ids,
+                                                      nikto_action_ids=nikto_action_ids,
+                                                      masscan_action_ids=masscan_action_ids,
+                                                      stopping_action_ids=stopping_action_ids)
+        return attacker_action_config
 
     @staticmethod
     def defender_actions_conf(num_nodes: int, subnet_mask: str) -> DefenderActionConfig:

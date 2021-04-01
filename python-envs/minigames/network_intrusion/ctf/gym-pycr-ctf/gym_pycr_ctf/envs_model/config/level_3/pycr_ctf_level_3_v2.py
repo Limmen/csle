@@ -74,10 +74,14 @@ class PyCrCTFLevel3V2:
         shell_action_ids = [AttackerActionId.FIND_FLAG, AttackerActionId.INSTALL_TOOLS, AttackerActionId.SSH_BACKDOOR]
         nikto_action_ids = []
         masscan_action_ids = []
-        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions, nmap_action_ids=nmap_action_ids,
-                                             network_service_action_ids=network_service_action_ids,
-                                             shell_action_ids=shell_action_ids, nikto_action_ids=nikto_action_ids,
-                                             masscan_action_ids=masscan_action_ids)
+        stopping_action_ids = []
+        attacker_action_config = AttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions,
+                                                      nmap_action_ids=nmap_action_ids,
+                                                      network_service_action_ids=network_service_action_ids,
+                                                      shell_action_ids=shell_action_ids,
+                                                      nikto_action_ids=nikto_action_ids,
+                                                      masscan_action_ids=masscan_action_ids,
+                                                      stopping_action_ids=stopping_action_ids)
         return attacker_action_config
 
     @staticmethod

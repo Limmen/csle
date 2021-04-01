@@ -94,3 +94,6 @@ class AttackerActionId(Enum):
     HTTP_ENUM_ALL = 81
     HTTP_GREP_ALL = 82
     FINGER_ALL = 83
+
+    STOP=84
+    CONTINUE=85
