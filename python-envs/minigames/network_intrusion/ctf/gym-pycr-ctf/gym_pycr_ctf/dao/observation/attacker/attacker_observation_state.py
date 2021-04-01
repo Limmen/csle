@@ -24,6 +24,18 @@ class AttackerObservationState:
         if agent_reachable is None:
             self.agent_reachable = set()
 
+    def ongoing_intrusion(self):
+        if self.catched_flags > 0:
+            return True
+
+        for m in self.machines:
+            if m.shell_access:
+                return True
+            if self.exploit_executed(m):
+                return True
+            if m.logged_in:
+                return True
+        return False
 
     def sort_machines(self):
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
@@ -116,6 +128,16 @@ class AttackerObservationState:
                     exploit_tried = res
                     break
             return exploit_tried
+
+    def exploit_executed(self, machine: AttackerMachineObservationState) -> bool:
+        if (machine.telnet_brute_tried or machine.ssh_brute_tried
+                or machine.ftp_brute_tried or machine.cassandra_brute_tried or machine.irc_brute_tried
+            or machine.mongo_brute_tried or machine.mysql_brute_tried or machine.smtp_brute_tried or
+            machine.postgres_brute_tried or machine.sambacry_tried or machine.shellshock_tried or
+            machine.dvwa_sql_injection_tried or machine.cve_2015_3306_tried or machine.cve_2015_1427_tried
+            or machine.cve_2016_10033_tried or machine.cve_2010_0426_tried or machine.cve_2015_5602_tried):
+            return True
+        return False
 
     def copy(self):
         c = AttackerObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,

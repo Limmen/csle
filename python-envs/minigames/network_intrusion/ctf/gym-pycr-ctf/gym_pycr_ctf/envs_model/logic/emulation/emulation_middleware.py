@@ -52,7 +52,7 @@ class EmulationMiddleware:
         :return: s', r, done
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
-            raise NotImplemented("Action not implemented")
+            return EmulationMiddleware.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
 

@@ -28,10 +28,14 @@ def test_env(env_name : str, num_steps : int):
     tot_rew = 0
     for i in range(num_steps):
         print(i)
-        legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
-        action = np.random.choice(legal_actions)
-        obs, reward, done, info = env.step(action, attacker=True)
-        tot_rew += reward
+        legal_attacker_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
+        attack_action = np.random.choice(legal_attacker_actions)
+        defender_action = None
+        action = (attack_action, defender_action)
+        obs, reward, done, info = env.step(action)
+        attacker_obs, defender_obs = obs
+        attacker_reward, defender_reward = reward
+        tot_rew += attacker_reward
         #env.render()
         if done:
             print("tot_rew:{}".format(tot_rew))

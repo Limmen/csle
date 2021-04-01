@@ -172,14 +172,23 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
+
+        # Initialization
         attack_action_id, defense_action_id = action_id
         attacker_reward = 0
         defender_reward = 0
+        attacker_obs = None
+        defender_obs = None
+        done = False
+
+        # First step attacker
         if attack_action_id is not None:
             attacker_m_obs, attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
+
+        # Second step defender
         if defense_action_id is not None:
             defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
-                self.step_defender(defender_action_id=defense_action_id)
+                self.step_defender(defender_action_id=defense_action_id, done_attacker=done)
             attacker_reward = attacker_reward + attacker_reward_2
             attacker_m_obs = attacker_m_obs_2
 
@@ -257,13 +266,21 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         return attacker_m_obs, attacker_reward, done, info
 
-    def step_defender(self, defender_action_id) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_defender(self, defender_action_id, done_attacker : bool = False) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment as the defender by executing the given action
 
         :param defender_action_id: the action to take
+        :param done_attacker: whether the environment completed after attacker action
         :return: (obs, reward, done, info)
         """
+
+        if done_attacker:
+            self.env_state.get_defender_observation()
+            defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+            attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+            defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
+            return defender_obs, attacker_m_obs, self.env_config.defender_intrusion_reward, 0, True, {}
 
         # Update trajectory
         self.defender_trajectory = []

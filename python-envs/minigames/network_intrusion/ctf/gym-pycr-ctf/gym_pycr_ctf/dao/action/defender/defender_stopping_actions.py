@@ -34,7 +34,7 @@ class DefenderStoppingActions:
         :param index: index of the machine to apply the action to
         :return: the action
         """
-        id = DefenderActionId.STOP
+        id = DefenderActionId.CONTINUE
         cmd = []
         alt_cmd = []
         return DefenderAction(id=id, name="Continue", cmd=cmd,

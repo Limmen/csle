@@ -9,7 +9,7 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 
 class RandomDefenderBotAgent:
     """
-    Class implementing an attack policy that acts randomly
+    Class implementing an defense policy that acts randomly
     """
 
     def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv = None):

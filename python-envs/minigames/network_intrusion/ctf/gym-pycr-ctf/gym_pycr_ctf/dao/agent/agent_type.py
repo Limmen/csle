@@ -7,3 +7,5 @@ class AgentType(Enum):
     A2C_BASELINE = 3
     TD3_BASELINE = 4
     DDPG_BASELINE = 5
+    RANDOM_ATTACKER = 6
+    RANDOM_DEFENDER = 7

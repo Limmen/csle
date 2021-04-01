@@ -20,8 +20,12 @@ class DefenderStoppingMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        pass
-        #return s_prime, reward, done
+        s_prime = s
+        if s_prime.attacker_obs_state.ongoing_intrusion():
+            s_prime.defender_obs_state.caught_attacker = True
+        else:
+            s_prime.defender_obs_state.stopped = True
+        return s_prime, 0, True
 
 
     @staticmethod
@@ -34,6 +38,5 @@ class DefenderStoppingMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        pass
-        # return s_prime, reward, done
+        return s, 0, False
 

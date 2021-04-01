@@ -124,6 +124,7 @@ class EnvConfig:
         self.defender_final_steps_reward_coefficient = 0
         self.defender_caught_attacker_reward = 50
         self.defender_early_stopping = -50
+        self.defender_intrusion_reward = -100
 
         self.defender_sum_costs = 1
         self.defender_max_costs = 1
@@ -337,4 +338,5 @@ class EnvConfig:
         env_config.defender_ids_severity_threshold = self.defender_ids_severity_threshold
         env_config.defender_ids_recent_threshold_seconds = self.defender_ids_recent_threshold_seconds
         env_config.defender_update_state = self.defender_update_state
+        env_config.defender_intrusion_reward = self.defender_intrusion_reward
         return env_config
