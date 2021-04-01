@@ -1,5 +1,5 @@
 """
-A bot attack agent for the pycr-wcrack environment that acts greedily according to a pre-trained policy network
+A bot attack agent for the pycr-ctf environment that acts greedily according to a pre-trained policy network
 """
 import torch
 import traceback
@@ -20,7 +20,10 @@ class PPOAttackerBotAgent:
         """
         Constructor, initializes the policy
 
-        :param game_config: the game configuration
+        :param pg_config:  agent config
+        :param env_config: environment config
+        :param model_path: path to saved model
+        :param env: the environment
         """
         self.env_config = env_config
         if model_path is None:
@@ -35,9 +38,9 @@ class PPOAttackerBotAgent:
     def initialize_models(self) -> None:
         """
         Initialize models
+
         :return: None
         """
-        policy = "MlpPolicy"
         # Initialize models
         self.model = PPO.load(env=self.env, load_path=self.agent_config.load_path, device=self.device,
                               agent_config=self.agent_config)
@@ -46,7 +49,7 @@ class PPOAttackerBotAgent:
         """
         Samples an action from the policy.
 
-        :param game_state: the game state
+        :param s: the environment state
         :return: action_id
         """
         try:

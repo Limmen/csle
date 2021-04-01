@@ -21,8 +21,9 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
                 try:
                     data = self.request.recv(1024)
                 except Exception as e:
-                    if "254" not in str(e):
+                    if "Connection reset by peer" not in str(e):
                         print(str(e))
+                    data = []
                 if len(data) == 0:
                     break
                 chan.send(data)

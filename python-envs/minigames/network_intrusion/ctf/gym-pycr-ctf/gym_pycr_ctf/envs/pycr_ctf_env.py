@@ -165,22 +165,25 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_config.pi_star_rew_list_attacker.append(self.env_config.pi_star_rew_attacker)
 
     # -------- API ------------
-    def step(self, action_id : int, attacker=True) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, action_id : Tuple[int, int]) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
-        if attacker:
-            return self.step_attacker(attacker_action_id=action_id)
-        else:
-            print("Step defender")
-            print("Defener state:")
-            print(self.env_state.defender_obs_state)
-            print(self.env_state.defender_obs_state.machines)
-            sys.exit(0)
-            return self.step_defender(defender_action_id=action_id)
+        attack_action_id, defense_action_id = action_id
+        attacker_reward = 0
+        defender_reward = 0
+        if attack_action_id is not None:
+            attacker_m_obs, attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
+        if defense_action_id is not None:
+            defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
+                self.step_defender(defender_action_id=defense_action_id)
+            attacker_reward = attacker_reward + attacker_reward_2
+            attacker_m_obs = attacker_m_obs_2
+
+        return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
     def step_attacker(self, attacker_action_id) -> Tuple[np.ndarray, int, bool, dict]:
         """
@@ -233,10 +236,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
             s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
 
-        # If defender is active, update defender's state
-        if self.env_config.defender_update_state:
-            s_prime.update_defender_state()
-
         # Parse result of action
         if done:
             attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient * self.attacker_agent_state.time_step
@@ -288,6 +287,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             s=self.env_state, defender_action=defense_action, env_config=self.env_config)
 
         # Parse result
+        attacker_reward = 0
         if done:
             defender_reward = defender_reward - \
                               self.env_config.defender_final_steps_reward_coefficient * \
@@ -299,10 +299,13 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         if self.env_state.defender_obs_state.caught_attacker:
             defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
+            attacker_reward = self.env_config.attacker_detection_reward
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.defender_last_obs = defender_obs
         self.defender_time_step += 1
@@ -311,7 +314,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_config.save_trajectories:
             self.defender_trajectories.append(self.defender_trajectory)
 
-        return defender_obs, defender_reward, done, info
+        return defender_obs, attacker_m_obs, defender_reward, attacker_reward, done, info
 
     def reset(self, soft : bool = False) -> np.ndarray:
         """

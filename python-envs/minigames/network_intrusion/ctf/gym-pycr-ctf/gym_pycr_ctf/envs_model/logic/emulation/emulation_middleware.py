@@ -9,6 +9,8 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.envs_model.logic.emulation.recon_middleware import ReconMiddleware
 from gym_pycr_ctf.envs_model.logic.emulation.exploit_middleware import ExploitMiddleware
 from gym_pycr_ctf.envs_model.logic.emulation.post_exploit_middleware import PostExploitMiddleware
+from gym_pycr_ctf.envs_model.logic.emulation.defender_stopping_middleware import DefenderStoppingMiddleware
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 class EmulationMiddleware:
@@ -183,3 +185,20 @@ class EmulationMiddleware:
             return PostExploitMiddleware.execute_ssh_backdoor(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
+
+    @staticmethod
+    def defender_stopping_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Implements transition of a stopping action of the defender
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == DefenderActionId.STOP:
+            return DefenderStoppingMiddleware.stop_monitor(s=s, a=a, env_config=env_config)
+        elif a.id == DefenderActionId.CONTINUE:
+            return DefenderStoppingMiddleware.continue_monitor(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
