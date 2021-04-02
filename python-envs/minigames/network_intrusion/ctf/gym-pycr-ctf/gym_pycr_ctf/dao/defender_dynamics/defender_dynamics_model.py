@@ -6,6 +6,7 @@ from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionId
 from gym_pycr_ctf.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
 
+
 class DefenderDynamicsModel:
     """
     Represents a dynamics model of the defender for simulating stochastic (b, a) -> b' transitions based on
