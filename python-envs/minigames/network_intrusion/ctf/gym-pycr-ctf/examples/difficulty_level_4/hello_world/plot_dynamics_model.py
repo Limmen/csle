@@ -75,33 +75,88 @@ def plot_all():
     #      xlabel=r"\# IDS Alerts",
     #      ylabel=r"$\mathbb{P}[ \cdot | (b_i, a_i)]$", file_name="ids_alerts")
 
-    plot_specific_dynamics(defender_dynamics_model.norm_num_new_alerts, action_cfg,
-                           subtitle="IDS Alerts",
-                           xlabel=r"\# IDS Alerts",
-                           ylabel=r"$\mathbb{P}[ \cdot | (b_i, a_i)]$",
+    row_dists = []
+    row_xks = []
+    row_a_ids = []
+    row_b_ids = []
+    row_subtitles = []
+    row_x_labels = []
+    row_y_labels = []
+
+    subtitle = "IDS Alerts"
+    xlabel = r"\# IDS Alerts"
+    ylabel = r"$\mathbb{P}[ \cdot | (b_i, a_i)]$"
+    total_dists, total_xks, total_a_ids, total_b_ids = plot_specific_dynamics(defender_dynamics_model.norm_num_new_alerts, action_cfg,
+                           subtitle=subtitle,
+                           xlabel=xlabel,
+                           ylabel=ylabel,
                            file_name="ids_alerts"
                            )
+    row_dists.append(total_dists)
+    row_xks.append(total_xks)
+    row_a_ids.append(total_a_ids)
+    row_b_ids.append(total_b_ids)
+    row_subtitles.append(subtitle)
+    row_x_labels.append(xlabel)
+    row_y_labels.append(ylabel)
 
-    plot_specific_dynamics(defender_dynamics_model.norm_num_new_severe_alerts, action_cfg,
-                           subtitle="Severe IDS Alerts",
-                           xlabel=r"\# Severe IDS Alerts",
-                           ylabel=r"$\mathbb{P}[ \cdot | (b_i, a_i)]$",
+    subtitle = "Severe IDS Alerts"
+    xlabel = r"\# Severe IDS Alerts"
+    ylabel = r"$\mathbb{P}[ \cdot | (b_i, a_i)]$"
+    total_dists, total_xks, total_a_ids, total_b_ids = plot_specific_dynamics(defender_dynamics_model.norm_num_new_severe_alerts, action_cfg,
+                           subtitle=subtitle,
+                           xlabel=xlabel,
+                           ylabel=ylabel,
                            file_name="severe_ids_alerts"
                            )
 
-    plot_specific_dynamics(defender_dynamics_model.norm_num_new_warning_alerts, action_cfg,
-                           subtitle="Warning IDS Alerts",
-                           xlabel=r"\# Warning IDS Alerts",
-                           ylabel=r"$\mathbb{P}[ \cdot | (b_i, a_i)]$",
+    row_dists.append(total_dists)
+    row_xks.append(total_xks)
+    row_a_ids.append(total_a_ids)
+    row_b_ids.append(total_b_ids)
+    row_subtitles.append(subtitle)
+    row_x_labels.append(xlabel)
+    row_y_labels.append(ylabel)
+
+    subtitle = "Warning IDS Alerts"
+    xlabel = r"\# Warning IDS Alerts"
+    ylabel = r"$\mathbb{P}[ \cdot | (b_i, a_i)]$"
+    total_dists, total_xks, total_a_ids, total_b_ids= plot_specific_dynamics(defender_dynamics_model.norm_num_new_warning_alerts, action_cfg,
+                           subtitle=subtitle,
+                           xlabel=xlabel,
+                           ylabel=ylabel,
                            file_name="warning_ids_alerts"
                            )
 
-    plot_specific_dynamics(defender_dynamics_model.norm_num_new_priority, action_cfg,
-                           subtitle="IDS Alert Priorities",
-                           xlabel=r"\# IDS Alert Priorities",
-                           ylabel=r"$\mathbb{P}[ \cdot | (b_i, a_i)]$",
+    row_dists.append(total_dists)
+    row_xks.append(total_xks)
+    row_a_ids.append(total_a_ids)
+    row_b_ids.append(total_b_ids)
+    row_subtitles.append(subtitle)
+    row_x_labels.append(xlabel)
+    row_y_labels.append(ylabel)
+
+    subtitle = "IDS Alert Priorities"
+    xlabel = r"\# IDS Alert Priorities"
+    ylabel = r"$\mathbb{P}[ \cdot | (b_i, a_i)]$"
+    total_dists, total_xks, total_a_ids, total_b_ids= plot_specific_dynamics(defender_dynamics_model.norm_num_new_priority, action_cfg,
+                           subtitle=subtitle,
+                           xlabel=xlabel,
+                           ylabel=ylabel,
                            file_name="priority_ids_alerts"
                            )
+
+    row_dists.append(total_dists)
+    row_xks.append(total_xks)
+    row_a_ids.append(total_a_ids)
+    row_b_ids.append(total_b_ids)
+    row_subtitles.append(subtitle)
+    row_x_labels.append(xlabel)
+    row_y_labels.append(ylabel)
+
+    plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
+                          "ids_dynamics_row")
+
 
 def plot_specific_dynamics(data_dict, action_cfg, subtitle, xlabel, ylabel, file_name):
     total_xks = []
@@ -144,10 +199,110 @@ def plot_specific_dynamics(data_dict, action_cfg, subtitle, xlabel, ylabel, file
         total_xks.append(xk)
         total_dists.append(dist)
 
-    plot_multiple(total_dists, total_xks, min_support, max_support, total_a_ids, total_b_ids,
-                  subtitle=subtitle,
-                  xlabel=xlabel,
-                  ylabel=ylabel, file_name=file_name)
+    # plot_multiple(total_dists, total_xks, min_support, max_support, total_a_ids, total_b_ids,
+    #               subtitle=subtitle,
+    #               xlabel=xlabel,
+    #               ylabel=ylabel, file_name=file_name)
+
+    return total_dists, total_xks, total_a_ids, total_b_ids
+
+def plot_ids_dynamics_two_row(dists, xks,
+                              a_ids, b_ids,
+                              subtitles,
+                              xlabels, ylabels, file_name):
+    cm = plt.cm.get_cmap('RdYlBu_r')
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1, 45))[-45:]
+
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    plt.rcParams['font.family'] = ['serif']
+    # plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(6, 4.5))
+    plt.rcParams.update({'font.size': 10})
+
+    k = 0
+    row = 0
+    for j in range(len(dists)):
+        title = r"PMF: $\mathbb{P}[b^{\prime} | b, a]$ - " + subtitles[j]
+        if j > 1 and row == 0:
+            row = 1
+            k = 0
+
+
+        #l = "r$(b_{" + b_ids[i] + "},a_{" + a_ids[i] + "})$"
+        for i in range(len(xks[j])):
+            if i < 2:
+                label = "$(b_{" + str(b_ids[j][i]) + "},a_{" + str(a_ids[j][i]) + "})$"
+                ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i],
+                        label=label)
+                ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+            else:
+                label = "..."
+                if i > 2:
+                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i])
+                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+                else:
+                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i],
+                            label=label)
+                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+
+        ax[row][k].set_title(title)
+        ax[row][k].set_xlabel(xlabels[j], fontsize=20)
+        ax[row][k].set_ylabel(ylabels[j], fontsize=20)
+
+        # set the grid on
+        ax[row][k].grid('on')
+
+        # tweak the axis labels
+        xlab = ax[row][k].xaxis.get_label()
+        ylab = ax[row][k].yaxis.get_label()
+
+        xlab.set_size(9)
+        ylab.set_size(9)
+        ax[row][k].tick_params(axis='both', which='major', labelsize=6)
+        ax[row][k].tick_params(axis='both', which='minor', labelsize=6)
+
+        # change the color of the top and right spines to opaque gray
+        ax[row][k].spines['right'].set_color((.8, .8, .8))
+        ax[row][k].spines['top'].set_color((.8, .8, .8))
+
+        # ax[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.18),
+        #           ncol=2, fancybox=True, shadow=True)
+        # ax.legend(loc="lower right")
+        ax[row][k].xaxis.label.set_size(9)
+        ax[row][k].yaxis.label.set_size(9)
+
+        # # remove tick marks
+        # ax[j].axis.set_tick_params(size=0)
+        # ax[j].yaxis.set_tick_params(size=0)
+        #
+        # # change the color of the top and right spines to opaque gray
+        # ax[j].spines['right'].set_color((.8, .8, .8))
+        # ax[j].spines['top'].set_color((.8, .8, .8))
+
+
+        ax[row][k].set_ylim(0, 1.1)
+
+        k+=1
+        # ax.set_xlim((0, 260))
+        #ax.set_xlim(min_support-2 , max_support+2)
+        #if len(labels) > 1:
+        #ax.legend(loc="upper right")
+    # ax[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+    #           ncol=3, fancybox=True, shadow=True)
+
+    handles, labels = ax[0][0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.52, 0.08),
+               ncol=4, fancybox=True, shadow=True)
+
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.15)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    plt.close(fig)
+    #plt.show()
+
 
 def plot_multiple(dists, xks, min_support, max_support,
                   a_ids, b_ids,
