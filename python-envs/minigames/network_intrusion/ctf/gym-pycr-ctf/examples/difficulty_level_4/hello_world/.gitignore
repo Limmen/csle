@@ -1,3 +1,5 @@
 *.json
 *.png
 *.pdf
+*.pickle
+*.pkl

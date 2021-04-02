@@ -355,7 +355,7 @@ class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
             env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
-            env_config.attacker_max_exploration_trajectories = 50
+            env_config.attacker_max_exploration_trajectories = 500
             env_config.explore_defense_states = True
             env_config.defender_update_state = True
             env_config.attacker_continue_action_sleep = 30
