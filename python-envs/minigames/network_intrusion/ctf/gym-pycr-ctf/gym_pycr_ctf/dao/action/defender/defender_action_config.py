@@ -2,7 +2,7 @@ from typing import List
 import gym
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
-
+from gym_pycr_ctf.dao.action.defender.defender_update_state_actions import DefenderUpdateStateActions
 
 class DefenderActionConfig:
     """
@@ -30,6 +30,9 @@ class DefenderActionConfig:
         self.stopping_action_ids = stopping_action_ids
         self.action_ids = self.stopping_action_ids
         self.num_node_specific_actions = len(self.action_ids)
+        self.state_update_action = DefenderUpdateStateActions.UPDATE_STATE(index=-1)
+        self.state_init_action = DefenderUpdateStateActions.INITIALIZE_STATE(index=-1)
+        self.state_reset_action = DefenderUpdateStateActions.RESET_STATE(index=-1)
 
     def print_actions(self) -> None:
         """

@@ -40,7 +40,8 @@ class TransitionOperator:
             raise ValueError("Invalid environment mode")
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) \
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+                            attacker_action : AttackerAction = None) \
             -> Tuple[EnvState, int, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for defense actions,
@@ -50,10 +51,12 @@ class TransitionOperator:
         :param s: the current state
         :param defender_action: the defender's action of the transition
         :param env_config: the environment config
+        :param attacker_action: previous attacker action
         :return: s', r, done
         """
         if env_config.env_mode == EnvMode.SIMULATION:
-            raise ValueError("Defender simulation not implemented yet")
+            Simulator.defender_transition(s=s, defender_action=defender_action, env_config=env_config,
+                                          attacker_action=attacker_action)
         elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             return EmulationMiddleware.defender_transition(s=s, defender_action=defender_action, env_config=env_config)
         else:

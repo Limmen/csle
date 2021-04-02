@@ -10,3 +10,4 @@ class DefenderActionType(Enum):
     """
     STOP = 0
     CONTINUE = 1
+    STATE_UPDATE = 2

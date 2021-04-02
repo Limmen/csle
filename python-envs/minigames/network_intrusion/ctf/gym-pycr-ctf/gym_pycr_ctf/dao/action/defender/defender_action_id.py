@@ -7,3 +7,6 @@ class DefenderActionId(Enum):
     """
     STOP = 0
     CONTINUE = 1
+    UPDATE_STATE = 2
+    INITIALIZE_STATE = 3
+    RESET_STATE = 4

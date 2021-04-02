@@ -2,8 +2,9 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
-from gym_pycr_ctf.envs.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 
 class DefenderBeliefStateSimulator:
@@ -12,19 +13,19 @@ class DefenderBeliefStateSimulator:
     """
 
     @staticmethod
-    def transition(s: EnvState, a: AttackerAction, env_config: EnvConfig,
-                   defender_dynamics_model: DefenderDynamicsModel) \
-            -> Tuple[EnvState, int, bool]:
+    def update_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
+                     defender_action: DefenderAction)-> Tuple[EnvState, int, bool]:
         """
         Simulates a belief state transition of the defender
 
         :param s: the current state
-        :param a: the action to take
+        :param attacker_action: the attacker's previous action
+        :param defender_action: the defender action
         :param env_config: the environment configuration
         :param defender_dynamics_model: dynamics model of the defender
         :return: s_prime, reward, done
         """
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=a, s=a)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
 
         num_new_alerts = 0
         num_new_priority = 0
@@ -32,17 +33,17 @@ class DefenderBeliefStateSimulator:
         num_new_warning_alerts = 0
 
         # Sample transitions
-        if (a.id.value, logged_in_ips_str) in defender_dynamics_model.norm_num_new_alerts:
-            num_new_alerts = defender_dynamics_model.norm_num_new_alerts[(a.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_alerts:
+            num_new_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (a.id.value, logged_in_ips_str) in defender_dynamics_model.norm_num_new_priority:
-            num_new_priority = defender_dynamics_model.norm_num_new_priority[(a.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_priority:
+            num_new_priority = env_config.network_conf.defender_dynamics_model.norm_num_new_priority[(attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (a.id.value, logged_in_ips_str) in defender_dynamics_model.norm_num_new_severe_alerts:
-            num_new_severe_alerts = defender_dynamics_model.norm_num_new_severe_alerts[(a.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
+            num_new_severe_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (a.id.value, logged_in_ips_str) in defender_dynamics_model.norm_num_new_warning_alerts:
-            num_new_warning_alerts = defender_dynamics_model.norm_num_new_warning_alerts[(a.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
+            num_new_warning_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
 
         # Update network state
         s.defender_obs_state.num_alerts_total = s.defender_obs_state.num_alerts_total + num_new_alerts
@@ -57,8 +58,8 @@ class DefenderBeliefStateSimulator:
         # Update machines state
         for m in s.defender_obs_state.machines:
 
-            if m.ip in defender_dynamics_model.machines_dynamics_model:
-                m_dynamics = defender_dynamics_model.machines_dynamics_model[m.ip]
+            if m.ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
+                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
 
                 num_new_open_connections = 0
                 num_new_failed_login_attempts = 0
@@ -68,28 +69,28 @@ class DefenderBeliefStateSimulator:
                 num_new_processes = 0
 
                 # Sample transitions
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_open_connections:
-                    num_new_open_connections = m_dynamics.norm_num_new_open_connections[(a.id.value, logged_in_ips_str)].rvs()
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_open_connections:
+                    num_new_open_connections = m_dynamics.norm_num_new_open_connections[(attacker_action.id.value, logged_in_ips_str)].rvs()
 
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_failed_login_attempts:
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_failed_login_attempts:
                     num_new_failed_login_attempts = m_dynamics.norm_num_new_failed_login_attempts[
-                        (a.id.value, logged_in_ips_str)].rvs()
+                        (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_users:
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_users:
                     num_new_users = m_dynamics.norm_num_new_users[
-                        (a.id.value, logged_in_ips_str)].rvs()
+                        (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_logged_in_users:
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_logged_in_users:
                     num_new_logged_in_users = m_dynamics.norm_num_new_logged_in_users[
-                        (a.id.value, logged_in_ips_str)].rvs()
+                        (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_login_events:
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_login_events:
                     num_new_login_events = m_dynamics.norm_num_new_login_events[
-                        (a.id.value, logged_in_ips_str)].rvs()
+                        (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-                if (a.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_processes:
+                if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_processes:
                     num_new_processes = m_dynamics.norm_num_new_processes[
-                        (a.id.value, logged_in_ips_str)].rvs()
+                        (attacker_action.id.value, logged_in_ips_str)].rvs()
 
                 # Update network state
                 m.num_open_connections = m.num_open_connections + num_new_open_connections
@@ -105,4 +106,34 @@ class DefenderBeliefStateSimulator:
                 m.num_processes = m.num_processes + num_new_processes
                 m.num_processes_recent = num_new_processes
 
+        return s, 0, True
+
+    @staticmethod
+    def init_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
+                     defender_action: DefenderAction) -> Tuple[EnvState, int, bool]:
+        """
+        Initializes the belief state of the defender
+
+        :param s: the current state
+        :param attacker_action: the attacker's previous action
+        :param defender_action: the defender action
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
+        return s, 0, True
+
+    @staticmethod
+    def reset_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
+                   defender_action: DefenderAction) -> Tuple[EnvState, int, bool]:
+        """
+        Resets the belief state of the defender
+
+        :param s: the current state
+        :param attacker_action: the attacker's previous action
+        :param defender_action: the defender action
+        :param env_config: the environment configuration
+        :return: s_prime, reward, done
+        """
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
         return s, 0, True

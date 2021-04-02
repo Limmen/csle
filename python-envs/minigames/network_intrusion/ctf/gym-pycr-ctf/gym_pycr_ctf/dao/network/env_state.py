@@ -6,7 +6,6 @@ from gym_pycr_ctf.dao.observation.defender.defender_observation_state import Def
 from gym_pycr_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
 from gym_pycr_ctf.envs_model.state_representation.defender_state_representation import DefenderStateRepresentation
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
-from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
 class EnvState:
     """
@@ -166,17 +165,6 @@ class EnvState:
 
         self.defender_observation_space = defender_observation_space
 
-    def update_defender_state(self, attacker_action: AttackerAction) -> None:
-        """
-        Upate the defender's state
-
-        :param: the previous attacker action
-        :return:
-        """
-        self.defender_obs_state.update_belief_state(env_config=self.env_config, state_type=self.state_type,
-                                                    env_state=self, attacker_action=attacker_action)
-
-
     def reset_state(self) -> None:
         """
         Resets the env state. Caches connections
@@ -203,19 +191,8 @@ class EnvState:
             for m in self.defender_obs_state.machines:
                 if len(m.ssh_connections) > 0:
                     self.defender_cached_ssh_connections[m.ip] = (m.ssh_connections, m.emulation_config)
-            self.defender_obs_state.reset(env_config=self.env_config, state_type=self.state_type)
         else:
             self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
-
-    def initialize_defender_state(self) -> None:
-        """
-        Initialize the defender's state
-
-        :return: None
-        """
-        self.defender_obs_state.initialize_state(self.service_lookup,
-                                                 self.defender_cached_ssh_connections,
-                                                 self.env_config)
 
     def merge_services_with_emulation(self, emulation_services : List[str]) -> None:
         """

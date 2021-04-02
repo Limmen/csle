@@ -55,10 +55,9 @@ class PyCrCTFLevel4V5:
         attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            AttackerActionId.NMAP_VULNERS_SUBNET,
-            AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
-            AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-            AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET
+            AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
+            AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
+            AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST
         ]
         network_service_action_ids = [AttackerActionId.NETWORK_SERVICE_LOGIN]
         shell_action_ids = [AttackerActionId.FIND_FLAG]

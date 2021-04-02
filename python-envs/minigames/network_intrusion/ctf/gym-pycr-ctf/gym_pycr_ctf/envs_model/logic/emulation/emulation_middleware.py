@@ -13,6 +13,7 @@ from gym_pycr_ctf.envs_model.logic.emulation.defender_stopping_middleware import
 from gym_pycr_ctf.envs_model.logic.emulation.attacker_stopping_middleware import AttackerStoppingMiddleware
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_ctf.envs_model.logic.emulation.defender_update_state_middleware import DefenderUpdateStateMiddleware
 
 class EmulationMiddleware:
     """
@@ -56,6 +57,8 @@ class EmulationMiddleware:
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
             return EmulationMiddleware.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
+        if defender_action.type == DefenderActionType.STATE_UPDATE:
+            return EmulationMiddleware.defender_update_state_action(s=s, a=defender_action, env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
 
@@ -222,3 +225,22 @@ class EmulationMiddleware:
             return AttackerStoppingMiddleware.continue_intrusion(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+
+    @staticmethod
+    def defender_update_state_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+        """
+        Implements transition of state update for the defender
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == DefenderActionId.UPDATE_STATE:
+            return DefenderUpdateStateMiddleware.update_belief_state(s=s, a=a, env_config=env_config)
+        elif a.id == DefenderActionId.INITIALIZE_STATE:
+            return DefenderUpdateStateMiddleware.initialize_state(s=s, a=a, env_config=env_config)
+        elif a.id == DefenderActionId.RESET_STATE:
+            return DefenderUpdateStateMiddleware.reset_state(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("State update action id:{},name:{} not recognized".format(a.id, a.name))

@@ -13,6 +13,7 @@ from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.defender.defender_action_type import DefenderActionType
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.simulation.defender_stopping_simulator import DefenderStoppingSimulator
+from gym_pycr_ctf.envs_model.logic.simulation.defender_belief_state_simulator import DefenderBeliefStateSimulator
 
 class Simulator:
     """
@@ -44,7 +45,8 @@ class Simulator:
             raise ValueError("Action type:{} not recognized".format(attacker_action.type))
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+                            attacker_action : AttackerAction = None) -> Tuple[
         EnvState, int, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
@@ -52,10 +54,14 @@ class Simulator:
         :param s: the current state
         :param defender_action: the defender action
         :param env_config: the environment configuration
+        :param attacker_action: previous attacker action
         :return: s', r, done
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
             return Simulator.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
+        elif defender_action.type == DefenderActionType.STATE_UPDATE:
+            Simulator.defender_update_state_action(s=s, attacker_action=attacker_action, a=defender_action,
+                                                   env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
 
@@ -206,40 +212,63 @@ class Simulator:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 
 
-        @staticmethod
-        def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
-                -> Tuple[EnvState, int, bool]:
-            """
-            Implements transition of a stopping action of the attacker
+    @staticmethod
+    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+            -> Tuple[EnvState, int, bool]:
+        """
+        Implements transition of a stopping action of the attacker
 
-            :param s: the current state
-            :param a: the action
-            :param env_config: the environment configuration
-            :return: s', r, done
-            """
-            if a.id == AttackerActionId.STOP:
-                return AttackerStoppingSimulator.stop_intrusion(s=s, a=a, env_config=env_config)
-            elif a.id == AttackerActionId.CONTINUE:
-                return AttackerStoppingSimulator.continue_intrusion(s=s, a=a, env_config=env_config)
-            else:
-                raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == AttackerActionId.STOP:
+            return AttackerStoppingSimulator.stop_intrusion(s=s, a=a, env_config=env_config)
+        elif a.id == AttackerActionId.CONTINUE:
+            return AttackerStoppingSimulator.continue_intrusion(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
 
-        @staticmethod
-        def defender_stopping_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[
-            EnvState, int, bool]:
-            """
-            Implements transition of a stopping action of the defender
+    @staticmethod
+    def defender_stopping_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[
+        EnvState, int, bool]:
+        """
+        Implements transition of a stopping action of the defender
 
-            :param s: the current state
-            :param a: the action
-            :param env_config: the environment configuration
-            :return: s', r, done
-            """
-            if a.id == DefenderActionId.STOP:
-                return DefenderStoppingSimulator.stop_monitor(s=s, a=a, env_config=env_config)
-            elif a.id == DefenderActionId.CONTINUE:
-                return DefenderStoppingSimulator.continue_monitor(s=s, a=a, env_config=env_config)
-            else:
-                raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if a.id == DefenderActionId.STOP:
+            return DefenderStoppingSimulator.stop_monitor(s=s, a=a, env_config=env_config)
+        elif a.id == DefenderActionId.CONTINUE:
+            return DefenderStoppingSimulator.continue_monitor(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+
+    @staticmethod
+    def defender_update_state_action(s: EnvState, a: DefenderAction, env_config: EnvConfig,
+                                     attacker_action: AttackerAction) -> Tuple[
+        EnvState, int, bool]:
+        """
+        Implements transition of state update for the defender
+
+        :param s: the current state
+        :param a: the action
+        :param env_config: the environment configuration
+        :param attacker_action: attacker's previous action
+        :return: s', r, done
+        """
+        if a.id == DefenderActionId.UPDATE_STATE:
+            return DefenderBeliefStateSimulator.update_state(s=s, attacker_action=attacker_action, env_config=env_config,
+                                                             defender_action=a)
+        elif a.id == DefenderActionId.INITIALIZE_STATE:
+            return DefenderBeliefStateSimulator.init_state(s=s, a=a, env_config=env_config)
+        elif a.id == DefenderActionId.RESET_STATE:
+            return DefenderBeliefStateSimulator.reset_state(s=s, a=a, env_config=env_config)
+        else:
+            raise ValueError("State update action id:{},name:{} not recognized".format(a.id, a.name))
 
 

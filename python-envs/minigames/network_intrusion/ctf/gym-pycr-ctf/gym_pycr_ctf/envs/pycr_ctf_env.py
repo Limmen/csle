@@ -79,7 +79,9 @@ class PyCRCTFEnv(gym.Env, ABC):
 
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
-                self.env_state.initialize_defender_state()
+                defender_init_action = self.env_config.defender_action_conf.state_init_action
+                TransitionOperator.defender_transition(s=self.env_state, a=defender_init_action,
+                                                       env_config=self.env_config)
 
             if self.env_config.load_services_from_server:
                 self.env_config.emulation_config.download_emulation_services()
@@ -146,7 +148,9 @@ class PyCRCTFEnv(gym.Env, ABC):
 
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
-                self.env_state.initialize_defender_state()
+                defender_init_action = self.env_config.defender_action_conf.state_init_action
+                TransitionOperator.defender_transition(s=self.env_state, a=defender_init_action,
+                                                       env_config=self.env_config)
                 self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
 
@@ -329,7 +333,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
         # Update defender's state
-        self.env_state.update_defender_state(attacker_action=attacker_action)
+        TransitionOperator.defender_transition(
+            s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
+            env_config=self.env_config)
 
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
@@ -378,7 +384,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.attacker_obs_state.all_flags:
             self.attacker_agent_state.num_all_flags += 1
-        self.env_state.reset_state()
+        self.reset_state()
+
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
@@ -753,3 +760,9 @@ class PyCRCTFEnv(gym.Env, ABC):
                     if action.id == AttackerActionId.FIND_FLAG and logged_in:
                         return True
         return False
+
+
+    def reset_state(self):
+        self.env_state.reset_state()
+        defender_reset_action = self.env_config.defender_action_conf.state_reset_action
+        TransitionOperator.defender_transition(s=self.env_state, a=defender_reset_action, env_config=self.env_config)

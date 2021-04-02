@@ -279,3 +279,10 @@ class DefenderDynamicsModel:
                 d = json.load(fp)
                 self.from_dict(d)
 
+    def read_model_path(self, path: str):
+        load_dir = path
+        if os.path.exists(load_dir):
+            with open(load_dir, 'r') as fp:
+                d = json.load(fp)
+                self.from_dict(d)
+

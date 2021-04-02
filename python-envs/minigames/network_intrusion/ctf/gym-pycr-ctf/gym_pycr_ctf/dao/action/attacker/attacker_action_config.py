@@ -119,3 +119,10 @@ class AttackerActionConfig:
             if self.actions[i].id == AttackerActionId.CONTINUE:
                 return i
         raise ValueError("No Continue Action in the action space")
+
+
+    def get_action_by_id(self, action_id: AttackerActionId):
+        for a in self.actions:
+            if a.id == action_id:
+                return a
+        raise ValueError("action id not found: {}".format(action_id))
