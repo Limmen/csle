@@ -186,7 +186,7 @@ class EnvConfig:
         self.defender_ids_severity_threshold=3
         self.defender_ids_recent_threshold_seconds = 30
         self.explore_defense_states = False
-        self.defender_sleep_before_state_update = 30
+        self.defender_sleep_before_state_update = 15
 
     def get_port_forward_port(self) -> int:
         """
