@@ -16,8 +16,11 @@ def test_env(env_name : str, num_steps : int):
     #                                server_username="kim")
     emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False)
-    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                               "gym-pycr-ctf/examples/difficulty_level_4/hello_world/"
+    # emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                                            "gym-pycr-ctf/examples/difficulty_level_4/hello_world/"
+    emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+                                               "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/" \
+                                               "hello_world/"
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = False
@@ -57,7 +60,6 @@ def test_all():
     #test_env("pycr-ctf-level-4-emulation-v4", num_steps=1000000000)
     #test_env("pycr-ctf-level-4-emulation-v5", num_steps=1000000000)
     test_env("pycr-ctf-level-4-generated-sim-v5", num_steps=1000000000)
-    #
 
 if __name__ == '__main__':
     test_all()

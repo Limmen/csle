@@ -4,19 +4,19 @@ import os, json, numpy as np, six
 from gym.utils import atomic_write, closer
 from gym.utils.json_utils import json_encode_np
 import imageio
-from gym_pycr_ctf.rendering import pycr_ctf_stats_recorder
-from gym_pycr_ctf.rendering import pycr_ctf_video_recorder
+from gym_pycr_ctf.rendering.video.pycr_ctf_stats_recorder import StatsRecorder
+from gym_pycr_ctf.rendering.video.pycr_ctf_video_recorder import PyCrCTFVideoRecorder
 
 FILE_PREFIX = 'openaigym'
 MANIFEST_PREFIX = FILE_PREFIX + '.manifest'
 
-class PycrctfMonitor(Wrapper):
+class PyCrCTFMonitor(Wrapper):
     """
     Helper class that sets up the openAIgym environment for recording videos and GIFs
     """
     def __init__(self, env, directory, video_callable=None, force=False, resume=False,
                  write_upon_reset=False, uid=None, mode=None, video_frequency = 1, openai_baseline = False):
-        super(PycrctfMonitor, self).__init__(env)
+        super(PyCrCTFMonitor, self).__init__(env)
 
         self.videos = []
 
@@ -150,7 +150,7 @@ class PycrctfMonitor(Wrapper):
 
     def close(self):
         """Flush all monitor data to disk and close any open rending windows."""
-        super(PycrctfMonitor, self).close()
+        super(PyCrCTFMonitor, self).close()
 
         if not self.enabled:
             return
@@ -237,7 +237,7 @@ class PycrctfMonitor(Wrapper):
         # Start recording the next video.
         #
         # TODO: calculate a more correct 'episode_id' upon merge
-        self.video_recorder = pycr_ctf_video_recorder.PycrctfVideoRecorder(
+        self.video_recorder = pycr_ctf_video_recorder.PyCrCTFVideoRecorder(
             env=self.env,
             base_path=os.path.join(self.directory, '{}.video.{}.video{:06}'.format(self.file_prefix, self.file_infix,
                                                                                    self.episode_id)),

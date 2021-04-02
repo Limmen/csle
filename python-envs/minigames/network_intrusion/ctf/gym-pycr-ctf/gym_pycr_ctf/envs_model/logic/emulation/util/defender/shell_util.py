@@ -65,11 +65,11 @@ class ShellUtil:
         :param emulation_config: configuration to connect to the node in the emulation
         :return: the number of processes
         """
-        outdata, errdata, total_time = \
-            EmulationUtil.execute_ssh_cmd(cmd=constants.DEFENDER.LIST_NUMBER_OF_PROCESSES,
-                                          conn=emulation_config.agent_conn)
-        processes_str = outdata.decode()
         try:
+            outdata, errdata, total_time = \
+                EmulationUtil.execute_ssh_cmd(cmd=constants.DEFENDER.LIST_NUMBER_OF_PROCESSES,
+                                              conn=emulation_config.agent_conn)
+            processes_str = outdata.decode()
             num_processes = int(processes_str)
         except:
             num_processes = 0

@@ -28,7 +28,7 @@ class TransitionOperator:
         """
         if env_config.env_mode == EnvMode.SIMULATION:
             return Simulator.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
-        elif env_config.env_mode == EnvMode.emulation or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+        elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             return EmulationMiddleware.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
             # try:
             #     return emulationMiddleware.transition(s=s,a=a,env_config=env_config)
@@ -54,7 +54,7 @@ class TransitionOperator:
         """
         if env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Defender simulation not implemented yet")
-        elif env_config.env_mode == EnvMode.emulation or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+        elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             return EmulationMiddleware.defender_transition(s=s, defender_action=defender_action, env_config=env_config)
         else:
             raise ValueError("Invalid environment mode")

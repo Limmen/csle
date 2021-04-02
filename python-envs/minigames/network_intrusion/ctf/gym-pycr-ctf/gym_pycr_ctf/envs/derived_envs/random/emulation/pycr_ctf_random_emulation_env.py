@@ -38,7 +38,7 @@ class PyCRCTFRandomEmulationBaseEnv(PyCRCTFEnv):
                                                       num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -74,7 +74,7 @@ class PyCRCTFRandomEmulation1Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -112,7 +112,7 @@ class PyCRCTFRandomEmulationWithCosts1Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -147,7 +147,7 @@ class PyCRCTFRandomEmulation2Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -185,7 +185,7 @@ class PyCRCTFRandomEmulationWithCosts2Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -222,7 +222,7 @@ class PyCRCTFRandomEmulation3Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -259,7 +259,7 @@ class PyCRCTFRandomEmulationWithCosts3Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -296,7 +296,7 @@ class PyCRCTFRandomEmulation4Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -333,7 +333,7 @@ class PyCRCTFRandomEmulationWithCosts4Env(PyCRCTFEnv):
                                                     num_nodes=num_nodes-1)
             env_config.attacker_cost_coefficient = 1
             env_config.attacker_alerts_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000

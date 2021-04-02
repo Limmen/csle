@@ -5,7 +5,7 @@ import time
 import torch
 import math
 
-from gym_pycr_ctf.rendering import PycrctfMonitor
+from gym_pycr_ctf.rendering import PyCrCTFMonitor
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.train_agent import TrainAgent
@@ -69,14 +69,14 @@ class TD3BaselineAgent(TrainAgent):
             if self.config.video_dir is None:
                 raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                      "the video_dir argument")
-            train_eval_env = PycrctfMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
+            train_eval_env = PyCrCTFMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
                                       video_frequency=self.config.video_frequency, openai_baseline=True)
             train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 
         eval_env = None
 
         if self.eval_env is not None:
-            eval_env = PycrctfMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
+            eval_env = PyCrCTFMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
                                           video_frequency=self.config.video_frequency, openai_baseline=True)
             eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 

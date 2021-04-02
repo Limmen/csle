@@ -5,7 +5,11 @@
                 {
                     "py/tuple": [
                         "/tmp/flag3.txt",
-                        "flag3"
+                        "flag3",
+                        "/tmp/",
+                        3,
+                        true,
+                        1
                     ]
                 }
             ],
@@ -17,7 +21,11 @@
                 {
                     "py/tuple": [
                         "/tmp/flag2.txt",
-                        "flag2"
+                        "flag2",
+                        "/tmp/",
+                        2,
+                        true,
+                        1
                     ]
                 }
             ],
@@ -29,7 +37,11 @@
                 {
                     "py/tuple": [
                         "/root/flag1.txt",
-                        "flag1"
+                        "flag1",
+                        "/root/",
+                        1,
+                        true,
+                        1
                     ]
                 }
             ],

@@ -9,7 +9,7 @@ import numpy as np
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
-from gym_pycr_ctf.rendering import PycrctfMonitor
+from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 from gym_pycr_ctf.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
 
 class Simulator:
@@ -52,7 +52,7 @@ class Simulator:
             if self.config.video_dir is None:
                 raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                      "the video_dir argument")
-            self.env = PycrctfMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
+            self.env = PyCrCTFMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
                                       video_frequency=self.config.video_frequency)
             self.env.metadata["video.frames_per_second"] = self.config.video_fps
 

@@ -25,6 +25,15 @@ class DefenderMachineObservationState:
         self.num_login_events = 0
         self.uptime = 0
         self.num_processes = 0
+
+        self.num_open_connections_recent = 0
+        self.num_failed_login_attempts_recent = 0
+        self.num_users_recent = 0
+        self.num_logged_in_users_recent = 0
+        self.num_login_events_recent = 0
+        self.num_processes_recent = 0
+
+
         self.failed_auth_last_ts = datetime.datetime.now().timestamp()
         self.login_last_ts = datetime.datetime.now().timestamp()
 
@@ -32,12 +41,16 @@ class DefenderMachineObservationState:
         return "ip:{},os:{},num_ports:{},num_ssh_connections:{},num_flags:{}," \
                "num_open_connections:{},num_failed_login_attempts:{},num_users:{}," \
                "num_logged_in_users:{},num_login_events:{},uptime:{},num_processes:{}," \
-               "failed_auth_last_ts:{},login_last_ts:{}" \
+               "failed_auth_last_ts:{},login_last_ts:{},num_open_connections_recent:{}," \
+               "num_failed_login_attempts_recent:{},num_users_recent:{},num_logged_in_users_recent:{}," \
+               "num_login_events_recent:{},num_processes_recent:{}" \
                "".format(self.ip, self.os, len(self.ports), len(self.ssh_connections),
                          self.num_flags, self.num_open_connections, self.num_failed_login_attempts,
                          self.num_failed_login_attempts, self.num_users, self.num_logged_in_users,
                          self.num_login_events, self.uptime, self.num_processes, self.failed_auth_last_ts,
-                         self.login_last_ts)
+                         self.login_last_ts, self.num_open_connections_recent, self.num_failed_login_attempts_recent,
+                         self.num_users_recent, self.num_logged_in_users_recent, self.num_login_events_recent,
+                         self.num_processes_recent)
 
     def sort_ports(self):
         for p in self.ports:
@@ -69,6 +82,12 @@ class DefenderMachineObservationState:
         m_copy.num_processes = self.num_processes
         m_copy.failed_auth_last_ts = self.failed_auth_last_ts
         m_copy.login_last_ts = self.login_last_ts
+        m_copy.num_open_connections_recent = self.num_open_connections_recent
+        m_copy.num_failed_login_attempts_recent = self.num_failed_login_attempts_recent
+        m_copy.num_users_recent = self.num_users_recent
+        m_copy.num_logged_in_users_recent = self.num_login_events_recent
+        m_copy.num_login_events_recent = self.num_login_events_recent
+        m_copy.num_processes_recent = self.num_processes_recent
         return m_copy
 
 

@@ -12,7 +12,7 @@ from gym import error, logger
 def touch(path):
     open(path, 'a').close()
 
-class PycrctfVideoRecorder(object):
+class PyCrCTFVideoRecorder(object):
     """VideoRecorder renders a nice movie of a rollout, frame by frame. It
     comes with an `enabled` option so you can still use the same code
     on episodes where you don't want to record video.

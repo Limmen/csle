@@ -33,7 +33,7 @@ class PyCRCTFLevel7EmulationBaseEnv(PyCRCTFEnv):
                                                       emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -65,7 +65,7 @@ class PyCRCTFLevel7Emulation1Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -97,7 +97,7 @@ class PyCRCTFLevel7EmulationWithCosts1Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -129,7 +129,7 @@ class PyCRCTFLevel7Emulation2Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -161,7 +161,7 @@ class PyCRCTFLevel7EmulationWithCosts2Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -193,7 +193,7 @@ class PyCRCTFLevel7Emulation3Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -225,7 +225,7 @@ class PyCRCTFLevel7EmulationWithCosts3Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -257,7 +257,7 @@ class PyCRCTFLevel7Emulation4Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
@@ -289,7 +289,7 @@ class PyCRCTFLevel7EmulationWithCosts4Env(PyCRCTFEnv):
                                                     emulation_config=emulation_config, render_conf=render_config)
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
-            env_config.env_mode = EnvMode.emulation
+            env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000

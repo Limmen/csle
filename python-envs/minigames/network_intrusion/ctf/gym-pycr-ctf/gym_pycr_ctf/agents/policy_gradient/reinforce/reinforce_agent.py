@@ -10,7 +10,7 @@ from gym_pycr_ctf.agents.models.fnn_w_softmax import FNNwithSoftmax
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_ctf.rendering import PycrctfMonitor
+from gym_pycr_ctf.rendering import PyCrCTFMonitor
 
 class ReinforceAgent(TrainAgent):
 
@@ -339,7 +339,7 @@ class ReinforceAgent(TrainAgent):
             if self.config.video_dir is None:
                 raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                      "the video_dir argument")
-            self.env = PycrctfMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
+            self.env = PyCrCTFMonitor(self.env, self.config.video_dir + "/" + time_str, force=True,
                                           video_frequency=self.config.video_frequency)
             self.env.metadata["video.frames_per_second"] = self.config.video_fps
 

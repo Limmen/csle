@@ -138,8 +138,6 @@ class SimulationGenerator:
                 save_path = util.get_script_path() + "/network_conf.pickle"
             env_config.network_conf.save(save_path)
 
-
-
         env.cleanup()
         return env_config.network_conf, aggregated_observation
 

@@ -8,6 +8,11 @@ from gym_pycr_ctf.envs_model.logic.simulation.recon_simulator import ReconSimula
 from gym_pycr_ctf.envs_model.logic.simulation.exploit_simulator import ExploitSimulator
 from gym_pycr_ctf.envs_model.logic.simulation.post_exploit_simulator import PostExploitSimulator
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_ctf.envs_model.logic.simulation.attacker_stopping_simulator import AttackerStoppingSimulator
+from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+from gym_pycr_ctf.dao.action.defender.defender_action_type import DefenderActionType
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
+from gym_pycr_ctf.envs_model.logic.simulation.defender_stopping_simulator import DefenderStoppingSimulator
 
 class Simulator:
     """
@@ -33,8 +38,27 @@ class Simulator:
             return Simulator.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return Simulator.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
+        elif attacker_action.type == AttackerActionType.STOP or attacker_action.type == AttackerActionType.CONTINUE:
+            return Simulator.attacker_stopping_action(s=s, a=attacker_action, env_config=env_config)
         else:
             raise ValueError("Action type:{} not recognized".format(attacker_action.type))
+
+    @staticmethod
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[
+        EnvState, int, bool]:
+        """
+        Implements the transition operator T: (s,a) -> (s',r)
+
+        :param s: the current state
+        :param defender_action: the defender action
+        :param env_config: the environment configuration
+        :return: s', r, done
+        """
+        if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
+            return Simulator.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
+        else:
+            raise ValueError("Action type not recognized")
+
 
     @staticmethod
     def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
@@ -180,5 +204,42 @@ class Simulator:
             return PostExploitSimulator.execute_ssh_backdoor(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
+
+
+        @staticmethod
+        def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+                -> Tuple[EnvState, int, bool]:
+            """
+            Implements transition of a stopping action of the attacker
+
+            :param s: the current state
+            :param a: the action
+            :param env_config: the environment configuration
+            :return: s', r, done
+            """
+            if a.id == AttackerActionId.STOP:
+                return AttackerStoppingSimulator.stop_intrusion(s=s, a=a, env_config=env_config)
+            elif a.id == AttackerActionId.CONTINUE:
+                return AttackerStoppingSimulator.continue_intrusion(s=s, a=a, env_config=env_config)
+            else:
+                raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+
+        @staticmethod
+        def defender_stopping_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[
+            EnvState, int, bool]:
+            """
+            Implements transition of a stopping action of the defender
+
+            :param s: the current state
+            :param a: the action
+            :param env_config: the environment configuration
+            :return: s', r, done
+            """
+            if a.id == DefenderActionId.STOP:
+                return DefenderStoppingSimulator.stop_monitor(s=s, a=a, env_config=env_config)
+            elif a.id == DefenderActionId.CONTINUE:
+                return DefenderStoppingSimulator.continue_monitor(s=s, a=a, env_config=env_config)
+            else:
+                raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
 
 

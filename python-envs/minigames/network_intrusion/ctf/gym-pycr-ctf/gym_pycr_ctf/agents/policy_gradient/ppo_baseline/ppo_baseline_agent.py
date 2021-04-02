@@ -5,7 +5,7 @@ import time
 import torch
 import math
 
-from gym_pycr_ctf.rendering import PycrctfMonitor
+from gym_pycr_ctf.rendering import PyCrCTFMonitor
 #from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.train_agent import TrainAgent
@@ -97,7 +97,7 @@ class PPOBaselineAgent(TrainAgent):
         else:
             train_eval_env_i = self.env
             if train_eval_env_i is not None:
-                train_eval_env = PycrctfMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
+                train_eval_env = PyCrCTFMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
                                           video_frequency=self.config.video_frequency, openai_baseline=True)
                 train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
             else:
@@ -108,7 +108,7 @@ class PPOBaselineAgent(TrainAgent):
             eval_env = self.eval_env
         else:
             if self.eval_env is not None:
-                eval_env = PycrctfMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
+                eval_env = PyCrCTFMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
                                                     video_frequency=self.config.video_frequency, openai_baseline=True)
                 eval_env.metadata["video.frames_per_second"] = self.config.video_fps
 

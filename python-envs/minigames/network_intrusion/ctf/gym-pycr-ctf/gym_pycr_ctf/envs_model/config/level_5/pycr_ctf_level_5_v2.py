@@ -128,7 +128,7 @@ class PyCrCTFLevel5V2:
         """
         env_config = EnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf, attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
                                attacker_num_sh_obs=3, num_nodes = PyCrCTFLevel5Base.num_nodes(),
-                               render_config=render_conf, env_mode=EnvMode.emulation,
+                               render_config=render_conf, env_mode=EnvMode.EMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
                                hacker_ip=PyCrCTFLevel5Base.hacker_ip(), state_type=StateType.ESSENTIAL,

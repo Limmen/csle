@@ -1,0 +1,75 @@
+{
+    "agent_ip": "172.18.4.191",
+    "containers": [
+        {
+            "ip": "172.18.4.254",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "client1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.79",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "ftp1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.191",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "hacker_kali1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.21",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "honeypot1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.10",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "router2",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.2",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "ssh1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        },
+        {
+            "ip": "172.18.4.3",
+            "level": "4",
+            "minigame": "ctf",
+            "name": "telnet1",
+            "network": "pycr_net_4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+            "version": "0.0.1"
+        }
+    ],
+    "ids_enabled": true,
+    "network": "pycr_net_4",
+    "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+    "router_ip": "172.18.4.10",
+    "subnet_mask": "172.18.4.0/24",
+    "subnet_prefix": "172.18.4.",
+    "vulnerable_nodes": null
+}

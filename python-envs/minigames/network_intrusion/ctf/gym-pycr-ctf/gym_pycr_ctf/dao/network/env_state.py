@@ -6,6 +6,7 @@ from gym_pycr_ctf.dao.observation.defender.defender_observation_state import Def
 from gym_pycr_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
 from gym_pycr_ctf.envs_model.state_representation.defender_state_representation import DefenderStateRepresentation
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
 class EnvState:
     """
@@ -165,12 +166,15 @@ class EnvState:
 
         self.defender_observation_space = defender_observation_space
 
-    def update_defender_state(self) -> None:
+    def update_defender_state(self, attacker_action: AttackerAction) -> None:
         """
         Upate the defender's state
+
+        :param: the previous attacker action
         :return:
         """
-        self.defender_obs_state.update_belief_state(env_config=self.env_config, state_type=self.state_type)
+        self.defender_obs_state.update_belief_state(env_config=self.env_config, state_type=self.state_type,
+                                                    env_state=self, attacker_action=attacker_action)
 
 
     def reset_state(self) -> None:

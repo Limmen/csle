@@ -72,7 +72,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.step_outcome = None
 
         # System Identification
-        if self.env_config.env_mode == EnvMode.emulation or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+        if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
 
             # Connect to emulation
             self.env_config.emulation_config.connect_agent()
@@ -121,7 +121,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Warmup in the emulation
         if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
-                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.emulation):
+                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.EMULATION):
             EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions),
                                    num_warmup_steps=env_config.emulation_config.warmup_iterations,
                                    env=self, render = False)
@@ -132,17 +132,22 @@ class PyCRCTFEnv(gym.Env, ABC):
                 len(self.env_config.attacker_user_command_cache.cache),
                 len(self.env_config.attacker_nikto_scan_cache.cache),
                 self.env_config.cache_misses))
+
+        # System Identification and Build Model
         if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
                 and not self.env_config.emulation_config.skip_exploration:
+
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
                 exp_policy=env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
             self.env_state.attacker_obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
             self.env_config.emulation_config.connect_agent()
+
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 self.env_state.initialize_defender_state()
+                self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
 
         # Reset and setup action spaces
@@ -179,20 +184,18 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Initialization
         attack_action_id, defense_action_id = action_id
-        attacker_reward = 0
         defender_reward = 0
-        attacker_obs = None
         defender_obs = None
-        done = False
 
         # First step attacker
-        if attack_action_id is not None:
-            attacker_m_obs, attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
+        attack_action = self.env_config.attacker_action_conf.actions[attack_action_id]
+        attacker_m_obs, attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
 
         # Second step defender
         if defense_action_id is not None:
             defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
-                self.step_defender(defender_action_id=defense_action_id, done_attacker=done)
+                self.step_defender(defender_action_id=defense_action_id, done_attacker=done,
+                                   attacker_action=attack_action)
             attacker_reward = attacker_reward + attacker_reward_2
             attacker_m_obs = attacker_m_obs_2
 
@@ -270,12 +273,14 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         return attacker_m_obs, attacker_reward, done, info
 
-    def step_defender(self, defender_action_id, done_attacker : bool = False) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_defender(self, defender_action_id, attacker_action: AttackerAction,
+                      done_attacker : bool = False) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment as the defender by executing the given action
 
         :param defender_action_id: the action to take
         :param done_attacker: whether the environment completed after attacker action
+        :param attacker_action: the previous attacker action
         :return: (obs, reward, done, info)
         """
 
@@ -324,7 +329,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
         # Update defender's state
-        self.env_state.update_defender_state()
+        self.env_state.update_defender_state(attacker_action=attacker_action)
 
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()

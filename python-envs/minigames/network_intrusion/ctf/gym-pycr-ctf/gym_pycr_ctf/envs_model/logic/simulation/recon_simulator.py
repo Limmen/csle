@@ -3,11 +3,12 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.envs_model.logic.simulation.simulator_util import SimulatorUtil
+from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
+from gym_pycr_ctf.envs_model.logic.simulation.util.recon_simulator_util import ReconSimulatorUtil
 
 class ReconSimulator:
     """
-    Class that implements functionality for simulating reconnissance actions
+    Class that implements functionality for simulating reconnaissance actions
     """
 
     @staticmethod
@@ -20,7 +21,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -39,7 +40,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.ping_scan_miss_p,
                                                           os=False)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -58,7 +59,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.udp_port_scan_miss_p,
                                                                        protocol=TransportProtocol.UDP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -77,7 +78,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -96,7 +97,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -115,7 +116,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -134,7 +135,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
@@ -153,7 +154,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.os_scan_miss_p, os=True)
         done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
         if done:
@@ -171,7 +172,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.vulscan_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)
@@ -191,7 +192,7 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = SimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.vulners_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)

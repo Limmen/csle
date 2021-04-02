@@ -1,0 +1,161 @@
+{
+    "node_traffic_configs": [
+        {
+            "commands": [],
+            "ip": "172.18.4.191",
+            "jumphosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79",
+                "172.18.4.191",
+                "172.18.4.10"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": []
+        },
+        {
+            "commands": [
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.2 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.2:80 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.3 > /dev/null 2>&1",
+                "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 ftp 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.79:8080 > /dev/null 2>&1"
+            ],
+            "ip": "172.18.4.21",
+            "jumphosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.79",
+                "172.18.4.191",
+                "172.18.4.10"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.79"
+            ]
+        },
+        {
+            "commands": [
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.2 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.2:80 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.3 > /dev/null 2>&1",
+                "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 snmpwalk -v2c 172.18.4.21 -c pycr_ctf1234 > /dev/null 2>&1",
+                "timeout 10 /irc_login_test.sh 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 psql -h 172.18.4.21 -p 5432 > /dev/null 2>&1",
+                "timeout 5 ftp 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.79:8080 > /dev/null 2>&1"
+            ],
+            "ip": "172.18.4.10",
+            "jumphosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79",
+                "172.18.4.191"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79"
+            ]
+        },
+        {
+            "commands": [
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.3 > /dev/null 2>&1",
+                "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 snmpwalk -v2c 172.18.4.21 -c pycr_ctf1234 > /dev/null 2>&1",
+                "timeout 10 /irc_login_test.sh 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 psql -h 172.18.4.21 -p 5432 > /dev/null 2>&1",
+                "timeout 5 ftp 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.79:8080 > /dev/null 2>&1"
+            ],
+            "ip": "172.18.4.2",
+            "jumphosts": [
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79",
+                "172.18.4.191",
+                "172.18.4.10"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79"
+            ]
+        },
+        {
+            "commands": [
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.2 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.2:80 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 snmpwalk -v2c 172.18.4.21 -c pycr_ctf1234 > /dev/null 2>&1",
+                "timeout 10 /irc_login_test.sh 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 psql -h 172.18.4.21 -p 5432 > /dev/null 2>&1",
+                "timeout 5 ftp 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.79 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.79:8080 > /dev/null 2>&1"
+            ],
+            "ip": "172.18.4.3",
+            "jumphosts": [
+                "172.18.4.2",
+                "172.18.4.21",
+                "172.18.4.79",
+                "172.18.4.191",
+                "172.18.4.10"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79"
+            ]
+        },
+        {
+            "commands": [
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.2 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.2:80 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 curl 172.18.4.3 > /dev/null 2>&1",
+                "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.4.3 > /dev/null 2>&1",
+                "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 snmpwalk -v2c 172.18.4.21 -c pycr_ctf1234 > /dev/null 2>&1",
+                "timeout 10 /irc_login_test.sh 172.18.4.21 > /dev/null 2>&1",
+                "timeout 5 psql -h 172.18.4.21 -p 5432 > /dev/null 2>&1"
+            ],
+            "ip": "172.18.4.79",
+            "jumphosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21",
+                "172.18.4.79",
+                "172.18.4.191",
+                "172.18.4.10"
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.node_traffic_config.NodeTrafficConfig",
+            "target_hosts": [
+                "172.18.4.2",
+                "172.18.4.3",
+                "172.18.4.21"
+            ]
+        }
+    ],
+    "py/object": "gym_pycr_ctf.dao.container_config.traffic_config.TrafficConfig"
+}
