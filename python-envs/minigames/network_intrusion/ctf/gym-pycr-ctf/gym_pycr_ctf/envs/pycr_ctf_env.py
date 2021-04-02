@@ -5,6 +5,7 @@ from abc import ABC
 import numpy as np
 import os
 import sys
+import time
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
@@ -80,7 +81,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
-                TransitionOperator.defender_transition(s=self.env_state, a=defender_init_action,
+                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=self.env_config)
 
             if self.env_config.load_services_from_server:
@@ -149,7 +150,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
-                TransitionOperator.defender_transition(s=self.env_state, a=defender_init_action,
+                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=self.env_config)
                 self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
@@ -197,6 +198,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Second step defender
         if defense_action_id is not None:
+            time.sleep(self.env_config.defender_sleep_before_state_update)
             defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
                 self.step_defender(defender_action_id=defense_action_id, done_attacker=done,
                                    attacker_action=attack_action)
@@ -765,4 +767,5 @@ class PyCRCTFEnv(gym.Env, ABC):
     def reset_state(self):
         self.env_state.reset_state()
         defender_reset_action = self.env_config.defender_action_conf.state_reset_action
-        TransitionOperator.defender_transition(s=self.env_state, a=defender_reset_action, env_config=self.env_config)
+        TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_reset_action,
+                                               env_config=self.env_config)

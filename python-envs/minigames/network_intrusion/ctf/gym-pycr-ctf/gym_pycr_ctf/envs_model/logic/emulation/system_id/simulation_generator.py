@@ -6,6 +6,7 @@ from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import Explora
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.util.experiments_util import util
+from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 
 class SimulationGenerator:
     """
@@ -99,7 +100,9 @@ class SimulationGenerator:
 
             if env.env_config.defender_update_state:
                 # Initialize Defender's state
-                env.env_state.initialize_defender_state()
+                defender_init_action = env_config.defender_action_conf.state_init_action
+                TransitionOperator.defender_transition(s=env.env_state, defender_action=defender_init_action,
+                                                       env_config=env_config)
 
             # Collect trajectory
             defender_dynamics_model = \
