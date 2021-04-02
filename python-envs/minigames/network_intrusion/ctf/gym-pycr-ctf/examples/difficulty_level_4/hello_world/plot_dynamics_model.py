@@ -6,7 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def read_model():
-    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
+    #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
+    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
     defender_dynamics_model = DefenderDynamicsModel()
     defender_dynamics_model.read_model_path(model_path)
     defender_dynamics_model.normalize()
@@ -18,19 +19,19 @@ def plot_all():
     total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles, \
     total_row_x_labels, total_row_y_labels,row_labels = plot_machines_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
 
-    ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles, ids_row_x_labels, ids_row_y_labels = \
-        plot_ids_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
+    # ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles, ids_row_x_labels, ids_row_y_labels = \
+    #     plot_ids_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
 
-    plot_complete_model_full_span(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids,
-                                  total_row_short_titles,
-                                  total_row_x_labels, total_row_y_labels,
-                                  ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles,
-                                  ids_row_x_labels, ids_row_y_labels,
-                                  file_name="total_model_full",
-                                  ncols=len(total_row_x_labels[0]),
-                                  nrows=len(total_row_x_labels), figsize=(3, 2.2), fontsize=3.2, labelsize=2.5,
-                                  suptitle="Estimated Emulation Dynamics", ms=0.4, title_fontsize=4.5, lw=0.2,
-                                  row_labels=row_labels, wspace=0.03, hspace=0.18, top=0.92)
+    # plot_complete_model_full_span(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids,
+    #                               total_row_short_titles,
+    #                               total_row_x_labels, total_row_y_labels,
+    #                               ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles,
+    #                               ids_row_x_labels, ids_row_y_labels,
+    #                               file_name="total_model_full",
+    #                               ncols=len(total_row_x_labels[0]),
+    #                               nrows=len(total_row_x_labels), figsize=(3, 2.2), fontsize=3.2, labelsize=2.5,
+    #                               suptitle="Estimated Emulation Dynamics", ms=0.4, title_fontsize=4.5, lw=0.2,
+    #                               row_labels=row_labels, wspace=0.03, hspace=0.18, top=0.92)
 
 def plot_machines_dynamics(defender_dynamics_model, action_cfg):
     total_row_dists = []
@@ -56,11 +57,11 @@ def plot_machines_dynamics(defender_dynamics_model, action_cfg):
         row_labels.append(machine_ip)
         total_row_short_titles.append(row_short_titles)
 
-    # plot_complete_model(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,
-    #                     total_row_x_labels, total_row_y_labels, file_name="total_model_machines", ncols=len(total_row_x_labels[0]),
-    #                     nrows=len(total_row_x_labels), figsize=(5.5,3), fontsize=4.5, labelsize=2.5,
-    #                     suptitle="Estimated Nodes Emulation Dynamics", ms=0.75, title_fontsize=6, lw=0.25,
-    #                     row_labels=row_labels, wspace=0.03, hspace=0.07, top=0.9)
+    plot_complete_model(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,
+                        total_row_x_labels, total_row_y_labels, file_name="total_model_machines", ncols=len(total_row_x_labels[0]),
+                        nrows=len(total_row_x_labels), figsize=(3,2.1), fontsize=3.5, labelsize=1.75,
+                        suptitle="Estimated Dynamics of Nodes in the Emulation", ms=0.45, title_fontsize=4, lw=0.2,
+                        row_labels=row_labels, wspace=0.00, hspace=0.00, top=0.925)
     return total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,\
            total_row_x_labels, total_row_y_labels, row_labels
 
@@ -180,7 +181,7 @@ def plot_machine_dynamics(machine_ip, machine_dynamics, action_cfg):
     xlabel = r"\# Created Processes"
     ylabel = r"$\mathbb{P}[ \cdot | (b_i, a_i)]$"
     total_dists, total_xks, total_a_ids, total_b_ids = plot_specific_dynamics(
-        machine_dynamics.norm_num_new_login_events, action_cfg,
+        machine_dynamics.norm_num_new_processes, action_cfg,
         subtitle=subtitle,
         xlabel=xlabel,
         ylabel=ylabel,
@@ -342,12 +343,17 @@ def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, f
                         figsize=(6, 4.5), fontsize=10, labelsize=6, suptitle="", nrows = 6, ms=2.5,
                         title_fontsize=8, lw=0.5, row_labels = None, wspace=0.03, hspace=0.07, top=0.9):
     cm = plt.cm.get_cmap('RdYlBu_r')
-    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
     colors = plt.cm.viridis(np.linspace(0.3, 1, 45))[-45:]
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
 
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
     plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['axes.titlepad'] = 0
+    plt.rcParams['xtick.major.pad'] = 0.5
+    plt.rcParams['ytick.major.pad'] = 0.5
+    plt.rcParams['axes.labelpad'] = 0.8
+    plt.rcParams['axes.linewidth'] = 0.1
     # plt.rcParams['font.serif'] = ['Times New Roman']
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     plt.rcParams.update({'font.size': fontsize})
@@ -396,8 +402,8 @@ def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, f
                 ax[row][col].set_xticks([])
             if col != 0:
                 ax[row][col].set_yticks([])
-            ax[row][col].tick_params(axis='both', which='major', labelsize=labelsize)
-            ax[row][col].tick_params(axis='both', which='minor', labelsize=labelsize)
+            ax[row][col].tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+            ax[row][col].tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
 
             # change the color of the top and right spines to opaque gray
             ax[row][col].spines['right'].set_color((.8, .8, .8))

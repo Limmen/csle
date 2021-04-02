@@ -51,7 +51,6 @@ class DefenderUpdateStateMiddleware:
 
             # Measure Node specific features
             for m in s_prime.defender_obs_state.machines:
-
                 # Measure metrics of the node
                 num_logged_in_users = ShellUtil.read_logged_in_users(emulation_config=m.emulation_config)
                 m.num_logged_in_users_recent = num_logged_in_users - m.num_logged_in_users

@@ -1,0 +1,53 @@
+{
+    "flags": [
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag3.txt",
+                        "flag3",
+                        "/tmp/",
+                        3,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.4.79",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/tmp/flag2.txt",
+                        "flag2",
+                        "/tmp/",
+                        2,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.4.2",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "py/tuple": [
+                        "/root/flag1.txt",
+                        "flag1",
+                        "/root/",
+                        1,
+                        true,
+                        1
+                    ]
+                }
+            ],
+            "ip": "172.18.4.3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+        }
+    ],
+    "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+}
