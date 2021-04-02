@@ -7,6 +7,10 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionId
 from gym_pycr_ctf.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
 
 class DefenderDynamicsModel:
+    """
+    Represents a dynamics model of the defender for simulating stochastic (b, a) -> b' transitions based on
+    maximum likelihood estimations
+    """
 
     def __init__(self):
         self.num_new_alerts = {}
@@ -21,7 +25,12 @@ class DefenderDynamicsModel:
         self.norm_num_new_warning_alerts = {}
         self.norm_machines_dynamics_model = {}
 
-    def normalize(self):
+    def normalize(self) -> None:
+        """
+        Normalizes transition counts into probability distributions
+
+        :return: None
+        """
 
         # Normalize num_new_alerts
         for attack_id_str, v1 in self.num_new_alerts.items():
@@ -85,7 +94,15 @@ class DefenderDynamicsModel:
             v.normalize()
 
     def add_new_alert_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
-                                 num_new_alerts: int):
+                                 num_new_alerts: int) -> None:
+        """
+        Adds a new transition for alerts
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_alerts: the number observed number of new alerts
+        :return: None
+        """
         if str(attacker_action_id.value) not in self.num_new_alerts:
             self.num_new_alerts[str(attacker_action_id.value)] = {}
             self.num_new_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
@@ -101,10 +118,16 @@ class DefenderDynamicsModel:
                 self.num_new_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
                 self.num_new_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_alerts)] = 1
 
-
-
     def add_new_priority_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
-                                    num_new_priority: int):
+                                    num_new_priority: int) -> None:
+        """
+        Adds a new transition for intrusion prevention priorities
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_priority: the observed new priorities
+        :return: None
+        """
         if str(attacker_action_id.value) not in self.num_new_priority:
             self.num_new_priority[str(attacker_action_id.value)] = {}
             self.num_new_priority[str(attacker_action_id.value)][logged_in_ips] = {}
@@ -120,46 +143,79 @@ class DefenderDynamicsModel:
                 self.num_new_priority[str(attacker_action_id.value)][logged_in_ips] = {}
                 self.num_new_priority[str(attacker_action_id.value)][logged_in_ips][str(num_new_priority)] = 1
 
-
     def add_new_severe_alert_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
-                                        num_new_severe_alerts: int):
+                                        num_new_severe_alerts: int) -> None:
+        """
+        Adds a new transition for intrusion prevention severe alerts
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_severe_alerts: the observed new number of severe alerts
+        :return: None
+        """
         if str(attacker_action_id.value) not in self.num_new_severe_alerts:
             self.num_new_severe_alerts[str(attacker_action_id.value)] = {}
             self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
             self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_severe_alerts)] = 1
         else:
             if logged_in_ips in self.num_new_severe_alerts[str(attacker_action_id.value)]:
-                if str(num_new_severe_alerts) in self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips]:
-                    self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_severe_alerts)] \
-                        = self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_severe_alerts)] + 1
+                if str(num_new_severe_alerts) in self.num_new_severe_alerts[str(attacker_action_id.value)][
+                    logged_in_ips]:
+                    self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_severe_alerts)] \
+                        = self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_severe_alerts)] + 1
                 else:
-                    self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_severe_alerts)] = 1
+                    self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_severe_alerts)] = 1
             else:
                 self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
-                self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_severe_alerts)] = 1
-
-
+                self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_severe_alerts)] = 1
 
     def add_new_warning_alert_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
-                                         num_new_warning_alerts: int):
+                                         num_new_warning_alerts: int) -> None:
+        """
+        Adds a new transition for intrusion prevention warning alerts
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_warning_alerts: observed new warning alerts
+        :return: None
+        """
         if str(attacker_action_id.value) not in self.num_new_warning_alerts:
             self.num_new_warning_alerts[str(attacker_action_id.value)] = {}
             self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
-            self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_warning_alerts)] = 1
+            self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
+                str(num_new_warning_alerts)] = 1
         else:
             if logged_in_ips in self.num_new_warning_alerts[str(attacker_action_id.value)]:
-                if str(num_new_warning_alerts) in self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips]:
-                    self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_warning_alerts)] \
-                        = self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_warning_alerts)] + 1
+                if str(num_new_warning_alerts) in self.num_new_warning_alerts[
+                    str(attacker_action_id.value)][logged_in_ips]:
+                    self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_warning_alerts)] \
+                        = self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_warning_alerts)] + 1
                 else:
-                    self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_warning_alerts)] = 1
+                    self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_warning_alerts)] = 1
             else:
                 self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
-                self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_warning_alerts)] = 1
+                self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_warning_alerts)] = 1
 
+    def update_model(self, s, s_prime, attacker_action_id: AttackerActionId, logged_in_ips: str) -> None:
+        """
+        Updates the dynamics model after observing a (s,a)->s' transition.
 
+        :param s: the previous state
+        :param s_prime: the new state
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :return: None
+        """
 
-    def update_model(self, s, s_prime, attacker_action_id: AttackerActionId, logged_in_ips: str):
+        # Update IDS Dynamics
         num_new_alerts = s_prime.defender_obs_state.num_alerts_total
         self.add_new_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                       num_new_alerts=num_new_alerts)
@@ -173,7 +229,7 @@ class DefenderDynamicsModel:
         self.add_new_warning_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                              num_new_warning_alerts=num_new_warning_alerts)
 
-
+        # Update dynamics of all nodes
         for i in range(len(s_prime.defender_obs_state.machines)):
             if s_prime.defender_obs_state.machines[i].ip not in self.machines_dynamics_model or \
                     self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip] is None:
@@ -213,16 +269,23 @@ class DefenderDynamicsModel:
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_processes=num_new_processes)
 
+    def reset(self) -> None:
+        """
+        Resets the model
 
-
-    def reset(self):
+        :return: None
+        """
         self.num_new_alerts = {}
         self.num_new_priority = {}
         self.num_new_severe_alerts = {}
         self.num_new_warning_alerts = {}
         self.machines_dynamics_model = {}
 
-
+        self.norm_num_new_alerts = {}
+        self.norm_num_new_priority = {}
+        self.norm_num_new_severe_alerts = {}
+        self.norm_num_new_warning_alerts = {}
+        self.norm_machines_dynamics_model = {}
 
     def __str__(self):
         return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
@@ -232,7 +295,12 @@ class DefenderDynamicsModel:
             self.machines_dynamics_model
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """
+        Converts the model to a dict representation
+
+        :return: dict representation of the model
+        """
         d={}
         d["num_new_alerts"] = self.num_new_alerts
         d["num_new_priority"] = self.num_new_priority
@@ -244,7 +312,13 @@ class DefenderDynamicsModel:
         d["machines_dynamics_model"] = m_dynamics_model_new
         return d
 
-    def from_dict(self, d):
+    def from_dict(self, d) -> None:
+        """
+        Bootstraps the model with data from a dict
+
+        :param d: the input dict
+        :return: None
+        """
         self.num_new_alerts = d["num_new_alerts"]
         self.num_new_priority = d["num_new_priority"]
         self.num_new_severe_alerts = d["num_new_severe_alerts"]
@@ -256,8 +330,13 @@ class DefenderDynamicsModel:
             m_dynamics_model_new[k]= m
         self.machines_dynamics_model = m_dynamics_model_new
 
+    def save_model(self, env_config) -> None:
+        """
+        Saves the model to disk as a json file
 
-    def save_model(self, env_config):
+        :param env_config: the environment config
+        :return: None
+        """
         save_dir = None
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             save_dir = env_config.emulation_config.save_dynamics_model_dir + "/defender_dynamics_model.json"
@@ -267,8 +346,13 @@ class DefenderDynamicsModel:
         with open(save_dir, 'w') as fp:
             json.dump(d, fp)
 
-
     def read_model(self, env_config):
+        """
+        Loads json model from disk (according to env config) and populates the model
+
+        :param env_config: the environment configuration
+        :return: None
+        """
         load_dir = None
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             load_dir = env_config.emulation_config.save_dynamics_model_dir + "/defender_dynamics_model.json"
@@ -279,7 +363,13 @@ class DefenderDynamicsModel:
                 d = json.load(fp)
                 self.from_dict(d)
 
-    def read_model_path(self, path: str):
+    def read_model_path(self, path: str) -> None:
+        """
+        Reads a json model from a specific path and populates the model
+
+        :param path: the path to read the model from
+        :return: None
+        """
         load_dir = path
         if os.path.exists(load_dir):
             with open(load_dir, 'r') as fp:
