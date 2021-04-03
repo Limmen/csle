@@ -218,9 +218,9 @@ class DQN(OffPolicyAlgorithm):
             action = np.array([np.random.choice(legal_actions)])
             #action = np.array([self.action_space.sample() for _ in range(n_batch)])
         else:
-            action, state = self.policy.predict(observation, state, mask, deterministic, env_config=env_config,
-                                                env_state=env_state, env_configs=env_configs,
-                                                env=env, env_idx=env_idx, infos=infos)
+            action, state = self.policy.predict_attacker(observation, state, mask, deterministic, env_config=env_config,
+                                                         env_state=env_state, env_configs=env_configs,
+                                                         env=env, env_idx=env_idx, infos=infos)
         return action, state
 
     def learn(

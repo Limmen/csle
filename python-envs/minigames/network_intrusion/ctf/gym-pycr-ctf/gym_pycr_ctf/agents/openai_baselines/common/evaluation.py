@@ -112,10 +112,10 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
                     time.sleep(1)
                     env.render()
 
-                actions, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
-                                               env_config=env_conf,
-                                               env_configs=env_configs, env=env, env_idx=i,
-                                               env_state=env_state)
+                actions, state = model.predict_attacker(obs, state=state, deterministic=deterministic, infos=infos,
+                                                        env_config=env_conf,
+                                                        env_configs=env_configs, env=env, env_idx=i,
+                                                        env_state=env_state)
                 action = actions[0]
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)
@@ -166,14 +166,14 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
                                          + time_str + ".gif", attacker_agent_config.video_fps)
         # Log average metrics every <self.config.eval_log_frequency> episodes
         if episode % attacker_agent_config.eval_log_frequency == 0:
-            model.log_metrics(iteration=episode, result=model.eval_result, episode_rewards=episode_rewards,
-                              episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
-                              episode_flags_percentage=episode_flags_percentage)
+            model.log_metrics_attacker(iteration=episode, result=model.eval_result, episode_rewards=episode_rewards,
+                                       episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
+                                       episode_flags_percentage=episode_flags_percentage)
 
     # Log average eval statistics
-    model.log_metrics(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
-                      episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
-                      episode_flags_percentage=episode_flags_percentage)
+    model.log_metrics_attacker(iteration=train_episode, result=model.eval_result, episode_rewards=episode_rewards,
+                               episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
+                               episode_flags_percentage=episode_flags_percentage)
 
     mean_reward = np.mean(episode_rewards)
     std_reward = np.std(episode_rewards)
@@ -263,10 +263,10 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
             while not done:
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
-                actions, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
-                                               env_config = env_conf,
-                                               env_configs=env_configs, env=env, env_idx=i,
-                                               env_state=env_state)
+                actions, state = model.predict_attacker(obs, state=state, deterministic=deterministic, infos=infos,
+                                                        env_config = env_conf,
+                                                        env_configs=env_configs, env=env, env_idx=i,
+                                                        env_state=env_state)
                 action = actions[0]
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)

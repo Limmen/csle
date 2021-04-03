@@ -57,7 +57,7 @@ def default_config() -> ClientConfig:
                                                     "examples/difficulty_level_4/hello_world/"
 
 
-    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v4",

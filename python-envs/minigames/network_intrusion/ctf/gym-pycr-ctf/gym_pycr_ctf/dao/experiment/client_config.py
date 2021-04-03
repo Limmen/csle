@@ -16,10 +16,12 @@ class ClientConfig:
     """
 
     def __init__(self, env_name:str,
-                 agent_config: AgentConfig = None,
+                 attacker_agent_config: AgentConfig = None,
+                 defender_agent_config: AgentConfig = None,
                  output_dir:str = None, title = None,
                  env_config = None, run_many :bool = False,
-                 random_seeds : list = None, random_seed = 0, agent_type : int = 0,
+                 random_seeds : list = None, random_seed = 0,
+                 agent_type : int = 0,
                  emulation_config = None, env_checkpoint_dir : str = None,
                  mode: RunnerMode = RunnerMode.TRAIN_ATTACKER,
                  simulation_config: SimulationConfig = None,
@@ -64,7 +66,7 @@ class ClientConfig:
         :param run_many: if this is true, it will try to run many experiments in a row, using different random seeds
         :param random_seeds: list of random seeds when running several experiments in a row
         :param random_seed: specific random seed
-        :param agent_config: policy gradient agent config
+        :param attacker_agent_config: policy gradient agent config
         :param agent_type: agent_type
         :param emulation_config: emulation_config
         :param eval_emulation_config: eval_emulation_config
@@ -95,7 +97,8 @@ class ClientConfig:
         self.run_many = run_many
         self.random_seeds = random_seeds
         self.random_seed = random_seed
-        self.agent_config = agent_config
+        self.attacker_agent_config = attacker_agent_config
+        self.defender_agent_config = defender_agent_config
         self.agent_type = agent_type
         self.emulation_config = emulation_config
         self.env_checkpoint_dir = env_checkpoint_dir

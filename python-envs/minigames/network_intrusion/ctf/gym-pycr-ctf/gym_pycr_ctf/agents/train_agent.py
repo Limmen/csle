@@ -14,7 +14,9 @@ class TrainAgent(ABC):
     """
     Abstract Train Agent
     """
-    def __init__(self, env, attacker_config: AgentConfig, eval_env, train_mode : TrainMode = TrainMode.TRAIN_ATTACKER):
+    def __init__(self, env, attacker_config: AgentConfig,
+                 defender_config: AgentConfig,
+                 eval_env, train_mode : TrainMode = TrainMode.TRAIN_ATTACKER):
         """
         Initialize environment and hyperparameters
 
@@ -25,25 +27,38 @@ class TrainAgent(ABC):
         self.env = env
         self.eval_env = eval_env
         self.attacker_config = attacker_config
+        self.defender_config = attacker_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
         self.train_mode=train_mode
         #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
         if self.attacker_config.logger is None:
-            self.attacker_config.logger = logging.getLogger('Train Agent')
+            self.attacker_config.logger = logging.getLogger('Train Agent - Attacker')
         random.seed(self.attacker_config.random_seed)
         np.random.seed(self.attacker_config.random_seed)
         torch.manual_seed(self.attacker_config.random_seed)
 
-    def log_action_dist(self, dist):
-        log_str = " Initial State Action Dist: ["
+        if self.defender_config.logger is None:
+            self.defender_config.logger = logging.getLogger('Train Agent - Defender')
+        random.seed(self.defender_config.random_seed)
+        np.random.seed(self.defender_config.random_seed)
+        torch.manual_seed(self.defender_config.random_seed)
+
+    def log_action_dist_attacker(self, dist):
+        log_str = " Initial State Action Dist for Attacker: ["
         dist_str = ",".join(list(map(lambda x: str(x), dist.data.cpu().numpy().tolist())))
         log_str = log_str + dist_str + "]"
         self.attacker_config.logger.info(log_str)
 
-    def log_metrics(self, iteration: int, result: ExperimentResult, episode_rewards: list,
-                    episode_steps: list, episode_avg_loss: list = None,
-                    eval: bool = False, lr: float = None, total_num_episodes : int = 0) -> None:
+    def log_action_dist_defender(self, dist):
+        log_str = " Initial State Action Dist for Defender: ["
+        dist_str = ",".join(list(map(lambda x: str(x), dist.data.cpu().numpy().tolist())))
+        log_str = log_str + dist_str + "]"
+        self.defender_config.logger.info(log_str)
+
+    def log_metrics_attacker(self, iteration: int, result: ExperimentResult, episode_rewards: list,
+                             episode_steps: list, episode_avg_loss: list = None,
+                             eval: bool = False, lr: float = None, total_num_episodes : int = 0) -> None:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -78,8 +93,8 @@ class TrainAgent(ABC):
             self.outer_train.set_description_str(log_str)
         self.attacker_config.logger.info(log_str)
         if self.attacker_config.tensorboard:
-            self.log_tensorboard(iteration, avg_episode_rewards, avg_episode_steps,
-                                 avg_episode_loss, self.attacker_config.epsilon, lr, eval=eval)
+            self.log_tensorboard_attacker(iteration, avg_episode_rewards, avg_episode_steps,
+                                          avg_episode_loss, self.attacker_config.epsilon, lr, eval=eval)
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.avg_episode_rewards.append(avg_episode_rewards)
@@ -87,9 +102,9 @@ class TrainAgent(ABC):
         result.avg_episode_loss.append(avg_episode_loss)
         result.lr_list.append(lr)
 
-    def log_tensorboard(self, episode: int, avg_episode_rewards: float,
-                        avg_episode_steps: float, episode_avg_loss: float,
-                        epsilon: float, lr: float, eval=False) -> None:
+    def log_tensorboard_attacker(self, episode: int, avg_episode_rewards: float,
+                                 avg_episode_steps: float, episode_avg_loss: float,
+                                 epsilon: float, lr: float, eval=False) -> None:
         """
         Log metrics to tensorboard
 

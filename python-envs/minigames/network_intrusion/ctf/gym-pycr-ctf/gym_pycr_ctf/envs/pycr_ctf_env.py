@@ -57,6 +57,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Setup Defender Spaces
         self.defender_observation_space = self.env_state.defender_observation_space
+        self.defender_action_space = self.env_config.defender_action_conf.action_space
 
         # Setup Config
         self.env_config.pi_star_rew_list_attacker = []

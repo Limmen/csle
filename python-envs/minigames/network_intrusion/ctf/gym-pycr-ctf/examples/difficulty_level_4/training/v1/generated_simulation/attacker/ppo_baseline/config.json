@@ -1,5 +1,6 @@
 {
-    "agent_config": {
+    "agent_type": 1,
+    "attacker_agent_config": {
         "alpha": 0.0005,
         "ar_policy": false,
         "ar_policy2": false,
@@ -104,9 +105,9 @@
         "video_fps": 5,
         "video_frequency": 10
     },
-    "agent_type": 1,
     "containers_config": null,
     "containers_configs": null,
+    "defender_agent_config": null,
     "dummy_vec_env": false,
     "emulation_config": {
         "agent_conn": null,

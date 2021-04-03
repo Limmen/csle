@@ -29,13 +29,20 @@ class DummyVecEnv(VecEnv):
             self.envs.append(fn())
         self.envs = [fn() for fn in env_fns]
         env = self.envs[0]
-        VecEnv.__init__(self, len(env_fns), env.attacker_observation_space, env.attacker_action_space)
-        obs_space = env.attacker_observation_space
-        self.keys, shapes, dtypes = obs_space_info(obs_space)
+        VecEnv.__init__(self, len(env_fns), env.attacker_observation_space, env.attacker_action_space,
+                        env.defender_observation_space, env.defender_action_space)
+        attacker_obs_space = env.attacker_observation_space
+        self.attacker_keys, attacker_shapes, attacker_dtypes = obs_space_info(attacker_obs_space)
+        defender_obs_space = env.defender_observation_space
+        self.defender_keys, defender_shapes, defender_dtypes = obs_space_info(defender_obs_space)
 
-        self.buf_obs = OrderedDict([(k, np.zeros((self.num_envs,) + tuple(shapes[k]), dtype=dtypes[k])) for k in self.keys])
+        self.buf_obs_attacker = OrderedDict([(k, np.zeros((self.num_envs,) + tuple(attacker_shapes[k]),
+                                                          dtype=attacker_dtypes[k])) for k in self.attacker_keys])
+        self.buf_obs_defender = OrderedDict([(k, np.zeros((self.num_envs,) + tuple(defender_shapes[k]),
+                                                          dtype=defender_dtypes[k])) for k in self.defender_keys])
         self.buf_dones = np.zeros((self.num_envs,), dtype=np.bool)
-        self.buf_rews = np.zeros((self.num_envs,), dtype=np.float32)
+        self.buf_rews_attacker = np.zeros((self.num_envs,), dtype=np.float32)
+        self.buf_rews_defender = np.zeros((self.num_envs,), dtype=np.float32)
         self.buf_infos = [{"idx": self.envs[i].idx} for i in range(self.num_envs)]
         self.actions = None
         self.metadata = env.metadata
@@ -53,16 +60,20 @@ class DummyVecEnv(VecEnv):
 
     def step_wait(self):
         for env_idx in range(self.num_envs):
-            obs, self.buf_rews[env_idx], self.buf_dones[env_idx], self.buf_infos[env_idx] = self.envs[env_idx].step(
-                self.actions[env_idx]
-            )
+            obs, rew, done, info = self.envs[env_idx].step(self.actions[env_idx])
+            attacker_rew, defender_rew = rew
+            self.buf_rews_attacker[env_idx] = attacker_rew
+            self.buf_rews_defender[env_idx] = defender_rew
+            self.buf_dones[env_idx] = done
+            self.buf_infos[env_idx] = info
             self.buf_infos[env_idx]["idx"] = self.envs[env_idx].idx
+
             if self.buf_dones[env_idx]:
                 # save final observation where user can get it, then reset
                 self.buf_infos[env_idx]["terminal_observation"] = obs
                 obs = self.envs[env_idx].reset()
             self._save_obs(env_idx, obs)
-        return (self._obs_from_buf(), np.copy(self.buf_rews), np.copy(self.buf_dones), deepcopy(self.buf_infos))
+        return (self._obs_from_buf(), (np.copy(self.buf_rews_attacker), np.copy(self.buf_rews_defender)), np.copy(self.buf_dones), deepcopy(self.buf_infos))
 
     def seed(self, seed: Optional[int] = None) -> List[int]:
         seeds = list()
@@ -105,15 +116,26 @@ class DummyVecEnv(VecEnv):
             return super().render(mode=mode)
 
     def _save_obs(self, env_idx, obs):
-        for key in self.keys:
+        obs_attacker, obs_defender = obs
+        for key in self.attacker_keys:
             if key is None:
                 pass
                 #self.buf_obs[key][env_idx] = obs
             else:
-                self.buf_obs[key][env_idx] = obs[key]
+                self.buf_obs_attacker[key][env_idx] = obs_attacker[key]
+
+        for key in self.defender_keys:
+            if key is None:
+                pass
+                # self.buf_obs[key][env_idx] = obs
+            else:
+                self.buf_obs_defender[key][env_idx] = obs_defender[key]
+
 
     def _obs_from_buf(self):
-        return dict_to_obs(self.observation_space, copy_obs_dict(self.buf_obs))
+        attacker_obs = dict_to_obs(self.attacker_observation_space, copy_obs_dict(self.buf_obs_attacker))
+        defender_obs = dict_to_obs(self.defender_observation_space, copy_obs_dict(self.buf_obs_defender))
+        return (attacker_obs, defender_obs)
 
     def get_attr(self, attr_name, indices=None):
         """Return attribute from vectorized environment (see base class)."""

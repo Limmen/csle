@@ -50,16 +50,21 @@ class VecEnv(ABC):
     An abstract asynchronous, vectorized environment.
 
     :param num_envs: (int) the number of environments
-    :param observation_space: (gym.spaces.Space) the observation space
-    :param action_space: (gym.spaces.Space) the action space
+    :param attacker_observation_space: (gym.spaces.Space) the observation space
+    :param attacker_action_space: (gym.spaces.Space) the action space
     """
 
     metadata = {"render.modes": ["human", "rgb_array"]}
 
-    def __init__(self, num_envs: int, observation_space: gym.spaces.Space, action_space: gym.spaces.Space):
+    def __init__(self, num_envs: int, attacker_observation_space: gym.spaces.Space,
+                 attacker_action_space: gym.spaces.Space,
+                 defender_observation_space: gym.spaces.Space,
+                 defender_action_space: gym.spaces.Space):
         self.num_envs = num_envs
-        self.observation_space = observation_space
-        self.action_space = action_space
+        self.attacker_observation_space = attacker_observation_space
+        self.attacker_action_space = attacker_action_space
+        self.defender_observation_space = defender_observation_space
+        self.defender_action_space = defender_action_space
 
     @abstractmethod
     def reset(self) -> VecEnvObs:
@@ -229,22 +234,22 @@ class VecEnvWrapper(VecEnv):
     Vectorized environment base class
 
     :param venv: (VecEnv) the vectorized environment to wrap
-    :param observation_space: (Optional[gym.spaces.Space]) the observation space (can be None to load from venv)
-    :param action_space: (Optional[gym.spaces.Space]) the action space (can be None to load from venv)
+    :param attacker_observation_space: (Optional[gym.spaces.Space]) the observation space (can be None to load from venv)
+    :param attacker_action_space: (Optional[gym.spaces.Space]) the action space (can be None to load from venv)
     """
 
     def __init__(
         self,
         venv: VecEnv,
-        observation_space: Optional[gym.spaces.Space] = None,
-        action_space: Optional[gym.spaces.Space] = None,
+        attacker_observation_space: Optional[gym.spaces.Space] = None,
+        attacker_action_space: Optional[gym.spaces.Space] = None,
     ):
         self.venv = venv
         VecEnv.__init__(
             self,
             num_envs=venv.num_envs,
-            observation_space=observation_space or venv.observation_space,
-            action_space=action_space or venv.action_space,
+            attacker_observation_space=attacker_observation_space or venv.attacker_observation_space,
+            attacker_action_space=attacker_action_space or venv.attacker_action_space,
         )
         self.class_attributes = dict(inspect.getmembers(self.__class__))
 

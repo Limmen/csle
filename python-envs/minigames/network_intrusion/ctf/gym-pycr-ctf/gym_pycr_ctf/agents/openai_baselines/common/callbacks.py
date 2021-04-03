@@ -296,7 +296,8 @@ class EvalCallback(EventCallback):
         deterministic: bool = True,
         render: bool = False,
         verbose: int = 1,
-        agent_config: AgentConfig = None
+        attacker_agent_config: AgentConfig = None,
+        defender_agent_config: AgentConfig = None
     ):
         super(EvalCallback, self).__init__(callback_on_new_best, verbose=verbose)
         self.n_eval_episodes = n_eval_episodes
@@ -305,7 +306,8 @@ class EvalCallback(EventCallback):
         self.last_mean_reward = -np.inf
         self.deterministic = deterministic
         self.render = render
-        self.agent_config = agent_config
+        self.attacker_agent_config = attacker_agent_config
+        self.defender_agent_config = defender_agent_config
 
 
         # Convert to VecEnv for consistency
@@ -354,9 +356,9 @@ class EvalCallback(EventCallback):
                 render=self.render,
                 deterministic=self.deterministic,
                 return_episode_rewards=True,
-                agent_config=self.agent_config,
-                env_config=self.agent_config.env_config,
-                env_configs=self.agent_config.env_configs
+                agent_config=self.attacker_agent_config,
+                env_config=self.attacker_agent_config.env_config,
+                env_configs=self.attacker_agent_config.env_configs
             )
 
             mean_reward, std_reward = np.mean(episode_rewards), np.std(episode_rewards)

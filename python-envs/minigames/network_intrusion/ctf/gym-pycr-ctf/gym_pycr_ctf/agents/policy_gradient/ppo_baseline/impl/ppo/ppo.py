@@ -24,7 +24,7 @@ class PPO(OnPolicyAlgorithm):
 
     Introduction to PPO: https://spinningup.openai.com/en/latest/algorithms/ppo.html
 
-    :param policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
+    :param attacker_policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: (Gym environment or str) The environment to learn from (if registered in Gym, can be str)
     :param attacker_learning_rate: (float or callable) The learning rate, it can be a function
         of the current progress remaining (from 1 to 0)
@@ -55,7 +55,7 @@ class PPO(OnPolicyAlgorithm):
     :param tensorboard_log: (str) the log location for tensorboard (if None, no logging)
     :param create_eval_env: (bool) Whether to create a second environment that will be
         used for evaluating the agent periodically. (Only available when passing string for the environment)
-    :param policy_kwargs: (dict) additional arguments to be passed to the policy on creation
+    :param attacker_policy_kwargs: (dict) additional arguments to be passed to the policy on creation
     :param verbose: (int) the verbosity level: 0 no output, 1 info, 2 debug
     :param seed: (int) Seed for the pseudo random generators
     :param device: (str or th.device) Device (cpu, cuda, ...) on which the code should be run.
@@ -65,60 +65,81 @@ class PPO(OnPolicyAlgorithm):
 
     def __init__(
         self,
-        policy: Union[str, Type[ActorCriticPolicy]],
+        attacker_policy: Union[str, Type[ActorCriticPolicy]],
+        defender_policy: Union[str, Type[ActorCriticPolicy]],
         env: Union[GymEnv, str],
         attacker_learning_rate: Union[float, Callable] = 3e-4,
+        defender_learning_rate: Union[float, Callable] = 3e-4,
         n_steps: int = 2048,
         batch_size: Optional[int] = 64,
         n_epochs: int = 10,
         attacker_gamma: float = 0.99,
+        defender_gamma: float = 0.99,
         attacker_gae_lambda: float = 0.95,
+        defender_gae_lambda: float = 0.95,
         attacker_clip_range: float = 0.2,
+        defender_clip_range: float = 0.2,
         attacker_clip_range_vf: Optional[float] = None,
+        defender_clip_range_vf: Optional[float] = None,
         attacker_ent_coef: float = 0.0,
+        defender_ent_coef: float = 0.0,
         attacker_vf_coef: float = 0.5,
+        defender_vf_coef: float = 0.5,
         attacker_max_grad_norm: float = 0.5,
+        defender_max_grad_norm: float = 0.5,
         use_sde: bool = False,
         sde_sample_freq: int = -1,
         target_kl: Optional[float] = None,
         create_eval_env: bool = False,
-        policy_kwargs: Optional[Dict[str, Any]] = None,
+        attacker_policy_kwargs: Optional[Dict[str, Any]] = None,
+        defender_policy_kwargs: Optional[Dict[str, Any]] = None,
         verbose: int = 0,
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
         attacker_agent_config: AgentConfig = None,
+        defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
         train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(PPO, self).__init__(
-            policy,
+            attacker_policy, defender_policy,
             env,
             attacker_learning_rate=attacker_learning_rate,
+            defender_learning_rate=defender_learning_rate,
             n_steps=n_steps,
-            attacker_gamma=attacker_gamma,
+            attacker_gamma=defender_gamma,
+            defender_gamma=defender_gamma,
             attacker_gae_lambda=attacker_gae_lambda,
+            defender_gae_lambda=defender_gae_lambda,
             attacker_ent_coef=attacker_ent_coef,
+            defender_ent_coef=defender_ent_coef,
             attacker_vf_coef=attacker_vf_coef,
+            defender_vf_coef=defender_vf_coef,
             attacker_max_grad_norm=attacker_max_grad_norm,
+            defender_max_grad_norm=defender_max_grad_norm,
             use_sde=use_sde,
             sde_sample_freq=sde_sample_freq,
-            policy_kwargs=policy_kwargs,
+            attacker_policy_kwargs=attacker_policy_kwargs,
+            defender_policy_kwargs=defender_policy_kwargs,
             verbose=verbose,
             device=device,
             create_eval_env=create_eval_env,
             seed=seed,
             _init_setup_model=False,
             attacker_agent_config=attacker_agent_config,
+            defender_agent_config=defender_agent_config,
             env_2=env_2,
             train_mode=train_mode
         )
 
         self.batch_size = batch_size
         self.n_epochs = n_epochs
-        self.clip_range = attacker_clip_range
-        self.clip_range_vf = attacker_clip_range_vf
+        self.attacker_clip_range = attacker_clip_range
+        self.attacker_clip_range_vf = attacker_clip_range_vf
+        self.defender_clip_range = defender_clip_range
+        self.defender_clip_range_vf = defender_clip_range_vf
         self.target_kl = target_kl
 
         if _init_setup_model:
@@ -127,13 +148,21 @@ class PPO(OnPolicyAlgorithm):
     def _setup_model(self) -> None:
         super(PPO, self)._setup_model()
 
-        # Initialize schedules for policy/value clipping
-        self.clip_range = get_schedule_fn(self.clip_range)
-        if self.clip_range_vf is not None:
-            if isinstance(self.clip_range_vf, (float, int)):
-                assert self.clip_range_vf > 0, "`clip_range_vf` must be positive, " "pass `None` to deactivate vf clipping"
+        # Initialize schedules for policy/value clipping for attacker
+        self.attacker_clip_range = get_schedule_fn(self.attacker_clip_range)
+        if self.attacker_clip_range_vf is not None:
+            if isinstance(self.attacker_clip_range_vf, (float, int)):
+                assert self.attacker_clip_range_vf > 0, "`clip_range_vf` must be positive, " "pass `None` to deactivate vf clipping"
 
-            self.clip_range_vf = get_schedule_fn(self.clip_range_vf)
+            self.attacker_clip_range_vf = get_schedule_fn(self.attacker_clip_range_vf)
+
+        # Initialize schedules for policy/value clipping for attacker
+        self.defender_clip_range = get_schedule_fn(self.defender_clip_range)
+        if self.defender_clip_range_vf is not None:
+            if isinstance(self.defender_clip_range_vf, (float, int)):
+                assert self.defender_clip_range_vf > 0, "`clip_range_vf` must be positive, " "pass `None` to deactivate vf clipping"
+
+            self.defender_clip_range_vf = get_schedule_fn(self.defender_clip_range_vf)
 
     def train(self) -> None:
         """
@@ -141,13 +170,14 @@ class PPO(OnPolicyAlgorithm):
         rollout buffer.
         """
         # Update optimizer learning rate
-        self._update_learning_rate(self.policy.optimizer)
-        lr = self.policy.optimizer.param_groups[0]["lr"]
+        self._update_learning_rate(self.attacker_policy.optimizer)
+        lr = self.attacker_policy.optimizer.param_groups[0]["lr"]
         # Compute current clip range
-        clip_range = self.clip_range(self._current_progress_remaining)
+        attacker_clip_range = self.attacker_clip_range(self._current_progress_remaining)
+        defender_clip_range = self.defender_clip_range(self._current_progress_remaining)
         # Optional: clip range for the value function
-        if self.clip_range_vf is not None:
-            clip_range_vf = self.clip_range_vf(self._current_progress_remaining)
+        if self.attacker_clip_range_vf is not None:
+            clip_range_vf = self.attacker_clip_range_vf(self._current_progress_remaining)
 
         entropy_losses, all_kl_divs = [], []
         pg_losses, value_losses = [], []
@@ -172,9 +202,9 @@ class PPO(OnPolicyAlgorithm):
                 # TODO: investigate why there is no issue with the gradient
                 # if that line is commented (as in SAC)
                 if self.use_sde:
-                    self.policy.reset_noise(self.batch_size)
+                    self.attacker_policy.reset_noise(self.batch_size)
 
-                values, log_prob, entropy = self.policy.evaluate_actions(rollout_data.observations, actions)
+                values, log_prob, entropy = self.attacker_policy.evaluate_actions(rollout_data.observations, actions)
                 values = values.flatten()
                 # Normalize advantage
                 advantages = rollout_data.advantages
@@ -185,15 +215,15 @@ class PPO(OnPolicyAlgorithm):
 
                 # clipped surrogate loss
                 policy_loss_1 = advantages * ratio
-                policy_loss_2 = advantages * th.clamp(ratio, 1 - clip_range, 1 + clip_range)
+                policy_loss_2 = advantages * th.clamp(ratio, 1 - attacker_clip_range, 1 + attacker_clip_range)
                 policy_loss = -th.min(policy_loss_1, policy_loss_2).mean()
 
                 # Logging
                 pg_losses.append(policy_loss.item())
-                clip_fraction = th.mean((th.abs(ratio - 1) > clip_range).float()).item()
+                clip_fraction = th.mean((th.abs(ratio - 1) > attacker_clip_range).float()).item()
                 clip_fractions.append(clip_fraction)
 
-                if self.clip_range_vf is None:
+                if self.attacker_clip_range_vf is None:
                     # No clipping
                     values_pred = values
                 else:
@@ -218,7 +248,7 @@ class PPO(OnPolicyAlgorithm):
                 loss = policy_loss + self.attacker_ent_coef * entropy_loss + self.attacker_vf_coef * value_loss
 
                 # Optimization step
-                self.policy.optimizer.zero_grad()
+                self.attacker_policy.optimizer.zero_grad()
                 loss.backward()
                 if self.attacker_agent_config.performance_analysis:
                     end= time.time()
@@ -226,8 +256,8 @@ class PPO(OnPolicyAlgorithm):
                 # Clip grad norm
                 if self.attacker_agent_config.performance_analysis:
                     start = time.time()
-                th.nn.utils.clip_grad_norm_(self.policy.parameters(), self.attacker_max_grad_norm)
-                self.policy.optimizer.step()
+                th.nn.utils.clip_grad_norm_(self.attacker_policy.parameters(), self.attacker_max_grad_norm)
+                self.attacker_policy.optimizer.step()
                 if self.attacker_agent_config.performance_analysis:
                     end = time.time()
                     weight_update_times.append(end-start)
@@ -256,10 +286,10 @@ class PPO(OnPolicyAlgorithm):
         lr = self.m_action_policy.optimizer.param_groups[0]["lr"]
 
         # Compute current clip range
-        clip_range = self.clip_range(self._current_progress_remaining)
+        clip_range = self.attacker_clip_range(self._current_progress_remaining)
         # Optional: clip range for the value function
-        if self.clip_range_vf is not None:
-            clip_range_vf = self.clip_range_vf(self._current_progress_remaining)
+        if self.attacker_clip_range_vf is not None:
+            clip_range_vf = self.attacker_clip_range_vf(self._current_progress_remaining)
 
         entropy_losses_m_selection, all_kl_divs_m_selection = [], []
         pg_losses_m_selection, value_losses_m_selection = [], []
@@ -274,7 +304,7 @@ class PPO(OnPolicyAlgorithm):
             m_selection_approx_kl_divs = []
             m_action_approx_kl_divs = []
             # Do a complete pass on the rollout buffer
-            for rollout_data in self.rollout_buffer.get(self.batch_size):
+            for rollout_data in self.attacker_rollout_buffer.get(self.batch_size):
                 m_selection_actions = rollout_data.m_selection_actions
                 if isinstance(self.env.envs[0].m_selection_action_space, spaces.Discrete):
                     # Convert discrete action from float to long
@@ -331,7 +361,7 @@ class PPO(OnPolicyAlgorithm):
                 clip_fraction = th.mean((th.abs(m_action_ratio - 1) > clip_range).float()).item()
                 clip_fractions_m.append(clip_fraction)
 
-                if self.clip_range_vf is None:
+                if self.attacker_clip_range_vf is None:
                     # No clipping
                     m_selection_values_pred = m_selection_values
                     m_action_values_pred = m_action_values
@@ -365,16 +395,16 @@ class PPO(OnPolicyAlgorithm):
                 entropy_losses_m_selection.append(m_selection_entropy_loss.item())
                 entropy_losses_m_.append(m_action_entropy_loss.item())
 
-                m_selection_loss = m_selection_policy_loss + self.ent_coef * m_selection_entropy_loss \
-                                   + self.vf_coef * m_selection_value_loss
-                m_action_loss = m_action_policy_loss + self.ent_coef * m_action_entropy_loss \
-                                   + self.vf_coef * m_action_value_loss
+                m_selection_loss = m_selection_policy_loss + self.attacker_ent_coef * m_selection_entropy_loss \
+                                   + self.attacker_vf_coef * m_selection_value_loss
+                m_action_loss = m_action_policy_loss + self.attacker_ent_coef * m_action_entropy_loss \
+                                   + self.attacker_vf_coef * m_action_value_loss
 
                 # Optimization step
                 self.m_selection_policy.optimizer.zero_grad()
                 m_selection_loss.backward()
                 # Clip grad norm
-                th.nn.utils.clip_grad_norm_(self.m_selection_policy.parameters(), self.max_grad_norm)
+                th.nn.utils.clip_grad_norm_(self.m_selection_policy.parameters(), self.attacker_max_grad_norm)
                 self.m_selection_policy.optimizer.step()
                 m_selection_approx_kl_divs.append(th.mean(rollout_data.m_selection_old_log_prob -
                                               m_selection_log_prob).detach().cpu().numpy())
@@ -383,7 +413,7 @@ class PPO(OnPolicyAlgorithm):
                 self.m_action_policy.optimizer.zero_grad()
                 m_action_loss.backward()
                 # Clip grad norm
-                th.nn.utils.clip_grad_norm_(self.m_action_policy.parameters(), self.max_grad_norm)
+                th.nn.utils.clip_grad_norm_(self.m_action_policy.parameters(), self.attacker_max_grad_norm)
                 self.m_action_policy.optimizer.step()
                 m_action_approx_kl_divs.append(th.mean(rollout_data.m_action_old_log_prob -
                                               m_action_log_prob).detach().cpu().numpy())

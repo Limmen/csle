@@ -103,22 +103,22 @@ class Runner:
                                     emulation_config = config.eval_emulation_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
             if config.eval_multi_env:
-                config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             elif config.train_multi_sim:
-                config.agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             else:
-                config.agent_config.eval_env_config = eval_env.env_config
+                config.attacker_agent_config.eval_env_config = eval_env.env_config
 
-        if config.agent_config.domain_randomization and config.sub_proc_env:
+        if config.attacker_agent_config.domain_randomization and config.sub_proc_env:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
                 randomization_space = DomainRandomizer.generate_randomization_space(
-                    env.network_confs, max_num_nodes = config.agent_config.dr_max_num_nodes,
-                min_num_nodes = config.agent_config.dr_min_num_nodes, max_num_flags=config.agent_config.dr_max_num_flags,
-                min_num_flags=config.agent_config.dr_min_num_flags, min_num_users=config.agent_config.dr_min_num_users,
-                max_num_users=config.agent_config.dr_max_num_users, use_base_randomization=config.agent_config.dr_use_base)
-                print("Randomization space created, base:{}".format(config.agent_config.dr_use_base))
+                    env.network_confs, max_num_nodes = config.attacker_agent_config.dr_max_num_nodes,
+                min_num_nodes = config.attacker_agent_config.dr_min_num_nodes, max_num_flags=config.attacker_agent_config.dr_max_num_flags,
+                min_num_flags=config.attacker_agent_config.dr_min_num_flags, min_num_users=config.attacker_agent_config.dr_min_num_users,
+                max_num_users=config.attacker_agent_config.dr_max_num_users, use_base_randomization=config.attacker_agent_config.dr_use_base)
+                print("Randomization space created, base:{}".format(config.attacker_agent_config.dr_use_base))
                 env.set_randomization_space(randomization_space)
                 print("Randomization space sent to all envs")
                 if eval_env is not None:
@@ -130,25 +130,43 @@ class Runner:
 
         agent: TrainAgent = None
         if config.multi_env:
-            config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
         elif config.train_multi_sim:
-            config.agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
         else:
-            config.agent_config.env_config = base_env.env_config
+            config.attacker_agent_config.env_config = base_env.env_config
 
         if config.agent_type == AgentType.REINFORCE.value:
-            agent = ReinforceAgent(env, config.agent_config, train_mode=TrainMode(config.train_mode))
+            agent = ReinforceAgent(env,
+                                   attacker_agent_config=config.attacker_agent_config,
+                                   defender_agent_config=config.defender_agent_config,
+                                   train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.PPO_BASELINE.value:
-            agent = PPOBaselineAgent(env, config.agent_config, eval_env=eval_env,
+            agent = PPOBaselineAgent(env,
+                                     attacker_agent_config=config.attacker_agent_config,
+                                     defender_agent_config=config.defender_agent_config,
+                                     eval_env=eval_env,
                                      train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.DQN_BASELINE.value:
-            agent = DQNBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
+            agent = DQNBaselineAgent(env,
+                                     attacker_agent_config=config.attacker_agent_config,
+                                     defender_agent_config=config.defender_agent_config,
+                                     eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.A2C_BASELINE.value:
-            agent = A2CBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
+            agent = A2CBaselineAgent(env,
+                                     attacker_agent_config=config.attacker_agent_config,
+                                     defender_agent_config=config.defender_agent_config,
+                                     eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.TD3_BASELINE.value:
-            agent = TD3BaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
+            agent = TD3BaselineAgent(env,
+                                     attacker_agent_config=config.attacker_agent_config,
+                                     defender_agent_config=config.defender_agent_config,
+                                     eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.DDPG_BASELINE.value:
-            agent = DDPGBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
+            agent = DDPGBaselineAgent(env,
+                                      attacker_agent_config=config.attacker_agent_config,
+                                      defender_agent_config=config.defender_agent_config,
+                                      eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()
@@ -188,11 +206,11 @@ class Runner:
 
         attacker: PPOAttackerBotAgent = None
         if config.agent_type == AgentType.PPO_BASELINE.value:
-            if config.agent_config is None or config.agent_config.load_path is None:
+            if config.attacker_agent_config is None or config.attacker_agent_config.load_path is None:
                 raise ValueError("To run a simulation with a PPO agent, the path to the saved "
                                  "model must be specified")
-            attacker = PPOAttackerBotAgent(pg_config=config.agent_config, env_config=env.env_config,
-                                           model_path=config.agent_config.load_path, env=env)
+            attacker = PPOAttackerBotAgent(pg_config=config.attacker_agent_config, env_config=env.env_config,
+                                           model_path=config.attacker_agent_config.load_path, env=env)
         else:
             raise AssertionError("Agent type not recognized: {}".format(config.attacker_type))
         simulator = Simulator(env, config.simulation_config, attacker=attacker)
@@ -229,11 +247,11 @@ class Runner:
         base_envs = [gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temps[i],
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.containers_configs,
                               flags_configs=config.flags_configs, idx=i,
-                              num_nodes=config.agent_config.num_nodes) for i in range(len(config.containers_configs))]
+                              num_nodes=config.attacker_agent_config.num_nodes) for i in range(len(config.containers_configs))]
         env_kwargs = [{"env_config": config.env_config, "emulation_config": config.emulation_configs[i],
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_configs,
                       "flags_config": config.flags_configs, "idx": i,
-                       "num_nodes": config.agent_config.num_nodes} for i in range(len(config.containers_configs))]
+                       "num_nodes": config.attacker_agent_config.num_nodes} for i in range(len(config.containers_configs))]
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
         if config.sub_proc_env:
@@ -250,10 +268,10 @@ class Runner:
     def randomized_env_creation(config: ClientConfig, emulation_config_temp):
         base_env = gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temp,
                             checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                            flags_config=config.flags_config, num_nodes = config.agent_config.num_nodes)
+                            flags_config=config.flags_config, num_nodes = config.attacker_agent_config.num_nodes)
         env_kwargs = {"env_config": config.env_config, "emulation_config": config.emulation_config,
                       "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.containers_config,
-                      "flags_config": config.flags_config, "num_nodes": config.agent_config.num_nodes}
+                      "flags_config": config.flags_config, "num_nodes": config.attacker_agent_config.num_nodes}
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
         if config.sub_proc_env:
@@ -264,7 +282,7 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                            checkpoint_dir=config.env_checkpoint_dir, containers_config=config.containers_config,
-                           flags_config=config.flags_config, num_nodes=config.agent_config.num_nodes)
+                           flags_config=config.flags_config, num_nodes=config.attacker_agent_config.num_nodes)
         return env, base_env
 
 
@@ -284,15 +302,15 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                            checkpoint_dir=config.env_checkpoint_dir)
-            if config.agent_config.domain_randomization:
+            if config.attacker_agent_config.domain_randomization:
                 randomization_space = DomainRandomizer.generate_randomization_space(
-                    [], max_num_nodes=config.agent_config.dr_max_num_nodes,
-                    min_num_nodes=config.agent_config.dr_min_num_nodes,
-                    max_num_flags=config.agent_config.dr_max_num_flags,
-                    min_num_flags=config.agent_config.dr_min_num_flags,
-                    min_num_users=config.agent_config.dr_min_num_users,
-                    max_num_users=config.agent_config.dr_max_num_users,
-                    use_base_randomization=config.agent_config.dr_use_base)
+                    [], max_num_nodes=config.attacker_agent_config.dr_max_num_nodes,
+                    min_num_nodes=config.attacker_agent_config.dr_min_num_nodes,
+                    max_num_flags=config.attacker_agent_config.dr_max_num_flags,
+                    min_num_flags=config.attacker_agent_config.dr_min_num_flags,
+                    min_num_users=config.attacker_agent_config.dr_min_num_users,
+                    max_num_users=config.attacker_agent_config.dr_max_num_users,
+                    use_base_randomization=config.attacker_agent_config.dr_use_base)
                 env.randomization_space = randomization_space
                 env.env_config.domain_randomization = True
                 base_env.randomization_space = randomization_space
@@ -325,21 +343,21 @@ class Runner:
     def multisim_env_creation(config: ClientConfig):
         base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=None,
                               idx=i, checkpoint_dir=config.env_checkpoint_dir,
-                              dr_max_num_nodes=config.agent_config.dr_max_num_nodes,
-                              dr_min_num_nodes=config.agent_config.dr_min_num_nodes,
-                              dr_max_num_users=config.agent_config.dr_max_num_users,
-                              dr_min_num_users=config.agent_config.dr_min_num_users,
-                              dr_max_num_flags=config.agent_config.dr_max_num_flags,
-                              dr_min_num_flags=config.agent_config.dr_min_num_flags
+                              dr_max_num_nodes=config.attacker_agent_config.dr_max_num_nodes,
+                              dr_min_num_nodes=config.attacker_agent_config.dr_min_num_nodes,
+                              dr_max_num_users=config.attacker_agent_config.dr_max_num_users,
+                              dr_min_num_users=config.attacker_agent_config.dr_min_num_users,
+                              dr_max_num_flags=config.attacker_agent_config.dr_max_num_flags,
+                              dr_min_num_flags=config.attacker_agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims)]
         env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
-                       "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
-                       "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,
-                       "dr_max_num_flags": config.agent_config.dr_max_num_flags,
-                       "dr_min_num_flags": config.agent_config.dr_min_num_flags,
-                       "dr_max_num_users": config.agent_config.dr_max_num_users,
-                       "dr_min_num_users": config.agent_config.dr_min_num_users
+                       "dr_max_num_nodes": config.attacker_agent_config.dr_max_num_nodes,
+                       "dr_min_num_nodes": config.attacker_agent_config.dr_min_num_nodes,
+                       "dr_max_num_flags": config.attacker_agent_config.dr_max_num_flags,
+                       "dr_min_num_flags": config.attacker_agent_config.dr_min_num_flags,
+                       "dr_max_num_users": config.attacker_agent_config.dr_max_num_users,
+                       "dr_min_num_users": config.attacker_agent_config.dr_min_num_users
                        } for i in range(config.num_sims)]
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv
@@ -357,21 +375,21 @@ class Runner:
     def eval_multisim_env_creation(config: ClientConfig):
         base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=None,
                               idx=i, checkpoint_dir=config.env_checkpoint_dir,
-                              dr_max_num_nodes = config.agent_config.dr_max_num_nodes,
-                              dr_min_num_nodes = config.agent_config.dr_min_num_nodes,
-                              dr_max_num_users = config.agent_config.dr_max_num_users,
-                              dr_min_num_users = config.agent_config.dr_min_num_users,
-                              dr_max_num_flags = config.agent_config.dr_max_num_flags,
-                              dr_min_num_flags = config.agent_config.dr_min_num_flags
+                              dr_max_num_nodes = config.attacker_agent_config.dr_max_num_nodes,
+                              dr_min_num_nodes = config.attacker_agent_config.dr_min_num_nodes,
+                              dr_max_num_users = config.attacker_agent_config.dr_max_num_users,
+                              dr_min_num_users = config.attacker_agent_config.dr_min_num_users,
+                              dr_max_num_flags = config.attacker_agent_config.dr_max_num_flags,
+                              dr_min_num_flags = config.attacker_agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims_eval)]
         env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
-                       "dr_max_num_nodes": config.agent_config.dr_max_num_nodes,
-                       "dr_min_num_nodes": config.agent_config.dr_min_num_nodes,
-                       "dr_max_num_flags": config.agent_config.dr_max_num_flags,
-                       "dr_min_num_flags": config.agent_config.dr_min_num_flags,
-                       "dr_max_num_users": config.agent_config.dr_max_num_users,
-                       "dr_min_num_users": config.agent_config.dr_min_num_users
+                       "dr_max_num_nodes": config.attacker_agent_config.dr_max_num_nodes,
+                       "dr_min_num_nodes": config.attacker_agent_config.dr_min_num_nodes,
+                       "dr_max_num_flags": config.attacker_agent_config.dr_max_num_flags,
+                       "dr_min_num_flags": config.attacker_agent_config.dr_min_num_flags,
+                       "dr_max_num_users": config.attacker_agent_config.dr_max_num_users,
+                       "dr_min_num_users": config.attacker_agent_config.dr_min_num_users
                        } for i in range(config.num_sims_eval)]
         vec_env_kwargs = {"env_config": config.env_config}
         vec_env_cls = DummyVecEnv

@@ -42,7 +42,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         used for evaluating the agent periodically. (Only available when passing string for the environment)
     :param monitor_wrapper: When creating an environment, whether to wrap it
         or not in a Monitor wrapper.
-    :param policy_kwargs: (dict) additional arguments to be passed to the policy on creation
+    :param attacker_policy_kwargs: (dict) additional arguments to be passed to the policy on creation
     :param verbose: (int) the verbosity level: 0 no output, 1 info, 2 debug
     :param seed: (int) Seed for the pseudo random generators
     :param device: (str or th.device) Device (cpu, cuda, ...) on which the code should be run.
@@ -53,33 +53,46 @@ class OnPolicyAlgorithm(BaseAlgorithm):
     def __init__(
         self,
         attacker_policy: Union[str, Type[ActorCriticPolicy]],
+        defender_policy: Union[str, Type[ActorCriticPolicy]],
         env: Union[GymEnv, str],
         attacker_learning_rate: Union[float, Callable],
+        defender_learning_rate: Union[float, Callable],
         n_steps: int,
         attacker_gamma: float,
+        defender_gamma: float,
         attacker_gae_lambda: float,
+        defender_gae_lambda: float,
         attacker_ent_coef: float,
+        defender_ent_coef: float,
         attacker_vf_coef: float,
+        defender_vf_coef: float,
         attacker_max_grad_norm: float,
+        defender_max_grad_norm: float,
         use_sde: bool,
         sde_sample_freq: int,
         create_eval_env: bool = False,
-        policy_kwargs: Optional[Dict[str, Any]] = None,
+        attacker_policy_kwargs: Optional[Dict[str, Any]] = None,
+        defender_policy_kwargs: Optional[Dict[str, Any]] = None,
         verbose: int = 0,
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
         attacker_agent_config: AgentConfig = None,
+        defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
         train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
             attacker_policy=attacker_policy,
+            defender_policy=defender_policy,
             env=env,
             attacker_policy_base=ActorCriticPolicy,
+            defender_policy_base=ActorCriticPolicy,
             attacker_learning_rate=attacker_learning_rate,
-            policy_kwargs=policy_kwargs,
+            defender_learning_rate=defender_learning_rate,
+            attacker_policy_kwargs=attacker_policy_kwargs,
+            defender_policy_kwargs=defender_policy_kwargs,
             verbose=verbose,
             device=device,
             use_sde=use_sde,
@@ -88,17 +101,24 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             support_multi_env=True,
             seed=seed,
             attacker_agent_config = attacker_agent_config,
+            defender_agent_config=defender_agent_config,
             env_2=env_2,
             train_mode=train_mode
         )
 
         self.n_steps = n_steps
         self.attacker_gamma = attacker_gamma
+        self.defender_gamma = defender_gamma
         self.attacker_gae_lambda = attacker_gae_lambda
+        self.defender_gae_lambda = defender_gae_lambda
         self.attacker_ent_coef = attacker_ent_coef
+        self.defender_ent_coef = defender_ent_coef
         self.attacker_vf_coef = attacker_vf_coef
+        self.defender_vf_coef = defender_vf_coef
         self.attacker_max_grad_norm = attacker_max_grad_norm
+        self.defender_max_grad_norm = defender_max_grad_norm
         self.attacker_rollout_buffer = None
+        self.defender_rollout_buffer = None
         self.iteration = 0
         self.num_episodes = 0
         self.num_episodes_total = 0
@@ -131,16 +151,27 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 n_envs=self.n_envs,
                 attacker_agent_config = self.attacker_agent_config
             )
+
+        self.defender_rollout_buffer = RolloutBuffer(
+            self.n_steps,
+            self.defender_observation_space,
+            self.defender_action_space,
+            self.device,
+            gamma=self.defender_gamma,
+            gae_lambda=self.defender_gae_lambda,
+            n_envs=self.n_envs,
+        )
+
         if not hasattr(self.attacker_agent_config, 'ar_policy2') or not self.attacker_agent_config.ar_policy2:
-            self.policy = self.attacker_policy_class(
+            self.attacker_policy = self.attacker_policy_class(
                 self.attacker_observation_space,
                 self.attacker_action_space,
                 self.attacker_lr_schedule,
                 use_sde=self.use_sde,
                 agent_config = self.attacker_agent_config,
-                **self.policy_kwargs  # pytype:disable=not-instantiable
+                **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
             )
-            self.policy = self.policy.to(self.device)
+            self.attacker_policy = self.attacker_policy.to(self.device)
         else:
             self.m_selection_policy = self.attacker_policy_class(
                 self.env.envs[0].attacker_m_selection_observation_space,
@@ -149,7 +180,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 use_sde=self.use_sde,
                 agent_config=self.attacker_agent_config,
                 m_selection = True,
-                **self.policy_kwargs  # pytype:disable=not-instantiable
+                **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
             )
             self.m_selection_policy = self.m_selection_policy.to(self.device)
             self.m_action_policy = self.attacker_policy_class(
@@ -159,9 +190,19 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 use_sde=self.use_sde,
                 agent_config=self.attacker_agent_config,
                 m_action = True,
-                **self.policy_kwargs  # pytype:disable=not-instantiable
+                **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
             )
             self.m_action_policy = self.m_action_policy.to(self.device)
+
+        self.defender_policy = self.defender_policy_class(
+            self.defender_observation_space,
+            self.defender_action_space,
+            self.defender_lr_schedule,
+            use_sde=self.use_sde,
+            agent_config=self.defender_agent_config,
+            **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
+        )
+        self.defender_policy = self.defender_policy.to(self.device)
 
     def collect_rollouts(
         self, env: VecEnv, callback: BaseCallback, rollout_buffer: RolloutBuffer, n_rollout_steps: int
@@ -182,7 +223,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         rollout_buffer.reset()
         # Sample new weights for the state dependent exploration
         if self.use_sde:
-            self.policy.reset_noise(env.num_envs)
+            self.attacker_policy.reset_noise(env.num_envs)
 
         # Avg metrics
         episode_rewards = []
@@ -207,7 +248,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         while n_steps < n_rollout_steps:
             if self.use_sde and self.sde_sample_freq > 0 and n_steps % self.sde_sample_freq == 0:
                 # Sample a new noise matrix
-                self.policy.reset_noise(env.num_envs)
+                self.attacker_policy.reset_noise(env.num_envs)
 
             if not self.attacker_agent_config.ar_policy:
                 new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time_s, env_step_time = self.step_policy(env, rollout_buffer)
@@ -399,7 +440,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
                     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
                     eval_2_episode_flags_percentage_env_specific = \
-                        quick_evaluate_policy(model=self.policy, env=self.env,
+                        quick_evaluate_policy(model=self.attacker_policy, env=self.env,
                                               n_eval_episodes_train=self.attacker_agent_config.n_deterministic_eval_iter,
                                               n_eval_episodes_eval2=self.attacker_agent_config.n_quick_eval_iter,
                                               deterministic=self.attacker_agent_config.eval_deterministic, attacker_agent_config=self.attacker_agent_config,
@@ -514,7 +555,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         with th.no_grad():
             # Convert to pytorch tensor
             obs_tensor = th.as_tensor(self._last_obs).to(self.device)
-            actions, values, log_probs = self.policy.forward(obs_tensor,  env=env, infos=self._last_infos)
+            actions, values, log_probs = self.attacker_policy.forward(obs_tensor, env=env, infos=self._last_infos)
         actions = actions.cpu().numpy()
         print("ACTIONS:{}".format(actions))
 
