@@ -121,7 +121,7 @@ class DefenderBeliefStateSimulator:
         :return: s_prime, reward, done
         """
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
-        return s, 0, True
+        return s, 0, False
 
     @staticmethod
     def reset_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
@@ -135,5 +135,31 @@ class DefenderBeliefStateSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
-        return s, 0, True
+        s_prime = s
+
+        s_prime.defender_obs_state.num_alerts_recent = 0
+        s_prime.defender_obs_state.num_severe_alerts_recent = 0
+        s_prime.defender_obs_state.num_warning_alerts_recent = 0
+        s_prime.defender_obs_state.sum_priority_alerts_recent = 0
+        s_prime.defender_obs_state.num_alerts_total = 0
+        s_prime.defender_obs_state.sum_priority_alerts_total = 0
+        s_prime.defender_obs_state.num_severe_alerts_total = 0
+        s_prime.defender_obs_state.num_warning_alerts_total = 0
+
+        # Update logs timestamps and reset machine states
+        for m in s_prime.defender_obs_state.machines:
+            # m.num_users = 0
+            # m.num_logged_in_users = 0
+            # m.num_processes = 0
+            # m.num_open_connections = 0
+
+            m.num_failed_login_attempts = 0
+            m.num_login_events = 0
+            m.num_open_connections_recent = 0
+            m.num_failed_login_attempts_recent = 0
+            m.num_users_recent = 0
+            m.num_logged_in_users_recent = 0
+            m.num_login_events_recent = 0
+            m.num_processes_recent = 0
+
+        return s_prime, 0, False

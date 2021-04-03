@@ -2,6 +2,7 @@ from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env im
 from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
+import gym_pycr_ctf.constants.constants as constants
 import gym
 import time
 import numpy as np
@@ -25,7 +26,8 @@ def test_env(env_name : str, num_steps : int):
     defender_dynamics_model = DefenderDynamicsModel()
     if env.env_config.emulation_config.save_dynamics_model_dir is not None:
         defender_dynamics_model.read_model(env.env_config)
-        load_dir = env.env_config.emulation_config.save_dynamics_model_dir + "/network_conf.pickle"
+        load_dir = env.env_config.emulation_config.save_dynamics_model_dir + "/" + \
+                   constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
         if os.path.exists(load_dir):
             env.env_config.network_conf = \
                 env.env_config.network_conf.load(load_dir)

@@ -155,6 +155,23 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
 
+        elif self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
+                and self.env_config.emulation_config.skip_exploration:
+            defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
+            if env_config.emulation_config.save_dynamics_model_dir is not None:
+                defender_dynamics_model.read_model(env_config)
+                load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
+                           + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
+                if os.path.exists(load_dir):
+                    env_config.network_conf = \
+                        env_config.network_conf.load(load_dir)
+
+            if self.env_config.defender_update_state:
+                # Initialize Defender's state
+                defender_init_action = env_config.defender_action_conf.state_init_action
+                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
+                                                       env_config=env_config)
+
         # Reset and setup action spaces
         self.reset()
         actions = list(range(self.attacker_num_actions))

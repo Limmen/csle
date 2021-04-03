@@ -7,6 +7,8 @@ from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUt
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
+import gym_pycr_ctf.constants.constants as constants
+
 
 class SimulationGenerator:
     """
@@ -29,12 +31,12 @@ class SimulationGenerator:
         :return: The final observation
         """
         env.reset()
+        init_state = env.env_state.copy()
         done = False
         step = 0
         if not env_config.explore_defense_states:
             defender_action = None
         else:
-
             # Setup config
             old_env_config = env_config.copy()
             env_config.attacker_use_nmap_cache = False
@@ -43,6 +45,9 @@ class SimulationGenerator:
             env_config.attacker_use_file_system_cache = False
             env_config.attacker_use_user_command_cache = False
             defender_action = env_config.defender_action_conf.get_continue_action_idx()
+            print("updating initial state dist")
+            defender_dynamics_model.update_init_state_distribution(init_state=init_state)
+            print("updating initial state dist")
 
         while not done and step < env_config.attacker_max_exploration_steps:
 
@@ -89,7 +94,8 @@ class SimulationGenerator:
         defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             defender_dynamics_model.read_model(env_config)
-            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/network_conf.pickle"
+            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
+                       + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
             if os.path.exists(load_dir):
                 env_config.network_conf = \
                     env_config.network_conf.load(load_dir)
@@ -136,9 +142,11 @@ class SimulationGenerator:
             print("checkpointing model")
             defender_dynamics_model.save_model(env_config)
             if env_config.emulation_config.save_dynamics_model_dir is not None:
-                save_path = env_config.emulation_config.save_dynamics_model_dir + "/network_conf.pickle"
+                save_path = env_config.emulation_config.save_dynamics_model_dir + "/" \
+                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
             else:
-                save_path = util.get_script_path() + "/network_conf.pickle"
+                save_path = util.get_script_path() + "/" \
+                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
             env_config.network_conf.save(save_path)
 
         env.cleanup()

@@ -17,12 +17,22 @@ class DefenderMachineDynamicsModel:
         self.num_new_login_events = {}
         self.num_new_processes = {}
 
+        self.init_open_connections = {}
+        self.init_users = {}
+        self.init_logged_in_users = {}
+        self.init_processes = {}
+
         self.norm_num_new_open_connections = {}
         self.norm_num_new_failed_login_attempts = {}
         self.norm_num_new_users = {}
         self.norm_num_new_logged_in_users = {}
         self.norm_num_new_login_events = {}
         self.norm_num_new_processes = {}
+
+        self.norm_init_open_connections = None
+        self.norm_init_users = None
+        self.norm_init_logged_in_users = None
+        self.norm_init_processes = None
 
     def normalize(self) -> None:
         """
@@ -120,6 +130,110 @@ class DefenderMachineDynamicsModel:
                                          values=(samples, empirical_probabilities))
                 self.norm_num_new_processes[(int(attack_id_str), logged_in_ips)] = dist
 
+        # Normalize num_init_connections
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_open_connections.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_connections_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_open_connections = dist
+
+        # Normalize num_init_users
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_users.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_users = dist
+
+        # Normalize num_init_logged_in_users
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_logged_in_users.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_logged_in_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_logged_in_users = dist
+
+        # Normalize num_init_processe
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_processes.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_processes_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_processes = dist
+
+    def add_new_init_connections(self, init_open_connections: int) -> None:
+        """
+        Adds a new transition for initial open connections
+
+        :param init_open_connections: the observed initial number of connections
+        :return: None
+        """
+        if str(init_open_connections) in self.init_open_connections:
+            self.init_open_connections[str(init_open_connections)] = \
+                self.init_open_connections[str(init_open_connections)] + 1
+        else:
+            self.init_open_connections[str(init_open_connections)] = 1
+
+    def add_new_init_users(self, init_users: int) -> None:
+        """
+        Adds a new transition for initial users
+
+        :param init_users: the observed initial number of users
+        :return: None
+        """
+        if str(init_users) in self.init_users:
+            self.init_users[str(init_users)] = \
+                self.init_users[str(init_users)] + 1
+        else:
+            self.init_users[str(init_users)] = 1
+
+    def add_new_init_logged_in_users(self, init_logged_in_users: int) -> None:
+        """
+        Adds a new transition for logged in initial users
+
+        :param init_logged_in_users: the observed initial number of logged in users
+        :return: None
+        """
+        if str(init_logged_in_users) in self.init_logged_in_users:
+            self.init_logged_in_users[str(init_logged_in_users)] = \
+                self.init_logged_in_users[str(init_logged_in_users)] + 1
+        else:
+            self.init_logged_in_users[str(init_logged_in_users)] = 1
+
+    def add_new_init_processes(self, init_processes: int) -> None:
+        """
+        Adds a new transition for initial number of processes
+
+        :param init_processes: the observed initial number of processes
+        :return: None
+        """
+        if str(init_processes) in self.init_logged_in_users:
+            self.init_processes[str(init_processes)] = \
+                self.init_processes[str(init_processes)] + 1
+        else:
+            self.init_processes[str(init_processes)] = 1
+
     def add_new_open_connection_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
                                  num_new_open_connections: int) -> None:
         """
@@ -151,14 +265,14 @@ class DefenderMachineDynamicsModel:
                     str(num_new_open_connections)] = 1
 
     def add_new_failed_login_attempt_transition(self, attacker_action_id: AttackerActionId, logged_in_ips : str,
-                                    num_new_failed_login_attempts: int):
+                                    num_new_failed_login_attempts: int) -> None:
         """
         Adds a new transition for failed login attempts
 
         :param attacker_action_id: the attacker action that triggered the transition
         :param logged_in_ips: the attacker state
         :param num_new_failed_login_attempts: the observed new number of faield login attempts
-        :return: Noneg
+        :return: None
         """
         if str(attacker_action_id.value) not in self.num_new_failed_login_attempts:
             self.num_new_failed_login_attempts[str(attacker_action_id.value)] = {}
@@ -317,11 +431,24 @@ class DefenderMachineDynamicsModel:
         self.norm_num_new_login_events = {}
         self.norm_num_new_processes = {}
 
+        self.init_open_connections = {}
+        self.init_users = {}
+        self.init_logged_in_users = {}
+        self.init_processes = {}
+
+        self.norm_init_open_connections = None
+        self.norm_init_users = None
+        self.norm_init_logged_in_users = None
+        self.norm_init_processes = None
+
     def __str__(self):
         return "open_connections_dynamics:{},\n failed_login_attempts_dynamics:{},\n user_dynamics:{},\n " \
-               "logged_in_users_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{}\n".format(
+               "logged_in_users_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{}\n," \
+               "init_open_connections:{},\n init_users:{},\n init_logged_in_users:{},\n" \
+               "init_processes:{}".format(
             self.num_new_open_connections, self.num_new_failed_login_attempts, self.num_new_users,
-            self.num_new_logged_in_users, self.num_new_login_events, self.num_new_processes
+            self.num_new_logged_in_users, self.num_new_login_events, self.num_new_processes,
+            self.init_open_connections, self.init_users, self.init_logged_in_users, self.init_processes
         )
 
     def to_dict(self) -> dict:
@@ -337,6 +464,10 @@ class DefenderMachineDynamicsModel:
         d["num_new_logged_in_users"] = self.num_new_logged_in_users
         d["num_new_login_events"] = self.num_new_login_events
         d["num_new_processes"] = self.num_new_processes
+        d["init_open_connections"] = self.init_open_connections
+        d["init_users"] = self.init_users
+        d["init_logged_in_users"] = self.init_logged_in_users
+        d["init_processes"] = self.init_processes
         return d
 
 
@@ -353,6 +484,10 @@ class DefenderMachineDynamicsModel:
         self.num_new_logged_in_users = d["num_new_logged_in_users"]
         self.num_new_login_events = d["num_new_login_events"]
         self.num_new_processes = d["num_new_processes"]
+        self.init_open_connections = d["init_open_connections"]
+        self.init_users = d["init_users"]
+        self.init_logged_in_users = d["init_logged_in_users"]
+        self.init_processes = d["init_processes"]
 
 
 

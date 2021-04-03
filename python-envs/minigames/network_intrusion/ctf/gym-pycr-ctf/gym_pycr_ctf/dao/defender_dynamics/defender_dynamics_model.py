@@ -5,6 +5,7 @@ import numpy as np
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionId
 from gym_pycr_ctf.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
+import gym_pycr_ctf.constants.constants as constants
 
 
 class DefenderDynamicsModel:
@@ -270,6 +271,36 @@ class DefenderDynamicsModel:
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_processes=num_new_processes)
 
+    def update_init_state_distribution(self, init_state) -> None:
+        """
+        Updates the dynamics model after observing a initial state
+
+        :param init_state: the observed initial state
+        :return: None
+        """
+
+        # Update initial state dynamics of all nodes
+        for i in range(len(init_state.defender_obs_state.machines)):
+            if init_state.defender_obs_state.machines[i].ip not in self.machines_dynamics_model or \
+                    self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip] is None:
+                self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip] = DefenderMachineDynamicsModel()
+
+            init_connections = init_state.defender_obs_state.machines[i].num_open_connections
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_connections(
+                init_open_connections=init_connections)
+
+            init_users = init_state.defender_obs_state.machines[i].num_users
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_users(
+                init_users=init_users)
+
+            init_logged_in_users = init_state.defender_obs_state.machines[i].num_logged_in_users
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_logged_in_users(
+                init_logged_in_users=init_logged_in_users)
+
+            init_processes = init_state.defender_obs_state.machines[i].num_processes
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_processes(
+                init_processes=init_processes)
+
     def reset(self) -> None:
         """
         Resets the model
@@ -340,9 +371,11 @@ class DefenderDynamicsModel:
         """
         save_dir = None
         if env_config.emulation_config.save_dynamics_model_dir is not None:
-            save_dir = env_config.emulation_config.save_dynamics_model_dir + "/defender_dynamics_model.json"
+            save_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
+                       + constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         else:
-            save_dir = util.get_script_path() + "/defender_dynamics_model.json"
+            save_dir = util.get_script_path() + "/" + \
+                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         d = self.to_dict()
         with open(save_dir, 'w') as fp:
             json.dump(d, fp)
@@ -356,9 +389,11 @@ class DefenderDynamicsModel:
         """
         load_dir = None
         if env_config.emulation_config.save_dynamics_model_dir is not None:
-            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/defender_dynamics_model.json"
+            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" + \
+                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         else:
-            load_dir = util.get_script_path() + "/defender_dynamics_model.json"
+            load_dir = util.get_script_path() + "/" + \
+                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         if os.path.exists(load_dir):
             with open(load_dir, 'r') as fp:
                 d = json.load(fp)

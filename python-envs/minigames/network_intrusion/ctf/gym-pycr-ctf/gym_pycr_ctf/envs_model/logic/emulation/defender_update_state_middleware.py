@@ -70,10 +70,16 @@ class DefenderUpdateStateMiddleware:
                         emulation_config=m.emulation_config, login_last_ts=m.login_last_ts)
                     m.num_login_events_recent = num_login_events - m.num_login_events
                     m.num_login_events = num_login_events
+
                 if s_prime.state_type == StateType.BASE:
+
                     num_processes = ShellUtil.read_processes(emulation_config=m.emulation_config)
                     m.num_processes_recent = num_processes - m.num_processes
                     m.num_processes = num_processes
+
+                    num_users = ShellUtil.read_users(emulation_config=m.emulation_config)
+                    m.num_users_recent = num_users - m.num_users
+                    m.num_users = num_users
 
                 m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
                 m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
@@ -99,7 +105,8 @@ class DefenderUpdateStateMiddleware:
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
             num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts = \
-                ReadLogsUtil.read_ids_data(env_config=env_config, episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
+                ReadLogsUtil.read_ids_data(env_config=env_config,
+                                           episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
 
             s_prime.defender_obs_state.num_alerts_recent = num_alerts - s_prime.defender_obs_state.num_alerts_total
             s_prime.defender_obs_state.num_severe_alerts_recent = num_severe_alerts - s_prime.defender_obs_state.num_severe_alerts_total
@@ -154,6 +161,10 @@ class DefenderUpdateStateMiddleware:
             d_obs.num_processes_recent = num_processes - d_obs.num_processes
             d_obs.num_processes = num_processes
 
+            num_users = ShellUtil.read_users(emulation_config=d_obs.emulation_config)
+            d_obs.num_users_recent = num_users - d_obs.num_users
+            d_obs.num_users = num_users
+
             d_obs.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=d_obs.emulation_config)
             d_obs.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=d_obs.emulation_config)
 
@@ -173,10 +184,12 @@ class DefenderUpdateStateMiddleware:
         """
         s_prime = s
 
+        # Reset ids states
         s_prime.defender_obs_state.num_alerts_recent = 0
         s_prime.defender_obs_state.num_severe_alerts_recent = 0
         s_prime.defender_obs_state.num_warning_alerts_recent = 0
         s_prime.defender_obs_state.sum_priority_alerts_recent = 0
+
         s_prime.defender_obs_state.num_alerts_total = 0
         s_prime.defender_obs_state.sum_priority_alerts_total = 0
         s_prime.defender_obs_state.num_severe_alerts_total = 0
@@ -186,9 +199,32 @@ class DefenderUpdateStateMiddleware:
         if env_config.ids_router:
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
-        # Update logs timestamps
+        # Update logs timestamps and reset machine states
         for m in s_prime.defender_obs_state.machines:
             m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
             m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
+
+            num_logged_in_users = ShellUtil.read_logged_in_users(emulation_config=m.emulation_config)
+            m.num_logged_in_users = num_logged_in_users
+
+            num_open_connections = ShellUtil.read_open_connections(emulation_config=m.emulation_config)
+            m.num_open_connections = num_open_connections
+
+            if s_prime.state_type == StateType.BASE:
+                num_processes = ShellUtil.read_processes(emulation_config=m.emulation_config)
+                m.num_processes = num_processes
+
+                num_users = ShellUtil.read_users(emulation_config=m.emulation_config)
+                m.num_users = num_users
+
+            # m.num_users = 0
+            m.num_failed_login_attempts = 0
+            m.num_login_events = 0
+            m.num_open_connections_recent = 0
+            m.num_failed_login_attempts_recent = 0
+            m.num_users_recent = 0
+            m.num_logged_in_users_recent = 0
+            m.num_login_events_recent = 0
+            m.num_processes_recent = 0
 
         return DefenderUpdateStateMiddleware.update_belief_state(s=s_prime, a=a, env_config=env_config)

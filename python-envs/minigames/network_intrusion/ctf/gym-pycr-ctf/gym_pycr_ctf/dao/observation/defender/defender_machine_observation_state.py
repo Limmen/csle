@@ -17,13 +17,11 @@ class DefenderMachineObservationState:
         self.ports : List[PortObservationState] = []
         self.ssh_connections :List[ConnectionObservationState] = []
         self.emulation_config : EmulationConfig = None
-        self.num_flags = 0
         self.num_open_connections = 0
         self.num_failed_login_attempts = 0
         self.num_users = 0
         self.num_logged_in_users = 0
         self.num_login_events = 0
-        self.uptime = 0
         self.num_processes = 0
 
         self.num_open_connections_recent = 0
@@ -38,16 +36,16 @@ class DefenderMachineObservationState:
         self.login_last_ts = datetime.datetime.now().timestamp()
 
     def __str__(self):
-        return "ip:{},os:{},num_ports:{},num_ssh_connections:{},num_flags:{}," \
+        return "ip:{},os:{},num_ports:{},num_ssh_connections:{}," \
                "num_open_connections:{},num_failed_login_attempts:{},num_users:{}," \
-               "num_logged_in_users:{},num_login_events:{},uptime:{},num_processes:{}," \
+               "num_logged_in_users:{},num_login_events:{},num_processes:{}," \
                "failed_auth_last_ts:{},login_last_ts:{},num_open_connections_recent:{}," \
                "num_failed_login_attempts_recent:{},num_users_recent:{},num_logged_in_users_recent:{}," \
                "num_login_events_recent:{},num_processes_recent:{}" \
                "".format(self.ip, self.os, len(self.ports), len(self.ssh_connections),
-                         self.num_flags, self.num_open_connections, self.num_failed_login_attempts,
+                         self.num_open_connections, self.num_failed_login_attempts,
                          self.num_failed_login_attempts, self.num_users, self.num_logged_in_users,
-                         self.num_login_events, self.uptime, self.num_processes, self.failed_auth_last_ts,
+                         self.num_login_events, self.num_processes, self.failed_auth_last_ts,
                          self.login_last_ts, self.num_open_connections_recent, self.num_failed_login_attempts_recent,
                          self.num_users_recent, self.num_logged_in_users_recent, self.num_login_events_recent,
                          self.num_processes_recent)
@@ -72,13 +70,11 @@ class DefenderMachineObservationState:
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
         m_copy.ssh_connections = self.ssh_connections
-        m_copy.num_flags = self.num_flags
         m_copy.num_open_connections = self.num_open_connections
         m_copy.num_failed_login_attempts = self.num_failed_login_attempts
         m_copy.num_users = self.num_users
         m_copy.num_logged_in_users = self.num_logged_in_users
         m_copy.num_login_events = self.num_login_events
-        m_copy.uptime = self.uptime
         m_copy.num_processes = self.num_processes
         m_copy.failed_auth_last_ts = self.failed_auth_last_ts
         m_copy.login_last_ts = self.login_last_ts

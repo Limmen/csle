@@ -61,7 +61,8 @@ def plot_machines_dynamics(defender_dynamics_model, action_cfg):
                         total_row_x_labels, total_row_y_labels, file_name="total_model_machines", ncols=len(total_row_x_labels[0]),
                         nrows=len(total_row_x_labels), figsize=(3,2.1), fontsize=3.5, labelsize=1.75,
                         suptitle="Estimated Dynamics of Nodes in the Emulation", ms=0.45, title_fontsize=4, lw=0.2,
-                        row_labels=row_labels, wspace=0.00, hspace=0.00, top=0.925)
+                        row_labels=row_labels, wspace=0.00, hspace=0.00, top=0.925,
+                        num_colors = 100)
     return total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,\
            total_row_x_labels, total_row_y_labels, row_labels
 
@@ -341,10 +342,11 @@ def plot_specific_dynamics(data_dict, action_cfg, subtitle, xlabel, ylabel, file
 
 def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, file_name, ncols=6,
                         figsize=(6, 4.5), fontsize=10, labelsize=6, suptitle="", nrows = 6, ms=2.5,
-                        title_fontsize=8, lw=0.5, row_labels = None, wspace=0.03, hspace=0.07, top=0.9):
+                        title_fontsize=8, lw=0.5, row_labels = None, wspace=0.03, hspace=0.07, top=0.9,
+                        num_colors: int = 45):
     cm = plt.cm.get_cmap('RdYlBu_r')
-    colors = plt.cm.viridis(np.linspace(0.3, 1, 45))[-45:]
-    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1,num_colors))[-num_colors:]
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
 
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
@@ -368,7 +370,7 @@ def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, f
         row_b_ids = b_ids[row]
         for col in range(ncols):
             title=rowtitles[col]
-            #l = "r$(b_{" + b_ids[i] + "},a_{" + a_ids[i] + "})$"
+            print(len(row_xks[col]))
             for i in range(len(row_xks[col])):
                 if i < 2:
                     label = "$(b_{" + str(row_b_ids[col][i]) + "},a_{" + str(row_a_ids[col][i]) + "})$"

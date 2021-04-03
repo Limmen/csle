@@ -17,7 +17,7 @@ class DefenderStateRepresentation:
         :return: the observation space
         """
         num_network_features = 8
-        num_m_features = 11
+        num_m_features = 10
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
@@ -37,7 +37,7 @@ class DefenderStateRepresentation:
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
-        num_m_features = 11
+        num_m_features = 10
         num_network_features =4
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
@@ -65,26 +65,23 @@ class DefenderStateRepresentation:
                 # Num Open Ports
                 machines_obs[i][3] = len(obs_state.machines[i].ports)
 
-                # Num flags
-                machines_obs[i][4] = obs_state.machines[i].num_flags
-
                 # Num open connections
-                machines_obs[i][5] = obs_state.machines[i].num_open_connections
+                machines_obs[i][4] = obs_state.machines[i].num_open_connections
 
                 # Num failed login attempts
-                machines_obs[i][6] = obs_state.machines[i].num_failed_login_attempts
+                machines_obs[i][5] = obs_state.machines[i].num_failed_login_attempts
 
                 # Num users
-                machines_obs[i][7] = obs_state.machines[i].num_users
+                machines_obs[i][6] = obs_state.machines[i].num_users
 
                 # Num logged in users
-                machines_obs[i][8] = obs_state.machines[i].num_logged_in_users
+                machines_obs[i][7] = obs_state.machines[i].num_logged_in_users
 
                 # Num login events
-                machines_obs[i][9] = obs_state.machines[i].num_login_events
+                machines_obs[i][8] = obs_state.machines[i].num_login_events
 
                 # Num processes
-                machines_obs[i][10] = obs_state.machines[i].num_processes
+                machines_obs[i][9] = obs_state.machines[i].num_processes
 
         return machines_obs, network_obs
 

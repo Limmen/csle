@@ -593,6 +593,10 @@ class DEFENDER:
     LIST_SUCCESSFUL_LOGIN_ATTEMPTS = "last"
     LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
+class SYSTEM_IDENTIFICATION:
+    NETWORK_CONF_FILE = "network_conf.pickle"
+    DEFENDER_DYNAMICS_MODEL_FILE = "defender_dynamics_model.json"
+
 # Log files:
 # /var/log/vsftpd.log
 # /var/log/auth.log
