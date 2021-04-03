@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import sys
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
@@ -64,6 +65,7 @@ class SimulationGenerator:
             action = (attacker_action, defender_action)
             obs, reward, done, info = env.step(action)
             s_prime = env.env_state
+            sys.stdout.flush()
 
             # Update dynamics
             if env_config.explore_defense_states and defender_dynamics_model is not None:

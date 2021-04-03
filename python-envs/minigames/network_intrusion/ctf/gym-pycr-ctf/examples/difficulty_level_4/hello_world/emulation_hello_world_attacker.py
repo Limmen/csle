@@ -4,6 +4,7 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym
 import time
 import numpy as np
+import sys
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
@@ -38,6 +39,7 @@ def test_env(env_name : str, num_steps : int):
         defender_action = None
         action = (attack_action, defender_action)
         obs, reward, done, info = env.step(action)
+        sys.stdout.flush()
         attacker_obs, defender_obs = obs
         attacker_reward, defender_reward = reward
         tot_rew += attacker_reward
