@@ -16,6 +16,38 @@ For documentation, see the README.md files inside each sub-directory,
 <img src="docs/arch.png" width="600">
 </p>
 
+## Features
+
+- **Emulations**
+    - [x] 50+ pre-defined emulation environments
+    - [x] Automatic generation of custom emulation environment
+    - [x] Monitoring Framework with Webapp, Grafana, Prometheus, C-advisor, Node-exporter
+    - [x] Automatic Network Traffic Simulation
+    - [x] 20+ vulnerable containers with exploits 
+
+- **Open-AI Gym Environment**
+     - [x] GUI rendering
+     - [x] 50+ gym environments
+     - [x] Simulation-mode
+     - [x] Emulation-mode
+     - [x] Manual-mode
+     - [x] Emulation+Simulation-model (using system identification)
+     
+- **Learning Process**
+     - [x] Attacker training
+     - [x] Defender training
+     - [ ] Self-play                    
+   
+- **Reinforcement Learning Algorithms**
+     - [x] PPO baseline
+     - [x] DQN baseline
+     - [x] DDPG baseline
+     - [x] REINFORCE baseline
+     - [x] TD3 baseline
+
+- **System Identification**
+     - [x] Custom system identifification algorithm to learn model of emulation     
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
