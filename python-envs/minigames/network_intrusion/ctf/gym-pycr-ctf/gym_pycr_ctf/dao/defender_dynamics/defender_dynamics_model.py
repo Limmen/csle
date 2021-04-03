@@ -218,16 +218,16 @@ class DefenderDynamicsModel:
         """
 
         # Update IDS Dynamics
-        num_new_alerts = s_prime.defender_obs_state.num_alerts_total
+        num_new_alerts = s_prime.defender_obs_state.num_alerts_recent
         self.add_new_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                       num_new_alerts=num_new_alerts)
-        num_new_priority = s_prime.defender_obs_state.sum_priority_alerts_total
+        num_new_priority = s_prime.defender_obs_state.sum_priority_alerts_recent
         self.add_new_priority_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                          num_new_priority=num_new_priority)
-        num_new_severe_alerts = s_prime.defender_obs_state.num_severe_alerts_total
+        num_new_severe_alerts = s_prime.defender_obs_state.num_severe_alerts_recent
         self.add_new_severe_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                              num_new_severe_alerts=num_new_severe_alerts)
-        num_new_warning_alerts = s_prime.defender_obs_state.num_warning_alerts_total
+        num_new_warning_alerts = s_prime.defender_obs_state.num_warning_alerts_recent
         self.add_new_warning_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                              num_new_warning_alerts=num_new_warning_alerts)
 
@@ -243,30 +243,27 @@ class DefenderDynamicsModel:
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_open_connections=num_new_open_connections)
 
-            num_new_failed_login_attempts = s_prime.defender_obs_state.machines[i].num_failed_login_attempts
+            num_new_failed_login_attempts = s_prime.defender_obs_state.machines[i].num_failed_login_attempts_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_failed_login_attempt_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_failed_login_attempts=num_new_failed_login_attempts)
 
-            num_new_users = s_prime.defender_obs_state.machines[i].num_users \
-                            - s.defender_obs_state.machines[i].num_users
+            num_new_users = s_prime.defender_obs_state.machines[i].num_users_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_users=num_new_users)
 
-            num_new_logged_in_users = s_prime.defender_obs_state.machines[i].num_logged_in_users - \
-                                      s.defender_obs_state.machines[i].num_logged_in_users
+            num_new_logged_in_users = s_prime.defender_obs_state.machines[i].num_logged_in_users_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_logged_in_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_logged_in_users=num_new_logged_in_users)
 
-            num_new_login_events = s_prime.defender_obs_state.machines[i].num_login_events
+            num_new_login_events = s_prime.defender_obs_state.machines[i].num_login_events_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_login_event_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_login_events=num_new_login_events)
 
-            num_new_processes = s_prime.defender_obs_state.machines[i].num_processes \
-                                - s.defender_obs_state.machines[i].num_processes
+            num_new_processes = s_prime.defender_obs_state.machines[i].num_processes_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_processes_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_processes=num_new_processes)

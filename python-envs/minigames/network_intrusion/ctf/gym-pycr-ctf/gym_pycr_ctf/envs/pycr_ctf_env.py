@@ -83,6 +83,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
                 TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=self.env_config)
+                self.env_config.network_conf.defender_dynamics_model.normalize()
 
             if self.env_config.load_services_from_server:
                 self.env_config.emulation_config.download_emulation_services()
@@ -165,12 +166,14 @@ class PyCRCTFEnv(gym.Env, ABC):
                 if os.path.exists(load_dir):
                     env_config.network_conf = \
                         env_config.network_conf.load(load_dir)
+            self.env_config.env_mode = EnvMode.SIMULATION
 
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = env_config.defender_action_conf.state_init_action
                 TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=env_config)
+                self.env_config.network_conf.defender_dynamics_model.normalize()
 
         # Reset and setup action spaces
         self.reset()
@@ -215,7 +218,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Second step defender
         if defense_action_id is not None:
-            time.sleep(self.env_config.defender_sleep_before_state_update)
+            if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+                time.sleep(self.env_config.defender_sleep_before_state_update)
             defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
                 self.step_defender(defender_action_id=defense_action_id, done_attacker=done,
                                    attacker_action=attack_action)
@@ -354,7 +358,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Update defender's state
         TransitionOperator.defender_transition(
             s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
-            env_config=self.env_config)
+            env_config=self.env_config, attacker_action=attacker_action)
 
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()

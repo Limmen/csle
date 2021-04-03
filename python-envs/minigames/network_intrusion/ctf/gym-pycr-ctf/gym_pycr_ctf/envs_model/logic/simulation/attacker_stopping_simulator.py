@@ -33,6 +33,5 @@ class AttackerStoppingSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        time.sleep(env_config.attacker_continue_action_sleep)
         return s, 0, False
 

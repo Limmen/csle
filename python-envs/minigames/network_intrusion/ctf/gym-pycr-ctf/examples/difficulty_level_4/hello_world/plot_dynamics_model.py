@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def read_model():
-    #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
-    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
+    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
+    #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
     defender_dynamics_model = DefenderDynamicsModel()
     defender_dynamics_model.read_model_path(model_path)
     defender_dynamics_model.normalize()
@@ -370,7 +370,6 @@ def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, f
         row_b_ids = b_ids[row]
         for col in range(ncols):
             title=rowtitles[col]
-            print(len(row_xks[col]))
             for i in range(len(row_xks[col])):
                 if i < 2:
                     label = "$(b_{" + str(row_b_ids[col][i]) + "},a_{" + str(row_a_ids[col][i]) + "})$"

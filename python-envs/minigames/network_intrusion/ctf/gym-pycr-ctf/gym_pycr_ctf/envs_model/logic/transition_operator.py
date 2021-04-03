@@ -55,7 +55,7 @@ class TransitionOperator:
         :return: s', r, done
         """
         if env_config.env_mode == EnvMode.SIMULATION:
-            Simulator.defender_transition(s=s, defender_action=defender_action, env_config=env_config,
+            return Simulator.defender_transition(s=s, defender_action=defender_action, env_config=env_config,
                                           attacker_action=attacker_action)
         elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
             return EmulationMiddleware.defender_transition(s=s, defender_action=defender_action, env_config=env_config)

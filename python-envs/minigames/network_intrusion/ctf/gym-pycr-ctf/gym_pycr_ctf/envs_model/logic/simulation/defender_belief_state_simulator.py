@@ -3,7 +3,6 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 
@@ -25,6 +24,7 @@ class DefenderBeliefStateSimulator:
         :param defender_dynamics_model: dynamics model of the defender
         :return: s_prime, reward, done
         """
+        s_prime = s
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
 
         num_new_alerts = 0
@@ -33,30 +33,45 @@ class DefenderBeliefStateSimulator:
         num_new_warning_alerts = 0
 
         # Sample transitions
-        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_alerts:
-            num_new_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_alerts:
+            num_new_alerts = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_alerts[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_priority:
-            num_new_priority = env_config.network_conf.defender_dynamics_model.norm_num_new_priority[(attacker_action.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_priority:
+            num_new_priority = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_priority[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
-            num_new_severe_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
+            num_new_severe_alerts = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (attacker_action.id.value, logged_in_ips_str) in env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
-            num_new_warning_alerts = env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[(attacker_action.id.value, logged_in_ips_str)].rvs()
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
+            num_new_warning_alerts = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
 
         # Update network state
-        s.defender_obs_state.num_alerts_total = s.defender_obs_state.num_alerts_total + num_new_alerts
-        s.defender_obs_state.num_alerts_recent = num_new_alerts
-        s.defender_obs_state.sum_priority_alerts_total = s.defender_obs_state.sum_priority_alerts_total + num_new_priority
-        s.defender_obs_state.sum_priority_alerts_recent = num_new_priority
-        s.defender_obs_state.num_warning_alerts_total = s.defender_obs_state.num_warning_alerts_total + num_new_warning_alerts
-        s.defender_obs_state.num_warning_alerts_recent = num_new_warning_alerts
-        s.defender_obs_state.num_severe_alerts_total = s.defender_obs_state.num_severe_alerts_total + num_new_severe_alerts
-        s.defender_obs_state.num_severe_alerts_recent = num_new_severe_alerts
+        s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total + num_new_alerts
+        s_prime.defender_obs_state.num_alerts_recent = num_new_alerts
+        s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
+                                                         num_new_priority
+        s_prime.defender_obs_state.sum_priority_alerts_recent = num_new_priority
+        s_prime.defender_obs_state.num_warning_alerts_total = s_prime.defender_obs_state.num_warning_alerts_total + \
+                                                        num_new_warning_alerts
+        s_prime.defender_obs_state.num_warning_alerts_recent = num_new_warning_alerts
+        s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total + \
+                                                       num_new_severe_alerts
+        s_prime.defender_obs_state.num_severe_alerts_recent = num_new_severe_alerts
 
         # Update machines state
-        for m in s.defender_obs_state.machines:
+        for m in s_prime.defender_obs_state.machines:
 
             if m.ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
                 m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
@@ -70,7 +85,9 @@ class DefenderBeliefStateSimulator:
 
                 # Sample transitions
                 if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_open_connections:
-                    num_new_open_connections = m_dynamics.norm_num_new_open_connections[(attacker_action.id.value, logged_in_ips_str)].rvs()
+                    num_new_open_connections = \
+                        m_dynamics.norm_num_new_open_connections[
+                            (attacker_action.id.value, logged_in_ips_str)].rvs()
 
                 if (attacker_action.id.value, logged_in_ips_str) in m_dynamics.norm_num_new_failed_login_attempts:
                     num_new_failed_login_attempts = m_dynamics.norm_num_new_failed_login_attempts[
@@ -106,7 +123,7 @@ class DefenderBeliefStateSimulator:
                 m.num_processes = m.num_processes + num_new_processes
                 m.num_processes_recent = num_new_processes
 
-        return s, 0, True
+        return s_prime, 0, True
 
     @staticmethod
     def init_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
@@ -120,8 +137,8 @@ class DefenderBeliefStateSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
-        return s, 0, False
+        return DefenderBeliefStateSimulator.reset_state(s=s, attacker_action=attacker_action, env_config=env_config,
+                                                        defender_action=defender_action)
 
     @staticmethod
     def reset_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
@@ -148,10 +165,29 @@ class DefenderBeliefStateSimulator:
 
         # Update logs timestamps and reset machine states
         for m in s_prime.defender_obs_state.machines:
-            # m.num_users = 0
-            # m.num_logged_in_users = 0
-            # m.num_processes = 0
-            # m.num_open_connections = 0
+            m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
+
+            m.num_users = 0
+            m.num_logged_in_users = 0
+            m.num_processes = 0
+            m.num_open_connections = 0
+
+            # Sample initial states
+            if m_dynamics.norm_num_new_open_connections is not None:
+                init_open_connections = m_dynamics.norm_init_open_connections.rvs()
+                m.num_open_connections = init_open_connections
+
+            if m_dynamics.norm_init_users is not None:
+                init_users = m_dynamics.norm_init_users.rvs()
+                m.num_users = init_users
+
+            if m_dynamics.norm_init_logged_in_users is not None:
+                init_logged_in_users = m_dynamics.norm_init_logged_in_users.rvs()
+                m.num_logged_in_users = init_logged_in_users
+
+            if m_dynamics.norm_init_processes is not None:
+                init_processes = m_dynamics.norm_init_processes.rvs()
+                m.num_processes = init_processes
 
             m.num_failed_login_attempts = 0
             m.num_login_events = 0

@@ -24,7 +24,7 @@ class ShellUtil:
             if len(parts2) > 1:
                 parts3 = parts2[1].split("\n")
                 return len(parts3)-1
-        return 0
+        return -1
 
     @staticmethod
     def read_users(emulation_config: EmulationConfig) -> int:
@@ -72,5 +72,5 @@ class ShellUtil:
             processes_str = outdata.decode()
             num_processes = int(processes_str)
         except:
-            num_processes = 0
+            num_processes = -1
         return num_processes

@@ -45,9 +45,7 @@ class SimulationGenerator:
             env_config.attacker_use_file_system_cache = False
             env_config.attacker_use_user_command_cache = False
             defender_action = env_config.defender_action_conf.get_continue_action_idx()
-            print("updating initial state dist")
             defender_dynamics_model.update_init_state_distribution(init_state=init_state)
-            print("updating initial state dist")
 
         while not done and step < env_config.attacker_max_exploration_steps:
 
@@ -75,7 +73,6 @@ class SimulationGenerator:
                 defender_dynamics_model.update_model(s=s, s_prime=s_prime,
                                                      attacker_action_id=attack_action_dto.id,
                                                      logged_in_ips=logged_in_ips_str)
-                print(defender_dynamics_model)
 
             step +=1
             if render:

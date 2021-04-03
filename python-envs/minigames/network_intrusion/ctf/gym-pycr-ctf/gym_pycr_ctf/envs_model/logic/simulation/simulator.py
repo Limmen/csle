@@ -60,7 +60,8 @@ class Simulator:
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
             return Simulator.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
         elif defender_action.type == DefenderActionType.STATE_UPDATE:
-            Simulator.defender_update_state_action(s=s, attacker_action=attacker_action, a=defender_action,
+            return Simulator.defender_update_state_action(s=s, attacker_action=attacker_action,
+                                                   defender_action=defender_action,
                                                    env_config=env_config)
         else:
             raise ValueError("Action type not recognized")
@@ -249,26 +250,28 @@ class Simulator:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def defender_update_state_action(s: EnvState, a: DefenderAction, env_config: EnvConfig,
+    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
                                      attacker_action: AttackerAction) -> Tuple[
         EnvState, int, bool]:
         """
         Implements transition of state update for the defender
 
         :param s: the current state
-        :param a: the action
+        :param defender_action: the action
         :param env_config: the environment configuration
         :param attacker_action: attacker's previous action
         :return: s', r, done
         """
-        if a.id == DefenderActionId.UPDATE_STATE:
+        if defender_action.id == DefenderActionId.UPDATE_STATE:
             return DefenderBeliefStateSimulator.update_state(s=s, attacker_action=attacker_action, env_config=env_config,
-                                                             defender_action=a)
-        elif a.id == DefenderActionId.INITIALIZE_STATE:
-            return DefenderBeliefStateSimulator.init_state(s=s, a=a, env_config=env_config)
-        elif a.id == DefenderActionId.RESET_STATE:
-            return DefenderBeliefStateSimulator.reset_state(s=s, a=a, env_config=env_config)
+                                                             defender_action=defender_action)
+        elif defender_action.id == DefenderActionId.INITIALIZE_STATE:
+            return DefenderBeliefStateSimulator.init_state(s=s, defender_action=defender_action, env_config=env_config,
+                                                           attacker_action=attacker_action)
+        elif defender_action.id == DefenderActionId.RESET_STATE:
+            return DefenderBeliefStateSimulator.reset_state(s=s, defender_action=defender_action, env_config=env_config,
+                                                            attacker_action=attacker_action)
         else:
-            raise ValueError("State update action id:{},name:{} not recognized".format(a.id, a.name))
+            raise ValueError("State update action id:{},name:{} not recognized".format(defender_action.id, defender_action.name))
 
 
