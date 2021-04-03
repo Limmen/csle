@@ -8,6 +8,7 @@ from gym_pycr_ctf.util.experiments_util import plotting_util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 
 def default_config() -> ClientConfig:
@@ -127,7 +128,7 @@ def default_config() -> ClientConfig:
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline random many v1",
@@ -141,7 +142,8 @@ def default_config() -> ClientConfig:
                                  eval_env_containers_configs=eval_env_containers_configs,
                                  eval_env_flags_configs=eval_env_flags_configs, eval_multi_env=True,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
-                                 eval_dummy_vec_env=False, eval_sub_proc_env=True
+                                 eval_dummy_vec_env=False, eval_sub_proc_env=True,
+                                 train_mode=TrainMode.TRAIN_ATTACKER
                                  # eval_env_flags_config = eval_env_flags_config,
                                  # eval_env_containers_config = eval_env_containers_config,
                                  # eval_env_num_nodes=num_nodes, eval_randomized_env=True

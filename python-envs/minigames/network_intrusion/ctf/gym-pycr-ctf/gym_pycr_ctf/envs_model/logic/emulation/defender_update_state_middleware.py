@@ -103,7 +103,6 @@ class DefenderUpdateStateMiddleware:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        print("INITIALIZE DEFEDER STATE")
         s_prime = s
 
         s_prime.defender_obs_state.adj_matrix = env_config.network_conf.adj_matrix

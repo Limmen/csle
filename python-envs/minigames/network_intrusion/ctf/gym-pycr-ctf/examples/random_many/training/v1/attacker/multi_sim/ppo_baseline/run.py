@@ -6,6 +6,7 @@ from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 
 def default_config() -> ClientConfig:
@@ -48,7 +49,7 @@ def default_config() -> ClientConfig:
     eval_env_name = "pycr-ctf-multisim-v1"
     eval_n_envs = 1
     env_name="pycr-ctf-multisim-v1"
-    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline multisim v1",
@@ -61,7 +62,8 @@ def default_config() -> ClientConfig:
                                  eval_multi_env=False,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
                                  eval_dummy_vec_env=False, eval_sub_proc_env=True,
-                                 train_multi_sim=True,  eval_multi_sim=True, num_sims = 10, num_sims_eval=2
+                                 train_multi_sim=True,  eval_multi_sim=True, num_sims = 10, num_sims_eval=2,
+                                 train_mode=TrainMode.TRAIN_ATTACKER
                                  )
     return client_config
 

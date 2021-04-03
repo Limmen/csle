@@ -359,6 +359,9 @@ class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_trajectories = 500
             env_config.explore_defense_states = True
             env_config.defender_update_state = True
-            env_config.attacker_continue_action_sleep = 30
-            env_config.defender_sleep_before_state_update = 15
+            # env_config.attacker_continue_action_sleep = 30
+            # env_config.defender_sleep_before_state_update = 15
+            env_config.attacker_continue_action_sleep = 0.0001
+            env_config.defender_sleep_before_state_update = 0.0001
+            env_config.max_episode_length = 50
         super().__init__(env_config=env_config)

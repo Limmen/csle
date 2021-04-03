@@ -7,6 +7,7 @@ from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
     """
@@ -50,12 +51,13 @@ def default_config() -> ClientConfig:
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline v3",
                                  run_many=True, random_seeds=[0, 999, 299],
-                                 random_seed=299, emulation_config=emulation_config, mode=RunnerMode.TRAIN_ATTACKER.value)
+                                 random_seed=299, emulation_config=emulation_config,
+                                 mode=RunnerMode.TRAIN_ATTACKER.value, train_mode=TrainMode.TRAIN_ATTACKER)
     #random_seeds=[0, 999, 299, 399, 499],
     return client_config
 

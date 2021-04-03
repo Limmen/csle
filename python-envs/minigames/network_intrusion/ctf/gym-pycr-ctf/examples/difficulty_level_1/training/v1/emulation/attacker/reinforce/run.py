@@ -4,6 +4,7 @@ from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
     """
@@ -27,12 +28,13 @@ def default_config() -> ClientConfig:
                                                 optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
                                                 state_length=1, gpu_id=0)
     env_name = "pycr-ctf-level-1-sim-v1"
-    client_config = ClientConfig(env_name=env_name, agent_config=agent_config,
+    client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.REINFORCE.value,
                                  output_dir=util.default_output_dir(),
                                  title="REINFORCE level_1 v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
-                                 random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value)
+                                 random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
+                                 train_mode=TrainMode.TRAIN_ATTACKER)
     return client_config
 
 
