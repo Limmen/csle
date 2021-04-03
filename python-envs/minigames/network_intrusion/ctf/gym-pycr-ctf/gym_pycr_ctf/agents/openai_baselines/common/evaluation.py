@@ -241,9 +241,13 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
 
     for episode in range(n_eval_episodes):
         if isinstance(env, SubprocVecEnv):
-            infos = np.array([{"non_legal_actions": env.initial_illegal_actions} for i in range(env.num_envs)])
+            infos = np.array([{"attacker_non_legal_actions": env.attacker_initial_illegal_actions,
+                               "defender_non_legal_actions": env.defender_initial_illegal_actions
+                               } for i in range(env.num_envs)])
         elif isinstance(env, DummyVecEnv):
-            infos = np.array([{"non_legal_actions": env.envs[i].initial_illegal_actions} for i in range(env.num_envs)])
+            infos = np.array([{"attacker_non_legal_actions": env.envs[i].attacker_initial_illegal_actions,
+                               "defender_non_legal_actions": env.envs[i].defender_initial_illegal_actions
+                               } for i in range(env.num_envs)])
         for i in range(env.num_envs):
             if env_configs is not None:
                 env_conf = env_configs[i]
@@ -263,17 +267,23 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
             while not done:
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
-                actions, state = model.predict_attacker(obs, state=state, deterministic=deterministic, infos=infos,
+                obs_attacker, obs_defender = obs
+                attacker_actions, state = model.predict(np.array([obs_attacker]), state=state,
+                                                        deterministic=deterministic,
+                                                        infos=infos,
                                                         env_config = env_conf,
                                                         env_configs=env_configs, env=env, env_idx=i,
                                                         env_state=env_state)
-                action = actions[0]
+                defender_action = None
+                attacker_action = attacker_actions[0]
+                action = (attacker_action, defender_action)
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)
                 elif isinstance(env, DummyVecEnv):
                     obs, reward, done, _info = env.envs[i].step(action)
+                attacker_reward, defender_reward = reward
                 infos = [_info]
-                episode_reward += reward
+                episode_reward += attacker_reward
                 episode_length += 1
             # Record episode metrics
             episode_rewards.append(episode_reward)
@@ -295,6 +305,7 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
     return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific
+
 
 def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_steps, env_specific_flags,
                                 env_specific_flags_percentage, episode_reward, episode_step, infos, i):

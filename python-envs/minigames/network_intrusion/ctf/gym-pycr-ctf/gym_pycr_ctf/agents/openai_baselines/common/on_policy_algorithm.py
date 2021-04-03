@@ -205,7 +205,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.defender_policy = self.defender_policy.to(self.device)
 
     def collect_rollouts(
-        self, env: VecEnv, callback: BaseCallback, rollout_buffer: RolloutBuffer, n_rollout_steps: int
+        self, env: VecEnv, callback: BaseCallback, attacker_rollout_buffer: RolloutBuffer,
+            defender_rollout_buffer: RolloutBuffer,
+            n_rollout_steps: int
     ) -> Union[bool, int, int]:
         """
         Collect rollouts using the current policy and fill a `RolloutBuffer`.
@@ -213,14 +215,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         :param env: (VecEnv) The training environment
         :param callback: (BaseCallback) Callback that will be called at each step
             (and at the beginning and end of the rollout)
-        :param rollout_buffer: (RolloutBuffer) Buffer to fill with rollouts
+        :param attacker_rollout_buffer: (RolloutBuffer) Buffer to fill with rollouts
         :param n_steps: (int) Number of experiences to collect per environment
         :return: (bool) True if function returned with at least `n_rollout_steps`
             collected, False if callback terminated rollout prematurely.
         """
         assert self._last_obs is not None, "No previous observation was provided"
         n_steps = 0
-        rollout_buffer.reset()
+        attacker_rollout_buffer.reset()
         # Sample new weights for the state dependent exploration
         if self.use_sde:
             self.attacker_policy.reset_noise(env.num_envs)
@@ -251,19 +253,22 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.attacker_policy.reset_noise(env.num_envs)
 
             if not self.attacker_agent_config.ar_policy:
-                new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time_s, env_step_time = self.step_policy(env, rollout_buffer)
+                new_obs, attacker_rewards, dones, infos, attacker_values, attacker_log_probs, attacker_actions, \
+                action_pred_time_s, env_step_time, defender_values, defender_log_probs, defender_actions, \
+                defender_rewards = \
+                    self.step_policy(env, attacker_rollout_buffer, defender_rollout_buffer)
                 if self.attacker_agent_config.performance_analysis:
                     env_response_time += env_step_time
                     action_pred_time += action_pred_time_s
             else:
-                new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
-                m_action_log_probs, m_selection_actions, m_actions = self.step_policy_ar(env, rollout_buffer)
+                new_obs, machine_obs, attacker_rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
+                m_action_log_probs, m_selection_actions, m_actions = self.step_policy_ar(env, attacker_rollout_buffer)
 
             # Record step metrics
             self.num_timesteps += env.num_envs
             self._update_info_buffer(infos)
             n_steps += 1
-            episode_reward += rewards
+            episode_reward += attacker_rewards
             episode_step += 1
             if dones.any():
                 for i in range(len(dones)):
@@ -296,10 +301,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_step[i] = 0
 
         if not self.attacker_agent_config.ar_policy:
-            rollout_buffer.compute_returns_and_advantage(values, dones=dones)
+            attacker_rollout_buffer.compute_returns_and_advantage(attacker_values, dones=dones)
         else:
-            rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
-            rollout_buffer.compute_returns_and_advantage(m_action_values, dones=dones, machine_action=True)
+            attacker_rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
+            attacker_rollout_buffer.compute_returns_and_advantage(m_action_values, dones=dones, machine_action=True)
 
         callback.on_rollout_end()
         for i in range(len(dones)):
@@ -368,7 +373,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
             env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage, \
             rollout_env_response_times, rollout_action_pred_times = \
-                self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer, n_rollout_steps=self.n_steps)
+                self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer,
+                                      self.defender_rollout_buffer,
+                                      n_rollout_steps=self.n_steps)
 
             if self.attacker_agent_config.performance_analysis:
                 end = time.time()
@@ -456,12 +463,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                             self._last_infos[i]["non_legal_actions"] = self.env.initial_illegal_actions
                 n_af, n_d = 0,0
                 if isinstance(self.env, DummyVecEnv):
-                    n_af = self.env.envs[0].agent_state.num_all_flags
-                    n_d = self.env.envs[0].agent_state.num_detections
-                self.log_metrics(iteration=self.iteration, result=self.train_result,
+                    n_af = self.env.envs[0].attacker_agent_state.num_all_flags
+                    n_d = self.env.envs[0].attacker_agent_state.num_detections
+                self.log_metrics_attacker(iteration=self.iteration, result=self.train_result,
                                  episode_rewards=episode_rewards,
                                  episode_avg_loss=episode_loss,
-                                 eval=False, lr=self.lr_schedule(self.num_timesteps),
+                                 eval=False, lr=self.attacker_lr_schedule(self.num_timesteps),
                                  total_num_episodes=self.num_episodes_total,
                                  episode_steps=episode_steps,
                                  episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
@@ -547,49 +554,90 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         return state_dicts, []
 
 
-    def step_policy(self, env, rollout_buffer):
+    def step_policy(self, env, attacker_rollout_buffer, defender_rollout_buffer):
         action_pred_time = 0.0
         env_step_time = 0.0
         if self.attacker_agent_config.performance_analysis:
             start = time.time()
         with th.no_grad():
             # Convert to pytorch tensor
-            obs_tensor = th.as_tensor(self._last_obs).to(self.device)
-            actions, values, log_probs = self.attacker_policy.forward(obs_tensor, env=env, infos=self._last_infos)
-        actions = actions.cpu().numpy()
-        print("ACTIONS:{}".format(actions))
+            attacker_obs, defender_obs = self._last_obs
+            obs_tensor_attacker = th.as_tensor(attacker_obs).to(self.device)
+            obs_tensor_defender = th.as_tensor(defender_obs).to(self.device)
+            defender_actions = None
+            attacker_actions = None
+            attacker_values = None
+            attacker_log_probs = None
+            defender_actions = None
+            defender_values = None
+            defender_log_probs = None
+            if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+                attacker_actions, attacker_values, attacker_log_probs = \
+                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos)
+            if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+                defender_actions, defender_values, defender_log_probs = \
+                    self.defender_policy.forward(obs_tensor_defender, env=env, infos=self._last_infos)
+        attacker_actions = attacker_actions.cpu().numpy()
 
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             action_pred_time = end-start
 
 
-        # Rescale and perform action
-        clipped_actions = actions
+        # Rescale attacker action
+        clipped_attacker_actions = attacker_actions
         # Clip the actions to avoid out of bound error
         if isinstance(self.attacker_action_space, gym.spaces.Box):
-            clipped_actions = np.clip(actions, self.attacker_action_space.low, self.attacker_action_space.high)
+            clipped_attacker_actions = np.clip(attacker_actions, self.attacker_action_space.low, self.attacker_action_space.high)
 
+        if defender_actions is not None:
+            clipped_defender_actions = defender_actions
+            # Clip the actions to avoid out of bound error
+            if isinstance(self.defender_action_space, gym.spaces.Box):
+                clipped_defender_actions = np.clip(defender_actions, self.defender_action_space.low,
+                                                   self.defender_action_space.high)
+        else:
+            defender_actions = np.array([None])
+            clipped_defender_actions = np.array([None])
+
+        # Perform action
         if self.attacker_agent_config.performance_analysis:
             start = time.time()
-        new_obs, rewards, dones, infos = env.step(clipped_actions)
+        actions = []
+        for i in range(len(clipped_attacker_actions)):
+            actions.append((clipped_attacker_actions[i], clipped_defender_actions[i]))
+        new_obs, rewards, dones, infos = env.step(actions)
+        attacker_rewards = rewards[0]
+        defender_rewards = rewards[1]
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             env_step_time = end-start
-        if len(new_obs.shape) == 3:
-            new_obs = new_obs.reshape((new_obs.shape[0], self.attacker_observation_space.shape[0]))
+
+        # if len(new_obs[0].shape) == 3:
+        #     new_obs = new_obs.reshape((new_obs.shape[0], self.attacker_observation_space.shape[0]))
 
         if isinstance(self.attacker_action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
-            actions = actions.reshape(-1, 1)
+            attacker_actions = attacker_actions.reshape(-1, 1)
 
-        rollout_buffer.add(self._last_obs, actions, rewards, self._last_dones, values, log_probs)
+        if isinstance(self.defender_action_space, gym.spaces.Discrete):
+            # Reshape in case of discrete action
+            defender_actions = defender_actions.reshape(-1, 1)
+
+        if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+            attacker_rollout_buffer.add(self._last_obs[0], attacker_actions, attacker_rewards, self._last_dones, attacker_values,
+                                        attacker_log_probs)
+        if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+            defender_rollout_buffer.add(self._last_obs[1], defender_actions, defender_rewards, self._last_dones, defender_values,
+                                        defender_log_probs)
 
         self._last_obs = new_obs
         self._last_dones = dones
         self._last_infos = infos
 
-        return new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time, env_step_time
+        return new_obs, attacker_rewards, dones, infos, \
+               attacker_values, attacker_log_probs, attacker_actions, action_pred_time, env_step_time, \
+               defender_values, defender_log_probs, defender_actions, defender_rewards
 
     def step_policy_ar(self, env, rollout_buffer):
         with th.no_grad():
