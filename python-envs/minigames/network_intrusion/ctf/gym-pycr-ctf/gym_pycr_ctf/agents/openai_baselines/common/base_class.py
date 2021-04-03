@@ -630,16 +630,16 @@ class BaseAlgorithm(ABC):
                                           )
 
         result.avg_episode_steps.append(avg_episode_steps)
-        result.avg_episode_rewards.append(avg_episode_rewards)
+        result.attacker_avg_episode_rewards.append(avg_episode_rewards)
         result.epsilon_values.append(self.attacker_agent_config.epsilon)
-        result.avg_episode_loss.append(avg_episode_loss)
+        result.attacker_avg_episode_loss.append(avg_episode_loss)
         result.avg_episode_flags.append(avg_episode_flags)
         result.avg_episode_flags_percentage.append(avg_episode_flags_percentage)
-        result.eval_avg_episode_rewards.append(eval_avg_episode_rewards)
+        result.attacker_eval_avg_episode_rewards.append(eval_avg_episode_rewards)
         result.eval_avg_episode_steps.append(eval_avg_episode_steps)
         result.eval_avg_episode_flags.append(eval_avg_episode_flags)
         result.eval_avg_episode_flags_percentage.append(eval_avg_episode_flags_percentage)
-        result.eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
+        result.attacker_eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
         result.eval_2_avg_episode_steps.append(eval_2_avg_episode_steps)
         result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
         result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
@@ -649,33 +649,33 @@ class BaseAlgorithm(ABC):
         result.action_pred_times.append(avg_action_pred_times)
         result.grad_comp_times.append(avg_grad_comp_times)
         result.weight_update_times.append(avg_weight_update_times)
-        result.avg_regret.append(avg_regret)
-        result.avg_opt_frac.append(avg_opt_frac)
-        result.eval_avg_regret.append(avg_eval_regret)
-        result.eval_avg_opt_frac.append(eval_avg_opt_frac)
-        result.eval_2_avg_regret.append(avg_regret_2)
-        result.eval_2_avg_opt_frac.append(avg_opt_frac_2)
+        result.attacker_avg_regret.append(avg_regret)
+        result.attacker_avg_opt_frac.append(avg_opt_frac)
+        result.attacker_eval_avg_regret.append(avg_eval_regret)
+        result.attacker_eval_avg_opt_frac.append(eval_avg_opt_frac)
+        result.attacker_eval_2_avg_regret.append(avg_regret_2)
+        result.attacker_eval_2_avg_opt_frac.append(avg_opt_frac_2)
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
                 avg = np.mean(train_env_specific_rewards[key])
-                if key in result.train_env_specific_rewards:
-                    result.train_env_specific_rewards[key].append(avg)
+                if key in result.attacker_train_env_specific_rewards:
+                    result.attacker_train_env_specific_rewards[key].append(avg)
                 else:
-                    result.train_env_specific_rewards[key] = [avg]
+                    result.attacker_train_env_specific_rewards[key] = [avg]
         if train_env_specific_regret is not None:
             for key in train_env_specific_regret.keys():
                 avg = np.mean(train_env_specific_regret[key])
-                if key in result.train_env_specific_regrets:
-                    result.train_env_specific_regrets[key].append(avg)
+                if key in result.attacker_train_env_specific_regrets:
+                    result.attacker_train_env_specific_regrets[key].append(avg)
                 else:
-                    result.train_env_specific_regrets[key] = [avg]
+                    result.attacker_train_env_specific_regrets[key] = [avg]
         if train_env_specific_opt_frac is not None:
             for key in train_env_specific_opt_frac.keys():
                 avg = np.mean(train_env_specific_opt_frac[key])
-                if key in result.train_env_specific_opt_fracs:
-                    result.train_env_specific_opt_fracs[key].append(avg)
+                if key in result.attacker_train_env_specific_opt_fracs:
+                    result.attacker_train_env_specific_opt_fracs[key].append(avg)
                 else:
-                    result.train_env_specific_opt_fracs[key] = [avg]
+                    result.attacker_train_env_specific_opt_fracs[key] = [avg]
         if train_env_specific_steps is not None:
             for key in train_env_specific_steps.keys():
                 avg = np.mean(train_env_specific_steps[key])
@@ -701,24 +701,24 @@ class BaseAlgorithm(ABC):
         if eval_env_specific_rewards is not None:
             for key in eval_env_specific_rewards.keys():
                 avg = np.mean(eval_env_specific_rewards[key])
-                if key in result.eval_env_specific_rewards:
-                    result.eval_env_specific_rewards[key].append(avg)
+                if key in result.attacker_eval_env_specific_rewards:
+                    result.attacker_eval_env_specific_rewards[key].append(avg)
                 else:
-                    result.eval_env_specific_rewards[key] = [avg]
+                    result.attacker_eval_env_specific_rewards[key] = [avg]
         if eval_env_specific_regret is not None:
             for key in eval_env_specific_regret.keys():
                 avg = np.mean(eval_env_specific_regret[key])
-                if key in result.eval_env_specific_regrets:
-                    result.eval_env_specific_regrets[key].append(avg)
+                if key in result.attacker_eval_env_specific_regrets:
+                    result.attacker_eval_env_specific_regrets[key].append(avg)
                 else:
-                    result.eval_env_specific_regrets[key] = [avg]
+                    result.attacker_eval_env_specific_regrets[key] = [avg]
         if eval_env_specific_opt_frac is not None:
             for key in eval_env_specific_opt_frac.keys():
                 avg = np.mean(eval_env_specific_opt_frac[key])
-                if key in result.eval_env_specific_opt_fracs:
-                    result.eval_env_specific_opt_fracs[key].append(avg)
+                if key in result.attacker_eval_env_specific_opt_fracs:
+                    result.attacker_eval_env_specific_opt_fracs[key].append(avg)
                 else:
-                    result.eval_env_specific_opt_fracs[key] = [avg]
+                    result.attacker_eval_env_specific_opt_fracs[key] = [avg]
         if eval_env_specific_steps is not None:
             for key in eval_env_specific_steps.keys():
                 avg = np.mean(eval_env_specific_steps[key])
@@ -744,24 +744,24 @@ class BaseAlgorithm(ABC):
         if eval_2_env_specific_rewards is not None:
             for key in eval_2_env_specific_rewards.keys():
                 avg = np.mean(eval_2_env_specific_rewards[key])
-                if key in result.eval_2_env_specific_rewards:
-                    result.eval_2_env_specific_rewards[key].append(avg)
+                if key in result.attacker_eval_2_env_specific_rewards:
+                    result.attacker_eval_2_env_specific_rewards[key].append(avg)
                 else:
-                    result.eval_2_env_specific_rewards[key] = [avg]
+                    result.attacker_eval_2_env_specific_rewards[key] = [avg]
         if eval_2_env_specific_regret is not None:
             for key in eval_2_env_specific_regret.keys():
                 avg = np.mean(eval_2_env_specific_regret[key])
-                if key in result.eval_2_env_specific_regrets:
-                    result.eval_2_env_specific_regrets[key].append(avg)
+                if key in result.attacker_eval_2_env_specific_regrets:
+                    result.attacker_eval_2_env_specific_regrets[key].append(avg)
                 else:
-                    result.eval_2_env_specific_regrets[key] = [avg]
+                    result.attacker_eval_2_env_specific_regrets[key] = [avg]
         if eval_2_env_specific_opt_frac is not None:
             for key in eval_2_env_specific_opt_frac.keys():
                 avg = np.mean(eval_2_env_specific_opt_frac[key])
-                if key in result.eval_2_env_specific_opt_fracs:
-                    result.eval_2_env_specific_opt_fracs[key].append(avg)
+                if key in result.attacker_eval_2_env_specific_opt_fracs:
+                    result.attacker_eval_2_env_specific_opt_fracs[key].append(avg)
                 else:
-                    result.eval_2_env_specific_opt_fracs[key] = [avg]
+                    result.attacker_eval_2_env_specific_opt_fracs[key] = [avg]
         if eval_2_env_specific_steps is not None:
             for key in eval_2_env_specific_steps.keys():
                 avg = np.mean(eval_2_env_specific_steps[key])
@@ -796,6 +796,191 @@ class BaseAlgorithm(ABC):
                     self.env_2.reset_pi_star_rew()
                 else:
                     self.env_2.envs[0].env_config.pi_star_rew_list_attacker = [self.env_2.envs[0].env_config.pi_star_rew_attacker]
+
+    def log_metrics_defender(self, iteration: int, result: ExperimentResult, episode_rewards: list,
+                             episode_steps: list, episode_avg_loss: list = None,
+                             eval: bool = False, lr: float = None, total_num_episodes: int = 0,
+                             eps: float = None, progress_left: float = 1.0,
+                             eval_episode_rewards: list = None,
+                             eval_episode_steps: list = None,
+                             eval_2_episode_rewards: list = None,
+                             eval_2_episode_steps: list = None,
+                             train_env_specific_rewards: dict = None,
+                             train_env_specific_steps: dict = None,
+                             eval_env_specific_rewards: dict = None,
+                             eval_env_specific_steps: dict = None,
+                             eval_2_env_specific_rewards: dict = None,
+                             eval_2_env_specific_steps: dict = None,
+                             rollout_times=None, env_response_times=None, action_pred_times=None,
+                             grad_comp_times=None, weight_update_times=None
+                             ) -> None:
+        if eps is None:
+            eps = 0.0
+        avg_episode_rewards = np.mean(episode_rewards)
+        avg_episode_steps = np.mean(episode_steps)
+        if not eval and eval_episode_steps is not None:
+            eval_avg_episode_steps = np.mean(eval_episode_steps)
+        else:
+            eval_avg_episode_steps = 0.0
+
+        if not eval and eval_2_episode_rewards is not None:
+            eval_2_avg_episode_rewards = np.mean(eval_2_episode_rewards)
+        else:
+            eval_2_avg_episode_rewards = 0.0
+
+        if not eval and eval_2_episode_steps is not None:
+            eval_2_avg_episode_steps = np.mean(eval_2_episode_steps)
+        else:
+            eval_2_avg_episode_steps = 0.0
+
+        if rollout_times is not None:
+            if len(rollout_times) > 0:
+                avg_rollout_times = np.mean(rollout_times)
+            else:
+                avg_rollout_times = 0.0
+        else:
+            avg_rollout_times = 0.0
+        if env_response_times is not None and len(env_response_times) > 0:
+            if len(env_response_times) > 0:
+                avg_env_response_times = np.mean(env_response_times)
+            else:
+                avg_env_response_times = 0.0
+        else:
+            avg_env_response_times = 0.0
+        if action_pred_times is not None and len(action_pred_times) > 0:
+            if len(action_pred_times) > 0:
+                avg_action_pred_times = np.mean(action_pred_times)
+            else:
+                avg_action_pred_times = 0.0
+        else:
+            avg_action_pred_times = 0.0
+        if grad_comp_times is not None and len(grad_comp_times) > 0:
+            if len(grad_comp_times) > 0:
+                avg_grad_comp_times = np.mean(grad_comp_times)
+            else:
+                avg_grad_comp_times = 0.0
+        else:
+            avg_grad_comp_times = 0.0
+        if weight_update_times is not None and len(weight_update_times) > 0:
+            if len(weight_update_times):
+                avg_weight_update_times = np.mean(weight_update_times)
+            else:
+                avg_weight_update_times = 0.0
+        else:
+            avg_weight_update_times = 0.0
+
+        if result.defender_avg_episode_rewards is not None:
+            rolling_avg_rewards = pycr_util.running_average(result.defender_avg_episode_rewards + [avg_episode_rewards],
+                                                            self.attacker_agent_config.running_avg)
+        else:
+            rolling_avg_rewards = 0.0
+
+        if result.avg_episode_steps is not None:
+            rolling_avg_steps = pycr_util.running_average(result.avg_episode_steps + [avg_episode_steps],
+                                                          self.attacker_agent_config.running_avg)
+        else:
+            rolling_avg_steps = 0.0
+
+        if lr is None:
+            lr = 0.0
+        if not eval and episode_avg_loss is not None:
+            avg_episode_loss = np.mean(episode_avg_loss)
+        else:
+            avg_episode_loss = 0.0
+
+        if not eval and eval_episode_rewards is not None:
+            eval_avg_episode_rewards = np.mean(eval_episode_rewards)
+        else:
+            eval_avg_episode_rewards = 0.0
+
+        if eval:
+            log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
+                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},".format(
+                iteration, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_steps, rolling_avg_steps, lr)
+        else:
+            log_str = "[Train] iter:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
+                      "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
+                      "avg_R_E:{:.2f}," \
+                      "avg_t_E:{:.2f}," \
+                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f}," \
+                      "epsilon:{:.2f}".format(
+                iteration, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_steps, rolling_avg_steps, avg_episode_loss,
+                lr, total_num_episodes,eps,
+                eval_avg_episode_rewards, eval_avg_episode_steps,
+                eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon)
+        self.defender_agent_config.logger.info(log_str)
+        print(log_str)
+        if self.defender_agent_config.tensorboard:
+            self.log_tensorboard_defender(iteration, avg_episode_rewards, avg_episode_steps,
+                                          avg_episode_loss, eps, lr, eval=eval,
+                                          eval_avg_episode_rewards=eval_avg_episode_rewards,
+                                          eval_avg_episode_steps=eval_avg_episode_steps,
+                                          eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
+                                          eval_2_avg_episode_steps=eval_2_avg_episode_steps,
+                                          rolling_avg_episode_rewards=rolling_avg_rewards,
+                                          rolling_avg_episode_steps=rolling_avg_steps
+                                          )
+
+        result.avg_episode_steps.append(avg_episode_steps)
+        result.defender_avg_episode_rewards.append(avg_episode_rewards)
+        result.epsilon_values.append(self.defender_agent_config.epsilon)
+        result.defender_avg_episode_loss.append(avg_episode_loss)
+        result.defender_eval_avg_episode_rewards.append(eval_avg_episode_rewards)
+        result.eval_avg_episode_steps.append(eval_avg_episode_steps)
+        result.defender_eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
+        result.eval_2_avg_episode_steps.append(eval_2_avg_episode_steps)
+        result.lr_list.append(lr)
+        result.rollout_times.append(avg_rollout_times)
+        result.env_response_times.append(avg_env_response_times)
+        result.action_pred_times.append(avg_action_pred_times)
+        result.grad_comp_times.append(avg_grad_comp_times)
+        result.weight_update_times.append(avg_weight_update_times)
+        if train_env_specific_rewards is not None:
+            for key in train_env_specific_rewards.keys():
+                avg = np.mean(train_env_specific_rewards[key])
+                if key in result.defender_train_env_specific_rewards:
+                    result.defender_train_env_specific_rewards[key].append(avg)
+                else:
+                    result.defender_train_env_specific_rewards[key] = [avg]
+        if train_env_specific_steps is not None:
+            for key in train_env_specific_steps.keys():
+                avg = np.mean(train_env_specific_steps[key])
+                if key in result.train_env_specific_steps:
+                    result.train_env_specific_steps[key].append(avg)
+                else:
+                    result.train_env_specific_steps[key] = [avg]
+        if eval_env_specific_rewards is not None:
+            for key in eval_env_specific_rewards.keys():
+                avg = np.mean(eval_env_specific_rewards[key])
+                if key in result.defender_eval_env_specific_rewards:
+                    result.defender_eval_env_specific_rewards[key].append(avg)
+                else:
+                    result.defender_eval_env_specific_rewards[key] = [avg]
+        if eval_env_specific_steps is not None:
+            for key in eval_env_specific_steps.keys():
+                avg = np.mean(eval_env_specific_steps[key])
+                if key in result.eval_env_specific_steps:
+                    result.eval_env_specific_steps[key].append(avg)
+                else:
+                    result.eval_env_specific_steps[key] = [avg]
+        if eval_2_env_specific_rewards is not None:
+            for key in eval_2_env_specific_rewards.keys():
+                avg = np.mean(eval_2_env_specific_rewards[key])
+                if key in result.defender_eval_2_env_specific_rewards:
+                    result.defender_eval_2_env_specific_rewards[key].append(avg)
+                else:
+                    result.defender_eval_2_env_specific_rewards[key] = [avg]
+        if eval_2_env_specific_steps is not None:
+            for key in eval_2_env_specific_steps.keys():
+                avg = np.mean(eval_2_env_specific_steps[key])
+                if key in result.eval_2_env_specific_steps:
+                    result.eval_2_env_specific_steps[key].append(avg)
+                else:
+                    result.eval_2_env_specific_steps[key] = [avg]
+
 
     def log_tensorboard_attacker(self, episode: int, avg_episode_rewards: float,
                                  avg_episode_steps: float, episode_avg_loss: float,
@@ -835,32 +1020,80 @@ class BaseAlgorithm(ABC):
         :return: None
         """
         train_or_eval = "eval" if eval else "train"
-        self.tensorboard_writer.add_scalar('avg_episode_rewards/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/avg_episode_rewards/' + train_or_eval,
                                            avg_episode_rewards, episode)
-        self.tensorboard_writer.add_scalar('rolling_avg_episode_rewards/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/rolling_avg_episode_rewards/' + train_or_eval,
                                            rolling_avg_episode_rewards, episode)
-        self.tensorboard_writer.add_scalar('avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
-        self.tensorboard_writer.add_scalar('rolling_avg_episode_steps/' + train_or_eval, rolling_avg_episode_steps, episode)
-        self.tensorboard_writer.add_scalar('episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
-        self.tensorboard_writer.add_scalar('epsilon/' + train_or_eval, epsilon, episode)
-        self.tensorboard_writer.add_scalar('avg_episode_flags/' + train_or_eval, avg_flags_catched, episode)
-        self.tensorboard_writer.add_scalar('avg_episode_flags_percentage/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('attacker/rolling_avg_episode_steps/' + train_or_eval, rolling_avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('attacker/episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
+        self.tensorboard_writer.add_scalar('attacker/epsilon/' + train_or_eval, epsilon, episode)
+        self.tensorboard_writer.add_scalar('attacker/avg_episode_flags/' + train_or_eval, avg_flags_catched, episode)
+        self.tensorboard_writer.add_scalar('attacker/avg_episode_flags_percentage/' + train_or_eval,
                                            avg_episode_flags_percentage, episode)
-        self.tensorboard_writer.add_scalar('eval_avg_episode_rewards/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/eval_avg_episode_rewards/' + train_or_eval,
                                            eval_avg_episode_rewards, episode)
-        self.tensorboard_writer.add_scalar('eval_avg_episode_steps/' + train_or_eval, eval_avg_episode_steps, episode)
-        self.tensorboard_writer.add_scalar('eval_avg_episode_flags/' + train_or_eval, eval_avg_episode_flags, episode)
-        self.tensorboard_writer.add_scalar('eval_avg_episode_flags_percentage/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/eval_avg_episode_steps/' + train_or_eval, eval_avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('attacker/eval_avg_episode_flags/' + train_or_eval, eval_avg_episode_flags, episode)
+        self.tensorboard_writer.add_scalar('attacker/eval_avg_episode_flags_percentage/' + train_or_eval,
                                            eval_avg_episode_flags_percentage, episode)
 
-        self.tensorboard_writer.add_scalar('eval_2_avg_episode_rewards/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_rewards/' + train_or_eval,
                                            eval_2_avg_episode_rewards, episode)
-        self.tensorboard_writer.add_scalar('eval_2_avg_episode_steps/' + train_or_eval, eval_2_avg_episode_steps, episode)
-        self.tensorboard_writer.add_scalar('eval_2_avg_episode_flags/' + train_or_eval, eval_2_avg_episode_flags, episode)
-        self.tensorboard_writer.add_scalar('eval_2_avg_episode_flags_percentage/' + train_or_eval,
+        self.tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_steps/' + train_or_eval, eval_2_avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_flags/' + train_or_eval, eval_2_avg_episode_flags, episode)
+        self.tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_flags_percentage/' + train_or_eval,
                                            eval_2_avg_episode_flags_percentage, episode)
         if not eval:
-            self.tensorboard_writer.add_scalar('lr', lr, episode)
+            self.tensorboard_writer.add_scalar('attacker/lr', lr, episode)
+
+    def log_tensorboard_defender(self, episode: int, avg_episode_rewards: float,
+                                 avg_episode_steps: float, episode_avg_loss: float,
+                                 epsilon: float, lr: float, eval=False,
+                                 eval_avg_episode_rewards: float = 0.0,
+                                 eval_avg_episode_steps: float = 0.0,
+                                 eval_2_avg_episode_rewards: float = 0.0,
+                                 eval_2_avg_episode_steps: float = 0.0,
+                                 rolling_avg_episode_rewards: float = 0.0,
+                                 rolling_avg_episode_steps: float = 0.0
+                                 ) -> None:
+        """
+        Log metrics to tensorboard
+
+        :param episode: the episode
+        :param avg_episode_rewards: the average attacker episode reward
+        :param avg_episode_steps: the average number of episode steps
+        :param episode_avg_loss: the average episode loss
+        :param epsilon: the exploration rate
+        :param lr: the learning rate of the attacker
+        :param eval: boolean flag whether eval or not
+        :param avg_flags_catched: avg number of flags catched per episode
+        :param avg_episode_flags_percentage: avg percentage of flags catched per episode
+        :param eval_avg_episode_rewards: average reward eval deterministic policy
+        :param eval_avg_episode_steps: average steps eval deterministic policy
+        :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
+        :param eval_avg_episode_steps: average steps 2nd eval deterministic policy
+        :return: None
+        """
+        train_or_eval = "eval" if eval else "train"
+        self.tensorboard_writer.add_scalar('defender/avg_episode_rewards/' + train_or_eval,
+                                           avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/rolling_avg_episode_rewards/' + train_or_eval,
+                                           rolling_avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('defender/rolling_avg_episode_steps/' + train_or_eval, rolling_avg_episode_steps,
+                                           episode)
+        self.tensorboard_writer.add_scalar('defender/episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
+        self.tensorboard_writer.add_scalar('defender/epsilon/' + train_or_eval, epsilon, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_rewards/' + train_or_eval,
+                                           eval_avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_steps/' + train_or_eval, eval_avg_episode_steps, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_episode_rewards/' + train_or_eval,
+                                           eval_2_avg_episode_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_episode_steps/' + train_or_eval, eval_2_avg_episode_steps,
+                                           episode)
+        if not eval:
+            self.tensorboard_writer.add_scalar('defender/lr', lr, episode)
 
     @abstractmethod
     def _setup_model(self) -> None:

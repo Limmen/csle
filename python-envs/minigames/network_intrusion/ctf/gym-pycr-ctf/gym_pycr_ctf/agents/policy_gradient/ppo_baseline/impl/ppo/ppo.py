@@ -185,6 +185,8 @@ class PPO(OnPolicyAlgorithm):
         defender_clip_range = self.defender_clip_range(self._current_progress_remaining)
 
         # Optional: clip range for the value function
+        attacker_clip_range_vf = None
+        defender_clip_range_vf = None
         if self.attacker_clip_range_vf is not None:
             attacker_clip_range_vf = self.attacker_clip_range_vf(self._current_progress_remaining)
 
@@ -209,21 +211,20 @@ class PPO(OnPolicyAlgorithm):
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                 attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
                 attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
-                grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker =  \
+                grad_comp_times_attacker, weight_update_times_attacker =  \
                     self.attacker_rollout_buffer_pass(
                     attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
                     attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
-                    grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker)
+                    grad_comp_times_attacker, weight_update_times_attacker)
 
             if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
-                attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
-                attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
-                grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker = \
-                    self.attacker_rollout_buffer_pass(
-                        attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
-                        attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
-                        grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker,
-                        all_kl_divs_attacker)
+                defender_clip_range, pg_losses_defender, clip_fractions_defender, \
+                defender_clip_range_vf, value_losses_defender, entropy_losses_defender, \
+                grad_comp_times_defender, weight_update_times_defender = \
+                    self.defender_rollout_buffer_pass(
+                        defender_clip_range, pg_losses_defender, clip_fractions_defender,
+                        defender_clip_range_vf, value_losses_defender, entropy_losses_defender,
+                        grad_comp_times_defender, weight_update_times_defender)
 
 
         self._n_updates += self.n_epochs
@@ -246,8 +247,7 @@ class PPO(OnPolicyAlgorithm):
 
     def attacker_rollout_buffer_pass(self, attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
                                      attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
-                                     grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs,
-                                     all_kl_divs_attacker):
+                                     grad_comp_times_attacker, weight_update_times_attacker):
         # Do a complete pass on the attacker's rollout buffer
         for rollout_data in self.attacker_rollout_buffer.get(self.batch_size):
             if self.attacker_agent_config.performance_analysis:
@@ -321,18 +321,17 @@ class PPO(OnPolicyAlgorithm):
             if self.attacker_agent_config.performance_analysis:
                 end = time.time()
                 weight_update_times_attacker.append(end - start)
-            approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
+            #approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
 
-        all_kl_divs_attacker.append(np.mean(approx_kl_divs))
+        #all_kl_divs_attacker.append(np.mean(approx_kl_divs))
 
         return attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
                attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
-               grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs, all_kl_divs_attacker
+               grad_comp_times_attacker, weight_update_times_attacker
 
     def defender_rollout_buffer_pass(self, defender_clip_range, pg_losses_defender, clip_fractions_defender,
                                      defender_clip_range_vf, value_losses_defender, entropy_losses_defender,
-                                     grad_comp_times_defender, weight_update_times_defender, approx_kl_divs,
-                                     all_kl_divs_defender):
+                                     grad_comp_times_defender, weight_update_times_defender):
         # Do a complete pass on the defender's rollout buffer
         for rollout_data in self.defender_rollout_buffer.get(self.batch_size):
             if self.defender_agent_config.performance_analysis:
@@ -406,13 +405,10 @@ class PPO(OnPolicyAlgorithm):
             if self.defender_agent_config.performance_analysis:
                 end = time.time()
                 weight_update_times_defender.append(end - start)
-            approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
-
-        all_kl_divs_defender.append(np.mean(approx_kl_divs))
 
         return defender_clip_range, pg_losses_defender, clip_fractions_defender, \
                defender_clip_range_vf, value_losses_defender, entropy_losses_defender, \
-               grad_comp_times_defender, weight_update_times_defender, approx_kl_divs, all_kl_divs_defender
+               grad_comp_times_defender, weight_update_times_defender
 
     def train_ar(self) -> None:
         """

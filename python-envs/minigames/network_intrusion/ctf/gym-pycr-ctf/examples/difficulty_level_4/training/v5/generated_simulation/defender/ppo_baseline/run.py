@@ -41,7 +41,8 @@ def default_config() -> ClientConfig:
                                n_deterministic_eval_iter=10, attacker_opponent_baseline_type = 6
                                )
     env_name = "pycr-ctf-level-4-generated-sim-v5"
-    eval_env_name = "pycr-ctf-level-4-emulation-v5"
+    eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
+    #eval_env_name = "pycr-ctf-level-4-emulation-v5"
 
     # env_name = "pycr-ctf-level-4-generated-sim-costs-v1"
     # eval_env_name = "pycr-ctf-level-4-emulation-costs-v1"

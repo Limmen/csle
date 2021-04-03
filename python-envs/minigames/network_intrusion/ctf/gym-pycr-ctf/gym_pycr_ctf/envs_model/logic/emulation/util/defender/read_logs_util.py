@@ -93,6 +93,7 @@ class ReadLogsUtil:
         year = datetime.datetime.now().year
         successful_logins = list(map(lambda x: SuccessfulLogin.parse_from_str(" ".join(x.split()), year=year),
                                      logins))
+        successful_logins = list(filter(lambda x: x.timestamp != None, successful_logins))
         successful_logins = list(filter(lambda x: x.timestamp > login_last_ts, successful_logins))
         return len(successful_logins)
 

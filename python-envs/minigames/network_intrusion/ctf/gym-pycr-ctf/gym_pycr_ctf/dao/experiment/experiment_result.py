@@ -9,187 +9,258 @@ class ExperimentResult:
     DTO with experiment result from an experiment in the pycr-ctf-envs
     """
 
-    def __init__(self, avg_episode_rewards: List[float] = None,
-                 avg_episode_rewards_a: List[float] = None,
+    def __init__(self, attacker_avg_episode_rewards: List[float] = None,
+                 defender_avg_episode_rewards: List[float] = None,
                  avg_episode_steps: List[int] = None, epsilon_values: List[float] = None,
-                 cumulative_reward: List[int] = None, avg_episode_loss: List[float] = None,
-                 lr_list : List[float] = None, avg_episode_flags : List[int] = None,
+                 attacker_cumulative_reward: List[int] = None,
+                 defender_cumulative_reward: List[int] = None,
+                 attacker_avg_episode_loss: List[float] = None,
+                 defender_avg_episode_loss: List[float] = None,
+                 lr_list : List[float] = None,
+                 avg_episode_flags : List[int] = None,
                  avg_episode_flags_percentage: List[float] = None,
-                 eval_avg_episode_rewards : List[float] = None,
+                 attacker_eval_avg_episode_rewards : List[float] = None,
+                 defender_eval_avg_episode_rewards: List[float] = None,
                  eval_avg_episode_steps: List[float] = None,
                  eval_avg_episode_flags: List[int] = None,
                  eval_avg_episode_flags_percentage: List[float] = None,
-                 eval_2_avg_episode_rewards: List[float] = None,
+                 attacker_eval_2_avg_episode_rewards: List[float] = None,
+                 defender_eval_2_avg_episode_rewards: List[float] = None,
                  eval_2_avg_episode_steps: List[float] = None,
                  eval_2_avg_episode_flags: List[int] = None,
                  eval_2_avg_episode_flags_percentage: List[float] = None,
-                 train_env_specific_rewards: dict = None,
+                 attacker_train_env_specific_rewards: dict = None,
+                 defender_train_env_specific_rewards: dict = None,
                  train_env_specific_steps: dict = None,
                  train_env_specific_flags: dict = None,
                  train_env_specific_flags_percentage: dict = None,
-                 train_env_specific_regrets: dict = None,
-                 train_env_specific_opt_fracs: dict = None,
-                 eval_env_specific_rewards: dict = None,
+                 attacker_train_env_specific_regrets: dict = None,
+                 defender_train_env_specific_regrets: dict = None,
+                 attacker_train_env_specific_opt_fracs: dict = None,
+                 defender_train_env_specific_opt_fracs: dict = None,
+                 attacker_eval_env_specific_rewards: dict = None,
+                 defender_eval_env_specific_rewards: dict = None,
                  eval_env_specific_steps: dict = None,
                  eval_env_specific_flags: dict = None,
                  eval_env_specific_flags_percentage: dict = None,
-                 eval_env_specific_regrets: dict = None,
-                 eval_env_specific_opt_fracs: dict = None,
-                 eval_2_env_specific_rewards: dict = None,
+                 attacker_eval_env_specific_regrets: dict = None,
+                 defender_eval_env_specific_regrets: dict = None,
+                 attacker_eval_env_specific_opt_fracs: dict = None,
+                 defender_eval_env_specific_opt_fracs: dict = None,
+                 attacker_eval_2_env_specific_rewards: dict = None,
+                 defender_eval_2_env_specific_rewards: dict = None,
                  eval_2_env_specific_steps: dict = None,
                  eval_2_env_specific_flags: dict = None,
                  eval_2_env_specific_flags_percentage: dict = None,
-                 eval_2_env_specific_regrets: dict = None,
-                 eval_2_env_specific_opt_fracs: dict = None,
+                 attacker_eval_2_env_specific_regrets: dict = None,
+                 defender_eval_2_env_specific_regrets: dict = None,
+                 attacker_eval_2_env_specific_opt_fracs: dict = None,
+                 defender_eval_2_env_specific_opt_fracs: dict = None,
                  rollout_times : List = None, env_response_times : List = None,
                  action_pred_times : List = None, grad_comp_times : List = None,
                  weight_update_times : List = None,
-                 avg_regret: List = None, avg_opt_frac : List = None,
-                 eval_avg_regret: List = None, eval_avg_opt_frac: List = None,
-                 eval_2_avg_regret: List = None, eval_2_avg_opt_frac: List = None
+                 attacker_avg_regret: List = None, defender_avg_regret: List = None,
+                 attacker_avg_opt_frac : List = None, defender_avg_opt_frac : List = None,
+                 attacker_eval_avg_regret: List = None, defender_eval_avg_regret: List = None,
+                 attacker_eval_avg_opt_frac: List = None, defender_eval_avg_opt_frac: List = None,
+                 attacker_eval_2_avg_regret: List = None, defender_eval_2_avg_regret: List = None,
+                 attacker_eval_2_avg_opt_frac: List = None, defender_eval_2_avg_opt_frac: List = None
                  ):
         """
         Constructor, initializes the DTO
 
-        :param avg_episode_rewards: list of episode rewards for attacker
+        :param attacker_avg_episode_rewards: list of episode rewards for attacker
+        :param defender_avg_episode_rewards: list of episode rewards for defender
         :param avg_episode_steps: list of episode steps
         :param epsilon_values: list of epsilon values
-        :param cumulative_reward: list of attacker cumulative rewards
-        :param avg_episode_loss: average loss for attacker
+        :param attacker_cumulative_reward: list of attacker cumulative rewards
+        :param defender_cumulative_reward: list of defender cumulative rewards
+        :param attacker_avg_episode_loss: average loss for attacker
+        :param defender_avg_episode_loss: average loss for defnder
         :param lr_list: learning rates
         :param avg_episode_flags: avg number of flags catched per episode
         :param avg_episode_flags_percentage: avg % of flags catched per episode
-        :param eval_avg_episode_rewards: list of episode rewards for eval deterministic
+        :param attacker_eval_avg_episode_rewards: list of episode rewards for eval deterministic attacker
+        :param defender_eval_avg_episode_rewards: list of episode rewards for eval deterministic defender
         :param eval_avg_episode_steps: list of episode steps for eval deterministic
         :param eval_avg_episode_flags: list of episode flags for eval deterministic
         :param eval_avg_episode_flags_percentage: list of episode flags for eval deterministic
-        :param eval_2_avg_episode_rewards: list of episode rewards for second eval env deterministic
+        :param attacker_eval_2_avg_episode_rewards: list of episode rewards for second eval env deterministic attacker
+        :param defender_eval_2_avg_episode_rewards: list of episode rewards for second eval env deterministic defender
         :param eval_2_avg_episode_steps: list of episode steps for second eval enveval deterministic
         :param eval_2_avg_episode_flags: list of episode flags for second eval enveval deterministic
         :param eval_2_avg_episode_flags_percentage: list of episode flags for second eval env eval deterministic
-        :param train_env_specific_rewards: rewards data for specific train env
+        :param attacker_train_env_specific_rewards: rewards data for specific train env attacker
+        :param defender_train_env_specific_rewards: rewards data for specific train env defender
         :param train_env_specific_flags: flags data for specific train env
         :param train_env_specific_steps: steps data for specific train env
         :param train_env_specific_flags_percentage: flags percentage for specific train env
-        :param eval_env_specific_rewards: eval reward data for specific train env deterministic
+        :param attacker_eval_env_specific_rewards: eval reward data for specific train env deterministic attacker
+        :param defender_eval_env_specific_rewards: eval reward data for specific train env deterministic defender
         :param eval_env_specific_flags: eval flags data for specific train env deterministic
         :param eval_env_specific_flags_percentage: eval flags percentage data for specific train env deterministic
         :param eval_env_specific_steps: eval steps data for specific train env deterministic
-        :param eval_2_env_specific_rewards: eval reward data for specific eval env deterministic
+        :param attacker_eval_2_env_specific_rewards: eval reward data for specific eval env deterministic attacker
+        :param defender_eval_2_env_specific_rewards: eval reward data for specific eval env deterministic defender
         :param eval_2_env_specific_flags: eval flags data for specific eval env deterministic
         :param eval_2_env_specific_flags_percentage: eval flags percentage dat2a for specific eval env deterministic
         :param eval_2_env_specific_steps: eval steps data for specific eval env env deterministic
         """
-        self.avg_episode_rewards = avg_episode_rewards
-        self.avg_episode_rewards_a = avg_episode_rewards_a
+        self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
+        self.defender_avg_episode_rewards = defender_avg_episode_rewards
         self.avg_episode_steps = avg_episode_steps
         self.epsilon_values = epsilon_values
-        self.cumulative_reward = cumulative_reward
-        self.avg_episode_loss = avg_episode_loss
+        self.attacker_cumulative_reward = attacker_cumulative_reward
+        self.defender_cumulative_reward = defender_cumulative_reward
+        self.attacker_avg_episode_loss = attacker_avg_episode_loss
+        self.defender_avg_episode_loss = defender_avg_episode_loss
         self.lr_list = lr_list
         self.avg_episode_flags = avg_episode_flags
         self.avg_episode_flags_percentage = avg_episode_flags_percentage
-        self.eval_avg_episode_rewards = eval_avg_episode_rewards
+        self.attacker_eval_avg_episode_rewards = attacker_eval_avg_episode_rewards
+        self.defender_eval_avg_episode_rewards = defender_eval_avg_episode_rewards
         self.eval_avg_episode_steps = eval_avg_episode_steps
         self.eval_avg_episode_flags = eval_avg_episode_flags
         self.eval_avg_episode_flags_percentage = eval_avg_episode_flags_percentage
-        self.eval_2_avg_episode_rewards = eval_2_avg_episode_rewards
+        self.attacker_eval_2_avg_episode_rewards = attacker_eval_2_avg_episode_rewards
+        self.defender_eval_2_avg_episode_rewards = defender_eval_2_avg_episode_rewards
         self.eval_2_avg_episode_steps = eval_2_avg_episode_steps
         self.eval_2_avg_episode_flags = eval_2_avg_episode_flags
         self.eval_2_avg_episode_flags_percentage = eval_2_avg_episode_flags_percentage
-        self.train_env_specific_rewards = train_env_specific_rewards
+        self.attacker_train_env_specific_rewards = attacker_train_env_specific_rewards
+        self.defender_train_env_specific_rewards = defender_train_env_specific_rewards
         self.train_env_specific_flags = train_env_specific_flags
         self.train_env_specific_steps = train_env_specific_steps
         self.train_env_specific_flags_percentage = train_env_specific_flags_percentage
-        self.train_env_specific_regrets = train_env_specific_regrets
-        self.train_env_specific_opt_fracs = train_env_specific_opt_fracs
-        self.eval_env_specific_rewards = eval_env_specific_rewards
+        self.attacker_train_env_specific_regrets = attacker_train_env_specific_regrets
+        self.defender_train_env_specific_regrets = defender_train_env_specific_regrets
+        self.attacker_train_env_specific_opt_fracs = attacker_train_env_specific_opt_fracs
+        self.defender_train_env_specific_opt_fracs = defender_train_env_specific_opt_fracs
+        self.attacker_eval_env_specific_rewards = attacker_eval_env_specific_rewards
+        self.defender_eval_env_specific_rewards = defender_eval_env_specific_rewards
         self.eval_env_specific_flags = eval_env_specific_flags
         self.eval_env_specific_steps = eval_env_specific_steps
         self.eval_env_specific_flags_percentage = eval_env_specific_flags_percentage
-        self.eval_env_specific_regrets = eval_env_specific_regrets
-        self.eval_env_specific_opt_fracs = eval_env_specific_opt_fracs
-        self.eval_2_env_specific_rewards = eval_2_env_specific_rewards
+        self.attacker_eval_env_specific_regrets = attacker_eval_env_specific_regrets
+        self.defender_eval_env_specific_regrets = defender_eval_env_specific_regrets
+        self.attacker_eval_env_specific_opt_fracs = attacker_eval_env_specific_opt_fracs
+        self.defender_eval_env_specific_opt_fracs = defender_eval_env_specific_opt_fracs
+        self.attacker_eval_2_env_specific_rewards = attacker_eval_2_env_specific_rewards
+        self.defender_eval_2_env_specific_rewards = defender_eval_2_env_specific_rewards
         self.eval_2_env_specific_flags = eval_2_env_specific_flags
         self.eval_2_env_specific_steps = eval_2_env_specific_steps
         self.eval_2_env_specific_flags_percentage = eval_2_env_specific_flags_percentage
-        self.eval_2_env_specific_regrets = eval_2_env_specific_regrets
-        self.eval_2_env_specific_opt_fracs = eval_2_env_specific_opt_fracs
+        self.attacker_eval_2_env_specific_regrets = attacker_eval_2_env_specific_regrets
+        self.defender_eval_2_env_specific_regrets = defender_eval_2_env_specific_regrets
+        self.attacker_eval_2_env_specific_opt_fracs = attacker_eval_2_env_specific_opt_fracs
+        self.defender_eval_2_env_specific_opt_fracs = defender_eval_2_env_specific_opt_fracs
         self.rollout_times = rollout_times
         self.env_response_times = env_response_times
         self.action_pred_times = action_pred_times
         self.grad_comp_times = grad_comp_times
         self.weight_update_times = weight_update_times
-        self.avg_opt_frac = avg_opt_frac
-        self.avg_regret = avg_regret
-        self.eval_avg_regret = eval_avg_regret
-        self.eval_avg_opt_frac = eval_avg_opt_frac
-        self.eval_2_avg_regret = eval_2_avg_regret
-        self.eval_2_avg_opt_frac = eval_2_avg_opt_frac
+        self.attacker_avg_opt_frac = attacker_avg_opt_frac
+        self.defender_avg_opt_frac = defender_avg_opt_frac
+        self.attacker_avg_regret = attacker_avg_regret
+        self.defender_avg_regret = defender_avg_regret
+        self.attacker_eval_avg_regret = attacker_eval_avg_regret
+        self.defender_eval_avg_regret = defender_eval_avg_regret
+        self.attacker_eval_avg_opt_frac = attacker_eval_avg_opt_frac
+        self.defender_eval_avg_opt_frac = defender_eval_avg_opt_frac
+        self.attacker_eval_2_avg_regret = attacker_eval_2_avg_regret
+        self.defender_eval_2_avg_regret = defender_eval_2_avg_regret
+        self.attacker_eval_2_avg_opt_frac = attacker_eval_2_avg_opt_frac
+        self.defender_eval_2_avg_opt_frac = defender_eval_2_avg_opt_frac
         if avg_episode_steps is None:
             self.avg_episode_steps = []
-        if avg_episode_rewards is None:
-            self.avg_episode_rewards = []
-        if avg_episode_rewards_a is None:
-            self.avg_episode_rewards_a = []
+        if attacker_avg_episode_rewards is None:
+            self.attacker_avg_episode_rewards = []
+        if defender_avg_episode_rewards is None:
+            self.defender_avg_episode_rewards = []
         if epsilon_values is None:
             self.epsilon_values = []
-        if cumulative_reward is None:
-            self.cumulative_reward = []
-        if avg_episode_loss is None:
-            self.avg_episode_loss = []
+        if attacker_cumulative_reward is None:
+            self.attacker_cumulative_reward = []
+        if defender_cumulative_reward is None:
+            self.defender_cumulative_reward = []
+        if attacker_avg_episode_loss is None:
+            self.attacker_avg_episode_loss = []
+        if defender_avg_episode_loss is None:
+            self.defender_avg_episode_loss = []
         if lr_list is None:
             self.lr_list = []
         if avg_episode_flags is None:
             self.avg_episode_flags = []
         if avg_episode_flags_percentage is None:
             self.avg_episode_flags_percentage = []
-        if eval_avg_episode_rewards is None:
-            self.eval_avg_episode_rewards = []
+        if attacker_eval_avg_episode_rewards is None:
+            self.attacker_eval_avg_episode_rewards = []
+        if defender_eval_avg_episode_rewards is None:
+            self.defender_eval_avg_episode_rewards = []
         if eval_avg_episode_steps is None:
             self.eval_avg_episode_steps = []
         if eval_avg_episode_flags is None:
             self.eval_avg_episode_flags = []
         if eval_avg_episode_flags_percentage is None:
             self.eval_avg_episode_flags_percentage = []
-        if eval_2_avg_episode_rewards is None:
-            self.eval_2_avg_episode_rewards = []
+        if attacker_eval_2_avg_episode_rewards is None:
+            self.attacker_eval_2_avg_episode_rewards = []
+        if defender_eval_2_avg_episode_rewards is None:
+            self.defender_eval_2_avg_episode_rewards = []
         if eval_2_avg_episode_steps is None:
             self.eval_2_avg_episode_steps = []
         if eval_2_avg_episode_flags is None:
             self.eval_2_avg_episode_flags = []
         if eval_2_avg_episode_flags_percentage is None:
             self.eval_2_avg_episode_flags_percentage = []
-        if train_env_specific_rewards is None:
-            self.train_env_specific_rewards = {}
-        if train_env_specific_regrets is None:
-            self.train_env_specific_regrets = {}
-        if train_env_specific_opt_fracs is None:
-            self.train_env_specific_opt_fracs = {}
+        if attacker_train_env_specific_rewards is None:
+            self.attacker_train_env_specific_rewards = {}
+        if defender_train_env_specific_rewards is None:
+            self.defender_train_env_specific_rewards = {}
+        if attacker_train_env_specific_regrets is None:
+            self.attacker_train_env_specific_regrets = {}
+        if defender_train_env_specific_regrets is None:
+            self.defender_train_env_specific_regrets = {}
+        if attacker_train_env_specific_opt_fracs is None:
+            self.attacker_train_env_specific_opt_fracs = {}
+        if defender_train_env_specific_opt_fracs is None:
+            self.defender_train_env_specific_opt_fracs = {}
         if train_env_specific_steps is None:
             self.train_env_specific_steps = {}
         if train_env_specific_flags is None:
             self.train_env_specific_flags = {}
         if train_env_specific_flags_percentage is None:
             self.train_env_specific_flags_percentage = {}
-        if eval_env_specific_rewards is None:
-            self.eval_env_specific_rewards = {}
-        if eval_env_specific_regrets is None:
-            self.eval_env_specific_regrets = {}
-        if eval_env_specific_opt_fracs is None:
-            self.eval_env_specific_opt_fracs = {}
+        if attacker_eval_env_specific_rewards is None:
+            self.attacker_eval_env_specific_rewards = {}
+        if defender_eval_env_specific_rewards is None:
+            self.defender_eval_env_specific_rewards = {}
+        if attacker_eval_env_specific_regrets is None:
+            self.attacker_eval_env_specific_regrets = {}
+        if defender_eval_env_specific_regrets is None:
+            self.defender_eval_env_specific_regrets = {}
+        if attacker_eval_env_specific_opt_fracs is None:
+            self.attacker_eval_env_specific_opt_fracs = {}
+        if defender_eval_env_specific_opt_fracs is None:
+            self.defender_eval_env_specific_opt_fracs = {}
         if eval_env_specific_steps is None:
             self.eval_env_specific_steps = {}
         if eval_env_specific_flags is None:
             self.eval_env_specific_flags = {}
         if eval_env_specific_flags_percentage is None:
             self.eval_env_specific_flags_percentage = {}
-        if eval_2_env_specific_rewards is None:
-            self.eval_2_env_specific_rewards = {}
-        if eval_2_env_specific_regrets is None:
-            self.eval_2_env_specific_regrets = {}
-        if eval_2_env_specific_opt_fracs is None:
-            self.eval_2_env_specific_opt_fracs = {}
+        if attacker_eval_2_env_specific_rewards is None:
+            self.attacker_eval_2_env_specific_rewards = {}
+        if defender_eval_2_env_specific_rewards is None:
+            self.defender_eval_2_env_specific_rewards = {}
+        if attacker_eval_2_env_specific_regrets is None:
+            self.attacker_eval_2_env_specific_regrets = {}
+        if defender_eval_2_env_specific_regrets is None:
+            self.defender_eval_2_env_specific_regrets = {}
+        if attacker_eval_2_env_specific_opt_fracs is None:
+            self.attacker_eval_2_env_specific_opt_fracs = {}
+        if defender_eval_2_env_specific_opt_fracs is None:
+            self.defender_eval_2_env_specific_opt_fracs = {}
         if eval_2_env_specific_steps is None:
             self.eval_2_env_specific_steps = {}
         if eval_2_env_specific_flags is None:
@@ -206,18 +277,30 @@ class ExperimentResult:
             self.grad_comp_times = []
         if weight_update_times is None:
             self.weight_update_times = []
-        if avg_regret is None:
-            self.avg_regret = []
-        if avg_opt_frac is None:
-            self.avg_opt_frac = []
-        if eval_avg_regret is None:
-            self.eval_avg_regret = []
-        if eval_avg_opt_frac is None:
-            self.eval_avg_opt_frac = []
-        if eval_2_avg_regret is None:
-            self.eval_2_avg_regret = []
-        if eval_2_avg_opt_frac is None:
-            self.eval_2_avg_opt_frac = []
+        if attacker_avg_regret is None:
+            self.attacker_avg_regret = []
+        if defender_avg_regret is None:
+            self.defender_avg_regret = []
+        if attacker_avg_opt_frac is None:
+            self.attacker_avg_opt_frac = []
+        if defender_avg_opt_frac is None:
+            self.defender_avg_opt_frac = []
+        if attacker_eval_avg_regret is None:
+            self.attacker_eval_avg_regret = []
+        if defender_eval_avg_regret is None:
+            self.defender_eval_avg_regret = []
+        if attacker_eval_avg_opt_frac is None:
+            self.attacker_eval_avg_opt_frac = []
+        if defender_eval_avg_opt_frac is None:
+            self.defender_eval_avg_opt_frac = []
+        if attacker_eval_2_avg_regret is None:
+            self.attacker_eval_2_avg_regret = []
+        if defender_eval_2_avg_regret is None:
+            self.defender_eval_2_avg_regret = []
+        if attacker_eval_2_avg_opt_frac is None:
+            self.attacker_eval_2_avg_opt_frac = []
+        if defender_eval_2_avg_opt_frac is None:
+            self.defender_eval_2_avg_opt_frac = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -226,24 +309,43 @@ class ExperimentResult:
         :param file_path: path to save the csv file
         :return: None
         """
-        metrics = [self.avg_episode_rewards, self.avg_episode_rewards_a, self.avg_episode_steps, self.epsilon_values,
-                   self.cumulative_reward, self.avg_episode_loss, self.lr_list, self.avg_episode_flags,
-                   self.avg_episode_flags_percentage, self.eval_avg_episode_rewards, self.eval_avg_episode_steps,
+        metrics = [self.attacker_avg_episode_rewards, self.defender_avg_episode_rewards, self.avg_episode_steps,
+                   self.epsilon_values,
+                   self.attacker_cumulative_reward, self.defender_cumulative_reward,
+                   self.attacker_avg_episode_loss, self.defender_avg_episode_loss,
+                   self.lr_list, self.avg_episode_flags,
+                   self.avg_episode_flags_percentage, self.attacker_eval_avg_episode_rewards,
+                   self.defender_eval_avg_episode_rewards,
+                   self.eval_avg_episode_steps,
                    self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage,
-                   self.eval_2_avg_episode_rewards, self.eval_2_avg_episode_steps,
+                   self.attacker_eval_2_avg_episode_rewards, self.defender_eval_2_avg_episode_rewards,
+                   self.eval_2_avg_episode_steps,
                    self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage, self.rollout_times,
                    self.env_response_times, self.action_pred_times, self.grad_comp_times, self.weight_update_times,
-                   self.avg_regret, self.avg_opt_frac, self.eval_avg_regret, self.eval_avg_opt_frac,
-                   self.eval_2_avg_regret, self.eval_2_avg_opt_frac
+                   self.attacker_avg_regret, self.defender_avg_regret,
+                   self.attacker_avg_opt_frac, self.defender_avg_opt_frac,
+                   self.attacker_eval_avg_regret, self.defender_eval_avg_regret,
+                   self.attacker_eval_avg_opt_frac, self.defender_eval_avg_opt_frac,
+                   self.attacker_eval_2_avg_regret, self.defender_eval_2_avg_regret,
+                   self.attacker_eval_2_avg_opt_frac, self.defender_eval_2_avg_opt_frac
                    ]
-        metric_labels = ["avg_episode_rewards", "avg_episode_rewards_a", "avg_episode_steps",
-                         "epsilon_values", "cumulative_reward", "avg_episode_loss",
-                         "lr_list", "avg_episode_flags", "avg_episode_flags_percentage", "eval_avg_episode_rewards",
+        metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
+                         "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
+                         "attacker_avg_episode_loss",
+                         "defender_avg_episode_loss",
+                         "lr_list", "avg_episode_flags", "avg_episode_flags_percentage",
+                         "attacker_eval_avg_episode_rewards", "defender_eval_avg_episode_rewards",
                          "eval_avg_episode_steps", "eval_avg_episode_flags", "eval_avg_episode_flags_percentage",
-                         "eval_2_avg_episode_rewards", "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
-                         "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times", "action_pred_times",
-                         "grad_comp_times", "weight_update_times", "avg_regret", "avg_opt_frac", "eval_avg_regret",
-                         "eval_avg_opt_frac", "eval_2_avg_regret", "eval_2_avg_opt_frac"
+                         "attacker_eval_2_avg_episode_rewards", "defender_eval_2_avg_episode_rewards",
+                         "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
+                         "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times",
+                         "action_pred_times",
+                         "grad_comp_times", "weight_update_times", "attacker_avg_regret", "defender_avg_regret" 
+                         "attacker_avg_opt_frac", "defender_avg_opt_frac",
+                         "attacker_eval_avg_regret", "defender_eval_avg_regret",
+                         "attacker_eval_avg_opt_frac", "defender_eval_avg_opt_frac" 
+                         "attacker_eval_2_avg_regret", "defender_eval_2_avg_regret" 
+                         "attacker_eval_2_avg_opt_frac", "defender_eval_2_avg_opt_frac"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
@@ -251,18 +353,30 @@ class ExperimentResult:
             if len(metrics[i]) > 0:
                 filtered_metrics.append(metrics[i])
                 filtered_metric_labels.append(metric_labels[i])
-        for key in self.train_env_specific_rewards.keys():
-            if len(self.train_env_specific_rewards[key]) > 0:
-                filtered_metrics.append(self.train_env_specific_rewards[key])
-                filtered_metric_labels.append(str(key) + "_" + "avg_episode_rewards")
-        for key in self.train_env_specific_regrets.keys():
-            if len(self.train_env_specific_regrets[key]) > 0:
-                filtered_metrics.append(self.train_env_specific_regrets[key])
-                filtered_metric_labels.append(str(key) + "_" + "avg_episode_regrets")
-        for key in self.train_env_specific_opt_fracs.keys():
-            if len(self.train_env_specific_opt_fracs[key]) > 0:
-                filtered_metrics.append(self.train_env_specific_opt_fracs[key])
-                filtered_metric_labels.append(str(key) + "_" + "avg_episode_opt_fracs")
+        for key in self.attacker_train_env_specific_rewards.keys():
+            if len(self.attacker_train_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.attacker_train_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_avg_episode_rewards")
+        for key in self.defender_train_env_specific_rewards.keys():
+            if len(self.defender_train_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.defender_train_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_avg_episode_rewards")
+        for key in self.attacker_train_env_specific_regrets.keys():
+            if len(self.attacker_train_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.attacker_train_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_avg_episode_regrets")
+        for key in self.defender_train_env_specific_regrets.keys():
+            if len(self.defender_train_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.defender_train_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_avg_episode_regrets")
+        for key in self.attacker_train_env_specific_opt_fracs.keys():
+            if len(self.attacker_train_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.attacker_train_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_avg_episode_opt_fracs")
+        for key in self.defender_train_env_specific_opt_fracs.keys():
+            if len(self.defender_train_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.defender_train_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_avg_episode_opt_fracs")
         for key in self.train_env_specific_steps.keys():
             if len(self.train_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.train_env_specific_steps[key])
@@ -275,18 +389,30 @@ class ExperimentResult:
             if len(self.train_env_specific_flags_percentage[key]) > 0:
                 filtered_metrics.append(self.train_env_specific_flags_percentage[key])
                 filtered_metric_labels.append(str(key) + "_" + "avg_episode_flags_percentage")
-        for key in self.eval_env_specific_rewards.keys():
-            if len(self.eval_env_specific_rewards[key]) > 0:
-                filtered_metrics.append(self.eval_env_specific_rewards[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_rewards")
-        for key in self.eval_env_specific_regrets.keys():
-            if len(self.eval_env_specific_regrets[key]) > 0:
-                filtered_metrics.append(self.eval_env_specific_regrets[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_regrets")
-        for key in self.eval_env_specific_opt_fracs.keys():
-            if len(self.eval_env_specific_opt_fracs[key]) > 0:
-                filtered_metrics.append(self.eval_env_specific_opt_fracs[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_opt_fracs")
+        for key in self.attacker_eval_env_specific_rewards.keys():
+            if len(self.attacker_eval_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_avg_episode_rewards")
+        for key in self.defender_eval_env_specific_rewards.keys():
+            if len(self.defender_eval_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.defender_eval_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_avg_episode_rewards")
+        for key in self.attacker_eval_env_specific_regrets.keys():
+            if len(self.attacker_eval_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_avg_episode_regrets")
+        for key in self.defender_eval_env_specific_regrets.keys():
+            if len(self.defender_eval_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.defender_eval_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_avg_episode_regrets")
+        for key in self.attacker_eval_env_specific_opt_fracs.keys():
+            if len(self.attacker_eval_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_avg_episode_opt_fracs")
+        for key in self.defender_eval_env_specific_opt_fracs.keys():
+            if len(self.defender_eval_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.defender_eval_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_avg_episode_opt_fracs")
         for key in self.eval_env_specific_steps.keys():
             if len(self.eval_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.eval_env_specific_steps[key])
@@ -299,18 +425,30 @@ class ExperimentResult:
             if len(self.eval_env_specific_flags_percentage[key]) > 0:
                 filtered_metrics.append(self.eval_env_specific_flags_percentage[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_avg_episode_flags_percentage")
-        for key in self.eval_2_env_specific_rewards.keys():
-            if len(self.eval_2_env_specific_rewards[key]) > 0:
-                filtered_metrics.append(self.eval_2_env_specific_rewards[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_rewards")
-        for key in self.eval_2_env_specific_regrets.keys():
-            if len(self.eval_2_env_specific_regrets[key]) > 0:
-                filtered_metrics.append(self.eval_2_env_specific_regrets[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_regrets")
-        for key in self.eval_2_env_specific_opt_fracs.keys():
-            if len(self.eval_2_env_specific_opt_fracs[key]) > 0:
-                filtered_metrics.append(self.eval_2_env_specific_opt_fracs[key])
-                filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_opt_fracs")
+        for key in self.attacker_eval_2_env_specific_rewards.keys():
+            if len(self.attacker_eval_2_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_2_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_2_avg_episode_rewards")
+        for key in self.defender_eval_2_env_specific_rewards.keys():
+            if len(self.defender_eval_2_env_specific_rewards[key]) > 0:
+                filtered_metrics.append(self.defender_eval_2_env_specific_rewards[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_2_avg_episode_rewards")
+        for key in self.attacker_eval_2_env_specific_regrets.keys():
+            if len(self.attacker_eval_2_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_2_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_2_avg_episode_regrets")
+        for key in self.defender_eval_2_env_specific_regrets.keys():
+            if len(self.defender_eval_2_env_specific_regrets[key]) > 0:
+                filtered_metrics.append(self.defender_eval_2_env_specific_regrets[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_2_avg_episode_regrets")
+        for key in self.attacker_eval_2_env_specific_opt_fracs.keys():
+            if len(self.attacker_eval_2_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.attacker_eval_2_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "attacker_eval_2_avg_episode_opt_fracs")
+        for key in self.defender_eval_2_env_specific_opt_fracs.keys():
+            if len(self.defender_eval_2_env_specific_opt_fracs[key]) > 0:
+                filtered_metrics.append(self.defender_eval_2_env_specific_opt_fracs[key])
+                filtered_metric_labels.append(str(key) + "_" + "defender_eval_2_avg_episode_opt_fracs")
         for key in self.eval_2_env_specific_steps.keys():
             if len(self.eval_2_env_specific_steps[key]) > 0:
                 filtered_metrics.append(self.eval_2_env_specific_steps[key])

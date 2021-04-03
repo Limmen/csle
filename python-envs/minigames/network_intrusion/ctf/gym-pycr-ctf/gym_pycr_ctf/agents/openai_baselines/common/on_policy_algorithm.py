@@ -227,6 +227,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         assert self._last_obs is not None, "No previous observation was provided"
         n_steps = 0
         attacker_rollout_buffer.reset()
+        defender_rollout_buffer.reset()
         # Sample new weights for the state dependent exploration
         if self.use_sde:
             self.attacker_policy.reset_noise(env.num_envs)
@@ -378,6 +379,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_flags = []
         episode_steps = []
         episode_loss_attacker = []
+        episode_loss_defender = []
         episode_flags_percentage = []
         attacker_train_episode_rewards_env_specific = {}
         defender_train_episode_rewards_env_specific = {}
@@ -514,41 +516,66 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
                     n_d = self.env.envs[0].attacker_agent_state.num_detections
-                self.log_metrics_attacker(iteration=self.iteration, result=self.train_result,
-                                 episode_rewards=attacker_episode_rewards,
-                                 episode_avg_loss=episode_loss_attacker,
-                                 eval=False, lr=self.attacker_lr_schedule(self.num_timesteps),
-                                 total_num_episodes=self.num_episodes_total,
-                                 episode_steps=episode_steps,
-                                 episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
-                                 progress_left = self._current_progress_remaining,
-                                 n_af = n_af,
-                                 n_d = n_d,
-                                 eval_episode_rewards = attacker_episode_rewards_1, eval_episode_steps=episode_steps_1,
-                                 eval_episode_flags=episode_flags_1,
-                                 eval_episode_flags_percentage=episode_flags_percentage_1,
-                                 eval_2_episode_rewards=eval_attacker_episode_rewards,
-                                 eval_2_episode_steps=eval_episode_steps,
-                                 eval_2_episode_flags=eval_episode_flags,
-                                 eval_2_episode_flags_percentage=eval_episode_flags_percentage,
-                                 train_env_specific_rewards=attacker_train_episode_rewards_env_specific,
-                                 train_env_specific_steps=train_episode_steps_env_specific,
-                                 train_env_specific_flags=train_episode_flags_env_specific,
-                                 train_env_specific_flags_percentage=train_episode_flags_percentage_env_specific,
-                                 eval_env_specific_rewards = attacker_eval_episode_rewards_env_specific,
-                                 eval_env_specific_steps=eval_episode_steps_env_specific,
-                                 eval_env_specific_flags=eval_episode_flags_env_specific,
-                                 eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific,
-                                 eval_2_env_specific_rewards = attacker_eval_2_episode_rewards_env_specific,
-                                 eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
-                                 eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
-                                 eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific,
-                                 rollout_times=rollout_times, env_response_times=env_response_times,
-                                 action_pred_times=action_pred_times, grad_comp_times=grad_comp_times_attacker,
-                                 weight_update_times=weight_update_times_attacker
-                                 )
+                if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+                    self.log_metrics_attacker(iteration=self.iteration, result=self.train_result,
+                                     episode_rewards=attacker_episode_rewards,
+                                     episode_avg_loss=episode_loss_attacker,
+                                     eval=False, lr=self.attacker_lr_schedule(self.num_timesteps),
+                                     total_num_episodes=self.num_episodes_total,
+                                     episode_steps=episode_steps,
+                                     episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
+                                     progress_left = self._current_progress_remaining,
+                                     n_af = n_af,
+                                     n_d = n_d,
+                                     eval_episode_rewards = attacker_episode_rewards_1, eval_episode_steps=episode_steps_1,
+                                     eval_episode_flags=episode_flags_1,
+                                     eval_episode_flags_percentage=episode_flags_percentage_1,
+                                     eval_2_episode_rewards=eval_attacker_episode_rewards,
+                                     eval_2_episode_steps=eval_episode_steps,
+                                     eval_2_episode_flags=eval_episode_flags,
+                                     eval_2_episode_flags_percentage=eval_episode_flags_percentage,
+                                     train_env_specific_rewards=attacker_train_episode_rewards_env_specific,
+                                     train_env_specific_steps=train_episode_steps_env_specific,
+                                     train_env_specific_flags=train_episode_flags_env_specific,
+                                     train_env_specific_flags_percentage=train_episode_flags_percentage_env_specific,
+                                     eval_env_specific_rewards = attacker_eval_episode_rewards_env_specific,
+                                     eval_env_specific_steps=eval_episode_steps_env_specific,
+                                     eval_env_specific_flags=eval_episode_flags_env_specific,
+                                     eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific,
+                                     eval_2_env_specific_rewards = attacker_eval_2_episode_rewards_env_specific,
+                                     eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
+                                     eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
+                                     eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific,
+                                     rollout_times=rollout_times, env_response_times=env_response_times,
+                                     action_pred_times=action_pred_times, grad_comp_times=grad_comp_times_attacker,
+                                     weight_update_times=weight_update_times_attacker
+                                     )
+                if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+                    self.log_metrics_defender(iteration=self.iteration, result=self.train_result,
+                                              episode_rewards=defender_episode_rewards,
+                                              episode_avg_loss=episode_loss_defender,
+                                              eval=False, lr=self.defender_lr_schedule(self.num_timesteps),
+                                              total_num_episodes=self.num_episodes_total,
+                                              episode_steps=episode_steps,
+                                              progress_left=self._current_progress_remaining,
+                                              eval_episode_rewards=defender_episode_rewards_1,
+                                              eval_episode_steps=episode_steps_1,
+                                              eval_2_episode_rewards=eval_defender_episode_rewards,
+                                              eval_2_episode_steps=eval_episode_steps,
+                                              train_env_specific_rewards=defender_train_episode_rewards_env_specific,
+                                              train_env_specific_steps=train_episode_steps_env_specific,
+                                              eval_env_specific_rewards=defender_eval_episode_rewards_env_specific,
+                                              eval_env_specific_steps=eval_episode_steps_env_specific,
+                                              eval_2_env_specific_rewards=defender_eval_2_episode_rewards_env_specific,
+                                              eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
+                                              rollout_times=rollout_times, env_response_times=env_response_times,
+                                              action_pred_times=action_pred_times,
+                                              grad_comp_times=grad_comp_times_attacker,
+                                              weight_update_times=weight_update_times_attacker
+                                              )
 
                 attacker_episode_rewards = []
+                defender_episode_rewards = []
                 episode_loss_attacker = []
                 episode_loss_defender = []
                 episode_flags = []
@@ -558,8 +585,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 action_pred_times = []
                 grad_comp_times_attacker = []
                 weight_update_times_attacker = []
+                grad_comp_times_defender = []
+                weight_update_times_defender = []
                 episode_flags_percentage = []
                 attacker_train_episode_rewards_env_specific = {}
+                defender_train_episode_rewards_env_specific = {}
                 train_episode_steps_env_specific = {}
                 train_episode_flags_env_specific = {}
                 train_episode_flags_percentage_env_specific = {}
