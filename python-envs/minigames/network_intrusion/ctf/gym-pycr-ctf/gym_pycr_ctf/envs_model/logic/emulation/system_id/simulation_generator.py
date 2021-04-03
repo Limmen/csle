@@ -37,6 +37,7 @@ class SimulationGenerator:
         step = 0
         if not env_config.explore_defense_states:
             defender_action = None
+            old_env_config = env_config
         else:
             # Setup config
             old_env_config = env_config.copy()
@@ -53,7 +54,7 @@ class SimulationGenerator:
             # Save previous state
             s = env.env_state.copy()
 
-            if step == 0:
+            if step == 0 and env_config.explore_defense_states:
                 # Start with sleep action to observe background noise
                 attacker_action = env_config.attacker_action_conf.get_continue_action_idx()
             else:

@@ -4,7 +4,7 @@ The main frame for the pycr-ctf environment
 import pyperclip
 import os
 import pyglet
-from gym_pycr_ctf.rendering import batch_rect_fill, batch_line, batch_label, \
+from gym_pycr_ctf.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
@@ -552,9 +552,11 @@ class MainFrame(pyglet.window.Window):
                 # self.env.step(action)
                 #try:
                 actions = list(map(lambda x: int(x), self.state.manual_action.split(",")))
+                defender_action = None
                 #action = int(self.state.manual_action)
                 for a in actions:
-                    _, _, done, _ = self.env.step(a)
+                    action = (a, defender_action)
+                    _, _, done, _ = self.env.step(action)
                     if done:
                         print("done:{}".format(done))
                 # except Exception as e:

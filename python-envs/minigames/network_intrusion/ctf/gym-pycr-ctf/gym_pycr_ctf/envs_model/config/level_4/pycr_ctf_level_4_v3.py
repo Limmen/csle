@@ -16,7 +16,7 @@ from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderS
 
 class PyCrCTFLevel4V3:
     """
-    V3 configuration of level 1 of the PyCrCTF environment.
+    V3 configuration of level 4 of the PyCrCTF environment.
     """
 
     @staticmethod

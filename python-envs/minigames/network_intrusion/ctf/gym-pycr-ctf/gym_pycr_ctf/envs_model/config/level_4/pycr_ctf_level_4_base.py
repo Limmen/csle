@@ -280,7 +280,7 @@ class PyCrCTFLevel4Base:
                                      adj_matrix=adj_matrix,
                                      flags_lookup = PyCrCTFLevel4Base.flags_lookup(),
                                      agent_reachable=reachable,
-                                     vulnerable_nodes = set(["172.18.1.3", "172.18.1.79", "172.18.1.2"]))
+                                     vulnerable_nodes = set(["172.18.4.3", "172.18.4.79", "172.18.4.2"]))
         return network_conf
 
     @staticmethod

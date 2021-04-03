@@ -8,6 +8,7 @@ from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 class ClientConfig:
     """
@@ -49,7 +50,8 @@ class ClientConfig:
                  train_multi_sim: bool = False,
                  eval_multi_sim: bool = False,
                  num_sims : int = 1,
-                 num_sims_eval: int = 1
+                 num_sims_eval: int = 1,
+                 train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
                  ):
         """
         Class constructor, initializes the DTO
@@ -83,6 +85,7 @@ class ClientConfig:
         :param flags_configs: list of flags config when using multi-env
         :param multi_env: boolean flag whether using a multi-env or not
         :param emulation_configs: list of emulation configs when using a multi-env
+        :param train_mode: the train mode
         """
         self.env_name = env_name
         self.logger = None
@@ -126,3 +129,4 @@ class ClientConfig:
         self.eval_multi_sim = eval_multi_sim
         self.num_sims = num_sims
         self.num_sims_eval = num_sims_eval
+        self.train_mode = train_mode

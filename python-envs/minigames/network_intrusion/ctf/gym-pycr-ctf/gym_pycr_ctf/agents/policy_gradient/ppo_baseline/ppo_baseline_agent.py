@@ -1,32 +1,31 @@
 """
-An agent for the cgc-bta env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
+An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
 """
 import time
 import torch
 import math
 
-from gym_pycr_ctf.rendering import PyCrCTFMonitor
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
-
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 class PPOBaselineAgent(TrainAgent):
     """
     An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
     """
 
-    def __init__(self, env, config: AgentConfig, eval_env):
+    def __init__(self, env, attacker_config: AgentConfig, eval_env, train_mode: TrainMode = TrainMode.TRAIN_ATTACKER):
         """
         Initialize environment and hyperparameters
 
-        :param config: the configuration
+        :param attacker_config: the configuration
         """
-        super(PPOBaselineAgent, self).__init__(env, config, eval_env)
+        super(PPOBaselineAgent, self).__init__(env, attacker_config, eval_env, train_mode)
 
     def train(self) -> ExperimentResult:
         """
@@ -36,56 +35,57 @@ class PPOBaselineAgent(TrainAgent):
         """
 
         # Custom MLP policy
-        net_arch = []
-        pi_arch = []
-        vf_arch = []
-        for l in range(self.config.shared_layers):
-            net_arch.append(self.config.shared_hidden_dim)
-        for l in range(self.config.pi_hidden_layers):
-            pi_arch.append(self.config.pi_hidden_dim)
-        for l in range(self.config.vf_hidden_layers):
-            vf_arch.append(self.config.vf_hidden_dim)
+        attacker_net_arch = []
+        attacker_pi_arch = []
+        attacker_vf_arch = []
+        for l in range(self.attacker_config.shared_layers):
+            attacker_net_arch.append(self.attacker_config.shared_hidden_dim)
+        for l in range(self.attacker_config.pi_hidden_layers):
+            attacker_pi_arch.append(self.attacker_config.pi_hidden_dim)
+        for l in range(self.attacker_config.vf_hidden_layers):
+            attacker_vf_arch.append(self.attacker_config.vf_hidden_dim)
 
 
-        net_dict = {"pi":pi_arch, "vf":vf_arch}
-        net_arch.append(net_dict)
+        net_dict_attacker = {"pi":attacker_pi_arch, "vf":attacker_vf_arch}
+        attacker_net_arch.append(net_dict_attacker)
 
-        policy_kwargs = dict(activation_fn=self.get_hidden_activation(), net_arch=net_arch)
-        device = "cpu" if not self.config.gpu else "cuda:" + str(self.config.gpu_id)
-        policy = "MlpPolicy"
+        policy_kwargs_attacker = dict(activation_fn=self.get_hidden_activation_attacker(), net_arch=attacker_net_arch)
+        device_attacker = "cpu" if not self.attacker_config.gpu else "cuda:" + str(self.attacker_config.gpu_id)
+        policy_attacker = "MlpPolicy"
 
-        if self.config.lr_progress_decay:
-            temp = self.config.alpha
-            lr_decay_func = lambda x: temp*math.pow(x, self.config.lr_progress_power_decay)
-            self.config.alpha = lr_decay_func
+        if self.attacker_config.lr_progress_decay:
+            temp = self.attacker_config.alpha
+            lr_decay_func = lambda x: temp*math.pow(x, self.attacker_config.lr_progress_power_decay)
+            self.attacker_config.alpha = lr_decay_func
 
-        model = PPO(policy, self.env,
-                    batch_size=self.config.mini_batch_size,
-                    learning_rate=self.config.alpha,
-                    n_steps=self.config.batch_size,
-                    n_epochs=self.config.optimization_iterations,
-                    gamma=self.config.gamma,
-                    gae_lambda=self.config.gae_lambda,
-                    clip_range=self.config.eps_clip,
-                    max_grad_norm=self.config.max_gradient_norm,
+        model = PPO(policy_attacker, self.env,
+                    batch_size=self.attacker_config.mini_batch_size,
+                    attacker_learning_rate=self.attacker_config.alpha,
+                    n_steps=self.attacker_config.batch_size,
+                    n_epochs=self.attacker_config.optimization_iterations,
+                    attacker_gamma=self.attacker_config.gamma,
+                    attacker_gae_lambda=self.attacker_config.gae_lambda,
+                    attacker_clip_range=self.attacker_config.eps_clip,
+                    attacker_max_grad_norm=self.attacker_config.max_gradient_norm,
                     verbose=1,
-                    seed=self.config.random_seed,
-                    policy_kwargs=policy_kwargs,
-                    device=device,
-                    agent_config=self.config,
-                    vf_coef=self.config.vf_coef,
-                    ent_coef=self.config.ent_coef,
-                    use_sde=self.config.use_sde,
-                    sde_sample_freq=self.config.sde_sample_freq,
-                    env_2=self.eval_env
+                    seed=self.attacker_config.random_seed,
+                    policy_kwargs=policy_kwargs_attacker,
+                    device=device_attacker,
+                    attacker_agent_config=self.attacker_config,
+                    attacker_vf_coef=self.attacker_config.vf_coef,
+                    attacker_ent_coef=self.attacker_config.ent_coef,
+                    use_sde=self.attacker_config.use_sde,
+                    sde_sample_freq=self.attacker_config.sde_sample_freq,
+                    env_2=self.eval_env,
+                    train_mode = self.train_mode
                     )
 
-        if self.config.load_path is not None:
-            PPO.load(self.config.load_path, policy, agent_config=self.config)
+        if self.attacker_config.load_path is not None:
+            PPO.load(self.attacker_config.load_path, policy_attacker, agent_config=self.attacker_config)
 
         # Eval config
         time_str = str(time.time())
-        if self.config.video_dir is None:
+        if self.attacker_config.video_dir is None:
             raise AssertionError("Video is set to True but no video_dir is provided, please specify "
                                  "the video_dir argument")
         if isinstance(self.env, DummyVecEnv):
@@ -97,9 +97,9 @@ class PPOBaselineAgent(TrainAgent):
         else:
             train_eval_env_i = self.env
             if train_eval_env_i is not None:
-                train_eval_env = PyCrCTFMonitor(train_eval_env_i, self.config.video_dir + "/" + time_str, force=True,
-                                          video_frequency=self.config.video_frequency, openai_baseline=True)
-                train_eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+                train_eval_env = PyCrCTFMonitor(train_eval_env_i, self.attacker_config.video_dir + "/" + time_str, force=True,
+                                          video_frequency=self.attacker_config.video_frequency, openai_baseline=True)
+                train_eval_env.metadata["video.frames_per_second"] = self.attacker_config.video_fps
             else:
                 train_eval_env = None
 
@@ -108,19 +108,19 @@ class PPOBaselineAgent(TrainAgent):
             eval_env = self.eval_env
         else:
             if self.eval_env is not None:
-                eval_env = PyCrCTFMonitor(self.eval_env, self.config.video_dir + "/" + time_str, force=True,
-                                                    video_frequency=self.config.video_frequency, openai_baseline=True)
-                eval_env.metadata["video.frames_per_second"] = self.config.video_fps
+                eval_env = PyCrCTFMonitor(self.eval_env, self.attacker_config.video_dir + "/" + time_str, force=True,
+                                                    video_frequency=self.attacker_config.video_frequency, openai_baseline=True)
+                eval_env.metadata["video.frames_per_second"] = self.attacker_config.video_fps
 
-        model.learn(total_timesteps=self.config.num_episodes,
-                    log_interval=self.config.train_log_frequency,
-                    eval_freq=self.config.eval_frequency,
-                    n_eval_episodes=self.config.eval_episodes,
+        model.learn(total_timesteps=self.attacker_config.num_episodes,
+                    log_interval=self.attacker_config.train_log_frequency,
+                    eval_freq=self.attacker_config.eval_frequency,
+                    n_eval_episodes=self.attacker_config.eval_episodes,
                     eval_env=train_eval_env,
                     eval_env_2=eval_env
                     )
 
-        self.config.logger.info("Training Complete")
+        self.attacker_config.logger.info("Training Complete")
 
         # Save networks
         try:
@@ -129,38 +129,38 @@ class PPOBaselineAgent(TrainAgent):
             print("There was en error saving the model:{}".format(str(e)))
 
         # Save other game data
-        if self.config.save_dir is not None:
+        if self.attacker_config.save_dir is not None:
             time_str = str(time.time())
-            model.train_result.to_csv(self.config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
-            model.eval_result.to_csv(self.config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
+            model.train_result.to_csv(self.attacker_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
+            model.eval_result.to_csv(self.attacker_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
         self.train_result = model.train_result
         self.eval_result = model.eval_result
         return model.train_result
 
-    def get_hidden_activation(self):
+    def get_hidden_activation_attacker(self):
         """
         Interprets the hidden activation
 
         :return: the hidden activation function
         """
         return torch.nn.Tanh
-        if self.config.hidden_activation == "ReLU":
+        if self.attacker_config.hidden_activation == "ReLU":
             return torch.nn.ReLU
-        elif self.config.hidden_activation == "LeakyReLU":
+        elif self.attacker_config.hidden_activation == "LeakyReLU":
             return torch.nn.LeakyReLU
-        elif self.config.hidden_activation == "LogSigmoid":
+        elif self.attacker_config.hidden_activation == "LogSigmoid":
             return torch.nn.LogSigmoid
-        elif self.config.hidden_activation == "PReLU":
+        elif self.attacker_config.hidden_activation == "PReLU":
             return torch.nn.PReLU
-        elif self.config.hidden_activation == "Sigmoid":
+        elif self.attacker_config.hidden_activation == "Sigmoid":
             return torch.nn.Sigmoid
-        elif self.config.hidden_activation == "Softplus":
+        elif self.attacker_config.hidden_activation == "Softplus":
             return torch.nn.Softplus
-        elif self.config.hidden_activation == "Tanh":
+        elif self.attacker_config.hidden_activation == "Tanh":
             return torch.nn.Tanh
         else:
-            raise ValueError("Activation type: {} not recognized".format(self.config.hidden_activation))
+            raise ValueError("Activation type: {} not recognized".format(self.attacker_config.hidden_activation))
 
 
     def get_action(self, s, eval=False, attacker=True) -> int:

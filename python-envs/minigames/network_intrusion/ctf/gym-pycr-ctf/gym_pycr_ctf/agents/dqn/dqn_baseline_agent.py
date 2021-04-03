@@ -1,20 +1,21 @@
 """
-An agent for the cgc-bta env that uses the DQN algorithm from OpenAI stable baselines
+An agent for the pycr-ctf env that uses the DQN algorithm from OpenAI stable baselines
 """
 import time
 import torch
 import math
 
-from gym_pycr_ctf.rendering import PyCrCTFMonitor
+from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.dqn.impl.dqn import DQN
 
+
 class DQNBaselineAgent(TrainAgent):
     """
-    An agent for the cgc-bta env that uses the TD3 Policy Gradient algorithm from OpenAI stable baselines
+    An agent for the pycr-ctf env that uses the TD3 Policy Gradient algorithm from OpenAI stable baselines
     """
 
     def __init__(self, env: PyCRCTFEnv, config: AgentConfig, eval_env: PyCRCTFEnv):

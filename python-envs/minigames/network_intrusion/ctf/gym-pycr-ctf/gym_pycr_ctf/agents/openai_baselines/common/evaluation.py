@@ -18,7 +18,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
                     deterministic : bool= True,
                     render : bool =False, callback: Optional[Callable] = None,
                     reward_threshold: Optional[float] = None,
-                    return_episode_rewards: bool = False, agent_config : AgentConfig = None,
+                    return_episode_rewards: bool = False, attacker_agent_config : AgentConfig = None,
                     train_episode = 1, env_config = None, env_configs = None):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
@@ -42,7 +42,7 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
         returns ([float], [int]) when ``return_episode_rewards`` is True
     """
     eval_mean_reward, eval_std_reward = -1, -1
-    train_eval_mean_reward, train_eval_std_reward = _eval_helper(env=env, agent_config=agent_config,
+    train_eval_mean_reward, train_eval_std_reward = _eval_helper(env=env, attacker_agent_config=attacker_agent_config,
                                                                  n_eval_episodes=n_eval_episodes,
                                                                  deterministic=deterministic,
                                                                  callback=callback, train_episode=train_episode,
@@ -50,18 +50,18 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
                                                                  env_configs=env_configs)
     if env_2 is not None:
         eval_mean_reward, eval_std_reward = _eval_helper(
-            env=env_2, agent_config=agent_config, n_eval_episodes=n_eval_episodes,  deterministic=deterministic,
+            env=env_2, attacker_agent_config=attacker_agent_config, n_eval_episodes=n_eval_episodes,  deterministic=deterministic,
             callback=callback, train_episode=train_episode, model=model, env_config=env_config,
             env_configs=env_configs)
     return train_eval_mean_reward, train_eval_std_reward, eval_mean_reward, eval_std_reward
 
 
-def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, deterministic,
+def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes, deterministic,
                  callback, train_episode, env_config, env_configs):
-    agent_config.logger.info("Starting Evaluation")
+    attacker_agent_config.logger.info("Starting Evaluation")
 
     model.num_eval_episodes = 0
-    if agent_config.eval_episodes < 1:
+    if attacker_agent_config.eval_episodes < 1:
         return
 
     done = False
@@ -108,7 +108,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
 
-                if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and agent_config.eval_render:
+                if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and attacker_agent_config.eval_render:
                     time.sleep(1)
                     env.render()
 
@@ -126,7 +126,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                 episode_length += 1
 
             # Render final frame when game completed
-            if env.num_envs == 1 and agent_config.eval_render:
+            if env.num_envs == 1 and attacker_agent_config.eval_render:
                 env.render()
 
             # Record episode metrics
@@ -154,7 +154,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
 
             # Save gifs
-            if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and agent_config.gifs or agent_config.video:
+            if env.num_envs == 1 and not isinstance(env, SubprocVecEnv) and attacker_agent_config.gifs or attacker_agent_config.video:
                 # Add frames to tensorboard
                 for idx, frame in enumerate(env.envs[0].episode_frames):
                     model.tensorboard_writer.add_image(str(train_episode) + "_eval_frames/" + str(idx),
@@ -162,10 +162,10 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
                                                        dataformats="HWC")
 
                 # Save Gif
-                env.envs[0].generate_gif(agent_config.gif_dir + "episode_" + str(train_episode) + "_"
-                                         + time_str + ".gif", agent_config.video_fps)
+                env.envs[0].generate_gif(attacker_agent_config.gif_dir + "episode_" + str(train_episode) + "_"
+                                         + time_str + ".gif", attacker_agent_config.video_fps)
         # Log average metrics every <self.config.eval_log_frequency> episodes
-        if episode % agent_config.eval_log_frequency == 0:
+        if episode % attacker_agent_config.eval_log_frequency == 0:
             model.log_metrics(iteration=episode, result=model.eval_result, episode_rewards=episode_rewards,
                               episode_steps=episode_steps, eval=True, episode_flags=episode_flags,
                               episode_flags_percentage=episode_flags_percentage)
@@ -178,7 +178,7 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
     mean_reward = np.mean(episode_rewards)
     std_reward = np.std(episode_rewards)
 
-    agent_config.logger.info("Evaluation Complete")
+    attacker_agent_config.logger.info("Evaluation Complete")
     print("Evaluation Complete")
     # env.close()
     # env.reset()
@@ -186,8 +186,8 @@ def _eval_helper(env, agent_config: AgentConfig, model, n_eval_episodes, determi
 
 
 def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
-                          n_eval_episodes_train : int=10,n_eval_episodes_eval2 : int=10,
-                          deterministic : bool= True, agent_config : AgentConfig = None,
+                          n_eval_episodes_train : int=10, n_eval_episodes_eval2 : int=10,
+                          deterministic : bool= True, attacker_agent_config : AgentConfig = None,
                           env_config: EnvConfig = None, env_configs : List[EnvConfig] = None,
                           eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None):
     """
@@ -199,7 +199,7 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
         this must contain only one environment.
     :param n_eval_episodes_train: (int) Number of episode to evaluate the agent
     :param deterministic: (bool) Whether to use deterministic or stochastic actions
-    :param agent_config: agent config
+    :param attacker_agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
     eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0

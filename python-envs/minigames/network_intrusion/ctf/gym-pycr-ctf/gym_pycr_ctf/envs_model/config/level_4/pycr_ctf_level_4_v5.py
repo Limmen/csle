@@ -17,7 +17,7 @@ from gym_pycr_ctf.dao.action.attacker.attacker_stopping_actions import AttackerS
 
 class PyCrCTFLevel4V5:
     """
-    V5 configuration of level 1 of the PyCrCTF environment.
+    V5 configuration of level 4 of the PyCrCTF environment.
     """
 
     @staticmethod

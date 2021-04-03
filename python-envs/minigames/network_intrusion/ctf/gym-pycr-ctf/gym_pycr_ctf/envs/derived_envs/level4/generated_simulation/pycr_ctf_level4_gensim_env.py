@@ -10,6 +10,7 @@ from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v4 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v5 import PyCrCTFLevel4V5
 from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 
+
 # -------- Version 1 ------------
 class PyCRCTFLevel4GeneratedSim1Env(PyCRCTFEnv):
     """

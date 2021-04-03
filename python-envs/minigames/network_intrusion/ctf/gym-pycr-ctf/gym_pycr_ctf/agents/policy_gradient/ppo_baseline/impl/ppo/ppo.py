@@ -10,6 +10,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.type_aliases import GymEnv, May
 from gym_pycr_ctf.agents.openai_baselines.common.policies import ActorCriticPolicy
 from gym_pycr_ctf.agents.openai_baselines.common.on_policy_algorithm import OnPolicyAlgorithm
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 
 class PPO(OnPolicyAlgorithm):
@@ -25,24 +26,24 @@ class PPO(OnPolicyAlgorithm):
 
     :param policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: (Gym environment or str) The environment to learn from (if registered in Gym, can be str)
-    :param learning_rate: (float or callable) The learning rate, it can be a function
+    :param attacker_learning_rate: (float or callable) The learning rate, it can be a function
         of the current progress remaining (from 1 to 0)
     :param n_steps: (int) The number of steps to run for each environment per update
         (i.e. batch size is n_steps * n_env where n_env is number of environment copies running in parallel)
     :param batch_size: (int) Minibatch size
     :param n_epochs: (int) Number of epoch when optimizing the surrogate loss
-    :param gamma: (float) Discount factor
-    :param gae_lambda: (float) Factor for trade-off of bias vs variance for Generalized Advantage Estimator
-    :param clip_range: (float or callable) Clipping parameter, it can be a function of the current progress
+    :param attacker_gamma: (float) Discount factor
+    :param attacker_gae_lambda: (float) Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+    :param attacker_clip_range: (float or callable) Clipping parameter, it can be a function of the current progress
         remaining (from 1 to 0).
-    :param clip_range_vf: (float or callable) Clipping parameter for the value function,
+    :param attacker_clip_range_vf: (float or callable) Clipping parameter for the value function,
         it can be a function of the current progress remaining (from 1 to 0).
         This is a parameter specific to the OpenAI implementation. If None is passed (default),
         no clipping will be done on the value function.
         IMPORTANT: this clipping depends on the reward scaling.
-    :param ent_coef: (float) Entropy coefficient for the loss calculation
-    :param vf_coef: (float) Value function coefficient for the loss calculation
-    :param max_grad_norm: (float) The maximum value for the gradient clipping
+    :param attacker_ent_coef: (float) Entropy coefficient for the loss calculation
+    :param attacker_vf_coef: (float) Value function coefficient for the loss calculation
+    :param attacker_max_grad_norm: (float) The maximum value for the gradient clipping
     :param use_sde: (bool) Whether to use generalized State Dependent Exploration (gSDE)
         instead of action noise exploration (default: False)
     :param sde_sample_freq: (int) Sample a new noise matrix every n steps when using gSDE
@@ -66,17 +67,17 @@ class PPO(OnPolicyAlgorithm):
         self,
         policy: Union[str, Type[ActorCriticPolicy]],
         env: Union[GymEnv, str],
-        learning_rate: Union[float, Callable] = 3e-4,
+        attacker_learning_rate: Union[float, Callable] = 3e-4,
         n_steps: int = 2048,
         batch_size: Optional[int] = 64,
         n_epochs: int = 10,
-        gamma: float = 0.99,
-        gae_lambda: float = 0.95,
-        clip_range: float = 0.2,
-        clip_range_vf: Optional[float] = None,
-        ent_coef: float = 0.0,
-        vf_coef: float = 0.5,
-        max_grad_norm: float = 0.5,
+        attacker_gamma: float = 0.99,
+        attacker_gae_lambda: float = 0.95,
+        attacker_clip_range: float = 0.2,
+        attacker_clip_range_vf: Optional[float] = None,
+        attacker_ent_coef: float = 0.0,
+        attacker_vf_coef: float = 0.5,
+        attacker_max_grad_norm: float = 0.5,
         use_sde: bool = False,
         sde_sample_freq: int = -1,
         target_kl: Optional[float] = None,
@@ -86,20 +87,21 @@ class PPO(OnPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        agent_config: AgentConfig = None,
-        env_2: Union[GymEnv, str] = None
+        attacker_agent_config: AgentConfig = None,
+        env_2: Union[GymEnv, str] = None,
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(PPO, self).__init__(
             policy,
             env,
-            learning_rate=learning_rate,
+            attacker_learning_rate=attacker_learning_rate,
             n_steps=n_steps,
-            gamma=gamma,
-            gae_lambda=gae_lambda,
-            ent_coef=ent_coef,
-            vf_coef=vf_coef,
-            max_grad_norm=max_grad_norm,
+            attacker_gamma=attacker_gamma,
+            attacker_gae_lambda=attacker_gae_lambda,
+            attacker_ent_coef=attacker_ent_coef,
+            attacker_vf_coef=attacker_vf_coef,
+            attacker_max_grad_norm=attacker_max_grad_norm,
             use_sde=use_sde,
             sde_sample_freq=sde_sample_freq,
             policy_kwargs=policy_kwargs,
@@ -108,14 +110,15 @@ class PPO(OnPolicyAlgorithm):
             create_eval_env=create_eval_env,
             seed=seed,
             _init_setup_model=False,
-            agent_config=agent_config,
-            env_2=env_2
+            attacker_agent_config=attacker_agent_config,
+            env_2=env_2,
+            train_mode=train_mode
         )
 
         self.batch_size = batch_size
         self.n_epochs = n_epochs
-        self.clip_range = clip_range
-        self.clip_range_vf = clip_range_vf
+        self.clip_range = attacker_clip_range
+        self.clip_range_vf = attacker_clip_range_vf
         self.target_kl = target_kl
 
         if _init_setup_model:
@@ -156,12 +159,12 @@ class PPO(OnPolicyAlgorithm):
         for epoch in range(self.n_epochs):
             approx_kl_divs = []
             # Do a complete pass on the rollout buffer
-            for rollout_data in self.rollout_buffer.get(self.batch_size):
-                if self.agent_config.performance_analysis:
+            for rollout_data in self.attacker_rollout_buffer.get(self.batch_size):
+                if self.attacker_agent_config.performance_analysis:
                     start= time.time()
 
                 actions = rollout_data.actions
-                if isinstance(self.action_space, spaces.Discrete):
+                if isinstance(self.attacker_action_space, spaces.Discrete):
                     # Convert discrete action from float to long
                     actions = rollout_data.actions.long().flatten()
 
@@ -212,20 +215,20 @@ class PPO(OnPolicyAlgorithm):
 
                 entropy_losses.append(entropy_loss.item())
 
-                loss = policy_loss + self.ent_coef * entropy_loss + self.vf_coef * value_loss
+                loss = policy_loss + self.attacker_ent_coef * entropy_loss + self.attacker_vf_coef * value_loss
 
                 # Optimization step
                 self.policy.optimizer.zero_grad()
                 loss.backward()
-                if self.agent_config.performance_analysis:
+                if self.attacker_agent_config.performance_analysis:
                     end= time.time()
                     grad_comp_times.append(end-start)
                 # Clip grad norm
-                if self.agent_config.performance_analysis:
+                if self.attacker_agent_config.performance_analysis:
                     start = time.time()
-                th.nn.utils.clip_grad_norm_(self.policy.parameters(), self.max_grad_norm)
+                th.nn.utils.clip_grad_norm_(self.policy.parameters(), self.attacker_max_grad_norm)
                 self.policy.optimizer.step()
-                if self.agent_config.performance_analysis:
+                if self.attacker_agent_config.performance_analysis:
                     end = time.time()
                     weight_update_times.append(end-start)
                 approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
@@ -237,7 +240,7 @@ class PPO(OnPolicyAlgorithm):
                 break
 
         self._n_updates += self.n_epochs
-        explained_var = explained_variance(self.rollout_buffer.returns.flatten(), self.rollout_buffer.values.flatten())
+        explained_var = explained_variance(self.attacker_rollout_buffer.returns.flatten(), self.attacker_rollout_buffer.values.flatten())
 
         return np.mean(entropy_losses), np.mean(pg_losses), np.mean(value_losses), lr, grad_comp_times, weight_update_times
 

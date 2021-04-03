@@ -115,7 +115,7 @@ class PyCrCTFMonitor(Wrapper):
         self.file_prefix = FILE_PREFIX
         self.file_infix = '{}.{}'.format(self._monitor_id, uid if uid else os.getpid())
 
-        self.stats_recorder = pycr_ctf_stats_recorder.StatsRecorder(
+        self.stats_recorder = StatsRecorder(
             directory, '{}.episode_batch.{}'.format(self.file_prefix, self.file_infix),
             autoreset=self.env_semantics_autoreset, env_id=env_id)
 
@@ -237,7 +237,7 @@ class PyCrCTFMonitor(Wrapper):
         # Start recording the next video.
         #
         # TODO: calculate a more correct 'episode_id' upon merge
-        self.video_recorder = pycr_ctf_video_recorder.PyCrCTFVideoRecorder(
+        self.video_recorder = PyCrCTFVideoRecorder(
             env=self.env,
             base_path=os.path.join(self.directory, '{}.video.{}.video{:06}'.format(self.file_prefix, self.file_infix,
                                                                                    self.episode_id)),

@@ -24,6 +24,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.env_util import make_vec_env
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 class Runner:
     """
@@ -136,17 +137,18 @@ class Runner:
             config.agent_config.env_config = base_env.env_config
 
         if config.agent_type == AgentType.REINFORCE.value:
-            agent = ReinforceAgent(env, config.agent_config)
+            agent = ReinforceAgent(env, config.agent_config, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.PPO_BASELINE.value:
-            agent = PPOBaselineAgent(env, config.agent_config, eval_env=eval_env)
+            agent = PPOBaselineAgent(env, config.agent_config, eval_env=eval_env,
+                                     train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.DQN_BASELINE.value:
-            agent = DQNBaselineAgent(env, config.agent_config, eval_env=eval_env)
+            agent = DQNBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.A2C_BASELINE.value:
-            agent = A2CBaselineAgent(env, config.agent_config, eval_env=eval_env)
+            agent = A2CBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.TD3_BASELINE.value:
-            agent = TD3BaselineAgent(env, config.agent_config, eval_env=eval_env)
+            agent = TD3BaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         elif config.agent_type == AgentType.DDPG_BASELINE.value:
-            agent = DDPGBaselineAgent(env, config.agent_config, eval_env=eval_env)
+            agent = DDPGBaselineAgent(env, config.agent_config, eval_env=eval_env, train_mode=TrainMode(config.train_mode))
         else:
             raise AssertionError("Train agent type not recognized: {}".format(config.agent_type))
         agent.train()

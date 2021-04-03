@@ -18,6 +18,7 @@ from stable_baselines3.common.noise import ActionNoise
 from stable_baselines3.common.preprocessing import is_image_space
 from gym_pycr_ctf.agents.openai_baselines.common.save_util import load_from_zip_file, recursive_getattr, \
     recursive_setattr, save_to_zip_file
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 from gym_pycr_ctf.agents.openai_baselines.common.utils import (
     check_for_correct_spaces,
@@ -60,11 +61,11 @@ class BaseAlgorithm(ABC):
     """
     The base of RL algorithms
 
-    :param policy: (Type[BasePolicy]) Policy object
+    :param attacker_policy: (Type[BasePolicy]) Policy object
     :param env: (Union[GymEnv, str, None]) The environment to learn from
                 (if registered in Gym, can be str. Can be None for loading trained models)
-    :param policy_base: (Type[BasePolicy]) The base policy used by this method
-    :param learning_rate: (float or callable) learning rate for the optimizer,
+    :param attacker_policy_base: (Type[BasePolicy]) The base policy used by this method
+    :param attacker_learning_rate: (float or callable) learning rate for the optimizer,
         it can be a function of the current progress remaining (from 1 to 0)
     :param policy_kwargs: (Dict[str, Any]) Additional arguments to be passed to the policy on creation
     :param verbose: (int) The verbosity level: 0 none, 1 training information, 2 debug
@@ -86,10 +87,10 @@ class BaseAlgorithm(ABC):
 
     def __init__(
             self,
-            policy: Type[BasePolicy],
+            attacker_policy: Type[BasePolicy],
             env: Union[GymEnv, str, None],
-            policy_base: Type[BasePolicy],
-            learning_rate: Union[float, Callable],
+            attacker_policy_base: Type[BasePolicy],
+            attacker_learning_rate: Union[float, Callable],
             policy_kwargs: Dict[str, Any] = None,
             verbose: int = 0,
             device: Union[th.device, str] = "auto",
@@ -99,36 +100,37 @@ class BaseAlgorithm(ABC):
             seed: Optional[int] = None,
             use_sde: bool = False,
             sde_sample_freq: int = -1,
-            agent_config: AgentConfig = None,
-            env_2: Union[GymEnv, str, None] = None
+            attacker_agent_config: AgentConfig = None,
+            env_2: Union[GymEnv, str, None] = None,
+            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER
     ):
-        self.agent_config = agent_config
+        self.attacker_agent_config = attacker_agent_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
 
         try:
-            self.tensorboard_writer = SummaryWriter(self.agent_config.tensorboard_dir)
-            self.tensorboard_writer.add_hparams(self.agent_config.hparams_dict(), {})
+            self.tensorboard_writer = SummaryWriter(self.attacker_agent_config.tensorboard_dir)
+            self.tensorboard_writer.add_hparams(self.attacker_agent_config.hparams_dict(), {})
         except:
             print("error creating tensorboard writer")
 
-        if isinstance(policy, str) and policy_base is not None:
-            self.policy_class = get_policy_from_name(policy_base, policy)
+        if isinstance(attacker_policy, str) and attacker_policy_base is not None:
+            self.attacker_policy_class = get_policy_from_name(attacker_policy_base, attacker_policy)
         else:
-            self.policy_class = policy
+            self.attacker_policy_class = attacker_policy
 
-        self.device = get_device(device, agent_config=self.agent_config)
+        self.device = get_device(device, agent_config=self.attacker_agent_config)
         if verbose > 0:
             print(f"Using {self.device} device")
-
+        self.train_mode = train_mode
         self.env = None  # type: Optional[GymEnv]
         self.env_2 = None  # type: Optional[GymEnv]
         # get VecNormalize object if needed
         self._vec_normalize_env = unwrap_vec_normalize(env)
         self.verbose = verbose
         self.policy_kwargs = {} if policy_kwargs is None else policy_kwargs
-        self.observation_space = None  # type: Optional[gym.spaces.Space]
-        self.action_space = None  # type: Optional[gym.spaces.Space]
+        self.attacker_observation_space = None  # type: Optional[gym.spaces.Space]
+        self.attacker_action_space = None  # type: Optional[gym.spaces.Space]
         self.n_envs = None
         self.num_timesteps = 0
         # Used for updating schedules
@@ -137,11 +139,11 @@ class BaseAlgorithm(ABC):
         self.seed = seed
         self.action_noise = None  # type: Optional[ActionNoise]
         self.start_time = None
-        self.policy = None
-        self.m_selection_policy = None
-        self.m_action_policy = None
-        self.learning_rate = learning_rate
-        self.lr_schedule = None  # type: Optional[Callable]
+        self.attacker_policy = None
+        self.attacker_m_selection_policy = None
+        self.attacker_m_action_policy = None
+        self.attacker_learning_rate = attacker_learning_rate
+        self.attacker_lr_schedule = None  # type: Optional[Callable]
         self._last_obs = None  # type: Optional[np.ndarray]
         self._last_dones = None  # type: Optional[np.ndarray]
         self._last_infos = None
@@ -175,8 +177,8 @@ class BaseAlgorithm(ABC):
             env = maybe_make_env(env, monitor_wrapper, self.verbose)
             env = self._wrap_env(env)
 
-            self.observation_space = env.observation_space
-            self.action_space = env.action_space
+            self.attacker_observation_space = env.observation_space
+            self.attacker_action_space = env.action_space
             self.n_envs = env.num_envs
             self.env = env
 
@@ -193,7 +195,7 @@ class BaseAlgorithm(ABC):
                     "Error: the model does not support multiple envs; it requires " "a single vectorized environment."
                 )
 
-        if self.use_sde and not isinstance(self.observation_space, gym.spaces.Box):
+        if self.use_sde and not isinstance(self.attacker_observation_space, gym.spaces.Box):
             raise ValueError("generalized State-Dependent Exploration (gSDE) can only be used with continuous actions.")
 
     def _wrap_env(self, env: GymEnv) -> VecEnv:
@@ -276,13 +278,13 @@ class BaseAlgorithm(ABC):
 
         if result.avg_episode_rewards is not None:
             rolling_avg_rewards = pycr_util.running_average(result.avg_episode_rewards + [avg_episode_rewards],
-                                                            self.agent_config.running_avg)
+                                                            self.attacker_agent_config.running_avg)
         else:
             rolling_avg_rewards = 0.0
 
         if result.avg_episode_steps is not None:
             rolling_avg_steps = pycr_util.running_average(result.avg_episode_steps + [avg_episode_steps],
-                                                            self.agent_config.running_avg)
+                                                          self.attacker_agent_config.running_avg)
         else:
             rolling_avg_steps = 0.0
 
@@ -297,7 +299,7 @@ class BaseAlgorithm(ABC):
             eval_avg_episode_rewards = np.mean(eval_episode_rewards)
         else:
             eval_avg_episode_rewards = 0.0
-        if self.agent_config.log_regret:
+        if self.attacker_agent_config.log_regret:
             if self.env.env_config is not None:
                 if len(self.env.envs[0].env_config.pi_star_rew_list) >= len(episode_rewards):
                     pi_star_rews = self.env.envs[0].env_config.pi_star_rew_list[-len(episode_rewards):]
@@ -577,10 +579,10 @@ class BaseAlgorithm(ABC):
                 eval_avg_episode_flags,
                 eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, avg_regret_2, avg_opt_frac_2,
                 eval_2_avg_episode_steps,
-                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage,self.agent_config.epsilon)
-        self.agent_config.logger.info(log_str)
+                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage,self.attacker_agent_config.epsilon)
+        self.attacker_agent_config.logger.info(log_str)
         print(log_str)
-        if self.agent_config.tensorboard:
+        if self.attacker_agent_config.tensorboard:
             self.log_tensorboard(iteration, avg_episode_rewards,avg_episode_steps,
                                  avg_episode_loss, eps, lr, eval=eval,
                                  avg_flags_catched=avg_episode_flags,
@@ -599,7 +601,7 @@ class BaseAlgorithm(ABC):
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.avg_episode_rewards.append(avg_episode_rewards)
-        result.epsilon_values.append(self.agent_config.epsilon)
+        result.epsilon_values.append(self.attacker_agent_config.epsilon)
         result.avg_episode_loss.append(avg_episode_loss)
         result.avg_episode_flags.append(avg_episode_flags)
         result.avg_episode_flags_percentage.append(avg_episode_flags_percentage)
@@ -851,7 +853,7 @@ class BaseAlgorithm(ABC):
 
     def _setup_lr_schedule(self) -> None:
         """Transform to callable if needed."""
-        self.lr_schedule = get_schedule_fn(self.learning_rate)
+        self.attacker_lr_schedule = get_schedule_fn(self.attacker_learning_rate)
 
     def _update_current_progress_remaining(self, num_timesteps: int, total_timesteps: int) -> None:
         """
@@ -871,12 +873,12 @@ class BaseAlgorithm(ABC):
             An optimizer or a list of optimizers.
         """
         # Log the current learning rate
-        logger.record("train/learning_rate", self.lr_schedule(self._current_progress_remaining))
+        logger.record("train/learning_rate", self.attacker_lr_schedule(self._current_progress_remaining))
 
         if not isinstance(optimizers, list):
             optimizers = [optimizers]
         for optimizer in optimizers:
-            update_learning_rate(optimizer, self.lr_schedule(self._current_progress_remaining))
+            update_learning_rate(optimizer, self.attacker_lr_schedule(self._current_progress_remaining))
 
     def get_env(self) -> Optional[VecEnv]:
         """
@@ -904,7 +906,7 @@ class BaseAlgorithm(ABC):
 
         :param env: The environment for learning a policy
         """
-        check_for_correct_spaces(env, self.observation_space, self.action_space)
+        check_for_correct_spaces(env, self.attacker_observation_space, self.attacker_action_space)
         # it must be coherent now
         # if it is not a VecEnv, make it a VecEnv
         env = self._wrap_env(env)
@@ -978,25 +980,25 @@ class BaseAlgorithm(ABC):
         :return: (Tuple[np.ndarray, Optional[np.ndarray]]) the model's action and the next state
             (used in recurrent policies)
         """
-        if not self.agent_config.ar_policy:
-            return self.policy.predict(observation, state, mask, deterministic,
-                                       env_config=env_config,
-                                       env_state=env_state, env_configs=env_configs,
-                                       env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions)
+        if not self.attacker_agent_config.ar_policy:
+            return self.attacker_policy.predict(observation, state, mask, deterministic,
+                                                env_config=env_config,
+                                                env_state=env_state, env_configs=env_configs,
+                                                env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions)
         else:
-            m_selection_actions, state1 = self.m_selection_policy.predict(observation, state, mask, deterministic,
-                                                                          env_config=env_config,
-                                                                          env_state=env_state,
-                                                                          infos=infos)
+            m_selection_actions, state1 = self.attacker_m_selection_policy.predict(observation, state, mask, deterministic,
+                                                                                   env_config=env_config,
+                                                                                   env_state=env_state,
+                                                                                   infos=infos)
             obs_2 = observation.reshape((observation.shape[0],) + self.env.envs[0].network_orig_shape)
             idx = m_selection_actions[0]
             if m_selection_actions[0] > 5:
                 idx = 0
             machine_obs = obs_2[:, idx].reshape((observation.shape[0],) + self.env.envs[0].machine_orig_shape)
             machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
-            m_actions, state2 = self.m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
-                                                    env_config=env_config,
-                                                    env_state=env_state, infos=infos)
+            m_actions, state2 = self.attacker_m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
+                                                                      env_config=env_config,
+                                                                      env_state=env_state, infos=infos)
             actions = self.env.envs[0].attacker_convert_ar_action(m_selection_actions[0], m_actions[0])
             actions = np.array([actions])
             return actions, state2
@@ -1064,7 +1066,7 @@ class BaseAlgorithm(ABC):
         # Sample gSDE exploration matrix, so it uses the right device
         # see issue #44
         if model.use_sde:
-            model.policy.reset_noise()  # pytype: disable=attribute-error
+            model.attacker_policy.reset_noise()  # pytype: disable=attribute-error
         return model
 
     def set_random_seed(self, seed: Optional[int] = None) -> None:
@@ -1077,7 +1079,7 @@ class BaseAlgorithm(ABC):
         if seed is None:
             return
         set_random_seed(seed, using_cuda=self.device == th.device("cuda"))
-        self.action_space.seed(seed)
+        self.attacker_action_space.seed(seed)
         if self.env is not None:
             self.env.seed(seed)
         if self.eval_env is not None:
@@ -1113,12 +1115,12 @@ class BaseAlgorithm(ABC):
             eval_callback = EvalCallback(
                 eval_env,
                 eval_env_2,
-                deterministic=self.agent_config.eval_deterministic,
+                deterministic=self.attacker_agent_config.eval_deterministic,
                 best_model_save_path=log_path,
                 log_path=log_path,
                 eval_freq=eval_freq,
                 n_eval_episodes=n_eval_episodes,
-                agent_config=self.agent_config
+                agent_config=self.attacker_agent_config
             )
             callback = CallbackList([callback, eval_callback])
 
@@ -1172,7 +1174,7 @@ class BaseAlgorithm(ABC):
         if reset_num_timesteps or self._last_obs is None:
             self._last_obs = self.env.reset()
             if len(self._last_obs.shape) == 3:
-                self._last_obs = self._last_obs.reshape((self._last_obs.shape[0], self.observation_space.shape[0]))
+                self._last_obs = self._last_obs.reshape((self._last_obs.shape[0], self.attacker_observation_space.shape[0]))
             self._last_dones = np.zeros((self.env.num_envs,), dtype=np.bool)
             if isinstance(self.env, SubprocVecEnv):
                 self._last_infos = np.array([{"non_legal_actions": self.env.initial_illegal_actions} for i in range(self.env.num_envs)])
@@ -1284,22 +1286,22 @@ class BaseAlgorithm(ABC):
         :return: None
         """
         time_str = str(time.time())
-        if self.agent_config.save_dir is not None:
-            path = self.agent_config.save_dir + "/" + time_str + "_policy_network.zip"
-            self.agent_config.logger.info("Saving policy-network to: {}".format(path))
-            env_config = self.agent_config.env_config
-            env_configs = self.agent_config.env_configs
-            eval_env_config = self.agent_config.eval_env_config
-            eval_env_configs = self.agent_config.eval_env_configs
-            self.agent_config.env_config = None
-            self.agent_config.env_configs = None
-            self.agent_config.eval_env_config = None
-            self.agent_config.eval_env_configs = None
+        if self.attacker_agent_config.save_dir is not None:
+            path = self.attacker_agent_config.save_dir + "/" + time_str + "_policy_network.zip"
+            self.attacker_agent_config.logger.info("Saving policy-network to: {}".format(path))
+            env_config = self.attacker_agent_config.env_config
+            env_configs = self.attacker_agent_config.env_configs
+            eval_env_config = self.attacker_agent_config.eval_env_config
+            eval_env_configs = self.attacker_agent_config.eval_env_configs
+            self.attacker_agent_config.env_config = None
+            self.attacker_agent_config.env_configs = None
+            self.attacker_agent_config.eval_env_config = None
+            self.attacker_agent_config.eval_env_configs = None
             self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env"])
-            self.agent_config.env_config = env_config
-            self.agent_config.env_configs = env_configs
-            self.agent_config.eval_env_config = eval_env_config
-            self.agent_config.eval_env_configs = eval_env_configs
+            self.attacker_agent_config.env_config = env_config
+            self.attacker_agent_config.env_configs = env_configs
+            self.attacker_agent_config.eval_env_config = eval_env_config
+            self.attacker_agent_config.eval_env_configs = eval_env_configs
         else:
-            self.agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
+            self.attacker_agent_config.logger.warning("Save path not defined, not saving policy-networks to disk")
             print("Save path not defined, not saving policy-networks to disk")

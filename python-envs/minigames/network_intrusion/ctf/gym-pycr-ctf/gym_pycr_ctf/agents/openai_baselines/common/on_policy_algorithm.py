@@ -15,23 +15,24 @@ from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.openai_baselines.common.evaluation import quick_evaluate_policy
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
     The base for On-Policy algorithms (ex: A2C/PPO).
 
-    :param policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
+    :param attacker_policy: (ActorCriticPolicy or str) The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: (Gym environment or str) The environment to learn from (if registered in Gym, can be str)
-    :param learning_rate: (float or callable) The learning rate, it can be a function
+    :param attacker_learning_rate: (float or callable) The learning rate, it can be a function
         of the current progress remaining (from 1 to 0)
     :param n_steps: (int) The number of steps to run for each environment per update
         (i.e. batch size is n_steps * n_env where n_env is number of environment copies running in parallel)
-    :param gamma: (float) Discount factor
-    :param gae_lambda: (float) Factor for trade-off of bias vs variance for Generalized Advantage Estimator.
+    :param attacker_gamma: (float) Discount factor
+    :param attacker_gae_lambda: (float) Factor for trade-off of bias vs variance for Generalized Advantage Estimator.
         Equivalent to classic advantage when set to 1.
-    :param ent_coef: (float) Entropy coefficient for the loss calculation
-    :param vf_coef: (float) Value function coefficient for the loss calculation
-    :param max_grad_norm: (float) The maximum value for the gradient clipping
+    :param attacker_ent_coef: (float) Entropy coefficient for the loss calculation
+    :param attacker_vf_coef: (float) Value function coefficient for the loss calculation
+    :param attacker_max_grad_norm: (float) The maximum value for the gradient clipping
     :param use_sde: (bool) Whether to use generalized State Dependent Exploration (gSDE)
         instead of action noise exploration (default: False)
     :param sde_sample_freq: (int) Sample a new noise matrix every n steps when using gSDE
@@ -51,15 +52,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
     def __init__(
         self,
-        policy: Union[str, Type[ActorCriticPolicy]],
+        attacker_policy: Union[str, Type[ActorCriticPolicy]],
         env: Union[GymEnv, str],
-        learning_rate: Union[float, Callable],
+        attacker_learning_rate: Union[float, Callable],
         n_steps: int,
-        gamma: float,
-        gae_lambda: float,
-        ent_coef: float,
-        vf_coef: float,
-        max_grad_norm: float,
+        attacker_gamma: float,
+        attacker_gae_lambda: float,
+        attacker_ent_coef: float,
+        attacker_vf_coef: float,
+        attacker_max_grad_norm: float,
         use_sde: bool,
         sde_sample_freq: int,
         create_eval_env: bool = False,
@@ -68,15 +69,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        agent_config: AgentConfig = None,
-        env_2: Union[GymEnv, str] = None
+        attacker_agent_config: AgentConfig = None,
+        env_2: Union[GymEnv, str] = None,
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
-            policy=policy,
+            attacker_policy=attacker_policy,
             env=env,
-            policy_base=ActorCriticPolicy,
-            learning_rate=learning_rate,
+            attacker_policy_base=ActorCriticPolicy,
+            attacker_learning_rate=attacker_learning_rate,
             policy_kwargs=policy_kwargs,
             verbose=verbose,
             device=device,
@@ -85,17 +87,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             create_eval_env=create_eval_env,
             support_multi_env=True,
             seed=seed,
-            agent_config = agent_config,
-            env_2=env_2
+            attacker_agent_config = attacker_agent_config,
+            env_2=env_2,
+            train_mode=train_mode
         )
 
         self.n_steps = n_steps
-        self.gamma = gamma
-        self.gae_lambda = gae_lambda
-        self.ent_coef = ent_coef
-        self.vf_coef = vf_coef
-        self.max_grad_norm = max_grad_norm
-        self.rollout_buffer = None
+        self.attacker_gamma = attacker_gamma
+        self.attacker_gae_lambda = attacker_gae_lambda
+        self.attacker_ent_coef = attacker_ent_coef
+        self.attacker_vf_coef = attacker_vf_coef
+        self.attacker_max_grad_norm = attacker_max_grad_norm
+        self.attacker_rollout_buffer = None
         self.iteration = 0
         self.num_episodes = 0
         self.num_episodes_total = 0
@@ -107,54 +110,54 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self._setup_lr_schedule()
         self.set_random_seed(self.seed)
 
-        if not self.agent_config.ar_policy:
-            self.rollout_buffer = RolloutBuffer(
+        if not self.attacker_agent_config.ar_policy:
+            self.attacker_rollout_buffer = RolloutBuffer(
                 self.n_steps,
-                self.observation_space,
-                self.action_space,
+                self.attacker_observation_space,
+                self.attacker_action_space,
                 self.device,
-                gamma=self.gamma,
-                gae_lambda=self.gae_lambda,
+                gamma=self.attacker_gamma,
+                gae_lambda=self.attacker_gae_lambda,
                 n_envs=self.n_envs,
             )
         else:
-            self.rollout_buffer = RolloutBufferAR(
+            self.attacker_rollout_buffer = RolloutBufferAR(
                 self.n_steps,
-                self.observation_space,
-                self.action_space,
+                self.attacker_observation_space,
+                self.attacker_action_space,
                 self.device,
-                gamma=self.gamma,
-                gae_lambda=self.gae_lambda,
+                gamma=self.attacker_gamma,
+                gae_lambda=self.attacker_gae_lambda,
                 n_envs=self.n_envs,
-                agent_config = self.agent_config
+                attacker_agent_config = self.attacker_agent_config
             )
-        if not hasattr(self.agent_config, 'ar_policy2') or not self.agent_config.ar_policy2:
-            self.policy = self.policy_class(
-                self.observation_space,
-                self.action_space,
-                self.lr_schedule,
+        if not hasattr(self.attacker_agent_config, 'ar_policy2') or not self.attacker_agent_config.ar_policy2:
+            self.policy = self.attacker_policy_class(
+                self.attacker_observation_space,
+                self.attacker_action_space,
+                self.attacker_lr_schedule,
                 use_sde=self.use_sde,
-                agent_config = self.agent_config,
+                agent_config = self.attacker_agent_config,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
             self.policy = self.policy.to(self.device)
         else:
-            self.m_selection_policy = self.policy_class(
-                self.env.envs[0].m_selection_observation_space,
-                self.env.envs[0].m_selection_action_space,
-                self.lr_schedule,
+            self.m_selection_policy = self.attacker_policy_class(
+                self.env.envs[0].attacker_m_selection_observation_space,
+                self.env.envs[0].attacker_m_selection_action_space,
+                self.attacker_lr_schedule,
                 use_sde=self.use_sde,
-                agent_config=self.agent_config,
+                agent_config=self.attacker_agent_config,
                 m_selection = True,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
             self.m_selection_policy = self.m_selection_policy.to(self.device)
-            self.m_action_policy = self.policy_class(
-                self.env.envs[0].m_action_observation_space,
-                self.env.envs[0].m_action_space,
-                self.lr_schedule,
+            self.m_action_policy = self.attacker_policy_class(
+                self.env.envs[0].attacker_m_action_observation_space,
+                self.env.envs[0].attacker_m_action_space,
+                self.attacker_lr_schedule,
                 use_sde=self.use_sde,
-                agent_config=self.agent_config,
+                agent_config=self.attacker_agent_config,
                 m_action = True,
                 **self.policy_kwargs  # pytype:disable=not-instantiable
             )
@@ -206,9 +209,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 # Sample a new noise matrix
                 self.policy.reset_noise(env.num_envs)
 
-            if not self.agent_config.ar_policy:
+            if not self.attacker_agent_config.ar_policy:
                 new_obs, rewards, dones, infos, values, log_probs, actions, action_pred_time_s, env_step_time = self.step_policy(env, rollout_buffer)
-                if self.agent_config.performance_analysis:
+                if self.attacker_agent_config.performance_analysis:
                     env_response_time += env_step_time
                     action_pred_time += action_pred_time_s
             else:
@@ -230,12 +233,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_rewards.append(episode_reward[i])
                         episode_steps.append(episode_step[i])
                         episode_flags.append(infos[i]["flags"])
-                        if self.agent_config.env_config is not None:
-                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_config.num_flags) # TODO this does not work with DR
+                        if self.attacker_agent_config.env_config is not None:
+                            episode_flags_percentage.append(infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags) # TODO this does not work with DR
                         else:
-                            episode_flags_percentage.append(infos[i]["flags"] / self.agent_config.env_configs[infos[i]["idx"]].num_flags)
+                            episode_flags_percentage.append(infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
 
-                        if self.agent_config.performance_analysis:
+                        if self.attacker_agent_config.performance_analysis:
                             env_response_times.append(env_response_time)
                             action_pred_times.append(action_pred_time)
                             env_response_time = 0
@@ -251,7 +254,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_reward[i] = 0
                         episode_step[i] = 0
 
-        if not self.agent_config.ar_policy:
+        if not self.attacker_agent_config.ar_policy:
             rollout_buffer.compute_returns_and_advantage(values, dones=dones)
         else:
             rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
@@ -286,7 +289,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         reset_num_timesteps: bool = True,
     ) -> "OnPolicyAlgorithm":
 
-        self.agent_config.logger.info("Setting up Training Configuration")
+        self.attacker_agent_config.logger.info("Setting up Training Configuration")
         print("Setting up Training Configuration")
 
         self.iteration = 0
@@ -296,8 +299,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         )
 
         callback.on_training_start(locals(), globals())
-        self.agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
-        self.agent_config.logger.info(self.agent_config.to_str())
+        self.attacker_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
+        self.attacker_agent_config.logger.info(self.attacker_agent_config.to_str())
 
         # Tracking metrics
         episode_rewards = []
@@ -316,17 +319,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         grad_comp_times = []
         weight_update_times = []
 
-        while self.iteration < self.agent_config.num_iterations:
+        while self.iteration < self.attacker_agent_config.num_iterations:
 
-            if self.agent_config.performance_analysis:
+            if self.attacker_agent_config.performance_analysis:
                 start = time.time()
 
             continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
             env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage, \
             rollout_env_response_times, rollout_action_pred_times = \
-                self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+                self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer, n_rollout_steps=self.n_steps)
 
-            if self.agent_config.performance_analysis:
+            if self.attacker_agent_config.performance_analysis:
                 end = time.time()
                 rollout_times.append(end-start)
                 env_response_times.extend(rollout_env_response_times)
@@ -366,7 +369,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             callback.iteration += 1
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
-            if self.iteration % self.agent_config.train_log_frequency == 0:
+            if self.iteration % self.attacker_agent_config.train_log_frequency == 0:
                 episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
                 eval_episode_rewards, eval_episode_steps, \
                 eval_episode_flags_percentage, eval_episode_flags, eval_2_episode_rewards_env_specific, \
@@ -375,19 +378,19 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
                 eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, None, \
                                                              None, None, None, {}, {}, {}, {}
-                if self.agent_config.train_progress_deterministic_eval:
-                    eval_conf = self.agent_config.env_config
-                    env_configs = self.agent_config.env_configs
-                    eval_env_configs = self.agent_config.eval_env_configs
-                    if self.agent_config.domain_randomization:
+                if self.attacker_agent_config.train_progress_deterministic_eval:
+                    eval_conf = self.attacker_agent_config.env_config
+                    env_configs = self.attacker_agent_config.env_configs
+                    eval_env_configs = self.attacker_agent_config.eval_env_configs
+                    if self.attacker_agent_config.domain_randomization:
                         if isinstance(self.env, DummyVecEnv):
                             eval_conf = self.env.env_config(0)
                             env_configs = self.env.env_configs()
                         if self.eval_env is not None:
                             eval_env_configs = self.eval_env.env_config
-                    if self.agent_config.eval_env_config is not None:
-                        eval_conf = self.agent_config.eval_env_config
-                        if self.agent_config.domain_randomization:
+                    if self.attacker_agent_config.eval_env_config is not None:
+                        eval_conf = self.attacker_agent_config.eval_env_config
+                        if self.attacker_agent_config.domain_randomization:
                             if isinstance(self.env, DummyVecEnv):
                                 eval_conf = self.eval_env.env_config(0)
                     episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
@@ -397,9 +400,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
                     eval_2_episode_flags_percentage_env_specific = \
                         quick_evaluate_policy(model=self.policy, env=self.env,
-                                              n_eval_episodes_train=self.agent_config.n_deterministic_eval_iter,
-                                              n_eval_episodes_eval2=self.agent_config.n_quick_eval_iter,
-                                              deterministic=self.agent_config.eval_deterministic, agent_config=self.agent_config,
+                                              n_eval_episodes_train=self.attacker_agent_config.n_deterministic_eval_iter,
+                                              n_eval_episodes_eval2=self.attacker_agent_config.n_quick_eval_iter,
+                                              deterministic=self.attacker_agent_config.eval_deterministic, attacker_agent_config=self.attacker_agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
                                               env_configs=env_configs,
                                               eval_env_config=eval_conf,
@@ -465,21 +468,21 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations
-            if self.iteration % self.agent_config.checkpoint_freq == 0:
+            if self.iteration % self.attacker_agent_config.checkpoint_freq == 0:
                 try:
                     self.save_model()
                 except Exception as e:
                     print("There was an error saving the model: {}".format(str(e)))
-                if self.agent_config.save_dir is not None:
+                if self.attacker_agent_config.save_dir is not None:
                     time_str = str(time.time())
                     self.train_result.to_csv(
-                        self.agent_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
+                        self.attacker_agent_config.save_dir + "/" + time_str + "_train_results_checkpoint.csv")
                     self.eval_result.to_csv(
-                        self.agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
+                        self.attacker_agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
-            if not self.agent_config.ar_policy:
+            if not self.attacker_agent_config.ar_policy:
                 entropy_loss, pg_loss, value_loss, lr, grad_comp_times, weight_update_times = self.train()
-                if self.agent_config.performance_analysis:
+                if self.attacker_agent_config.performance_analysis:
                     grad_comp_times.append(np.sum(grad_comp_times))
                     weight_update_times.append(np.sum(weight_update_times))
             else:
@@ -494,7 +497,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         """
         cf base class
         """
-        if not self.agent_config.ar_policy:
+        if not self.attacker_agent_config.ar_policy:
             state_dicts = ["policy", "policy.optimizer"]
         else:
             state_dicts = ["m_selection_policy", "m_selection_policy.optimizer",
@@ -506,15 +509,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
     def step_policy(self, env, rollout_buffer):
         action_pred_time = 0.0
         env_step_time = 0.0
-        if self.agent_config.performance_analysis:
+        if self.attacker_agent_config.performance_analysis:
             start = time.time()
         with th.no_grad():
             # Convert to pytorch tensor
             obs_tensor = th.as_tensor(self._last_obs).to(self.device)
             actions, values, log_probs = self.policy.forward(obs_tensor,  env=env, infos=self._last_infos)
         actions = actions.cpu().numpy()
+        print("ACTIONS:{}".format(actions))
 
-        if self.agent_config.performance_analysis:
+        if self.attacker_agent_config.performance_analysis:
             end = time.time()
             action_pred_time = end-start
 
@@ -522,19 +526,19 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         # Rescale and perform action
         clipped_actions = actions
         # Clip the actions to avoid out of bound error
-        if isinstance(self.action_space, gym.spaces.Box):
-            clipped_actions = np.clip(actions, self.action_space.low, self.action_space.high)
+        if isinstance(self.attacker_action_space, gym.spaces.Box):
+            clipped_actions = np.clip(actions, self.attacker_action_space.low, self.attacker_action_space.high)
 
-        if self.agent_config.performance_analysis:
+        if self.attacker_agent_config.performance_analysis:
             start = time.time()
         new_obs, rewards, dones, infos = env.step(clipped_actions)
-        if self.agent_config.performance_analysis:
+        if self.attacker_agent_config.performance_analysis:
             end = time.time()
             env_step_time = end-start
         if len(new_obs.shape) == 3:
-            new_obs = new_obs.reshape((new_obs.shape[0], self.observation_space.shape[0]))
+            new_obs = new_obs.reshape((new_obs.shape[0], self.attacker_observation_space.shape[0]))
 
-        if isinstance(self.action_space, gym.spaces.Discrete):
+        if isinstance(self.attacker_action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
             actions = actions.reshape(-1, 1)
 
@@ -571,11 +575,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         new_obs, rewards, dones, infos = env.step(actions)
 
-        if isinstance(self.env.envs[0].m_selection_action_space, gym.spaces.Discrete):
+        if isinstance(self.env.envs[0].attacker_m_selection_action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
             m_selection_actions = m_selection_actions.reshape(-1, 1)
         
-        if isinstance(self.env.envs[0].m_action_space, gym.spaces.Discrete):
+        if isinstance(self.env.envs[0].attacker_m_action_space, gym.spaces.Discrete):
             # Reshape in case of discrete action
             m_actions = m_actions.reshape(-1, 1)
 
@@ -591,18 +595,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
     def update_env_specific_metrics(self, env_specific_rewards, env_specific_steps, env_specific_flags,
                                     env_specific_flags_percentage, episode_reward, episode_step, infos, i):
-        if self.agent_config.env_config is not None:
-            num_flags = self.agent_config.env_config.num_flags
-            if self.agent_config.env_config.emulation_config is not None:
-                agent_ip = self.agent_config.env_config.emulation_config.agent_ip
+        if self.attacker_agent_config.env_config is not None:
+            num_flags = self.attacker_agent_config.env_config.num_flags
+            if self.attacker_agent_config.env_config.emulation_config is not None:
+                agent_ip = self.attacker_agent_config.env_config.emulation_config.agent_ip
             else:
-                agent_ip = self.agent_config.env_config.idx
+                agent_ip = self.attacker_agent_config.env_config.idx
         else:
-            if self.agent_config.env_configs[i].emulation_config is not None:
-                agent_ip = self.agent_config.env_configs[i].emulation_config.agent_ip
+            if self.attacker_agent_config.env_configs[i].emulation_config is not None:
+                agent_ip = self.attacker_agent_config.env_configs[i].emulation_config.agent_ip
             else:
-                agent_ip = self.agent_config.env_configs[i].idx
-            num_flags = self.agent_config.env_configs[infos[i]["idx"]].num_flags
+                agent_ip = self.attacker_agent_config.env_configs[i].idx
+            num_flags = self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags
 
         if agent_ip not in env_specific_rewards:
             env_specific_rewards[agent_ip] = [episode_reward[i]]

@@ -14,9 +14,10 @@ from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActi
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 
+
 class PyCrCTFLevel4V1:
     """
-    V1 configuration of level 1 of the PyCrCTF environment.
+    V1 configuration of level 4 of the PyCrCTF environment.
     """
 
     @staticmethod
@@ -38,7 +39,7 @@ class PyCrCTFLevel4V1:
         # Subnet actions
         attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
                                                                 subnet=True))
-        attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+        #attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
         attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
         attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
         attacker_actions.append(
@@ -52,7 +53,7 @@ class PyCrCTFLevel4V1:
         attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
             AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            AttackerActionId.NMAP_VULNERS_SUBNET,
+            #AttackerActionId.NMAP_VULNERS_SUBNET,
             AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
             AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
             AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET

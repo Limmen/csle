@@ -22,7 +22,7 @@ except ImportError as e:
     ''')
 import numpy as np
 import sys
-from gym_pycr_ctf.rendering import MainFrame
+from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.envs import PyCRCTFEnv

@@ -2,44 +2,44 @@
 Abstract Train Agent
 """
 import numpy as np
-#import tqdm
 import logging
 import random
 import torch
 from abc import ABC, abstractmethod
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 class TrainAgent(ABC):
     """
     Abstract Train Agent
     """
-    def __init__(self, env, config: AgentConfig, eval_env):
+    def __init__(self, env, attacker_config: AgentConfig, eval_env, train_mode : TrainMode = TrainMode.TRAIN_ATTACKER):
         """
         Initialize environment and hyperparameters
 
         :param env: the training env
-        :param config: the configuration
+        :param attacker_config: the configuration
         :param eval_env: the eval env
         """
         self.env = env
         self.eval_env = eval_env
-        self.config = config
+        self.attacker_config = attacker_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
+        self.train_mode=train_mode
         #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
-        if self.config.logger is None:
-            self.config.logger = logging.getLogger('Train Agent')
-        random.seed(self.config.random_seed)
-        np.random.seed(self.config.random_seed)
-        torch.manual_seed(self.config.random_seed)
+        if self.attacker_config.logger is None:
+            self.attacker_config.logger = logging.getLogger('Train Agent')
+        random.seed(self.attacker_config.random_seed)
+        np.random.seed(self.attacker_config.random_seed)
+        torch.manual_seed(self.attacker_config.random_seed)
 
     def log_action_dist(self, dist):
         log_str = " Initial State Action Dist: ["
         dist_str = ",".join(list(map(lambda x: str(x), dist.data.cpu().numpy().tolist())))
         log_str = log_str + dist_str + "]"
-        self.config.logger.info(log_str)
+        self.attacker_config.logger.info(log_str)
 
     def log_metrics(self, iteration: int, result: ExperimentResult, episode_rewards: list,
                     episode_steps: list, episode_avg_loss: list = None,
@@ -73,17 +73,17 @@ class TrainAgent(ABC):
         else:
             log_str = "[Train] iter: {:.2f} epsilon:{:.2f},avg_R:{:.2f},avg_t:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{}".format(
-                iteration, self.config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss, lr,
+                iteration, self.attacker_config.epsilon, avg_episode_rewards, avg_episode_steps, avg_episode_loss, lr,
                 total_num_episodes)
             self.outer_train.set_description_str(log_str)
-        self.config.logger.info(log_str)
-        if self.config.tensorboard:
+        self.attacker_config.logger.info(log_str)
+        if self.attacker_config.tensorboard:
             self.log_tensorboard(iteration, avg_episode_rewards, avg_episode_steps,
-                                 avg_episode_loss,  self.config.epsilon, lr, eval=eval)
+                                 avg_episode_loss, self.attacker_config.epsilon, lr, eval=eval)
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.avg_episode_rewards.append(avg_episode_rewards)
-        result.epsilon_values.append(self.config.epsilon)
+        result.epsilon_values.append(self.attacker_config.epsilon)
         result.avg_episode_loss.append(avg_episode_loss)
         result.lr_list.append(lr)
 
@@ -117,8 +117,8 @@ class TrainAgent(ABC):
 
         :return: None
         """
-        if self.config.epsilon > self.config.min_epsilon:
-            self.config.epsilon = self.config.epsilon*self.config.epsilon_decay
+        if self.attacker_config.epsilon > self.attacker_config.min_epsilon:
+            self.attacker_config.epsilon = self.attacker_config.epsilon * self.attacker_config.epsilon_decay
 
     def update_state(self, obs: np.ndarray = None, state: np.ndarray = None) -> np.ndarray:
         """
