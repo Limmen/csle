@@ -32,6 +32,7 @@ For documentation, see the README.md files inside each sub-directory,
      - [x] Emulation-mode
      - [x] Manual-mode
      - [x] Emulation+Simulation-model (using system identification)
+     - [x] Support for massively parallel training with several emulation/simulation environments
      
 - **Learning Process**
      - [x] Attacker training
@@ -46,7 +47,8 @@ For documentation, see the README.md files inside each sub-directory,
      - [x] TD3 baseline
 
 - **System Identification**
-     - [x] Custom system identifification algorithm to learn model of emulation     
+     - [x] Custom system identifification algorithm to learn model of emulation
+     - [x] Custom domain randomization algorithm          
 
 ## Author & Maintainer
 
