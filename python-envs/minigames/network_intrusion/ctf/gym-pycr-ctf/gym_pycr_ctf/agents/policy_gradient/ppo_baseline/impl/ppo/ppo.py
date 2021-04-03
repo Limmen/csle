@@ -100,7 +100,9 @@ class PPO(OnPolicyAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+        attacker_opponent = None,
+        defender_opponent = None
     ):
 
         super(PPO, self).__init__(
@@ -109,7 +111,7 @@ class PPO(OnPolicyAlgorithm):
             attacker_learning_rate=attacker_learning_rate,
             defender_learning_rate=defender_learning_rate,
             n_steps=n_steps,
-            attacker_gamma=defender_gamma,
+            attacker_gamma=attacker_gamma,
             defender_gamma=defender_gamma,
             attacker_gae_lambda=attacker_gae_lambda,
             defender_gae_lambda=defender_gae_lambda,
@@ -131,7 +133,9 @@ class PPO(OnPolicyAlgorithm):
             attacker_agent_config=attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode
+            train_mode=train_mode,
+            attacker_opponent = attacker_opponent,
+            defender_opponent = defender_opponent
         )
 
         self.batch_size = batch_size
@@ -171,108 +175,244 @@ class PPO(OnPolicyAlgorithm):
         """
         # Update optimizer learning rate
         self._update_learning_rate(self.attacker_policy.optimizer)
-        lr = self.attacker_policy.optimizer.param_groups[0]["lr"]
+        lr_attacker = self.attacker_policy.optimizer.param_groups[0]["lr"]
+
+        self._update_learning_rate(self.defender_policy.optimizer)
+        lr_defender = self.defender_policy.optimizer.param_groups[0]["lr"]
+
         # Compute current clip range
         attacker_clip_range = self.attacker_clip_range(self._current_progress_remaining)
         defender_clip_range = self.defender_clip_range(self._current_progress_remaining)
+
         # Optional: clip range for the value function
         if self.attacker_clip_range_vf is not None:
-            clip_range_vf = self.attacker_clip_range_vf(self._current_progress_remaining)
+            attacker_clip_range_vf = self.attacker_clip_range_vf(self._current_progress_remaining)
 
-        entropy_losses, all_kl_divs = [], []
-        pg_losses, value_losses = [], []
-        clip_fractions = []
-        grad_comp_times = []
-        weight_update_times = []
+        if self.defender_clip_range_vf is not None:
+            defender_clip_range_vf = self.defender_clip_range_vf(self._current_progress_remaining)
+
+        entropy_losses_attacker, all_kl_divs_attacker = [], []
+        pg_losses_attacker, value_losses_attacker = [], []
+        clip_fractions_attacker = []
+        grad_comp_times_attacker = []
+        weight_update_times_attacker = []
+
+        entropy_losses_defender, all_kl_divs_defender = [], []
+        pg_losses_defender, value_losses_defender = [], []
+        clip_fractions_defender = []
+        grad_comp_times_defender = []
+        weight_update_times_defender = []
 
         # train for gradient_steps epochs
         for epoch in range(self.n_epochs):
-            approx_kl_divs = []
-            # Do a complete pass on the rollout buffer
-            for rollout_data in self.attacker_rollout_buffer.get(self.batch_size):
-                if self.attacker_agent_config.performance_analysis:
-                    start= time.time()
 
-                actions = rollout_data.actions
-                if isinstance(self.attacker_action_space, spaces.Discrete):
-                    # Convert discrete action from float to long
-                    actions = rollout_data.actions.long().flatten()
+            if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+                attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
+                attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
+                grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker =  \
+                    self.attacker_rollout_buffer_pass(
+                    attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
+                    attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
+                    grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker)
 
-                # Re-sample the noise matrix because the log_std has changed
-                # TODO: investigate why there is no issue with the gradient
-                # if that line is commented (as in SAC)
-                if self.use_sde:
-                    self.attacker_policy.reset_noise(self.batch_size)
+            if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+                attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
+                attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
+                grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker, all_kl_divs_attacker = \
+                    self.attacker_rollout_buffer_pass(
+                        attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
+                        attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
+                        grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs_attacker,
+                        all_kl_divs_attacker)
 
-                values, log_prob, entropy = self.attacker_policy.evaluate_actions(rollout_data.observations, actions)
-                values = values.flatten()
-                # Normalize advantage
-                advantages = rollout_data.advantages
-                advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
-
-                # ratio between old and new policy, should be one at the first iteration
-                ratio = th.exp(log_prob - rollout_data.old_log_prob)
-
-                # clipped surrogate loss
-                policy_loss_1 = advantages * ratio
-                policy_loss_2 = advantages * th.clamp(ratio, 1 - attacker_clip_range, 1 + attacker_clip_range)
-                policy_loss = -th.min(policy_loss_1, policy_loss_2).mean()
-
-                # Logging
-                pg_losses.append(policy_loss.item())
-                clip_fraction = th.mean((th.abs(ratio - 1) > attacker_clip_range).float()).item()
-                clip_fractions.append(clip_fraction)
-
-                if self.attacker_clip_range_vf is None:
-                    # No clipping
-                    values_pred = values
-                else:
-                    # Clip the different between old and new value
-                    # NOTE: this depends on the reward scaling
-                    values_pred = rollout_data.old_values + th.clamp(
-                        values - rollout_data.old_values, -clip_range_vf, clip_range_vf
-                    )
-                # Value loss using the TD(gae_lambda) target
-                value_loss = F.mse_loss(rollout_data.returns, values_pred)
-                value_losses.append(value_loss.item())
-
-                # Entropy loss favor exploration
-                if entropy is None:
-                    # Approximate entropy when no analytical form
-                    entropy_loss = -th.mean(-log_prob)
-                else:
-                    entropy_loss = -th.mean(entropy)
-
-                entropy_losses.append(entropy_loss.item())
-
-                loss = policy_loss + self.attacker_ent_coef * entropy_loss + self.attacker_vf_coef * value_loss
-
-                # Optimization step
-                self.attacker_policy.optimizer.zero_grad()
-                loss.backward()
-                if self.attacker_agent_config.performance_analysis:
-                    end= time.time()
-                    grad_comp_times.append(end-start)
-                # Clip grad norm
-                if self.attacker_agent_config.performance_analysis:
-                    start = time.time()
-                th.nn.utils.clip_grad_norm_(self.attacker_policy.parameters(), self.attacker_max_grad_norm)
-                self.attacker_policy.optimizer.step()
-                if self.attacker_agent_config.performance_analysis:
-                    end = time.time()
-                    weight_update_times.append(end-start)
-                approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
-
-            all_kl_divs.append(np.mean(approx_kl_divs))
-
-            if self.target_kl is not None and np.mean(approx_kl_divs) > 1.5 * self.target_kl:
-                print(f"Early stopping at step {epoch} due to reaching max kl: {np.mean(approx_kl_divs):.2f}")
-                break
 
         self._n_updates += self.n_epochs
-        explained_var = explained_variance(self.attacker_rollout_buffer.returns.flatten(), self.attacker_rollout_buffer.values.flatten())
+        if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+            explained_var_attacker = \
+                explained_variance(self.attacker_rollout_buffer.returns.flatten(),
+                                   self.attacker_rollout_buffer.values.flatten())
 
-        return np.mean(entropy_losses), np.mean(pg_losses), np.mean(value_losses), lr, grad_comp_times, weight_update_times
+        if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+            explained_var_defender = \
+                explained_variance(self.defender_rollout_buffer.returns.flatten(),
+                                   self.defender_rollout_buffer.values.flatten())
+
+        return np.mean(entropy_losses_attacker), \
+               np.mean(pg_losses_attacker), np.mean(value_losses_attacker), \
+               lr_attacker, grad_comp_times_attacker, weight_update_times_attacker, \
+               np.mean(entropy_losses_defender), \
+               np.mean(pg_losses_defender), np.mean(value_losses_defender), \
+               lr_defender, grad_comp_times_defender, weight_update_times_defender
+
+    def attacker_rollout_buffer_pass(self, attacker_clip_range, pg_losses_attacker, clip_fractions_attacker,
+                                     attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker,
+                                     grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs,
+                                     all_kl_divs_attacker):
+        # Do a complete pass on the attacker's rollout buffer
+        for rollout_data in self.attacker_rollout_buffer.get(self.batch_size):
+            if self.attacker_agent_config.performance_analysis:
+                start = time.time()
+
+            actions = rollout_data.actions
+            if isinstance(self.attacker_action_space, spaces.Discrete):
+                # Convert discrete action from float to long
+                actions = rollout_data.actions.long().flatten()
+
+            # Re-sample the noise matrix because the log_std has changed
+            # TODO: investigate why there is no issue with the gradient
+            # if that line is commented (as in SAC)
+            if self.use_sde:
+                self.attacker_policy.reset_noise(self.batch_size)
+
+            values, log_prob, entropy = self.attacker_policy.evaluate_actions(rollout_data.observations, actions)
+            values = values.flatten()
+            # Normalize advantage
+            advantages = rollout_data.advantages
+            advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+
+            # ratio between old and new policy, should be one at the first iteration
+            ratio = th.exp(log_prob - rollout_data.old_log_prob)
+
+            # clipped surrogate loss
+            policy_loss_1 = advantages * ratio
+            policy_loss_2 = advantages * th.clamp(ratio, 1 - attacker_clip_range, 1 + attacker_clip_range)
+            policy_loss = -th.min(policy_loss_1, policy_loss_2).mean()
+
+            # Logging
+            pg_losses_attacker.append(policy_loss.item())
+            clip_fraction = th.mean((th.abs(ratio - 1) > attacker_clip_range).float()).item()
+            clip_fractions_attacker.append(clip_fraction)
+
+            if self.attacker_clip_range_vf is None:
+                # No clipping
+                values_pred = values
+            else:
+                # Clip the different between old and new value
+                # NOTE: this depends on the reward scaling
+                values_pred = rollout_data.old_values + th.clamp(
+                    values - rollout_data.old_values, -attacker_clip_range_vf, attacker_clip_range_vf
+                )
+            # Value loss using the TD(gae_lambda) target
+            value_loss = F.mse_loss(rollout_data.returns, values_pred)
+            value_losses_attacker.append(value_loss.item())
+
+            # Entropy loss favor exploration
+            if entropy is None:
+                # Approximate entropy when no analytical form
+                entropy_loss = -th.mean(-log_prob)
+            else:
+                entropy_loss = -th.mean(entropy)
+
+            entropy_losses_attacker.append(entropy_loss.item())
+
+            loss = policy_loss + self.attacker_ent_coef * entropy_loss + self.attacker_vf_coef * value_loss
+
+            # Optimization step
+            self.attacker_policy.optimizer.zero_grad()
+            loss.backward()
+            if self.attacker_agent_config.performance_analysis:
+                end = time.time()
+                grad_comp_times_attacker.append(end - start)
+            # Clip grad norm
+            if self.attacker_agent_config.performance_analysis:
+                start = time.time()
+            th.nn.utils.clip_grad_norm_(self.attacker_policy.parameters(), self.attacker_max_grad_norm)
+            self.attacker_policy.optimizer.step()
+            if self.attacker_agent_config.performance_analysis:
+                end = time.time()
+                weight_update_times_attacker.append(end - start)
+            approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
+
+        all_kl_divs_attacker.append(np.mean(approx_kl_divs))
+
+        return attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
+               attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
+               grad_comp_times_attacker, weight_update_times_attacker, approx_kl_divs, all_kl_divs_attacker
+
+    def defender_rollout_buffer_pass(self, defender_clip_range, pg_losses_defender, clip_fractions_defender,
+                                     defender_clip_range_vf, value_losses_defender, entropy_losses_defender,
+                                     grad_comp_times_defender, weight_update_times_defender, approx_kl_divs,
+                                     all_kl_divs_defender):
+        # Do a complete pass on the defender's rollout buffer
+        for rollout_data in self.defender_rollout_buffer.get(self.batch_size):
+            if self.defender_agent_config.performance_analysis:
+                start = time.time()
+
+            actions = rollout_data.actions
+            if isinstance(self.defender_action_space, spaces.Discrete):
+                # Convert discrete action from float to long
+                actions = rollout_data.actions.long().flatten()
+
+            # Re-sample the noise matrix because the log_std has changed
+            # TODO: investigate why there is no issue with the gradient
+            # if that line is commented (as in SAC)
+            if self.use_sde:
+                self.defender_policy.reset_noise(self.batch_size)
+
+            values, log_prob, entropy = self.defender_policy.evaluate_actions(rollout_data.observations, actions)
+            values = values.flatten()
+            # Normalize advantage
+            advantages = rollout_data.advantages
+            advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+
+            # ratio between old and new policy, should be one at the first iteration
+            ratio = th.exp(log_prob - rollout_data.old_log_prob)
+
+            # clipped surrogate loss
+            policy_loss_1 = advantages * ratio
+            policy_loss_2 = advantages * th.clamp(ratio, 1 - defender_clip_range, 1 + defender_clip_range)
+            policy_loss = -th.min(policy_loss_1, policy_loss_2).mean()
+
+            # Logging
+            pg_losses_defender.append(policy_loss.item())
+            clip_fraction = th.mean((th.abs(ratio - 1) > defender_clip_range).float()).item()
+            clip_fractions_defender.append(clip_fraction)
+
+            if self.defender_clip_range_vf is None:
+                # No clipping
+                values_pred = values
+            else:
+                # Clip the different between old and new value
+                # NOTE: this depends on the reward scaling
+                values_pred = rollout_data.old_values + th.clamp(
+                    values - rollout_data.old_values, -defender_clip_range_vf, defender_clip_range_vf
+                )
+            # Value loss using the TD(gae_lambda) target
+            value_loss = F.mse_loss(rollout_data.returns, values_pred)
+            value_losses_defender.append(value_loss.item())
+
+            # Entropy loss favor exploration
+            if entropy is None:
+                # Approximate entropy when no analytical form
+                entropy_loss = -th.mean(-log_prob)
+            else:
+                entropy_loss = -th.mean(entropy)
+
+            entropy_losses_defender.append(entropy_loss.item())
+
+            loss = policy_loss + self.defender_ent_coef * entropy_loss + self.defender_vf_coef * value_loss
+
+            # Optimization step
+            self.defender_policy.optimizer.zero_grad()
+            loss.backward()
+            if self.defender_agent_config.performance_analysis:
+                end = time.time()
+                grad_comp_times_defender.append(end - start)
+            # Clip grad norm
+            if self.defender_agent_config.performance_analysis:
+                start = time.time()
+            th.nn.utils.clip_grad_norm_(self.defender_policy.parameters(), self.defender_max_grad_norm)
+            self.defender_policy.optimizer.step()
+            if self.defender_agent_config.performance_analysis:
+                end = time.time()
+                weight_update_times_defender.append(end - start)
+            approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
+
+        all_kl_divs_defender.append(np.mean(approx_kl_divs))
+
+        return defender_clip_range, pg_losses_defender, clip_fractions_defender, \
+               defender_clip_range_vf, value_losses_defender, entropy_losses_defender, \
+               grad_comp_times_defender, weight_update_times_defender, approx_kl_divs, all_kl_divs_defender
 
     def train_ar(self) -> None:
         """

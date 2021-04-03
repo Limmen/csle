@@ -107,12 +107,16 @@ class BaseAlgorithm(ABC):
             attacker_agent_config: AgentConfig = None,
             defender_agent_config: AgentConfig = None,
             env_2: Union[GymEnv, str, None] = None,
-            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER
+            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER,
+            attacker_opponent=None,
+            defender_opponent=None
     ):
         self.attacker_agent_config = attacker_agent_config
         self.defender_agent_config = defender_agent_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
+        self.attacker_opponent = attacker_opponent
+        self.defender_opponent = defender_opponent
 
         try:
             self.tensorboard_writer = SummaryWriter(self.attacker_agent_config.tensorboard_dir)

@@ -221,11 +221,16 @@ class PyCRCTFEnv(gym.Env, ABC):
         if defense_action_id is not None:
             if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
                 time.sleep(self.env_config.defender_sleep_before_state_update)
-            defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, info = \
+            defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, defender_info = \
                 self.step_defender(defender_action_id=defense_action_id, done_attacker=done,
                                    attacker_action=attack_action)
             attacker_reward = attacker_reward + attacker_reward_2
             attacker_m_obs = attacker_m_obs_2
+
+        # Merge infos
+        for k,v in defender_info.items():
+            if k not in info:
+                info[k] = v
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 

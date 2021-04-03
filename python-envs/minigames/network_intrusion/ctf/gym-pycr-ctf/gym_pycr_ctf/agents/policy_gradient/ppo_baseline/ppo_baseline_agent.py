@@ -13,6 +13,8 @@ from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
 
 class PPOBaselineAgent(TrainAgent):
     """
@@ -39,53 +41,57 @@ class PPOBaselineAgent(TrainAgent):
         """
 
         # Setup Attacker
+        if self.attacker_config is not None:
+            # Custom MLP policy for attacker
+            attacker_net_arch = []
+            attacker_pi_arch = []
+            attacker_vf_arch = []
+            for l in range(self.attacker_config.shared_layers):
+                attacker_net_arch.append(self.attacker_config.shared_hidden_dim)
+            for l in range(self.attacker_config.pi_hidden_layers):
+                attacker_pi_arch.append(self.attacker_config.pi_hidden_dim)
+            for l in range(self.attacker_config.vf_hidden_layers):
+                attacker_vf_arch.append(self.attacker_config.vf_hidden_dim)
 
+            net_dict_attacker = {"pi": attacker_pi_arch, "vf": attacker_vf_arch}
+            attacker_net_arch.append(net_dict_attacker)
 
-        # Custom MLP policy for attacker
-        attacker_net_arch = []
-        attacker_pi_arch = []
-        attacker_vf_arch = []
-        for l in range(self.attacker_config.shared_layers):
-            attacker_net_arch.append(self.attacker_config.shared_hidden_dim)
-        for l in range(self.attacker_config.pi_hidden_layers):
-            attacker_pi_arch.append(self.attacker_config.pi_hidden_dim)
-        for l in range(self.attacker_config.vf_hidden_layers):
-            attacker_vf_arch.append(self.attacker_config.vf_hidden_dim)
+            policy_kwargs_attacker = dict(activation_fn=self.get_hidden_activation_attacker(), net_arch=attacker_net_arch)
+            device_attacker = "cpu" if not self.attacker_config.gpu else "cuda:" + str(self.attacker_config.gpu_id)
+            policy_attacker = "MlpPolicy"
 
-        net_dict_attacker = {"pi": attacker_pi_arch, "vf": attacker_vf_arch}
-        attacker_net_arch.append(net_dict_attacker)
-
-        policy_kwargs_attacker = dict(activation_fn=self.get_hidden_activation_attacker(), net_arch=attacker_net_arch)
-        device_attacker = "cpu" if not self.attacker_config.gpu else "cuda:" + str(self.attacker_config.gpu_id)
-        policy_attacker = "MlpPolicy"
-
-        if self.attacker_config.lr_progress_decay:
-            temp = self.attacker_config.alpha
-            lr_decay_func = lambda x: temp * math.pow(x, self.attacker_config.lr_progress_power_decay)
-            self.attacker_config.alpha = lr_decay_func
+            if self.attacker_config.lr_progress_decay:
+                temp = self.attacker_config.alpha
+                lr_decay_func = lambda x: temp * math.pow(x, self.attacker_config.lr_progress_power_decay)
+                self.attacker_config.alpha = lr_decay_func
 
         # Setup Defender
+        if self.defender_config is not None:
+            # Custom MLP policy for attacker
+            defender_net_arch = []
+            defender_pi_arch = []
+            defender_vf_arch = []
+            for l in range(self.defender_config.shared_layers):
+                defender_net_arch.append(self.defender_config.shared_hidden_dim)
+            for l in range(self.defender_config.pi_hidden_layers):
+                defender_pi_arch.append(self.defender_config.pi_hidden_dim)
+            for l in range(self.defender_config.vf_hidden_layers):
+                defender_vf_arch.append(self.defender_config.vf_hidden_dim)
 
-        # Custom MLP policy for attacker
-        defender_net_arch = []
-        defender_pi_arch = []
-        defender_vf_arch = []
-        for l in range(self.defender_config.shared_layers):
-            defender_net_arch.append(self.defender_config.shared_hidden_dim)
-        for l in range(self.defender_config.pi_hidden_layers):
-            defender_pi_arch.append(self.defender_config.pi_hidden_dim)
-        for l in range(self.defender_config.vf_hidden_layers):
-            defender_vf_arch.append(self.defender_config.vf_hidden_dim)
+            net_dict_defender = {"pi": defender_pi_arch, "vf": defender_vf_arch}
+            defender_net_arch.append(net_dict_defender)
 
-        net_dict_defender = {"pi": defender_pi_arch, "vf": defender_vf_arch}
-        defender_net_arch.append(net_dict_defender)
+            policy_kwargs_defender = dict(activation_fn=self.get_hidden_activation_defender(), net_arch=defender_net_arch)
+            device_defender = "cpu" if not self.defender_config.gpu else "cuda:" + str(self.defender_config.gpu_id)
+            policy_defender = "MlpPolicy"
 
-        policy_kwargs_defender = dict(activation_fn=self.get_hidden_activation_defender(), net_arch=defender_net_arch)
-        device_defender = "cpu" if not self.defender_config.gpu else "cuda:" + str(self.defender_config.gpu_id)
-        policy_defender = "MlpPolicy"
+        # Setup baseline opponents
+        attacker_opponent = None
+        defender_opponent = None
+        if self.attacker_opponent_type == AgentType.RANDOM_ATTACKER:
+            attacker_opponent = RandomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
 
         # Create model
-
         model = PPO(policy_attacker, policy_defender,
                     self.env,
                     batch_size=self.attacker_config.mini_batch_size,
@@ -115,7 +121,9 @@ class PPOBaselineAgent(TrainAgent):
                     use_sde=self.attacker_config.use_sde,
                     sde_sample_freq=self.attacker_config.sde_sample_freq,
                     env_2=self.eval_env,
-                    train_mode = self.train_mode
+                    train_mode = self.train_mode,
+                    attacker_opponent = attacker_opponent,
+                    defender_opponent = defender_opponent
                     )
 
         if self.attacker_config.load_path is not None:

@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.dao.agent.agent_type import AgentType
 
 class TrainAgent(ABC):
     """
@@ -27,22 +28,31 @@ class TrainAgent(ABC):
         self.env = env
         self.eval_env = eval_env
         self.attacker_config = attacker_config
-        self.defender_config = attacker_config
+        self.defender_config = defender_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
         self.train_mode=train_mode
         #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
+        if self.attacker_config is None:
+            self.attacker_config = self.defender_config
         if self.attacker_config.logger is None:
             self.attacker_config.logger = logging.getLogger('Train Agent - Attacker')
         random.seed(self.attacker_config.random_seed)
         np.random.seed(self.attacker_config.random_seed)
         torch.manual_seed(self.attacker_config.random_seed)
 
+        if self.defender_config is None:
+            self.defender_config = self.attacker_config
         if self.defender_config.logger is None:
             self.defender_config.logger = logging.getLogger('Train Agent - Defender')
         random.seed(self.defender_config.random_seed)
         np.random.seed(self.defender_config.random_seed)
         torch.manual_seed(self.defender_config.random_seed)
+
+        if self.defender_config.attacker_opponent_baseline_type is not None and self.train_mode != TrainMode.SELF_PLAY:
+            self.attacker_opponent_type = AgentType(self.defender_config.attacker_opponent_baseline_type)
+        if self.attacker_config.defender_opponent_baseline_type is not None and self.train_mode != TrainMode.SELF_PLAY:
+            self.defender_opponent_type = AgentType(self.attacker_config.defender_opponent_baseline_type)
 
     def log_action_dist_attacker(self, dist):
         log_str = " Initial State Action Dist for Attacker: ["

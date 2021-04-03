@@ -12,6 +12,7 @@ if typing.TYPE_CHECKING:
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
 def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                     n_eval_episodes : int=10,
@@ -185,16 +186,21 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
     return mean_reward, std_reward
 
 
-def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
+def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "BaseAlgorithm",
+                          env: Union[gym.Env, VecEnv], env_2: Union[gym.Env, VecEnv],
                           n_eval_episodes_train : int=10, n_eval_episodes_eval2 : int=10,
                           deterministic : bool= True, attacker_agent_config : AgentConfig = None,
+                          defender_agent_config : AgentConfig = None,
                           env_config: EnvConfig = None, env_configs : List[EnvConfig] = None,
-                          eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None):
+                          eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None,
+                          train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+                          attacker_opponent = None, defender_opponent = None
+                          ):
     """
     Runs policy for ``n_eval_episodes`` episodes and returns average reward.
     This is made to work only with one env.
 
-    :param model: (BaseRLModel) The RL agent you want to evaluate.
+    :param attacker_model: (BaseRLModel) The RL agent you want to evaluate.
     :param env: (gym.Env or VecEnv) The gym environment. In the case of a ``VecEnv``
         this must contain only one environment.
     :param n_eval_episodes_train: (int) Number of episode to evaluate the agent
@@ -202,39 +208,52 @@ def quick_evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], e
     :param attacker_agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
-    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
-    eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-    eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+    attacker_eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
+    attacker_eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+    eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
     eval_2_episode_flags_percentage_env_specific = {}, {}, {}, {}, {}, {}, {}, {}
 
-    episode_rewards, episode_steps, episode_flags_percentage, episode_flags, eval_episode_rewards_env_specific, \
+    attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+    attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific = _quick_eval_helper(
-        env=env, model=model, n_eval_episodes=n_eval_episodes_train, deterministic=True, env_config=env_config,
-        env_configs =env_configs)
+        env=env, attacker_model=attacker_model, defender_model=defender_model,
+        n_eval_episodes=n_eval_episodes_train, deterministic=True, env_config=env_config, train_mode=train_mode,
+        env_configs =env_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent)
 
     if env_2 is not None:
-        eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-        eval_2_episode_rewards_env_specific, eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+        attacker_eval_episode_rewards, defender_eval_episode_rewards, \
+        eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+        attacker_eval_2_episode_rewards_env_specific, defender_eval_2_episode_rewards_env_specific, \
+        eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
         eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
-            env=env_2, model=model, n_eval_episodes=n_eval_episodes_eval2, deterministic=deterministic, env_config=eval_env_config,
-            env_configs=eval_envs_configs)
-    return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-           eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-           eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-           eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+            env=env_2, attacker_model=attacker_model, defender_model=defender_model,
+            n_eval_episodes=n_eval_episodes_eval2, deterministic=deterministic, env_config=eval_env_config,
+            train_mode=train_mode,
+            env_configs=eval_envs_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent)
+    return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+           attacker_eval_episode_rewards, defender_eval_episode_rewards, \
+           eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+           attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
+           eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+           eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
+           defender_eval_2_episode_rewards_env_specific, \
            eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
            eval_2_episode_flags_percentage_env_specific
 
 
-def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, env_configs = None):
+def _quick_eval_helper(env, attacker_model, defender_model,
+                       n_eval_episodes, deterministic, env_config, train_mode, env_configs = None,
+                       attacker_opponent = None, defender_opponent = None):
     # Tracking metrics
-    episode_rewards = []
+    attacker_episode_rewards = []
+    defender_episode_rewards = []
     episode_steps = []
     episode_flags = []
     episode_flags_percentage = []
-    eval_episode_rewards_env_specific = {}
+    attacker_eval_episode_rewards_env_specific = {}
+    defender_eval_episode_rewards_env_specific = {}
     eval_episode_steps_env_specific = {}
     eval_episode_flags_env_specific = {}
     eval_episode_flags_percentage_env_specific = {}
@@ -262,19 +281,32 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
             done = False
             state = None
             env_state = None
-            episode_reward = 0.0
+            attacker_episode_reward = 0.0
+            defender_episode_reward = 0.0
             episode_length = 0
             while not done:
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
                 obs_attacker, obs_defender = obs
-                attacker_actions, state = model.predict(np.array([obs_attacker]), state=state,
-                                                        deterministic=deterministic,
-                                                        infos=infos,
-                                                        env_config = env_conf,
-                                                        env_configs=env_configs, env=env, env_idx=i,
-                                                        env_state=env_state)
-                defender_action = None
+                attacker_actions = None
+                defender_actions = [None]
+                if train_mode == train_mode.TRAIN_ATTACKER or train_mode == train_mode.SELF_PLAY:
+                    attacker_actions, state = attacker_model.predict(np.array([obs_attacker]), state=state,
+                                                                     deterministic=deterministic,
+                                                                     infos=infos,
+                                                                     env_config = env_conf,
+                                                                     env_configs=env_configs, env=env, env_idx=i,
+                                                                     env_state=env_state)
+                if train_mode == train_mode.TRAIN_DEFENDER or train_mode == train_mode.SELF_PLAY:
+                    defender_actions, state = defender_model.predict(np.array([obs_defender]), state=state,
+                                                                     deterministic=deterministic,
+                                                                     infos=infos,
+                                                                     env_config=env_conf,
+                                                                     env_configs=env_configs, env=env, env_idx=i,
+                                                                     env_state=env_state)
+                    if attacker_actions is None:
+                        attacker_actions = np.array([attacker_opponent.action(env_state)])
+                defender_action = defender_actions[0]
                 attacker_action = attacker_actions[0]
                 action = (attacker_action, defender_action)
                 if isinstance(env, SubprocVecEnv):
@@ -283,42 +315,57 @@ def _quick_eval_helper(env, model, n_eval_episodes, deterministic, env_config, e
                     obs, reward, done, _info = env.envs[i].step(action)
                 attacker_reward, defender_reward = reward
                 infos = [_info]
-                episode_reward += attacker_reward
+                attacker_episode_reward += attacker_reward
+                defender_episode_reward += defender_reward
                 episode_length += 1
             # Record episode metrics
-            episode_rewards.append(episode_reward)
+            attacker_episode_rewards.append(attacker_episode_reward)
+            defender_episode_rewards.append(defender_episode_reward)
             episode_steps.append(episode_length)
             episode_flags.append(_info["flags"])
             episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
-            eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
+            attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
+            eval_episode_steps_env_specific, \
             eval_episode_flags_env_specific, eval_episode_flags_percentage_env_specific = \
-                update_env_specific_metrics(env_conf, eval_episode_rewards_env_specific,
-                                        eval_episode_steps_env_specific, eval_episode_flags_env_specific,
-                                        eval_episode_flags_percentage_env_specific, episode_reward,episode_length,
-                                        _info, i)
+                update_env_specific_metrics(env_conf, attacker_eval_episode_rewards_env_specific,
+                                            defender_eval_episode_rewards_env_specific,
+                                            eval_episode_steps_env_specific, eval_episode_flags_env_specific,
+                                            eval_episode_flags_percentage_env_specific,
+                                            attacker_episode_reward, defender_episode_reward,
+                                            episode_length,
+                                            _info, i)
             if isinstance(env, SubprocVecEnv):
                 obs = env.eval_reset(idx=i)
             elif isinstance(env, DummyVecEnv):
                 obs = env.envs[i].reset()
                 env_conf = env.env_config(i)
                 env_configs = env.env_configs()
-    return episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-           eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+    return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+           attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
+           eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific
 
 
-def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_steps, env_specific_flags,
-                                env_specific_flags_percentage, episode_reward, episode_step, infos, i):
+def update_env_specific_metrics(env_config, attacker_env_specific_rewards, defender_env_specific_rewards,
+                                env_specific_steps, env_specific_flags,
+                                env_specific_flags_percentage, attacker_episode_reward,
+                                defender_episode_reward,
+                                episode_step, infos, i):
     if env_config.emulation_config is not None:
         agent_ip = env_config.emulation_config.agent_ip
     else:
         agent_ip = env_config.idx
     num_flags = env_config.num_flags
 
-    if agent_ip not in env_specific_rewards:
-        env_specific_rewards[agent_ip] = [episode_reward]
+    if agent_ip not in attacker_env_specific_rewards:
+        attacker_env_specific_rewards[agent_ip] = [attacker_episode_reward]
     else:
-        env_specific_rewards[agent_ip].append(episode_reward)
+        attacker_env_specific_rewards[agent_ip].append(attacker_episode_reward)
+
+    if agent_ip not in defender_env_specific_rewards:
+        defender_env_specific_rewards[agent_ip] = [defender_episode_reward]
+    else:
+        defender_env_specific_rewards[agent_ip].append(defender_episode_reward)
 
     if agent_ip not in env_specific_steps:
         env_specific_steps[agent_ip] = [episode_step]
@@ -335,4 +382,5 @@ def update_env_specific_metrics(env_config, env_specific_rewards, env_specific_s
     else:
         env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
 
-    return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage
+    return attacker_env_specific_rewards, defender_env_specific_rewards, \
+           env_specific_steps, env_specific_flags, env_specific_flags_percentage

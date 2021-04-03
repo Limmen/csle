@@ -103,22 +103,35 @@ class Runner:
                                     emulation_config = config.eval_emulation_config,
                                     checkpoint_dir = config.env_checkpoint_dir)
             if config.eval_multi_env:
-                config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                if config.attacker_agent_config is not None:
+                    config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                if config.defender_agent_config is not None:
+                    config.defender_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             elif config.train_multi_sim:
-                config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                if config.attacker_agent_config is not None:
+                    config.attacker_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
+                if config.defender_agent_config is not None:
+                    config.defender_agent_config.eval_env_configs = list(map(lambda x: x.env_config, eval_base_envs))
             else:
-                config.attacker_agent_config.eval_env_config = eval_env.env_config
+                if config.attacker_agent_config is not None:
+                    config.attacker_agent_config.eval_env_config = eval_env.env_config
+                if config.defender_agent_config is not None:
+                    config.defender_agent_config.eval_env_config = eval_env.env_config
 
-        if config.attacker_agent_config.domain_randomization and config.sub_proc_env:
+        if config.train_mode == TrainMode.TRAIN_ATTACKER or config.train_mode == TrainMode.SELF_PLAY:
+            cfg = config.attacker_agent_config
+        else:
+            cfg = config.defender_agent_config
+        if cfg.domain_randomization and config.sub_proc_env:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
                 randomization_space = DomainRandomizer.generate_randomization_space(
-                    env.network_confs, max_num_nodes = config.attacker_agent_config.dr_max_num_nodes,
-                min_num_nodes = config.attacker_agent_config.dr_min_num_nodes, max_num_flags=config.attacker_agent_config.dr_max_num_flags,
-                min_num_flags=config.attacker_agent_config.dr_min_num_flags, min_num_users=config.attacker_agent_config.dr_min_num_users,
-                max_num_users=config.attacker_agent_config.dr_max_num_users, use_base_randomization=config.attacker_agent_config.dr_use_base)
-                print("Randomization space created, base:{}".format(config.attacker_agent_config.dr_use_base))
+                    env.network_confs, max_num_nodes = cfg.dr_max_num_nodes,
+                min_num_nodes = cfg.dr_min_num_nodes, max_num_flags=cfg.dr_max_num_flags,
+                min_num_flags=cfg.dr_min_num_flags, min_num_users=cfg.dr_min_num_users,
+                fmax_num_users=cfg.dr_max_num_users, use_base_randomization=cfg.dr_use_base)
+                print("Randomization space created, base:{}".format(cfg.dr_use_base))
                 env.set_randomization_space(randomization_space)
                 print("Randomization space sent to all envs")
                 if eval_env is not None:
@@ -130,11 +143,20 @@ class Runner:
 
         agent: TrainAgent = None
         if config.multi_env:
-            config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            if config.attacker_agent_config is not None:
+                config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            if config.defender_agent_config is not None:
+                config.defender_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
         elif config.train_multi_sim:
-            config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            if config.attacker_agent_config is not None:
+                config.attacker_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
+            if config.defender_agent_config is not None:
+                config.defender_agent_config.env_configs = list(map(lambda x: x.env_config, base_envs))
         else:
-            config.attacker_agent_config.env_config = base_env.env_config
+            if config.attacker_agent_config is not None:
+                config.attacker_agent_config.env_config = base_env.env_config
+            if config.defender_agent_config is not None:
+                config.defender_agent_config.env_config = base_env.env_config
 
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env,
@@ -302,15 +324,19 @@ class Runner:
         else:
             env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                            checkpoint_dir=config.env_checkpoint_dir)
-            if config.attacker_agent_config.domain_randomization:
+            if config.train_mode == TrainMode.TRAIN_ATTACKER or config.train_mode == TrainMode.SELF_PLAY:
+                cfg = config.attacker_agent_config
+            else:
+                cfg = config.defender_agent_config
+            if cfg.domain_randomization:
                 randomization_space = DomainRandomizer.generate_randomization_space(
                     [], max_num_nodes=config.attacker_agent_config.dr_max_num_nodes,
-                    min_num_nodes=config.attacker_agent_config.dr_min_num_nodes,
-                    max_num_flags=config.attacker_agent_config.dr_max_num_flags,
-                    min_num_flags=config.attacker_agent_config.dr_min_num_flags,
-                    min_num_users=config.attacker_agent_config.dr_min_num_users,
-                    max_num_users=config.attacker_agent_config.dr_max_num_users,
-                    use_base_randomization=config.attacker_agent_config.dr_use_base)
+                    min_num_nodes=cfg.dr_min_num_nodes,
+                    max_num_flags=cfg.dr_max_num_flags,
+                    min_num_flags=cfg.dr_min_num_flags,
+                    min_num_users=cfg.dr_min_num_users,
+                    max_num_users=cfg.dr_max_num_users,
+                    use_base_randomization=cfg.dr_use_base)
                 env.randomization_space = randomization_space
                 env.env_config.domain_randomization = True
                 base_env.randomization_space = randomization_space

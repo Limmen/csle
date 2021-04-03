@@ -80,7 +80,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+        attacker_opponent=None,
+        defender_opponent = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -103,7 +105,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             attacker_agent_config = attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode
+            train_mode=train_mode,
+            attacker_opponent = attacker_opponent,
+            defender_opponent = defender_opponent
         )
 
         self.n_steps = n_steps
@@ -228,11 +232,13 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.attacker_policy.reset_noise(env.num_envs)
 
         # Avg metrics
-        episode_rewards = []
+        attacker_episode_rewards = []
+        defender_episode_rewards = []
         episode_steps = []
         episode_flags = []
         episode_flags_percentage = []
-        env_specific_rewards = {}
+        attacker_env_specific_rewards = {}
+        defender_env_specific_rewards = {}
         env_specific_steps = {}
         env_specific_flags = {}
         env_specific_flags_percentage = {}
@@ -240,7 +246,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         action_pred_times = []
 
         # Per episode metrics
-        episode_reward = np.zeros(env.num_envs)
+        episode_reward_attacker = np.zeros(env.num_envs)
+        episode_reward_defender = np.zeros(env.num_envs)
         episode_step = np.zeros(env.num_envs)
         env_response_time = 0
         action_pred_time = 0
@@ -268,7 +275,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.num_timesteps += env.num_envs
             self._update_info_buffer(infos)
             n_steps += 1
-            episode_reward += attacker_rewards
+            episode_reward_attacker += attacker_rewards
+            episode_reward_defender += defender_rewards
             episode_step += 1
             if dones.any():
                 for i in range(len(dones)):
@@ -276,13 +284,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         # Record episode metrics
                         self.num_episodes += 1
                         self.num_episodes_total += 1
-                        episode_rewards.append(episode_reward[i])
+                        attacker_episode_rewards.append(episode_reward_attacker[i])
+                        defender_episode_rewards.append(episode_reward_defender[i])
                         episode_steps.append(episode_step[i])
                         episode_flags.append(infos[i]["flags"])
                         if self.attacker_agent_config.env_config is not None:
-                            episode_flags_percentage.append(infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags) # TODO this does not work with DR
+                            episode_flags_percentage.append(
+                                infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
+                            ) # TODO this does not work with DR
                         else:
-                            episode_flags_percentage.append(infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
+                            episode_flags_percentage.append(
+                                infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
 
                         if self.attacker_agent_config.performance_analysis:
                             env_response_times.append(env_response_time)
@@ -290,18 +302,27 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                             env_response_time = 0
                             action_pred_time = 0
 
-                        env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage= \
-                            self.update_env_specific_metrics(env_specific_rewards=env_specific_rewards,
-                                                         env_specific_steps=env_specific_steps,
-                                                         env_specific_flags=env_specific_flags,
-                                                         env_specific_flags_percentage=env_specific_flags_percentage,
-                                                         episode_reward=episode_reward, episode_step=episode_step,
-                                                         infos=infos, i=i)
-                        episode_reward[i] = 0
+                        attacker_env_specific_rewards, defender_env_specific_rewards, \
+                        env_specific_steps, env_specific_flags, env_specific_flags_percentage= \
+                            self.update_env_specific_metrics(
+                                env_specific_rewards_attacker=attacker_env_specific_rewards,
+                                env_specific_rewards_defender=defender_env_specific_rewards,
+                                env_specific_steps=env_specific_steps,
+                                env_specific_flags=env_specific_flags,
+                                env_specific_flags_percentage=env_specific_flags_percentage,
+                                episode_reward_attacker=episode_reward_attacker,
+                                episode_reward_defender=episode_reward_defender,
+                                episode_step=episode_step,
+                                infos=infos, i=i)
+                        episode_reward_attacker[i] = 0
+                        episode_reward_defender[i] = 0
                         episode_step[i] = 0
 
         if not self.attacker_agent_config.ar_policy:
-            attacker_rollout_buffer.compute_returns_and_advantage(attacker_values, dones=dones)
+            if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+                attacker_rollout_buffer.compute_returns_and_advantage(attacker_values, dones=dones)
+            if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
+                defender_rollout_buffer.compute_returns_and_advantage(defender_values, dones=dones)
         else:
             attacker_rollout_buffer.compute_returns_and_advantage(m_selection_values, dones=dones, machine_action = False)
             attacker_rollout_buffer.compute_returns_and_advantage(m_action_values, dones=dones, machine_action=True)
@@ -309,10 +330,13 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback.on_rollout_end()
         for i in range(len(dones)):
             if not dones[i]:
-                episode_rewards.append(episode_reward[i])
+                attacker_episode_rewards.append(episode_reward_attacker[i])
+                defender_episode_rewards.append(episode_reward_defender[i])
                 episode_steps.append(episode_step[i])
-        return True, episode_rewards, episode_steps, episode_flags, episode_flags_percentage, env_specific_rewards, \
-               env_specific_steps, env_specific_flags, env_specific_flags_percentage, env_response_times, action_pred_times
+        return True, attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags, \
+               episode_flags_percentage, attacker_env_specific_rewards, defender_env_specific_rewards, \
+               env_specific_steps, env_specific_flags, env_specific_flags_percentage, env_response_times, \
+               action_pred_times
 
     def train(self) -> None:
         """
@@ -349,29 +373,33 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.attacker_agent_config.logger.info(self.attacker_agent_config.to_str())
 
         # Tracking metrics
-        episode_rewards = []
+        attacker_episode_rewards = []
+        defender_episode_rewards = []
         episode_flags = []
         episode_steps = []
-        episode_loss = []
+        episode_loss_attacker = []
         episode_flags_percentage = []
-        train_episode_rewards_env_specific = {}
+        attacker_train_episode_rewards_env_specific = {}
+        defender_train_episode_rewards_env_specific = {}
         train_episode_steps_env_specific = {}
         train_episode_flags_env_specific = {}
         train_episode_flags_percentage_env_specific = {}
-        lr = 0.0
+        lr_attacker = 0.0
         rollout_times = []
         env_response_times = []
         action_pred_times = []
-        grad_comp_times = []
-        weight_update_times = []
+        grad_comp_times_attacker = []
+        weight_update_times_attacker = []
 
         while self.iteration < self.attacker_agent_config.num_iterations:
 
             if self.attacker_agent_config.performance_analysis:
                 start = time.time()
 
-            continue_training, rollouts_rewards, rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
-            env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage, \
+            continue_training, attacker_rollouts_rewards, defender_rollouts_rewards, \
+            rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
+            attacker_env_specific_rewards, defender_env_specific_rewards, env_specific_steps, \
+            env_specific_flags, env_specific_flags_percentage, \
             rollout_env_response_times, rollout_action_pred_times = \
                 self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer,
                                       self.defender_rollout_buffer,
@@ -384,16 +412,22 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 action_pred_times.extend(rollout_action_pred_times)
 
 
-            episode_rewards.extend(rollouts_rewards)
+            attacker_episode_rewards.extend(attacker_rollouts_rewards)
+            defender_episode_rewards.extend(defender_rollouts_rewards)
             episode_steps.extend(rollouts_steps)
             episode_flags.extend(rollouts_flags)
             episode_flags_percentage.extend(rollouts_flags_percentage)
 
-            for key in env_specific_rewards.keys():
-                if key in train_episode_rewards_env_specific:
-                    train_episode_rewards_env_specific[key].extend(env_specific_rewards[key])
+            for key in attacker_env_specific_rewards.keys():
+                if key in attacker_train_episode_rewards_env_specific:
+                    attacker_train_episode_rewards_env_specific[key].extend(attacker_env_specific_rewards[key])
                 else:
-                    train_episode_rewards_env_specific[key] = env_specific_rewards[key]
+                    attacker_train_episode_rewards_env_specific[key] = attacker_env_specific_rewards[key]
+            for key in defender_env_specific_rewards.keys():
+                if key in defender_train_episode_rewards_env_specific:
+                    defender_train_episode_rewards_env_specific[key].extend(defender_env_specific_rewards[key])
+                else:
+                    defender_train_episode_rewards_env_specific[key] = defender_env_specific_rewards[key]
             for key in env_specific_steps.keys():
                 if key in train_episode_steps_env_specific:
                     train_episode_steps_env_specific[key].extend(env_specific_steps[key])
@@ -418,13 +452,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
             if self.iteration % self.attacker_agent_config.train_log_frequency == 0:
-                episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
-                eval_episode_rewards, eval_episode_steps, \
-                eval_episode_flags_percentage, eval_episode_flags, eval_2_episode_rewards_env_specific, \
-                    eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
-                    eval_2_episode_flags_percentage_env_specific, eval_episode_rewards_env_specific, \
-                eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, None, \
+                attacker_episode_rewards_1, defender_episode_rewards_1, \
+                episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
+                eval_attacker_episode_rewards, eval_defender_episode_rewards, eval_episode_steps, \
+                eval_episode_flags_percentage, eval_episode_flags, attacker_eval_2_episode_rewards_env_specific, \
+                defender_eval_2_episode_rewards_env_specific, \
+                eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
+                eval_2_episode_flags_percentage_env_specific, attacker_eval_episode_rewards_env_specific, \
+                defender_eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
+                eval_episode_flags_env_specific, \
+                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, \
+                                                             None, None, None, None, None, \
                                                              None, None, None, {}, {}, {}, {}
                 if self.attacker_agent_config.train_progress_deterministic_eval:
                     eval_conf = self.attacker_agent_config.env_config
@@ -441,20 +479,31 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         if self.attacker_agent_config.domain_randomization:
                             if isinstance(self.env, DummyVecEnv):
                                 eval_conf = self.eval_env.env_config(0)
-                    episode_rewards_1, episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
-                    eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-                    eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-                    eval_episode_flags_percentage_env_specific, eval_2_episode_rewards_env_specific, \
+                    attacker_episode_rewards_1, defender_episode_rewards_1, \
+                    episode_steps_1, episode_flags_percentage_1, episode_flags_1, \
+                    eval_attacker_episode_rewards, eval_defender_episode_rewards, \
+                    eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+                    attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
+                    eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+                    eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
+                    defender_eval_2_episode_rewards_env_specific, \
                     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
                     eval_2_episode_flags_percentage_env_specific = \
-                        quick_evaluate_policy(model=self.attacker_policy, env=self.env,
+                        quick_evaluate_policy(attacker_model=self.attacker_policy,
+                                              defender_model=self.defender_policy,
+                                              env=self.env,
                                               n_eval_episodes_train=self.attacker_agent_config.n_deterministic_eval_iter,
                                               n_eval_episodes_eval2=self.attacker_agent_config.n_quick_eval_iter,
-                                              deterministic=self.attacker_agent_config.eval_deterministic, attacker_agent_config=self.attacker_agent_config,
+                                              deterministic=self.attacker_agent_config.eval_deterministic,
+                                              attacker_agent_config=self.attacker_agent_config,
+                                              defender_agent_config=self.defender_agent_config,
                                               env_config=eval_conf, env_2=self.env_2,
                                               env_configs=env_configs,
                                               eval_env_config=eval_conf,
-                                              eval_envs_configs=eval_env_configs
+                                              eval_envs_configs=eval_env_configs,
+                                              train_mode = self.train_mode,
+                                              attacker_opponent = self.attacker_opponent,
+                                              defender_opponent = self.defender_opponent
                                               )
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
@@ -466,8 +515,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
                     n_d = self.env.envs[0].attacker_agent_state.num_detections
                 self.log_metrics_attacker(iteration=self.iteration, result=self.train_result,
-                                 episode_rewards=episode_rewards,
-                                 episode_avg_loss=episode_loss,
+                                 episode_rewards=attacker_episode_rewards,
+                                 episode_avg_loss=episode_loss_attacker,
                                  eval=False, lr=self.attacker_lr_schedule(self.num_timesteps),
                                  total_num_episodes=self.num_episodes_total,
                                  episode_steps=episode_steps,
@@ -475,41 +524,42 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                  progress_left = self._current_progress_remaining,
                                  n_af = n_af,
                                  n_d = n_d,
-                                 eval_episode_rewards = episode_rewards_1, eval_episode_steps=episode_steps_1,
+                                 eval_episode_rewards = attacker_episode_rewards_1, eval_episode_steps=episode_steps_1,
                                  eval_episode_flags=episode_flags_1,
                                  eval_episode_flags_percentage=episode_flags_percentage_1,
-                                 eval_2_episode_rewards=eval_episode_rewards,
+                                 eval_2_episode_rewards=eval_attacker_episode_rewards,
                                  eval_2_episode_steps=eval_episode_steps,
                                  eval_2_episode_flags=eval_episode_flags,
                                  eval_2_episode_flags_percentage=eval_episode_flags_percentage,
-                                 train_env_specific_rewards=train_episode_rewards_env_specific,
+                                 train_env_specific_rewards=attacker_train_episode_rewards_env_specific,
                                  train_env_specific_steps=train_episode_steps_env_specific,
                                  train_env_specific_flags=train_episode_flags_env_specific,
                                  train_env_specific_flags_percentage=train_episode_flags_percentage_env_specific,
-                                 eval_env_specific_rewards = eval_episode_rewards_env_specific,
+                                 eval_env_specific_rewards = attacker_eval_episode_rewards_env_specific,
                                  eval_env_specific_steps=eval_episode_steps_env_specific,
                                  eval_env_specific_flags=eval_episode_flags_env_specific,
                                  eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific,
-                                 eval_2_env_specific_rewards = eval_2_episode_rewards_env_specific,
+                                 eval_2_env_specific_rewards = attacker_eval_2_episode_rewards_env_specific,
                                  eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
                                  eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
                                  eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific,
                                  rollout_times=rollout_times, env_response_times=env_response_times,
-                                 action_pred_times=action_pred_times, grad_comp_times=grad_comp_times,
-                                 weight_update_times=weight_update_times
+                                 action_pred_times=action_pred_times, grad_comp_times=grad_comp_times_attacker,
+                                 weight_update_times=weight_update_times_attacker
                                  )
 
-                episode_rewards = []
-                episode_loss = []
+                attacker_episode_rewards = []
+                episode_loss_attacker = []
+                episode_loss_defender = []
                 episode_flags = []
                 episode_steps = []
                 rollout_times = []
                 env_response_times = []
                 action_pred_times = []
-                grad_comp_times = []
-                weight_update_times = []
+                grad_comp_times_attacker = []
+                weight_update_times_attacker = []
                 episode_flags_percentage = []
-                train_episode_rewards_env_specific = {}
+                attacker_train_episode_rewards_env_specific = {}
                 train_episode_steps_env_specific = {}
                 train_episode_flags_env_specific = {}
                 train_episode_flags_percentage_env_specific = {}
@@ -529,13 +579,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         self.attacker_agent_config.save_dir + "/" + time_str + "_eval_results_checkpoint.csv")
 
             if not self.attacker_agent_config.ar_policy:
-                entropy_loss, pg_loss, value_loss, lr, grad_comp_times, weight_update_times = self.train()
+                entropy_loss_attacker, pg_loss_attacker, value_loss_attacker, lr_attacker, grad_comp_times_attacker, \
+                weight_update_times_attacker, \
+                entropy_loss_defender, pg_loss_defender, value_loss_defender, lr_defedner, grad_comp_times_defender, \
+                weight_update_times_defender = self.train()
+
                 if self.attacker_agent_config.performance_analysis:
-                    grad_comp_times.append(np.sum(grad_comp_times))
-                    weight_update_times.append(np.sum(weight_update_times))
+                    grad_comp_times_attacker.append(np.sum(grad_comp_times_attacker))
+                    weight_update_times_attacker.append(np.sum(weight_update_times_attacker))
             else:
-                entropy_loss, pg_loss, value_loss, lr = self.train_ar()
-            episode_loss.append(entropy_loss + pg_loss + value_loss)
+                entropy_loss_attacker, pg_loss_attacker, value_loss_attacker, lr_attacker = self.train_ar()
+            episode_loss_attacker.append(entropy_loss_attacker + pg_loss_attacker + value_loss_attacker)
+            episode_loss_defender.append(entropy_loss_defender + pg_loss_defender + value_loss_defender)
 
         callback.on_training_end()
 
@@ -546,7 +601,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         cf base class
         """
         if not self.attacker_agent_config.ar_policy:
-            state_dicts = ["policy", "policy.optimizer"]
+            state_dicts = ["attacker_policy", "attacker_policy.optimizer", "defender_policy",
+                           "defender_policy.optimizer"]
         else:
             state_dicts = ["m_selection_policy", "m_selection_policy.optimizer",
                            "m_action_policy", "m_action_policy.optimizer"]
@@ -574,15 +630,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                 attacker_actions, attacker_values, attacker_log_probs = \
                     self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos)
+                attacker_actions = attacker_actions.cpu().numpy()
             if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
                 defender_actions, defender_values, defender_log_probs = \
                     self.defender_policy.forward(obs_tensor_defender, env=env, infos=self._last_infos)
-        attacker_actions = attacker_actions.cpu().numpy()
+                defender_actions = defender_actions.cpu().numpy()
+            if attacker_actions is None:
+                attacker_actions = np.array([self.attacker_opponent.action(env.envs[0].env_state)])
 
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             action_pred_time = end-start
-
 
         # Rescale attacker action
         clipped_attacker_actions = attacker_actions
@@ -682,8 +740,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         return new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
                m_action_log_probs, m_selection_actions, m_actions
 
-    def update_env_specific_metrics(self, env_specific_rewards, env_specific_steps, env_specific_flags,
-                                    env_specific_flags_percentage, episode_reward, episode_step, infos, i):
+    def update_env_specific_metrics(self, env_specific_rewards_attacker, env_specific_rewards_defender,
+                                    env_specific_steps, env_specific_flags,
+                                    env_specific_flags_percentage, episode_reward_attacker,
+                                    episode_reward_defender,
+                                    episode_step, infos, i):
         if self.attacker_agent_config.env_config is not None:
             num_flags = self.attacker_agent_config.env_config.num_flags
             if self.attacker_agent_config.env_config.emulation_config is not None:
@@ -697,10 +758,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 agent_ip = self.attacker_agent_config.env_configs[i].idx
             num_flags = self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags
 
-        if agent_ip not in env_specific_rewards:
-            env_specific_rewards[agent_ip] = [episode_reward[i]]
+        if agent_ip not in env_specific_rewards_attacker:
+            env_specific_rewards_attacker[agent_ip] = [episode_reward_attacker[i]]
         else:
-            env_specific_rewards[agent_ip].append(episode_reward[i])
+            env_specific_rewards_attacker[agent_ip].append(episode_reward_attacker[i])
+
+        if agent_ip not in env_specific_rewards_defender:
+            env_specific_rewards_defender[agent_ip] = [episode_reward_defender[i]]
+        else:
+            env_specific_rewards_defender[agent_ip].append(episode_reward_defender[i])
 
         if agent_ip not in env_specific_steps:
             env_specific_steps[agent_ip] = [episode_step[i]]
@@ -717,5 +783,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         else:
             env_specific_flags_percentage[agent_ip].append(infos[i]["flags"]/ num_flags)
 
-        return env_specific_rewards, env_specific_steps, env_specific_flags, env_specific_flags_percentage
+        return env_specific_rewards_attacker, env_specific_rewards_defender, \
+               env_specific_steps, env_specific_flags, env_specific_flags_percentage
 
