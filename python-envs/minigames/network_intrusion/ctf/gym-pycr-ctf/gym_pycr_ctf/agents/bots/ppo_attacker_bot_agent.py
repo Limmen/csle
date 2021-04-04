@@ -45,7 +45,7 @@ class PPOAttackerBotAgent:
         self.model = PPO.load(env=self.env, load_path=self.agent_config.load_path, device=self.device,
                               agent_config=self.agent_config)
 
-    def action(self, s: EnvState) -> int:
+    def action(self, s: EnvState, agent_state = None) -> int:
         """
         Samples an action from the policy.
 

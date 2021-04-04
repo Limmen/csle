@@ -212,6 +212,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         attack_action_id, defense_action_id = action_id
         defender_reward = 0
         defender_obs = None
+        defender_info = None
 
         # First step attacker
         attack_action = self.env_config.attacker_action_conf.actions[attack_action_id]
@@ -228,9 +229,10 @@ class PyCRCTFEnv(gym.Env, ABC):
             attacker_m_obs = attacker_m_obs_2
 
         # Merge infos
-        for k,v in defender_info.items():
-            if k not in info:
-                info[k] = v
+        if defender_info is not None:
+            for k,v in defender_info.items():
+                if k not in info:
+                    info[k] = v
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
@@ -346,10 +348,10 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Parse result
         attacker_reward = 0
-        if done:
-            defender_reward = defender_reward - \
-                              self.env_config.defender_final_steps_reward_coefficient * \
-                              self.defender_time_step
+        # if done:
+        #     defender_reward = defender_reward - \
+        #                       self.env_config.defender_final_steps_reward_coefficient * \
+        #                       self.defender_time_step
         if self.defender_time_step > self.env_config.max_episode_length:
             done = True
 
@@ -358,8 +360,12 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_state.defender_obs_state.caught_attacker:
             defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
             attacker_reward = self.env_config.attacker_detection_reward
+            self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
+
+        info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
+        info["early_stopped"] = self.env_state.defender_obs_state.stopped
 
         # Update defender's state
         TransitionOperator.defender_transition(

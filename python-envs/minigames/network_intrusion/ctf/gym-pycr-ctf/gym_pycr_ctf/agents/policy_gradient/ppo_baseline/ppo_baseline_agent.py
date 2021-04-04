@@ -15,6 +15,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import 
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
+from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 
 class PPOBaselineAgent(TrainAgent):
     """
@@ -90,6 +91,8 @@ class PPOBaselineAgent(TrainAgent):
         defender_opponent = None
         if self.attacker_opponent_type == AgentType.RANDOM_ATTACKER:
             attacker_opponent = RandomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
+        elif self.attacker_opponent_type == AgentType.CUSTOM_ATTACKER:
+            attacker_opponent = CustomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
 
         # Create model
         model = PPO(policy_attacker, policy_defender,

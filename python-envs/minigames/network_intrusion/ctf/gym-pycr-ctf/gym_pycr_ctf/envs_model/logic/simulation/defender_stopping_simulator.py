@@ -10,12 +10,12 @@ class DefenderStoppingSimulator:
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def stop_monitor(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
         :param s: the current state
-        :param a: the action to take
+        :param defender_action: the action to take
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
@@ -28,12 +28,12 @@ class DefenderStoppingSimulator:
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def continue_monitor(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
 
         :param s: the current state
-        :param a: the action to take
+        :param defender_action: the action to take
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """

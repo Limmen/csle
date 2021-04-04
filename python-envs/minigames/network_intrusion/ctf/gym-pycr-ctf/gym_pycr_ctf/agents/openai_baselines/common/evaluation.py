@@ -208,13 +208,17 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     :param attacker_agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
-    attacker_eval_episode_rewards, eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags = 0,0,0,0
-    attacker_eval_episode_rewards_env_specific, eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
+    attacker_eval_episode_rewards, defender_eval_episode_rewards, \
+    eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+    eval_episode_caught, eval_episode_early_stopped = 0,0,0,0, 0, 0, 0
+    attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
+    eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
     eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
-    eval_2_episode_flags_percentage_env_specific = {}, {}, {}, {}, {}, {}, {}, {}
+    eval_2_episode_flags_percentage_env_specific = {}, {}, {}, {}, {}, {}, {}, {}, {}
 
     attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+    episode_caught, episode_early_stopped, \
     attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific = _quick_eval_helper(
@@ -224,7 +228,8 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
 
     if env_2 is not None:
         attacker_eval_episode_rewards, defender_eval_episode_rewards, \
-        eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+        eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, \
+        eval_episode_early_stopped, \
         attacker_eval_2_episode_rewards_env_specific, defender_eval_2_episode_rewards_env_specific, \
         eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
         eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
@@ -233,8 +238,10 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             train_mode=train_mode,
             env_configs=eval_envs_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent)
     return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+           episode_caught, episode_early_stopped, \
            attacker_eval_episode_rewards, defender_eval_episode_rewards, \
-           eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
+           eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, \
+           eval_episode_early_stopped, \
            attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
            eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
@@ -251,6 +258,8 @@ def _quick_eval_helper(env, attacker_model, defender_model,
     defender_episode_rewards = []
     episode_steps = []
     episode_flags = []
+    episode_caught = []
+    episode_early_stopped = []
     episode_flags_percentage = []
     attacker_eval_episode_rewards_env_specific = {}
     defender_eval_episode_rewards_env_specific = {}
@@ -287,6 +296,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
             while not done:
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
+                    agent_state = env.envs[i].attacker_agent_state
                 obs_attacker, obs_defender = obs
                 attacker_actions = None
                 defender_actions = [None]
@@ -305,7 +315,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                                                                      env_configs=env_configs, env=env, env_idx=i,
                                                                      env_state=env_state)
                     if attacker_actions is None:
-                        attacker_actions = np.array([attacker_opponent.action(env_state)])
+                        attacker_actions = np.array([attacker_opponent.action(env_state, agent_state)])
                 defender_action = defender_actions[0]
                 attacker_action = attacker_actions[0]
                 action = (attacker_action, defender_action)
@@ -323,6 +333,8 @@ def _quick_eval_helper(env, attacker_model, defender_model,
             defender_episode_rewards.append(defender_episode_reward)
             episode_steps.append(episode_length)
             episode_flags.append(_info["flags"])
+            episode_caught.append(_info["caught_attacker"])
+            episode_early_stopped.append(_info["early_stopped"])
             episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
             attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
             eval_episode_steps_env_specific, \
@@ -341,6 +353,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 env_conf = env.env_config(i)
                 env_configs = env.env_configs()
     return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
+           episode_caught, episode_early_stopped, \
            attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
            eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific

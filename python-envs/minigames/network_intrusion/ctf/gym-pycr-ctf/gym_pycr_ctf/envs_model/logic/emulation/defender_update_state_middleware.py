@@ -182,6 +182,10 @@ class DefenderUpdateStateMiddleware:
         """
         s_prime = s
 
+        # Reset stopped state
+        s_prime.defender_obs_state.caught_attacker = False
+        s_prime.defender_obs_state.stopped = False
+
         # Reset ids states
         s_prime.defender_obs_state.num_alerts_recent = 0
         s_prime.defender_obs_state.num_severe_alerts_recent = 0

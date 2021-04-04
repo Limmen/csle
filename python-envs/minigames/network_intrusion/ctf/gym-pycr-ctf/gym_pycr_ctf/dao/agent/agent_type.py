@@ -9,3 +9,4 @@ class AgentType(Enum):
     DDPG_BASELINE = 5
     RANDOM_ATTACKER = 6
     RANDOM_DEFENDER = 7
+    CUSTOM_ATTACKER = 8

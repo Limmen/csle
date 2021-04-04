@@ -812,8 +812,41 @@ class BaseAlgorithm(ABC):
                              eval_2_env_specific_rewards: dict = None,
                              eval_2_env_specific_steps: dict = None,
                              rollout_times=None, env_response_times=None, action_pred_times=None,
-                             grad_comp_times=None, weight_update_times=None
+                             grad_comp_times=None, weight_update_times=None,
+                             episode_caught = None, episode_early_stopped = None,
+                             eval_episode_caught = None, eval_episode_early_stopped = None,
+                             eval_2_episode_caught = None, eval_episode_2_early_stopped = None
                              ) -> None:
+        """
+        Log metrics of the defender
+
+        :param iteration: the current iteration
+        :param result: the experiment result
+        :param episode_rewards: the episode rewards
+        :param episode_steps: the episode steps
+        :param episode_avg_loss: the avg loss
+        :param eval: boolean flag whether evaluation or not
+        :param lr: the learning rate
+        :param total_num_episodes: the total number of episode
+        :param eps: epsilon
+        :param progress_left: progress left
+        :param eval_episode_rewards: list of eval rewards
+        :param eval_episode_steps:  list of eval steps
+        :param eval_2_episode_rewards: list rewards in 2nd eval environment
+        :param eval_2_episode_steps:  list of steps in 2nd eval environment
+        :param train_env_specific_rewards: list of rewards per environment
+        :param train_env_specific_steps: list of steps per environment
+        :param eval_env_specific_rewards: list of rewards per environment
+        :param eval_env_specific_steps: list of steps per environment
+        :param eval_2_env_specific_rewards: list of rewards per environment
+        :param eval_2_env_specific_steps: list of steps per environment
+        :param rollout_times: list of rollout times
+        :param env_response_times: list of response times
+        :param action_pred_times: list of action prediction times
+        :param grad_comp_times: list of times to compute gradient
+        :param weight_update_times: list of weight update times
+        :return: None
+        """
         if eps is None:
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
@@ -923,21 +956,12 @@ class BaseAlgorithm(ABC):
                                           rolling_avg_episode_rewards=rolling_avg_rewards,
                                           rolling_avg_episode_steps=rolling_avg_steps
                                           )
-
-        result.avg_episode_steps.append(avg_episode_steps)
+        # Defender specific metrics
         result.defender_avg_episode_rewards.append(avg_episode_rewards)
-        result.epsilon_values.append(self.defender_agent_config.epsilon)
         result.defender_avg_episode_loss.append(avg_episode_loss)
         result.defender_eval_avg_episode_rewards.append(eval_avg_episode_rewards)
-        result.eval_avg_episode_steps.append(eval_avg_episode_steps)
         result.defender_eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
-        result.eval_2_avg_episode_steps.append(eval_2_avg_episode_steps)
-        result.lr_list.append(lr)
-        result.rollout_times.append(avg_rollout_times)
-        result.env_response_times.append(avg_env_response_times)
-        result.action_pred_times.append(avg_action_pred_times)
-        result.grad_comp_times.append(avg_grad_comp_times)
-        result.weight_update_times.append(avg_weight_update_times)
+
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
                 avg = np.mean(train_env_specific_rewards[key])
@@ -945,13 +969,7 @@ class BaseAlgorithm(ABC):
                     result.defender_train_env_specific_rewards[key].append(avg)
                 else:
                     result.defender_train_env_specific_rewards[key] = [avg]
-        if train_env_specific_steps is not None:
-            for key in train_env_specific_steps.keys():
-                avg = np.mean(train_env_specific_steps[key])
-                if key in result.train_env_specific_steps:
-                    result.train_env_specific_steps[key].append(avg)
-                else:
-                    result.train_env_specific_steps[key] = [avg]
+
         if eval_env_specific_rewards is not None:
             for key in eval_env_specific_rewards.keys():
                 avg = np.mean(eval_env_specific_rewards[key])
@@ -959,13 +977,7 @@ class BaseAlgorithm(ABC):
                     result.defender_eval_env_specific_rewards[key].append(avg)
                 else:
                     result.defender_eval_env_specific_rewards[key] = [avg]
-        if eval_env_specific_steps is not None:
-            for key in eval_env_specific_steps.keys():
-                avg = np.mean(eval_env_specific_steps[key])
-                if key in result.eval_env_specific_steps:
-                    result.eval_env_specific_steps[key].append(avg)
-                else:
-                    result.eval_env_specific_steps[key] = [avg]
+
         if eval_2_env_specific_rewards is not None:
             for key in eval_2_env_specific_rewards.keys():
                 avg = np.mean(eval_2_env_specific_rewards[key])
@@ -973,13 +985,41 @@ class BaseAlgorithm(ABC):
                     result.defender_eval_2_env_specific_rewards[key].append(avg)
                 else:
                     result.defender_eval_2_env_specific_rewards[key] = [avg]
-        if eval_2_env_specific_steps is not None:
-            for key in eval_2_env_specific_steps.keys():
-                avg = np.mean(eval_2_env_specific_steps[key])
-                if key in result.eval_2_env_specific_steps:
-                    result.eval_2_env_specific_steps[key].append(avg)
-                else:
-                    result.eval_2_env_specific_steps[key] = [avg]
+
+        # General metrics
+        if not self.train_mode == TrainMode.SELF_PLAY:
+            result.avg_episode_steps.append(avg_episode_steps)
+            result.epsilon_values.append(self.defender_agent_config.epsilon)
+            result.eval_avg_episode_steps.append(eval_avg_episode_steps)
+            result.eval_2_avg_episode_steps.append(eval_2_avg_episode_steps)
+            result.lr_list.append(lr)
+            result.rollout_times.append(avg_rollout_times)
+            result.env_response_times.append(avg_env_response_times)
+            result.action_pred_times.append(avg_action_pred_times)
+            result.grad_comp_times.append(avg_grad_comp_times)
+            result.weight_update_times.append(avg_weight_update_times)
+
+            if train_env_specific_steps is not None:
+                for key in train_env_specific_steps.keys():
+                    avg = np.mean(train_env_specific_steps[key])
+                    if key in result.train_env_specific_steps:
+                        result.train_env_specific_steps[key].append(avg)
+                    else:
+                        result.train_env_specific_steps[key] = [avg]
+            if eval_env_specific_steps is not None:
+                for key in eval_env_specific_steps.keys():
+                    avg = np.mean(eval_env_specific_steps[key])
+                    if key in result.eval_env_specific_steps:
+                        result.eval_env_specific_steps[key].append(avg)
+                    else:
+                        result.eval_env_specific_steps[key] = [avg]
+            if eval_2_env_specific_steps is not None:
+                for key in eval_2_env_specific_steps.keys():
+                    avg = np.mean(eval_2_env_specific_steps[key])
+                    if key in result.eval_2_env_specific_steps:
+                        result.eval_2_env_specific_steps[key].append(avg)
+                    else:
+                        result.eval_2_env_specific_steps[key] = [avg]
 
 
     def log_tensorboard_attacker(self, episode: int, avg_episode_rewards: float,
@@ -998,7 +1038,7 @@ class BaseAlgorithm(ABC):
                                  rolling_avg_episode_steps: float = 0.0
                                  ) -> None:
         """
-        Log metrics to tensorboard
+        Log metrics to tensorboard for attacker
 
         :param episode: the episode
         :param avg_episode_rewards: the average attacker episode reward
@@ -1058,7 +1098,7 @@ class BaseAlgorithm(ABC):
                                  rolling_avg_episode_steps: float = 0.0
                                  ) -> None:
         """
-        Log metrics to tensorboard
+        Log metrics to tensorboard for defender
 
         :param episode: the episode
         :param avg_episode_rewards: the average attacker episode reward
@@ -1067,8 +1107,6 @@ class BaseAlgorithm(ABC):
         :param epsilon: the exploration rate
         :param lr: the learning rate of the attacker
         :param eval: boolean flag whether eval or not
-        :param avg_flags_catched: avg number of flags catched per episode
-        :param avg_episode_flags_percentage: avg percentage of flags catched per episode
         :param eval_avg_episode_rewards: average reward eval deterministic policy
         :param eval_avg_episode_steps: average steps eval deterministic policy
         :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
