@@ -232,6 +232,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         # Sample new weights for the state dependent exploration
         if self.use_sde:
             self.attacker_policy.reset_noise(env.num_envs)
+            self.defender_policy.reset_noise(env.num_envs)
 
         # Avg metrics
         attacker_episode_rewards = []
@@ -259,15 +260,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback.on_rollout_start()
         dones = False
         while n_steps < n_rollout_steps:
+
             if self.use_sde and self.sde_sample_freq > 0 and n_steps % self.sde_sample_freq == 0:
                 # Sample a new noise matrix
                 self.attacker_policy.reset_noise(env.num_envs)
+                self.defender_policy.reset_noise(env.num_envs)
 
             if not self.attacker_agent_config.ar_policy:
                 new_obs, attacker_rewards, dones, infos, attacker_values, attacker_log_probs, attacker_actions, \
                 action_pred_time_s, env_step_time, defender_values, defender_log_probs, defender_actions, \
                 defender_rewards = \
                     self.step_policy(env, attacker_rollout_buffer, defender_rollout_buffer)
+
                 if self.attacker_agent_config.performance_analysis:
                     env_response_time += env_step_time
                     action_pred_time += action_pred_time_s
@@ -365,7 +369,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         reset_num_timesteps: bool = True,
     ) -> "OnPolicyAlgorithm":
 
-        self.attacker_agent_config.logger.info("Setting up Training Configuration")
+        if self.attacker_agent_config is not None and self.attacker_agent_config.logger is not None:
+            self.attacker_agent_config.logger.info("Setting up Training Configuration")
+        if self.defender_agent_config is not None and self.defender_agent_config.logger is not None:
+            self.defender_agent_config.logger.info("Setting up Training Configuration")
+
         print("Setting up Training Configuration")
 
         self.iteration = 0
@@ -375,8 +383,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         )
 
         callback.on_training_start(locals(), globals())
-        self.attacker_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
-        self.attacker_agent_config.logger.info(self.attacker_agent_config.to_str())
+        if self.attacker_agent_config is not None and self.attacker_agent_config.logger is not None:
+            self.attacker_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
+            self.attacker_agent_config.logger.info(self.attacker_agent_config.to_str())
+        if self.defender_agent_config is not None and self.defender_agent_config.logger is not None:
+            self.defender_agent_config.logger.info("Starting training, max time steps:{}".format(total_timesteps))
+            self.defender_agent_config.logger.info(self.attacker_agent_config.to_str())
 
         # Tracking metrics
         attacker_episode_rewards = []
@@ -400,7 +412,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         grad_comp_times_attacker = []
         weight_update_times_attacker = []
 
-        while self.iteration < self.attacker_agent_config.num_iterations:
+        num_iterations = self.attacker_agent_config.num_iterations
+        if self.train_mode == TrainMode.TRAIN_DEFENDER:
+            num_iterations = self.defender_agent_config.num_iterations
+
+        while self.iteration < num_iterations:
 
             if self.attacker_agent_config.performance_analysis:
                 start = time.time()
@@ -524,7 +540,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     if isinstance(self.env, SubprocVecEnv):
                         for i in range(self.env.num_envs):
                             self.env.eval_reset(i)
-                            self._last_infos[i]["non_legal_actions"] = self.env.initial_illegal_actions
+                            self._last_infos[i]["attacker_non_legal_actions"] = self.env.attacker_initial_illegal_actions
+                            self._last_infos[i]["defender_non_legal_actions"] = self.env.attacker_initial_illegal_actions
                 n_af, n_d = 0,0
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
@@ -663,12 +680,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         env_step_time = 0.0
         if self.attacker_agent_config.performance_analysis:
             start = time.time()
+
         with th.no_grad():
             # Convert to pytorch tensor
             attacker_obs, defender_obs = self._last_obs
             obs_tensor_attacker = th.as_tensor(attacker_obs).to(self.device)
             obs_tensor_defender = th.as_tensor(defender_obs).to(self.device)
-            defender_actions = None
             attacker_actions = None
             attacker_values = None
             attacker_log_probs = None
@@ -677,12 +694,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_log_probs = None
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                 attacker_actions, attacker_values, attacker_log_probs = \
-                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos)
+                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True)
                 attacker_actions = attacker_actions.cpu().numpy()
             if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
                 defender_actions, defender_values, defender_log_probs = \
-                    self.defender_policy.forward(obs_tensor_defender, env=env, infos=self._last_infos)
+                    self.defender_policy.forward(obs_tensor_defender, env=env, infos=self._last_infos,
+                                                 attacker=False)
                 defender_actions = defender_actions.cpu().numpy()
+
             if attacker_actions is None:
                 attacker_actions = np.array([self.attacker_opponent.action(env.envs[0].env_state,
                                                                            env.envs[0].attacker_agent_state)])
@@ -710,6 +729,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         # Perform action
         if self.attacker_agent_config.performance_analysis:
             start = time.time()
+
         actions = []
         for i in range(len(clipped_attacker_actions)):
             actions.append((clipped_attacker_actions[i], clipped_defender_actions[i]))
@@ -732,11 +752,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_actions = defender_actions.reshape(-1, 1)
 
         if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
-            attacker_rollout_buffer.add(self._last_obs[0], attacker_actions, attacker_rewards, self._last_dones, attacker_values,
-                                        attacker_log_probs)
+            attacker_rollout_buffer.add(self._last_obs[0], attacker_actions, attacker_rewards, self._last_dones,
+                                        attacker_values, attacker_log_probs)
         if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
-            defender_rollout_buffer.add(self._last_obs[1], defender_actions, defender_rewards, self._last_dones, defender_values,
-                                        defender_log_probs)
+            defender_rollout_buffer.add(self._last_obs[1], defender_actions, defender_rewards, self._last_dones,
+                                        defender_values, defender_log_probs)
 
         self._last_obs = new_obs
         self._last_dones = dones

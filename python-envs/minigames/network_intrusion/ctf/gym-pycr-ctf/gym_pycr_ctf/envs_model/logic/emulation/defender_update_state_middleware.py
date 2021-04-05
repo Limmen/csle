@@ -91,6 +91,8 @@ class DefenderUpdateStateMiddleware:
                 m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
                 m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
 
+        s_prime.defender_obs_state.step = s_prime.defender_obs_state.step + 1
+
         return s_prime, 0, False
 
     @staticmethod
@@ -168,6 +170,8 @@ class DefenderUpdateStateMiddleware:
 
             s_prime.defender_obs_state.machines.append(d_obs)
 
+        s_prime.defender_obs_state.step = 0
+
         return s_prime, 0, False
 
     @staticmethod
@@ -227,5 +231,7 @@ class DefenderUpdateStateMiddleware:
             m.num_logged_in_users_recent = 0
             m.num_login_events_recent = 0
             m.num_processes_recent = 0
+
+        s_prime.defender_obs_state.step = 0
 
         return s_prime, 0, False

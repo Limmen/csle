@@ -59,7 +59,7 @@ class PPOAttackerBotAgent:
             m_obs, p_obs = s.get_attacker_observation()
             obs_tensor = torch.as_tensor(m_obs.flatten()).to(self.device)            
             actions, values = self.model.predict(observation=obs_tensor, deterministic = True,
-                                                            state=obs_tensor)
+                                                 state=obs_tensor, attacker=True)
             time.sleep(2)
 
             action = actions[0]

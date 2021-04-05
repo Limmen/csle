@@ -32,6 +32,8 @@ class ManualDefenderAgent:
             num_actions = env.env_config.defender_action_conf.num_actions
             actions = np.array(list(range(num_actions)))
             history = []
+            latest_obs = None
+            latest_rew = None
             while True:
                 raw_input = input(">")
                 raw_input = raw_input.strip()
@@ -56,12 +58,16 @@ class ManualDefenderAgent:
                         print("done:{}".format(done))
                 elif raw_input == "H":
                     print(history)
+                elif raw_input == "O":
+                    print(latest_obs)
+                elif raw_input == "U":
+                    print(latest_rew)
                 else:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
                     attacker_action = None
                     if attacker_opponent is not None:
-                        attacker_action = attacker_opponent.action(env.env_state)
+                        attacker_action = attacker_opponent.action(env.env_state, env.attacker_agent_state)
                     if not digits_only:
                         print("Invalid action. Actions must be integers.")
                     else:
@@ -70,7 +76,7 @@ class ManualDefenderAgent:
                             if env.is_defense_action_legal(a, env.env_config, env.env_state):
                                 action = (attacker_action, a)
                                 print("Attacker action: {}".format(attacker_action))
-                                _, _, done, _ = self.env.step(action)
+                                latest_obs, latest_rew, done, _ = self.env.step(action)
                                 history.append(a)
                                 if done:
                                     print("done:{}, attacker_caught:{}, stopped:{}".format(

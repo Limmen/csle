@@ -442,14 +442,30 @@ class DefenderMachineDynamicsModel:
         self.norm_init_processes = None
 
     def __str__(self):
-        return "open_connections_dynamics:{},\n failed_login_attempts_dynamics:{},\n user_dynamics:{},\n " \
-               "logged_in_users_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{}\n," \
-               "init_open_connections:{},\n init_users:{},\n init_logged_in_users:{},\n" \
-               "init_processes:{}".format(
-            self.num_new_open_connections, self.num_new_failed_login_attempts, self.num_new_users,
-            self.num_new_logged_in_users, self.num_new_login_events, self.num_new_processes,
-            self.init_open_connections, self.init_users, self.init_logged_in_users, self.init_processes
-        )
+        try:
+            return "open_connections_dynamics:{},\n failed_login_attempts_dynamics:{},\n user_dynamics:{},\n " \
+                   "logged_in_users_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{}\n," \
+                   "init_open_connections:{},\n init_users:{},\n init_logged_in_users:{},\n" \
+                   "init_processes:{},\n norm_open_connections:{},\n norm_new_processes:{},\n" \
+                   "norm_new_login_events:{},\n norm_new_users:{},\n norm_new_login_events:{}".format(
+                self.num_new_open_connections, self.num_new_failed_login_attempts, self.num_new_users,
+                self.num_new_logged_in_users, self.num_new_login_events, self.num_new_processes,
+                self.init_open_connections, self.init_users, self.init_logged_in_users, self.init_processes,
+                self.norm_num_new_open_connections.values(), self.norm_num_new_processes.values(),
+                self.norm_num_new_login_events.values(),
+                self.norm_num_new_users.values(), self.norm_num_new_login_events.values())
+        except:
+            return "open_connections_dynamics:{},\n failed_login_attempts_dynamics:{},\n user_dynamics:{},\n " \
+                   "logged_in_users_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{}\n," \
+                   "init_open_connections:{},\n init_users:{},\n init_logged_in_users:{},\n" \
+                   "init_processes:{},\n norm_open_connections:{},\n norm_new_processes:{},\n" \
+                   "norm_new_login_events:{},\n norm_new_users:{},\n norm_new_login_events:{}".format(
+                self.num_new_open_connections, self.num_new_failed_login_attempts, self.num_new_users,
+                self.num_new_logged_in_users, self.num_new_login_events, self.num_new_processes,
+                self.init_open_connections, self.init_users, self.init_logged_in_users, self.init_processes,
+                self.norm_num_new_open_connections, self.norm_num_new_processes,
+                self.norm_num_new_login_events,
+                self.norm_num_new_users, self.norm_num_new_login_events)
 
     def to_dict(self) -> dict:
         """

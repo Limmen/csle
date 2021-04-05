@@ -45,18 +45,22 @@ class EmulationMiddleware:
             raise ValueError("Action type not recognized")
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[
+    def defender_transition(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                            env_config: EnvConfig) -> Tuple[
         EnvState, int, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
 
         :param s: the current state
         :param defender_action: the defender action
+        :param attacker_action: the previous action of the attacker
         :param env_config: the environment configuration
         :return: s', r, done
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
-            return EmulationMiddleware.defender_stopping_action(s=s, a=defender_action, env_config=env_config)
+            return EmulationMiddleware.defender_stopping_action(s=s, defender_action=defender_action,
+                                                                attacker_action=attacker_action,
+                                                                env_config=env_config)
         if defender_action.type == DefenderActionType.STATE_UPDATE:
             return EmulationMiddleware.defender_update_state_action(s=s, a=defender_action, env_config=env_config)
         else:
@@ -193,21 +197,27 @@ class EmulationMiddleware:
             raise ValueError("Post-expoit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def defender_stopping_action(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def defender_stopping_action(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                                 env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
         """
         Implements transition of a stopping action of the defender
 
         :param s: the current state
-        :param a: the action
+        :param defender_action: the defender's action
+        :param attacker_action: the previous action of the attacker
         :param env_config: the environment configuration
         :return: s', r, done
         """
-        if a.id == DefenderActionId.STOP:
-            return DefenderStoppingMiddleware.stop_monitor(s=s, a=a, env_config=env_config)
-        elif a.id == DefenderActionId.CONTINUE:
-            return DefenderStoppingMiddleware.continue_monitor(s=s, a=a, env_config=env_config)
+        if defender_action.id == DefenderActionId.STOP:
+            return DefenderStoppingMiddleware.stop_monitor(s=s, defender_action=defender_action,
+                                                           attacker_action=attacker_action,
+                                                           env_config=env_config)
+        elif defender_action.id == DefenderActionId.CONTINUE:
+            return DefenderStoppingMiddleware.continue_monitor(s=s, defender_action=defender_action,
+                                                               attacker_action=attacker_action,
+                                                               env_config=env_config)
         else:
-            raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
+            raise ValueError("Stopping action id:{},name:{} not recognized".format(defender_action.id, defender_action.name))
 
     @staticmethod
     def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:

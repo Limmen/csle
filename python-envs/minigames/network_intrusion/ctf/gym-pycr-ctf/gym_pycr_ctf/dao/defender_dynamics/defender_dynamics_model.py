@@ -317,12 +317,28 @@ class DefenderDynamicsModel:
         self.norm_machines_dynamics_model = {}
 
     def __str__(self):
-        return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
-               "warning_alerts_dynamics:{},\n " \
-               "machines_dynamics_model: {}\n".format(
-            self.num_new_alerts, self.num_new_priority, self.num_new_severe_alerts, self.num_new_warning_alerts,
-            self.machines_dynamics_model
-        )
+        try:
+            return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
+                   "warning_alerts_dynamics:{},\n norm_alerts_dynamics:{},\n norm_priority_dynamics:{},\n" \
+                   "norm_severe_alerts_dynamics:{},\n norm_warning_alerts_dynamics:{},\n" \
+                   "machines_dynamics_model: {}\n".format(
+                self.num_new_alerts, self.num_new_priority, self.num_new_severe_alerts, self.num_new_warning_alerts,
+                self.norm_num_new_alerts.values(), self.norm_num_new_priority.values(),
+                self.norm_num_new_severe_alerts.values(),
+                self.norm_num_new_severe_alerts.values(),
+                str(self.machines_dynamics_model)
+            )
+        except:
+            return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
+                   "warning_alerts_dynamics:{},\n norm_alerts_dynamics:{},\n norm_priority_dynamics:{},\n" \
+                   "norm_severe_alerts_dynamics:{},\n norm_warning_alerts_dynamics:{},\n" \
+                   "machines_dynamics_model: {}\n".format(
+                self.num_new_alerts, self.num_new_priority, self.num_new_severe_alerts, self.num_new_warning_alerts,
+                self.norm_num_new_alerts, self.norm_num_new_priority,
+                self.norm_num_new_severe_alerts,
+                self.norm_num_new_severe_alerts,
+                str(self.machines_dynamics_model)
+            )
 
     def to_dict(self) -> dict:
         """

@@ -290,6 +290,7 @@ class BaseAlgorithm(ABC):
         :param eval_env_specific_flags_percentage: episodic flags_percentage per train eval env
         :return: None
         """
+        print("logg metrics defender")
         if eps is None:
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
@@ -857,6 +858,37 @@ class BaseAlgorithm(ABC):
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
         avg_episode_steps = np.mean(episode_steps)
+
+        if episode_caught is not None:
+            episode_caught = sum(list(map(lambda x: int(x), episode_caught)))
+        else:
+            episode_caught = 0
+
+        if episode_early_stopped is not None:
+            episode_early_stopped = sum(list(map(lambda x: int(x), episode_early_stopped)))
+        else:
+            episode_early_stopped = 0
+
+        if eval_episode_caught is not None:
+            eval_episode_caught = sum(list(map(lambda x: int(x), eval_episode_caught)))
+        else:
+            eval_episode_caught = 0
+
+        if eval_episode_early_stopped is not None:
+            eval_episode_early_stopped = sum(list(map(lambda x: int(x), eval_episode_early_stopped)))
+        else:
+            eval_episode_early_stopped = 0
+
+        if eval_2_episode_caught is not None:
+            eval_2_episode_caught = sum(list(map(lambda x: int(x), eval_2_episode_caught)))
+        else:
+            eval_2_episode_caught = 0
+
+        if eval_2_episode_early_stopped is not None:
+            eval_2_episode_early_stopped = sum(list(map(lambda x: int(x), eval_2_episode_early_stopped)))
+        else:
+            eval_2_episode_early_stopped = 0
+
         if not eval and eval_episode_steps is not None:
             eval_avg_episode_steps = np.mean(eval_episode_steps)
         else:
@@ -1270,7 +1302,7 @@ class BaseAlgorithm(ABC):
         :return: (BaseAlgorithm) the trained model
         """
 
-    def predict_attacker(
+    def predict(
             self,
             observation: np.ndarray,
             state: Optional[np.ndarray] = None,
@@ -1283,7 +1315,8 @@ class BaseAlgorithm(ABC):
             env_idx: int = None,
             m_index: int = None,
             mask_actions: bool = True,
-            env=None
+            env=None,
+            attacker : bool = False
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the model's action(s) from an observation
@@ -1295,28 +1328,38 @@ class BaseAlgorithm(ABC):
         :return: (Tuple[np.ndarray, Optional[np.ndarray]]) the model's action and the next state
             (used in recurrent policies)
         """
-        if not self.attacker_agent_config.ar_policy:
-            return self.attacker_policy.predict_attacker(observation, state, mask, deterministic,
-                                                         env_config=env_config,
-                                                         env_state=env_state, env_configs=env_configs,
-                                                         env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions)
+        if attacker:
+            if not self.attacker_agent_config.ar_policy:
+                return self.attacker_policy.predict(observation, state, mask, deterministic,
+                                                    env_config=env_config,
+                                                    env_state=env_state, env_configs=env_configs,
+                                                    env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions,
+                                                    attacker=attacker)
+            else:
+                m_selection_actions, state1 = self.attacker_m_selection_policy.predict(observation, state, mask, deterministic,
+                                                                                       env_config=env_config,
+                                                                                       env_state=env_state,
+                                                                                       infos=infos,
+                                                                                       attacker=attacker)
+                obs_2 = observation.reshape((observation.shape[0],) + self.env.envs[0].network_orig_shape)
+                idx = m_selection_actions[0]
+                if m_selection_actions[0] > 5:
+                    idx = 0
+                machine_obs = obs_2[:, idx].reshape((observation.shape[0],) + self.env.envs[0].machine_orig_shape)
+                machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
+                m_actions, state2 = self.attacker_m_action_policy.predict(machine_obs_tensor, state, mask, deterministic,
+                                                                          env_config=env_config,
+                                                                          env_state=env_state, infos=infos,
+                                                                          attacker=attacker)
+                actions = self.env.envs[0].attacker_convert_ar_action(m_selection_actions[0], m_actions[0])
+                actions = np.array([actions])
+                return actions, state2
         else:
-            m_selection_actions, state1 = self.attacker_m_selection_policy.predict_attacker(observation, state, mask, deterministic,
-                                                                                            env_config=env_config,
-                                                                                            env_state=env_state,
-                                                                                            infos=infos)
-            obs_2 = observation.reshape((observation.shape[0],) + self.env.envs[0].network_orig_shape)
-            idx = m_selection_actions[0]
-            if m_selection_actions[0] > 5:
-                idx = 0
-            machine_obs = obs_2[:, idx].reshape((observation.shape[0],) + self.env.envs[0].machine_orig_shape)
-            machine_obs_tensor = th.as_tensor(machine_obs).to(self.device)
-            m_actions, state2 = self.attacker_m_action_policy.predict_attacker(machine_obs_tensor, state, mask, deterministic,
-                                                                               env_config=env_config,
-                                                                               env_state=env_state, infos=infos)
-            actions = self.env.envs[0].attacker_convert_ar_action(m_selection_actions[0], m_actions[0])
-            actions = np.array([actions])
-            return actions, state2
+            return self.defender_policy.predict(observation, state, mask, deterministic,
+                                                env_config=env_config,
+                                                env_state=env_state, env_configs=env_configs,
+                                                env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions,
+                                                attacker=attacker)
 
     @classmethod
     def load(

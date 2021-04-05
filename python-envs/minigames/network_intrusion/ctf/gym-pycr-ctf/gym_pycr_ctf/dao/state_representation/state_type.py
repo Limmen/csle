@@ -11,3 +11,4 @@ class StateType(Enum):
     COMPACT = 1
     ESSENTIAL = 2
     SIMPLE = 3
+    CORE = 4

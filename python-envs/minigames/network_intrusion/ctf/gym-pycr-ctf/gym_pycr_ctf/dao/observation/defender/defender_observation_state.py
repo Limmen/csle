@@ -25,6 +25,7 @@ class DefenderObservationState:
         self.stopped = False
         self.adj_matrix = np.array(0)
         self.ids_last_alert_ts = None
+        self.step = 0
 
     def sort_machines(self):
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
@@ -65,9 +66,9 @@ class DefenderObservationState:
         return  "# alerts recent:{}, # severe alerts recent: {}, # warning alerts recent: {}, " \
                 "sum priority recent:{}, # alerts total:{} # severe alerts total: {}, " \
                 "# warning alerts total: {}, sum priority total: {}, caught_attacker:{}," \
-                " stopped:{}".format(
+                " stopped:{}, step:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
-            self.caught_attacker, self.stopped) + "\n" + \
+            self.caught_attacker, self.stopped, self.step) + "\n" + \
                 "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

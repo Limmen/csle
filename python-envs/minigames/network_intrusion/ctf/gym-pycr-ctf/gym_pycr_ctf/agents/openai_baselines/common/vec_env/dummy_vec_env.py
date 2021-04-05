@@ -68,6 +68,7 @@ class DummyVecEnv(VecEnv):
             self.buf_infos[env_idx] = info
             self.buf_infos[env_idx]["idx"] = self.envs[env_idx].idx
 
+
             if self.buf_dones[env_idx]:
                 # save final observation where user can get it, then reset
                 self.buf_infos[env_idx]["terminal_observation"] = obs
@@ -85,7 +86,8 @@ class DummyVecEnv(VecEnv):
         for env_idx in range(self.num_envs):
             obs = self.envs[env_idx].reset()
             self._save_obs(env_idx, obs)
-        return self._obs_from_buf()
+        o = self._obs_from_buf()
+        return o
 
     def close(self):
         for env in self.envs:

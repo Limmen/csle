@@ -58,6 +58,8 @@ class TransitionOperator:
             return Simulator.defender_transition(s=s, defender_action=defender_action, env_config=env_config,
                                           attacker_action=attacker_action)
         elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
-            return EmulationMiddleware.defender_transition(s=s, defender_action=defender_action, env_config=env_config)
+            return EmulationMiddleware.defender_transition(s=s, defender_action=defender_action,
+                                                           attacker_action=attacker_action,
+                                                           env_config=env_config)
         else:
             raise ValueError("Invalid environment mode")

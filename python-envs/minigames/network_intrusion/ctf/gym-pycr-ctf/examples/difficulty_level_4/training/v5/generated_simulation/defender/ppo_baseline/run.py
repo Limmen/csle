@@ -1,33 +1,34 @@
-import os
 import glob
+import os
+
+import gym_pycr_ctf.util.experiments_util.plotting_util as plotting_util
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.util.experiments_util import util
+from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-import gym_pycr_ctf.util.experiments_util.plotting_util as plotting_util
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.util.experiments_util import util
 
 
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=0.999, alpha=0.00001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=0.999, alpha=0.005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=100,
+                               num_iterations=10000,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=150, input_dim=(8 + 10*5),
+                               checkpoint_freq=150, input_dim=(1),
                                output_dim=2,
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
-                               shared_hidden_layers=2, shared_hidden_dim=32,
+                               shared_hidden_layers=1, shared_hidden_dim=32,
                                batch_size=2000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
@@ -73,7 +74,7 @@ def default_config() -> ClientConfig:
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline level 4 v5",
                                  run_many=True, random_seeds=[0, 999, 299, 399, 499],
-                                 random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
+                                 random_seed=399, mode=RunnerMode.TRAIN_DEFENDER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
                                  eval_emulation_config=eval_emulation_config,
                                  emulation_config=emulation_config,

@@ -113,10 +113,10 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
                     time.sleep(1)
                     env.render()
 
-                actions, state = model.predict_attacker(obs, state=state, deterministic=deterministic, infos=infos,
-                                                        env_config=env_conf,
-                                                        env_configs=env_configs, env=env, env_idx=i,
-                                                        env_state=env_state)
+                actions, state = model.predict(obs, state=state, deterministic=deterministic, infos=infos,
+                                               env_config=env_conf,
+                                               env_configs=env_configs, env=env, env_idx=i,
+                                               env_state=env_state)
                 action = actions[0]
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)
@@ -306,14 +306,16 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                                                                      infos=infos,
                                                                      env_config = env_conf,
                                                                      env_configs=env_configs, env=env, env_idx=i,
-                                                                     env_state=env_state)
+                                                                     env_state=env_state,
+                                                                     attacker=True)
                 if train_mode == train_mode.TRAIN_DEFENDER or train_mode == train_mode.SELF_PLAY:
                     defender_actions, state = defender_model.predict(np.array([obs_defender]), state=state,
                                                                      deterministic=deterministic,
                                                                      infos=infos,
                                                                      env_config=env_conf,
                                                                      env_configs=env_configs, env=env, env_idx=i,
-                                                                     env_state=env_state)
+                                                                     env_state=env_state,
+                                                                     attacker=False)
                     if attacker_actions is None:
                         attacker_actions = np.array([attacker_opponent.action(env_state, agent_state)])
                 defender_action = defender_actions[0]

@@ -16,6 +16,7 @@ from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs_model.logic.common.util as util
 from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -182,7 +183,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.attacker_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                     action, env_config=self.env_config, env_state=self.env_state), actions))
         self.defender_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
-            action, env_config=self.env_config, env_state=self.env_state), actions))
+            action, env_config=self.env_config, env_state=self.env_state, attacker_action=None), actions))
 
         if (self.env_config.env_mode == EnvMode.SIMULATION
             or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
@@ -207,6 +208,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
+        # print("attacker trajectory:{}".format(self.attacker_trajectory))
+        # print("defender trajectory:{}".format(self.defender_trajectory))
 
         # Initialization
         attack_action_id, defense_action_id = action_id
@@ -227,6 +230,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                                    attacker_action=attack_action)
             attacker_reward = attacker_reward + attacker_reward_2
             attacker_m_obs = attacker_m_obs_2
+        else:
+            print("defense action id None:{}".format(defense_action_id))
 
         # Merge infos
         if defender_info is not None:
@@ -318,21 +323,24 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action: the previous attacker action
         :return: (obs, reward, done, info)
         """
-
+        info = {"idx": self.idx}
         if done_attacker:
             defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
             attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
             defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
-            return defender_obs, attacker_m_obs, self.env_config.defender_intrusion_reward, 0, True, {}
+            info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
+            info["early_stopped"] = self.env_state.defender_obs_state.stopped
+            return defender_obs, attacker_m_obs, self.env_config.defender_intrusion_reward, 0, True, info
 
         # Update trajectory
         self.defender_trajectory = []
         self.defender_trajectory.append(self.defender_last_obs)
         self.defender_trajectory.append(defender_action_id)
-        info = {"idx": self.idx}
-        if not self.is_defense_action_legal(defender_action_id, env_config=self.env_config, env_state=self.env_state):
+        if not self.is_defense_action_legal(defender_action_id, env_config=self.env_config,
+                                            env_state=self.env_state, attacker_action=attacker_action):
             print("illegal defense action:{}, idx:{}".format(defender_action_id, self.idx))
-            sys.exit(0)
+            raise ValueError("illegal defense action")
+            #sys.exit(0)
             done = False
             return self.defender_last_obs, self.env_config.illegal_reward_action, done, info
 
@@ -344,7 +352,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Step in the environment
         s_prime, defender_reward, done = TransitionOperator.defender_transition(
-            s=self.env_state, defender_action=defense_action, env_config=self.env_config)
+            s=self.env_state, defender_action=defense_action, attacker_action=attacker_action,
+            env_config=self.env_config)
 
         # Parse result
         attacker_reward = 0
@@ -474,16 +483,26 @@ class PyCRCTFEnv(gym.Env, ABC):
             action, env_config=self.env_config, env_state=self.env_state), attacker_total_actions))
 
     @staticmethod
-    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState,
+                                attacker_action : int) -> bool:
         """
         Checks if a given defense action is legal in the current state of the environment
 
         :param defense_action_id: the id of the action to check
         :param env_config: the environment config
         :param env_state: the environment state
+        :param attacker_action: the id of the previous attack action
         :return: True if legal, else false
         """
         return True
+        # if attacker_action is None:
+        #     return True
+        # defense_action = env_config.defender_action_conf.actions[defense_action_id]
+        # if attacker_action.id == AttackerActionId.CONTINUE and defense_action.id == DefenderActionId.STOP:
+        #     return True
+        # if attacker_action.id != AttackerActionId.CONTINUE and defense_action.id == DefenderActionId.CONTINUE:
+        #     return True
+        # return False
 
     @staticmethod
     def is_attack_action_legal(attack_action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,

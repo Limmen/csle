@@ -39,7 +39,7 @@ class Runner:
         :param config: configuration for the run
         :return: the result
         """
-        if config.mode == RunnerMode.TRAIN_ATTACKER.value:
+        if config.mode == RunnerMode.TRAIN_ATTACKER.value or config.mode == RunnerMode.TRAIN_DEFENDER.value:
             return Runner.train(config)
         elif config.mode == RunnerMode.SIMULATE.value:
             return Runner.simulate(config)
@@ -130,7 +130,7 @@ class Runner:
                     env.network_confs, max_num_nodes = cfg.dr_max_num_nodes,
                 min_num_nodes = cfg.dr_min_num_nodes, max_num_flags=cfg.dr_max_num_flags,
                 min_num_flags=cfg.dr_min_num_flags, min_num_users=cfg.dr_min_num_users,
-                fmax_num_users=cfg.dr_max_num_users, use_base_randomization=cfg.dr_use_base)
+                max_num_users=cfg.dr_max_num_users, use_base_randomization=cfg.dr_use_base)
                 print("Randomization space created, base:{}".format(cfg.dr_use_base))
                 env.set_randomization_space(randomization_space)
                 print("Randomization space sent to all envs")

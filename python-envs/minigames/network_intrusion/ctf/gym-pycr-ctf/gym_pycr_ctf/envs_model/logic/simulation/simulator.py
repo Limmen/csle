@@ -58,7 +58,9 @@ class Simulator:
         :return: s', r, done
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
-            return Simulator.defender_stopping_action(s=s, defender_action=defender_action, env_config=env_config)
+            return Simulator.defender_stopping_action(s=s, defender_action=defender_action,
+                                                      attacker_action=attacker_action,
+                                                      env_config=env_config)
         elif defender_action.type == DefenderActionType.STATE_UPDATE:
             return Simulator.defender_update_state_action(s=s, attacker_action=attacker_action,
                                                    defender_action=defender_action,
@@ -232,20 +234,25 @@ class Simulator:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def defender_stopping_action(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig) -> Tuple[
+    def defender_stopping_action(s: EnvState, defender_action: DefenderAction, attacker_action: DefenderAction,
+                                env_config: EnvConfig) -> Tuple[
         EnvState, int, bool]:
         """
         Implements transition of a stopping action of the defender
 
         :param s: the current state
-        :param defender_action: the action
+        :param defender_action: the defender's action
+        :param attacker_action: previous attacker action
         :param env_config: the environment configuration
         :return: s', r, done
         """
         if defender_action.id == DefenderActionId.STOP:
-            return DefenderStoppingSimulator.stop_monitor(s=s, defender_action=defender_action, env_config=env_config)
+            return DefenderStoppingSimulator.stop_monitor(s=s, defender_action=defender_action,
+                                                          attacker_action=attacker_action,
+                                                          env_config=env_config)
         elif defender_action.id == DefenderActionId.CONTINUE:
-            return DefenderStoppingSimulator.continue_monitor(s=s, defender_action=defender_action, env_config=env_config)
+            return DefenderStoppingSimulator.continue_monitor(s=s, attacker_action=attacker_action,
+                                                              defender_action=defender_action, env_config=env_config)
         else:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(defender_action.id, defender_action.name))
 

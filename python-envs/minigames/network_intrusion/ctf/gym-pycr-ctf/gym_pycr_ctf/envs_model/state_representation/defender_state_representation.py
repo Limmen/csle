@@ -123,10 +123,10 @@ class DefenderStateRepresentation:
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_total
-            network_obs[1] = obs_state.sum_priority_alerts_total
-            network_obs[2] = obs_state.num_severe_alerts_total
-            network_obs[3] = obs_state.num_warning_alerts_total
+            network_obs[0] = obs_state.num_alerts_recent
+            network_obs[1] = obs_state.sum_priority_alerts_recent
+            network_obs[2] = obs_state.num_severe_alerts_recent
+            network_obs[3] = obs_state.num_alerts_recent
         else:
             network_obs = np.zeros(0)
         for i in range(num_machines):
@@ -191,10 +191,10 @@ class DefenderStateRepresentation:
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_total
-            network_obs[1] = obs_state.sum_priority_alerts_total
-            network_obs[2] = obs_state.num_severe_alerts_total
-            network_obs[3] = obs_state.num_warning_alerts_total
+            network_obs[0] = obs_state.num_alerts_recent
+            network_obs[1] = obs_state.sum_priority_alerts_recent
+            network_obs[2] = obs_state.num_severe_alerts_recent
+            network_obs[3] = obs_state.num_warning_alerts_recent
         else:
             network_obs = np.zeros(0)
         for i in range(num_machines):
@@ -248,11 +248,65 @@ class DefenderStateRepresentation:
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_total
-            network_obs[1] = obs_state.sum_priority_alerts_total
-            network_obs[2] = obs_state.num_severe_alerts_total
-            network_obs[3] = obs_state.num_warning_alerts_total
+            network_obs[0] = obs_state.num_alerts_recent
+            network_obs[1] = obs_state.sum_priority_alerts_recent
+            network_obs[2] = obs_state.num_severe_alerts_recent
+            network_obs[3] = obs_state.num_warning_alerts_recent
         else:
             network_obs = np.zeros(0)
 
         return machines_obs, network_obs
+
+    @staticmethod
+    def core_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+        """
+        Configures observation spaces for the core representation
+
+        :param obs_state: the observation state
+        :return the observation space
+        """
+        #num_network_features = 9
+        num_network_features = 1
+        num_m_features = 0
+        observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
+            obs_state.num_machines * num_m_features + num_network_features,))
+        return observation_space
+
+    @staticmethod
+    def core_representation(num_machines: int, obs_state: DefenderObservationState,
+                              os_lookup: dict,
+                              ids: bool = False) \
+            -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Core representation for the defender, includes only IDS features
+
+        :param num_machines: max number of machines in the obs
+        :param obs_state: current observation state to turn into a numeratical representation
+        :param os_lookup: lookup dict for converting categorical os into numerical
+        :param ids: whether ids is enabled or not
+        :return: machine observations and network observations
+        """
+        obs_state.sort_machines()
+        num_m_features = 0
+        num_network_features = 1
+        #num_network_features = 9
+        machines_obs = np.zeros((num_machines, num_m_features))
+        if ids:
+            network_obs = np.zeros(num_network_features)
+            network_obs[0] = obs_state.step
+            # network_obs[0] = obs_state.num_alerts_recent
+            # network_obs[1] = obs_state.sum_priority_alerts_recent
+            # network_obs[2] = obs_state.num_severe_alerts_recent
+            # network_obs[3] = obs_state.num_warning_alerts_recent
+            # network_obs[4] = obs_state.num_alerts_total
+            # network_obs[5] = obs_state.sum_priority_alerts_total
+            # network_obs[6] = obs_state.num_severe_alerts_total
+            # network_obs[7] = obs_state.num_warning_alerts_total
+            # network_obs[8] = obs_state.step
+        else:
+            network_obs = np.zeros(0)
+
+        return machines_obs, network_obs
+
+
+

@@ -229,7 +229,8 @@ class BasePolicy(BaseModel):
         m_index: int = None,
         infos=None,
         env=None,
-        mask_actions: bool = True
+        mask_actions: bool = True,
+        attacker: bool = True
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Get the policy action and state from an observation (and optional state).
@@ -250,7 +251,8 @@ class BasePolicy(BaseModel):
         with th.no_grad():
             actions = self._predict(observation, deterministic=deterministic, env_config=env_config,
                                     env_state=env_state, m_index=m_index, infos=infos, env=env,
-                                    env_configs=env_configs, env_idx=env_idx, mask_actions=mask_actions)
+                                    env_configs=env_configs, env_idx=env_idx, mask_actions=mask_actions,
+                                    attacker=attacker)
         if type(actions) == th.Tensor:
             # Convert to numpy
             actions = actions.cpu().numpy()
@@ -444,7 +446,8 @@ class ActorCriticPolicy(BasePolicy):
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
 
     def forward(self, obs: th.Tensor, deterministic: bool = False,
-                m_index : int = None, env = None, infos=None, mask_actions: bool = True) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
+                m_index : int = None, env = None, infos=None, mask_actions: bool = True, attacker: bool = True) \
+            -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
         Forward pass in all the networks (actor and critic)
 
@@ -477,11 +480,19 @@ class ActorCriticPolicy(BasePolicy):
                                 non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                                     action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_selection=True), actions))
                         else:
-                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                                action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
+                            if attacker:
+                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
+                            else:
+                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
+                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state,
+                                    attacker_action=None), actions))
                     non_legal_actions_total.append(non_legal_actions)
                 elif isinstance(env, SubprocVecEnv):
-                    non_legal_actions_total.append(infos[i]["non_legal_actions"])
+                    if attacker:
+                        non_legal_actions_total.append(infos[i]["attacker_non_legal_actions"])
+                    else:
+                        non_legal_actions_total.append(infos[i]["defender_non_legal_actions"])
                 else:
                     raise ValueError("Unrecognized env")
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
@@ -538,7 +549,8 @@ class ActorCriticPolicy(BasePolicy):
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
                 env_config: EnvConfig = None, m_index : int = None, env = None, infos = None,
-                 env_configs: List[EnvConfig] = None, env_idx: int = None, mask_actions: bool = True) -> th.Tensor:
+                 env_configs: List[EnvConfig] = None, env_idx: int = None, mask_actions: bool = True,
+                 attacker : bool = True) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -569,11 +581,18 @@ class ActorCriticPolicy(BasePolicy):
                             non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
                                 action, env_config=env_config, env_state=env_state, m_selection=True), actions))
                     else:
-                        non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                            action, env_config=env_config, env_state=env_state), actions))
+                        if attacker:
+                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                                action, env_config=env_config, env_state=env_state), actions))
+                        else:
+                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
+                                action, env_config=env_config, env_state=env_state, attacker_action=None), actions))
                 non_legal_actions = [non_legal_actions]
             elif isinstance(env, SubprocVecEnv):
-                non_legal_actions = infos[0]["non_legal_actions"]
+                if attacker:
+                    non_legal_actions = infos[0]["attacker_non_legal_actions"]
+                else:
+                    non_legal_actions = infos[0]["defender_non_legal_actions"]
                 non_legal_actions = [non_legal_actions]
             else:
                 raise ValueError("Unrecognized env: {}".format(env))

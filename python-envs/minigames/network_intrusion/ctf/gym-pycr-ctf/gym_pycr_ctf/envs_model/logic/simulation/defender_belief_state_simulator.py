@@ -123,6 +123,8 @@ class DefenderBeliefStateSimulator:
                 m.num_processes = m.num_processes + num_new_processes
                 m.num_processes_recent = num_new_processes
 
+        s_prime.defender_obs_state.step = s_prime.defender_obs_state.step + 1
+
         return s_prime, 0, True
 
     @staticmethod
@@ -202,5 +204,7 @@ class DefenderBeliefStateSimulator:
             m.num_logged_in_users_recent = 0
             m.num_login_events_recent = 0
             m.num_processes_recent = 0
+
+        s_prime.defender_obs_state.step = 0
 
         return s_prime, 0, False
