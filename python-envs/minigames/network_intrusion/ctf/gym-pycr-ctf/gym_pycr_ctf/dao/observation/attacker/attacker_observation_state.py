@@ -23,17 +23,27 @@ class AttackerObservationState:
         self.agent_reachable = agent_reachable
         if agent_reachable is None:
             self.agent_reachable = set()
+        self.last_attacker_action : AttackerAction = None
+        self.undetected_intrusions_steps = 0
 
     def ongoing_intrusion(self):
+        if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
+            self.undetected_intrusions_steps +=1
+            return True
+
         if self.catched_flags > 0:
+            self.undetected_intrusions_steps += 1
             return True
 
         for m in self.machines:
             if m.shell_access:
+                self.undetected_intrusions_steps += 1
                 return True
             if self.exploit_executed(m):
+                self.undetected_intrusions_steps += 1
                 return True
             if m.logged_in:
+                self.undetected_intrusions_steps += 1
                 return True
         return False
 
@@ -144,7 +154,9 @@ class AttackerObservationState:
                                      num_flags = self.num_flags, catched_flags = self.catched_flags,
                                      agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
         c.detected = self.detected
+        c.undetected_intrusions_steps = self.undetected_intrusions_steps
         c.all_flags = self.all_flags
+        c.last_attacker_action = self.last_attacker_action
         c.actions_tried = self.actions_tried.copy()
         for m in self.machines:
             c.machines.append(m.copy())

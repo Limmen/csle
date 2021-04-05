@@ -383,13 +383,13 @@ class BernoulliDistribution(Distribution):
         return self
 
     def log_prob(self, actions: th.Tensor) -> th.Tensor:
-        return self.distribution.log_prob(actions).sum(dim=1)
+        return self.distribution.log_prob(actions.float()).sum(dim=1)
 
     def entropy(self) -> th.Tensor:
         return self.distribution.entropy().sum(dim=1)
 
     def sample(self) -> th.Tensor:
-        return self.distribution.sample()
+        return self.distribution.sample().long()
 
     def mode(self) -> th.Tensor:
         return th.round(self.distribution.probs)
@@ -659,4 +659,11 @@ def make_proba_distribution(
     """
     if dist_kwargs is None:
         dist_kwargs = {}
+    # if action_space.n == 2:
+    #     return BernoulliDistribution(action_space.n-1, **dist_kwargs)
+    # if action_space.n == 2:
+    #     print("Bernoulli")
+    #     return BernoulliDistribution(action_space.n-1, **dist_kwargs)
+    # else:
+    #     print("Categorical")
     return CategoricalDistribution(action_space.n, **dist_kwargs)

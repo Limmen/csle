@@ -59,6 +59,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Setup Defender Spaces
         self.defender_observation_space = self.env_state.defender_observation_space
         self.defender_action_space = self.env_config.defender_action_conf.action_space
+        self.defender_num_actions = self.env_config.defender_action_conf.num_actions
 
         # Setup Config
         self.env_config.pi_star_rew_list_attacker = []
@@ -83,8 +84,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
-                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
+                s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=self.env_config)
+                self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
 
             if self.env_config.load_services_from_server:
@@ -153,8 +155,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
-                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
+                s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=self.env_config)
+                self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
 
@@ -173,17 +176,19 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = env_config.defender_action_conf.state_init_action
-                TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
+                s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
                                                        env_config=env_config)
+                self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
 
         # Reset and setup action spaces
         self.reset()
-        actions = list(range(self.attacker_num_actions))
+        attacker_actions = list(range(self.attacker_num_actions))
         self.attacker_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                    action, env_config=self.env_config, env_state=self.env_state), actions))
+                    action, env_config=self.env_config, env_state=self.env_state), attacker_actions))
+        defender_actions = list(range(self.defender_num_actions))
         self.defender_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
-            action, env_config=self.env_config, env_state=self.env_state, attacker_action=None), actions))
+            action, env_config=self.env_config, env_state=self.env_state), defender_actions))
 
         if (self.env_config.env_mode == EnvMode.SIMULATION
             or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
@@ -208,36 +213,74 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
-        # print("attacker trajectory:{}".format(self.attacker_trajectory))
-        # print("defender trajectory:{}".format(self.defender_trajectory))
 
         # Initialization
         attack_action_id, defense_action_id = action_id
+        attack_action_id = int(attack_action_id)
+        defense_action_id = int(defense_action_id)
         defender_reward = 0
-        defender_obs = None
         defender_info = None
+        attacker_reward = 0
+        done = False
+        info = None
 
-        # First step attacker
-        attack_action = self.env_config.attacker_action_conf.actions[attack_action_id]
-        attacker_m_obs, attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
-
-        # Second step defender
+        # First step defender
         if defense_action_id is not None:
             if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
                 time.sleep(self.env_config.defender_sleep_before_state_update)
-            defender_obs, attacker_m_obs_2, defender_reward, attacker_reward_2, done, defender_info = \
-                self.step_defender(defender_action_id=defense_action_id, done_attacker=done,
-                                   attacker_action=attack_action)
-            attacker_reward = attacker_reward + attacker_reward_2
-            attacker_m_obs = attacker_m_obs_2
-        else:
-            print("defense action id None:{}".format(defense_action_id))
+            defender_reward, attacker_reward, done, defender_info = \
+                self.step_defender(defender_action_id=defense_action_id,
+                                   attacker_action=self.env_state.attacker_obs_state.last_attacker_action)
+            defender_info["successful_intrusion"] = False
+            attacker_reward = attacker_reward
+
+        if not done:
+            # Second step attacker
+            attacker_reward, defender_reward_2, done, info = self.step_attacker(attacker_action_id=attack_action_id)
+            defender_reward = defender_reward + defender_reward_2
 
         # Merge infos
-        if defender_info is not None:
-            for k,v in defender_info.items():
-                if k not in info:
-                    info[k] = v
+        if info is None:
+            info = defender_info
+        else:
+            if defender_info is not None:
+                for k,v in defender_info.items():
+                    if k not in info:
+                        info[k] = v
+
+        # Update state
+        if self.env_config.defender_update_state and not done:
+            # Update defender's state
+            s_prime, _, _ = TransitionOperator.defender_transition(
+                s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
+                env_config=self.env_config, attacker_action=self.env_state.attacker_obs_state.last_attacker_action)
+            self.env_state = s_prime
+
+        # Extract observations
+        defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
+        self.defender_last_obs = defender_obs
+        self.attacker_last_obs = attacker_m_obs
+        self.defender_time_step += 1
+        self.attacker_agent_state.time_step += 1
+
+        # Update trajectories
+        if self.env_config.save_trajectories:
+            self.defender_trajectory = []
+            self.defender_trajectory.append(defender_obs)
+            self.defender_trajectory.append(defender_reward)
+            self.attacker_trajectory = []
+            self.attacker_trajectory.append(self.attacker_last_obs)
+            self.attacker_trajectory.append(attack_action_id)
+            self.attacker_agent_state.episode_reward += attacker_reward
+            self.attacker_trajectory.append(attacker_m_obs)
+            self.attacker_trajectory.append(attacker_reward)
+            self.defender_trajectories.append(self.defender_trajectory)
+            self.attacker_trajectories.append(self.attacker_trajectory)
+
+        if self.env_state.defender_obs_state.caught_attacker and defense_action_id != 0:
+            print("caught attacker wth continue")
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
@@ -248,12 +291,9 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action_id: the action to take
         :return: (obs, reward, done, info)
         """
-
-        # Update trajecotry
-        self.attacker_trajectory = []
-        self.attacker_trajectory.append(self.attacker_last_obs)
-        self.attacker_trajectory.append(attacker_action_id)
         info = {"idx": self.idx}
+        info["successful_intrusion"] = False
+        defender_reward = 0
 
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
@@ -280,7 +320,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.agent_state.time_step += 1
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True
-            return self.attacker_last_obs, self.env_config.illegal_reward_action, done, info
+            return self.env_config.illegal_reward_action, defender_reward, done, info
         if attacker_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
             raise ValueError("Action ID: {} not recognized".format(attacker_action_id))
 
@@ -297,47 +337,42 @@ class PyCRCTFEnv(gym.Env, ABC):
             attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient * self.attacker_agent_state.time_step
         if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
             done = True
+
+        if s_prime.attacker_obs_state.all_flags:
+            info["successful_intrusion"] = True
+
+        if s_prime.attacker_obs_state.all_flags:
+            defender_reward = defender_reward + self.env_config.defender_intrusion_reward
+
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
             attacker_reward = attacker_reward - self.env_config.attacker_detection_reward
-        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-        self.attacker_last_obs = attacker_m_obs
-        self.attacker_agent_state.time_step += 1
-        self.attacker_agent_state.episode_reward += attacker_reward
-        self.__update_log(attack_action)
-        self.attacker_trajectory.append(attacker_m_obs)
-        self.attacker_trajectory.append(attacker_reward)
         info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.attacker_trajectories.append(self.attacker_trajectory)
 
-        return attacker_m_obs, attacker_reward, done, info
+        self.__update_log(attack_action)
 
-    def step_defender(self, defender_action_id, attacker_action: AttackerAction,
-                      done_attacker : bool = False) -> Tuple[np.ndarray, int, bool, dict]:
+        self.env_state.attacker_obs_state.last_attacker_action = attack_action
+        return attacker_reward, defender_reward, done, info
+
+    def step_defender(self, defender_action_id, attacker_action: AttackerAction) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment as the defender by executing the given action
 
         :param defender_action_id: the action to take
         :param done_attacker: whether the environment completed after attacker action
-        :param attacker_action: the previous attacker action
         :return: (obs, reward, done, info)
         """
         info = {"idx": self.idx}
-        if done_attacker:
-            defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
-            attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-            defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
-            info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
-            info["early_stopped"] = self.env_state.defender_obs_state.stopped
-            return defender_obs, attacker_m_obs, self.env_config.defender_intrusion_reward, 0, True, info
+        info["flags"] = self.env_state.attacker_obs_state.catched_flags
 
         # Update trajectory
         self.defender_trajectory = []
         self.defender_trajectory.append(self.defender_last_obs)
         self.defender_trajectory.append(defender_action_id)
         if not self.is_defense_action_legal(defender_action_id, env_config=self.env_config,
-                                            env_state=self.env_state, attacker_action=attacker_action):
+                                            env_state=self.env_state):
             print("illegal defense action:{}, idx:{}".format(defender_action_id, self.idx))
             raise ValueError("illegal defense action")
             #sys.exit(0)
@@ -367,33 +402,21 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state = s_prime
 
         if self.env_state.defender_obs_state.caught_attacker:
-            defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
+            defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward / max(
+                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
             attacker_reward = self.env_config.attacker_detection_reward
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
+        if self.env_state.attacker_obs_state.ongoing_intrusion():
+            done = True
+            defender_reward = defender_reward -1
+
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped
 
-        # Update defender's state
-        TransitionOperator.defender_transition(
-            s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
-            env_config=self.env_config, attacker_action=attacker_action)
-
-        # Extract observations
-        defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
-        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-
-        defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
-        self.defender_last_obs = defender_obs
-        self.defender_time_step += 1
-        self.defender_trajectory.append(defender_obs)
-        self.defender_trajectory.append(defender_reward)
-        if self.env_config.save_trajectories:
-            self.defender_trajectories.append(self.defender_trajectory)
-
-        return defender_obs, attacker_m_obs, defender_reward, attacker_reward, done, info
+        return defender_reward, attacker_reward, done, info
 
     def reset(self, soft : bool = False) -> np.ndarray:
         """
@@ -483,8 +506,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             action, env_config=self.env_config, env_state=self.env_state), attacker_total_actions))
 
     @staticmethod
-    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState,
-                                attacker_action : int) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
         """
         Checks if a given defense action is legal in the current state of the environment
 
@@ -494,15 +516,19 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action: the id of the previous attack action
         :return: True if legal, else false
         """
-        return True
-        # if attacker_action is None:
-        #     return True
+        #return True
         # defense_action = env_config.defender_action_conf.actions[defense_action_id]
-        # if attacker_action.id == AttackerActionId.CONTINUE and defense_action.id == DefenderActionId.STOP:
+        # if env_state.attacker_obs_state.last_attacker_action is None and defense_action.id == DefenderActionId.STOP:
+        #     return False
+        # if env_state.attacker_obs_state.last_attacker_action is None and defense_action.id == DefenderActionId.CONTINUE:
         #     return True
-        # if attacker_action.id != AttackerActionId.CONTINUE and defense_action.id == DefenderActionId.CONTINUE:
+        # if env_state.last_attacker_action is not None and env_state.last_attacker_action.id == AttackerActionId.CONTINUE \
+        #         and defense_action.id == DefenderActionId.CONTINUE:
         #     return True
-        # return False
+        # if env_state.last_attacker_action is not None and env_state.last_attacker_action.id != AttackerActionId.CONTINUE \
+        #         and defense_action.id == DefenderActionId.STOP:
+        #     return True
+        return True
 
     @staticmethod
     def is_attack_action_legal(attack_action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
@@ -819,5 +845,6 @@ class PyCRCTFEnv(gym.Env, ABC):
     def reset_state(self):
         self.env_state.reset_state()
         defender_reset_action = self.env_config.defender_action_conf.state_reset_action
-        TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_reset_action,
+        s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_reset_action,
                                                env_config=self.env_config)
+        self.env_state = s_prime

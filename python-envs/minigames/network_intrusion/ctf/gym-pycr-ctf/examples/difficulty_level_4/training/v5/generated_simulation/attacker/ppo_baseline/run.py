@@ -56,7 +56,12 @@ def default_config() -> ClientConfig:
                                                     "network_intrusion/ctf/gym-pycr-ctf/" \
                                                     "examples/difficulty_level_4/hello_world/"
 
+    emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+                                       server_connection=False)
+
     eval_emulation_config.skip_exploration = True
+    emulation_config.skip_exploration = True
+    emulation_config.save_dynamics_model_dir = eval_emulation_config.save_dynamics_model_dir
 
     client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,

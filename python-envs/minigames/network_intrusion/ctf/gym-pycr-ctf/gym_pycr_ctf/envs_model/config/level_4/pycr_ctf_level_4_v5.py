@@ -120,7 +120,7 @@ class PyCrCTFLevel4V5:
                                render_config=render_conf, env_mode=EnvMode.SIMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrCTFLevel4Base.hacker_ip(), state_type=StateType.CORE,
+                               hacker_ip=PyCrCTFLevel4Base.hacker_ip(), state_type=StateType.TEST,
                                router_ip=PyCrCTFLevel4Base.router_ip())
         env_config.ids_router = True
 

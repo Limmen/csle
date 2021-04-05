@@ -121,15 +121,13 @@ class DummyVecEnv(VecEnv):
         obs_attacker, obs_defender = obs
         for key in self.attacker_keys:
             if key is None:
-                pass
-                #self.buf_obs[key][env_idx] = obs
+                self.buf_obs_attacker[key][env_idx] = obs_attacker
             else:
                 self.buf_obs_attacker[key][env_idx] = obs_attacker[key]
 
         for key in self.defender_keys:
             if key is None:
-                pass
-                # self.buf_obs[key][env_idx] = obs
+                self.buf_obs_defender[key][env_idx] = obs_defender
             else:
                 self.buf_obs_defender[key][env_idx] = obs_defender[key]
 

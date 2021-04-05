@@ -210,7 +210,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     """
     attacker_eval_episode_rewards, defender_eval_episode_rewards, \
     eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-    eval_episode_caught, eval_episode_early_stopped = 0,0,0,0, 0, 0, 0
+    eval_episode_caught, eval_episode_early_stopped, eval_episode_successful_intrusion = 0,0,0,0, 0, 0, 0, 0
     attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
@@ -218,7 +218,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     eval_2_episode_flags_percentage_env_specific = {}, {}, {}, {}, {}, {}, {}, {}, {}
 
     attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-    episode_caught, episode_early_stopped, \
+    episode_caught, episode_early_stopped, episode_successful_intrusion, \
     attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
     eval_episode_flags_percentage_env_specific = _quick_eval_helper(
@@ -229,7 +229,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     if env_2 is not None:
         attacker_eval_episode_rewards, defender_eval_episode_rewards, \
         eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, \
-        eval_episode_early_stopped, \
+        eval_episode_early_stopped, eval_episode_successful_intrusion,\
         attacker_eval_2_episode_rewards_env_specific, defender_eval_2_episode_rewards_env_specific, \
         eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
         eval_2_episode_flags_percentage_env_specific = _quick_eval_helper(
@@ -238,10 +238,10 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             train_mode=train_mode,
             env_configs=eval_envs_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent)
     return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-           episode_caught, episode_early_stopped, \
+           episode_caught, episode_early_stopped, episode_successful_intrusion, \
            attacker_eval_episode_rewards, defender_eval_episode_rewards, \
            eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, \
-           eval_episode_early_stopped, \
+           eval_episode_early_stopped, eval_episode_successful_intrusion, \
            attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
            eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
@@ -260,13 +260,13 @@ def _quick_eval_helper(env, attacker_model, defender_model,
     episode_flags = []
     episode_caught = []
     episode_early_stopped = []
+    episode_successful_intrusion = []
     episode_flags_percentage = []
     attacker_eval_episode_rewards_env_specific = {}
     defender_eval_episode_rewards_env_specific = {}
     eval_episode_steps_env_specific = {}
     eval_episode_flags_env_specific = {}
     eval_episode_flags_percentage_env_specific = {}
-
     for episode in range(n_eval_episodes):
         if isinstance(env, SubprocVecEnv):
             infos = np.array([{"attacker_non_legal_actions": env.attacker_initial_illegal_actions,
@@ -337,6 +337,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
             episode_flags.append(_info["flags"])
             episode_caught.append(_info["caught_attacker"])
             episode_early_stopped.append(_info["early_stopped"])
+            episode_successful_intrusion.append(_info["successful_intrusion"])
             episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
             attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
             eval_episode_steps_env_specific, \
@@ -355,7 +356,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 env_conf = env.env_config(i)
                 env_configs = env.env_configs()
     return attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags_percentage, episode_flags, \
-           episode_caught, episode_early_stopped, \
+           episode_caught, episode_early_stopped, episode_successful_intrusion, \
            attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
            eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
            eval_episode_flags_percentage_env_specific

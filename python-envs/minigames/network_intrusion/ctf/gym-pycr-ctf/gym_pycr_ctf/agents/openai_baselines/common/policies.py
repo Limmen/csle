@@ -485,8 +485,7 @@ class ActorCriticPolicy(BasePolicy):
                                     action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
                             else:
                                 non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
-                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state,
-                                    attacker_action=None), actions))
+                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
                     non_legal_actions_total.append(non_legal_actions)
                 elif isinstance(env, SubprocVecEnv):
                     if attacker:
@@ -530,6 +529,8 @@ class ActorCriticPolicy(BasePolicy):
         :return: (Distribution) Action distribution
         """
         mean_actions = self.action_net(latent_pi)
+        if self.agent_config.output_dim == 1:
+            mean_actions = th.sigmoid(mean_actions)
         #mean_actions = mean_actions*100
         action_logits = mean_actions.clone()
         if non_legal_actions is not None:
@@ -586,7 +587,7 @@ class ActorCriticPolicy(BasePolicy):
                                 action, env_config=env_config, env_state=env_state), actions))
                         else:
                             non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
-                                action, env_config=env_config, env_state=env_state, attacker_action=None), actions))
+                                action, env_config=env_config, env_state=env_state), actions))
                 non_legal_actions = [non_legal_actions]
             elif isinstance(env, SubprocVecEnv):
                 if attacker:
@@ -612,7 +613,7 @@ class ActorCriticPolicy(BasePolicy):
         """
         latent_pi, latent_vf, latent_sde = self._get_latent(obs)
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde)
-        log_prob = distribution.log_prob(actions)
+        log_prob = distribution.log_prob(actions.long())
         values = self.value_net(latent_vf)
         return values, log_prob, distribution.entropy()
 

@@ -241,6 +241,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_flags = []
         episode_caught = []
         episode_early_stopped = []
+        episode_successful_intrusion = []
         episode_flags_percentage = []
         attacker_env_specific_rewards = {}
         defender_env_specific_rewards = {}
@@ -298,11 +299,13 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         episode_flags.append(infos[i]["flags"])
                         episode_caught.append(infos[i]["caught_attacker"])
                         episode_early_stopped.append(infos[i]["early_stopped"])
+                        episode_successful_intrusion.append(infos[i]["successful_intrusion"])
                         if self.attacker_agent_config.env_config is not None:
                             episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
                             ) # TODO this does not work with DR
                         else:
+                            print("env config None?:{}".format(self.attacker_agent_config.env_config))
                             episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
 
@@ -346,7 +349,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         return True, attacker_episode_rewards, defender_episode_rewards, episode_steps, episode_flags, \
                episode_flags_percentage, attacker_env_specific_rewards, defender_env_specific_rewards, \
                env_specific_steps, env_specific_flags, env_specific_flags_percentage, env_response_times, \
-               action_pred_times, episode_caught, episode_early_stopped
+               action_pred_times, episode_caught, episode_early_stopped, episode_successful_intrusion
 
     def train(self) -> None:
         """
@@ -396,6 +399,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         episode_flags = []
         episode_caught = []
         episode_early_stopped = []
+        episode_successful_intrusion = []
         episode_steps = []
         episode_loss_attacker = []
         episode_loss_defender = []
@@ -425,7 +429,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             rollouts_steps, rollouts_flags, rollouts_flags_percentage, \
             attacker_env_specific_rewards, defender_env_specific_rewards, env_specific_steps, \
             env_specific_flags, env_specific_flags_percentage, \
-            rollout_env_response_times, rollout_action_pred_times, rollouts_caught, rollouts_early_stopped = \
+            rollout_env_response_times, rollout_action_pred_times, rollouts_caught, rollouts_early_stopped, \
+            rollouts_successful_intrusion = \
                 self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer,
                                       self.defender_rollout_buffer,
                                       n_rollout_steps=self.n_steps)
@@ -442,6 +447,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             episode_steps.extend(rollouts_steps)
             episode_flags.extend(rollouts_flags)
             episode_caught.extend(rollouts_caught)
+            episode_successful_intrusion.extend(rollouts_successful_intrusion)
             episode_early_stopped.extend(rollouts_early_stopped)
             episode_flags_percentage.extend(rollouts_flags_percentage)
 
@@ -481,9 +487,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             if self.iteration % self.attacker_agent_config.train_log_frequency == 0:
                 attacker_episode_rewards_1, defender_episode_rewards_1, \
                 episode_steps_1, episode_flags_percentage_1, episode_flags_1, episode_caught_1, \
-                episode_early_stopped_1, \
+                episode_early_stopped_1, episode_successful_intrusion_1,\
                 eval_attacker_episode_rewards, eval_defender_episode_rewards, eval_episode_steps, \
                 eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, eval_episode_early_stopped, \
+                eval_episode_successful_intrusion, \
                 attacker_eval_2_episode_rewards_env_specific, \
                 defender_eval_2_episode_rewards_env_specific, \
                 eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
@@ -492,7 +499,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 eval_episode_flags_env_specific, \
                 eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, \
                                                              None, None, None, None, None, None, None, None, None, \
-                                                             None, None, None, {}, {}, {}, {}
+                                                             None, None, None, None, None, {}, {}, {}, {}
                 if self.attacker_agent_config.train_progress_deterministic_eval:
                     eval_conf = self.attacker_agent_config.env_config
                     env_configs = self.attacker_agent_config.env_configs
@@ -510,10 +517,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                 eval_conf = self.eval_env.env_config(0)
                     attacker_episode_rewards_1, defender_episode_rewards_1, \
                     episode_steps_1, episode_flags_percentage_1, episode_flags_1, episode_caught_1, \
-                    episode_early_stopped_1, \
+                    episode_early_stopped_1, episode_successful_intrusion_1, \
                     eval_attacker_episode_rewards, eval_defender_episode_rewards, \
                     eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-                    eval_episode_caught, eval_episode_early_stopped, \
+                    eval_episode_caught, eval_episode_early_stopped, eval_episode_successful_intrusion,\
                     attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
                     eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
                     eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
@@ -603,8 +610,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               grad_comp_times=grad_comp_times_attacker,
                                               weight_update_times=weight_update_times_attacker,
                                               episode_caught=episode_caught, episode_early_stopped = episode_early_stopped,
+                                              episode_successful_intrusion=episode_successful_intrusion,
                                               eval_episode_caught = eval_episode_caught,
-                                              eval_episode_early_stopped = eval_episode_early_stopped
+                                              eval_episode_early_stopped = eval_episode_early_stopped,
+                                              eval_episode_successful_intrusion=eval_episode_successful_intrusion,
+                                              n_af=n_af,
                                               )
 
                 attacker_episode_rewards = []
@@ -614,6 +624,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 episode_flags = []
                 episode_caught = []
                 episode_early_stopped = []
+                episode_successful_intrusion = []
                 episode_steps = []
                 rollout_times = []
                 env_response_times = []

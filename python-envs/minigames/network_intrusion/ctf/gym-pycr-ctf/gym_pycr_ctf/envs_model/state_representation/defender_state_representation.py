@@ -17,7 +17,7 @@ class DefenderStateRepresentation:
         :return: the observation space
         """
         num_network_features = 8
-        num_m_features = 10
+        num_m_features = 16
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
@@ -37,7 +37,7 @@ class DefenderStateRepresentation:
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
-        num_m_features = 10
+        num_m_features = 16
         num_network_features =8
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
@@ -86,6 +86,24 @@ class DefenderStateRepresentation:
 
                 # Num processes
                 machines_obs[i][9] = obs_state.machines[i].num_processes
+
+                # Num open recent connections
+                machines_obs[i][10] = obs_state.machines[i].num_open_connections_recent
+
+                # Num recent failed login attempts
+                machines_obs[i][11] = obs_state.machines[i].num_failed_login_attempts_recent
+
+                # Num users recent
+                machines_obs[i][12] = obs_state.machines[i].num_users_recent
+
+                # Num logged in users recent
+                machines_obs[i][13] = obs_state.machines[i].num_logged_in_users_recent
+
+                # Num login events recent
+                machines_obs[i][14] = obs_state.machines[i].num_login_events_recent
+
+                # Num processes recent
+                machines_obs[i][15] = obs_state.machines[i].num_processes_recent
 
         return machines_obs, network_obs
 
@@ -265,8 +283,7 @@ class DefenderStateRepresentation:
         :param obs_state: the observation state
         :return the observation space
         """
-        #num_network_features = 9
-        num_network_features = 1
+        num_network_features = 9
         num_m_features = 0
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
@@ -288,25 +305,38 @@ class DefenderStateRepresentation:
         """
         obs_state.sort_machines()
         num_m_features = 0
-        num_network_features = 1
-        #num_network_features = 9
+        num_network_features = 9
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.step
-            # network_obs[0] = obs_state.num_alerts_recent
-            # network_obs[1] = obs_state.sum_priority_alerts_recent
-            # network_obs[2] = obs_state.num_severe_alerts_recent
-            # network_obs[3] = obs_state.num_warning_alerts_recent
-            # network_obs[4] = obs_state.num_alerts_total
-            # network_obs[5] = obs_state.sum_priority_alerts_total
-            # network_obs[6] = obs_state.num_severe_alerts_total
-            # network_obs[7] = obs_state.num_warning_alerts_total
-            # network_obs[8] = obs_state.step
+            network_obs[0] = obs_state.num_alerts_recent
+            network_obs[1] = obs_state.sum_priority_alerts_recent
+            network_obs[2] = obs_state.num_severe_alerts_recent
+            network_obs[3] = obs_state.num_warning_alerts_recent
+            network_obs[4] = obs_state.num_alerts_total
+            network_obs[5] = obs_state.sum_priority_alerts_total
+            network_obs[6] = obs_state.num_severe_alerts_total
+            network_obs[7] = obs_state.num_warning_alerts_total
+            network_obs[8] = obs_state.step
         else:
             network_obs = np.zeros(0)
 
         return machines_obs, network_obs
+
+    @staticmethod
+    def test_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+        """
+        Configures observation spaces for the test representation
+
+        :param obs_state: the observation state
+        :return the observation space
+        """
+        # num_network_features = 9
+        num_network_features = 2
+        num_m_features = 0
+        observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
+            obs_state.num_machines * num_m_features + num_network_features,))
+        return observation_space
 
 
 

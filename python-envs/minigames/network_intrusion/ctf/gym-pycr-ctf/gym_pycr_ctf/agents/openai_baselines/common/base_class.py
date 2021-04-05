@@ -816,7 +816,10 @@ class BaseAlgorithm(ABC):
                              grad_comp_times=None, weight_update_times=None,
                              episode_caught = None, episode_early_stopped = None,
                              eval_episode_caught = None, eval_episode_early_stopped = None,
-                             eval_2_episode_caught = None, eval_2_episode_early_stopped = None
+                             eval_2_episode_caught = None, eval_2_episode_early_stopped = None,
+                             n_af: int = 0,
+                             episode_successful_intrusion = None, eval_episode_successful_intrusion = None,
+                             eval_2_episode_successful_intrusion=None
                              ) -> None:
         """
         Log metrics of the defender
@@ -852,6 +855,7 @@ class BaseAlgorithm(ABC):
         :param eval_episode_early_stopped: number of times the defender stopped early during eval
         :param eval_2_episode_caught: number of times the attacker was caught during eval2
         :param eval_2_episode_early_stopped: number of times the defender stopped early during eval2
+        :param n_af: number of times the attacker successfully collected all flags
         :return: None
         """
         if eps is None:
@@ -869,10 +873,20 @@ class BaseAlgorithm(ABC):
         else:
             episode_early_stopped = 0
 
+        if episode_successful_intrusion is not None:
+            episode_successful_intrusion = sum(list(map(lambda x: int(x), episode_successful_intrusion)))
+        else:
+            episode_successful_intrusion = 0
+
         if eval_episode_caught is not None:
             eval_episode_caught = sum(list(map(lambda x: int(x), eval_episode_caught)))
         else:
             eval_episode_caught = 0
+
+        if eval_episode_successful_intrusion is not None:
+            eval_episode_successful_intrusion = sum(list(map(lambda x: int(x), eval_episode_successful_intrusion)))
+        else:
+            eval_episode_successful_intrusion = 0
 
         if eval_episode_early_stopped is not None:
             eval_episode_early_stopped = sum(list(map(lambda x: int(x), eval_episode_early_stopped)))
@@ -883,6 +897,11 @@ class BaseAlgorithm(ABC):
             eval_2_episode_caught = sum(list(map(lambda x: int(x), eval_2_episode_caught)))
         else:
             eval_2_episode_caught = 0
+
+        if eval_2_episode_successful_intrusion is not None:
+            eval_2_episode_successful_intrusion = sum(list(map(lambda x: int(x), eval_2_episode_successful_intrusion)))
+        else:
+            eval_2_episode_successful_intrusion = 0
 
         if eval_2_episode_early_stopped is not None:
             eval_2_episode_early_stopped = sum(list(map(lambda x: int(x), eval_2_episode_early_stopped)))
@@ -967,9 +986,10 @@ class BaseAlgorithm(ABC):
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
-                      "c:{:.2f},s:{:.2f},".format(
+                      "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, lr, episode_caught, episode_early_stopped)
+                avg_episode_steps, rolling_avg_steps, lr, episode_caught, episode_early_stopped,
+                episode_successful_intrusion)
         else:
             log_str = "[Train] iter:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
@@ -978,16 +998,17 @@ class BaseAlgorithm(ABC):
                       "avg_t_E:{:.2f}," \
                       "avg_R_E2:{:.2f},avg_t_E2:{:.2f}," \
                       "epsilon:{:.2f}," \
-                      "c:{:.2f},s:{:.2f}," \
-                      "c_E:{:.2f},s_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},".format(
+                      "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
+                      "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
+                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f}".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes,eps,
                 eval_avg_episode_rewards, eval_avg_episode_steps,
                 eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon,
-                episode_caught, episode_early_stopped, eval_episode_caught, eval_episode_early_stopped,
-                eval_2_episode_caught, eval_2_episode_early_stopped
+                episode_caught, episode_early_stopped, episode_successful_intrusion,
+                n_af, eval_episode_caught, eval_episode_early_stopped, eval_episode_successful_intrusion,
+                eval_2_episode_caught, eval_2_episode_early_stopped, eval_2_episode_successful_intrusion
             )
         self.defender_agent_config.logger.info(log_str)
         print(log_str)

@@ -23,14 +23,15 @@ class DefenderStoppingMiddleware:
         :return: s_prime, reward, done
         """
         s_prime = s
-        if attacker_action.id != AttackerActionId.CONTINUE:
-            s_prime.defender_obs_state.caught_attacker = True
-        else:
-            s_prime.defender_obs_state.stopped = True
-        # if s_prime.attacker_obs_state.ongoing_intrusion():
+        # if attacker_action is not None and attacker_action.id != AttackerActionId.CONTINUE:
         #     s_prime.defender_obs_state.caught_attacker = True
         # else:
         #     s_prime.defender_obs_state.stopped = True
+
+        if s_prime.attacker_obs_state.ongoing_intrusion():
+            s_prime.defender_obs_state.caught_attacker = True
+        else:
+            s_prime.defender_obs_state.stopped = True
         return s_prime, 0, True
 
 

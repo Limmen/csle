@@ -19,7 +19,7 @@ def manual_control():
     #env = gym.make("pycr-ctf-level-4-emulation-v1", env_config=None, emulation_config=emulation_config)
     env = gym.make("pycr-ctf-level-4-emulation-v5", env_config=None, emulation_config=emulation_config)
 
-    ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
+    ManualAttackerAgent(env=env, env_config=env.env_config, render=False)
 
 
 
