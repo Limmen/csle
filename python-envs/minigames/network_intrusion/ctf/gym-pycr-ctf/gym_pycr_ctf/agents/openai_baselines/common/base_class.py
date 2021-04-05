@@ -815,7 +815,7 @@ class BaseAlgorithm(ABC):
                              grad_comp_times=None, weight_update_times=None,
                              episode_caught = None, episode_early_stopped = None,
                              eval_episode_caught = None, eval_episode_early_stopped = None,
-                             eval_2_episode_caught = None, eval_episode_2_early_stopped = None
+                             eval_2_episode_caught = None, eval_2_episode_early_stopped = None
                              ) -> None:
         """
         Log metrics of the defender
@@ -845,6 +845,12 @@ class BaseAlgorithm(ABC):
         :param action_pred_times: list of action prediction times
         :param grad_comp_times: list of times to compute gradient
         :param weight_update_times: list of weight update times
+        :param episode_caught: number of times the attacker was caught
+        :param episode_early_stopped: number of times the defender stopped early
+        :param eval_episode_caught: number of times the attacker was caught during eval
+        :param eval_episode_early_stopped: number of times the defender stopped early during eval
+        :param eval_2_episode_caught: number of times the attacker was caught during eval2
+        :param eval_2_episode_early_stopped: number of times the defender stopped early during eval2
         :return: None
         """
         if eps is None:
@@ -928,9 +934,10 @@ class BaseAlgorithm(ABC):
 
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
-                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},".format(
+                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
+                      "c:{:.2f},s:{:.2f},".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, lr)
+                avg_episode_steps, rolling_avg_steps, lr, episode_caught, episode_early_stopped)
         else:
             log_str = "[Train] iter:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
@@ -938,12 +945,18 @@ class BaseAlgorithm(ABC):
                       "avg_R_E:{:.2f}," \
                       "avg_t_E:{:.2f}," \
                       "avg_R_E2:{:.2f},avg_t_E2:{:.2f}," \
-                      "epsilon:{:.2f}".format(
+                      "epsilon:{:.2f}," \
+                      "c:{:.2f},s:{:.2f}," \
+                      "c_E:{:.2f},s_E:{:.2f}," \
+                      "c_E2:{:.2f},s_E2:{:.2f},".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes,eps,
                 eval_avg_episode_rewards, eval_avg_episode_steps,
-                eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon)
+                eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon,
+                episode_caught, episode_early_stopped, eval_episode_caught, eval_episode_early_stopped,
+                eval_2_episode_caught, eval_2_episode_early_stopped
+            )
         self.defender_agent_config.logger.info(log_str)
         print(log_str)
         if self.defender_agent_config.tensorboard:

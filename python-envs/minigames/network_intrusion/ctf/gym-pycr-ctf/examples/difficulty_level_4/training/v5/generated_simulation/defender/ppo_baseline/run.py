@@ -52,14 +52,22 @@ def default_config() -> ClientConfig:
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
+    emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+                                            server_connection=False)
     eval_emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
                                           server_connection=False)
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
-                                                    "network_intrusion/ctf/gym-pycr-ctf/" \
-                                                    "examples/difficulty_level_4/hello_world/"
+    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+    #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
+    #                                                 "examples/difficulty_level_4/hello_world/"
+    # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
+    #                                                 "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/" \
+    #                                                 "hello_world/defender_dynamics_model.json"
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+                                                    "gym-pycr-ctf/examples/difficulty_level_4/hello_world"
 
     eval_emulation_config.skip_exploration = True
-
+    emulation_config.skip_exploration = True
+    emulation_config.save_dynamics_model_dir = eval_emulation_config.save_dynamics_model_dir
     client_config = ClientConfig(env_name=env_name, defender_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
@@ -68,7 +76,7 @@ def default_config() -> ClientConfig:
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
                                  eval_emulation_config=eval_emulation_config,
-                                 emulation_config=eval_emulation_config,
+                                 emulation_config=emulation_config,
                                  train_mode =TrainMode.TRAIN_DEFENDER.value)
     return client_config
 
