@@ -15,11 +15,11 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=1, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.000005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=10000,
+                               num_iterations=100,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
@@ -29,7 +29,7 @@ def default_config() -> ClientConfig:
                                pi_hidden_dim=64, pi_hidden_layers=2,
                                vf_hidden_dim=64, vf_hidden_layers=2,
                                shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=4000,
+                               batch_size=8000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -40,7 +40,7 @@ def default_config() -> ClientConfig:
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=10, attacker_opponent_baseline_type = 8,
-                               running_avg=50, n_quick_eval_iter=30
+                               running_avg=50, n_quick_eval_iter=30, log_regret=True
                                )
     env_name = "pycr-ctf-level-4-generated-sim-v5"
     eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
@@ -49,22 +49,37 @@ def default_config() -> ClientConfig:
     # env_name = "pycr-ctf-level-4-generated-sim-costs-v1"
     # eval_env_name = "pycr-ctf-level-4-emulation-costs-v1"
 
-    # eval_emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
+    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
-                                            server_connection=False)
-    eval_emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
-                                          server_connection=False)
-    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
-    #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
-    #                                                 "examples/difficulty_level_4/hello_world/"
+    #     EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                   server_username="kim", server_ip="172.31.212.92",
+    #                   port_forward_next_port=8001 + i * 150,
+    #                   warmup=True, warmup_iterations=500)
+
+    # emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+    #                                         server_connection=False)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.4.191",
+                                            agent_username="agent", agent_pw="agent", server_connection=True,
+                                            server_private_key_file="/home/kim/.ssh/id_rsa",
+                                            server_username="kim")
+    # eval_emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+    #                                       server_connection=False)
+    eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.4.191",
+                                   agent_username="agent", agent_pw="agent", server_connection=True,
+                                   server_private_key_file="/home/kim/.ssh/id_rsa",
+                                   server_username="kim")
+
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+                                                    "network_intrusion/ctf/gym-pycr-ctf/" \
+                                                    "examples/difficulty_level_4/hello_world/"
     # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/" \
     #                                                 "hello_world/defender_dynamics_model.json"
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                                    "gym-pycr-ctf/examples/difficulty_level_4/hello_world"
+    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                                                 "gym-pycr-ctf/examples/difficulty_level_4/hello_world"
 
     eval_emulation_config.skip_exploration = True
     emulation_config.skip_exploration = True
@@ -73,7 +88,7 @@ def default_config() -> ClientConfig:
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
                                  title="PPO-Baseline level 4 v5",
-                                 run_many=True, random_seeds=[0, 999, 299, 399, 499],
+                                 run_many=True, random_seeds=[0, 999],
                                  random_seed=399, mode=RunnerMode.TRAIN_DEFENDER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
                                  eval_emulation_config=eval_emulation_config,

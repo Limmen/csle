@@ -46,7 +46,7 @@ def default_config() -> ClientConfig:
     env_name = "pycr-ctf-level-1-emulation-v1"
     emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False)
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")

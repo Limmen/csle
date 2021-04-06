@@ -862,51 +862,80 @@ class BaseAlgorithm(ABC):
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
         avg_episode_steps = np.mean(episode_steps)
-
-        if episode_caught is not None:
-            episode_caught = sum(list(map(lambda x: int(x), episode_caught)))
+        if episode_caught is not None and episode_early_stopped is not None \
+                and episode_successful_intrusion is not None:
+            total_c_s_i = sum(list(map(lambda x: int(x), episode_caught))) \
+                          + sum(list(map(lambda x: int(x), episode_early_stopped))) \
+                          + sum(list(map(lambda x: int(x), episode_successful_intrusion)))
         else:
-            episode_caught = 0
+            total_c_s_i = 1
+        if eval_episode_caught is not None and eval_episode_early_stopped is not None \
+            and eval_episode_successful_intrusion is not None:
+            eval_total_c_s_i = sum(list(map(lambda x: int(x), eval_episode_caught))) \
+                          + sum(list(map(lambda x: int(x), eval_episode_early_stopped))) \
+                          + sum(list(map(lambda x: int(x), eval_episode_successful_intrusion)))
+        else:
+            eval_total_c_s_i = 1
+        if eval_2_episode_caught is not None and eval_2_episode_early_stopped is not None \
+                and eval_2_episode_successful_intrusion is not None:
+            eval_2_total_c_s_i = sum(list(map(lambda x: int(x), eval_2_episode_caught))) \
+                           + sum(list(map(lambda x: int(x), eval_2_episode_early_stopped))) \
+                           + sum(list(map(lambda x: int(x), eval_2_episode_successful_intrusion)))
+        else:
+            eval_2_total_c_s_i = 1
+        if episode_caught is not None:
+            episode_caught_frac = sum(list(map(lambda x: int(x), episode_caught)))/max(1, total_c_s_i)
+        else:
+            episode_caught_frac = 0
 
         if episode_early_stopped is not None:
-            episode_early_stopped = sum(list(map(lambda x: int(x), episode_early_stopped)))
+            episode_early_stopped_frac = sum(list(map(lambda x: int(x),
+                                                      episode_early_stopped)))/max(1, total_c_s_i)
         else:
-            episode_early_stopped = 0
+            episode_early_stopped_frac = 0
 
         if episode_successful_intrusion is not None:
-            episode_successful_intrusion = sum(list(map(lambda x: int(x), episode_successful_intrusion)))
+            episode_successful_intrusion_frac = sum(list(map(lambda x: int(x),
+                                                             episode_successful_intrusion)))/max(1, total_c_s_i)
         else:
-            episode_successful_intrusion = 0
+            episode_successful_intrusion_frac = 0
 
         if eval_episode_caught is not None:
-            eval_episode_caught = sum(list(map(lambda x: int(x), eval_episode_caught)))
+            eval_episode_caught_frac = sum(list(map(lambda x: int(x),
+                                                    eval_episode_caught)))/max(1, eval_total_c_s_i)
         else:
-            eval_episode_caught = 0
+            eval_episode_caught_frac = 0
 
         if eval_episode_successful_intrusion is not None:
-            eval_episode_successful_intrusion = sum(list(map(lambda x: int(x), eval_episode_successful_intrusion)))
+            eval_episode_successful_intrusion_frac = sum(list(map(lambda x: int(x),
+                                                                  eval_episode_successful_intrusion)))/max(1, eval_total_c_s_i)
         else:
-            eval_episode_successful_intrusion = 0
+            eval_episode_successful_intrusion_frac = 0
 
         if eval_episode_early_stopped is not None:
-            eval_episode_early_stopped = sum(list(map(lambda x: int(x), eval_episode_early_stopped)))
+            eval_episode_early_stopped_frac = sum(list(map(lambda x: int(x),
+                                                           eval_episode_early_stopped)))/max(1, eval_total_c_s_i)
         else:
-            eval_episode_early_stopped = 0
+            eval_episode_early_stopped_frac = 0
 
         if eval_2_episode_caught is not None:
-            eval_2_episode_caught = sum(list(map(lambda x: int(x), eval_2_episode_caught)))
+            eval_2_episode_caught_frac = sum(list(map(lambda x: int(x),
+                                                      eval_2_episode_caught)))/max(1, eval_2_total_c_s_i)
         else:
-            eval_2_episode_caught = 0
+            eval_2_episode_caught_frac = 0
 
         if eval_2_episode_successful_intrusion is not None:
-            eval_2_episode_successful_intrusion = sum(list(map(lambda x: int(x), eval_2_episode_successful_intrusion)))
+            eval_2_episode_successful_intrusion_frac = sum(list(map(lambda x: int(x),
+                                                                    eval_2_episode_successful_intrusion)))/max(
+                1, eval_2_total_c_s_i)
         else:
-            eval_2_episode_successful_intrusion = 0
+            eval_2_episode_successful_intrusion_frac = 0
 
         if eval_2_episode_early_stopped is not None:
-            eval_2_episode_early_stopped = sum(list(map(lambda x: int(x), eval_2_episode_early_stopped)))
+            eval_2_episode_early_stopped_frac = sum(list(map(lambda x: int(x),
+                                                             eval_2_episode_early_stopped)))/max(1, eval_2_total_c_s_i)
         else:
-            eval_2_episode_early_stopped = 0
+            eval_2_episode_early_stopped_frac = 0
 
         if not eval and eval_episode_steps is not None:
             eval_avg_episode_steps = np.mean(eval_episode_steps)
@@ -983,32 +1012,62 @@ class BaseAlgorithm(ABC):
         else:
             eval_avg_episode_rewards = 0.0
 
+        # Regret & Pi* Metrics
+        if self.defender_agent_config.log_regret:
+
+            # Regret
+            if self.env.env_config is not None:
+                avg_regret = self.env.envs[0].env_config.pi_star_rew_defender - avg_episode_rewards
+            else:
+                avg_regret = 0.0
+
+            if eval_episode_rewards is not None and eval_env_specific_rewards != {}:
+                avg_eval_regret = self.env.envs[0].env_config.pi_star_rew_defender - eval_avg_episode_rewards
+            else:
+                avg_eval_regret = 0.0
+
+            # Opt frac
+            if self.env.env_config is not None:
+                avg_opt_frac = avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew_defender
+            else:
+                avg_opt_frac = 0.0
+
+            if eval_episode_rewards is not None:
+                eval_avg_opt_frac = eval_avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew_defender
+            else:
+                eval_avg_opt_frac = 0.0
+
+
+            # if self.env_2 is not None:
+            #     if self.env_2.env_config is not None:
+
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, lr, episode_caught, episode_early_stopped,
-                episode_successful_intrusion)
+                avg_episode_steps, rolling_avg_steps, lr, episode_caught_frac, episode_early_stopped_frac,
+                episode_successful_intrusion_frac)
         else:
-            log_str = "[Train] iter:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
+                      "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
-                      "avg_R_E:{:.2f}," \
+                      "avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
                       "avg_t_E:{:.2f}," \
                       "avg_R_E2:{:.2f},avg_t_E2:{:.2f}," \
                       "epsilon:{:.2f}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
                       "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
                       "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f}".format(
-                iteration, avg_episode_rewards, rolling_avg_rewards,
+                iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes,eps,
-                eval_avg_episode_rewards, eval_avg_episode_steps,
+                eval_avg_episode_rewards, avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
                 eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon,
-                episode_caught, episode_early_stopped, episode_successful_intrusion,
-                n_af, eval_episode_caught, eval_episode_early_stopped, eval_episode_successful_intrusion,
-                eval_2_episode_caught, eval_2_episode_early_stopped, eval_2_episode_successful_intrusion
+                episode_caught_frac, episode_early_stopped_frac, episode_successful_intrusion_frac,
+                n_af, eval_episode_caught_frac, eval_episode_early_stopped_frac, eval_episode_successful_intrusion_frac,
+                eval_2_episode_caught_frac, eval_2_episode_early_stopped_frac, eval_2_episode_successful_intrusion_frac
             )
         self.defender_agent_config.logger.info(log_str)
         print(log_str)
@@ -1020,13 +1079,37 @@ class BaseAlgorithm(ABC):
                                           eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
                                           eval_2_avg_episode_steps=eval_2_avg_episode_steps,
                                           rolling_avg_episode_rewards=rolling_avg_rewards,
-                                          rolling_avg_episode_steps=rolling_avg_steps
+                                          rolling_avg_episode_steps=rolling_avg_steps,
+                                          episode_caught_frac=episode_caught_frac,
+                                          episode_early_stopped_frac=episode_early_stopped_frac,
+                                          episode_successful_intrusion_frac=episode_successful_intrusion_frac,
+                                          eval_episode_caught_frac=eval_episode_caught_frac,
+                                          eval_episode_early_stopped_frac=eval_episode_early_stopped_frac,
+                                          eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
+                                          eval_2_episode_caught_frac=eval_2_episode_caught_frac,
+                                          eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
+                                          eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac
                                           )
         # Defender specific metrics
         result.defender_avg_episode_rewards.append(avg_episode_rewards)
         result.defender_avg_episode_loss.append(avg_episode_loss)
         result.defender_eval_avg_episode_rewards.append(eval_avg_episode_rewards)
         result.defender_eval_2_avg_episode_rewards.append(eval_2_avg_episode_rewards)
+        result.caught_frac.append(episode_caught_frac)
+        result.early_stopping_frac.append(episode_early_stopped_frac)
+        result.intrusion_frac.append(episode_successful_intrusion_frac)
+        result.eval_caught_frac.append(eval_episode_caught_frac)
+        result.eval_early_stopping_frac.append(eval_episode_early_stopped_frac)
+        result.eval_intrusion_frac.append(eval_episode_successful_intrusion_frac)
+        result.eval_2_caught_frac.append(eval_2_episode_caught_frac)
+        result.eval_2_early_stopping_frac.append(eval_2_episode_early_stopped_frac)
+        result.eval_2_intrusion_frac.append(eval_2_episode_successful_intrusion_frac)
+        result.defender_avg_regret.append(avg_regret)
+        result.defender_avg_opt_frac.append(avg_opt_frac)
+        result.defender_eval_avg_regret.append(avg_eval_regret)
+        result.defender_eval_avg_opt_frac.append(eval_avg_opt_frac)
+        #result.defender_eval_2_avg_regret.append(avg_regret_2)
+        #result.defender_eval_2_avg_opt_frac.append(avg_opt_frac_2)
 
         if train_env_specific_rewards is not None:
             for key in train_env_specific_rewards.keys():
@@ -1161,7 +1244,12 @@ class BaseAlgorithm(ABC):
                                  eval_2_avg_episode_rewards: float = 0.0,
                                  eval_2_avg_episode_steps: float = 0.0,
                                  rolling_avg_episode_rewards: float = 0.0,
-                                 rolling_avg_episode_steps: float = 0.0
+                                 rolling_avg_episode_steps: float = 0.0,
+                                 episode_caught_frac=None, episode_early_stopped_frac=None,
+                                 eval_episode_caught_frac=None, eval_episode_early_stopped_frac=None,
+                                 eval_2_episode_caught_frac=None, eval_2_episode_early_stopped_frac=None,
+                                 episode_successful_intrusion_frac=None, eval_episode_successful_intrusion_frac=None,
+                                 eval_2_episode_successful_intrusion_frac=None
                                  ) -> None:
         """
         Log metrics to tensorboard for defender
@@ -1177,6 +1265,15 @@ class BaseAlgorithm(ABC):
         :param eval_avg_episode_steps: average steps eval deterministic policy
         :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
         :param eval_avg_episode_steps: average steps 2nd eval deterministic policy
+        :param episode_caught_frac: fraction that the attacker was caught successfully
+        :param episode_early_stopped_frac: fraction that the defender stopped too early
+        :param episode_successful_intrusion_frac: fraction that the attacker succeeded with intrusion
+        :param eval_episode_caught_frac: eval fraction that the attacker was caught successfully
+        :param eval_episode_early_stopped_frac: eval fraction that the defender stopped too early
+        :param eval_episode_successful_intrusion_frac: eval fraction that the attacker succeeded with intrusion
+        :param eval_2_episode_caught_frac: eval2 fraction that the attacker was caught successfully
+        :param eval_2_episode_early_stopped_frac: eval2 fraction that the defender stopped too early
+        :param eval_2_episode_successful_intrusion_frac: eval2 fraction that the attacker succeeded with intrusion
         :return: None
         """
         train_or_eval = "eval" if eval else "train"
@@ -1196,6 +1293,25 @@ class BaseAlgorithm(ABC):
                                            eval_2_avg_episode_rewards, episode)
         self.tensorboard_writer.add_scalar('defender/eval_2_avg_episode_steps/' + train_or_eval, eval_2_avg_episode_steps,
                                            episode)
+
+        self.tensorboard_writer.add_scalar('defender/episode_caught_frac/' + train_or_eval,
+                                           episode_caught_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/episode_early_stopped_frac/' + train_or_eval,
+                                           episode_early_stopped_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/episode_successful_intrusion_frac/' + train_or_eval,
+                                           episode_successful_intrusion_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_episode_caught_frac/' + train_or_eval,
+                                           eval_episode_caught_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_episode_early_stopped_frac/' + train_or_eval,
+                                           eval_episode_early_stopped_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_episode_successful_intrusion_frac/' + train_or_eval,
+                                           eval_episode_successful_intrusion_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_2_episode_caught_frac/' + train_or_eval,
+                                           eval_2_episode_caught_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_2_episode_early_stopped_frac/' + train_or_eval,
+                                           eval_2_episode_early_stopped_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_2_episode_successful_intrusion_frac/' + train_or_eval,
+                                           eval_2_episode_successful_intrusion_frac, episode)
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', lr, episode)
 

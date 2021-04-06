@@ -16,7 +16,6 @@ from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs_model.logic.common.util as util
 from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -126,6 +125,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.defender_trajectory = []
         self.defender_trajectories = []
         self.defender_time_step = 0
+        self.env_config.pi_star_rew_defender = self.env_config.defender_caught_attacker_reward
 
         # Warmup in the emulation
         if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
@@ -404,16 +404,18 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state = s_prime
 
         if self.env_state.defender_obs_state.caught_attacker:
-            defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward / max(
+            defender_reward = defender_reward + float(self.env_config.defender_caught_attacker_reward) / max(
                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+            print("undetecte steps:{}".format(self.env_state.attacker_obs_state.undetected_intrusions_steps))
             attacker_reward = self.env_config.attacker_detection_reward
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
 
-        if self.env_state.attacker_obs_state.ongoing_intrusion():
+        if self.env_config.stop_after_failed_detection and not done and \
+                self.env_state.attacker_obs_state.ongoing_intrusion():
             done = True
-            defender_reward = defender_reward -1
+            defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped

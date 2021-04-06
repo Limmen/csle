@@ -64,7 +64,13 @@ class ExperimentResult:
                  attacker_eval_avg_regret: List = None, defender_eval_avg_regret: List = None,
                  attacker_eval_avg_opt_frac: List = None, defender_eval_avg_opt_frac: List = None,
                  attacker_eval_2_avg_regret: List = None, defender_eval_2_avg_regret: List = None,
-                 attacker_eval_2_avg_opt_frac: List = None, defender_eval_2_avg_opt_frac: List = None
+                 attacker_eval_2_avg_opt_frac: List = None, defender_eval_2_avg_opt_frac: List = None,
+                 caught_frac: List = None, early_stopping_frac: List = None,
+                 intrusion_frac: List = None,
+                 eval_caught_frac: List = None, eval_early_stopping_frac: List = None,
+                 eval_intrusion_frac: List = None,
+                 eval_2_caught_frac: List = None, eval_2_early_stopping_frac: List = None,
+                 eval_2_intrusion_frac: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -105,6 +111,15 @@ class ExperimentResult:
         :param eval_2_env_specific_flags: eval flags data for specific eval env deterministic
         :param eval_2_env_specific_flags_percentage: eval flags percentage dat2a for specific eval env deterministic
         :param eval_2_env_specific_steps: eval steps data for specific eval env env deterministic
+        :param caught_frac: percentage that the attacker was caught by the defender
+        :param early_stopping_frac: percentage that the defender stopped too early
+        :param intrusion_frac: percentage of successful intrusions by the attacker
+        :param eval_caught_frac: eval percentage that the attacker was caught by the defender
+        :param eval_early_stopping_frac: eval percentage that the defender stopped too early
+        :param eval_intrusion_frac: eval percentage of successful intrusions by the attacker
+        :param eval_2_caught_frac: eval2 percentage that the attacker was caught by the defender
+        :param eval_2_early_stopping_frac: eval2 percentage that the defender stopped too early
+        :param eval_2_intrusion_frac: eval2 percentage of successful intrusions by the attacker
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -171,6 +186,16 @@ class ExperimentResult:
         self.defender_eval_2_avg_regret = defender_eval_2_avg_regret
         self.attacker_eval_2_avg_opt_frac = attacker_eval_2_avg_opt_frac
         self.defender_eval_2_avg_opt_frac = defender_eval_2_avg_opt_frac
+        self.caught_frac = caught_frac
+        self.early_stopping_frac = early_stopping_frac
+        self.intrusion_frac = intrusion_frac
+        self.eval_caught_frac = eval_caught_frac
+        self.eval_early_stopping_frac = eval_early_stopping_frac
+        self.eval_intrusion_frac = eval_intrusion_frac
+        self.eval_2_caught_frac = eval_2_caught_frac
+        self.eval_2_early_stopping_frac = eval_2_early_stopping_frac
+        self.eval_2_intrusion_frac = eval_2_intrusion_frac
+
         if avg_episode_steps is None:
             self.avg_episode_steps = []
         if attacker_avg_episode_rewards is None:
@@ -301,6 +326,24 @@ class ExperimentResult:
             self.attacker_eval_2_avg_opt_frac = []
         if defender_eval_2_avg_opt_frac is None:
             self.defender_eval_2_avg_opt_frac = []
+        if caught_frac is None:
+            self.caught_frac = []
+        if early_stopping_frac is None:
+            self.early_stopping_frac = []
+        if intrusion_frac is None:
+            self.intrusion_frac = []
+        if eval_caught_frac is None:
+            self.eval_caught_frac = []
+        if eval_early_stopping_frac is None:
+            self.eval_early_stopping_frac = []
+        if eval_intrusion_frac is None:
+            self.eval_intrusion_frac = []
+        if eval_2_caught_frac is None:
+            self.eval_2_caught_frac = []
+        if eval_2_early_stopping_frac is None:
+            self.eval_2_early_stopping_frac = []
+        if eval_2_intrusion_frac is None:
+            self.eval_2_intrusion_frac = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -327,7 +370,11 @@ class ExperimentResult:
                    self.attacker_eval_avg_regret, self.defender_eval_avg_regret,
                    self.attacker_eval_avg_opt_frac, self.defender_eval_avg_opt_frac,
                    self.attacker_eval_2_avg_regret, self.defender_eval_2_avg_regret,
-                   self.attacker_eval_2_avg_opt_frac, self.defender_eval_2_avg_opt_frac
+                   self.attacker_eval_2_avg_opt_frac, self.defender_eval_2_avg_opt_frac,
+                   self.caught_frac, self.early_stopping_frac, self.intrusion_frac,
+                   self.eval_caught_frac, self.eval_early_stopping_frac, self.eval_intrusion_frac,
+                   self.eval_2_caught_frac, self.eval_2_early_stopping_frac,
+                   self.eval_2_intrusion_frac
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -340,12 +387,15 @@ class ExperimentResult:
                          "eval_2_avg_episode_steps", "eval_2_avg_episode_flags",
                          "eval_2_avg_episode_flags_percentage", "rollout_times", "env_response_times",
                          "action_pred_times",
-                         "grad_comp_times", "weight_update_times", "attacker_avg_regret", "defender_avg_regret" 
+                         "grad_comp_times", "weight_update_times", "attacker_avg_regret", "defender_avg_regret",
                          "attacker_avg_opt_frac", "defender_avg_opt_frac",
                          "attacker_eval_avg_regret", "defender_eval_avg_regret",
-                         "attacker_eval_avg_opt_frac", "defender_eval_avg_opt_frac" 
-                         "attacker_eval_2_avg_regret", "defender_eval_2_avg_regret" 
-                         "attacker_eval_2_avg_opt_frac", "defender_eval_2_avg_opt_frac"
+                         "attacker_eval_avg_opt_frac", "defender_eval_avg_opt_frac",
+                         "attacker_eval_2_avg_regret", "defender_eval_2_avg_regret",
+                         "attacker_eval_2_avg_opt_frac", "defender_eval_2_avg_opt_frac",
+                         "caught_frac","early_stopping_frac","intrusion_frac",
+                         "eval_caught_frac", "eval_early_stopping_frac", "eval_intrusion_frac",
+                         "eval_2_caught_frac", "eval_2_early_stopping_frac", "eval_2_intrusion_frac"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

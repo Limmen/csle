@@ -89,7 +89,7 @@ def default_config() -> ClientConfig:
         for i in range(len(containers_configs))
     ]
     # emulation_configs = [
-    #     emulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #     EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
     #                   port_forward_next_port=2001 + i * 150,
@@ -97,7 +97,7 @@ def default_config() -> ClientConfig:
     #     for i in range(len(containers_configs))
     # ]
 
-    # eval_emulation_config = emulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    # eval_emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
     eval_env_emulation_configs = [
         EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
@@ -107,7 +107,7 @@ def default_config() -> ClientConfig:
     ]
 
     # eval_env_emulation_configs = [
-    #     emulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+    #     EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
     #                   port_forward_next_port=8001 + i * 150,
@@ -115,16 +115,16 @@ def default_config() -> ClientConfig:
     #     for i in range(len(eval_env_containers_configs))
     # ]
 
-    # emulation_config = emulationConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim", warmup=True, warmup_iterations=500,
     #                                port_forward_next_port=4000)
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")

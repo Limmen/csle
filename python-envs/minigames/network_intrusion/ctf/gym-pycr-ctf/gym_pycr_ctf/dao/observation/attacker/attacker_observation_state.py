@@ -28,22 +28,17 @@ class AttackerObservationState:
 
     def ongoing_intrusion(self):
         if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
-            self.undetected_intrusions_steps +=1
             return True
 
         if self.catched_flags > 0:
-            self.undetected_intrusions_steps += 1
             return True
 
         for m in self.machines:
             if m.shell_access:
-                self.undetected_intrusions_steps += 1
                 return True
             if self.exploit_executed(m):
-                self.undetected_intrusions_steps += 1
                 return True
             if m.logged_in:
-                self.undetected_intrusions_steps += 1
                 return True
         return False
 

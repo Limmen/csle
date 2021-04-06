@@ -50,6 +50,12 @@ For documentation, see the README.md files inside each sub-directory,
      - [x] Custom system identifification algorithm to learn model of emulation
      - [x] Custom domain randomization algorithm          
 
+## Quickstart
+TODO
+
+## Documentation
+TODO
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

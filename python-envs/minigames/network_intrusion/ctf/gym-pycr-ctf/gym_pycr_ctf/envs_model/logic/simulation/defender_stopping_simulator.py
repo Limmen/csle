@@ -32,6 +32,7 @@ class DefenderStoppingSimulator:
         #     s_prime.defender_obs_state.stopped = True
 
         if s_prime.attacker_obs_state.ongoing_intrusion():
+            s_prime.attacker_obs_state.undetected_intrusions_steps += 1
             s_prime.defender_obs_state.caught_attacker = True
         else:
             s_prime.defender_obs_state.stopped = True
@@ -50,5 +51,8 @@ class DefenderStoppingSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
+        s_prime = s
+        if s_prime.attacker_obs_state.ongoing_intrusion():
+            s_prime.attacker_obs_state.undetected_intrusions_steps += 1
         return s, 0, False
 
