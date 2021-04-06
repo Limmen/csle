@@ -26,8 +26,7 @@ class CustomAttackerBotAgent:
         self.num_actions = env.env_config.attacker_action_conf.num_actions
         self.actions = np.array(list(range(self.num_actions)))
         self.strategy = []
-        self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
-                         18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
+        self.strategy = [18, 18, 15, 18, 18, 18, 5, 18, 18, 1, 18, 18, 14, 16, 15, 18, 18, 18, 17]
         # if isinstance(self.env, PyCRCTFLevel4GeneratedSim5Env) or isinstance(self.env, PyCRCTFLevel4Emulation5Env):
         #     self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
         #                      18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
