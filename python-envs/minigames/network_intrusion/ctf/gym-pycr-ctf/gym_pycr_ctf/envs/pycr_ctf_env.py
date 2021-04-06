@@ -216,8 +216,10 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Initialization
         attack_action_id, defense_action_id = action_id
-        attack_action_id = int(attack_action_id)
-        defense_action_id = int(defense_action_id)
+        if attack_action_id is not None:
+            attack_action_id = int(attack_action_id)
+        if defense_action_id is not None:
+            defense_action_id = int(defense_action_id)
         defender_reward = 0
         defender_info = None
         attacker_reward = 0
