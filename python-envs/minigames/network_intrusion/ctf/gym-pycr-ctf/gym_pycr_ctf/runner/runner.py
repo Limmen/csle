@@ -158,6 +158,11 @@ class Runner:
             if config.defender_agent_config is not None:
                 config.defender_agent_config.env_config = base_env.env_config
 
+        if config.attacker_agent_config is not None:
+            config.attacker_agent_config.random_seed = config.random_seed
+        if config.defender_agent_config is not None:
+            config.defender_agent_config.random_seed = config.random_seed
+
         if config.agent_type == AgentType.REINFORCE.value:
             agent = ReinforceAgent(env,
                                    attacker_agent_config=config.attacker_agent_config,

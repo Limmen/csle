@@ -115,8 +115,8 @@ class DefenderStateRepresentation:
         :param obs_state: the observation state
         :return: the observation space
         """
-        num_network_features = 4
-        num_m_features = 7
+        num_network_features = 9
+        num_m_features = 10
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
@@ -136,41 +136,54 @@ class DefenderStateRepresentation:
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
-        num_m_features = 7
-        num_network_features = 4
+        num_m_features = 10
+        num_network_features = 9
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
             network_obs[0] = obs_state.num_alerts_recent
             network_obs[1] = obs_state.sum_priority_alerts_recent
             network_obs[2] = obs_state.num_severe_alerts_recent
-            network_obs[3] = obs_state.num_alerts_recent
+            network_obs[3] = obs_state.num_warning_alerts_recent
+            network_obs[4] = obs_state.num_alerts_total
+            network_obs[5] = obs_state.sum_priority_alerts_total
+            network_obs[6] = obs_state.num_severe_alerts_total
+            network_obs[7] = obs_state.num_warning_alerts_total
+            network_obs[8] = obs_state.step
         else:
             network_obs = np.zeros(0)
         for i in range(num_machines):
 
             if len(obs_state.machines) > i:
+
                 machines_obs[i][0] = i + 1
-                obs_state.machines[i].sort_ports()
-
-                # IP
-                host_ip = int(obs_state.machines[i].ip.rsplit(".", 1)[-1])
-                machines_obs[i][1] = host_ip
-
-                # Num Open Ports
-                machines_obs[i][2] = len(obs_state.machines[i].ports)
 
                 # Num open connections
-                machines_obs[i][3] = obs_state.machines[i].num_open_connections
+                machines_obs[i][1] = obs_state.machines[i].num_open_connections
 
                 # Num failed login attempts
-                machines_obs[i][4] = obs_state.machines[i].num_failed_login_attempts
+                machines_obs[i][2] = obs_state.machines[i].num_failed_login_attempts
 
                 # Num logged in users
-                machines_obs[i][5] = obs_state.machines[i].num_logged_in_users
+                machines_obs[i][3] = obs_state.machines[i].num_logged_in_users
 
                 # Num login events
-                machines_obs[i][6] = obs_state.machines[i].num_login_events
+                machines_obs[i][4] = obs_state.machines[i].num_login_events
+
+                # Num open recent connections
+                machines_obs[i][5] = obs_state.machines[i].num_open_connections_recent
+
+                # Num recent failed login attempts
+                machines_obs[i][6] = obs_state.machines[i].num_failed_login_attempts_recent
+
+                # Num logged in users recent
+                machines_obs[i][7] = obs_state.machines[i].num_logged_in_users_recent
+
+                # Num login events recent
+                machines_obs[i][8] = obs_state.machines[i].num_login_events_recent
+
+                # Num processes recent
+                machines_obs[i][9] = obs_state.machines[i].num_processes_recent
 
 
         return machines_obs, network_obs

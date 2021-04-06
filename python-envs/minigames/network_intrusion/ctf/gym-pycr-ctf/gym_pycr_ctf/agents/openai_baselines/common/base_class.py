@@ -290,7 +290,6 @@ class BaseAlgorithm(ABC):
         :param eval_env_specific_flags_percentage: episodic flags_percentage per train eval env
         :return: None
         """
-        print("logg metrics defender")
         if eps is None:
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
@@ -819,7 +818,18 @@ class BaseAlgorithm(ABC):
                              eval_2_episode_caught = None, eval_2_episode_early_stopped = None,
                              n_af: int = 0,
                              episode_successful_intrusion = None, eval_episode_successful_intrusion = None,
-                             eval_2_episode_successful_intrusion=None
+                             eval_2_episode_successful_intrusion=None,
+                             episode_snort_severe_baseline_rewards = None, episode_snort_warning_baseline_rewards=None,
+                             eval_episode_snort_severe_baseline_rewards=None,
+                             eval_episode_snort_warning_baseline_rewards=None,
+                             eval_2_episode_snort_severe_baseline_rewards=None,
+                             eval_2_episode_snort_warning_baseline_rewards=None,
+                             episode_snort_critical_baseline_rewards=None,
+                             episode_var_log_baseline_rewards=None,
+                             eval_episode_snort_critical_baseline_rewards=None,
+                             eval_episode_var_log_baseline_rewards=None,
+                             eval_2_episode_snort_critical_baseline_rewards=None,
+                             eval_2_episode_var_log_baseline_rewards=None
                              ) -> None:
         """
         Log metrics of the defender
@@ -856,12 +866,28 @@ class BaseAlgorithm(ABC):
         :param eval_2_episode_caught: number of times the attacker was caught during eval2
         :param eval_2_episode_early_stopped: number of times the defender stopped early during eval2
         :param n_af: number of times the attacker successfully collected all flags
+        :param episode_snort_severe_baseline_rewards: rewards for snort severe baseline
+        :param episode_snort_warning_baseline_rewards: rewards for snort warning baseline
+        :param eval_episode_snort_severe_baseline_rewards: eval rewards for snort severe baseline
+        :param eval_episode_snort_warning_baseline_rewards: eval rewards for snort warning baseline
+        :param eval_2_episode_snort_severe_baseline_rewards: eval 2 rewards for snort severe baseline
+        :param eval_2_episode_snort_warning_baseline_rewards: eval 2 rewards for snort warning baseline
+        :param episode_snort_critical_baseline_rewards: rewards for snort critical baseline
+        :param episode_var_log_baseline_rewards: rewards for snort critical baseline
+        :param eval_episode_snort_critical_baseline_rewards: eval rewards for snort critical baseline
+        :param eval_episode_var_log_baseline_rewards: eval rewards for snort critical baseline
+        :param eval_2_episode_snort_critical_baseline_rewards: eval rewards for snort critical baseline
+        :param eval_2_episode_var_log_baseline_rewards: eval rewards for snort critical baseline
         :return: None
         """
         if eps is None:
             eps = 0.0
         avg_episode_rewards = np.mean(episode_rewards)
         avg_episode_steps = np.mean(episode_steps)
+        avg_episode_snort_severe_baseline_rewards = np.mean(episode_snort_severe_baseline_rewards)
+        avg_episode_snort_warning_baseline_rewards = np.mean(episode_snort_warning_baseline_rewards)
+        avg_episode_snort_critical_baseline_rewards = np.mean(episode_snort_critical_baseline_rewards)
+        avg_episode_var_log_baseline_rewards = np.mean(episode_var_log_baseline_rewards)
         if episode_caught is not None and episode_early_stopped is not None \
                 and episode_successful_intrusion is not None:
             total_c_s_i = sum(list(map(lambda x: int(x), episode_caught))) \
@@ -947,6 +973,26 @@ class BaseAlgorithm(ABC):
         else:
             eval_2_avg_episode_rewards = 0.0
 
+        if not eval and eval_2_episode_snort_severe_baseline_rewards is not None:
+            eval_2_avg_episode_snort_severe_baseline_rewards = np.mean(eval_2_episode_snort_severe_baseline_rewards)
+        else:
+            eval_2_avg_episode_snort_severe_baseline_rewards = 0.0
+
+        if not eval and eval_2_episode_snort_warning_baseline_rewards is not None:
+            eval_2_avg_episode_snort_warning_baseline_rewards = np.mean(eval_2_episode_snort_warning_baseline_rewards)
+        else:
+            eval_2_avg_episode_snort_warning_baseline_rewards = 0.0
+
+        if not eval and eval_2_episode_snort_critical_baseline_rewards is not None:
+            eval_2_avg_episode_snort_critical_baseline_rewards = np.mean(eval_2_episode_snort_critical_baseline_rewards)
+        else:
+            eval_2_avg_episode_snort_critical_baseline_rewards = 0.0
+
+        if not eval and eval_2_episode_var_log_baseline_rewards is not None:
+            eval_2_avg_episode_var_log_baseline_rewards = np.mean(eval_2_episode_var_log_baseline_rewards)
+        else:
+            eval_2_avg_episode_var_log_baseline_rewards = 0.0
+
         if not eval and eval_2_episode_steps is not None:
             eval_2_avg_episode_steps = np.mean(eval_2_episode_steps)
         else:
@@ -1012,6 +1058,26 @@ class BaseAlgorithm(ABC):
         else:
             eval_avg_episode_rewards = 0.0
 
+        if not eval and eval_episode_snort_severe_baseline_rewards is not None:
+            eval_avg_episode_snort_severe_baseline_rewards = np.mean(eval_episode_snort_severe_baseline_rewards)
+        else:
+            eval_avg_episode_snort_severe_baseline_rewards = 0.0
+
+        if not eval and eval_episode_snort_warning_baseline_rewards is not None:
+            eval_avg_episode_snort_warning_baseline_rewards = np.mean(eval_episode_snort_warning_baseline_rewards)
+        else:
+            eval_avg_episode_snort_warning_baseline_rewards = 0.0
+
+        if not eval and eval_episode_snort_critical_baseline_rewards is not None:
+            eval_avg_episode_snort_critical_baseline_rewards = np.mean(eval_episode_snort_critical_baseline_rewards)
+        else:
+            eval_avg_episode_snort_critical_baseline_rewards = 0.0
+
+        if not eval and eval_episode_var_log_baseline_rewards is not None:
+            eval_avg_episode_var_log_baseline_rewards = np.mean(eval_episode_var_log_baseline_rewards)
+        else:
+            eval_avg_episode_var_log_baseline_rewards = 0.0
+
         # Regret & Pi* Metrics
         if self.defender_agent_config.log_regret:
 
@@ -1043,28 +1109,45 @@ class BaseAlgorithm(ABC):
 
         if eval:
             log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
+                      "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f}," \
+                      "S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
                 iteration, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_snort_severe_baseline_rewards, avg_episode_snort_warning_baseline_rewards,
+                avg_episode_snort_critical_baseline_rewards, avg_episode_var_log_baseline_rewards,
                 avg_episode_steps, rolling_avg_steps, lr, episode_caught_frac, episode_early_stopped_frac,
                 episode_successful_intrusion_frac)
         else:
             log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
                       "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+                      "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
-                      "avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
+                      "avg_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
+                      "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}," \
+                      "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
                       "avg_t_E:{:.2f}," \
-                      "avg_R_E2:{:.2f},avg_t_E2:{:.2f}," \
+                      "avg_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
+                      "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f}," \
+                      "avg_t_E2:{:.2f}," \
                       "epsilon:{:.2f}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
                       "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
                       "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f}".format(
                 iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
+                avg_episode_snort_severe_baseline_rewards, avg_episode_snort_warning_baseline_rewards,
+                avg_episode_snort_critical_baseline_rewards, avg_episode_var_log_baseline_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
                 lr, total_num_episodes,eps,
-                eval_avg_episode_rewards, avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
-                eval_2_avg_episode_rewards, eval_2_avg_episode_steps, self.attacker_agent_config.epsilon,
+                eval_avg_episode_rewards, eval_avg_episode_snort_severe_baseline_rewards,
+                eval_avg_episode_snort_warning_baseline_rewards, eval_avg_episode_snort_critical_baseline_rewards,
+                eval_avg_episode_var_log_baseline_rewards,
+                avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
+                eval_2_avg_episode_rewards, eval_2_avg_episode_snort_severe_baseline_rewards,
+                eval_2_avg_episode_snort_warning_baseline_rewards,eval_2_avg_episode_snort_critical_baseline_rewards,
+                eval_2_avg_episode_var_log_baseline_rewards,
+                eval_2_avg_episode_steps, self.attacker_agent_config.epsilon,
                 episode_caught_frac, episode_early_stopped_frac, episode_successful_intrusion_frac,
                 n_af, eval_episode_caught_frac, eval_episode_early_stopped_frac, eval_episode_successful_intrusion_frac,
                 eval_2_episode_caught_frac, eval_2_episode_early_stopped_frac, eval_2_episode_successful_intrusion_frac
@@ -1088,7 +1171,19 @@ class BaseAlgorithm(ABC):
                                           eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
                                           eval_2_episode_caught_frac=eval_2_episode_caught_frac,
                                           eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
-                                          eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac
+                                          eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac,
+                                          avg_episode_snort_severe_baseline_rewards=avg_episode_snort_severe_baseline_rewards,
+                                          avg_episode_snort_warning_baseline_rewards=avg_episode_snort_warning_baseline_rewards,
+                                          eval_avg_episode_snort_severe_baseline_rewards=eval_avg_episode_snort_severe_baseline_rewards,
+                                          eval_avg_episode_snort_warning_baseline_rewards=eval_avg_episode_snort_warning_baseline_rewards,
+                                          eval_avg_2_episode_snort_severe_baseline_rewards=eval_2_avg_episode_snort_severe_baseline_rewards,
+                                          eval_avg_2_episode_snort_warning_baseline_rewards=eval_2_avg_episode_snort_warning_baseline_rewards,
+                                          avg_episode_snort_critical_baseline_rewards=avg_episode_snort_critical_baseline_rewards,
+                                          avg_episode_var_log_baseline_rewards=avg_episode_var_log_baseline_rewards,
+                                          eval_avg_episode_snort_critical_baseline_rewards=eval_avg_episode_snort_critical_baseline_rewards,
+                                          eval_avg_episode_var_log_baseline_rewards=eval_avg_episode_var_log_baseline_rewards,
+                                          eval_avg_2_episode_snort_critical_baseline_rewards=eval_2_avg_episode_snort_critical_baseline_rewards,
+                                          eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards
                                           )
         # Defender specific metrics
         result.defender_avg_episode_rewards.append(avg_episode_rewards)
@@ -1108,6 +1203,18 @@ class BaseAlgorithm(ABC):
         result.defender_avg_opt_frac.append(avg_opt_frac)
         result.defender_eval_avg_regret.append(avg_eval_regret)
         result.defender_eval_avg_opt_frac.append(eval_avg_opt_frac)
+        result.snort_severe_baseline_rewards.append(avg_episode_snort_severe_baseline_rewards)
+        result.snort_warning_baseline_rewards.append(avg_episode_snort_warning_baseline_rewards)
+        result.eval_snort_severe_baseline_rewards.append(eval_avg_episode_snort_severe_baseline_rewards)
+        result.eval_snort_warning_baseline_rewards.append(eval_avg_episode_snort_warning_baseline_rewards)
+        result.eval_2_snort_severe_baseline_rewards.append(eval_2_avg_episode_snort_severe_baseline_rewards)
+        result.eval_2_snort_warning_baseline_rewards.append(eval_2_avg_episode_snort_warning_baseline_rewards)
+        result.snort_critical_baseline_rewards.append(avg_episode_snort_critical_baseline_rewards)
+        result.var_log_baseline_rewards.append(avg_episode_var_log_baseline_rewards)
+        result.eval_snort_critical_baseline_rewards.append(eval_avg_episode_snort_critical_baseline_rewards)
+        result.eval_var_log_baseline_rewards.append(eval_avg_episode_var_log_baseline_rewards)
+        result.eval_2_snort_critical_baseline_rewards.append(eval_2_avg_episode_snort_critical_baseline_rewards)
+        result.eval_2_var_log_baseline_rewards.append(eval_2_avg_episode_var_log_baseline_rewards)
         #result.defender_eval_2_avg_regret.append(avg_regret_2)
         #result.defender_eval_2_avg_opt_frac.append(avg_opt_frac_2)
 
@@ -1245,11 +1352,23 @@ class BaseAlgorithm(ABC):
                                  eval_2_avg_episode_steps: float = 0.0,
                                  rolling_avg_episode_rewards: float = 0.0,
                                  rolling_avg_episode_steps: float = 0.0,
-                                 episode_caught_frac=None, episode_early_stopped_frac=None,
-                                 eval_episode_caught_frac=None, eval_episode_early_stopped_frac=None,
-                                 eval_2_episode_caught_frac=None, eval_2_episode_early_stopped_frac=None,
-                                 episode_successful_intrusion_frac=None, eval_episode_successful_intrusion_frac=None,
-                                 eval_2_episode_successful_intrusion_frac=None
+                                 episode_caught_frac=0.0, episode_early_stopped_frac=0.0,
+                                 eval_episode_caught_frac=0.0, eval_episode_early_stopped_frac=0.0,
+                                 eval_2_episode_caught_frac=0.0, eval_2_episode_early_stopped_frac=0.0,
+                                 episode_successful_intrusion_frac=0.0, eval_episode_successful_intrusion_frac=0.0,
+                                 eval_2_episode_successful_intrusion_frac=0.0,
+                                 avg_episode_snort_severe_baseline_rewards=0.0,
+                                 avg_episode_snort_warning_baseline_rewards=0.0,
+                                 eval_avg_episode_snort_severe_baseline_rewards=0.0,
+                                 eval_avg_episode_snort_warning_baseline_rewards=0.0,
+                                 eval_avg_2_episode_snort_severe_baseline_rewards=0.0,
+                                 eval_avg_2_episode_snort_warning_baseline_rewards=0.0,
+                                 avg_episode_snort_critical_baseline_rewards = 0.0,
+                                 avg_episode_var_log_baseline_rewards=0.0,
+                                 eval_avg_episode_snort_critical_baseline_rewards=0.0,
+                                 eval_avg_episode_var_log_baseline_rewards=0.0,
+                                 eval_avg_2_episode_snort_critical_baseline_rewards=0.0,
+                                 eval_avg_2_episode_var_log_baseline_rewards=0.0
                                  ) -> None:
         """
         Log metrics to tensorboard for defender
@@ -1274,6 +1393,18 @@ class BaseAlgorithm(ABC):
         :param eval_2_episode_caught_frac: eval2 fraction that the attacker was caught successfully
         :param eval_2_episode_early_stopped_frac: eval2 fraction that the defender stopped too early
         :param eval_2_episode_successful_intrusion_frac: eval2 fraction that the attacker succeeded with intrusion
+        :param avg_episode_snort_severe_baseline_rewards: avg_rewards for snort severe baseline
+        :param avg_episode_snort_warning_baseline_rewards: avg_rewards for snort warning baseline
+        :param eval_avg_episode_snort_severe_baseline_rewards: avg_eval rewards for snort severe baseline
+        :param eval_avg_episode_snort_warning_baseline_rewards: avg_eval rewards for snort warning baseline
+        :param eval_2_avg_episode_snort_severe_baseline_rewards: avg_eval 2 rewards for snort severe baseline
+        :param eval_2_avg_episode_snort_warning_baseline_rewards: avg_eval 2 rewards for snort warning baseline
+        :param avg_episode_snort_critical_baseline_rewards: avg_rewards for snort critical baseline
+        :param avg_episode_var_log_baseline_rewards: avg_rewards for var_log baseline
+        :param eval_avg_episode_snort_critical_baseline_rewards: eval avg_rewards for snort critical baseline
+        :param eval_avg_episode_var_log_baseline_rewards: eval avg_rewards for var_log baseline
+        :param eval_2_avg_episode_snort_critical_baseline_rewards: eval 2 avg_rewards for snort critical baseline
+        :param eval_2_avg_episode_var_log_baseline_rewards: eval 2 avg_rewards for var_log baseline
         :return: None
         """
         train_or_eval = "eval" if eval else "train"
@@ -1312,6 +1443,30 @@ class BaseAlgorithm(ABC):
                                            eval_2_episode_early_stopped_frac, episode)
         self.tensorboard_writer.add_scalar('defender/eval_2_episode_successful_intrusion_frac/' + train_or_eval,
                                            eval_2_episode_successful_intrusion_frac, episode)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_severe_baseline_rewards/' + train_or_eval,
+                                           avg_episode_snort_severe_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_warning_baseline_rewards/' + train_or_eval,
+                                           avg_episode_snort_warning_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_severe_baseline_rewards/' + train_or_eval,
+                                           eval_avg_episode_snort_severe_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_warning_baseline_rewards/' + train_or_eval,
+                                           eval_avg_episode_snort_warning_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_snort_severe_baseline_rewards/' + train_or_eval,
+                                           eval_avg_2_episode_snort_severe_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_snort_warning_baseline_rewards/' + train_or_eval,
+                                           eval_avg_2_episode_snort_warning_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_critical_baseline_rewards/' + train_or_eval,
+                                           avg_episode_snort_critical_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_var_log_baseline_rewards/' + train_or_eval,
+                                           avg_episode_var_log_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_critical_baseline_rewards/' + train_or_eval,
+                                           eval_avg_episode_snort_critical_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_var_log_baseline_rewards/' + train_or_eval,
+                                           eval_avg_episode_var_log_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_snort_critical_baseline_rewards/' + train_or_eval,
+                                           eval_avg_2_episode_snort_critical_baseline_rewards, episode)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_var_log_baseline_rewards/' + train_or_eval,
+                                           eval_avg_2_episode_var_log_baseline_rewards, episode)
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', lr, episode)
 
@@ -1726,7 +1881,7 @@ class BaseAlgorithm(ABC):
         :return: ([str]) List of parameters that should be excluded from save
         """
         return ["device", "env", "eval_env", "replay_buffer", "attacker_rollout_buffer", "defender_rollout_buffer",
-                "_vec_normalize_env"]
+                "_vec_normalize_env", "tensoboard_writer"]
 
     def save(
             self,
@@ -1796,6 +1951,10 @@ class BaseAlgorithm(ABC):
 
         if save_dir is not None:
             path = save_dir + "/" + time_str + "_policy_network.zip"
+            env_config = None
+            env_configs = None
+            eval_env_config = None
+            eval_env_configs = None
             if self.attacker_agent_config is not None:
                 self.attacker_agent_config.logger.info("Saving policy-network to: {}".format(path))
                 env_config = self.attacker_agent_config.env_config
@@ -1808,15 +1967,17 @@ class BaseAlgorithm(ABC):
                 self.attacker_agent_config.eval_env_configs = None
             if self.defender_agent_config is not None:
                 self.defender_agent_config.logger.info("Saving policy-network to: {}".format(path))
-                env_config = self.defender_agent_config.env_config
-                env_configs = self.defender_agent_config.env_configs
-                eval_env_config = self.defender_agent_config.eval_env_config
-                eval_env_configs = self.defender_agent_config.eval_env_configs
-                self.defender_agent_config.env_config = None
-                self.defender_agent_config.env_configs = None
-                self.defender_agent_config.eval_env_config = None
-                self.defender_agent_config.eval_env_configs = None
-            self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env"])
+                if self.defender_agent_config.env_config is not None:
+                    env_config = self.defender_agent_config.env_config
+                    env_configs = self.defender_agent_config.env_configs
+                    eval_env_config = self.defender_agent_config.eval_env_config
+                    eval_env_configs = self.defender_agent_config.eval_env_configs
+                    self.defender_agent_config.env_config = None
+                    self.defender_agent_config.env_configs = None
+                    self.defender_agent_config.eval_env_config = None
+                    self.defender_agent_config.eval_env_configs = None
+            self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env", "attacker_opponent",
+                                     "defender_opponent"])
             if self.attacker_agent_config is not None:
                 self.attacker_agent_config.env_config = env_config
                 self.attacker_agent_config.env_configs = env_configs

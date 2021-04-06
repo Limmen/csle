@@ -3,9 +3,9 @@ A bot attack agent for the pycr-ctf environment that acts according to a custom 
 """
 import time
 import numpy as np
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_gensim_env import PyCRCTFLevel4GeneratedSim5Env
-from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCRCTFLevel4Emulation5Env
+#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+#from gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_gensim_env import PyCRCTFLevel4GeneratedSim5Env
+#from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCRCTFLevel4Emulation5Env
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 
@@ -14,7 +14,7 @@ class CustomAttackerBotAgent:
     Class implementing an attack policy that acts according to a custom pre-defined policy
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv = None):
+    def __init__(self, env_config: EnvConfig, env):
         """
         Constructor, initializes the policy
 
@@ -26,11 +26,13 @@ class CustomAttackerBotAgent:
         self.num_actions = env.env_config.attacker_action_conf.num_actions
         self.actions = np.array(list(range(self.num_actions)))
         self.strategy = []
-        if isinstance(self.env, PyCRCTFLevel4GeneratedSim5Env) or isinstance(self.env, PyCRCTFLevel4Emulation5Env):
-            self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
-                             18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
-        else:
-            raise ValueError("Environment not recognized")
+        self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
+                         18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
+        # if isinstance(self.env, PyCRCTFLevel4GeneratedSim5Env) or isinstance(self.env, PyCRCTFLevel4Emulation5Env):
+        #     self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
+        #                      18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
+        # else:
+        #     raise ValueError("Environment not recognized")
 
     def action(self, s: EnvState, agent_state) -> int:
         """

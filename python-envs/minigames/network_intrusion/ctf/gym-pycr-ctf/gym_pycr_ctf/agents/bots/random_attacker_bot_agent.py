@@ -3,7 +3,7 @@ A bot attack agent for the pycr-ctf environment that acts randomly
 """
 import time
 import numpy as np
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 
@@ -12,7 +12,7 @@ class RandomAttackerBotAgent:
     Class implementing an attack policy that acts randomly
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv = None):
+    def __init__(self, env_config: EnvConfig, env):
         """
         Constructor, initializes the policy
 

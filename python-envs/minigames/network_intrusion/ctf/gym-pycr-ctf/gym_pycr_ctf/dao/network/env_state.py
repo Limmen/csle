@@ -278,7 +278,9 @@ class EnvState:
         self.attacker_obs_state.cleanup()
 
         for _, c in self.defender_cached_ssh_connections.items():
-            c.cleanup()
+            (ssh_conns, _) = c
+            for c2 in ssh_conns:
+                c2.cleanup()
 
         self.defender_obs_state.cleanup()
 

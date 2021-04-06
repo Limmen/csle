@@ -23,6 +23,9 @@ from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import 
 from gym_pycr_ctf.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star import FindPiStar
+from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
+from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 
 class PyCRCTFEnv(gym.Env, ABC):
     """
@@ -171,7 +174,6 @@ class PyCRCTFEnv(gym.Env, ABC):
                 if os.path.exists(load_dir):
                     env_config.network_conf = \
                         env_config.network_conf.load(load_dir)
-            self.env_config.env_mode = EnvMode.SIMULATION
 
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
@@ -180,6 +182,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                                                        env_config=env_config)
                 self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
+
+            self.env_config.env_mode = EnvMode.SIMULATION
 
         # Reset and setup action spaces
         self.reset()
@@ -213,9 +217,14 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
-
         # Initialization
-        attack_action_id, defense_action_id = action_id
+        opponent_type = None
+        if action_id is not None and len(action_id) > 2:
+            attack_action_id, defense_action_id, opponent_type = action_id
+            opponent_type = AgentType(opponent_type)
+        else:
+            attack_action_id, defense_action_id = action_id
+
         if attack_action_id is not None:
             attack_action_id = int(attack_action_id)
         if defense_action_id is not None:
@@ -230,9 +239,16 @@ class PyCRCTFEnv(gym.Env, ABC):
         if defense_action_id is not None:
             if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
                 time.sleep(self.env_config.defender_sleep_before_state_update)
+            attacker_opponent = None
+            if opponent_type is not None:
+                if opponent_type == AgentType.RANDOM_ATTACKER:
+                    attacker_opponent = RandomAttackerBotAgent(env_config=self.env_config, env=self)
+                elif opponent_type == AgentType.CUSTOM_ATTACKER:
+                    attacker_opponent = CustomAttackerBotAgent(env_config=self.env_config, env=self)
             defender_reward, attacker_reward, done, defender_info = \
                 self.step_defender(defender_action_id=defense_action_id,
-                                   attacker_action=self.env_state.attacker_obs_state.last_attacker_action)
+                                   attacker_action=self.env_state.attacker_obs_state.last_attacker_action,
+                                   attacker_opponent=attacker_opponent)
             defender_info["successful_intrusion"] = False
             attacker_reward = attacker_reward
 
@@ -280,9 +296,6 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.attacker_trajectory.append(attacker_reward)
             self.defender_trajectories.append(self.defender_trajectory)
             self.attacker_trajectories.append(self.attacker_trajectory)
-
-        if self.env_state.defender_obs_state.caught_attacker and defense_action_id != 0:
-            print("caught attacker wth continue")
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
@@ -358,7 +371,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state.attacker_obs_state.last_attacker_action = attack_action
         return attacker_reward, defender_reward, done, info
 
-    def step_defender(self, defender_action_id, attacker_action: AttackerAction) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_defender(self, defender_action_id, attacker_action: AttackerAction,
+                      attacker_opponent = None) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment as the defender by executing the given action
 
@@ -392,6 +406,61 @@ class PyCRCTFEnv(gym.Env, ABC):
             s=self.env_state, defender_action=defense_action, attacker_action=attacker_action,
             env_config=self.env_config)
 
+        # Snort baselines
+        if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
+            if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_severe_baseline_threshold:
+                s_prime.defender_obs_state.snort_severe_baseline_stopped = True
+                if self.env_state.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_severe_baseline_reward = \
+                        float(self.env_config.defender_caught_attacker_reward) / max(
+                            1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                else:
+                    s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping
+            if done:
+                s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
+
+
+        if not s_prime.defender_obs_state.snort_warning_baseline_stopped:
+            if s_prime.defender_obs_state.num_warning_alerts_recent > self.env_config.snort_warning_baseline_threshold:
+                s_prime.defender_obs_state.snort_warning_baseline_stopped = True
+                if self.env_state.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_warning_baseline_reward = \
+                        float(self.env_config.defender_caught_attacker_reward) / max(
+                            1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                else:
+                    s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping
+            else:
+                if done:
+                    s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
+
+        if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
+            if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_critical_baseline_threshold:
+                s_prime.defender_obs_state.snort_critical_baseline_stopped = True
+                if self.env_state.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_critical_baseline_reward = \
+                        float(self.env_config.defender_caught_attacker_reward) / max(
+                            1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                else:
+                    s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping
+            else:
+                if done:
+                    s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_intrusion_reward
+
+        if not s_prime.defender_obs_state.var_log_baseline_stopped:
+            sum_failed_logins = sum(list(map(lambda x: x.num_failed_login_attempts_recent,
+                                             s_prime.defender_obs_state.machines)))
+            if sum_failed_logins > self.env_config.var_log_baseline_threshold:
+                s_prime.defender_obs_state.var_log_baseline_stopped = True
+                if self.env_state.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.var_log_baseline_reward = \
+                        float(self.env_config.defender_caught_attacker_reward) / max(
+                            1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                else:
+                    s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping
+            else:
+                if done:
+                    s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_intrusion_reward
+
         # Parse result
         attacker_reward = 0
         # if done:
@@ -406,7 +475,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_state.defender_obs_state.caught_attacker:
             defender_reward = defender_reward + float(self.env_config.defender_caught_attacker_reward) / max(
                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
-            print("undetecte steps:{}".format(self.env_state.attacker_obs_state.undetected_intrusions_steps))
             attacker_reward = self.env_config.attacker_detection_reward
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
@@ -417,10 +485,117 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
+        if attacker_opponent is not None and (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
+            not s_prime.defender_obs_state.snort_warning_baseline_stopped
+                        or not s_prime.defender_obs_state.snort_critical_baseline_stopped
+                                                        or not s_prime.defender_obs_state.var_log_baseline_stopped)):
+            self.simulate_snort_vs_opponent(attacker_opponent)
+
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped
+        info["snort_severe_baseline_reward"] = self.env_state.defender_obs_state.snort_severe_baseline_reward
+        info["snort_warning_baseline_reward"] = self.env_state.defender_obs_state.snort_warning_baseline_reward
+        info["snort_critical_baseline_reward"] = self.env_state.defender_obs_state.snort_critical_baseline_reward
+        info["var_log_baseline_reward"] = self.env_state.defender_obs_state.var_log_baseline_reward
 
         return defender_reward, attacker_reward, done, info
+
+    def simulate_snort_vs_opponent(self, attacker_opponent):
+        defender_action = self.env_config.defender_action_conf.get_continue_action_idx()
+        done = False
+        i = 0
+        while not done:
+            i += 1
+            attacker_action_id = attacker_opponent.action(self.env_state, self.attacker_agent_state)
+            if i > 100:
+                print("infinite loop..")
+
+            # Prepare action for execution
+            attack_action = self.env_config.attacker_action_conf.actions[attacker_action_id]
+            attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
+
+            # Step in the environment
+            s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
+                s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
+            self.env_state = s_prime
+            self.env_state.attacker_obs_state.last_attacker_action = attack_action
+
+            # Update state
+            if self.env_config.defender_update_state and not done:
+                # Update defender's state
+                s_prime, _, _ = TransitionOperator.defender_transition(
+                    s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
+                    env_config=self.env_config, attacker_action=self.env_state.attacker_obs_state.last_attacker_action)
+                self.env_state = s_prime
+
+            # Extract observations
+            defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+            attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+            defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
+            self.defender_last_obs = defender_obs
+            self.attacker_last_obs = attacker_m_obs
+            self.defender_time_step += 1
+            self.attacker_agent_state.time_step += 1
+
+            # Snort baselines
+            if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
+                if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_severe_baseline_threshold:
+                    s_prime.defender_obs_state.snort_severe_baseline_stopped = True
+                    if self.env_state.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_severe_baseline_reward = \
+                            float(self.env_config.defender_caught_attacker_reward) / max(
+                                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                    else:
+                        s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping
+                if done:
+                    s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
+
+            if not s_prime.defender_obs_state.snort_warning_baseline_stopped:
+                if s_prime.defender_obs_state.num_warning_alerts_recent > self.env_config.snort_warning_baseline_threshold:
+                    s_prime.defender_obs_state.snort_warning_baseline_stopped = True
+                    if self.env_state.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_warning_baseline_reward = \
+                            float(self.env_config.defender_caught_attacker_reward) / max(
+                                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                    else:
+                        s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping
+                else:
+                    if done:
+                        s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
+
+            if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
+                if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_critical_baseline_threshold:
+                    s_prime.defender_obs_state.snort_critical_baseline_stopped = True
+                    if self.env_state.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_critical_baseline_reward = \
+                            float(self.env_config.defender_caught_attacker_reward) / max(
+                                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                    else:
+                        s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping
+                else:
+                    if done:
+                        s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_intrusion_reward
+
+            if not s_prime.defender_obs_state.var_log_baseline_stopped:
+                sum_failed_logins = sum(list(map(lambda x: x.num_failed_login_attempts_recent,
+                                                 s_prime.defender_obs_state.machines)))
+                if sum_failed_logins > self.env_config.var_log_baseline_threshold:
+                    s_prime.defender_obs_state.var_log_baseline_stopped = True
+                    if self.env_state.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.var_log_baseline_reward = \
+                            float(self.env_config.defender_caught_attacker_reward) / max(
+                                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
+                    else:
+                        s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping
+                else:
+                    if done:
+                        s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_intrusion_reward
+
+            if s_prime.defender_obs_state.snort_severe_baseline_stopped and \
+                    s_prime.defender_obs_state.snort_warning_baseline_stopped \
+                    and s_prime.defender_obs_state.snort_critical_baseline_stopped \
+                    and s_prime.defender_obs_state.var_log_baseline_stopped:
+                done = True
 
     def reset(self, soft : bool = False) -> np.ndarray:
         """

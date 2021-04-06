@@ -188,6 +188,10 @@ class EnvConfig:
         self.explore_defense_states = False
         self.defender_sleep_before_state_update = 15
         self.stop_after_failed_detection = False
+        self.snort_critical_baseline_threshold = 200
+        self.snort_severe_baseline_threshold = 0
+        self.snort_warning_baseline_threshold = 0
+        self.var_log_baseline_threshold = 0
 
     def get_port_forward_port(self) -> int:
         """
@@ -344,4 +348,8 @@ class EnvConfig:
         env_config.defender_intrusion_reward = self.defender_intrusion_reward
         env_config.explore_defense_states = self.explore_defense_states
         env_config.defender_sleep_before_state_update = self.defender_sleep_before_state_update
+        env_config.snort_severe_baseline_threshold = self.snort_severe_baseline_threshold
+        env_config.snort_warning_baseline_threshold = self.snort_warning_baseline_threshold
+        env_config.snort_critical_baseline_threshold = self.snort_critical_baseline_threshold
+        env_config.var_log_baseline_threshold = self.var_log_baseline_threshold
         return env_config

@@ -26,6 +26,14 @@ class DefenderObservationState:
         self.adj_matrix = np.array(0)
         self.ids_last_alert_ts = None
         self.step = 0
+        self.snort_warning_baseline_reward = 0
+        self.snort_severe_baseline_reward = 0
+        self.snort_critical_baseline_reward = 0
+        self.var_log_baseline_reward = 0
+        self.snort_severe_baseline_stopped = False
+        self.snort_warning_baseline_stopped = False
+        self.snort_critical_baseline_stopped = False
+        self.var_log_baseline_stopped = False
 
     def sort_machines(self):
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
@@ -58,6 +66,14 @@ class DefenderObservationState:
         c.num_warning_alerts_total = self.num_warning_alerts_total
         c.sum_priority_alerts_total = self.sum_priority_alerts_total
         c.adj_matrix = self.adj_matrix
+        c.snort_warning_baseline_reward = self.snort_warning_baseline_reward
+        c.snort_severe_baseline_reward = self.snort_severe_baseline_reward
+        c.snort_warning_baseline_stopped = self.snort_warning_baseline_stopped
+        c.snort_severe_baseline_stopped = self.snort_severe_baseline_stopped
+        c.snort_critical_baseline_reward = self.snort_critical_baseline_reward
+        c.snort_critical_baseline_stopped = self.snort_critical_baseline_stopped
+        c.var_log_baseline_reward = self.var_log_baseline_reward
+        c.var_log_baseline_stopped = self.var_log_baseline_stopped
         for m in self.machines:
             c.machines.append(m.copy())
         return c
@@ -66,9 +82,15 @@ class DefenderObservationState:
         return  "# alerts recent:{}, # severe alerts recent: {}, # warning alerts recent: {}, " \
                 "sum priority recent:{}, # alerts total:{} # severe alerts total: {}, " \
                 "# warning alerts total: {}, sum priority total: {}, caught_attacker:{}," \
-                " stopped:{}, step:{}".format(
+                " stopped:{}, step:{}, snort_severe_baseline_reward:{}, snort_warning_baseline_reward:{}," \
+                "snort_severe_baseline_stopped:{}, snort_warning_baseline_stopped:{}," \
+                "snort_critical_baseline_reward:{}, snort_critical_baseline_stopped:{}," \
+                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
-            self.caught_attacker, self.stopped, self.step) + "\n" + \
+            self.caught_attacker, self.stopped, self.step, self.snort_severe_baseline_reward,
+            self.snort_warning_baseline_reward, self.snort_severe_baseline_stopped,
+            self.snort_warning_baseline_stopped, self.snort_critical_baseline_reward,
+            self.snort_critical_baseline_stopped) + "\n" + \
                 "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

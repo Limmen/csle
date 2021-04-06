@@ -206,5 +206,13 @@ class DefenderBeliefStateSimulator:
             m.num_processes_recent = 0
 
         s_prime.defender_obs_state.step = 0
+        s_prime.defender_obs_state.snort_warning_baseline_reward = 0
+        s_prime.defender_obs_state.snort_severe_baseline_reward = 0
+        s_prime.defender_obs_state.snort_critical_baseline_reward = 0
+        s_prime.defender_obs_state.var_log_baseline_reward = 0
+        s_prime.defender_obs_state.snort_warning_baseline_stopped = False
+        s_prime.defender_obs_state.snort_severe_baseline_stopped = False
+        s_prime.defender_obs_state.snort_critical_baseline_stopped = False
+        s_prime.defender_obs_state.var_log_baseline_stopped = False
 
         return s_prime, 0, False

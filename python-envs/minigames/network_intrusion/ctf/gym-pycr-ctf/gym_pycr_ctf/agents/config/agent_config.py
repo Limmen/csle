@@ -49,7 +49,8 @@ class AgentConfig:
                  dr_min_num_flags : int = 1, dr_max_num_flags : int = 1,
                  dr_min_num_users: int = 1, dr_max_num_users : int = 1,
                  dr_use_base : bool = False, log_regret : bool = False, running_avg: int = 10,
-                 attacker_opponent_baseline_type: int = 6, defender_opponent_baseline_type: int = 7
+                 attacker_opponent_baseline_type: int = 6, defender_opponent_baseline_type: int = 7,
+                 snort_baseline_simulate: bool = False, quick_eval_freq : int = 1
                  ):
         """
         Initialize environment and hyperparameters
@@ -132,6 +133,8 @@ class AgentConfig:
         :param filter_illegal_actions: boolean flag whether to filter illegal actions
         :param train_progress_deterministic_eval: boolean flag whether to use deterministic policy for eval during train
         :param n_deterministic_eval_iter: number of iterations for determinisitic eval
+        :param snort_baseline_simulate: whether to simulate snort vs opponent
+        :param quick_eval_freq: frequency of running quick-eval
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -237,6 +240,8 @@ class AgentConfig:
         self.running_avg = running_avg
         self.attacker_opponent_baseline_type = attacker_opponent_baseline_type
         self.defender_opponent_baseline_type = defender_opponent_baseline_type
+        self.snort_baseline_simulate = snort_baseline_simulate
+        self.quick_eval_freq = quick_eval_freq
 
 
     def to_str(self) -> str:
@@ -268,7 +273,8 @@ class AgentConfig:
                "ar_policy2:{83},domain_randomization:{84},n_quick_eval_iter:{85}," \
                "dr_max_num_nodes:{86},dr_min_num_nodes:{87},dr_min_num_flags:{88}," \
                "dr_max_num_flags:{89},dr_min_num_users:{90},dr_max_num_users:{91},dr_use_base:{92},log_regret:{93}," \
-               "running_avg:{94},attacker_opponent_baseline_type:{95},defender_opponent_baseline_type:{96}".format(
+               "running_avg:{94},attacker_opponent_baseline_type:{95},defender_opponent_baseline_type:{96}," \
+               "snort_baseline_simulate:{97},quick_eval_iter:{98}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -290,7 +296,8 @@ class AgentConfig:
             self.ar_policy2, self.domain_randomization, self.n_quick_eval_iter,
             self.dr_max_num_nodes, self.dr_min_num_nodes, self.dr_min_num_flags, self.dr_max_num_flags,
             self.dr_min_num_users, self.dr_max_num_users, self.dr_use_base, self.log_regret, self.running_avg,
-            self.attacker_opponent_baseline_type, self.defender_opponent_baseline_type)
+            self.attacker_opponent_baseline_type, self.defender_opponent_baseline_type, self.snort_baseline_simulate,
+            self.quick_eval_freq)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -391,6 +398,8 @@ class AgentConfig:
             writer.writerow(["running_avg", str(self.running_avg)])
             writer.writerow(["attacker_opponent_baseline_type", str(self.attacker_opponent_baseline_type)])
             writer.writerow(["defender_opponent_baseline_type", str(self.defender_opponent_baseline_type)])
+            writer.writerow(["snort_baseline_simulate", str(self.snort_baseline_simulate)])
+            writer.writerow(["quick_eval_freq", str(self.quick_eval_freq)])
 
 
     def hparams_dict(self):
@@ -472,4 +481,6 @@ class AgentConfig:
         hparams["running_avg"] = self.running_avg
         hparams["attacker_opponent_baseline_type"] = self.attacker_opponent_baseline_type
         hparams["defender_opponent_baseline_type"] = self.defender_opponent_baseline_type
+        hparams["snort_baseline_simulate"] = self.snort_baseline_simulate
+        hparams["quick_eval_freq"] = self.quick_eval_freq
         return hparams

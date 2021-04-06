@@ -37,17 +37,15 @@ class TrainAgent(ABC):
             self.attacker_config = self.defender_config
         if self.attacker_config.logger is None:
             self.attacker_config.logger = logging.getLogger('Train Agent - Attacker')
-        random.seed(self.attacker_config.random_seed)
-        np.random.seed(self.attacker_config.random_seed)
-        torch.manual_seed(self.attacker_config.random_seed)
 
         if self.defender_config is None:
             self.defender_config = self.attacker_config
         if self.defender_config.logger is None:
             self.defender_config.logger = logging.getLogger('Train Agent - Defender')
-        random.seed(self.defender_config.random_seed)
-        np.random.seed(self.defender_config.random_seed)
-        torch.manual_seed(self.defender_config.random_seed)
+
+        random.seed(self.attacker_config.random_seed)
+        np.random.seed(self.attacker_config.random_seed)
+        torch.manual_seed(self.attacker_config.random_seed)
 
         if self.defender_config.attacker_opponent_baseline_type is not None and self.train_mode != TrainMode.SELF_PLAY:
             self.attacker_opponent_type = AgentType(self.defender_config.attacker_opponent_baseline_type)

@@ -29,7 +29,7 @@ def default_config() -> ClientConfig:
                                pi_hidden_dim=64, pi_hidden_layers=2,
                                vf_hidden_dim=64, vf_hidden_layers=2,
                                shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=100,
+                               batch_size=2000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -39,13 +39,12 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=1, attacker_opponent_baseline_type = 8,
-                               running_avg=50, n_quick_eval_iter=1,
-                               log_regret=True, snort_baseline_simulate=True, quick_eval_freq=30
+                               n_deterministic_eval_iter=10, attacker_opponent_baseline_type = 8,
+                               running_avg=50, n_quick_eval_iter=30, log_regret=True, snort_baseline_simulate=True
                                )
     env_name = "pycr-ctf-level-4-generated-sim-v5"
-    #eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
-    eval_env_name = "pycr-ctf-level-4-emulation-v5"
+    eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
+    #eval_env_name = "pycr-ctf-level-4-emulation-v5"
 
     # env_name = "pycr-ctf-level-4-generated-sim-costs-v1"
     # eval_env_name = "pycr-ctf-level-4-emulation-costs-v1"

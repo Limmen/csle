@@ -70,7 +70,13 @@ class ExperimentResult:
                  eval_caught_frac: List = None, eval_early_stopping_frac: List = None,
                  eval_intrusion_frac: List = None,
                  eval_2_caught_frac: List = None, eval_2_early_stopping_frac: List = None,
-                 eval_2_intrusion_frac: List = None
+                 eval_2_intrusion_frac: List = None,
+                 snort_severe_baseline_rewards : List = None, snort_warning_baseline_rewards : List = None,
+                 eval_snort_severe_baseline_rewards: List = None, eval_snort_warning_baseline_rewards: List = None,
+                 eval_2_snort_severe_baseline_rewards: List = None, eval_2_snort_warning_baseline_rewards: List = None,
+                 snort_critical_baseline_rewards: List = None, var_log_baseline_rewards : List = None,
+                 eval_snort_critical_baseline_rewards: List = None, eval_var_log_baseline_rewards: List = None,
+                 eval_2_snort_critical_baseline_rewards: List = None, eval_2_var_log_baseline_rewards: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -120,6 +126,18 @@ class ExperimentResult:
         :param eval_2_caught_frac: eval2 percentage that the attacker was caught by the defender
         :param eval_2_early_stopping_frac: eval2 percentage that the defender stopped too early
         :param eval_2_intrusion_frac: eval2 percentage of successful intrusions by the attacker
+        :param snort_severe_baseline_rewards: rewards of the snort severe baseline
+        :param snort_warning_baseline_rewards: rewards of the snort warning baseline
+        :param eval_snort_severe_baseline_rewards: eval rewards of the snort severe baseline
+        :param eval_snort_warning_baseline_rewards: eval rewards of the snort warning baseline
+        :param eval_2_snort_severe_baseline_rewards: eval 2 rewards of the snort severe baseline
+        :param eval_2_snort_warning_baseline_rewards: eval 2 rewards of the snort warning baseline
+        :param snort_critical_baseline_rewards: rewards of the snort critical baseline
+        :param var_log_baseline_rewards: rewards of the var_log  baseline
+        :param eval_snort_critical_baseline_rewards: eval rewards of the snort critical baseline
+        :param eval_var_log_baseline_rewards: eval rewards of the var_log  baseline
+        :param eval_2_snort_critical_baseline_rewards: eval 2 rewards of the snort critical baseline
+        :param eval_2_var_log_baseline_rewards: eval 2 rewards of the var_log  baseline
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -195,6 +213,18 @@ class ExperimentResult:
         self.eval_2_caught_frac = eval_2_caught_frac
         self.eval_2_early_stopping_frac = eval_2_early_stopping_frac
         self.eval_2_intrusion_frac = eval_2_intrusion_frac
+        self.snort_severe_baseline_rewards = snort_severe_baseline_rewards
+        self.snort_warning_baseline_rewards = snort_warning_baseline_rewards
+        self.eval_snort_severe_baseline_rewards = eval_snort_severe_baseline_rewards
+        self.eval_snort_warning_baseline_rewards = eval_snort_warning_baseline_rewards
+        self.eval_2_snort_severe_baseline_rewards = eval_2_snort_severe_baseline_rewards
+        self.eval_2_snort_warning_baseline_rewards = eval_2_snort_warning_baseline_rewards
+        self.snort_critical_baseline_rewards = snort_critical_baseline_rewards
+        self.var_log_baseline_rewards= var_log_baseline_rewards
+        self.eval_snort_critical_baseline_rewards = eval_snort_critical_baseline_rewards
+        self.eval_var_log_baseline_rewards = eval_var_log_baseline_rewards
+        self.eval_2_snort_critical_baseline_rewards = eval_2_snort_critical_baseline_rewards
+        self.eval_2_var_log_baseline_rewards = eval_2_var_log_baseline_rewards
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -344,6 +374,30 @@ class ExperimentResult:
             self.eval_2_early_stopping_frac = []
         if eval_2_intrusion_frac is None:
             self.eval_2_intrusion_frac = []
+        if snort_severe_baseline_rewards is None:
+            self.snort_severe_baseline_rewards = []
+        if snort_warning_baseline_rewards is None:
+            self.snort_warning_baseline_rewards = []
+        if eval_snort_severe_baseline_rewards is None:
+            self.eval_snort_severe_baseline_rewards = []
+        if eval_snort_warning_baseline_rewards is None:
+            self.eval_snort_warning_baseline_rewards = []
+        if eval_2_snort_severe_baseline_rewards is None:
+            self.eval_2_snort_severe_baseline_rewards = []
+        if eval_2_snort_warning_baseline_rewards is None:
+            self.eval_2_snort_warning_baseline_rewards = []
+        if snort_critical_baseline_rewards is None:
+            self.snort_critical_baseline_rewards = []
+        if var_log_baseline_rewards is None:
+            self.var_log_baseline_rewards = []
+        if eval_snort_critical_baseline_rewards is None:
+            self.eval_snort_critical_baseline_rewards = []
+        if eval_var_log_baseline_rewards is None:
+            self.eval_var_log_baseline_rewards = []
+        if eval_2_snort_critical_baseline_rewards is None:
+            self.eval_2_snort_critical_baseline_rewards = []
+        if eval_2_var_log_baseline_rewards is None:
+            self.eval_2_var_log_baseline_rewards = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -374,7 +428,13 @@ class ExperimentResult:
                    self.caught_frac, self.early_stopping_frac, self.intrusion_frac,
                    self.eval_caught_frac, self.eval_early_stopping_frac, self.eval_intrusion_frac,
                    self.eval_2_caught_frac, self.eval_2_early_stopping_frac,
-                   self.eval_2_intrusion_frac
+                   self.eval_2_intrusion_frac,
+                   self.snort_severe_baseline_rewards, self.snort_warning_baseline_rewards,
+                   self.eval_snort_severe_baseline_rewards, self.eval_snort_warning_baseline_rewards,
+                   self.eval_2_snort_severe_baseline_rewards, self.eval_2_snort_warning_baseline_rewards,
+                   self.snort_critical_baseline_rewards, self.var_log_baseline_rewards,
+                   self.eval_snort_critical_baseline_rewards, self.eval_var_log_baseline_rewards,
+                   self.eval_2_snort_critical_baseline_rewards, self.eval_2_var_log_baseline_rewards,
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -395,7 +455,13 @@ class ExperimentResult:
                          "attacker_eval_2_avg_opt_frac", "defender_eval_2_avg_opt_frac",
                          "caught_frac","early_stopping_frac","intrusion_frac",
                          "eval_caught_frac", "eval_early_stopping_frac", "eval_intrusion_frac",
-                         "eval_2_caught_frac", "eval_2_early_stopping_frac", "eval_2_intrusion_frac"
+                         "eval_2_caught_frac", "eval_2_early_stopping_frac", "eval_2_intrusion_frac",
+                         "snort_severe_baseline_rewards", "snort_warning_baseline_rewards",
+                         "eval_snort_severe_baseline_rewards", "eval_snort_warning_baseline_rewards",
+                         "eval_2_snort_severe_baseline_rewards", "eval_2_snort_warning_baseline_rewards",
+                         "snort_critical_baseline_rewards", "var_log_baseline_rewards",
+                         "eval_snort_critical_baseline_rewards", "eval_var_log_baseline_rewards",
+                         "eval_2_snort_critical_baseline_rewards", "eval_2_var_log_baseline_rewards"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
