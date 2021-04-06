@@ -47,7 +47,7 @@ class DefenderUpdateStateMiddleware:
                                                                    s_prime.defender_obs_state.sum_priority_alerts_recent
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
-        if s_prime.state_type == StateType.BASE or s_prime.state_type == s_prime.StateType.ESSENTIAL \
+        if s_prime.state_type == StateType.BASE or s_prime.state_type == StateType.ESSENTIAL \
                 or s_prime.state_type == StateType.COMPACT:
 
             # Measure Node specific features
