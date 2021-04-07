@@ -8,6 +8,7 @@ except:
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
 import numpy as np
+import torch
 
 class ManualDefenderAgent:
     """
@@ -15,7 +16,7 @@ class ManualDefenderAgent:
     """
 
     def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv, render: bool = False,
-                 attacker_opponent = None):
+                 attacker_opponent = None, model = None):
         """
         Sets up manual defender environment
 
@@ -24,6 +25,7 @@ class ManualDefenderAgent:
         self.env = env
         self.env_config = env_config
         self.attacker_opponent = attacker_opponent
+        self.model = model
 
         self.env.env_config.defender_action_conf.print_actions()
         if render:
@@ -34,6 +36,7 @@ class ManualDefenderAgent:
             history = []
             latest_obs = None
             latest_rew = None
+            latest_obs = env.reset()
             while True:
                 raw_input = input(">")
                 raw_input = raw_input.strip()
@@ -45,7 +48,7 @@ class ManualDefenderAgent:
                           "press L to print the legal actions, press x to select a random legal action,"
                           "press H to print the history of actions")
                 elif raw_input == "R":
-                    env.reset()
+                    latest_obs = env.reset()
                 elif raw_input == "S":
                     print(str(env.env_state.defender_obs_state))
                 elif raw_input == "L":
@@ -77,6 +80,17 @@ class ManualDefenderAgent:
                                 action = (attacker_action, a)
                                 print("Attacker action: {}".format(attacker_action))
                                 latest_obs, latest_rew, done, _ = self.env.step(action)
+                                if self.model is not None:
+                                    attacker_obs, defender_obs = latest_obs
+                                    obs_tensor = torch.as_tensor(defender_obs.flatten()).to(self.device)
+                                    actions, values = self.model.predict(observation=obs_tensor, deterministic=True,
+                                                                         state=obs_tensor, attacker=False,
+                                                                         infos={},
+                                                                         env_config=self.env.env_config,
+                                                                         env_configs=None, env=self.env,
+                                                                         env_idx=0,
+                                                                         env_state=self.env.env_state
+                                                                         )
                                 history.append(a)
                                 if done:
                                     print("done:{}, attacker_caught:{}, stopped:{}".format(

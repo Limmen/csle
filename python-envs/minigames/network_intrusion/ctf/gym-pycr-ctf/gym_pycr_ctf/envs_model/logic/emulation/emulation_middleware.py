@@ -191,6 +191,7 @@ class EmulationMiddleware:
             # Temporary
             s_prime = s
             s_prime.all_flags = True
+            s_prime.attacker_obs_state.all_flags = True
             s_prime.attacker_obs_state.catched_flags = 3
             return s_prime, env_config.attacker_all_flags_reward, True
             #return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)

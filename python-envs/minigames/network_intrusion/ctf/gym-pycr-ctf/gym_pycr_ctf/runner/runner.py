@@ -317,6 +317,15 @@ class Runner:
     def regular_env_creation(config: ClientConfig, emulation_config_temp):
         base_env = gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temp,
                             checkpoint_dir=config.env_checkpoint_dir)
+
+        if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
+            if base_env is not None:
+                base_env.env_config.attacker_use_nmap_cache = False
+                base_env.env_config.attacker_nmap_scan_cache = False
+                base_env.env_config.attacker_use_nikto_cache = False
+                base_env.env_config.attacker_use_file_system_cache = False
+                base_env.env_config.attacker_use_user_command_cache = False
+
         env_kwargs = {"env_config": config.env_config, "emulation_config": config.emulation_config,
                       "checkpoint_dir": config.env_checkpoint_dir}
         vec_env_kwargs = {"env_config": config.env_config}
@@ -354,6 +363,15 @@ class Runner:
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.eval_env_containers_configs,
                               flags_configs=config.eval_env_flags_configs, idx=i) for i in range(len(config.eval_env_containers_configs))]
 
+        if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
+            for i in range(len(base_envs)):
+                if base_envs[i] is not None:
+                    base_envs[i].env_config.attacker_use_nmap_cache = False
+                    base_envs[i].env_config.attacker_nmap_scan_cache = False
+                    base_envs[i].env_config.attacker_use_nikto_cache = False
+                    base_envs[i].env_config.attacker_use_file_system_cache = False
+                    base_envs[i].env_config.attacker_use_user_command_cache = False
+
         env_kwargs = [{"env_config": config.env_config, "emulation_config": config.eval_env_emulation_configs[i],
                        "checkpoint_dir": config.env_checkpoint_dir, "containers_config": config.eval_env_containers_configs,
                        "flags_config": config.eval_env_flags_configs, "idx": i, "num_nodes": config.eval_env_num_nodes
@@ -381,6 +399,15 @@ class Runner:
                               dr_max_num_flags=config.attacker_agent_config.dr_max_num_flags,
                               dr_min_num_flags=config.attacker_agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims)]
+        if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
+            for i in range(len(base_envs)):
+                if base_envs[i] is not None:
+                    base_envs[i].env_config.attacker_use_nmap_cache = False
+                    base_envs[i].env_config.attacker_nmap_scan_cache = False
+                    base_envs[i].env_config.attacker_use_nikto_cache = False
+                    base_envs[i].env_config.attacker_use_file_system_cache = False
+                    base_envs[i].env_config.attacker_use_user_command_cache = False
+
         env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.attacker_agent_config.dr_max_num_nodes,
@@ -413,6 +440,16 @@ class Runner:
                               dr_max_num_flags = config.attacker_agent_config.dr_max_num_flags,
                               dr_min_num_flags = config.attacker_agent_config.dr_min_num_flags
                               ) for i in range(config.num_sims_eval)]
+
+        if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
+            for i in range(len(base_envs)):
+                if base_envs[i] is not None:
+                    base_envs[i].env_config.attacker_use_nmap_cache = False
+                    base_envs[i].env_config.attacker_nmap_scan_cache = False
+                    base_envs[i].env_config.attacker_use_nikto_cache = False
+                    base_envs[i].env_config.attacker_use_file_system_cache = False
+                    base_envs[i].env_config.attacker_use_user_command_cache = False
+
         env_kwargs = [{"env_config": config.env_config, "emulation_config": None,
                        "checkpoint_dir": config.env_checkpoint_dir, "idx": i,
                        "dr_max_num_nodes": config.attacker_agent_config.dr_max_num_nodes,

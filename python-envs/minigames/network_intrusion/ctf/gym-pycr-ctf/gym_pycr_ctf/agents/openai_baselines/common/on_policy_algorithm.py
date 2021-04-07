@@ -16,6 +16,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.evaluation import quick_evaluat
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.envs_model.util.eval_util import EvalUtil
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -632,6 +633,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         eval_2_episode_flags_env_specific = self.saved_eval_2_episode_flags_env_specific
                         eval_2_episode_flags_percentage_env_specific = self.saved_eval_2_episode_flags_percentage_env_specific
 
+                    avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r, avg_baseline_critical_r, \
+                    avg_baseline_var_log_r = EvalUtil.eval_defender(self.env.envs[0], self)
+                    eval_defender_episode_rewards = avg_reward
+                    eval_episode_steps = avg_steps
+                    eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
+                    eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
+                    eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
+                    eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
+
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
                         for i in range(self.env.num_envs):
@@ -752,7 +762,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             # Save models every <self.config.checkpoint_frequency> iterations
             if self.iteration % self.attacker_agent_config.checkpoint_freq == 0:
                 try:
-                    self.save_model()
+                    self.save_model(self.iteration)
                 except Exception as e:
                     print("There was an error saving the model: {}".format(str(e)))
                 if self.attacker_agent_config.save_dir is not None:

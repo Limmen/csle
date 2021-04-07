@@ -32,19 +32,20 @@ class DefenderUpdateStateMiddleware:
                 ReadLogsUtil.read_ids_data(env_config=env_config,
                                            episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
 
+            s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total + \
+                                                          num_alerts
+            s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total + \
+                                                                 num_severe_alerts
+            s_prime.defender_obs_state.num_warning_alerts_total = s_prime.defender_obs_state.num_warning_alerts_total + \
+                                                                  num_warning_alerts
+            s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
+                                                                   sum_priority_alerts
+
             s_prime.defender_obs_state.num_alerts_recent = num_alerts
             s_prime.defender_obs_state.num_severe_alerts_recent = num_severe_alerts
             s_prime.defender_obs_state.num_warning_alerts_recent = num_warning_alerts
             s_prime.defender_obs_state.sum_priority_alerts_recent = sum_priority_alerts
 
-            s_prime.defender_obs_state.num_alerts_total = num_alerts + \
-                                                          s_prime.defender_obs_state.num_alerts_recent
-            s_prime.defender_obs_state.num_severe_alerts_total = num_severe_alerts + \
-                                                                 s_prime.defender_obs_state.num_severe_alerts_recent
-            s_prime.defender_obs_state.num_warning_alerts_total = num_warning_alerts + \
-                                                                  s_prime.defender_obs_state.num_warning_alerts_recent
-            s_prime.defender_obs_state.sum_priority_alerts_total = sum_priority_alerts + \
-                                                                   s_prime.defender_obs_state.sum_priority_alerts_recent
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
         if s_prime.state_type == StateType.BASE or s_prime.state_type == StateType.ESSENTIAL \
@@ -60,7 +61,7 @@ class DefenderUpdateStateMiddleware:
                 num_failed_login_attempts = ReadLogsUtil.read_failed_login_attempts(
                     emulation_config=m.emulation_config, failed_auth_last_ts=m.failed_auth_last_ts)
                 m.num_failed_login_attempts_recent = num_failed_login_attempts
-                m.num_failed_login_attempts = num_failed_login_attempts + m.num_failed_login_attempts_recent
+                m.num_failed_login_attempts = m.num_failed_login_attempts + m.num_failed_login_attempts_recent
 
                 num_open_connections = ShellUtil.read_open_connections(emulation_config=m.emulation_config)
                 if num_open_connections == -1:
@@ -73,7 +74,7 @@ class DefenderUpdateStateMiddleware:
                     num_login_events = ReadLogsUtil.read_successful_login_events(
                         emulation_config=m.emulation_config, login_last_ts=m.login_last_ts)
                     m.num_login_events_recent = num_login_events
-                    m.num_login_events = num_login_events + m.num_login_events_recent
+                    m.num_login_events = m.num_login_events + m.num_login_events_recent
 
                 if s_prime.state_type == StateType.BASE:
 

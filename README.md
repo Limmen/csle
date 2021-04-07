@@ -1,14 +1,25 @@
 # `pycr` The Python Cyber Range for Self-Learning Cyber Security Systems
 
+TODO abstract
+
+## Outline
+
+ * [What is pycr?](#what-is-pycr)
+ * [Architecture](#architecture)
+ * [Features](#features)
+ * [Quickstart](#quickstart)
+ * [Documentation](#documentation)
+ * [Author &amp; Maintainer](#author--maintainer)
+ * [Copyright and license](#copyright-and-license)
+ * [Disclaimer](#disclaimer)
+
+
+## What is `pycr`?
+
+TODO
+
 The environment implements virtual cyber ranges for training reinforcement learning agents. 
-The environment exposes a Markov-game or Markov Decision Process API for OpenAI Gym.
-
-For documentation, see the README.md files inside each sub-directory,
-
-- **Emulation Environments** ([emulation-envs](./emulation-envs)).
-- **Python Environments** ([python-envs](./python-envs)).
-- **Notebooks** ([notebooks](./notebooks)).
-- **Documentation** ([docs](./docs)).    
+The environment exposes a Markov-game or Markov Decision Process API for OpenAI Gym.    
 
 ## Architecture
 
@@ -54,7 +65,13 @@ For documentation, see the README.md files inside each sub-directory,
 TODO
 
 ## Documentation
-TODO
+
+For documentation, see the README.md files inside each sub-directory,
+
+- **Emulation Environments** ([emulation-envs](./emulation-envs)).
+- **Python Environments** ([python-envs](./python-envs)).
+- **Notebooks** ([notebooks](./notebooks)).
+- **Documentation** ([docs](./docs)).
 
 ## Author & Maintainer
 

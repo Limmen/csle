@@ -15,7 +15,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=1, alpha=0.000005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.00001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -24,12 +24,12 @@ def default_config() -> ClientConfig:
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=50, input_dim=(9 + 10*5),
+                               checkpoint_freq=50, input_dim=(9),
                                output_dim=2,
                                pi_hidden_dim=64, pi_hidden_layers=2,
                                vf_hidden_dim=64, vf_hidden_layers=2,
                                shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=8000,
+                               batch_size=5000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -41,12 +41,12 @@ def default_config() -> ClientConfig:
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=1, attacker_opponent_baseline_type = 8,
                                running_avg=50, n_quick_eval_iter=10,
-                               log_regret=True, snort_baseline_simulate=True, quick_eval_freq=50,
+                               log_regret=True, snort_baseline_simulate=True, quick_eval_freq=1,
                                eval_deterministic = False
                                )
     env_name = "pycr-ctf-level-4-generated-sim-v5"
-    #eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
-    eval_env_name = "pycr-ctf-level-4-emulation-v5"
+    eval_env_name = "pycr-ctf-level-4-generated-sim-v5"
+    #eval_env_name = "pycr-ctf-level-4-emulation-v5"
 
     # env_name = "pycr-ctf-level-4-generated-sim-costs-v1"
     # eval_env_name = "pycr-ctf-level-4-emulation-costs-v1"

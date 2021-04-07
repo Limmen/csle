@@ -596,7 +596,8 @@ class ActorCriticPolicy(BasePolicy):
                     non_legal_actions = infos[0]["defender_non_legal_actions"]
                 non_legal_actions = [non_legal_actions]
             else:
-                raise ValueError("Unrecognized env: {}".format(env))
+                pass
+                #raise ValueError("Unrecognized env: {}".format(env))
 
         distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)

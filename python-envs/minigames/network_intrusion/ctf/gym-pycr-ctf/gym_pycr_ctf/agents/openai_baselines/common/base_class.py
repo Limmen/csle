@@ -1692,7 +1692,8 @@ class BaseAlgorithm(ABC):
 
         # noinspection PyArgumentList
         model = cls(
-            policy=data["policy_class"],
+            attacker_policy=data["attacker_policy_class"],
+            defender_policy=data["defender_policy_class"],
             env=env,
             device=device,
             _init_setup_model=False,  # pytype: disable=not-instantiable,wrong-keyword-args
@@ -1937,7 +1938,7 @@ class BaseAlgorithm(ABC):
 
         save_to_zip_file(path, data=data, params=params_to_save, tensors=tensors)
 
-    def save_model(self) -> None:
+    def save_model(self, iteration : int = 1) -> None:
         """
         Saves the PyTorch Model Weights
 
@@ -1946,11 +1947,13 @@ class BaseAlgorithm(ABC):
         time_str = str(time.time())
         if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
             save_dir = self.attacker_agent_config.save_dir
+            seed = self.attacker_agent_config.random_seed
         else:
             save_dir = self.defender_agent_config.save_dir
+            seed = self.defender_agent_config.random_seed
 
         if save_dir is not None:
-            path = save_dir + "/" + time_str + "_policy_network.zip"
+            path = save_dir + "/" + time_str + "_" + str(seed)  + "_" + str(iteration) + "_policy_network.zip"
             env_config = None
             env_configs = None
             eval_env_config = None
