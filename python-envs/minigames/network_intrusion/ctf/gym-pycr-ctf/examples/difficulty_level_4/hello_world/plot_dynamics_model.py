@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def read_model():
-    model_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
-    #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
+    #model_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
+    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
     defender_dynamics_model = DefenderDynamicsModel()
     defender_dynamics_model.read_model_path(model_path)
     defender_dynamics_model.normalize()
@@ -197,9 +197,10 @@ def plot_machine_dynamics(machine_ip, machine_dynamics, action_cfg):
     row_y_labels.append(ylabel)
     row_short_titles.append(short_title)
 
-    # plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
-    #                           machine_ip + "_row_dynamics", ncols=3, ip=machine_ip, figsize=(8, 4.5),
-    #                           fontsize=8, labelsize=6, suptitle="Node IP: " + machine_ip)
+    plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
+                              machine_ip + "_row_dynamics", ncols=3, ip=machine_ip, figsize=(8, 4.5),
+                              fontsize=8, labelsize=6, suptitle="Node IP: " + machine_ip,
+                              lw=1.5, ms=4)
 
 
     return row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels, row_short_titles
@@ -286,8 +287,8 @@ def plot_ids_dynamics(defender_dynamics_model, action_cfg):
     row_x_labels.append(xlabel)
     row_y_labels.append(ylabel)
 
-    # plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
-    #                       "ids_dynamics_row", suptitle="IDS Dynamics"),
+    plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
+                          "ids_dynamics_row", suptitle="IDS Dynamics", lw=1.5, ms=4),
     return row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels
 
 
@@ -657,10 +658,10 @@ def plot_ids_dynamics_two_row(dists, xks,
                               subtitles,
                               xlabels, ylabels, file_name, ncols=2, ip=None,
                               figsize=(6, 4.5), fontsize=10, labelsize=6,
-                              suptitle=""):
+                              suptitle="", num_colors=75, lw=2, ms=8):
     cm = plt.cm.get_cmap('RdYlBu_r')
-    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
-    colors = plt.cm.viridis(np.linspace(0.3, 1, 45))[-45:]
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1, num_colors))[-num_colors:]
 
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
@@ -673,7 +674,7 @@ def plot_ids_dynamics_two_row(dists, xks,
     row = 0
     for j in range(len(dists)):
         title = subtitles[j]
-        if j > 2 and row == 0:
+        if j > (len(dists)/2)-1 and row == 0:
             row = 1
             k = 0
 
@@ -681,18 +682,18 @@ def plot_ids_dynamics_two_row(dists, xks,
         for i in range(len(xks[j])):
             if i < 2:
                 label = "$(b_{" + str(b_ids[j][i]) + "},a_{" + str(a_ids[j][i]) + "})$"
-                ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i],
+                ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=ms, mec=colors[i], color=colors[i],
                         label=label)
-                ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+                ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=lw)
             else:
                 label = "..."
                 if i > 2:
-                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i])
-                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=ms, mec=colors[i], color=colors[i])
+                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=lw)
                 else:
-                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=8, mec=colors[i], color=colors[i],
+                    ax[row][k].plot(xks[j][i], dists[j][i].pmf(xks[j][i]), 'ro', ms=ms, mec=colors[i], color=colors[i],
                             label=label)
-                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=2)
+                    ax[row][k].vlines(xks[j][i], 0, dists[j][i].pmf(xks[j][i]), colors=colors[i], linestyles='-', lw=lw)
 
         ax[row][k].set_title(title, fontsize=fontsize)
         ax[row][k].set_xlabel(xlabels[j], fontsize=labelsize)
@@ -734,10 +735,10 @@ def plot_ids_dynamics_two_row(dists, xks,
 def plot_multiple(dists, xks, min_support, max_support,
                   a_ids, b_ids,
                   subtitle : str,
-                  xlabel: str, ylabel: str, file_name: str):
+                  xlabel: str, ylabel: str, file_name: str, num_colors=75):
     cm = plt.cm.get_cmap('RdYlBu_r')
-    colors = plt.cm.GnBu(np.linspace(0.3, 1, 45))[-45:]
-    colors = plt.cm.viridis(np.linspace(0.3, 1, 45))[-45:]
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1, num_colors)[-num_colors:])
 
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
