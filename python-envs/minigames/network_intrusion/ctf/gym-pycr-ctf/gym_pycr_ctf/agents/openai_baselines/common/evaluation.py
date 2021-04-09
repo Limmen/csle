@@ -314,7 +314,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.eval_episode_snort_critical_baseline_rewards.append(_info["snort_critical_baseline_reward"])
                 train_log_dto.eval_episode_var_log_baseline_rewards.append(_info["var_log_baseline_reward"])
                 train_log_dto.eval_episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
-                train_log_dto = eval_update_env_specific_metrics(env_conf, train_log_dto, _info, i)
+                train_log_dto.eval_update_env_specific_metrics(env_conf, _info, i)
             else:
                 train_log_dto.attacker_eval_2_episode_rewards.append(attacker_episode_reward)
                 train_log_dto.defender_eval_2_episode_rewards.append(defender_episode_reward)
@@ -329,83 +329,11 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                     _info["snort_critical_baseline_reward"])
                 train_log_dto.eval_2_episode_var_log_baseline_rewards.append(_info["var_log_baseline_reward"])
                 train_log_dto.eval_2_episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
-                train_log_dto = eval_2_update_env_specific_metrics(env_conf, train_log_dto, _info, i)
+                train_log_dto.eval_2_update_env_specific_metrics(env_conf, _info, i)
             if isinstance(env, SubprocVecEnv):
                 obs = env.eval_reset(idx=i)
             elif isinstance(env, DummyVecEnv):
                 obs = env.envs[i].reset()
                 env_conf = env.env_config(i)
                 env_configs = env.env_configs()
-    return train_log_dto
-
-
-def eval_update_env_specific_metrics(env_config, train_log_dto : TrainAgentLogDTO, infos, i):
-    if env_config.emulation_config is not None:
-        agent_ip = env_config.emulation_config.agent_ip
-    else:
-        agent_ip = env_config.idx
-    num_flags = env_config.num_flags
-
-    if agent_ip not in train_log_dto.attacker_eval_env_specific_rewards:
-        train_log_dto.attacker_eval_env_specific_rewards[agent_ip] = [train_log_dto.attacker_episode_rewards]
-    else:
-        train_log_dto.attacker_eval_env_specific_rewards[agent_ip].append(train_log_dto.attacker_episode_rewards)
-
-    if agent_ip not in train_log_dto.defender_eval_env_specific_rewards:
-        train_log_dto.defender_eval_env_specific_rewards[agent_ip] = [train_log_dto.defender_episode_rewards]
-    else:
-        train_log_dto.defender_eval_env_specific_rewards[agent_ip].append(train_log_dto.defender_episode_rewards)
-
-    if agent_ip not in train_log_dto.eval_env_specific_steps:
-        train_log_dto.eval_env_specific_steps[agent_ip] = [train_log_dto.episode_steps]
-    else:
-        train_log_dto.eval_env_specific_steps[agent_ip].append(train_log_dto.episode_steps)
-
-    if agent_ip not in train_log_dto.eval_env_specific_flags:
-        train_log_dto.eval_env_specific_flags[agent_ip] = [infos["flags"]]
-    else:
-        train_log_dto.eval_env_specific_flags[agent_ip].append(infos["flags"])
-
-    if agent_ip not in train_log_dto.eval_env_specific_flags_percentage:
-        train_log_dto.eval_env_specific_flags_percentage[agent_ip] = [infos["flags"] / num_flags]
-    else:
-        train_log_dto.eval_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
-
-    return train_log_dto
-
-
-
-def eval_2_update_env_specific_metrics(env_config, train_log_dto : TrainAgentLogDTO, infos, i):
-
-    if env_config.emulation_config is not None:
-        agent_ip = env_config.emulation_config.agent_ip
-    else:
-        agent_ip = env_config.idx
-    num_flags = env_config.num_flags
-
-    if agent_ip not in train_log_dto.attacker_eval_2_env_specific_rewards:
-        train_log_dto.attacker_eval_2_env_specific_rewards[agent_ip] = [train_log_dto.attacker_episode_rewards]
-    else:
-        train_log_dto.attacker_eval_2_env_specific_rewards[agent_ip].append(train_log_dto.attacker_episode_rewards)
-
-    if agent_ip not in train_log_dto.defender_eval_2_env_specific_rewards:
-        train_log_dto.defender_eval_2_env_specific_rewards[agent_ip] = [train_log_dto.defender_episode_rewards]
-    else:
-        train_log_dto.defender_eval_2_env_specific_rewards[agent_ip].append(train_log_dto.defender_episode_rewards)
-
-    if agent_ip not in train_log_dto.eval_2_env_specific_steps:
-        train_log_dto.eval_2_env_specific_steps[agent_ip] = [train_log_dto.episode_steps]
-    else:
-        train_log_dto.eval_2_env_specific_steps[agent_ip].append(train_log_dto.episode_steps)
-
-    if agent_ip not in train_log_dto.eval_2_env_specific_flags:
-        train_log_dto.eval_2_env_specific_flags[agent_ip] = [infos["flags"]]
-    else:
-        train_log_dto.eval_2_env_specific_flags[agent_ip].append(infos["flags"])
-
-    if agent_ip not in train_log_dto.eval_2_env_specific_flags_percentage:
-        train_log_dto.eval_2_env_specific_flags_percentage[agent_ip] = [infos["flags"] / num_flags]
-    else:
-        train_log_dto.eval_2_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
-
     return train_log_dto

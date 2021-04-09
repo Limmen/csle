@@ -188,13 +188,7 @@ class EmulationMiddleware:
         if a.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
             return PostExploitMiddleware.execute_service_login(s=s, a=a, env_config=env_config)
         if a.id == AttackerActionId.FIND_FLAG:
-            # Temporary
-            s_prime = s
-            s_prime.all_flags = True
-            s_prime.attacker_obs_state.all_flags = True
-            s_prime.attacker_obs_state.catched_flags = 3
-            return s_prime, env_config.attacker_all_flags_reward, True
-            #return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
+            return PostExploitMiddleware.execute_bash_find_flag(s=s, a=a, env_config=env_config)
         if a.id == AttackerActionId.INSTALL_TOOLS:
             return PostExploitMiddleware.execute_install_tools(s=s, a=a, env_config=env_config)
         if a.id == AttackerActionId.SSH_BACKDOOR:
