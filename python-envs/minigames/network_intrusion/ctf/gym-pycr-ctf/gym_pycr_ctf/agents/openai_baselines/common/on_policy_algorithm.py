@@ -17,6 +17,7 @@ from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import Du
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 from gym_pycr_ctf.envs_model.util.eval_util import EvalUtil
+from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
@@ -129,23 +130,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.num_episodes = 0
         self.num_episodes_total = 0
 
-        self.saved_eval_attacker_episode_rewards = []
-        self.saved_eval_defender_episode_rewards = []
-        self.saved_eval_episode_steps = []
-        self.saved_eval_episode_flags_percentage = []
-        self.saved_eval_episode_flags = []
-        self.saved_eval_episode_caught = []
-        self.saved_eval_episode_early_stopped = []
-        self.saved_eval_episode_successful_intrusion = []
-        self.saved_eval_episode_snort_severe_baseline_rewards = []
-        self.saved_eval_episode_snort_warning_baseline_rewards = []
-        self.saved_eval_episode_snort_critical_baseline_rewards = []
-        self.saved_eval_episode_var_log_baseline_rewards = []
-        self.saved_attacker_eval_2_episode_rewards_env_specific = {}
-        self.saved_defender_eval_2_episode_rewards_env_specific = {}
-        self.saved_eval_2_episode_steps_env_specific = {}
-        self.saved_eval_2_episode_flags_env_specific = {}
-        self.saved_eval_2_episode_flags_percentage_env_specific = {}
+        self.saved_log_dto = TrainAgentLogDTO()
+        self.saved_log_dto.initialize()
 
         if _init_setup_model:
             self._setup_model()
@@ -423,31 +409,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.defender_agent_config.logger.info(self.attacker_agent_config.to_str())
 
         # Tracking metrics
-        attacker_episode_rewards = []
-        defender_episode_rewards = []
-        episode_flags = []
-        episode_caught = []
-        episode_early_stopped = []
-        episode_successful_intrusion = []
-        episode_snort_severe_baseline_rewards = []
-        episode_snort_warning_baseline_rewards = []
-        episode_snort_critical_baseline_rewards = []
-        episode_var_log_baseline_rewards = []
-        episode_steps = []
-        episode_loss_attacker = []
-        episode_loss_defender = []
-        episode_flags_percentage = []
-        attacker_train_episode_rewards_env_specific = {}
-        defender_train_episode_rewards_env_specific = {}
-        train_episode_steps_env_specific = {}
-        train_episode_flags_env_specific = {}
-        train_episode_flags_percentage_env_specific = {}
-        lr_attacker = 0.0
-        rollout_times = []
-        env_response_times = []
-        action_pred_times = []
-        grad_comp_times_attacker = []
-        weight_update_times_attacker = []
+        train_log_dto = TrainAgentLogDTO()
+        train_log_dto.initialize()
 
         num_iterations = self.attacker_agent_config.num_iterations
         if self.train_mode == TrainMode.TRAIN_DEFENDER:
@@ -472,49 +435,49 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
             if self.attacker_agent_config.performance_analysis:
                 end = time.time()
-                rollout_times.append(end-start)
-                env_response_times.extend(rollout_env_response_times)
-                action_pred_times.extend(rollout_action_pred_times)
+                train_log_dto.rollout_times.append(end-start)
+                train_log_dto.env_response_times.extend(rollout_env_response_times)
+                train_log_dto.action_pred_times.extend(rollout_action_pred_times)
 
 
-            attacker_episode_rewards.extend(attacker_rollouts_rewards)
-            defender_episode_rewards.extend(defender_rollouts_rewards)
-            episode_steps.extend(rollouts_steps)
-            episode_flags.extend(rollouts_flags)
-            episode_caught.extend(rollouts_caught)
-            episode_successful_intrusion.extend(rollouts_successful_intrusion)
-            episode_early_stopped.extend(rollouts_early_stopped)
-            episode_flags_percentage.extend(rollouts_flags_percentage)
-            episode_snort_severe_baseline_rewards.extend(rollouts_snort_severe_baseline_rewards)
-            episode_snort_warning_baseline_rewards.extend(rollouts_snort_warning_baseline_rewards)
-            episode_snort_critical_baseline_rewards.extend(rollouts_snort_critical_baseline_rewards)
-            episode_var_log_baseline_rewards.extend(rollouts_var_log_baseline_rewards)
+            train_log_dto.attacker_episode_rewards.extend(attacker_rollouts_rewards)
+            train_log_dto.defender_episode_rewards.extend(defender_rollouts_rewards)
+            train_log_dto.episode_steps.extend(rollouts_steps)
+            train_log_dto.episode_flags.extend(rollouts_flags)
+            train_log_dto.episode_caught.extend(rollouts_caught)
+            train_log_dto.episode_successful_intrusion.extend(rollouts_successful_intrusion)
+            train_log_dto.episode_early_stopped.extend(rollouts_early_stopped)
+            train_log_dto.episode_flags_percentage.extend(rollouts_flags_percentage)
+            train_log_dto.episode_snort_severe_baseline_rewards.extend(rollouts_snort_severe_baseline_rewards)
+            train_log_dto.episode_snort_warning_baseline_rewards.extend(rollouts_snort_warning_baseline_rewards)
+            train_log_dto.episode_snort_critical_baseline_rewards.extend(rollouts_snort_critical_baseline_rewards)
+            train_log_dto.episode_var_log_baseline_rewards.extend(rollouts_var_log_baseline_rewards)
 
             for key in attacker_env_specific_rewards.keys():
-                if key in attacker_train_episode_rewards_env_specific:
-                    attacker_train_episode_rewards_env_specific[key].extend(attacker_env_specific_rewards[key])
+                if key in train_log_dto.attacker_train_episode_env_specific_rewards:
+                    train_log_dto.attacker_train_episode_env_specific_rewards[key].extend(attacker_env_specific_rewards[key])
                 else:
-                    attacker_train_episode_rewards_env_specific[key] = attacker_env_specific_rewards[key]
+                    train_log_dto.attacker_train_episode_env_specific_rewards[key] = attacker_env_specific_rewards[key]
             for key in defender_env_specific_rewards.keys():
-                if key in defender_train_episode_rewards_env_specific:
-                    defender_train_episode_rewards_env_specific[key].extend(defender_env_specific_rewards[key])
+                if key in train_log_dto.defender_train_episode_env_specific_rewards:
+                    train_log_dto.defender_train_episode_env_specific_rewards[key].extend(defender_env_specific_rewards[key])
                 else:
-                    defender_train_episode_rewards_env_specific[key] = defender_env_specific_rewards[key]
+                    train_log_dto.defender_train_episode_env_specific_rewards[key] = defender_env_specific_rewards[key]
             for key in env_specific_steps.keys():
-                if key in train_episode_steps_env_specific:
-                    train_episode_steps_env_specific[key].extend(env_specific_steps[key])
+                if key in train_log_dto.train_env_specific_steps:
+                    train_log_dto.train_env_specific_steps[key].extend(env_specific_steps[key])
                 else:
-                    train_episode_steps_env_specific[key] = env_specific_steps[key]
+                    train_log_dto.train_env_specific_steps[key] = env_specific_steps[key]
             for key in env_specific_flags.keys():
-                if key in train_episode_flags_env_specific:
-                    train_episode_flags_env_specific[key].extend(env_specific_flags[key])
+                if key in train_log_dto.train_env_specific_flags:
+                    train_log_dto.train_env_specific_flags[key].extend(env_specific_flags[key])
                 else:
-                    train_episode_flags_env_specific[key] = env_specific_flags[key]
-            for key in env_specific_flags_percentage.keys():
-                if key in train_episode_flags_percentage_env_specific:
-                    train_episode_flags_percentage_env_specific[key].extend(env_specific_flags_percentage[key])
+                    train_log_dto.train_env_specific_flags[key] = env_specific_flags[key]
+            for key in train_log_dto.train_env_specific_flags_percentage.keys():
+                if key in train_log_dto.train_env_specific_flags_percentage:
+                    train_log_dto.train_env_specific_flags_percentage[key].extend(env_specific_flags_percentage[key])
                 else:
-                    train_episode_flags_percentage_env_specific[key] = env_specific_flags_percentage[key]
+                    train_log_dto.train_env_specific_flags_percentage[key] = env_specific_flags_percentage[key]
 
             if continue_training is False:
                 break
@@ -529,26 +492,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 env2 = None
 
             if self.iteration % self.attacker_agent_config.train_log_frequency == 0 or self.iteration == 1:
-                attacker_episode_rewards_1, defender_episode_rewards_1, \
-                episode_steps_1, episode_flags_percentage_1, episode_flags_1, episode_caught_1, \
-                episode_early_stopped_1, episode_successful_intrusion_1, episode_snort_severe_baseline_rewards_1, \
-                episode_snort_warning_baseline_rewards_1, episode_snort_critical_baseline_rewards_1, \
-                episode_var_log_baseline_rewards_1, \
-                eval_attacker_episode_rewards, eval_defender_episode_rewards, eval_episode_steps, \
-                eval_episode_flags_percentage, eval_episode_flags, eval_episode_caught, eval_episode_early_stopped, \
-                eval_episode_successful_intrusion, eval_episode_snort_severe_baseline_rewards, \
-                eval_episode_snort_warning_baseline_rewards, eval_episode_snort_critical_baseline_rewards, \
-                eval_episode_var_log_baseline_rewards, \
-                attacker_eval_2_episode_rewards_env_specific, \
-                defender_eval_2_episode_rewards_env_specific, \
-                eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
-                eval_2_episode_flags_percentage_env_specific, attacker_eval_episode_rewards_env_specific, \
-                defender_eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
-                eval_episode_flags_env_specific, \
-                eval_episode_flags_percentage_env_specific = None, None, None, None, None, None, None, None, None, \
-                                                             None, None, None, None, None, None, None, \
-                                                             None, None, None, None, None, None, None, None, None, \
-                                                             None, None, None, None, None, {}, {}, {}, {}
+
                 if self.attacker_agent_config.train_progress_deterministic_eval:
                     eval_conf = self.attacker_agent_config.env_config
                     env_configs = self.attacker_agent_config.env_configs
@@ -564,23 +508,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         if self.attacker_agent_config.domain_randomization:
                             if isinstance(self.env, DummyVecEnv):
                                 eval_conf = self.eval_env.env_config(0)
-                    attacker_episode_rewards_1, defender_episode_rewards_1, \
-                    episode_steps_1, episode_flags_percentage_1, episode_flags_1, episode_caught_1, \
-                    episode_early_stopped_1, episode_successful_intrusion_1, episode_snort_severe_baseline_rewards_1, \
-                    episode_snort_warning_baseline_rewards_1, episode_snort_critical_baseline_rewards_1, \
-                    episode_var_log_baseline_rewards_1, \
-                    eval_attacker_episode_rewards, eval_defender_episode_rewards, \
-                    eval_episode_steps, eval_episode_flags_percentage, eval_episode_flags, \
-                    eval_episode_caught, eval_episode_early_stopped, eval_episode_successful_intrusion, \
-                    eval_episode_snort_severe_baseline_rewards, eval_episode_snort_warning_baseline_rewards, \
-                    eval_episode_snort_critical_baseline_rewards, eval_episode_var_log_baseline_rewards, \
-                    attacker_eval_episode_rewards_env_specific, defender_eval_episode_rewards_env_specific, \
-                    eval_episode_steps_env_specific, eval_episode_flags_env_specific, \
-                    eval_episode_flags_percentage_env_specific, attacker_eval_2_episode_rewards_env_specific, \
-                    defender_eval_2_episode_rewards_env_specific, \
-                    eval_2_episode_steps_env_specific, eval_2_episode_flags_env_specific, \
-                    eval_2_episode_flags_percentage_env_specific = \
-                        quick_evaluate_policy(attacker_model=self.attacker_policy,
+
+                    train_log_dto = quick_evaluate_policy(attacker_model=self.attacker_policy,
                                               defender_model=self.defender_policy,
                                               env=self.env,
                                               n_eval_episodes_train=self.attacker_agent_config.n_deterministic_eval_iter,
@@ -594,53 +523,23 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               eval_envs_configs=eval_env_configs,
                                               train_mode = self.train_mode,
                                               attacker_opponent = self.attacker_opponent,
-                                              defender_opponent = self.defender_opponent
+                                              defender_opponent = self.defender_opponent,
+                                              train_dto=train_log_dto
                                               )
                     if env2 is not None:
-                        self.saved_eval_attacker_episode_rewards = eval_attacker_episode_rewards
-                        self.saved_eval_defender_episode_rewards = eval_defender_episode_rewards
-                        self.saved_eval_episode_steps = eval_episode_steps
-                        self.saved_eval_episode_flags_percentage = eval_episode_flags_percentage
-                        self.saved_eval_episode_flags = eval_episode_flags
-                        self.saved_eval_episode_caught = eval_episode_caught
-                        self.saved_eval_episode_early_stopped = eval_episode_early_stopped
-                        self.saved_eval_episode_successful_intrusion = eval_episode_successful_intrusion
-                        self.saved_eval_episode_snort_severe_baseline_rewards = eval_episode_snort_severe_baseline_rewards
-                        self.saved_eval_episode_snort_warning_baseline_rewards = eval_episode_snort_warning_baseline_rewards
-                        self.saved_eval_episode_snort_critical_baseline_rewards = eval_episode_snort_critical_baseline_rewards
-                        self.saved_eval_episode_var_log_baseline_rewards = eval_episode_var_log_baseline_rewards
-                        self.saved_attacker_eval_2_episode_rewards_env_specific = attacker_eval_2_episode_rewards_env_specific
-                        self.saved_defender_eval_2_episode_rewards_env_specific = defender_eval_2_episode_rewards_env_specific
-                        self.saved_eval_2_episode_steps_env_specific = eval_2_episode_steps_env_specific
-                        self.saved_eval_2_episode_flags_env_specific = eval_2_episode_flags_env_specific
-                        self.saved_eval_2_episode_flags_percentage_env_specific = eval_2_episode_flags_percentage_env_specific
+                        self.saved_log_dto = train_log_dto.copy()
                     else:
-                        eval_attacker_episode_rewards = self.saved_eval_attacker_episode_rewards
-                        eval_defender_episode_rewards = self.saved_eval_defender_episode_rewards
-                        eval_episode_steps = self.saved_eval_episode_steps
-                        eval_episode_flags_percentage = self.saved_eval_episode_flags_percentage
-                        eval_episode_flags = self.saved_eval_episode_flags
-                        eval_episode_caught= self.saved_eval_episode_caught
-                        eval_episode_early_stopped = self.saved_eval_episode_early_stopped
-                        eval_episode_successful_intrusion = self.saved_eval_episode_successful_intrusion
-                        eval_episode_snort_severe_baseline_rewards = self.saved_eval_episode_snort_severe_baseline_rewards
-                        eval_episode_snort_warning_baseline_rewards = self.saved_eval_episode_snort_warning_baseline_rewards
-                        eval_episode_snort_critical_baseline_rewards = self.saved_eval_episode_snort_critical_baseline_rewards
-                        eval_episode_var_log_baseline_rewards = self.saved_eval_episode_var_log_baseline_rewards
-                        attacker_eval_2_episode_rewards_env_specific = self.saved_attacker_eval_2_episode_rewards_env_specific
-                        defender_eval_2_episode_rewards_env_specific = self.saved_defender_eval_2_episode_rewards_env_specific
-                        eval_2_episode_steps_env_specific = self.saved_eval_2_episode_steps_env_specific
-                        eval_2_episode_flags_env_specific = self.saved_eval_2_episode_flags_env_specific
-                        eval_2_episode_flags_percentage_env_specific = self.saved_eval_2_episode_flags_percentage_env_specific
+                        train_log_dto.copy_saved_env_2(self.saved_log_dto)
 
                     avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r, avg_baseline_critical_r, \
                     avg_baseline_var_log_r = EvalUtil.eval_defender(self.env.envs[0], self)
-                    eval_defender_episode_rewards = avg_reward
-                    eval_episode_steps = avg_steps
-                    eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
-                    eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
-                    eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
-                    eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
+
+                    train_log_dto.eval_defender_episode_rewards = avg_reward
+                    train_log_dto.eval_episode_steps = avg_steps
+                    train_log_dto.eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
+                    train_log_dto.eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
+                    train_log_dto.eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
+                    train_log_dto.eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
@@ -653,110 +552,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
                     n_d = self.env.envs[0].attacker_agent_state.num_detections
                 if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
-                    self.log_metrics_attacker(iteration=self.iteration, result=self.train_result,
-                                     episode_rewards=attacker_episode_rewards,
-                                     episode_avg_loss=episode_loss_attacker,
-                                     eval=False, lr=self.attacker_lr_schedule(self.num_timesteps),
-                                     total_num_episodes=self.num_episodes_total,
-                                     episode_steps=episode_steps,
-                                     episode_flags=episode_flags, episode_flags_percentage=episode_flags_percentage,
-                                     progress_left = self._current_progress_remaining,
-                                     n_af = n_af,
-                                     n_d = n_d,
-                                     eval_episode_rewards = attacker_episode_rewards_1, eval_episode_steps=episode_steps_1,
-                                     eval_episode_flags=episode_flags_1,
-                                     eval_episode_flags_percentage=episode_flags_percentage_1,
-                                     eval_2_episode_rewards=eval_attacker_episode_rewards,
-                                     eval_2_episode_steps=eval_episode_steps,
-                                     eval_2_episode_flags=eval_episode_flags,
-                                     eval_2_episode_flags_percentage=eval_episode_flags_percentage,
-                                     train_env_specific_rewards=attacker_train_episode_rewards_env_specific,
-                                     train_env_specific_steps=train_episode_steps_env_specific,
-                                     train_env_specific_flags=train_episode_flags_env_specific,
-                                     train_env_specific_flags_percentage=train_episode_flags_percentage_env_specific,
-                                     eval_env_specific_rewards = attacker_eval_episode_rewards_env_specific,
-                                     eval_env_specific_steps=eval_episode_steps_env_specific,
-                                     eval_env_specific_flags=eval_episode_flags_env_specific,
-                                     eval_env_specific_flags_percentage=eval_episode_flags_percentage_env_specific,
-                                     eval_2_env_specific_rewards = attacker_eval_2_episode_rewards_env_specific,
-                                     eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
-                                     eval_2_env_specific_flags=eval_2_episode_flags_env_specific,
-                                     eval_2_env_specific_flags_percentage=eval_2_episode_flags_percentage_env_specific,
-                                     rollout_times=rollout_times, env_response_times=env_response_times,
-                                     action_pred_times=action_pred_times, grad_comp_times=grad_comp_times_attacker,
-                                     weight_update_times=weight_update_times_attacker
-                                     )
+                    self.log_metrics_attacker(train_log_dto=train_log_dto, eval=False)
                 if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
-                    self.log_metrics_defender(iteration=self.iteration, result=self.train_result,
-                                              episode_rewards=defender_episode_rewards,
-                                              episode_avg_loss=episode_loss_defender,
-                                              eval=False, lr=self.defender_lr_schedule(self.num_timesteps),
-                                              total_num_episodes=self.num_episodes_total,
-                                              episode_steps=episode_steps,
-                                              progress_left=self._current_progress_remaining,
-                                              eval_episode_rewards=defender_episode_rewards_1,
-                                              eval_episode_steps=episode_steps_1,
-                                              eval_2_episode_rewards=eval_defender_episode_rewards,
-                                              eval_2_episode_steps=eval_episode_steps,
-                                              train_env_specific_rewards=defender_train_episode_rewards_env_specific,
-                                              train_env_specific_steps=train_episode_steps_env_specific,
-                                              eval_env_specific_rewards=defender_eval_episode_rewards_env_specific,
-                                              eval_env_specific_steps=eval_episode_steps_env_specific,
-                                              eval_2_env_specific_rewards=defender_eval_2_episode_rewards_env_specific,
-                                              eval_2_env_specific_steps=eval_2_episode_steps_env_specific,
-                                              rollout_times=rollout_times, env_response_times=env_response_times,
-                                              action_pred_times=action_pred_times,
-                                              grad_comp_times=grad_comp_times_attacker,
-                                              weight_update_times=weight_update_times_attacker,
-                                              episode_caught=episode_caught, episode_early_stopped = episode_early_stopped,
-                                              episode_successful_intrusion=episode_successful_intrusion,
-                                              eval_episode_caught=episode_caught_1,
-                                              eval_episode_early_stopped=episode_early_stopped_1,
-                                              eval_episode_successful_intrusion=episode_successful_intrusion_1,
-                                              eval_2_episode_caught = eval_episode_caught,
-                                              eval_2_episode_early_stopped = eval_episode_early_stopped,
-                                              eval_2_episode_successful_intrusion=eval_episode_successful_intrusion,
-                                              n_af=n_af,
-                                              episode_snort_severe_baseline_rewards=episode_snort_severe_baseline_rewards,
-                                              episode_snort_warning_baseline_rewards=episode_snort_warning_baseline_rewards,
-                                              eval_episode_snort_severe_baseline_rewards=episode_snort_severe_baseline_rewards_1,
-                                              eval_episode_snort_warning_baseline_rewards=episode_snort_warning_baseline_rewards_1,
-                                              eval_2_episode_snort_severe_baseline_rewards=eval_episode_snort_severe_baseline_rewards,
-                                              eval_2_episode_snort_warning_baseline_rewards=eval_episode_snort_warning_baseline_rewards,
-                                              episode_snort_critical_baseline_rewards=episode_snort_critical_baseline_rewards,
-                                              episode_var_log_baseline_rewards=episode_var_log_baseline_rewards,
-                                              eval_episode_snort_critical_baseline_rewards=episode_snort_critical_baseline_rewards_1,
-                                              eval_episode_var_log_baseline_rewards=episode_var_log_baseline_rewards_1,
-                                              eval_2_episode_snort_critical_baseline_rewards=eval_episode_snort_critical_baseline_rewards,
-                                              eval_2_episode_var_log_baseline_rewards=eval_episode_var_log_baseline_rewards
-                                              )
+                    self.log_metrics_defender(train_log_dto=train_log_dto, eval=False)
 
-                attacker_episode_rewards = []
-                defender_episode_rewards = []
-                episode_loss_attacker = []
-                episode_loss_defender = []
-                episode_flags = []
-                episode_caught = []
-                episode_early_stopped = []
-                episode_successful_intrusion = []
-                episode_snort_severe_baseline_rewards = []
-                episode_snort_warning_baseline_rewards = []
-                episode_snort_critical_baseline_rewards = []
-                episode_var_log_baseline_rewards = []
-                episode_steps = []
-                rollout_times = []
-                env_response_times = []
-                action_pred_times = []
-                grad_comp_times_attacker = []
-                weight_update_times_attacker = []
-                grad_comp_times_defender = []
-                weight_update_times_defender = []
-                episode_flags_percentage = []
-                attacker_train_episode_rewards_env_specific = {}
-                defender_train_episode_rewards_env_specific = {}
-                train_episode_steps_env_specific = {}
-                train_episode_flags_env_specific = {}
-                train_episode_flags_percentage_env_specific = {}
+                train_log_dto.initialize()
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations
@@ -783,8 +583,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     weight_update_times_attacker.append(np.sum(weight_update_times_attacker))
             else:
                 entropy_loss_attacker, pg_loss_attacker, value_loss_attacker, lr_attacker = self.train_ar()
-            episode_loss_attacker.append(entropy_loss_attacker + pg_loss_attacker + value_loss_attacker)
-            episode_loss_defender.append(entropy_loss_defender + pg_loss_defender + value_loss_defender)
+            train_log_dto.attacker_episode_avg_loss.append(entropy_loss_attacker + pg_loss_attacker + value_loss_attacker)
+            train_log_dto.defender_episode_avg_loss.append(entropy_loss_defender + pg_loss_defender + value_loss_defender)
 
         callback.on_training_end()
 
