@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import torch
 import glob
-from gym_pycr_ctf.util.experiments_util import plotting_util
+from gym_pycr_ctf.util.plots import plotting_util_defender
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
@@ -282,7 +282,7 @@ def plot_train(avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_
     suffix = "gensim"
     ylim_rew = (-2, 10.5)
 
-    plotting_util.plot_rewards_defender(
+    plotting_util_defender.plot_rewards_defender(
         avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_rewards_stds_v1,
         avg_eval_2_rewards_data_v1, avg_eval_2_rewards_means_v1, avg_eval_2_rewards_stds_v1,
         avg_train_snort_severe_baseline_data_v1, avg_train_snort_severe_baseline_means_v1, avg_train_snort_severe_baseline_stds_v1,
@@ -315,7 +315,7 @@ def plot_train(avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_
             avg_eval_2_early_stopping_means_v1[i] = 0
             avg_eval_2_intrusion_means_v1[i] = 0
 
-    plotting_util.plot_caught_stopped_intruded(
+    plotting_util_defender.plot_caught_stopped_intruded(
         avg_train_caught_frac_data_v1, avg_train_caught_frac_means_v1, avg_train_caught_frac_stds_v1,
         avg_train_early_stopping_frac_data_v1, avg_train_early_stopping_means_v1, avg_train_early_stopping_stds_v1,
         avg_train_intrusion_frac_data_v1, avg_train_intrusion_means_v1, avg_train_intrusion_stds_v1,

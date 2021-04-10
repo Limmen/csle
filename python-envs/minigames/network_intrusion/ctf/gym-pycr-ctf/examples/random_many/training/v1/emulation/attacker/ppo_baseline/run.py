@@ -4,7 +4,7 @@ from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.util.experiments_util import plotting_util
+from gym_pycr_ctf.util.plots import plotting_util_basic
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     # Plot
     if args.plotonly:
         if args.csvfile is not None:
-            plotting_util.plot_csv_files([args.csvfile],
+            plotting_util_basic.plot_csv_files([args.csvfile],
                                         config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
         elif args.resultdirs is not None:
             rds = args.resultdirs.split(",")
@@ -201,24 +201,24 @@ if __name__ == '__main__':
                     # plotting_util.plot_csv_files([p], config.output_dir + "/" + rd + "/plots/"
                     #                              + str(config.random_seed) + "/")
 
-            plotting_util.plot_two_csv_files(total_files, config.output_dir + "/")
+            plotting_util_basic.plot_two_csv_files(total_files, config.output_dir + "/")
 
         elif config.run_many:
             csv_files = []
             for seed in config.random_seeds:
                 p = glob.glob(config.output_dir + "/results/data/" + str(seed) + "/*_train.csv")[0]
                 csv_files.append(p)
-            plotting_util.plot_csv_files(csv_files, config.output_dir + "/results/plots/")
+            plotting_util_basic.plot_csv_files(csv_files, config.output_dir + "/results/plots/")
         else:
             p = glob.glob(config.output_dir + "/results/data/" + str(config.random_seed) + "/*_train.csv")[0]
-            plotting_util.plot_csv_files([p], config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+            plotting_util_basic.plot_csv_files([p], config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
 
     # Run experiment
     else:
         if not config.run_many:
             train_csv_path, eval_csv_path = util.run_experiment(config, config.random_seed)
             if train_csv_path is not None and not train_csv_path == "":
-                plotting_util.plot_csv_files([train_csv_path], config.output_dir + "/results/plots/")
+                plotting_util_basic.plot_csv_files([train_csv_path], config.output_dir + "/results/plots/")
         else:
             train_csv_paths = []
             eval_csv_paths = []
@@ -233,4 +233,4 @@ if __name__ == '__main__':
                 train_csv_paths.append(train_csv_path)
                 eval_csv_paths.append(eval_csv_path)
 
-            plotting_util.plot_csv_files(train_csv_paths, config.output_dir + "/results/plots/")
+            plotting_util_basic.plot_csv_files(train_csv_paths, config.output_dir + "/results/plots/")
