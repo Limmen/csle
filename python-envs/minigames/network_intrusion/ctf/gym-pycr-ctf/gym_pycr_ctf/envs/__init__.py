@@ -63,6 +63,11 @@ from gym_pycr_ctf.envs.derived_envs.level5.emulation.pycr_ctf_level5_emulation_e
 
 # ------ Level 6 ----- #
 
+from gym_pycr_ctf.envs.derived_envs.level6.emulation.pycr_ctf_level6_emulation_env import PyCRCTFLevel6EmulationBaseEnv, \
+    PyCRCTFLevel6Emulation1Env, PyCRCTFLevel6Emulation2Env, PyCRCTFLevel6Emulation3Env, PyCRCTFLevel6Emulation4Env, \
+    PyCRCTFLevel6EmulationWithCosts1Env, PyCRCTFLevel6EmulationWithCosts2Env, PyCRCTFLevel6EmulationWithCosts3Env, \
+    PyCRCTFLevel6EmulationWithCosts4Env
+
 # ------ Level 7 ----- #
 
 from gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_env import PyCRCTFLevel7EmulationBaseEnv, \
@@ -70,13 +75,18 @@ from gym_pycr_ctf.envs.derived_envs.level7.emulation.pycr_ctf_level7_emulation_e
     PyCRCTFLevel7EmulationWithCosts1Env, PyCRCTFLevel7EmulationWithCosts2Env, PyCRCTFLevel7EmulationWithCosts3Env, \
     PyCRCTFLevel7EmulationWithCosts4Env
 
-
 # ------ Level 8 ----- #
 
 from gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_env import PyCRCTFLevel8EmulationBaseEnv, \
     PyCRCTFLevel8Emulation1Env, PyCRCTFLevel8Emulation2Env, PyCRCTFLevel8Emulation3Env, PyCRCTFLevel8Emulation4Env, \
     PyCRCTFLevel8EmulationWithCosts1Env, PyCRCTFLevel8EmulationWithCosts2Env, PyCRCTFLevel8EmulationWithCosts3Env, \
     PyCRCTFLevel8EmulationWithCosts4Env
+
+# ------ Level 9 ----- #
+from gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env import PyCRCTFLevel9EmulationBaseEnv, \
+    PyCRCTFLevel9Emulation1Env, PyCRCTFLevel9Emulation2Env, PyCRCTFLevel9Emulation3Env, PyCRCTFLevel9Emulation4Env, \
+    PyCRCTFLevel9EmulationWithCosts1Env, PyCRCTFLevel9EmulationWithCosts2Env, PyCRCTFLevel9EmulationWithCosts3Env, \
+    PyCRCTFLevel9EmulationWithCosts4Env
 
 # ------ Random ----- #
 

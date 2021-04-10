@@ -1,0 +1,431 @@
+{
+    "py/object": "gym_pycr_ctf.dao.container_config.users_config.UsersConfig",
+    "users": [
+        {
+            "ip": "172.18.9.191",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "agent",
+                        "agent",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.21",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "admin",
+                        "admin31151x",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "test",
+                        "qwerty",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "oracle",
+                        "abc123",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.10",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "admin",
+                        "admin1235912",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "jessica",
+                        "water",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.2",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "admin",
+                        "test32121",
+                        false
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "user1",
+                        "123123",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.3",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "admin",
+                        "admin",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "john",
+                        "doe",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "vagrant",
+                        "test_pw1",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.54",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "trent",
+                        "xe125@41!341",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.101",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "zidane",
+                        "1b12ha9",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.7",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "zlatan",
+                        "pi12195e",
+                        true
+                    ]
+                },
+                {
+                    "py/tuple": [
+                        "kennedy",
+                        "eul1145x",
+                        false
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.4",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user1",
+                        "1235121",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.5",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user2",
+                        "1235121",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.6",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user3",
+                        "1bsae235121",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.8",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user4",
+                        "1bsae235121",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.9",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user5",
+                        "1gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.178",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user6",
+                        "1gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.11",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user7",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.12",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user8",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.13",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user9",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.14",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user10",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.15",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user11",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.16",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user12",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.17",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user13",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.18",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user14",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.19",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user15",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.20",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user16",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.28",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user17",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.22",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user18",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.23",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user19",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.24",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user20",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        },
+        {
+            "ip": "172.18.9.25",
+            "py/object": "gym_pycr_ctf.dao.container_config.node_users_config.NodeUsersConfig",
+            "users": [
+                {
+                    "py/tuple": [
+                        "user20",
+                        "081gxq2",
+                        true
+                    ]
+                }
+            ]
+        }
+    ]
+}

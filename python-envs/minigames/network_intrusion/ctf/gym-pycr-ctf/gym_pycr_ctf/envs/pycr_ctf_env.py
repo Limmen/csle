@@ -217,6 +217,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
+        if isinstance(action_id, int):
+            action_id = (action_id, None)
+            print("[WARNING]: This is a multi-agent environment where the input should be "
+                  "(attacker_action, defender_action)")
         # Initialization
         opponent_type = None
         if action_id is not None and len(action_id) > 2:
