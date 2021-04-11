@@ -464,6 +464,19 @@ class EmulationUtil:
         return users
 
     @staticmethod
+    def is_connection_active(conn):
+        """
+        Checks if a given connection is active or not
+
+        :param conn: the connection to check
+        :return: True if active, otherwise False
+        """
+        if conn is not None and conn.get_transport() is not None:
+            return conn.get_transport().is_active()
+        else:
+            return False
+
+    @staticmethod
     def get_latest_alert_ts(env_config: EnvConfig) -> float:
         """
         Gets the latest timestamp in the snort alerts log
@@ -473,6 +486,11 @@ class EmulationUtil:
         """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
+        if not EmulationUtil.is_connection_active(env_config.emulation_config.router_conn):
+            print("Router connection not established, reconnecting..")
+            if not EmulationUtil.is_connection_active(env_config.emulation_config.agent_conn):
+                env_config.emulation_config.connect_agent()
+            env_config.emulation_config.connect_router()
         stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
             constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
         alerts = []

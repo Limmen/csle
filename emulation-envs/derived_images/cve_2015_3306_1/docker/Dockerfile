@@ -10,5 +10,5 @@ RUN chmod 777 /start.sh
 ENTRYPOINT ["/usr/bin/env"]
 
 # CMD to run when container starts, starts the services (e.g. Samba)
-CMD ["bash", "/start.sh"]
-#CMD /start.sh
+#CMD ["bash", "/start.sh"]
+CMD ["/start.sh"]

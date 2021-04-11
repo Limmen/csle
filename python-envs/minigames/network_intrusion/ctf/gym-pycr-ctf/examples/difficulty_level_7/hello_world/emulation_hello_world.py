@@ -26,7 +26,6 @@ def test_env(env_name : str, num_steps : int):
     tot_rew = 0
     tried_actions = []
     for i in range(num_steps):
-        print("i:{}".format(i))
         legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
         if len(legal_actions) == 0:
             print("no legal actions, {}".format(tried_actions))
@@ -42,17 +41,27 @@ def test_env(env_name : str, num_steps : int):
                 EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config)))
             print("done?:{}".format(done))
 
-        action = np.random.choice(legal_actions)
+        attacker_action = np.random.choice(legal_actions)
+        action = (attacker_action, None)
+        #print("i:{}, action:{}".format(i, attacker_action))
         # if i < 1:
         #     action = 21
         # else:
         #     action = 40
-        env.render()
+        #env.render()
+        #print("step")
         obs, reward, done, info = env.step(action)
-        tried_actions.append(action)
-        tot_rew += reward
+        tried_actions.append(attacker_action)
+        #print("trajectory:{}".format(tried_actions))
+        attacker_reward, defender_reward = reward
+        tot_rew += attacker_reward
+        found_flags = set()
+        for node in env.env_state.attacker_obs_state.machines:
+            found_flags = found_flags.union(node.flags_found)
         if EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config) and not done:
-            print("All flags but done")
+            print("All flags but not done")
+            print("action:{}, collected flags:{}, {}".format(attacker_action, len(found_flags),
+                                                             list(map(lambda x: str(x), found_flags))))
         if done:
             print("tot_rew:{}".format(tot_rew))
             tot_rew = 0
@@ -73,3 +82,5 @@ def test_all():
 
 if __name__ == '__main__':
     test_all()
+
+# Test case: 39, 13, 1, 37, 44, 45, 50, 44, 45, 65, 44, 45, 80, 44, 45, 92, 44, 45, 110, 44, 45, 121, 44, 45, 22, 44, 133, 45, 16, 44, 140, 45

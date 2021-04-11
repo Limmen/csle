@@ -27,6 +27,7 @@ from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 
+
 class PyCRCTFEnv(gym.Env, ABC):
     """
     Abstract OpenAI Gym Env for the PyCr CTF minigame
@@ -217,7 +218,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param action_id: the action to take
         :return: (obs, reward, done, info)
         """
-        if isinstance(action_id, int):
+        if isinstance(action_id, int) or isinstance(action_id, np.int64):
             action_id = (action_id, None)
             print("[WARNING]: This is a multi-agent environment where the input should be "
                   "(attacker_action, defender_action)")
@@ -915,7 +916,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         :return: None
         """
-        from gym_pycr_ctf.rendering import Viewer
+        from gym_pycr_ctf.rendering.viewer import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path

@@ -219,7 +219,8 @@ class EnvState:
                 for cr in m.backdoor_credentials:
                     self.attacker_cached_backdoor_credentials[(m.ip, cr.username, cr.pw)] = cr
         self.attacker_obs_state = AttackerObservationState(num_machines=self.num_nodes, num_ports=self.num_ports,
-                                                           num_vuln=self.num_vuln, num_sh=self.num_sh, num_flags=self.num_flags,
+                                                           num_vuln=self.num_vuln, num_sh=self.num_sh,
+                                                           num_flags=self.num_flags,
                                                            catched_flags=0, agent_reachable=agent_reachable)
         self.attacker_obs_state.last_attacker_action = None
         self.attacker_obs_state.undetected_intrusions_steps = 0

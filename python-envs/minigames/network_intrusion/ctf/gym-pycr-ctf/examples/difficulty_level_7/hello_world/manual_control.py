@@ -24,10 +24,12 @@ def manual_control():
 
     env = gym.make("pycr-ctf-level-7-emulation-v1", env_config=None, emulation_config=emulation_config)
 
-    ManualAttackerAgent(env=env, env_config=env.env_config)
+    ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
 
 
 
 
 if __name__ == '__main__':
     manual_control()
+
+# Test case: 39, 13, 1, 37, 44, 45, 50, 44, 45, 65, 44, 45, 80, 44, 45, 92, 44, 45, 110, 44, 45, 121, 44, 45, 22, 44, 133, 45, 16, 44, 140, 45

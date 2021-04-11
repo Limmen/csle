@@ -1,5 +1,4 @@
 from typing import Tuple
-from typing import List
 import numpy as np
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
@@ -8,9 +7,7 @@ from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
 
 class ReconSimulatorUtil:
@@ -20,7 +17,8 @@ class ReconSimulatorUtil:
 
     @staticmethod
     def simulate_port_vuln_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float,
-                                       protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> Tuple[EnvState, int]:
+                                       protocol=TransportProtocol.TCP, vuln_scan : bool = False) \
+            -> Tuple[EnvState, int]:
         """
         Helper function for simulating port-scan and vuln-scan actions
 

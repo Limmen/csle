@@ -61,6 +61,9 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
      - [x] Custom system identifification algorithm to learn model of emulation
      - [x] Custom domain randomization algorithm          
 
+## Installation
+TODO
+
 ## Quickstart
 TODO
 

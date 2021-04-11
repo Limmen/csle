@@ -66,6 +66,7 @@ class TrafficGenerator:
         :return: None
         """
         for node in traffic_config.node_traffic_configs:
+            print("creating traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)

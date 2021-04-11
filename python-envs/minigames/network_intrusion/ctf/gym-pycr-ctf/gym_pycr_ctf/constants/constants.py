@@ -371,6 +371,8 @@ class SAMBA:
     PORT=445
     ALREADY_EXISTS = "already exists"
     ERROR = "Error"
+    AUTH_OK = "Authentication ok"
+    VERIFYING = "Veryfying"
 
 class CVE_2010_0426:
     SERVICE_NAME = "sudoedit"

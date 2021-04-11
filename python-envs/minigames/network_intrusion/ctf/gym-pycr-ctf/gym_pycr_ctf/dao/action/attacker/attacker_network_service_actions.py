@@ -3,6 +3,7 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionOutcome
 
+
 class AttackerNetworkServiceActions:
     """
     Class that implements network-service actions for the attacker
@@ -21,6 +22,6 @@ class AttackerNetworkServiceActions:
         cmd = []
         return AttackerAction(id=id, name="Network service login", cmd=cmd,
                               type=AttackerActionType.POST_EXPLOIT,
-                              descr="Uses kown credentials to login to network services on a server",
+                              descr="Uses known credentials to login to network services on a server",
                               cost=0.01, noise=0.01, index=index,
                               ip=ip, subnet=False, action_outcome=AttackerActionOutcome.LOGIN)

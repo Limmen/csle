@@ -1,12 +1,23 @@
+from typing import Tuple
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
 class FindPiStar:
+    """
+    Class with utility methods for finding pi-star for simple environments, can be used to
+    evaluate learning performance
+    """
 
     @staticmethod
-    def brute_force(env_config: EnvConfig, env):
-        print("brute")
+    def brute_force(env_config: EnvConfig, env) -> Tuple[list, float]:
+        """
+        Attempts to compute the optimal policy for the attacker using brute-force search
+
+        :param env_config: the environment configuration
+        :param env: the environment to compute pi-star for
+        :return: (optimal tau, optimal r)
+        """
         shortest_paths = env_config.network_conf.shortest_paths()
         if len(shortest_paths) == 0:
             return [], -1
@@ -34,6 +45,18 @@ class FindPiStar:
 
     @staticmethod
     def _breach_node(path, current_node, remaining_nodes, rew, env, env_config, pivot_actions):
+        """
+        Helper function to compute pi-star
+
+        :param path: the current path
+        :param current_node: the current node
+        :param remaining_nodes: remaining nodes
+        :param rew: the current reward
+        :param env: the env
+        :param env_config: the environment configuration
+        :param pivot_actions: list of actions that can be used for pivoting
+        :return: List of (pi_star[0], pi_star[1])
+        """
         paths = []
         shell_access = False
         old_state = env.env_state.copy()
@@ -148,6 +171,12 @@ class FindPiStar:
 
     @staticmethod
     def pivot_actions(env_config):
+        """
+        Helper function that returns the actions that are used for pivoting
+
+        :param env_config: the envrironment configuration
+        :return: list of action ids for pivoting
+        """
         pivot_actions = []
 
         for a in env_config.attacker_action_conf.actions:
@@ -169,8 +198,13 @@ class FindPiStar:
 
 
     @staticmethod
-    def upper_bound_pi(env_config):
-        #shortest_path = env_config.network_conf.shortest_paths()[0][0]
+    def upper_bound_pi(env_config) -> float:
+        """
+        Returns an upper bound reward for an environment
+
+        :param env_config: the environment configuration
+        :return: the upper bound reward
+        """
         num_flags = len(env_config.network_conf.flags_lookup)
         reward = env_config.flag_found_reward_mult*num_flags
         reward = reward + env_config.all_flags_reward

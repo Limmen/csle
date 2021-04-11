@@ -7,6 +7,46 @@ from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGe
 
 def default_traffic_generators() -> TrafficConfig:
     traffic_generators = [
+        NodeTrafficConfig(ip="172.18.3.254",
+                          commands=[
+                              "timeout 120 sudo nmap -sS -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sP --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sU -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sT -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sF -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sN -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sX -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -O --osscan-guess --max-os-tries 1 --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap --script=http-grep --min-rate 100000 --max-retries 1 -T5 -n  172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 120 sudo nmap -sv -sC --script=finger --min-rate 100000 --max-retries 1 -T5 -n 172.18.3.0/24 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.3.2 > /dev/null 2>&1 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.3.2:80 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.3.3 > /dev/null 2>&1 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.3.3 > /dev/null 2>&1",
+                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.3.3 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.3.21 > /dev/null 2>&1",
+                              "timeout 5 snmpwalk -v2c 172.18.3.21 -c pycr_ctf1234 > /dev/null 2>&1",
+                              "timeout 10 /irc_login_test.sh 172.18.3.21 > /dev/null 2>&1",
+                              "timeout 5 psql -h 172.18.3.21 -p 5432 > /dev/null 2>&1",
+                              "timeout 5 ftp 172.18.3.79 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.3.79 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.3.79:8080 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.3.2 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.3.3 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.3.21 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.3.79 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.3.10 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.3.2 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.3.3 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.3.21 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.3.79 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.3.10 > /dev/null 2>&1"
+                          ],
+                          jumphosts=[],
+                          target_hosts=[
+                              "172.18.3.2", "172.18.3.3", "172.18.3.21",
+                              "172.18.3.79", "172.18.3.10"
+                          ]),
         NodeTrafficConfig(ip="172.18.3.191",
                           commands=[],
                           jumphosts=[

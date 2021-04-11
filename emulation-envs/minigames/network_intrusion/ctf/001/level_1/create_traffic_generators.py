@@ -36,11 +36,11 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 15 ping 172.18.1.21 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.1.79 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.1.10 > /dev/null 2>&1",
-                              "traceroute 25 ping 172.18.1.2 > /dev/null 2>&1",
-                              "traceroute 25 ping 172.18.1.3 > /dev/null 2>&1",
-                              "traceroute 25 ping 172.18.1.21 > /dev/null 2>&1",
-                              "traceroute 25 ping 172.18.1.79 > /dev/null 2>&1",
-                              "traceroute 25 ping 172.18.1.10 > /dev/null 2>&1"
+                              "timeout 25 traceroute 172.18.1.2 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.1.3 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.1.21 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.1.79 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.1.10 > /dev/null 2>&1"
                           ],
                           jumphosts=[],
                           target_hosts=[

@@ -3,7 +3,6 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
 
 class DefenderStoppingSimulator:
@@ -24,12 +23,6 @@ class DefenderStoppingSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
-
-
-        # if attacker_action is not None and attacker_action.id != AttackerActionId.CONTINUE:
-        #     s_prime.defender_obs_state.caught_attacker = True
-        # else:
-        #     s_prime.defender_obs_state.stopped = True
 
         if s_prime.attacker_obs_state.ongoing_intrusion():
             s_prime.attacker_obs_state.undetected_intrusions_steps += 1

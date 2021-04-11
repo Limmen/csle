@@ -123,11 +123,11 @@ class AttackerMachineObservationState:
         m_copy.cve_vulns = copy.deepcopy(self.cve_vulns)
         m_copy.osvdb_vulns = copy.deepcopy(self.osvdb_vulns)
         m_copy.shell_access = self.shell_access
-        m_copy.shell_access_credentials = self.shell_access_credentials
-        m_copy.backdoor_credentials = self.backdoor_credentials
+        m_copy.shell_access_credentials = copy.deepcopy(self.shell_access_credentials)
+        m_copy.backdoor_credentials = copy.deepcopy(self.backdoor_credentials)
         m_copy.logged_in = self.logged_in
         m_copy.root = self.root
-        m_copy.flags_found = self.flags_found
+        m_copy.flags_found = copy.deepcopy(self.flags_found)
         m_copy.filesystem_searched = self.filesystem_searched
         m_copy.untried_credentials = self.untried_credentials
         m_copy.ssh_connections = self.ssh_connections

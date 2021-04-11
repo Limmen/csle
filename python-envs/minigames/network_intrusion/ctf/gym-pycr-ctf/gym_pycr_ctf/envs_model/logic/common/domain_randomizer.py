@@ -14,6 +14,9 @@ from gym_pycr_ctf.envs_model.config.domain_randomization.base_randomization_spac
 from gym_pycr_ctf.dao.network.flag import Flag
 
 class DomainRandomizer:
+    """
+    Utility class for domain randomization to improve generalization performance
+    """
 
     @staticmethod
     def generate_randomization_space(network_confs: List[NetworkConfig], min_num_nodes : int=4,
@@ -21,6 +24,22 @@ class DomainRandomizer:
                                      min_num_users: int = 1, max_num_users : int = 1,
                                      services = None, vulnerabilities = None, os = None,
                                      use_base_randomization: bool = False) -> RandomizationSpace:
+        """
+        Creates a randomization space according to the given parameters
+
+        :param network_confs: the network configurations of the environment
+        :param min_num_nodes: the minimum number of nodes in a sampled MDP
+        :param max_num_nodes: the maximum number of nodes in a sampled MDP
+        :param min_num_flags: the minimum number of flags in a sampled MDP
+        :param max_num_flags: the maximum number of flags in a sampled MDP
+        :param min_num_users: the minimum number of users in a sampled MDP
+        :param max_num_users: the maximum number of users in a sampled MDP
+        :param services: the list of possible services to include in the sampled MDP
+        :param vulnerabilities: the list of possible vulnerabilities to include in the sampled MDP
+        :param os: the list of possible operating systems to include in the sampled MDP
+        :param use_base_randomization: boolean flag whether to use a base set of services/vulnerabilities
+        :return: the created randomization space
+        """
         if services is None:
             services = set()
         if vulnerabilities is None:
@@ -79,12 +98,20 @@ class DomainRandomizer:
                                      min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
                                      min_num_flags=min_num_flags, max_num_flags=max_num_flags,
                                      min_num_users=min_num_users, max_num_users=max_num_users)
-        # print("randomization space created, num nodes:{}, num services:{}, num_vulns:{}, os:{}".format(max_num_nodes, len(services), len(vulnerabilities),
-        #                                                                                                len(os)))
         return r_space
 
     @staticmethod
-    def randomize(subnet_prefix: str, network_ids: List, r_space: RandomizationSpace, env_config: EnvConfig) -> NetworkConfig:
+    def randomize(subnet_prefix: str, network_ids: List, r_space: RandomizationSpace, env_config: EnvConfig) \
+            -> NetworkConfig:
+        """
+        Randomizes a given MDP using a specified randomization space
+
+        :param subnet_prefix: the subnet prefix
+        :param network_ids: the list of network ids to consider for randomization
+        :param r_space: the randomization space
+        :param env_config: the environment config
+        :return: a new randomized network configuration
+        """
         subnet_id = network_ids[random.randint(0, len(network_ids) - 1)]
         num_nodes = random.randint(r_space.min_num_nodes, r_space.max_num_nodes)
         subnet_prefix = subnet_prefix + str(subnet_id) + "."
@@ -154,15 +181,10 @@ class DomainRandomizer:
         env_config.ids_router=ids_router
         env_config.num_flags = len(flags_lookup)
         env_config.blacklist_ips = [subnet_prefix + ".1"]
-        #env_config.num_nodes = len(randomized_nodes)
         for a in env_config.attacker_action_conf.actions:
             if a.subnet:
                 a.ip = subnet_mask
         return randomized_network_conf, env_config
-
-    @staticmethod
-    def perturb(network_conf: NetworkConfig):
-        pass
 
 
 

@@ -13,4 +13,4 @@ RUN service ssh start
 RUN service named start
 
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
-CMD /start.sh
+CMD ["/start.sh"]

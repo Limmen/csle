@@ -14,13 +14,32 @@ from gym_pycr_ctf.dao.network.network_service import NetworkService
 from gym_pycr_ctf.dao.network.vulnerability import Vulnerability
 import gym_pycr_ctf.constants.constants as constants
 
+
 class NodeRandomizer:
+    """
+    Utility class for randomizing a given node in the infrastructure
+    """
 
     @staticmethod
     def randomize(ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
                   flags_config: NodeFlagsConfig, vulns_config: NodeVulnerabilityConfig,
                   r_space: RandomizationSpace,
-                  router: bool = False, agent: bool = False, gateway: bool = False):
+                  router: bool = False, agent: bool = False, gateway: bool = False) -> Node:
+        """
+        Randomizes a node configuration using the specified parameters and configuration space
+
+        :param ip: the ip of the node
+        :param reachable: the list of reachable nodes
+        :param id: the id of the node
+        :param users_config: the configuration of the users
+        :param flags_config: the configuration of the flags
+        :param vulns_config: the configuration of the vulnerabilities
+        :param r_space: the randomization space
+        :param router: the router
+        :param agent: the agent
+        :param gateway: the gateway
+        :return: the randomized node
+        """
         id = id
         ip_id = int(ip.rsplit(".", 1)[-1])
         node = NodeRandomizer.randomize_server(ip=ip, reachable=reachable, id=id, users_config=users_config,
@@ -31,20 +50,26 @@ class NodeRandomizer:
         if router:
             node.type == NodeType.ROUTER
         return node
-        # if router:
-        #     pass
-        # elif agent:
-        #     pass
-        # else:
-        #     return NodeRandomizer.randomize_server(ip=ip, reachable=reachable, id=id, users_config=users_config,
-        #                                     flags_config=flags_config, vulns_config=vulns_config, r_space=r_space,
-        #                                     gateway=gateway)
 
     @staticmethod
     def randomize_server(ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
                          flags_config: NodeFlagsConfig, vulns_config: NodeVulnerabilityConfig,
                          r_space: RandomizationSpace,
                          gateway: bool = False, router: bool = False) -> Node:
+        """
+        Randomizes a server node according to the specified parameters and randomization space
+
+        :param ip: the ip of the node
+        :param reachable: the list of reachable nodes
+        :param id: the id of the node
+        :param users_config: the users configuration of the node
+        :param flags_config: the flags configuration of the node
+        :param vulns_config: the vulnerability configuration of the node
+        :param r_space: the randomization space
+        :param gateway: the gateway
+        :param router: the router
+        :return: The randomized node
+        """
         type = NodeType.SERVER
         flags = NodeRandomizer.parse_flags(flags_conf=flags_config)
         vulns, n_serv, creds, n_roots = NodeRandomizer.generate_required_vulns(vuln_conf=vulns_config, gateway=gateway)
@@ -74,11 +99,13 @@ class NodeRandomizer:
         return node
 
     @staticmethod
-    def perturb(network_conf: NetworkConfig):
-        pass
-
-    @staticmethod
     def parse_flags(flags_conf: NodeFlagsConfig) -> List[Flag]:
+        """
+        Parses the flag configuration
+
+        :param flags_conf:
+        :return: a list of the flags
+        """
         flags = []
         if flags_conf is not None:
             for flag in flags_conf.flags:
@@ -89,6 +116,12 @@ class NodeRandomizer:
 
     @staticmethod
     def parse_credentials(users_conf: NodeUsersConfig) -> Tuple[List[Credential], List[str]]:
+        """
+        Parses the credential configuration
+
+        :param users_conf: the user configuration
+        :return: (list of credentials, list of users)
+        """
         credentials = []
         root_usernames = []
         if users_conf is not None:
@@ -101,18 +134,35 @@ class NodeRandomizer:
         return credentials, root_usernames
 
     @staticmethod
-    def random_vulnerabilities(vulns: List[Vulnerability], num_vulns: int, blacklist_vulnerabilities: List[str]) -> List[Vulnerability]:
+    def random_vulnerabilities(vulns: List[Vulnerability], num_vulns: int, blacklist_vulnerabilities: List[str]) \
+            -> List[Vulnerability]:
+        """
+        Randomizes the set of vulnerabilities
+
+        :param vulns: the list of vulnerabilities
+        :param num_vulns: the number of vulnerabilities
+        :param blacklist_vulnerabilities: blacklisted vulnerabilities
+        :return: the randomized lsit of vulnerabilities
+        """
         vulns = list(filter(lambda x: not x.name in blacklist_vulnerabilities, vulns))
         if num_vulns > len(vulns):
             sample_vulns = vulns
         else:
             sample_vulns = random.sample(vulns, num_vulns)
-        vulns = list(map(lambda x: x.copy(), sample_vulns))
 
         return list(map(lambda x: x.copy(), sample_vulns))
 
     @staticmethod
-    def random_services(services: List[NetworkService], num_services: int, blacklist_services: List[str]) -> List[NetworkService]:
+    def random_services(services: List[NetworkService], num_services: int, blacklist_services: List[str]) \
+            -> List[NetworkService]:
+        """
+        Randomizes the set of services
+
+        :param services: the list of services
+        :param num_services: the number of services
+        :param blacklist_services: the blacklisted services
+        :return: the randomized list of services
+        """
         services = list(filter(lambda x: not x.name in blacklist_services, services))
         if num_services > len(services):
             sample_services = services
@@ -122,12 +172,26 @@ class NodeRandomizer:
         return list(map(lambda x: x.copy(), sample_services))
 
     @staticmethod
-    def random_os(os: List[str]):
+    def random_os(os: List[str]) -> str:
+        """
+        Randomizes the operating system
+
+        :param os: list of operating systems
+        :return: the randomized operating system
+        """
         r_idx = random.randint(0, len(os)-1)
         return os[r_idx]
 
     @staticmethod
-    def generate_required_vulns(vuln_conf: NodeVulnerabilityConfig, gateway):
+    def generate_required_vulns(vuln_conf: NodeVulnerabilityConfig, gateway) \
+            -> Tuple[List[NodeVulnerabilityConfig], List[NetworkService], List[Credential], List[str]]:
+        """
+        Generates the configuration of the required vulnerabilities
+
+        :param vuln_conf: the vulnerability configuration
+        :param gateway: the gateway of the node
+        :return: vulnerabilities, services, credentials, root_usernames
+        """
         if vuln_conf is not None:
             pw_vuln_services, gw_pw_vuln_services = NetworkService.pw_vuln_services()
             if vuln_conf.vuln_type == VulnType.WEAK_PW:

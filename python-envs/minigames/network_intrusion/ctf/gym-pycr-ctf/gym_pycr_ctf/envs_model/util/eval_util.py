@@ -1,12 +1,22 @@
+from typing import Tuple, List
 import torch
 import numpy as np
+
 
 class EvalUtil:
     """
     Utility class for evaluating policies
     """
     @staticmethod
-    def eval_defender(env, model):
+    def eval_defender(env, model) -> Tuple[float, float, float, float, float, float]:
+        """
+        Evaluates a given model in the given environment
+
+        :param env: the environment
+        :param model: the model
+        :return: (avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r,
+                  avg_baseline_critical_r, avg_baseline_var_log_r)
+        """
         tau_1, tau_2, tau_3 = EvalUtil.eval_taus()
         rewards = []
         steps = []
@@ -73,7 +83,12 @@ class EvalUtil:
 
 
     @staticmethod
-    def eval_taus():
+    def eval_taus() -> List[float]:
+        """
+        Returns a list of trajectories to use for evaluation
+
+        :return: list of trajectories with observations
+        """
         tau_1 = [
             [0., 0., 0., 0., 0., 0., 0., 0., 0.],
             [2., 4., 0., 2., 2., 4., 0., 2., 1.],
@@ -144,7 +159,13 @@ class EvalUtil:
         return tau_1, tau_2, tau_3
 
     @staticmethod
-    def compute_reward(actions):
+    def compute_reward(actions) -> float:
+        """
+        Utility function for computing the reward of a sequence of actions of the defender
+
+        :param actions: the sequence of actions of the defender
+        :return: the reward
+        """
         stopping_idx = -1
         for i in range(len(actions)):
             if actions[i] == 0:
@@ -159,7 +180,13 @@ class EvalUtil:
             return 10.0 / max(1, stopping_idx - 5)
 
     @staticmethod
-    def compute_steps(actions):
+    def compute_steps(actions) -> int:
+        """
+        Utility function for computing the steps in the environment of a sequence of actions of the defender
+
+        :param actions: the sequence of actions of the defender
+        :return: The number of steps
+        """
         stopping_idx = -1
         for i in range(len(actions)):
             if actions[i] == 0:
@@ -171,7 +198,14 @@ class EvalUtil:
             return stopping_idx
 
     @staticmethod
-    def compute_snort_warning_baseline(tau, env_config):
+    def compute_snort_warning_baseline(tau, env_config) -> float:
+        """
+        Utility function for computing the reward of the snort warning baseline
+
+        :param tau: the trajectory of observations
+        :param env_config: the environment configuration
+        :return: the reward
+        """
         stopping_thresh = env_config.snort_warning_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
@@ -187,7 +221,14 @@ class EvalUtil:
             return 10.0 / max(1, stopping_idx - 5)
 
     @staticmethod
-    def compute_snort_severe_baseline(tau, env_config):
+    def compute_snort_severe_baseline(tau, env_config) -> float:
+        """
+        Utility function for computing the reward of the snort severe baseline
+
+        :param tau: the trajectory
+        :param env_config: the environment configuration
+        :return: the reward
+        """
         stopping_thresh = env_config.snort_severe_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
@@ -203,7 +244,14 @@ class EvalUtil:
             return 10.0 / max(1, stopping_idx - 5)
 
     @staticmethod
-    def compute_snort_critical_baseline(tau, env_config):
+    def compute_snort_critical_baseline(tau, env_config) -> float:
+        """
+        Utility function for computing the reward of the snort critical baseline
+
+        :param tau: the trajectory
+        :param env_config: the environment configuration
+        :return: the reward
+        """
         stopping_thresh = env_config.snort_critical_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
@@ -219,7 +267,15 @@ class EvalUtil:
             return 10.0 / max(1, stopping_idx - 5)
 
     @staticmethod
-    def predict(model, obs_tensor, env):
+    def predict(model, obs_tensor, env) -> Tuple[List[int], List[float]]:
+        """
+        Utility function for predicting the next action given a model, an environment, and a observation
+
+        :param model: the model
+        :param obs_tensor: the observation from the environment
+        :param env: the environment
+        :return: the predicted action and values
+        """
         actions, values = model.predict(observation=obs_tensor, deterministic=True,
                                         state=obs_tensor, attacker=False,
                                         infos={},

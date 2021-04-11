@@ -6,3 +6,4 @@ USER root
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker/sshd_config /etc/ssh/sshd_config
 RUN service ssh start
+

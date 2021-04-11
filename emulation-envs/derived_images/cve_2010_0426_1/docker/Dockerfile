@@ -7,4 +7,4 @@ ADD docker/start.sh /start.sh
 RUN chmod 777 /start.sh
 
 # CMD to run when container starts, starts the services
-CMD /start.sh
+CMD ["/start.sh"]

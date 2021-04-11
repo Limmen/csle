@@ -2,7 +2,7 @@
 Manual defender agent
 """
 try:
-    from gym_pycr_ctf.rendering import Viewer
+    from gym_pycr_ctf.rendering.viewer import Viewer
 except:
     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
