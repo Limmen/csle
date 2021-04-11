@@ -19,13 +19,13 @@ class ExploreThread(threading.Thread):
         # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
         #                                agent_username="agent", agent_pw="agent", server_connection=True,
         #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-        #                                server_username="kim")
+        #                                server_username="kim", port_forward_next_port=self.port_start)
         # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
         #                                agent_username="agent", agent_pw="agent", server_connection=True,
         #                                server_private_key_file="/home/kim/.ssh/id_rsa",
-        #                                server_username="kim")
+        #                                server_username="kim", port_forward_next_port=self.port_start)
         emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                           server_connection=False)
+                                           server_connection=False, port_forward_next_port=self.port_start)
         env = gym.make(self.env_name, env_config=None, emulation_config=emulation_config)
         env.env_config.max_episode_length = 1000000000
         env.reset()
