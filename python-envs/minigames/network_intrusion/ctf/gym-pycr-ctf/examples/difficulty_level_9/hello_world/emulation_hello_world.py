@@ -1,6 +1,7 @@
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
+import sys
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 
 def test_env(env_name : str, num_steps : int):
@@ -59,6 +60,7 @@ def test_env(env_name : str, num_steps : int):
         #env.render()
         print("a:{}".format(attacker_action))
         obs, reward, done, info = env.step(action)
+        sys.stdout.flush()
         attacker_reward, _ = reward
         tried_actions.append(attacker_action)
         tot_rew += attacker_reward
