@@ -11,6 +11,7 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
 
+
 class EnvDynamicsUtil:
     """
     Class containing common utilities that are used both in simulation-mode and in emulation-mode.
@@ -174,7 +175,8 @@ class EnvDynamicsUtil:
         return n_m, new_access
 
     @staticmethod
-    def merge_reachable(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_reachable(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation reachable nodes with new information collected
 
@@ -186,7 +188,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_backdoor_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_backdoor_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation backdoor credentials nodes with new information collected
 
@@ -198,7 +201,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_logged_in(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_logged_in(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation logged in with new information collected
 
@@ -214,7 +218,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_logged_in
 
     @staticmethod
-    def merge_tools_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_tools_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation "tools installed flag" with new information collected
 
@@ -230,7 +235,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_tools_installed
 
     @staticmethod
-    def merge_backdoor_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_backdoor_installed(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation "backdoor installed" flag with new information collected
 
@@ -246,7 +252,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_backdoor_installed
 
     @staticmethod
-    def merge_backdoor_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_backdoor_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "backdoor tried" flag with new information collected
 
@@ -259,7 +266,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_tools_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_tools_tried(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "tools tried" flag with new information collected
 
@@ -272,7 +280,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_root(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_root(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation root with new information collected
 
@@ -288,7 +297,8 @@ class EnvDynamicsUtil:
         return n_m, new_root
 
     @staticmethod
-    def merge_flags(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_flags(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation flags with new information collected
 
@@ -304,7 +314,8 @@ class EnvDynamicsUtil:
         return n_m, new_flag_points
 
     @staticmethod
-    def merge_connections(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) -> AttackerMachineObservationState:
+    def merge_connections(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState) \
+            -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation shell-connections with new information collected
 
@@ -318,8 +329,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_filesystem_scanned(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState, new_root: int) -> \
-            AttackerMachineObservationState:
+    def merge_filesystem_scanned(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState,
+                                 new_root: int) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation file-system-scanned-flag with new information collected
 
@@ -335,8 +346,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_untried_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState, action: AttackerAction) \
-            -> AttackerMachineObservationState:
+    def merge_untried_credentials(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState,
+                                  action: AttackerAction) -> AttackerMachineObservationState:
         """
         Helper function for merging an old machine observation untried-credentials-flag with new information collected
 
@@ -588,6 +599,13 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def exploit_tried_flags(a: AttackerAction, m_obs: AttackerMachineObservationState):
+        """
+        Utility function for updating exploit-tried flags
+
+        :param a: the action
+        :param m_obs: the observation to update
+        :return: the updated observation
+        """
         # Subnet scans sometimes fail due to stagnation, https://github.com/nmap/nmap/issues/1321
         if (a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
                 or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
@@ -636,23 +654,53 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def ssh_backdoor_tried_flags(a: AttackerAction, m_obs: AttackerMachineObservationState):
+        """
+        Utility function for updating install-backdoor flag
+
+        :param a: the action
+        :param m_obs: the observation to update
+        :return: the updated observation
+        """
         if a.id == AttackerActionId.SSH_BACKDOOR:
             m_obs.backdoor_tried = True
         return m_obs
 
     @staticmethod
     def install_tools_tried(a: AttackerAction, m_obs: AttackerMachineObservationState):
+        """
+        Utility function for updating install-tools flag
+
+        :param a: the action
+        :param m_obs: the observation to update
+        :return: the updated observation
+        """
         if a.id == AttackerActionId.INSTALL_TOOLS:
             m_obs.install_tools_tried = True
         return m_obs
 
     @staticmethod
-    def cache_action(env_config: EnvConfig, a: AttackerAction, s: EnvState):
+    def cache_action(env_config: EnvConfig, a: AttackerAction, s: EnvState) -> None:
+        """
+        Utility function for caching an action
+
+        :param env_config: the environment configuration
+        :param a: the action to cache
+        :param s: the current state
+        :return: None
+        """
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=a, s=s)
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
-    def logged_in_ips_str(env_config: EnvConfig, a: AttackerAction, s: EnvState):
+    def logged_in_ips_str(env_config: EnvConfig, a: AttackerAction, s: EnvState) -> str:
+        """
+        Utility function to getting a string-id of the attacker state (Q) of logged in machines
+
+        :param env_config: the environment config
+        :param a: the action
+        :param s: the current state
+        :return: the string id
+        """
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
@@ -663,7 +711,13 @@ class EnvDynamicsUtil:
         return logged_in_ips_str
 
     @staticmethod
-    def exploit_get_vuln_name(a: AttackerAction):
+    def exploit_get_vuln_name(a: AttackerAction) -> str:
+        """
+        Utiltiy function to get the vulnerability name of a particular exploit action
+
+        :param a: the action
+        :return: the name of hte corresponding vulnerability
+        """
         if a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS
@@ -695,12 +749,24 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def exploit_get_vuln_cvss(a: AttackerAction) -> float:
+        """
+        Utility function for getting the CVSS of an exploit action
+
+        :param a: the action
+        :return: the CVSS
+        """
         if a.id in AttackerActionConfig.dict_brute_same_user_ids():
             return constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS
         return 0.0
 
     @staticmethod
-    def exploit_get_service_name(a: AttackerAction):
+    def exploit_get_service_name(a: AttackerAction) -> str:
+        """
+        Utility function to get the name of the exploited service of a particular exploit action
+
+        :param a: the action
+        :return: the name of the service
+        """
         if a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.FTP.SERVICE_NAME
@@ -732,7 +798,15 @@ class EnvDynamicsUtil:
 
 
     @staticmethod
-    def merge_duplicate_machines(machines : List[AttackerMachineObservationState], action: AttackerAction):
+    def merge_duplicate_machines(machines : List[AttackerMachineObservationState], action: AttackerAction) \
+            -> List[AttackerMachineObservationState]:
+        """
+        Utility function for merging machines that are duplicates
+
+        :param machines: list of machines (possibly with duplicates)
+        :param action: the action that generated the new machines
+        :return: the merged set of machines
+        """
         merged_machines = []
         ips = set()
         for m in machines:

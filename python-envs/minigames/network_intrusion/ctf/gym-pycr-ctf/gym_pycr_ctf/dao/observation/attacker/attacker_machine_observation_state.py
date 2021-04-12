@@ -59,7 +59,7 @@ class AttackerMachineObservationState:
 
 
     def __str__(self):
-        return "ip:{},os:{},shell_access:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{},num_ssh_connections:{}," \
+        return "ip:{},os:{},shell_access:{},logged_in:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{},num_ssh_connections:{}," \
                "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{},hostnames:{},trace:{}, " \
                "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
                "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
@@ -68,7 +68,7 @@ class AttackerMachineObservationState:
                "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
                "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}," \
                "flags_found:{}".format(
-            self.ip, self.os,  self.shell_access, self.root, len(self.ports), len(self.cve_vulns),
+            self.ip, self.os,  self.shell_access, self.logged_in, self.root, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
             self.telnet_brute_tried, self.ssh_brute_tried, self.ftp_brute_tried, self.cassandra_brute_tried,

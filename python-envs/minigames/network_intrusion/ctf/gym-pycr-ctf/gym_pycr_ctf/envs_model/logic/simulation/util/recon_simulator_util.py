@@ -9,6 +9,7 @@ from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObser
 from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
+from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
 
 class ReconSimulatorUtil:
     """
@@ -30,11 +31,8 @@ class ReconSimulatorUtil:
         :param vuln_scan: boolean flag whether the scan is a vulnerability scan or not
         :return: s_prime, reward
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, total_new_root, \
-        total_new_flag_pts, total_new_osvb_vuln, total_new_logged_in, total_new_tools_installed, \
-        total_new_backdoors_installed = 0,0,0,0,0,0,0,0,0,0,0
+        net_outcome = NetworkOutcome()
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
-
         # Scan action on a single host
         if not a.subnet:
             new_m_obs = None
@@ -55,49 +53,29 @@ class ReconSimulatorUtil:
                                 vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
                                                                          protocol=vuln.protocol, cvss=vuln.cvss)
                                 new_m_obs.cve_vulns.append(vuln_obs)
-            new_machines_obs = s.attacker_obs_state.machines
             if new_m_obs is not None:
-                new_machines_obs = []
                 merged = False
                 for o_m in s.attacker_obs_state.machines:
                     # Machine was already known, merge state
                     if o_m.ip == a.ip:
-                        merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                        new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
-                        num_new_backdoors_installed \
-                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs, action=a)
-                        new_machines_obs.append(merged_machine_obs)
+                        new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(
+                            o_m, new_m_obs, action=a)
+                        merged_machine_obs = new_net_outcome.attacker_machine_observation
+                        net_outcome.update_counts(new_net_outcome)
+                        net_outcome.attacker_machine_observations.append(merged_machine_obs)
                         merged = True
-                        total_new_ports += num_new_ports_found
-                        total_new_os += num_new_os_found
-                        total_new_vuln += num_new_cve_vuln_found
-                        total_new_shell_access += new_shell_access
-                        total_new_root += new_root
-                        total_new_flag_pts += new_flag_pts
-                        total_new_osvb_vuln += num_new_osvdb_vuln_found
-                        total_new_logged_in += num_new_logged_in
-                        total_new_tools_installed += num_new_tools_installed
-                        total_new_backdoors_installed += num_new_backdoors_installed
                     else:
-                        new_machines_obs.append(o_m)
+                        net_outcome.attacker_machine_observations.append.append(o_m)
                 # New machine, was not known before
                 if not merged:
-                    new_machines_obs.append(new_m_obs)
-                    total_new_machines +=1
+                    net_outcome.attacker_machine_observations.append.append(new_m_obs)
+                    net_outcome.total_new_machines_found +=1
+            else:
+                net_outcome.attacker_machine_observations = s.attacker_obs_state.machines
             s_prime = s
-            s_prime.attacker_obs_state.machines = new_machines_obs
-            reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                   num_new_cve_vuln_found=total_new_vuln,
-                                                   num_new_machines=total_new_machines,
-                                                   num_new_shell_access=total_new_shell_access,
-                                                   num_new_root=total_new_root,
-                                                   num_new_flag_pts=total_new_flag_pts,
-                                                   num_new_osvdb_vuln_found=total_new_osvb_vuln,
-                                                   num_new_logged_in=total_new_logged_in,
-                                                   num_new_tools_installed=total_new_tools_installed,
-                                                   num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config,
-                                                   alerts=a.alerts, action=a)
+            s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+
+            reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
 
         # Scan action on a whole subnet
         else:
@@ -142,9 +120,7 @@ class ReconSimulatorUtil:
         :param os: boolean flag whether the host scan should check the operating system too
         :return: s_prime, reward
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = 0,0,0,0,0,0,0,0,0,0,0
+        net_outcome = NetworkOutcome()
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
         # Scan a a single host
         if not a.subnet:
@@ -157,51 +133,29 @@ class ReconSimulatorUtil:
                     if os:
                         new_m_obs.os = node.os
 
-            new_machines_obs = s.attacker_obs_state.machines
             if new_m_obs is not None:
-                new_machines_obs = []
                 merged = False
                 for o_m in s.attacker_obs_state.machines:
-
-                    # Existing machine, it was already known
+                    # Machine was already known, merge state
                     if o_m.ip == a.ip:
-                        merged_machine_obs, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                        new_root, new_flag_pts, num_new_osvdb_vuln, num_new_logged_in, num_new_tools_installed, \
-                        num_new_backdoors_installed \
-                            = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, new_m_obs, action=a)
-                        new_machines_obs.append(merged_machine_obs)
+                        new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(
+                            o_m, new_m_obs, action=a)
+                        merged_machine_obs = new_net_outcome.attacker_machine_observation
+                        net_outcome.update_counts(new_net_outcome)
+                        net_outcome.attacker_machine_observations.append(merged_machine_obs)
                         merged = True
-                        total_new_ports += num_new_ports_found
-                        total_new_os += num_new_os_found
-                        total_new_vuln += num_new_cve_vuln_found
-                        total_new_shell_access += new_shell_access
-                        total_new_root += new_root
-                        total_new_flag_pts += new_flag_pts
-                        total_new_logged_in += num_new_logged_in
-                        total_new_osvdb_vuln += num_new_osvdb_vuln
-                        total_new_tools_installed += num_new_tools_installed
-                        total_new_backdoors_installed += num_new_backdoors_installed
                     else:
-                        new_machines_obs.append(o_m)
-
-                # New machine, it was not known before
+                        net_outcome.attacker_machine_observations.append.append(o_m)
+                # New machine, was not known before
                 if not merged:
-                    total_new_machines += 1
-                    new_machines_obs.append(new_m_obs)
+                    net_outcome.attacker_machine_observations.append.append(new_m_obs)
+                    net_outcome.total_new_machines_found +=1
+            else:
+                net_outcome.attacker_machine_observations = s.attacker_obs_state.machines
             s_prime = s
-            s_prime.attacker_obs_state.machines = new_machines_obs
-            reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                   num_new_cve_vuln_found=total_new_vuln,
-                                                   num_new_machines=total_new_machines,
-                                                   num_new_shell_access=total_new_shell_access,
-                                                   num_new_root=total_new_root,
-                                                   num_new_flag_pts=total_new_flag_pts,
-                                                   num_new_osvdb_vuln_found=total_new_osvdb_vuln,
-                                                   num_new_logged_in=total_new_logged_in,
-                                                   num_new_tools_installed=total_new_tools_installed,
-                                                   num_new_backdoors_installed=total_new_backdoors_installed,
-                                                   cost=a.cost, env_config=env_config, alerts=a.alerts,
-                                                   action=a)
+            s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+            reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome,
+                                                     env_config=env_config, action=a)
 
         # Scan a whole subnetwork
         else:

@@ -23,9 +23,6 @@ class ShellSimulatorUtil:
         :param service_name: the name of the service to login to
         :return: s_prime, reward
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_obs_machines = []
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
         discovered_nodes = list(map(lambda x: x.ip, s.attacker_obs_state.machines))
@@ -41,9 +38,12 @@ class ShellSimulatorUtil:
                 if o_m.ip == node.ip:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
+            print("logging in, ip:{}, acess:{}, service_name:{}".format(node.ip, access, service_name))
             if access:
+                print("node services:{}".format(list(map(lambda x: str(x), node.services))))
                 for service in node.services:
                     if service.name == service_name:
+                        print("service match, service-credentials:{}, credentials:".format(list(map(lambda x: str(x), service.credentials))), list(map(lambda x: str(x), credentials)))
                         for cr in service.credentials:
                             for a_cr in credentials:
                                 if a_cr.username == cr.username and a_cr.pw == cr.pw:

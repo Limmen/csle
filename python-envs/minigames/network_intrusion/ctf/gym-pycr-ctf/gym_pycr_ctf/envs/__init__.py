@@ -88,6 +88,12 @@ from gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_e
     PyCRCTFLevel9EmulationWithCosts1Env, PyCRCTFLevel9EmulationWithCosts2Env, PyCRCTFLevel9EmulationWithCosts3Env, \
     PyCRCTFLevel9EmulationWithCosts4Env
 
+from gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env import \
+    PyCRCTFLevel9GeneratedSimWithCosts1Env, PyCRCTFLevel9GeneratedSim2Env, PyCRCTFLevel9GeneratedSim1Env, \
+    PyCRCTFLevel9GeneratedSimWithCosts2Env, PyCRCTFLevel9GeneratedSim3Env, \
+    PyCRCTFLevel9GeneratedSimWithCosts3Env, PyCRCTFLevel9GeneratedSim4Env, \
+    PyCRCTFLevel9GeneratedSimWithCosts4Env
+
 # ------ Random ----- #
 
 from gym_pycr_ctf.envs.derived_envs.random.generated_simulation.pycr_ctf_random_gensim_env import \

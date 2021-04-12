@@ -1030,3 +1030,59 @@ register(
     entry_point='gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env:PyCRCTFLevel9EmulationWithCosts4Env',
     kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 4 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Costs, Version: 1 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSimWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 2 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Costs, Version: 2 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSimWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 3 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Costs, Version: 3 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSimWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 4 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Costs, Version: 4 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSimWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)

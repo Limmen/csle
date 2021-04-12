@@ -14,7 +14,14 @@ def test_env(env_name : str, num_steps : int):
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                     server_connection=False, port_forward_next_port=3000)
+                                     server_connection=False, port_forward_next_port=3200)
+
+    # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+    #                                            "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/" \
+    #                                            "hello_world/"
+    # emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    emulation_config.skip_exploration = False
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = False
@@ -82,7 +89,8 @@ def test_all():
     #test_env("pycr-ctf-level-9-emulation-v1", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-emulation-v2", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-emulation-v3", num_steps=1000000000)
-    test_env("pycr-ctf-level-9-emulation-v1", num_steps=1000000000)
+    #test_env("pycr-ctf-level-9-emulation-v1", num_steps=1000000000)
+    test_env("pycr-ctf-level-9-generated-sim-v1", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()
