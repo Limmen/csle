@@ -33,8 +33,6 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
@@ -45,7 +43,9 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
-            env_config.max_episode_length = 500
+            env_config.max_episode_length = 50000
+            env_config.attacker_alerts_coefficient = 0
+            env_config.attacker_cost_coefficient = 0
 
         super().__init__(env_config=env_config)
 

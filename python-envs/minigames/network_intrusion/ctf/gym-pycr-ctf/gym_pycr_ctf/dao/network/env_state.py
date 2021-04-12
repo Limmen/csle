@@ -85,7 +85,12 @@ class EnvState:
                                                                   obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.TEST:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.simple_representation(num_machines=self.attacker_obs_state.num_machines,
+                AttackerStateRepresentation.test_representation(num_machines=self.attacker_obs_state.num_machines,
+                                                                  num_ports=self.attacker_obs_state.num_ports,
+                                                                  obs_state=self.attacker_obs_state)
+        elif self.state_type == StateType.BASIC:
+            machines_obs, ports_protocols_obs = \
+                AttackerStateRepresentation.basic_representation(num_machines=self.attacker_obs_state.num_machines,
                                                                   num_ports=self.attacker_obs_state.num_ports,
                                                                   obs_state=self.attacker_obs_state)
             # raise NotImplementedError("Core state type not implemented for the attacker")
@@ -127,6 +132,12 @@ class EnvState:
         elif self.state_type == StateType.TEST:
             machines_obs = np.array([])
             network_obs = np.array([int(self.attacker_obs_state.ongoing_intrusion()), self.defender_obs_state.step])
+
+        elif self.state_type == StateType.BASIC:
+            machines_obs, network_obs = \
+                DefenderStateRepresentation.core_representation(num_machines=self.defender_obs_state.num_machines,
+                                                                     obs_state=self.defender_obs_state,
+                                                                     os_lookup=self.os_lookup, ids=self.ids)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, network_obs
@@ -160,7 +171,11 @@ class EnvState:
         elif self.state_type == StateType.TEST:
             attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
             attacker_machine_orig_shape, attacker_m_action_observation_space = \
-                AttackerStateRepresentation.simple_representation_spaces(obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.test_representation_spaces(obs_state=self.attacker_obs_state)
+        elif self.state_type == StateType.BASIC:
+            attacker_observation_space, attacker_m_selection_observation_space, attacker_network_orig_shape, \
+            attacker_machine_orig_shape, attacker_m_action_observation_space = \
+                AttackerStateRepresentation.basic_representation_spaces(obs_state=self.attacker_obs_state)
                 # raise NotImplementedError("Core state type not implemented for the attacker")
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
@@ -195,6 +210,9 @@ class EnvState:
         elif self.state_type == StateType.TEST:
             defender_observation_space = DefenderStateRepresentation.test_representation_spaces(
                 obs_state=self.defender_obs_state)
+        elif self.state_type == StateType.BASIC:
+            defender_observation_space = DefenderStateRepresentation.core_representation_spaces(
+                obs_state=self.defender_obs_state)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
 
@@ -226,6 +244,7 @@ class EnvState:
         self.attacker_obs_state.undetected_intrusions_steps = 0
         self.attacker_obs_state.all_flags = False
         self.attacker_obs_state.catched_flags = 0
+        self.attacker_obs_state.step = 0
         #self.attacker_obs_state.num_sh = 0
 
         if self.defender_obs_state is not None:

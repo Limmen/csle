@@ -294,11 +294,11 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_warning_baseline_rewards = saved_log_dto.eval_2_episode_snort_warning_baseline_rewards
         self.eval_2_episode_snort_critical_baseline_rewards = saved_log_dto.eval_2_episode_snort_critical_baseline_rewards
         self.eval_2_episode_var_log_baseline_rewards = saved_log_dto.eval_2_episode_var_log_baseline_rewards
-        self.attacker_eval_2_episode_rewards_env_specific = saved_log_dto.attacker_eval_2_episode_rewards_env_specific
-        self.defender_eval_2_episode_rewards_env_specific = saved_log_dto.defender_eval_2_episode_rewards_env_specific
-        self.eval_2_episode_steps_env_specific = saved_log_dto.eval_2_episode_steps_env_specific
-        self.eval_2_episode_flags_env_specific = saved_log_dto.eval_2_episode_flags_env_specific
-        self.eval_2_episode_flags_percentage_env_specific = saved_log_dto.eval_2_episode_flags_percentage_env_specific
+        self.attacker_eval_2_env_specific_rewards = saved_log_dto.attacker_eval_2_env_specific_rewards
+        self.defender_eval_2_env_specific_rewards = saved_log_dto.defender_eval_2_env_specific_rewards
+        self.eval_2_env_specific_steps = saved_log_dto.eval_2_env_specific_steps
+        self.eval_2_env_specific_flags = saved_log_dto.eval_2_env_specific_flags
+        self.eval_2_env_specific_flags_percentage = saved_log_dto.eval_2_env_specific_flags_percentage
 
     def eval_update_env_specific_metrics(self, env_config, infos, i):
         if env_config.emulation_config is not None:

@@ -514,6 +514,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
                     n_d = self.env.envs[0].attacker_agent_state.num_detections
+                train_log_dto.n_af = n_af
+                train_log_dto.n_d = n_d
                 if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                     self.log_metrics_attacker(train_log_dto=train_log_dto, eval=False)
                 if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:

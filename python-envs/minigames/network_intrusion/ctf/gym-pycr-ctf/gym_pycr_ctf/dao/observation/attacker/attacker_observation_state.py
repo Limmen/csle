@@ -3,6 +3,7 @@ from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state im
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
+
 class AttackerObservationState:
     """
     Represents the attacker's agent's current belief state of the environment
@@ -25,8 +26,15 @@ class AttackerObservationState:
             self.agent_reachable = set()
         self.last_attacker_action : AttackerAction = None
         self.undetected_intrusions_steps = 0
+        self.step=0
 
-    def ongoing_intrusion(self):
+    def ongoing_intrusion(self) -> bool:
+        """
+        Checks if there is an ongoing intrusion or not
+
+        :return: true if there is an intrusion, otherwise false
+        """
+
         # if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
         #     return True
 
@@ -45,13 +53,22 @@ class AttackerObservationState:
     def sort_machines(self):
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
 
+    def cleanup(self) -> None:
+        """
+        Cleanup machine states
 
-    def cleanup(self):
+        :return: None
+        """
         for m in self.machines:
             m.cleanup()
 
+    def get_action_ip(self, a : AttackerAction) -> str:
+        """
+        Returns the ip of the machine that the action targets
 
-    def get_action_ip(self, a : AttackerAction):
+        :param a: the action
+        :return: the ip of the target
+        """
         if a.index == -1:
             self.sort_machines()
             ips = list(map(lambda x: x.ip, self.machines))
@@ -61,7 +78,14 @@ class AttackerObservationState:
             return self.machines[a.index].ip
         return a.ip
 
-    def exploit_tried(self, a: AttackerAction, m: AttackerMachineObservationState):
+    def exploit_tried(self, a: AttackerAction, m: AttackerMachineObservationState) -> bool:
+        """
+        Checks if a given exploit have been tried on a given machine or not
+
+        :param a: the exploit action
+        :param m: the machine
+        :return: true if it has already been tried, otherwise false
+        """
         # Known issue with subnet attacks and NMAP: https://github.com/nmap/nmap/issues/1321
         if m is not None:
             if (a.id == AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL
@@ -135,6 +159,12 @@ class AttackerObservationState:
             return exploit_tried
 
     def exploit_executed(self, machine: AttackerMachineObservationState) -> bool:
+        """
+        Check if exploit have been tried on a particular machine
+
+        :param machine: the machine
+        :return: true if some exploit have been launched, false otherwise
+        """
         if (machine.telnet_brute_tried or machine.ssh_brute_tried
                 or machine.ftp_brute_tried or machine.cassandra_brute_tried or machine.irc_brute_tried
             or machine.mongo_brute_tried or machine.mysql_brute_tried or machine.smtp_brute_tried or
@@ -145,6 +175,9 @@ class AttackerObservationState:
         return False
 
     def copy(self):
+        """
+        :return: a copy of the state
+        """
         c = AttackerObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,
                                      num_flags = self.num_flags, catched_flags = self.catched_flags,
                                      agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
@@ -157,7 +190,9 @@ class AttackerObservationState:
             c.machines.append(m.copy())
         return c
 
-
     def __str__(self):
-        return  "Found flags:{}".format(self.catched_flags) + "\n" + \
+        """
+        :return: a string representation of the state
+        """
+        return  "Found flags:{}, step:{}".format(self.catched_flags, self.step) + "\n" + \
                 "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

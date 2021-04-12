@@ -508,7 +508,8 @@ class EnvDynamicsUtil:
                  env_config.attacker_osvdb_vuln_found_reward_mult * net_outcome.total_new_osvdb_vuln_found + \
                  env_config.attacker_new_login_reward_mult * net_outcome.total_new_logged_in+ \
                  env_config.attacker_new_tools_installed_reward_mult * net_outcome.total_new_tools_installed + \
-                 env_config.attacker_new_backdoors_installed_reward_mult * net_outcome.total_new_machines_found
+                 env_config.attacker_new_backdoors_installed_reward_mult * net_outcome.total_new_backdoors_installed
+
         new_info = [net_outcome.total_new_ports_found, net_outcome.total_new_os_found,
                     net_outcome.total_new_cve_vuln_found, net_outcome.total_new_machines_found,
                     net_outcome.total_new_shell_access, net_outcome.total_new_root, net_outcome.total_new_flag_pts,
@@ -518,6 +519,7 @@ class EnvDynamicsUtil:
 
         # normalize between 0-10
         cost = ((net_outcome.cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) * 10
+
         alerts_pts = 0
         if env_config.ids_router and net_outcome.alerts is not None:
             # normalize between 0-10
@@ -537,14 +539,16 @@ class EnvDynamicsUtil:
         #         reward = env_config.base_step_reward - cost - alerts_pts
         # else:
         #     reward = reward - cost - alerts_pts
-
-        if reward == 0:
-            if sum(new_info) > 0:
-                reward = - cost - alerts_pts
-            else:
-                reward = env_config.attacker_base_step_reward - cost - alerts_pts
-        else:
-            reward = (-env_config.attacker_base_step_reward) * reward - cost - alerts_pts
+        #print(float(reward) + float(env_config.attacker_base_step_reward))
+        # if reward == 0:
+        #     if sum(new_info) > 0:
+        #         reward = - cost - alerts_pts
+        #     else:
+        #         reward = env_config.attacker_base_step_reward - cost - alerts_pts
+        # else:
+        #     reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
+        reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
+        #print("returning reward:{}, {}".format(reward, env_config.attacker_base_step_reward))
         return reward
 
     @staticmethod

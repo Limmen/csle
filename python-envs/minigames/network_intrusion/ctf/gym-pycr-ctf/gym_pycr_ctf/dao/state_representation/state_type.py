@@ -13,3 +13,4 @@ class StateType(Enum):
     SIMPLE = 3
     CORE = 4
     TEST = 5
+    BASIC = 6

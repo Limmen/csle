@@ -26,20 +26,6 @@ class ManualAttackerAgent:
         self.env_config = env_config
         self.defender_opponent = defender_opponent
 
-        # net = NetworkConfig.load("/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/generated_simulation/ppo_baseline/netconf9.pkl")
-        # env_config = env_config.copy()
-        # env_config.network_conf = net
-        # # env_config.router_ip = router_ip
-        # # env_config.hacker_ip = agent_ip
-        # # env_config.ids_router = ids_router
-        # env_config.num_flags = len(net.flags_lookup)
-        # #env_config.blacklist_ips = [subnet_prefix + ".1"]
-        # # env_config.num_nodes = len(randomized_nodes)
-        # for a in env_config.attacker_action_conf.actions:
-        #     if a.subnet:
-        #         a.ip = net.subnet_mask
-        # self.env.env_config = env_config
-
         self.env.env_config.attacker_action_conf.print_actions()
         if render:
             agent_state = self.env.attacker_agent_state
@@ -48,6 +34,9 @@ class ManualAttackerAgent:
         else:
             num_actions = env.env_config.attacker_action_conf.num_actions
             actions = np.array(list(range(num_actions)))
+            latest_obs = None
+            latest_rew = None
+            latest_obs = env.reset()
             history = []
             while True:
                 raw_input = input(">")
@@ -60,7 +49,7 @@ class ManualAttackerAgent:
                           "press L to print the legal actions, press x to select a random legal action,"
                           "press H to print the history of actions")
                 elif raw_input == "R":
-                    env.reset()
+                    latest_obs = env.reset()
                 elif raw_input == "S":
                     print(str(env.env_state.attacker_obs_state))
                 elif raw_input == "L":
@@ -73,6 +62,10 @@ class ManualAttackerAgent:
                         print("done:{}".format(done))
                 elif raw_input == "H":
                     print(history)
+                elif raw_input == "O":
+                    print(latest_obs)
+                elif raw_input == "U":
+                    print(latest_rew)
                 else:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
@@ -86,7 +79,7 @@ class ManualAttackerAgent:
                         for a in actions:
                             if env.is_attack_action_legal(a, env.env_config, env.env_state):
                                 action = (a, defender_action)
-                                _, _, done, _ = self.env.step(action)
+                                latest_obs, latest_rew, done, _ = self.env.step(action)
                                 history.append(a)
                                 if done:
                                     print("done:{}, attacker_caught:{}, stopped:{}, all_flags:{}".format(

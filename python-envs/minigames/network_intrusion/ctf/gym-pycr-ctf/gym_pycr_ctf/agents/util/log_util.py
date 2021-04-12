@@ -46,8 +46,8 @@ class LogUtil:
         eval_env_specific_opt_frac = {}
         eval_2_env_specific_opt_frac = {}
 
-        if result.avg_episode_rewards is not None:
-            rolling_avg_rewards = pycr_util.running_average(result.avg_episode_rewards + [avg_episode_rewards],
+        if result.attacker_avg_episode_rewards is not None:
+            rolling_avg_rewards = pycr_util.running_average(result.attacker_avg_episode_rewards + [avg_episode_rewards],
                                                             attacker_agent_config.running_avg)
         else:
             rolling_avg_rewards = 0.0
@@ -75,22 +75,23 @@ class LogUtil:
                         train_log_dto.attacker_eval_episode_rewards):
                     pi_star_rews_attacker = env.envs[0].env_config.pi_star_rew_list_attacker[
                                             -len(train_log_dto.attacker_eval_episode_rewards):]
-                    r = [pi_star_rews_attacker[i] - train_log_dto.attacker_eval_episode_rewards[i] for i in
+                    r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=train_log_dto.attacker_eval_episode_rewards[i]) for i in
                          range(len(train_log_dto.attacker_eval_episode_rewards))]
                     avg_regret = np.mean(np.array(r))
                 else:
-                    avg_regret = env.envs[0].env_config.pi_star_rew_attacker - avg_episode_rewards
+                    avg_regret = LogUtil.compute_regret(r=avg_episode_rewards, opt_r=env.envs[0].env_config.pi_star_rew_attacker)
 
                 if train_log_dto.attacker_eval_episode_rewards is not None and train_log_dto.attacker_eval_env_specific_rewards != {}:
                     if len(env.envs[0].env_config.pi_star_rew_list_attacker) >= len(
                             train_log_dto.attacker_eval_episode_rewards):
                         pi_star_rews_attacker = env.envs[0].env_config.pi_star_rew_list_attacker[
                                                 -len(train_log_dto.attacker_eval_episode_rewards):]
-                        r = [pi_star_rews_attacker[i] - train_log_dto.attacker_eval_episode_rewards[i] for i in
-                             range(len(train_log_dto.attacker_eval_episode_rewards))]
+                        r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=train_log_dto.attacker_eval_episode_rewards[i])
+                             for i in range(len(train_log_dto.attacker_eval_episode_rewards))]
                         avg_eval_regret = np.mean(np.array(r))
                     else:
-                        avg_eval_regret = env.envs[0].env_config.pi_star_rew_attacker - eval_avg_episode_rewards
+                        avg_eval_regret = LogUtil.compute_regret(opt_r=env.envs[0].env_config.pi_star_rew_attacker,
+                                                                 r=eval_avg_episode_rewards)
                 else:
                     avg_eval_regret = 0.0
 
@@ -103,20 +104,20 @@ class LogUtil:
 
                 if len(env_regret[2]) >= len(train_log_dto.attacker_episode_rewards):
                     pi_star_rews_attacker = env_regret[2][-len(train_log_dto.attacker_episode_rewards):]
-                    r = [pi_star_rews_attacker[i] - train_log_dto.attacker_episode_rewards[i] for i in
+                    r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=train_log_dto.attacker_episode_rewards[i]) for i in
                          range(len(train_log_dto.attacker_episode_rewards))]
                     avg_regret = np.mean(np.array(r))
                 else:
-                    avg_regret = env_regret[1] - avg_episode_rewards
+                    avg_regret = LogUtil.compute_regret(opt_r=env_regret[1],r=avg_episode_rewards)
 
                 if train_log_dto.attacker_eval_episode_rewards is not None:
                     if len(env_regret[2]) >= len(train_log_dto.attacker_eval_episode_rewards):
                         pi_star_rews_attacker = env_regret[2][-len(train_log_dto.attacker_eval_episode_rewards):]
-                        r = [pi_star_rews_attacker[i] - train_log_dto.attacker_eval_episode_rewards[i] for i in
-                             range(len(train_log_dto.attacker_eval_episode_rewards))]
+                        r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=train_log_dto.attacker_eval_episode_rewards[i])
+                             for i in range(len(train_log_dto.attacker_eval_episode_rewards))]
                         avg_eval_regret = np.mean(np.array(r))
                     else:
-                        avg_eval_regret = env_regret[1] - eval_avg_episode_rewards
+                        avg_eval_regret = LogUtil.compute_regret(opt_r=env_regret[1],r=eval_avg_episode_rewards)
                 else:
                     avg_eval_regret = 0.0
             else:
@@ -131,18 +132,18 @@ class LogUtil:
                         rewards = train_log_dto.attacker_train_episode_env_specific_rewards[ip]
                         if len(env_regret[2]) >= len(rewards):
                             pi_star_rews_attacker = env_regret[2][-len(rewards):]
-                            r = [pi_star_rews_attacker[i] - rewards[i] for i in range(len(rewards))]
+                            r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=rewards[i]) for i in range(len(rewards))]
                         else:
-                            r = [env_regret[1] - rewards[i] for i in range(len(rewards))]
+                            r = [LogUtil.compute_regret(opt_r=env_regret[1], r=rewards[i]) for i in range(len(rewards))]
                         train_env_specific_regret[ip] = r
                         regrets = regrets + r
                     if train_log_dto.attacker_eval_env_specific_rewards is not None and train_log_dto.attacker_eval_env_specific_rewards != {}:
                         rewards = train_log_dto.attacker_eval_env_specific_rewards[ip]
                         if len(env_regret[2]) >= len(rewards):
                             pi_star_rews_attacker = env_regret[2][-len(rewards):]
-                            r = [pi_star_rews_attacker[i] - rewards[i] for i in range(len(rewards))]
+                            r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=rewards[i]) for i in range(len(rewards))]
                         else:
-                            r = list(map(lambda x: pi_star_rew - x, rewards))
+                            r = list(map(lambda x: LogUtil.compute_regret(opt_r=pi_star_rew, r=x), rewards))
                         eval_env_specific_regret[ip] = r
                         eval_regrets = eval_regrets + r
 
@@ -153,11 +154,13 @@ class LogUtil:
                 if env_2.env_config is not None:
                     pi_star_rews_attacker = env_2.envs[0].env_config.pi_star_rew_list_attacker[
                                             -len(train_log_dto.attacker_eval_2_episode_rewards):]
-                    r = [pi_star_rews_attacker[i] - train_log_dto.attacker_eval_2_episode_rewards[i] for
-                         i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
+                    r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i],
+                                                r=train_log_dto.attacker_eval_2_episode_rewards[i])
+                         for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
                     avg_regret_2 = np.mean(np.array(r))
 
-                    of = [train_log_dto.attacker_eval_2_episode_rewards[i] / pi_star_rews_attacker[i]
+                    of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_eval_2_episode_rewards[i],
+                                                   opt_r=pi_star_rews_attacker[i])
                           for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
                     avg_opt_frac_2 = np.mean(np.array(of))
                 else:
@@ -171,7 +174,7 @@ class LogUtil:
                             rewards = train_log_dto.attacker_eval_2_env_specific_rewards[ip]
                             # print("len ip:{} reg:{}, rews:{}".format(ip, env_regret[2], rewards))
                             # pi_star_rews = env_regret[2][-len(rewards):]
-                            r = [pi_star_rew - rewards[i] for i in range(len(rewards))]
+                            r = [LogUtil.compute_regret(opt_r=pi_star_rew, r=rewards[i]) for i in range(len(rewards))]
                             # r = list(map(lambda x: pi_star_rew - x, rewards))
                             eval_2_env_specific_regret[ip] = r
                             regrets_2 = regrets_2 + r
@@ -188,7 +191,7 @@ class LogUtil:
                                 and train_log_dto.attacker_eval_2_env_specific_rewards != {}:
                             rewards = train_log_dto.attacker_eval_2_env_specific_rewards[ip]
                             # pi_star_rews = env_regret[2][-len(rewards):]
-                            of = [rewards[i] / pi_star_rew for i in range(len(rewards))]
+                            of = [LogUtil.compute_opt_frac(r=rewards[i], opt_r=pi_star_rew) for i in range(len(rewards))]
                             # of = list(map(lambda x: x / pi_star_rew, rewards))
                             eval_2_env_specific_opt_frac[ip] = of
                             opt_fracs = opt_fracs + of
@@ -205,22 +208,26 @@ class LogUtil:
                         train_log_dto.attacker_episode_rewards):
                     pi_star_rews_attacker = env.envs[0].env_config.pi_star_rew_list_attacker[-len(
                         train_log_dto.attacker_episode_rewards):]
-                    of = [train_log_dto.attacker_episode_rewards[i] / pi_star_rews_attacker[i] for i in range(len(
+                    of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_episode_rewards[i],
+                                                   opt_r=pi_star_rews_attacker[i]) for i in range(len(
                         train_log_dto.attacker_episode_rewards))]
                     avg_opt_frac = np.mean(np.array(of))
                 else:
-                    avg_opt_frac = avg_episode_rewards / env.envs[0].env_config.pi_star_rew_attacker
+                    avg_opt_frac = LogUtil.compute_opt_frac(r=avg_episode_rewards,
+                                                            opt_r=env.envs[0].env_config.pi_star_rew_attacker)
 
                 if train_log_dto.attacker_eval_episode_rewards is not None:
                     if len(env.envs[0].env_config.pi_star_rew_list_attacker) >= len(
                             train_log_dto.attacker_eval_episode_rewards):
                         pi_star_rews_attacker = env.envs[0].env_config.pi_star_rew_list_attacker[
                                                 -len(train_log_dto.attacker_eval_episode_rewards):]
-                        of = [train_log_dto.attacker_eval_episode_rewards[i] / pi_star_rews_attacker[i]
+                        of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_eval_episode_rewards[i],
+                                                       opt_r=pi_star_rews_attacker[i])
                               for i in range(len(train_log_dto.attacker_eval_episode_rewards))]
                         eval_avg_opt_frac = np.mean(np.array(of))
                     else:
-                        eval_avg_opt_frac = eval_avg_episode_rewards / env.envs[0].env_config.pi_star_rew_attacker
+                        eval_avg_opt_frac = LogUtil.compute_opt_frac(r=eval_avg_episode_rewards,
+                                                                     opt_r=env.envs[0].env_config.pi_star_rew_attacker)
                 else:
                     eval_avg_opt_frac = 0.0
             elif (train_log_dto.attacker_train_episode_env_specific_rewards is None
@@ -232,20 +239,22 @@ class LogUtil:
 
                 if len(env_regret[2]) >= len(train_log_dto.attacker_episode_rewards):
                     pi_star_rews_attacker = env_regret[2][-len(train_log_dto.attacker_episode_rewards):]
-                    of = [train_log_dto.attacker_episode_rewards[i] / pi_star_rews_attacker[i] for i in range(len(
+                    of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_episode_rewards[i],
+                                                   opt_r=pi_star_rews_attacker[i]) for i in range(len(
                         train_log_dto.attacker_episode_rewards))]
                     avg_opt_frac = np.mean(np.array(of))
                 else:
-                    avg_opt_frac = avg_episode_rewards / env_regret[1]
+                    avg_opt_frac = LogUtil.compute_opt_frac(r=avg_episode_rewards, opt_r=env_regret[1])
 
                 if train_log_dto.attacker_eval_episode_rewards is not None:
                     if len(env_regret[2]) >= len(eval_avg_episode_rewards):
                         pi_star_rews_attacker = env_regret[2][-len(train_log_dto.attacker_eval_episode_rewards):]
-                        of = [train_log_dto.attacker_eval_episode_rewards[i] / pi_star_rews_attacker[i]
+                        of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_eval_episode_rewards[i],
+                                                       opt_r=pi_star_rews_attacker[i])
                               for i in range(len(train_log_dto.attacker_eval_episode_rewards))]
                         eval_avg_opt_frac = np.mean(np.array(of))
                     else:
-                        eval_avg_opt_frac = eval_avg_episode_rewards / env_regret[1]
+                        eval_avg_opt_frac = LogUtil.compute_opt_frac(r=eval_avg_episode_rewards,opt_r=env_regret[1])
                 else:
                     eval_avg_opt_frac = 0.0
             else:
@@ -260,9 +269,10 @@ class LogUtil:
                         rewards = train_log_dto.attacker_train_episode_env_specific_rewards[ip]
                         if len(env_pi_star[2]) >= len(rewards):
                             pi_star_rews_attacker = env_pi_star[2][-len(rewards):]
-                            of = [rewards[i] / pi_star_rews_attacker[i] for i in range(len(rewards))]
+                            of = [LogUtil.compute_opt_frac(r=rewards[i],opt_r=pi_star_rews_attacker[i])
+                                  for i in range(len(rewards))]
                         else:
-                            of = list(map(lambda x: x / pi_star_rew, rewards))
+                            of = list(map(lambda x: LogUtil.compute_opt_frac(r=x, opt_r=pi_star_rew), rewards))
                         train_env_specific_opt_frac[ip] = of
                         opt_fracs = opt_fracs + of
                     elif train_log_dto.attacker_eval_env_specific_rewards is not None \
@@ -270,9 +280,10 @@ class LogUtil:
                         rewards = train_log_dto.attacker_eval_env_specific_rewards[ip]
                         if len(env_pi_star[2]) >= len(rewards):
                             pi_star_rews_attacker = env_pi_star[2][-len(rewards):]
-                            of = [rewards[i] / pi_star_rews_attacker[i] for i in range(len(rewards))]
+                            of = [LogUtil.compute_opt_frac(r=rewards[i], opt_r=pi_star_rews_attacker[i])
+                                  for i in range(len(rewards))]
                         else:
-                            of = list(map(lambda x: x / pi_star_rew, rewards))
+                            of = list(map(lambda x: LogUtil.compute_opt_frac(r=x, opt_r=pi_star_rew), rewards))
                         eval_env_specific_opt_frac[ip] = of
                         eval_opt_fracs = eval_opt_fracs + of
                 if len(opt_fracs) == 0:
@@ -305,8 +316,8 @@ class LogUtil:
         else:
             eval_avg_episode_steps = 0.0
 
-        if not eval and train_log_dto.eval_2_episode_rewards is not None:
-            eval_2_avg_episode_rewards = np.mean(train_log_dto.eval_2_episode_rewards)
+        if not eval and train_log_dto.attacker_eval_2_episode_rewards is not None:
+            eval_2_avg_episode_rewards = np.mean(train_log_dto.attacker_eval_2_episode_rewards)
         else:
             eval_2_avg_episode_rewards = 0.0
         if not eval and train_log_dto.eval_2_episode_flags is not None:
@@ -362,7 +373,7 @@ class LogUtil:
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}".format(
                 train_log_dto.iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, lr, avg_episode_flags,
+                avg_episode_steps, rolling_avg_steps, train_log_dto.attacker_lr, avg_episode_flags,
                 avg_episode_flags_percentage, train_log_dto.n_af, train_log_dto.n_d)
         else:
             log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
@@ -374,7 +385,7 @@ class LogUtil:
                       "avg_F_E2%:{:.2f},epsilon:{:.2f}".format(
                 train_log_dto.iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
                 avg_episode_steps, rolling_avg_steps, avg_episode_loss,
-                lr, train_log_dto.total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps,
+                train_log_dto.attacker_lr, train_log_dto.total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps,
                 train_log_dto.n_af, train_log_dto.n_d,
                 eval_avg_episode_rewards, avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
                 eval_avg_episode_flags,
@@ -385,7 +396,7 @@ class LogUtil:
         print(log_str)
         if attacker_agent_config.tensorboard:
             LogUtil.log_tensorboard_attacker(train_log_dto.iteration, avg_episode_rewards, avg_episode_steps,
-                                          avg_episode_loss, eps, lr, eval=eval,
+                                          avg_episode_loss, eps, train_log_dto.attacker_lr, eval=eval,
                                           avg_flags_catched=avg_episode_flags,
                                           avg_episode_flags_percentage=avg_episode_flags_percentage,
                                           eval_avg_episode_rewards=eval_avg_episode_rewards,
@@ -418,7 +429,7 @@ class LogUtil:
         result.lr_list.append(train_log_dto.attacker_lr)
         result.rollout_times.append(avg_rollout_times)
         result.env_response_times.append(avg_env_response_times)
-        result.action_pred_times.apend(avg_action_pred_times)
+        result.action_pred_times.append(avg_action_pred_times)
         result.grad_comp_times.append(avg_grad_comp_times)
         result.weight_update_times.append(avg_weight_update_times)
         result.attacker_avg_regret.append(avg_regret)
@@ -882,19 +893,22 @@ class LogUtil:
 
             # Regret
             if env.env_config is not None:
-                avg_regret = env.envs[0].env_config.pi_star_rew_defender - avg_episode_rewards
+                avg_regret = LogUtil.compute_regret(opt_r=env.envs[0].env_config.pi_star_rew_defender,
+                                                    r=avg_episode_rewards)
             else:
                 avg_regret = 0.0
 
             if train_log_dto.defender_eval_episode_rewards is not None \
                     and train_log_dto.defender_eval_env_specific_rewards != {}:
-                avg_eval_regret = env.envs[0].env_config.pi_star_rew_defender - eval_avg_episode_rewards
+                avg_eval_regret = LogUtil.compute_regret(opt_r=env.envs[0].env_config.pi_star_rew_defender,
+                                                         r=eval_avg_episode_rewards)
             else:
                 avg_eval_regret = 0.0
 
             # Opt frac
             if env.env_config is not None:
-                avg_opt_frac = avg_episode_rewards / env.envs[0].env_config.pi_star_rew_defender
+                avg_opt_frac = LogUtil.compute_opt_frac(r=avg_episode_rewards,
+                                                        opt_r=env.envs[0].env_config.pi_star_rew_defender)
             else:
                 avg_opt_frac = 0.0
 
@@ -1212,3 +1226,32 @@ class LogUtil:
                                            eval_avg_2_episode_var_log_baseline_rewards, episode)
         if not eval:
             tensorboard_writer.add_scalar('defender/lr', lr, episode)
+
+
+    @staticmethod
+    def compute_opt_frac(r: float, opt_r: float) -> float:
+        """
+        Utility function for computing fraction of optimal reward
+
+        :param r: reward
+        :param opt_r: optimal reward
+        :return: fraction of optimal reward
+        """
+        abs_difference = abs(opt_r - r)
+        if (r > 0 and opt_r > 0) or (r < 0 and opt_r < 0):
+            return r/opt_r
+        elif r < 0 and opt_r > 0:
+            return 1/abs_difference
+        else:
+            raise ValueError("Invalid inpt")
+
+    @staticmethod
+    def compute_regret(r: float, opt_r : float) -> float:
+        """
+        Utility function for computing the regret
+
+        :param r: the reward
+        :param opt_r: the optimal reward
+        :return: the regret
+        """
+        return abs(opt_r - r)

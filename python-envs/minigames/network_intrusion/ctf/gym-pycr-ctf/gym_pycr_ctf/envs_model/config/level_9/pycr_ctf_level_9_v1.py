@@ -46,8 +46,8 @@ class PyCrCTFLevel9V1:
             attacker_actions.append(AttackerShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet actions
-        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
-                                                                subnet=True))
+        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(
+            index=num_nodes + 1, ip=subnet_mask, subnet=True))
         attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
         attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
         attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
@@ -136,8 +136,8 @@ class PyCrCTFLevel9V1:
                                attacker_num_sh_obs=3, num_nodes = PyCrCTFLevel9Base.num_nodes(),
                                render_config=render_conf, env_mode=EnvMode.EMULATION,
                                emulation_config=emulation_config,
-                               simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.ESSENTIAL,
+                               simulate_detection=False, detection_reward=10, base_detection_p=0.05,
+                               hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.BASIC,
                                router_ip=PyCrCTFLevel9Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
@@ -147,18 +147,18 @@ class PyCrCTFLevel9V1:
         env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.9.1", "172.18.9.254"]
 
-        env_config.attacker_shell_access_found_reward_mult = 1
-        env_config.attacker_new_tools_installed_reward_mult = 1
-        env_config.attacker_new_backdoors_installed_reward_mult = 1
-        env_config.attacker_new_login_reward_mult = 1
-        env_config.attacker_machine_found_reward_mult = 0
+        env_config.attacker_shell_access_found_reward_mult = 2
+        env_config.attacker_new_tools_installed_reward_mult = 2
+        env_config.attacker_new_backdoors_installed_reward_mult = 2
+        env_config.attacker_new_login_reward_mult = 2
+        env_config.attacker_machine_found_reward_mult = 1
 
         env_config.attacker_final_steps_reward_coefficient = 0
 
         env_config.attacker_flag_found_reward_mult = 10
         env_config.attacker_all_flags_reward = 0
         env_config.attacker_base_step_reward = -1
-        env_config.attacker_illegal_reward_action = -1
+        env_config.attacker_illegal_reward_action = 0
 
         env_config.attacker_port_found_reward_mult = 0
         env_config.attacker_os_found_reward_mult = 0
@@ -167,7 +167,11 @@ class PyCrCTFLevel9V1:
         env_config.attacker_root_found_reward_mult = 0
         env_config.attacker_cost_coefficient = 0
         env_config.attacker_detection_reward = 0
+        env_config.attacker_alerts_coefficient = 0
 
         env_config.max_episode_length = 10000
         env_config.ids_router = True
+        env_config.attacker_filter_illegal_actions = True
+        env_config.attacker_exploration_filter_illegal = True
+        env_config.compute_pi_star_attacker = False
         return env_config

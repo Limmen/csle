@@ -256,6 +256,14 @@ class PyCRCTFEnv(gym.Env, ABC):
                                    attacker_opponent=attacker_opponent)
             defender_info["successful_intrusion"] = False
             attacker_reward = attacker_reward
+        else:
+            defender_info = {}
+            defender_info["caught_attacker"] = 0
+            defender_info["early_stopped"] = 0
+            defender_info["snort_severe_baseline_reward"] = 0
+            defender_info["snort_warning_baseline_reward"] = 0
+            defender_info["snort_critical_baseline_reward"] = 0
+            defender_info["var_log_baseline_reward"] = 0
 
         if not done:
             # Second step attacker
@@ -282,11 +290,13 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        attacker_m_obs = attacker_m_obs.flatten()
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.defender_last_obs = defender_obs
         self.attacker_last_obs = attacker_m_obs
         self.defender_time_step += 1
         self.attacker_agent_state.time_step += 1
+        self.env_state.attacker_obs_state.step += 1
 
         # Update trajectories
         if self.env_config.save_trajectories:
@@ -632,12 +642,14 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.attacker_obs_state.detected:
+            print("detected")
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.attacker_obs_state.all_flags:
             self.attacker_agent_state.num_all_flags += 1
         self.reset_state()
 
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        attacker_m_obs = attacker_m_obs.flatten()
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.attacker_last_obs = attacker_m_obs
