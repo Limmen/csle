@@ -14,7 +14,7 @@ def test_env(env_name : str, num_steps : int):
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                     server_connection=False)
+                                     server_connection=False, port_forward_next_port=3000)
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
     env.env_config.max_episode_length = 1000000000
     env.env_config.manual_play = False

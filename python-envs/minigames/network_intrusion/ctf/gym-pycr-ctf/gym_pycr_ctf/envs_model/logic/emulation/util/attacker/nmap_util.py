@@ -535,14 +535,11 @@ class NmapUtil:
             # m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 
-        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs, env_config=env_config,
-                                                   action=a)
+        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs,
+                                                             env_config=env_config, action=a)
 
         s_prime = s
-        s_prime.attacker_obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
         # Use measured cost
         if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ip):
@@ -552,20 +549,7 @@ class NmapUtil:
         if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ip):
             a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
 
-        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_cve_vuln_found=total_new_vuln,
-                                                 num_new_machines=total_new_machines,
-                                                 num_new_shell_access=total_new_shell_access,
-                                                 num_new_root=total_new_root,
-                                                 num_new_flag_pts=total_new_flag_pts,
-                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
-                                                 num_new_logged_in=total_new_logged_in,
-                                                 num_new_tools_installed=total_new_tools_installed,
-                                                 num_new_backdoors_installed=total_new_backdoors_installed,
-                                                 cost=a.cost,
-                                                 env_config=env_config,
-                                                 alerts=a.alerts, action=a
-                                                 )
+        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
         return s_prime, reward
 
     @staticmethod

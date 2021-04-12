@@ -13,6 +13,8 @@ from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state im
 from gym_pycr_ctf.envs_model.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
+from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
+
 
 class ConnectionUtil:
     """
@@ -21,8 +23,7 @@ class ConnectionUtil:
 
     @staticmethod
     def login_service_helper(s: EnvState, a: AttackerAction, alive_check, service_name: str,
-                             env_config: EnvConfig) -> Tuple[EnvState, int, int, int, int, int, int, int,
-                                                             int, float, bool]:
+                             env_config: EnvConfig) -> Tuple[EnvState, NetworkOutcome, bool]:
         """
         Helper function for logging in to a network service in the emulation
 
@@ -31,13 +32,8 @@ class ConnectionUtil:
         :param alive_check:  the function to check whether current connections are alive or not
         :param service_name: name of the service to login to
         :param env_config: environment config
-        :return: s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                   total_new_shell_access, total_new_flag_pts, total_new_root, cost, new_conn, total_new_osvdb_found,
-                   total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
+        :return: s_prime, network_outcome, new connection (bool)
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         total_cost = 0
         target_machine = None
         non_used_credentials = []
@@ -144,16 +140,11 @@ class ConnectionUtil:
         if target_machine is None or root or len(non_used_nor_cached_credentials) == 0:
             s_prime = s
             if target_machine is not None:
-                new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                    EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
-                                                           env_config=env_config, action=a)
-                s_prime.attacker_obs_state.machines = new_machines_obs
+                net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines,
+                                                                     [target_machine], env_config=env_config, action=a)
+                s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
-            return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-                   total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-                   total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, False
+            return s_prime, net_outcome, False
 
         # If not logged in and there are credentials, setup a new connection
         connected = False
@@ -173,9 +164,10 @@ class ConnectionUtil:
                 proxy_connections.append(ssh_connections_sorted_by_root[0])
 
         if service_name == constants.SSH.SERVICE_NAME:
-            connected, users, target_connections, ports, cost, non_failed_credentials, proxies = ConnectionUtil._ssh_setup_connection(
-                a=a, env_config=env_config, credentials=non_used_nor_cached_credentials,
-                proxy_connections=proxy_connections, s=s)
+            connected, users, target_connections, ports, cost, non_failed_credentials, proxies = \
+                ConnectionUtil._ssh_setup_connection(
+                    a=a, env_config=env_config, credentials=non_used_nor_cached_credentials,
+                    proxy_connections=proxy_connections, s=s)
         elif service_name == constants.TELNET.SERVICE_NAME:
             connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials, \
             proxies = \
@@ -227,25 +219,20 @@ class ConnectionUtil:
                     if c_root:
                         root = True
             target_machine.root = root
-            new_machines_obs, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
-            total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-            total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed = \
-                EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine], env_config=env_config,
-                                                       action=a)
-            s_prime.attacker_obs_state.machines = new_machines_obs
+            net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
+                                                                 env_config=env_config, action=a)
+            s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
         else:
             target_machine.shell_access = False
             target_machine.shell_access_credentials = []
 
-        return s_prime, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-               total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed, total_cost, True
+        return s_prime, net_outcome, False
 
     @staticmethod
     def _ssh_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List[ConnectionObservationState],
                               s: EnvState) \
-            -> Tuple[bool, List[str], List, List[int], float, List[Credential]]:
+            -> Tuple[bool, List[str], List, List[int], float, List[Credential], List[ConnectionObservationState]]:
         """
         Helper function for setting up a SSH connection
 
@@ -255,7 +242,7 @@ class ConnectionUtil:
         :param proxy_connections: list of proxy connections to try
         :param s: env state
         :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
-                 cost, non_failed_credentials
+                 cost, non_failed_credentials, proxies
         """
         connected = False
         users = []
@@ -348,7 +335,8 @@ class ConnectionUtil:
     def _telnet_setup_connection(a: AttackerAction, env_config: EnvConfig,
                                  credentials: List[Credential], proxy_connections: List,
                                  s: EnvState) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential],
+                     List[ConnectionObservationState]]:
         """
         Helper function for setting up a Telnet connection to a target machine
 
@@ -358,7 +346,7 @@ class ConnectionUtil:
         :param proxies: proxy connections
         :param s: env state
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports, cost
+                 list of ports, cost, proxies
         """
         connected = False
         users = []
@@ -468,7 +456,8 @@ class ConnectionUtil:
     def _ftp_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List,
                               s: EnvState) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential]]:
+            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential],
+            List[ConnectionObservationState]]:
         """
         Helper function for setting up a FTP connection
 
@@ -478,7 +467,7 @@ class ConnectionUtil:
         :param proxy_connections: proxy connections
         :param env_state: env state
         :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports, cost, non_failed_credentials
+                 list of ports, cost, non_failed_credentials, proxies
         """
         connected = False
         users = []

@@ -9,6 +9,7 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
 
 class EnvDynamicsUtil:
     """
@@ -24,10 +25,9 @@ class EnvDynamicsUtil:
         merged_obs_state.num_vuln = max(old_obs_state.num_vuln, new_obs_state.num_vuln)
         merged_obs_state.num_flags = max(old_obs_state.num_flags, new_obs_state.num_flags)
         merged_obs_state.catched_flags = max(old_obs_state.catched_flags, new_obs_state.catched_flags)
-        merged_machines, _, _, _, _, _, _, _, _, _, _, _ = \
-            EnvDynamicsUtil.merge_new_obs_with_old(old_obs_state.machines, new_obs_state.machines,
+        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(old_obs_state.machines, new_obs_state.machines,
                                                                            env_config=env_config, action=None)
-        merged_obs_state.machines = merged_machines
+        merged_obs_state.machines = net_outcome.attacker_machine_observations
         merged_obs_state.num_sh = max(old_obs_state.num_sh, new_obs_state.num_sh)
         merged_obs_state.agent_reachable = old_obs_state.agent_reachable.union(new_obs_state.agent_reachable)
         return merged_obs_state
@@ -35,22 +35,16 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[AttackerMachineObservationState],
                                new_machines_obs: List[AttackerMachineObservationState], env_config: EnvConfig,
-                               action : AttackerAction) -> \
-            Tuple[List[AttackerMachineObservationState], int, int, int, int, int, int, int, int, int, int, int]:
+                               action : AttackerAction) -> NetworkOutcome:
         """
         Helper function for merging an old network observation with new information collected
 
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
         :param env_config: environment config
-        :return: the merged machine information, n_new_ports, n_new_os, n_new_vuln, n_new_m, new_s_a, new_osvdb_v,
-                                                 n_new_logged_in, n_new_tools, n_new_backdoors
+        :return: the merged network outcome
         """
-        merged_machines = []
-        total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, total_new_tools_installed, \
-        total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-
+        net_outcome = NetworkOutcome()
         new_machines_obs = EnvDynamicsUtil.merge_duplicate_machines(machines=new_machines_obs, action=action)
 
         # Add updated machines to merged state
@@ -61,63 +55,42 @@ class EnvDynamicsUtil:
             merged_m = n_m
             for i, o_m in enumerate(old_machines_obs):
                 if n_m.ip == o_m.ip:
-                    merged_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, \
-                    new_root, new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
-                    num_new_backdoors_installed = \
-                        EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m, action)
-                    total_new_ports_found += num_new_ports_found
-                    total_new_os_found += num_new_os_found
-                    total_new_cve_vuln_found += num_new_cve_vuln_found
-                    total_new_shell_access += new_shell_access
-                    total_new_root += new_root
-                    total_new_flag_pts += new_flag_pts
-                    total_new_osvdb_vuln_found += num_new_osvdb_vuln_found
-                    total_new_logged_in += num_new_logged_in
-                    total_new_tools_installed += num_new_tools_installed
-                    total_new_backdoors_installed += num_new_backdoors_installed
+                    new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m, action)
+                    net_outcome.update_counts(new_net_outcome)
+                    merged_m = new_net_outcome.attacker_machine_observation
                     exists = True
-            merged_machines.append(merged_m)
+            net_outcome.attacker_machine_observations.append(merged_m)
             if not exists:
-                total_new_ports_found += len(merged_m.ports)
-                new_os = 0 if merged_m.os == "unknown" else 1
-                total_new_os_found += new_os
-                total_new_cve_vuln_found += len(merged_m.cve_vulns)
-                total_new_osvdb_vuln_found += len(merged_m.osvdb_vulns)
-                total_new_logged_in += 1 if merged_m.logged_in else 0
-                total_new_tools_installed += 1 if merged_m.tools_installed else 0
-                total_new_backdoors_installed += 1 if merged_m.backdoor_installed else 0
-                total_new_shell_access += 1 if merged_m.shell_access else 0
-                total_new_root += 1 if merged_m.root else 0
-                total_new_flag_pts += len(merged_m.flags_found)
-                total_new_machines += 1
+                net_outcome.update_counts_machine(merged_m)
 
         # Add old machines to merged state
         for o_m in old_machines_obs:
             exists = False
-            for m_m in merged_machines:
+            for m_m in net_outcome.attacker_machine_observations:
                 if o_m.ip == m_m.ip:
                     exists = True
             if not exists:
-                merged_machines.append(o_m)
+                net_outcome.attacker_machine_observations.append(o_m)
 
-        return merged_machines, total_new_ports_found, total_new_os_found, total_new_cve_vuln_found, total_new_machines, \
-               total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, \
-               total_new_logged_in, total_new_tools_installed, total_new_backdoors_installed
+        return net_outcome
 
     @staticmethod
-    def merge_new_machine_obs_with_old_machine_obs(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState,
-                                                   action: AttackerAction) \
-            -> Tuple[AttackerMachineObservationState, int, int, int, int, int, int, int, int, int, int]:
+    def merge_new_machine_obs_with_old_machine_obs(o_m: AttackerMachineObservationState,
+                                                   n_m: AttackerMachineObservationState,
+                                                   action: AttackerAction) -> NetworkOutcome:
         """
         Helper function for merging an old machine observation with new information collected
 
         :param o_m: old machine observation
         :param n_m: newly collected machine information
-        :return: the merged machine observation state, n_new_ports, n_new_os, n_new_cve_vuln, new_access, new_root,
-                 new_fl, new_osvdb_vulns, num_new_logged_in, num_new_tools_installed
+        :return: the merged network outcome
         """
+
+        net_outcome = NetworkOutcome()
         if n_m == None:
-            return o_m, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            net_outcome.attacker_machine_observation = o_m
+            return net_outcome
+
         merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports)
         n_m.ports = merged_ports
         merged_os, num_new_os_found = EnvDynamicsUtil.merge_os(o_m.os, n_m.os)
@@ -143,9 +116,20 @@ class EnvDynamicsUtil:
         n_m, num_new_backdoors_installed = EnvDynamicsUtil.merge_backdoor_installed(o_m, n_m)
         n_m = EnvDynamicsUtil.merge_reachable(o_m=o_m, n_m=n_m)
         n_m = EnvDynamicsUtil.merge_backdoor_credentials(o_m=o_m, n_m=n_m)
-        return n_m, num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, new_shell_access, new_root, \
-               new_flag_pts, num_new_osvdb_vuln_found, num_new_logged_in, num_new_tools_installed, \
-               num_new_backdoors_installed
+
+        net_outcome.attacker_machine_observation = n_m
+        net_outcome.total_new_ports_found = num_new_ports_found
+        net_outcome.total_new_os_found = num_new_os_found
+        net_outcome.total_new_cve_vuln_found = num_new_cve_vuln_found
+        net_outcome.total_new_shell_access = new_shell_access
+        net_outcome.total_new_flag_pts = new_flag_pts
+        net_outcome.total_new_root = new_root
+        net_outcome.total_new_osvdb_vuln_found = num_new_osvdb_vuln_found
+        net_outcome.total_new_logged_in = num_new_logged_in
+        net_outcome.total_new_tools_installed = num_new_tools_installed
+        net_outcome.total_new_backdoors_installed = num_new_backdoors_installed
+
+        return net_outcome
 
     @staticmethod
     def merge_os(o_os: str, n_os: str) -> Tuple[str, int]:
@@ -493,49 +477,41 @@ class EnvDynamicsUtil:
         return merged_vuln, num_new_vuln_found
 
     @staticmethod
-    def reward_function(num_new_ports_found: int = 0, num_new_os_found: int = 0, num_new_cve_vuln_found: int = 0,
-                        num_new_machines: int = 0, num_new_shell_access: int = 0, num_new_root: int = 0,
-                        num_new_flag_pts: int = 0, num_new_osvdb_vuln_found : int = 0,
-                        num_new_logged_in : int = 0, num_new_tools_installed : int = 0,
-                        num_new_backdoors_installed : int = 0,
-                        cost: float = 0.0, env_config: EnvConfig  = None, alerts: Tuple = None,
+    def reward_function(net_outcome: NetworkOutcome, env_config: EnvConfig  = None,
                         action: AttackerAction = None) -> int:
         """
         Implements the reward function
 
-        :param num_new_ports_found: number of new ports detected
-        :param num_new_os_found: number of new operating systems detected
-        :param num_new_cve_vuln_found: number of new cve vulnerabilities detected
-        :param num_new_osvdb_vuln_found: number of new osvdb vulnerabilities detected
-        :param num_new_machines: number of new machines
-        :param num_new_shell_access: number of new shell access to different machines
-        :param num_new_root: number of new root access to different machines
-        :param num_new_logged_in: number of new successful login sessions
-        :param num_new_tools_installed: number of new tools installed
-        :param num_new_backdoors_installed: number of new backdoors installed
-        :param cost: cost of the action that was performed
-        :param env_config: env config
-        :param alerts: ids alerts
+        :param net_outcome: the outcome statistics
+        :param env_config: the environment configuration
+        :param action: the action
         :return: reward
         """
-        reward = env_config.attacker_port_found_reward_mult * num_new_ports_found + \
-                 env_config.attacker_os_found_reward_mult * num_new_os_found + \
-                 env_config.attacker_cve_vuln_found_reward_mult * num_new_cve_vuln_found + \
-                 env_config.attacker_machine_found_reward_mult * num_new_machines + \
-                 env_config.attacker_shell_access_found_reward_mult * num_new_shell_access + \
-                 env_config.attacker_root_found_reward_mult * num_new_root + \
-                 env_config.attacker_flag_found_reward_mult * num_new_flag_pts + \
-                 env_config.attacker_osvdb_vuln_found_reward_mult * num_new_osvdb_vuln_found + \
-                 env_config.attacker_new_login_reward_mult * num_new_logged_in + \
-                 env_config.attacker_new_tools_installed_reward_mult * num_new_tools_installed + \
-                 env_config.attacker_new_backdoors_installed_reward_mult * num_new_backdoors_installed
-        new_info = [num_new_ports_found, num_new_os_found, num_new_cve_vuln_found, num_new_machines,
-                    num_new_shell_access, num_new_root, num_new_flag_pts, num_new_osvdb_vuln_found,
-                    num_new_logged_in, num_new_tools_installed, num_new_backdoors_installed]
-        cost = ((cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) * 10 # normalize between 0-10
+        reward = env_config.attacker_port_found_reward_mult * net_outcome.total_new_ports_found + \
+                 env_config.attacker_os_found_reward_mult * net_outcome.total_new_os_found + \
+                 env_config.attacker_cve_vuln_found_reward_mult * net_outcome.total_new_cve_vuln_found + \
+                 env_config.attacker_machine_found_reward_mult * net_outcome.total_new_machines_found + \
+                 env_config.attacker_shell_access_found_reward_mult * net_outcome.total_new_shell_access + \
+                 env_config.attacker_root_found_reward_mult * net_outcome.total_new_root + \
+                 env_config.attacker_flag_found_reward_mult * net_outcome.total_new_flag_pts + \
+                 env_config.attacker_osvdb_vuln_found_reward_mult * net_outcome.total_new_osvdb_vuln_found + \
+                 env_config.attacker_new_login_reward_mult * net_outcome.total_new_logged_in+ \
+                 env_config.attacker_new_tools_installed_reward_mult * net_outcome.total_new_tools_installed + \
+                 env_config.attacker_new_backdoors_installed_reward_mult * net_outcome.total_new_machines_found
+        new_info = [net_outcome.total_new_ports_found, net_outcome.total_new_os_found,
+                    net_outcome.total_new_cve_vuln_found, net_outcome.total_new_machines_found,
+                    net_outcome.total_new_shell_access, net_outcome.total_new_root, net_outcome.total_new_flag_pts,
+                    net_outcome.total_new_osvdb_vuln_found,
+                    net_outcome.total_new_logged_in, net_outcome.total_new_tools_installed,
+                    net_outcome.total_new_tools_installed]
+
+        # normalize between 0-10
+        cost = ((net_outcome.cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) * 10
         alerts_pts = 0
-        if env_config.ids_router and alerts is not None:
-            alerts_pts = ((alerts[0] * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) * 10  # normalize between 0-10
+        if env_config.ids_router and net_outcome.alerts is not None:
+            # normalize between 0-10
+            alerts_pts = ((net_outcome.alerts[0]
+                           * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) * 10
 
         #reward = (-env_config.base_step_reward) * reward - cost - alerts_pts
         # if reward == 0:
@@ -686,7 +662,6 @@ class EnvDynamicsUtil:
         logged_in_ips_str = "_".join(logged_in_ips)
         return logged_in_ips_str
 
-
     @staticmethod
     def exploit_get_vuln_name(a: AttackerAction):
         if a.id == AttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
@@ -765,8 +740,8 @@ class EnvDynamicsUtil:
                 merged_m = m
                 for m2 in machines:
                     if m2.ip == merged_m.ip:
-                        merged_m, _, _, _, _, _, _, _, _, _, _ = \
-                            EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(merged_m, m2, action)
+                        net_out = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(merged_m, m2, action)
+                        merged_m = net_out.attacker_machine_observation
                 merged_machines.append(merged_m)
                 ips.add(m.ip)
         return merged_machines

@@ -19,7 +19,8 @@ class ShellUtil:
 
     @staticmethod
     def _find_flag_using_ssh(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
-                             new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
+                             new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float,
+                                                                                  bool, Tuple]:
         """
         Utility function for using existing SSH connections to a specific machine to search the file system for flags
 
@@ -27,7 +28,7 @@ class ShellUtil:
         :param env_config: the env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
-        :return: the updated machine observation with the found flags, cost, root
+        :return: the updated machine observation with the found flags, cost, root, alerts
         """
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(
@@ -119,7 +120,8 @@ class ShellUtil:
 
     @staticmethod
     def _find_flag_using_telnet(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
-                                new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
+                                new_m_obs: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, float, bool, Tuple]:
         """
         Utility function for using existing Telnet connections to a specific machine to search the file system for flags
 
@@ -127,7 +129,7 @@ class ShellUtil:
         :param env_config: the env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
-        :return: the updated machine observation with the found flags, cost, root
+        :return: the updated machine observation with the found flags, cost, root, alerts
         """
         total_cost = 0
         total_alerts = (0, 0)
@@ -210,7 +212,8 @@ class ShellUtil:
 
     @staticmethod
     def _find_flag_using_ftp(machine: AttackerMachineObservationState, env_config: EnvConfig, a: AttackerAction,
-                             new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float, bool]:
+                             new_m_obs: AttackerMachineObservationState) \
+            -> Tuple[AttackerMachineObservationState, float, bool, Tuple]:
         """
         Utility function for using existing FTP connections to a specific machine to search the file system for flags
 
@@ -218,7 +221,7 @@ class ShellUtil:
         :param env_config: the env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
-        :return: the updated machine observation with the found flags, cost, root
+        :return: the updated machine observation with the found flags, cost, root, alerts
         """
         total_cost = 0
         total_alerts = (0, 0)
@@ -560,28 +563,13 @@ class ShellUtil:
                 new_m_obs.install_tools_tried = True
 
                 total_cost += telnet_cost
-        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs, env_config=env_config,
-                                                   action=a)
+        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
+                                                             env_config=env_config, action=a)
         s_prime = s
-        s_prime.attacker_obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
-        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_cve_vuln_found=total_new_vuln,
-                                                 num_new_machines=total_new_machines,
-                                                 num_new_shell_access=total_new_shell_access,
-                                                 num_new_root=total_new_root,
-                                                 num_new_flag_pts=total_new_flag_pts,
-                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
-                                                 num_new_logged_in=total_new_logged_in,
-                                                 num_new_tools_installed=total_new_tools_installed,
-                                                 num_new_backdoors_installed=total_new_backdoors_installed,
-                                                 cost=total_cost,
-                                                 env_config=env_config,
-                                                 alerts=total_alerts, action=a)
-        return s, reward, False
+        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
+        return s_prime, reward, False
 
     @staticmethod
     def _check_if_seclists_is_installed(conn, telnet: bool = False) -> bool:
@@ -762,28 +750,13 @@ class ShellUtil:
                 total_cost += telnet_cost
         # if not backdoor_created:
         #     print("failed to create backdoor, target:{}".format(a.ip))
-        new_machines_obs, total_new_ports, total_new_os, total_new_vuln, total_new_machines, \
-        total_new_shell_access, total_new_flag_pts, total_new_root, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = \
-            EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs, env_config=env_config,
-                                                   action=a)
+        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
+                                                             env_config=env_config, action=a)
         s_prime = s
-        s_prime.attacker_obs_state.machines = new_machines_obs
+        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
-        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_cve_vuln_found=total_new_vuln,
-                                                 num_new_machines=total_new_machines,
-                                                 num_new_shell_access=total_new_shell_access,
-                                                 num_new_root=total_new_root,
-                                                 num_new_flag_pts=total_new_flag_pts,
-                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln_found,
-                                                 num_new_logged_in=total_new_logged_in,
-                                                 num_new_tools_installed=total_new_tools_installed,
-                                                 num_new_backdoors_installed=total_new_backdoors_installed,
-                                                 cost=total_cost,
-                                                 env_config=env_config,
-                                                 alerts=total_alerts, action=a)
-        return s, reward, False
+        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
+        return s_prime, reward, False
 
     @staticmethod
     def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
@@ -795,18 +768,6 @@ class ShellUtil:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        total_cost = 0
-        total_new_ports = 0
-        total_new_os = 0
-        total_new_cve_vuln = 0
-        total_new_machines = 0
-        total_new_shell_access = 0
-        total_new_flag_pts = 0
-        total_new_root = 0
-        total_new_osvdb_vuln = 0
-        total_new_logins = 0
-        total_new_tools_installed = 0
-        total_new_backdoors_installed = 0
         s_prime = s
         new_conn = False
 
@@ -815,33 +776,19 @@ class ShellUtil:
 
         for machine in s.attacker_obs_state.machines:
             a.ip = machine.ip
-            s_1, t_n_p_1, t_n_os_1, t_n_v_1, t_n_m_1, \
-            t_n_s_a_1, t_n_f_p_1, t_n_r_1, t_n_o_v_1, t_n_l_i_1, t_n_t_i_1, t_n_b_i_1, ssh_cost, \
-            new_conn_ssh = ConnectionUtil.login_service_helper(
+            s_1, net_out_1, new_conn_ssh = ConnectionUtil.login_service_helper(
                 s=s_prime, a=a, alive_check=EnvDynamicsUtil.check_if_ssh_connection_is_alive,
                 service_name=constants.SSH.SERVICE_NAME, env_config=env_config)
-            s_2, t_n_p_2, t_n_os_2, t_n_v_2, t_n_m_2, \
-            t_n_s_a_2, t_n_f_p_2, t_n_r_2, t_n_o_v_2, t_n_l_i_2, t_n_t_i_2, t_n_b_i_2, ftp_cost, \
-            new_conn_ftp = ConnectionUtil.login_service_helper(
+            s_2, net_out_2, new_conn_ftp = ConnectionUtil.login_service_helper(
                 s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
                 service_name=constants.FTP.SERVICE_NAME, env_config=env_config)
-            s_3, t_n_p_3, t_n_os_3, t_n_v_3, t_n_m_3, \
-            t_n_s_a_3, t_n_f_p_3, t_n_r_3, t_n_o_v_3, t_n_l_i_3, t_n_t_i_3, t_n_b_i_3, telnet_cost, \
-            new_conn_telnet = ConnectionUtil.login_service_helper(
+            s_3, net_out_3, new_conn_telnet = ConnectionUtil.login_service_helper(
                 s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
                 service_name=constants.TELNET.SERVICE_NAME, env_config=env_config)
-            total_cost = total_cost + ssh_cost + ftp_cost + telnet_cost
-            total_new_ports = total_new_ports + t_n_p_1 + t_n_p_2 + t_n_p_3
-            total_new_os = total_new_os + t_n_os_1 + t_n_os_2 + t_n_os_3
-            total_new_cve_vuln = total_new_cve_vuln + t_n_v_1 + t_n_v_2 + t_n_v_3
-            total_new_machines = total_new_machines + t_n_m_1 + t_n_m_2 + t_n_m_3
-            total_new_shell_access = total_new_shell_access + t_n_s_a_1 + t_n_s_a_2 + t_n_s_a_3
-            total_new_flag_pts = total_new_flag_pts + t_n_f_p_1 + t_n_f_p_2 + t_n_f_p_3
-            total_new_root = total_new_root + t_n_r_1 + t_n_r_2 + t_n_r_3
-            total_new_osvdb_vuln = total_new_osvdb_vuln + t_n_o_v_1 + t_n_o_v_2 + t_n_o_v_3
-            total_new_logins = total_new_logins + t_n_l_i_1 + t_n_l_i_2 + t_n_l_i_3
-            total_new_tools_installed = total_new_tools_installed + t_n_t_i_1 + t_n_t_i_2 + t_n_t_i_3
-            total_new_backdoors_installed = total_new_backdoors_installed + t_n_b_i_1 + t_n_b_i_2 + t_n_b_i_3
+
+            net_out_merged = net_out_1
+            net_out_merged.update_counts(net_out_2)
+            net_out_merged.update_counts(net_out_3)
 
             s_prime = s_3
             if new_conn_ssh or new_conn_ftp or new_conn_telnet:
@@ -852,7 +799,7 @@ class ShellUtil:
                     m.untried_credentials = False
 
         # Update cost cache
-        total_cost = round(total_cost, 1)
+        total_cost = round(net_out_merged.cost, 1)
         if new_conn:
             env_config.attacker_action_costs.service_add_cost(action_id=a.id, ip=env_config.emulation_config.agent_ip,
                                                               cost=float(total_cost))
@@ -877,17 +824,5 @@ class ShellUtil:
         if env_config.attacker_action_alerts.exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):
             a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip)
 
-        reward = EnvDynamicsUtil.reward_function(num_new_ports_found=total_new_ports, num_new_os_found=total_new_os,
-                                                 num_new_cve_vuln_found=total_new_cve_vuln,
-                                                 num_new_machines=total_new_machines,
-                                                 num_new_shell_access=total_new_shell_access,
-                                                 num_new_root=total_new_root,
-                                                 num_new_flag_pts=total_new_flag_pts,
-                                                 num_new_osvdb_vuln_found=total_new_osvdb_vuln,
-                                                 num_new_logged_in=total_new_logins,
-                                                 num_new_tools_installed=total_new_tools_installed,
-                                                 num_new_backdoors_installed=total_new_backdoors_installed,
-                                                 cost=a.cost,
-                                                 env_config=env_config,
-                                                 alerts=a.alerts, action=a)
+        reward = EnvDynamicsUtil.reward_function(net_outcome=net_out_merged, env_config=env_config, action=a)
         return s_prime, reward, False
