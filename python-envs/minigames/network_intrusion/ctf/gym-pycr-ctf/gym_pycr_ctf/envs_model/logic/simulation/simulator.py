@@ -167,21 +167,21 @@ class Simulator:
                 or a.id == AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.SAMBACRY_EXPLOIT:
-            raise NotImplementedError("Sambacry simulation not implemented")
+            return ExploitSimulator.simulate_sambacry_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.SHELLSHOCK_EXPLOIT:
-            raise NotImplementedError("Shellshock simulation not implemented")
+            return ExploitSimulator.simulate_shellshock_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.DVWA_SQL_INJECTION:
-            raise NotImplementedError("DVWA SQL Injection simulation not implemented")
+            return ExploitSimulator.simulate_sql_injection_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.CVE_2015_3306_EXPLOIT:
-            raise NotImplementedError("CVE-2015-3306 simulation not implemented")
+            return ExploitSimulator.simulate_cve_2015_3306_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.CVE_2015_1427_EXPLOIT:
-            raise NotImplementedError("CVE-2015-1427 simulation not implemented")
+            return ExploitSimulator.simulate_cve_2015_1427_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.CVE_2016_10033_EXPLOIT:
-            raise NotImplementedError("CVE-2016-10033 simulation not implemented")
+            return ExploitSimulator.simulate_cve_2016_10033_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.CVE_2010_0426_PRIV_ESC:
-            raise NotImplementedError("CVE-2010-0426 simulation not implemented")
+            return ExploitSimulator.simulate_cve_2010_0426_exploit(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.CVE_2015_5602_PRIV_ESC:
-            raise NotImplementedError("CVE-2015-5602 simulation not implemented")
+            return ExploitSimulator.simulate_cve_2015_5602_exploit(s=s, a=a, env_config=env_config)
         else:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 

@@ -373,12 +373,14 @@ class SAMBA:
     ERROR = "Error"
     AUTH_OK = "Authentication ok"
     VERIFYING = "Veryfying"
+    VULNERABILITY_NAME = "cve-2017-7494"
 
 class CVE_2010_0426:
     SERVICE_NAME = "sudoedit"
     BACKDOOR_USER="ssh_backdoor_cve10_0426pwn"
     BACKDOOR_PW="cve_2010_0426_pwnedpw"
     EXPLOIT_FILE = "/etc/fstab"
+    VULNERABILITY_NAME="cve-2010-0426"
 
 
 class CVE_2015_5602:
@@ -386,36 +388,42 @@ class CVE_2015_5602:
     BACKDOOR_USER="ssh_backdoor_cve15_5602pwn"
     BACKDOOR_PW="cve_2015_5602_pwnedpw"
     ROOT_PW="cve_2015_5602_temp_root_pw"
+    VULNERABILITY_NAME = "cve-2015-5602"
 
 class CVE_2015_3306:
     SERVICE_NAME = "proftpd"
     BACKDOOR_USER="ssh_backdoor_cve2015_3306_pwned"
     BACKDOOR_PW="cve2015_3306_pwnedpw"
     PORT=21
+    VULNERABILITY_NAME="cve-2015-3306"
 
 class CVE_2016_10033:
     SERVICE_NAME = "http"
     BACKDOOR_USER="ssh_backdoor_2016_10033_pwn"
     BACKDOOR_PW="cve_2016_10033_pwnedpw"
     PORT=80
+    VULNERABILITY_NAME = "cve-2016-10033"
 
 class CVE_2015_1427:
     SERVICE_NAME = "elasticsearch"
     BACKDOOR_USER="ssh_backdoor_cve_2015_1427_pwned"
     BACKDOOR_PW="cve_2015_1427_pwnedpw"
     PORT=9200
+    VULNERABILITY_NAME = "cve-2015-1427"
 
 class SHELLSHOCK:
     SERVICE_NAME = "http"
     BACKDOOR_USER="ssh_backdoor_shellshocked"
     BACKDOOR_PW="shellshockedpw"
     PORT=80
+    VULNERABILITY_NAME = "cve-2014-6271"
 
 class DVWA_SQL_INJECTION:
     SERVICE_NAME = "http"
     EXPLOIT_USER="pablo"
     EXPLOIT_OUTPUT_FILENAME = "dvwa_sql_injection_result.txt"
     PORT=80
+    VULNERABILITY_NAME="dvwa_sql_injection"
 
 class COMMON:
     CVE_FILE = "/allitems_prep.csv"
@@ -486,14 +494,14 @@ class EXPLOIT_VULNERABILITES:
     WEAK_PW_VULNS = [SSH_DICT_SAME_USER_PASS, FTP_DICT_SAME_USER_PASS, TELNET_DICTS_SAME_USER_PASS,
                      IRC_DICTS_SAME_USER_PASS, POSTGRES_DICTS_SAME_USER_PASS, SMTP_DICTS_SAME_USER_PASS,
                      MYSQL_DICTS_SAME_USER_PASS, MONGO_DICTS_SAME_USER_PASS, CASSANDRA_DICTS_SAME_USER_PASS]
-    SAMBACRY_EXPLOIT = "CVE-2017-7494"
-    SHELLSHOCK_EXPLOIT = "CVE-2014-6271"
+    SAMBACRY_EXPLOIT = "cve-2017-7494"
+    SHELLSHOCK_EXPLOIT = "cve-2014-6271"
     DVWA_SQL_INJECTION = "dvwa_sql_injection"
-    CVE_2015_3306 = "CVE-2015-3306"
-    CVE_2015_1427 = "CVE-2015-1427"
-    CVE_2016_10033 = "CVE-2016-10033"
-    CVE_2010_0426 = "CVE-2010-0426"
-    CVE_2015_5602 = "CVE-2015-5602"
+    CVE_2015_3306 = "cve-2015-3306"
+    CVE_2015_1427 = "cve-2015-1427"
+    CVE_2016_10033 = "cve-2016-10033"
+    CVE_2010_0426 = "cve-2010-0426"
+    CVE_2015_5602 = "cve-2015-5602"
     CVE_VULNS = [SAMBACRY_EXPLOIT, SHELLSHOCK_EXPLOIT, CVE_2015_3306, CVE_2015_1427, CVE_2016_10033, CVE_2010_0426,
                  CVE_2015_5602]
     UNKNOWN = "unknown"

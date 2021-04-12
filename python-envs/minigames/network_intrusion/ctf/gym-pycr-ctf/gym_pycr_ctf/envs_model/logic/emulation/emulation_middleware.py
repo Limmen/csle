@@ -15,6 +15,7 @@ from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.envs_model.logic.emulation.defender_update_state_middleware import DefenderUpdateStateMiddleware
 
+
 class EmulationMiddleware:
     """
     Class that provides a middleware between the OpenAI Gym Env and the Emulation

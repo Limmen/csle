@@ -211,7 +211,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_config.pi_star_rew_list_attacker.append(self.env_config.pi_star_rew_attacker)
 
     # -------- API ------------
-    def step(self, action_id : Tuple[int, int]) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, action_id : Tuple[int, int]) -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         """
         Takes a step in the environment by executing the given action
 

@@ -1,10 +1,10 @@
-from typing import Tuple
 from typing import List
 import numpy as np
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
+
 
 class SimulatorUtil:
     """

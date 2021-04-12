@@ -4,6 +4,7 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionOutcome
 
+
 class AttackerNMAPActions:
     """
     Class containing Attacker NMAP actions
@@ -38,7 +39,8 @@ class AttackerNMAPActions:
                               descr="A stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
                               cost=0.1*cost_noise_multiplier, noise=0.01*cost_noise_multiplier,
                               ip=ip, subnet=subnet, index=index,
-                              action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def PING_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -70,7 +72,8 @@ class AttackerNMAPActions:
                      "scanning the ports.",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, index=index,
-                              action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def UDP_PORT_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -100,7 +103,8 @@ class AttackerNMAPActions:
                               type=AttackerActionType.RECON,
                               descr="", index=index,
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def TCP_CON_NON_STEALTH_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -130,7 +134,8 @@ class AttackerNMAPActions:
                               type=AttackerActionType.RECON, index=index,
                               descr="A non-stealthy and fast TCP SYN scan to detect open TCP ports on the subnet",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def TCP_FIN_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -161,7 +166,8 @@ class AttackerNMAPActions:
                               type=AttackerActionType.RECON, index=index,
                               descr="A special type of TCP port scan using FIN, can avoid IDS and firewalls that block SYN scans",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def TCP_NULL_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -197,7 +203,8 @@ class AttackerNMAPActions:
                               type=AttackerActionType.RECON,
                               descr="A special type of TCP port scan using Null, can avoid IDS and firewalls that block SYN scans",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def TCP_XMAS_TREE_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -228,7 +235,8 @@ class AttackerNMAPActions:
                               descr="A special type of TCP port scan using XMas Tree, "
                      "can avoid IDS and firewalls that block SYN scans",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def OS_DETECTION_SCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -258,7 +266,8 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON,
                               descr="OS detection/guess scan", index=index,
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def VULSCAN(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -288,7 +297,8 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON, index=index,
                               descr="Uses a vulcan.nse script to turn NMAP into a vulnerability scanner",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def NMAP_VULNERS(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -318,7 +328,8 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON, index=index,
                               descr="Uses vulners.nse script to turn NMAP into a vulnerability scanner",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def TELNET_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -349,10 +360,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="Telnet dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT, index=index,
                               descr="A dictionary attack that tries common passwords and usernames "
-                     "for Telnet where username=password",
+                                    "for Telnet where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="telnet-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def SSH_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -386,7 +398,8 @@ class AttackerNMAPActions:
                       "for SSH where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="ssh-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def FTP_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -417,10 +430,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="FTP dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for FTP where username=password", index=index,
+                                    "for FTP where username=password", index=index,
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="ftp-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def CASSANDRA_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -452,10 +466,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="Cassandra dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for Cassandra where username=password", index=index,
+                                    "for Cassandra where username=password", index=index,
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="cassandra-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.CASSANDRA_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def IRC_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -486,10 +501,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="IRC dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for IRC where username=password", index=index,
+                                    "for IRC where username=password", index=index,
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="irc-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.IRC_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def MONGO_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -521,10 +537,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="MongoDB dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT, index=index,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for MongoDB where username=password",
+                                    "for MongoDB where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="mongo-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.MONGO_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def MYSQL_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -558,7 +575,8 @@ class AttackerNMAPActions:
                      "for MySQL where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="mysql-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.MYSQL_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def SMTP_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -589,10 +607,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="SMTP dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT, index=index,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for SMTP where username=password",
+                                    "for SMTP where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="smtp-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.SMTP_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def POSTGRES_SAME_USER_PASS_DICTIONARY(index:int, subnet=True, ip:str = "") -> AttackerAction:
@@ -623,10 +642,11 @@ class AttackerNMAPActions:
         return AttackerAction(id=id, name="Postgres dictionary attack for username=pw",
                               cmd=cmd, type=AttackerActionType.EXPLOIT, index=index,
                               descr="A dictionary attack that tries common passwords and usernames"
-                     "for Postgres where username=password",
+                                    "for Postgres where username=password",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
                               ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.SHELL_ACCESS,
-                              vulnerability="postgres-weak-password")
+                              vulnerability=constants.EXPLOIT_VULNERABILITES.POSTGRES_DICTS_SAME_USER_PASS,
+                              backdoor=False)
 
     @staticmethod
     def FIREWALK(index: int, subnet=True, ip: str = "") -> AttackerAction:
@@ -659,7 +679,8 @@ class AttackerNMAPActions:
                               descr="Tries to discover firewall rules using an IP TTL expiration technique "
                             "known as firewalking.",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def HTTP_ENUM(index: int, subnet=True, ip: str = "") -> AttackerAction:
@@ -691,7 +712,8 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON, index=index,
                               descr="Enumerates directories used by popular web applications and servers.",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def HTTP_GREP(index: int, subnet=True, ip: str = "") -> AttackerAction:
@@ -724,7 +746,8 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON, index=index,
                               descr="Spiders a website and attempts to match all pages and urls to find ips and emails.",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)
 
     @staticmethod
     def FINGER(index: int, subnet=True, ip: str = "") -> AttackerAction:
@@ -757,4 +780,5 @@ class AttackerNMAPActions:
                               cmd=cmd, type=AttackerActionType.RECON, index=index,
                               descr="Attempts to retrieve a list of usernames using the finger service.",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)
+                              ip=ip, subnet=subnet, action_outcome=AttackerActionOutcome.INFORMATION_GATHERING,
+                              backdoor=False)

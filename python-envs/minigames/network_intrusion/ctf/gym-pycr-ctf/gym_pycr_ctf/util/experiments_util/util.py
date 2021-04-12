@@ -20,9 +20,10 @@ from gym_pycr_ctf.dao.container_config.vulnerabilities_config import Vulnerabili
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
 
+
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
     """
-    Runs an inidividual experiment
+    Runs an individual experiment
 
     :param config: the config of the experiment
     :param random_seed: random seed
@@ -31,7 +32,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     """
     from gym_pycr_ctf.runner.runner import Runner
     time_str = str(time.time())
-    create_artefact_dirs(config.output_dir, random_seed)
+    create_artifact_dirs(config.output_dir, random_seed)
     logger = setup_logger(title, config.output_dir + "/results/logs/" +
                                str(random_seed) + "/",
                                time_str=time_str)
@@ -70,7 +71,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
         Runner.run(config)
 
 
-def create_artefact_dirs(output_dir: str, random_seed : int) -> None:
+def create_artifact_dirs(output_dir: str, random_seed : int) -> None:
     """
     Creates artefact directories if they do not already exist
 
@@ -92,7 +93,6 @@ def create_artefact_dirs(output_dir: str, random_seed : int) -> None:
         os.makedirs(output_dir + "/results/tensorboard/" + str(random_seed) + "/")
     if not os.path.exists(output_dir + "/results/env_data/" + str(random_seed) + "/"):
         os.makedirs(output_dir + "/results/env_data/" + str(random_seed) + "/")
-
 
 
 def setup_logger(name: str, logdir: str, time_str = None):
@@ -161,6 +161,7 @@ def write_users_config_file(users_config: UsersConfig, path: str) -> None:
     json_str = json.dumps(json.loads(jsonpickle.encode(users_config)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
+
 
 def write_flags_config_file(flags_config: FlagsConfig, path: str) -> None:
     """
@@ -250,6 +251,7 @@ def read_users_config(users_config_path) -> UsersConfig:
         json_str = f.read()
     users_config: UsersConfig = jsonpickle.decode(json_str)
     return users_config
+
 
 def read_flags_config(flags_config_path) -> FlagsConfig:
     """
@@ -484,16 +486,16 @@ def running_average(x, N):
     return y
 
 
-def running_average(x, N):
-    ''' Function used to compute the running average
-        of the last N elements of a vector x
-    '''
-    if len(x) >= N:
-        y = np.copy(x)
-        y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
-    else:
-        y = [x[-1]]
-    return y[-1]
+# def running_average(x, N):
+#     ''' Function used to compute the running average
+#         of the last N elements of a vector x
+#     '''
+#     if len(x) >= N:
+#         y = np.copy(x)
+#         y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+#     else:
+#         y = [x[-1]]
+#     return y[-1]
 
 
 def running_average_list(x, N):

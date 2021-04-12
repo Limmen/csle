@@ -77,3 +77,4 @@ class ShellSimulatorUtil:
                                                num_new_backdoors_installed=total_new_backdoors_installed,
                                                cost=a.cost, env_config=env_config, alerts=a.alerts, action=a)
         return s_prime, reward
+

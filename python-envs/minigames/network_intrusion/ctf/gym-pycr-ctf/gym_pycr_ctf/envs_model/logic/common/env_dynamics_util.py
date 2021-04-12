@@ -36,7 +36,7 @@ class EnvDynamicsUtil:
     def merge_new_obs_with_old(old_machines_obs: List[AttackerMachineObservationState],
                                new_machines_obs: List[AttackerMachineObservationState], env_config: EnvConfig,
                                action : AttackerAction) -> \
-            Tuple[List[AttackerMachineObservationState], int, int, int, int, int, int, int, int, int, int]:
+            Tuple[List[AttackerMachineObservationState], int, int, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old network observation with new information collected
 
@@ -107,7 +107,7 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: AttackerMachineObservationState, n_m: AttackerMachineObservationState,
                                                    action: AttackerAction) \
-            -> Tuple[AttackerMachineObservationState, int, int, int, int, int, int, int, int, int]:
+            -> Tuple[AttackerMachineObservationState, int, int, int, int, int, int, int, int, int, int]:
         """
         Helper function for merging an old machine observation with new information collected
 
@@ -117,7 +117,7 @@ class EnvDynamicsUtil:
                  new_fl, new_osvdb_vulns, num_new_logged_in, num_new_tools_installed
         """
         if n_m == None:
-            return o_m, 0, 0, 0, 0, 0, 0, 0
+            return o_m, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports)
         n_m.ports = merged_ports
         merged_os, num_new_os_found = EnvDynamicsUtil.merge_os(o_m.os, n_m.os)

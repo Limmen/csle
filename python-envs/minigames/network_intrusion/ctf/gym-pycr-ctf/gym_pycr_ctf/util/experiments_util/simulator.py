@@ -1,18 +1,18 @@
 """
 A utility class for running simulations of pre-defined policies against each other (No training involved)
 """
-#import tqdm
 import logging
 import time
 import numpy as np
-
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
 from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 from gym_pycr_ctf.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
 
+
 class Simulator:
+
     """
     A class to orchestrate simulations of pre-defined policies against each other
     """
@@ -27,7 +27,6 @@ class Simulator:
         self.config = config
         self.env = env
         self.experiment_result = ExperimentResult()
-        #self.outer = tqdm.tqdm(total=self.config.num_episodes, desc='Episode', position=0)
         if self.config.logger is None:
             self.config.logger = logging.getLogger('Simulation')
         self.attacker = attacker
@@ -89,7 +88,6 @@ class Simulator:
 
             done = False
             obs = self.env.reset()
-            self.outer.update(1)
 
         self.env.close()
         self.config.logger.info("Simulation Complete")
@@ -105,6 +103,5 @@ class Simulator:
         """
         avg_episode_steps = np.mean(episode_steps)
         log_str = "avg_t:{:.2f}".format(avg_episode_steps)
-        self.outer.set_description_str(log_str)
         self.config.logger.info(log_str)
         result.avg_episode_steps.append(avg_episode_steps)

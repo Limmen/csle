@@ -11,7 +11,7 @@ class AttackerAction:
     def __init__(self, id : AttackerActionId, name :str, cmd : List[str], type: AttackerActionType, descr: str, cost: float,
                  noise : float, ip :str, index: int, subnet : bool = False,
                  action_outcome: AttackerActionOutcome = AttackerActionOutcome.INFORMATION_GATHERING,
-                 vulnerability: str = None, alt_cmd = List[str], alerts = None):
+                 vulnerability: str = None, alt_cmd = List[str], alerts = None, backdoor: bool = False):
         """
         Class constructor
 
@@ -29,6 +29,7 @@ class AttackerAction:
         :param vulnerability: type of vulnerability that the action exploits (in case an exploit)
         :param alt_cmd: alternative command if the first command does not work
         :param alerts: the number of IDS alerts triggered by this action
+        :param backdoor: if the action also installs a backdoor (some exploits does this)
         """
         self.id = id
         self.name = name
@@ -46,6 +47,7 @@ class AttackerAction:
         self.alerts = alerts
         if self.alerts is None:
             self.alerts = (0,0)
+        self.backdoor = backdoor
 
     def __str__(self):
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)
