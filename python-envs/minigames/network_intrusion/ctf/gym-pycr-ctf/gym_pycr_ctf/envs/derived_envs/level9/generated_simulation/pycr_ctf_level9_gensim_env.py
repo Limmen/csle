@@ -46,6 +46,7 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.max_episode_length = 50000
             env_config.attacker_alerts_coefficient = 0
             env_config.attacker_cost_coefficient = 0
+            env_config.use_upper_bound_pi_star_attacker = False
 
         super().__init__(env_config=env_config)
 

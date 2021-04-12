@@ -34,6 +34,7 @@ class ManualAttackerAgent:
         else:
             num_actions = env.env_config.attacker_action_conf.num_actions
             actions = np.array(list(range(num_actions)))
+            cumulative_reward = 0
             latest_obs = None
             latest_rew = None
             latest_obs = env.reset()
@@ -50,6 +51,7 @@ class ManualAttackerAgent:
                           "press H to print the history of actions")
                 elif raw_input == "R":
                     latest_obs = env.reset()
+                    cumulative_reward = 0
                 elif raw_input == "S":
                     print(str(env.env_state.attacker_obs_state))
                 elif raw_input == "L":
@@ -66,6 +68,8 @@ class ManualAttackerAgent:
                     print(latest_obs)
                 elif raw_input == "U":
                     print(latest_rew)
+                elif raw_input == "P":
+                    print(cumulative_reward)
                 else:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
@@ -80,6 +84,8 @@ class ManualAttackerAgent:
                             if env.is_attack_action_legal(a, env.env_config, env.env_state):
                                 action = (a, defender_action)
                                 latest_obs, latest_rew, done, _ = self.env.step(action)
+                                attacker_rew, defender_rew = latest_rew
+                                cumulative_reward += attacker_rew
                                 history.append(a)
                                 if done:
                                     print("done:{}, attacker_caught:{}, stopped:{}, all_flags:{}".format(

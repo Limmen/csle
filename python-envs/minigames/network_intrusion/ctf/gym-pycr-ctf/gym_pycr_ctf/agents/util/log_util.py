@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize, SubprocVecEnv
 from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 import gym_pycr_ctf.envs_model.logic.common.util as pycr_util
@@ -394,6 +395,7 @@ class LogUtil:
                 eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage, attacker_agent_config.epsilon)
         attacker_agent_config.logger.info(log_str)
         print(log_str)
+        sys.stdout.flush()
         if attacker_agent_config.tensorboard:
             LogUtil.log_tensorboard_attacker(train_log_dto.iteration, avg_episode_rewards, avg_episode_steps,
                                           avg_episode_loss, eps, train_log_dto.attacker_lr, eval=eval,
@@ -969,6 +971,7 @@ class LogUtil:
             )
         defender_agent_config.logger.info(log_str)
         print(log_str)
+        sys.stdout.flush()
         if defender_agent_config.tensorboard:
             LogUtil.log_tensorboard_defender(train_log_dto.iteration, avg_episode_rewards, avg_episode_steps,
                                           avg_episode_loss, eps, train_log_dto.defender_lr, eval=eval,
@@ -1238,12 +1241,13 @@ class LogUtil:
         :return: fraction of optimal reward
         """
         abs_difference = abs(opt_r - r)
+        print("r:{}, opt_r:{}, abs_difference:{}".format(r, opt_r, abs_difference))
         if (r > 0 and opt_r > 0) or (r < 0 and opt_r < 0):
             return r/opt_r
         elif r < 0 and opt_r > 0:
             return 1/abs_difference
         else:
-            raise ValueError("Invalid inpt")
+            raise ValueError("Invalid input")
 
     @staticmethod
     def compute_regret(r: float, opt_r : float) -> float:

@@ -206,7 +206,7 @@ class FindPiStar:
         :return: the upper bound reward
         """
         num_flags = len(env_config.network_conf.flags_lookup)
-        reward = env_config.flag_found_reward_mult*num_flags
-        reward = reward + env_config.all_flags_reward
+        reward = env_config.attacker_flag_found_reward_mult*num_flags
+        reward = reward + env_config.attacker_all_flags_reward
         return reward
 
