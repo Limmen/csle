@@ -38,12 +38,9 @@ class ShellSimulatorUtil:
                 if o_m.ip == node.ip:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
-            print("logging in, ip:{}, acess:{}, service_name:{}".format(node.ip, access, service_name))
             if access:
-                print("node services:{}".format(list(map(lambda x: str(x), node.services))))
                 for service in node.services:
                     if service.name == service_name:
-                        print("service match, service-credentials:{}, credentials:".format(list(map(lambda x: str(x), service.credentials))), list(map(lambda x: str(x), credentials)))
                         for cr in service.credentials:
                             for a_cr in credentials:
                                 if a_cr.username == cr.username and a_cr.pw == cr.pw:
