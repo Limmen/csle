@@ -145,7 +145,7 @@ clean: stop
 	cd containers/hacker_kali1/ && $(MAKE) clean
 	cd containers/client1/ && $(MAKE) clean
 
-apply_config: users vuln flags topology gen_containers_config traffic
+apply_config: users vuln flags topology gen_containers_config
 
 topology: ./create_topology.py
 	python create_topology.py

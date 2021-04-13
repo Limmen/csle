@@ -1,7 +1,7 @@
 {
     "agent_type": 1,
     "attacker_agent_config": {
-        "alpha": 0.0001,
+        "alpha": 5e-05,
         "ar_policy": false,
         "ar_policy2": false,
         "attacker_opponent_baseline_type": 8,
@@ -62,10 +62,10 @@
         "min_epsilon": 0.01,
         "mini_batch_size": 64,
         "multi_input_channel": false,
-        "n_deterministic_eval_iter": 5,
+        "n_deterministic_eval_iter": 0,
         "n_quick_eval_iter": 5,
         "num_episodes": 5000,
-        "num_iterations": 200,
+        "num_iterations": 400,
         "num_nodes": 10,
         "optimization_iterations": 10,
         "optimizer": "Adam",
