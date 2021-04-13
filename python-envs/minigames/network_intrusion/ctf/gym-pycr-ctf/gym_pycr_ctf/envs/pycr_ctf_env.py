@@ -40,7 +40,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Initialize environment state
         self.env_state = EnvState(env_config=self.env_config, num_ports=self.env_config.attacker_num_ports_obs,
-                                  num_vuln=self.env_config.attacker_num_vuln_obs, num_sh=self.env_config.attacker_num_sh_obs,
+                                  num_vuln=self.env_config.attacker_num_vuln_obs,
+                                  num_sh=self.env_config.attacker_num_sh_obs,
                                   num_nodes=env_config.num_nodes,
                                   service_lookup=constants.SERVICES.service_lookup,
                                   vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
@@ -114,7 +115,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         self.env_config.scale_rewards_prep_attacker()
         self.env_config.scale_rewards_prep_defender()
-        self.attacker_agent_state = AttackerAgentState(attacker_obs_state=self.env_state.attacker_obs_state, env_log=AgentLog(),
+        self.attacker_agent_state = AttackerAgentState(attacker_obs_state=self.env_state.attacker_obs_state,
+                                                       env_log=AgentLog(),
                                                        service_lookup=self.env_state.service_lookup,
                                                        vuln_lookup=self.env_state.vuln_lookup,
                                                        os_lookup=self.env_state.os_lookup)
@@ -133,10 +135,12 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Warmup in the emulation
         if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
-                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION or self.env_config.env_mode == EnvMode.EMULATION):
-            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions),
-                                   num_warmup_steps=env_config.emulation_config.warmup_iterations,
-                                   env=self, render = False)
+                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION
+                     or self.env_config.env_mode == EnvMode.EMULATION):
+            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(
+                num_actions=env_config.attacker_action_conf.num_actions),
+                num_warmup_steps=env_config.emulation_config.warmup_iterations,
+                env=self, render = False)
             print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
                   "cache_misses:{}".format(
                 len(self.env_config.attacker_nmap_scan_cache.cache),
@@ -159,8 +163,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
-                s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
-                                                       env_config=self.env_config)
+                s_prime, _, _ = TransitionOperator.defender_transition(
+                    s=self.env_state, defender_action=defender_init_action, env_config=self.env_config)
                 self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
             self.reset()
@@ -254,7 +258,6 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.step_defender(defender_action_id=defense_action_id,
                                    attacker_action=self.env_state.attacker_obs_state.last_attacker_action,
                                    attacker_opponent=attacker_opponent)
-            defender_info["successful_intrusion"] = False
             attacker_reward = attacker_reward
         else:
             defender_info = {}
@@ -264,6 +267,12 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_info["snort_warning_baseline_reward"] = 0
             defender_info["snort_critical_baseline_reward"] = 0
             defender_info["var_log_baseline_reward"] = 0
+
+        defender_info["successful_intrusion"] = False
+        defender_info["attacker_cost"] = 0.0
+        defender_info["attacker_cost_norm"] = 0.0
+        defender_info["attacker_alerts"] = 0.0
+        defender_info["attacker_alerts_norm"] = 0.0
 
         if not done:
             # Second step attacker
@@ -357,7 +366,16 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Prepare action for execution
         attack_action = self.env_config.attacker_action_conf.actions[attacker_action_id]
         attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
-
+        self.env_state.attacker_obs_state.cost += attack_action.cost
+        self.env_state.attacker_obs_state.cost_norm += EnvDynamicsUtil.normalize_action_costs(
+            action=attack_action, env_config=self.env_config)
+        self.env_state.attacker_obs_state.alerts += attack_action.alerts[0]
+        self.env_state.attacker_obs_state.alerts_norm += EnvDynamicsUtil.normalize_action_alerts(
+            action=attack_action, env_config=self.env_config)
+        info["attacker_cost"] = self.env_state.attacker_obs_state.cost
+        info["attacker_cost_norm"] = self.env_state.attacker_obs_state.cost_norm
+        info["attacker_alerts"] = self.env_state.attacker_obs_state.alerts
+        info["attacker_alerts_norm"] = self.env_state.attacker_obs_state.alerts_norm
         # Step in the environment
         s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
             s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
@@ -377,6 +395,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
             attacker_reward = attacker_reward - self.env_config.attacker_detection_reward
+            info["caught_attacker"] = True
         info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.attacker_trajectories.append(self.attacker_trajectory)

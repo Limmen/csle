@@ -27,6 +27,10 @@ class AttackerObservationState:
         self.last_attacker_action : AttackerAction = None
         self.undetected_intrusions_steps = 0
         self.step=0
+        self.cost=0.0
+        self.cost_norm=0.0
+        self.alerts=0.0
+        self.alerts_norm = 0.0
 
     def ongoing_intrusion(self) -> bool:
         """
@@ -186,6 +190,11 @@ class AttackerObservationState:
         c.all_flags = self.all_flags
         c.last_attacker_action = self.last_attacker_action
         c.actions_tried = self.actions_tried.copy()
+        c.step = self.step
+        c.cost = self.cost
+        c.cost_norm = self.cost_norm
+        c.alerts = self.alerts
+        c.alerts_norm = self.alerts_norm
         for m in self.machines:
             c.machines.append(m.copy())
         return c
@@ -194,5 +203,6 @@ class AttackerObservationState:
         """
         :return: a string representation of the state
         """
-        return  "Found flags:{}, step:{}".format(self.catched_flags, self.step) + "\n" + \
+        return  "Found flags:{}, step:{},costs:{},costs_norm:{},alerts:{},alerts_norm:{}".format(
+            self.catched_flags, self.step, self.cost, self.cost_norm, self.alerts, self.alerts_norm) + "\n" + \
                 "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

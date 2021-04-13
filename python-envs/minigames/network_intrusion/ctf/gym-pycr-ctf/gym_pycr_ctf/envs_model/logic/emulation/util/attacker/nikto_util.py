@@ -51,10 +51,10 @@ class NiktoUtil:
         if env_config.attacker_use_nikto_cache:
             cache_value = env_config.attacker_nikto_scan_cache.get(cache_id)
             if cache_value is not None:
-                s_prime, reward = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
+                s_prime, reward, done = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
                                                                                  env_config=env_config)
 
-                return s_prime, reward, False
+                return s_prime, reward, done
 
         # Check On-disk cache
         if env_config.attacker_use_nmap_cache:
@@ -99,18 +99,15 @@ class NiktoUtil:
 
     @staticmethod
     def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: AttackerAction, env_config: EnvConfig) \
-            -> Tuple[EnvState, float]:
+            -> Tuple[EnvState, float, bool]:
         """
         Merges a Nikto scan result with an existing observation state
 
         :param scan_result: the scan result
         :param s: the current state
         :param a: the action just executed
-        :return: s', reward
+        :return: s', reward, done
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_osvdb_vuln_found, total_new_logged_in, \
-        total_new_tools_installed, total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         m_obs = None
 
         for m in s.attacker_obs_state.machines:
@@ -135,7 +132,13 @@ class NiktoUtil:
             a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+        return s_prime, reward, done
 
     @staticmethod
     def parse_nikto_scan_xml(xml_data) -> NiktoScanResult:

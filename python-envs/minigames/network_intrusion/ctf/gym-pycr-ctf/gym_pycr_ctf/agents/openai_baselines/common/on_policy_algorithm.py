@@ -298,6 +298,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.episode_snort_warning_baseline_rewards.append(infos[i]["snort_warning_baseline_reward"])
                         rollout_data_dto.episode_snort_critical_baseline_rewards.append(infos[i]["snort_critical_baseline_reward"])
                         rollout_data_dto.episode_var_log_baseline_rewards.append(infos[i]["var_log_baseline_reward"])
+                        rollout_data_dto.attacker_action_costs.append(infos[i]["attacker_cost"])
+                        rollout_data_dto.attacker_action_costs_norm.append(infos[i]["attacker_cost_norm"])
+                        rollout_data_dto.attacker_action_alerts.append(infos[i]["attacker_alerts"])
+                        rollout_data_dto.attacker_action_alerts_norm.append(infos[i]["attacker_alerts_norm"])
                         if self.attacker_agent_config.env_config is not None:
                             rollout_data_dto.episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
@@ -381,6 +385,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         # Tracking metrics
         train_log_dto = TrainAgentLogDTO()
         train_log_dto.initialize()
+        train_log_dto.train_result = self.train_result
+        train_log_dto.eval_result = self.eval_result
+        train_log_dto.iteration = self.iteration
 
         num_iterations = self.attacker_agent_config.num_iterations
         if self.train_mode == TrainMode.TRAIN_DEFENDER:
@@ -402,7 +409,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 train_log_dto.env_response_times.extend(rollout_data_dto.env_response_times)
                 train_log_dto.action_pred_times.extend(rollout_data_dto.action_pred_times)
 
-
             train_log_dto.attacker_episode_rewards.extend(rollout_data_dto.attacker_episode_rewards)
             train_log_dto.defender_episode_rewards.extend(rollout_data_dto.defender_episode_rewards)
             train_log_dto.episode_steps.extend(rollout_data_dto.episode_steps)
@@ -415,6 +421,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             train_log_dto.episode_snort_warning_baseline_rewards.extend(rollout_data_dto.episode_snort_warning_baseline_rewards)
             train_log_dto.episode_snort_critical_baseline_rewards.extend(rollout_data_dto.episode_snort_critical_baseline_rewards)
             train_log_dto.episode_var_log_baseline_rewards.extend(rollout_data_dto.episode_var_log_baseline_rewards)
+            train_log_dto.attacker_action_costs.extend(rollout_data_dto.attacker_action_costs)
+            train_log_dto.attacker_action_costs_norm.extend(rollout_data_dto.attacker_action_costs_norm)
+            train_log_dto.attacker_action_alerts.extend(rollout_data_dto.attacker_action_alerts)
+            train_log_dto.attacker_action_alerts_norm.extend(rollout_data_dto.attacker_action_alerts_norm)
 
             for key in rollout_data_dto.attacker_env_specific_rewards.keys():
                 if key in train_log_dto.attacker_train_episode_env_specific_rewards:
@@ -446,6 +456,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 break
 
             self.iteration += 1
+            train_log_dto.iteration = self.iteration
             callback.iteration += 1
             self._update_current_progress_remaining(self.num_timesteps, total_timesteps)
 
@@ -494,15 +505,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     else:
                         train_log_dto.copy_saved_env_2(self.saved_log_dto)
 
-                    avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r, avg_baseline_critical_r, \
-                    avg_baseline_var_log_r = EvalUtil.eval_defender(self.env.envs[0], self)
+                    if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
+                        avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r, avg_baseline_critical_r, \
+                        avg_baseline_var_log_r = EvalUtil.eval_defender(self.env.envs[0], self)
 
-                    train_log_dto.eval_defender_episode_rewards = avg_reward
-                    train_log_dto.eval_episode_steps = avg_steps
-                    train_log_dto.eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
-                    train_log_dto.eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
-                    train_log_dto.eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
-                    train_log_dto.eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
+                        train_log_dto.eval_defender_episode_rewards = avg_reward
+                        train_log_dto.eval_episode_steps = avg_steps
+                        train_log_dto.eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
+                        train_log_dto.eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
+                        train_log_dto.eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
+                        train_log_dto.eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

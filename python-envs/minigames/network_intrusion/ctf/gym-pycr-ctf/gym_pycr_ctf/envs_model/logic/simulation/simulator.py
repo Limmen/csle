@@ -21,7 +21,7 @@ class Simulator:
     real actions in the emulation environment.
     """
     @staticmethod
-    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a state transition in the MDP or Markov Game
 
@@ -70,7 +70,7 @@ class Simulator:
 
 
     @staticmethod
-    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a reconnaissance action
 
@@ -130,7 +130,7 @@ class Simulator:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs an exploit action
 
@@ -186,7 +186,7 @@ class Simulator:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a post-exploit action
 
@@ -217,7 +217,7 @@ class Simulator:
 
     @staticmethod
     def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
-            -> Tuple[EnvState, int, bool]:
+            -> Tuple[EnvState, float, bool]:
         """
         Implements transition of a stopping action of the attacker
 

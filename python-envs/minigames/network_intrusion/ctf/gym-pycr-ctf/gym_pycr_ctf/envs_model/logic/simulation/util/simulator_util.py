@@ -1,4 +1,4 @@
-from typing import List
+from typing import Tuple
 import numpy as np
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
@@ -12,7 +12,7 @@ class SimulatorUtil:
     """
 
     @staticmethod
-    def simulate_detection(a: AttackerAction, env_config: EnvConfig) -> List[str]:
+    def simulate_detection(a: AttackerAction, env_config: EnvConfig) -> Tuple[bool, int]:
         """
         Simulates probability that an attack is detected by a defender
 

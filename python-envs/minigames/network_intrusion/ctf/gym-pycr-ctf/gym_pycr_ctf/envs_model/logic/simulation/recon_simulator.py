@@ -12,7 +12,7 @@ class ReconSimulator:
     """
 
     @staticmethod
-    def simulate_tcp_syn_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_tcp_syn_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP SYN Stealth Scan action
 
@@ -21,17 +21,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_ping_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_ping_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a Ping Scan action
 
@@ -40,17 +41,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.ping_scan_miss_p,
                                                           os=False)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_udp_port_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_udp_port_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a UDP port scan action
 
@@ -59,17 +61,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.udp_port_scan_miss_p,
                                                                        protocol=TransportProtocol.UDP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_con_non_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_con_non_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP CON Scan (non-stealth) action
 
@@ -78,17 +81,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_fin_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_fin_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP FIN Scan action
 
@@ -97,17 +101,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_null_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_tcp_null_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP NULL Scan action
 
@@ -116,17 +121,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_xmas_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_tcp_xmas_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP XMAS Scan action
 
@@ -135,17 +141,18 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.syn_stealth_scan_miss_p,
                                                                        protocol=TransportProtocol.TCP)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_os_detection_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_os_detection_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs an OS Detection scan action
 
@@ -154,16 +161,17 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
                                                           miss_p=env_config.os_scan_miss_p, os=True)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_vulscan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_vulscan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a nmap vulnerability scan using "vulscan" action
 
@@ -172,18 +180,19 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.vulscan_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_nmap_vulners(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_nmap_vulners(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a nmap vulnerability scan using "vulners" action
 
@@ -192,18 +201,19 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        s_prime, reward = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
+        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(s=s, a=a, env_config=env_config,
                                                                        miss_p=env_config.vulners_miss_p,
                                                                        protocol=TransportProtocol.TCP,
                                                                        vuln_scan=True)
-        done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
+        if not done:
+            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
+            if done:
+                reward = d_reward
+            s_prime.attacker_obs_state.detected = done
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_nikto_web_host_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_nikto_web_host_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a Nikto web host scan
 
@@ -215,7 +225,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_masscan_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_masscan_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a masscan host scan
 
@@ -227,7 +237,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_firewalk_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_firewalk_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a firewalk scan
 
@@ -239,7 +249,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_http_enum(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_http_enum(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a http enum scan
 
@@ -251,7 +261,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_http_grep(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_http_grep(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a http grep scan
 
@@ -263,7 +273,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_finger(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def simulate_finger(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a finger scan
 

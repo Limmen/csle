@@ -517,18 +517,15 @@ class NmapUtil:
 
     @staticmethod
     def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EnvState, a: AttackerAction, env_config: EnvConfig) \
-            -> Tuple[EnvState, float]:
+            -> Tuple[EnvState, float, bool]:
         """
         Merges a NMAP scan result with an existing observation state
 
         :param scan_result: the scan result
         :param s: the current state
         :param a: the action just executed
-        :return: s', reward
+        :return: s', reward, done
         """
-        total_new_ports, total_new_os, total_new_vuln, total_new_machines, total_new_shell_access, \
-        total_new_root, total_new_flag_pts, total_new_logged_in, total_new_tools_installed, \
-        total_new_backdoors_installed = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         new_m_obs = []
         for host in scan_result.hosts:
             m_obs = host.to_obs()
@@ -550,7 +547,14 @@ class NmapUtil:
             a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+
+        return s_prime, reward, done
 
     @staticmethod
     def nmap_scan_action_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, masscan: bool = False) \
@@ -773,6 +777,7 @@ class NmapUtil:
     def nmap_pivot_scan_action_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, partial_result:
     NmapScanResult, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
+        done = False
         hacker_ip = env_config.hacker_ip
         logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
                                                                   and x.backdoor_installed,
@@ -794,8 +799,10 @@ class NmapUtil:
             scan_result = env_config.attacker_nmap_scan_cache.get(base_cache_id)
             if scan_result is not None:
                 merged_result, total_results = scan_result
-                s_prime, reward = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_result, s=s, a=a,
+                s_prime, reward, d = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_result, s=s, a=a,
                                                                                 env_config=env_config)
+                if d:
+                    done = d
                 for res in total_results:
                     if res.ip == env_config.hacker_ip:
                         s_prime.attacker_obs_state.agent_reachable.update(res.reachable)
@@ -829,7 +836,7 @@ class NmapUtil:
                     new_machines_obs_1.append(machine)
                 s_prime.attacker_obs_state.machines = new_machines_obs_1
 
-                return s_prime, reward, False
+                return s_prime, reward, done
 
         new_machines_obs = []
         total_cost = 0
@@ -920,8 +927,10 @@ class NmapUtil:
         if env_config.attacker_use_nmap_cache:
             env_config.attacker_nmap_scan_cache.add(base_cache_id, (merged_scan_result, total_results))
         a.cost = a.cost + total_cost
-        s_prime, reward = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
+        s_prime, reward, d = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
+        if d:
+            done = d
         new_machines_obs_1 = []
         reachable = s.attacker_obs_state.agent_reachable
         reachable.add(env_config.router_ip)
@@ -939,4 +948,4 @@ class NmapUtil:
             new_machines_obs_1.append(machine)
         s_prime.attacker_obs_state.machines = new_machines_obs_1
 
-        return s_prime, reward, False
+        return s_prime, reward, done

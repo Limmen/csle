@@ -11,6 +11,7 @@ from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUt
 from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
 from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
 
+
 class ReconSimulatorUtil:
     """
     Class containing utility functions for simulating Recon actions
@@ -19,7 +20,7 @@ class ReconSimulatorUtil:
     @staticmethod
     def simulate_port_vuln_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float,
                                        protocol=TransportProtocol.TCP, vuln_scan : bool = False) \
-            -> Tuple[EnvState, int]:
+            -> Tuple[EnvState, float, bool]:
         """
         Helper function for simulating port-scan and vuln-scan actions
 
@@ -29,7 +30,7 @@ class ReconSimulatorUtil:
         :param miss_p: the simulated probability that the scan action will not detect a real service or node
         :param protocol: the tranport protocol for the scan
         :param vuln_scan: boolean flag whether the scan is a vulnerability scan or not
-        :return: s_prime, reward
+        :return: s_prime, reward, done
         """
         net_outcome = NetworkOutcome()
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
@@ -105,11 +106,18 @@ class ReconSimulatorUtil:
             s_prime = s
             s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
             reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+
+        return s_prime, reward, done
 
     @staticmethod
     def simulate_host_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float, os=False) -> \
-            Tuple[EnvState, int]:
+            Tuple[EnvState, float, bool]:
         """
         Helper method for simulating a host-scan (i.e non-port scan) action
 
@@ -118,7 +126,7 @@ class ReconSimulatorUtil:
         :param env_config: the current environment configuration
         :param miss_p: the simulated probability that the scan action will not detect a real service or node
         :param os: boolean flag whether the host scan should check the operating system too
-        :return: s_prime, reward
+        :return: s_prime, reward, done
         """
         net_outcome = NetworkOutcome()
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
@@ -173,5 +181,12 @@ class ReconSimulatorUtil:
             s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
             reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+
+        return s_prime, reward, done
 

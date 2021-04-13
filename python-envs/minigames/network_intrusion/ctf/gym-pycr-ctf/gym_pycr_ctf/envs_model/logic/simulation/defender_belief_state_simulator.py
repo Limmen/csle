@@ -13,7 +13,7 @@ class DefenderBeliefStateSimulator:
 
     @staticmethod
     def update_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
-                     defender_action: DefenderAction)-> Tuple[EnvState, int, bool]:
+                     defender_action: DefenderAction)-> Tuple[EnvState, float, bool]:
         """
         Simulates a belief state transition of the defender
 
@@ -129,7 +129,7 @@ class DefenderBeliefStateSimulator:
 
     @staticmethod
     def init_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
-                     defender_action: DefenderAction) -> Tuple[EnvState, int, bool]:
+                     defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
         """
         Initializes the belief state of the defender
 
@@ -144,7 +144,7 @@ class DefenderBeliefStateSimulator:
 
     @staticmethod
     def reset_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
-                   defender_action: DefenderAction) -> Tuple[EnvState, int, bool]:
+                   defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
         """
         Resets the belief state of the defender
 

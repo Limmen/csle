@@ -15,7 +15,7 @@ class TransitionOperator:
     """
 
     @staticmethod
-    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : EnvConfig) -> Tuple[EnvState, int, bool]:
+    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for attack actions,
         supporting both simulation and emulation mode
@@ -42,7 +42,7 @@ class TransitionOperator:
     @staticmethod
     def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
                             attacker_action : AttackerAction = None) \
-            -> Tuple[EnvState, int, bool]:
+            -> Tuple[EnvState, float, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for defense actions,
         supporting both simulation and emulation mode

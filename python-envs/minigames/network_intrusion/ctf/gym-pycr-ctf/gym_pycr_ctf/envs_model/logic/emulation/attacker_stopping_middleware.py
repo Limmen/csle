@@ -11,7 +11,7 @@ class AttackerStoppingMiddleware:
     """
 
     @staticmethod
-    def stop_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def stop_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -24,7 +24,7 @@ class AttackerStoppingMiddleware:
 
 
     @staticmethod
-    def continue_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def continue_intrusion(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
 

@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import numpy as np
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
@@ -19,7 +20,15 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_complete_obs_state(old_obs_state: AttackerObservationState, new_obs_state : AttackerObservationState,
-                                 env_config: EnvConfig):
+                                 env_config: EnvConfig) -> AttackerObservationState:
+        """
+        Merges an old observation state with a new one
+
+        :param old_obs_state: the old observation state
+        :param new_obs_state: the new observation state
+        :param env_config: the environment configuration
+        :return: the merged observation state
+        """
         merged_obs_state = old_obs_state.copy()
         merged_obs_state.num_machines = max(old_obs_state.num_machines, new_obs_state.num_machines)
         merged_obs_state.num_ports = max(old_obs_state.num_ports, new_obs_state.num_ports)
@@ -43,6 +52,7 @@ class EnvDynamicsUtil:
         :param old_machines_obs: the list of old machine observations
         :param new_machines_obs: the list of newly collected information
         :param env_config: environment config
+        :param action: the action
         :return: the merged network outcome
         """
         net_outcome = NetworkOutcome()
@@ -489,7 +499,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def reward_function(net_outcome: NetworkOutcome, env_config: EnvConfig  = None,
-                        action: AttackerAction = None) -> int:
+                        action: AttackerAction = None) -> float:
         """
         Implements the reward function
 
@@ -517,39 +527,38 @@ class EnvDynamicsUtil:
                     net_outcome.total_new_logged_in, net_outcome.total_new_tools_installed,
                     net_outcome.total_new_tools_installed]
 
-        # normalize between 0-10
-        cost = ((net_outcome.cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) * 10
+        cost = EnvDynamicsUtil.normalize_action_costs(action=action, env_config=env_config)
 
         alerts_pts = 0
         if env_config.ids_router and net_outcome.alerts is not None:
-            # normalize between 0-10
-            alerts_pts = ((net_outcome.alerts[0]
-                           * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) * 10
+            alerts_pts = EnvDynamicsUtil.normalize_action_alerts(action=action, env_config=env_config)
 
-        #reward = (-env_config.base_step_reward) * reward - cost - alerts_pts
-        # if reward == 0:
-        #     reward = reward + env_config.base_step_reward - cost - alerts_pts
-        # else:
-        #     reward = reward - cost - alerts_pts
-
-        # if reward == 0:
-        #     if sum(new_info) > 0:
-        #         reward = - cost - alerts_pts
-        #     else:
-        #         reward = env_config.base_step_reward - cost - alerts_pts
-        # else:
-        #     reward = reward - cost - alerts_pts
-        #print(float(reward) + float(env_config.attacker_base_step_reward))
-        # if reward == 0:
-        #     if sum(new_info) > 0:
-        #         reward = - cost - alerts_pts
-        #     else:
-        #         reward = env_config.attacker_base_step_reward - cost - alerts_pts
-        # else:
-        #     reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
         reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
-        #print("returning reward:{}, {}".format(reward, env_config.attacker_base_step_reward))
         return reward
+
+    @staticmethod
+    def emulate_detection(net_outcome: NetworkOutcome, env_config: EnvConfig = None,
+                          action: AttackerAction = None) -> Tuple[bool, int]:
+        if env_config.emulate_detection:
+            detected = False
+            if net_outcome.alerts is not None:
+                num_alerts = net_outcome.alerts[0]
+            else:
+                num_alerts = 0
+
+            if num_alerts > env_config.attacker_alerts_coefficient:
+                print("detection probability:{}".format((num_alerts / env_config.attacker_max_alerts)))
+                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts)
+
+            r = env_config.attacker_detection_reward
+
+            if not detected:
+                r = 0
+            return detected, r
+        else:
+            return False, 0
+
+
 
     @staticmethod
     def is_all_flags_collected(s: EnvState, env_config: EnvConfig) -> bool:
@@ -823,3 +832,29 @@ class EnvDynamicsUtil:
                 merged_machines.append(merged_m)
                 ips.add(m.ip)
         return merged_machines
+
+
+    @staticmethod
+    def normalize_action_costs(action : AttackerAction, env_config: EnvConfig) -> float:
+        """
+        Normalize action costs
+
+        :param action: the attacker aciton
+        :param env_config: the environment configuration
+        :return: the normalized cost
+        """
+        return ((action.cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) \
+        * env_config.normalize_costs_max
+
+    @staticmethod
+    def normalize_action_alerts(action : AttackerAction, env_config: EnvConfig) -> float:
+        """
+        Normalize action alerts
+
+        :param action: the attacker action
+        :param env_config: the environment configuration
+        :return: the normalized alerts pts
+        """
+        return ((action.alerts[0]
+          * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) \
+          * env_config.normalize_alerts_max

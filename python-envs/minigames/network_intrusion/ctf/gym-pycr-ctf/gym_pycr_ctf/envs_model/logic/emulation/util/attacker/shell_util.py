@@ -372,7 +372,7 @@ class ShellUtil:
                 "will be installed" in result or "already installed" in result or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> bool:
+    def install_tools_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Uses compromised machines with root access to install tools
 
@@ -569,7 +569,14 @@ class ShellUtil:
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward, False
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+
+        return s_prime, reward, done
 
     @staticmethod
     def _check_if_seclists_is_installed(conn, telnet: bool = False) -> bool:
@@ -598,7 +605,8 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def execute_ssh_backdoor_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+            -> Tuple[EnvState, float, bool]:
         """
         Uses compromised machines with root access to setup SSH backdoor
 
@@ -756,10 +764,18 @@ class ShellUtil:
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward, False
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+
+        return s_prime, reward, done
 
     @staticmethod
-    def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+            -> Tuple[EnvState, float, bool]:
         """
         Executes a service login on the emulation using previously found credentials
 
@@ -825,4 +841,11 @@ class ShellUtil:
             a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip)
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_out_merged, env_config=env_config, action=a)
-        return s_prime, reward, False
+
+        # Emulate detection
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_out_merged, action=a,
+                                                           env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+        return s_prime, reward, done

@@ -13,7 +13,7 @@ class ShellSimulatorUtil:
 
     @staticmethod
     def simulate_service_login_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, service_name : str = "ssh") \
-            -> Tuple[EnvState, int]:
+            -> Tuple[EnvState, float, bool]:
         """
         Helper function for simulating login to various network services
 
@@ -59,5 +59,9 @@ class ShellSimulatorUtil:
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        return s_prime, reward
+        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
+        if done:
+            reward = d_reward
+        s_prime.attacker_obs_state.detected = done
+        return s_prime, reward, done
 

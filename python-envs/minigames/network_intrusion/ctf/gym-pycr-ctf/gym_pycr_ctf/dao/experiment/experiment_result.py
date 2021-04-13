@@ -76,7 +76,19 @@ class ExperimentResult:
                  eval_2_snort_severe_baseline_rewards: List = None, eval_2_snort_warning_baseline_rewards: List = None,
                  snort_critical_baseline_rewards: List = None, var_log_baseline_rewards : List = None,
                  eval_snort_critical_baseline_rewards: List = None, eval_var_log_baseline_rewards: List = None,
-                 eval_2_snort_critical_baseline_rewards: List = None, eval_2_var_log_baseline_rewards: List = None
+                 eval_2_snort_critical_baseline_rewards: List = None, eval_2_var_log_baseline_rewards: List = None,
+                 attacker_action_costs: List[float] = None,
+                 attacker_action_costs_norm: List[float] = None,
+                 attacker_action_alerts: List[float] = None,
+                 attacker_action_alerts_norm: List[float] = None,
+                 eval_attacker_action_costs: List[float] = None,
+                 eval_attacker_action_costs_norm: List[float] = None,
+                 eval_attacker_action_alerts: List[float] = None,
+                 eval_attacker_action_alerts_norm: List[float] = None,
+                 eval_2_attacker_action_costs: List[float] = None,
+                 eval_2_attacker_action_costs_norm: List[float] = None,
+                 eval_2_attacker_action_alerts: List[float] = None,
+                 eval_2_attacker_action_alerts_norm: List[float] = None
                  ):
         """
         Constructor, initializes the DTO
@@ -225,6 +237,19 @@ class ExperimentResult:
         self.eval_var_log_baseline_rewards = eval_var_log_baseline_rewards
         self.eval_2_snort_critical_baseline_rewards = eval_2_snort_critical_baseline_rewards
         self.eval_2_var_log_baseline_rewards = eval_2_var_log_baseline_rewards
+
+        self.attacker_action_costs = attacker_action_costs
+        self.attacker_action_costs_norm = attacker_action_costs_norm
+        self.attacker_action_alerts = attacker_action_alerts
+        self.attacker_action_alerts_norm = attacker_action_alerts_norm
+        self.eval_attacker_action_costs = eval_attacker_action_costs
+        self.eval_attacker_action_costs_norm = eval_attacker_action_costs_norm
+        self.eval_attacker_action_alerts = eval_attacker_action_alerts
+        self.eval_attacker_action_alerts_norm = eval_attacker_action_alerts_norm
+        self.eval_2_attacker_action_costs = eval_2_attacker_action_costs
+        self.eval_2_attacker_action_costs_norm = eval_2_attacker_action_costs_norm
+        self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
+        self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -398,6 +423,30 @@ class ExperimentResult:
             self.eval_2_snort_critical_baseline_rewards = []
         if eval_2_var_log_baseline_rewards is None:
             self.eval_2_var_log_baseline_rewards = []
+        if attacker_action_costs is None:
+            self.attacker_action_costs = []
+        if attacker_action_costs_norm is None:
+            self.attacker_action_costs_norm = []
+        if attacker_action_alerts is None:
+            self.attacker_action_alerts = []
+        if attacker_action_alerts_norm is None:
+            self.attacker_action_alerts_norm = []
+        if eval_attacker_action_costs is None:
+            self.eval_attacker_action_costs = []
+        if eval_attacker_action_costs_norm is None:
+            self.eval_attacker_action_costs_norm = []
+        if eval_attacker_action_alerts is None:
+            self.eval_attacker_action_alerts = []
+        if eval_attacker_action_alerts_norm is None:
+            self.eval_attacker_action_alerts_norm = []
+        if eval_2_attacker_action_costs is None:
+            self.eval_2_attacker_action_costs = []
+        if eval_2_attacker_action_costs_norm is None:
+            self.eval_2_attacker_action_costs_norm = []
+        if eval_2_attacker_action_alerts is None:
+            self.eval_2_attacker_action_alerts = []
+        if eval_2_attacker_action_alerts_norm is None:
+            self.eval_2_attacker_action_alerts_norm = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -435,6 +484,12 @@ class ExperimentResult:
                    self.snort_critical_baseline_rewards, self.var_log_baseline_rewards,
                    self.eval_snort_critical_baseline_rewards, self.eval_var_log_baseline_rewards,
                    self.eval_2_snort_critical_baseline_rewards, self.eval_2_var_log_baseline_rewards,
+                   self.attacker_action_costs, self.attacker_action_costs_norm,
+                   self.attacker_action_alerts, self.attacker_action_alerts_norm,
+                   self.eval_attacker_action_costs, self.eval_attacker_action_costs_norm,
+                   self.eval_attacker_action_alerts, self.eval_attacker_action_alerts_norm,
+                   self.eval_2_attacker_action_costs, self.eval_2_attacker_action_costs_norm,
+                   self.eval_2_attacker_action_alerts, self.eval_2_attacker_action_alerts_norm
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -461,7 +516,13 @@ class ExperimentResult:
                          "eval_2_snort_severe_baseline_rewards", "eval_2_snort_warning_baseline_rewards",
                          "snort_critical_baseline_rewards", "var_log_baseline_rewards",
                          "eval_snort_critical_baseline_rewards", "eval_var_log_baseline_rewards",
-                         "eval_2_snort_critical_baseline_rewards", "eval_2_var_log_baseline_rewards"
+                         "eval_2_snort_critical_baseline_rewards", "eval_2_var_log_baseline_rewards",
+                         "attacker_action_costs", "attacker_action_costs_norm",
+                         "attacker_action_alerts", "attacker_action_alerts_norm",
+                         "eval_attacker_action_costs", "eval_attacker_action_costs_norm",
+                         "eval_attacker_action_alerts", "eval_attacker_action_alerts_norm",
+                         "eval_2_attacker_action_costs", "eval_2_attacker_action_costs_norm",
+                         "eval_2_attacker_action_alerts", "eval_2_attacker_action_alerts_norm"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

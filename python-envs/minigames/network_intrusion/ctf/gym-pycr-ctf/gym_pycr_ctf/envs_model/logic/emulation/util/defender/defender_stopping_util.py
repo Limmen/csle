@@ -10,7 +10,7 @@ class DefenderStoppingUtil:
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def stop_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -24,7 +24,7 @@ class DefenderStoppingUtil:
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def continue_monitor(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
 

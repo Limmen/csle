@@ -17,7 +17,11 @@ class RolloutDataDTO:
                  env_specific_flags = None,
                  env_specific_flags_percentage = None,
                  env_response_times = None,
-                 action_pred_times = None
+                 action_pred_times = None,
+                 attacker_action_costs = None,
+                 attacker_action_costs_norm=None,
+                 attacker_action_alerts=None,
+                 attacker_action_alerts_norm=None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -38,6 +42,10 @@ class RolloutDataDTO:
         self.env_specific_flags_percentage = env_specific_flags_percentage
         self.env_response_times = env_response_times
         self.action_pred_times = action_pred_times
+        self.attacker_action_costs = attacker_action_costs
+        self.attacker_action_costs_norm = attacker_action_costs_norm
+        self.attacker_action_alerts = attacker_action_alerts
+        self.attacker_action_alerts_norm = attacker_action_alerts_norm
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -60,6 +68,10 @@ class RolloutDataDTO:
         self.env_specific_flags_percentage = {}
         self.env_response_times = []
         self.action_pred_times = []
+        self.attacker_action_costs = []
+        self.attacker_action_costs_norm = []
+        self.attacker_action_alerts = []
+        self.attacker_action_alerts_norm = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 

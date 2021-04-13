@@ -5,7 +5,7 @@ class TrainAgentLogDTO:
     """
     DTO with information for logging during training
     """
-    def __init__(self, iteration: int = 1, train_result : ExperimentResult = None, eval_result: ExperimentResult = None,
+    def __init__(self, iteration: int = 0, train_result : ExperimentResult = None, eval_result: ExperimentResult = None,
                  attacker_episode_rewards: List[float] = None,
                  attacker_episode_avg_loss: List[float] = None,
                  attacker_lr: float = 0.0,
@@ -61,7 +61,19 @@ class TrainAgentLogDTO:
                  eval_episode_snort_critical_baseline_rewards: List[int] = None,
                  eval_episode_var_log_baseline_rewards: List[int] = None,
                  eval_2_episode_snort_critical_baseline_rewards: List[int] = None,
-                 eval_2_episode_var_log_baseline_rewards: List[int] = None
+                 eval_2_episode_var_log_baseline_rewards: List[int] = None,
+                 attacker_action_costs :List[float] = None,
+                 attacker_action_costs_norm :List[float] = None,
+                 attacker_action_alerts :List[float] = None,
+                 attacker_action_alerts_norm :List[float] = None,
+                 eval_attacker_action_costs: List[float] = None,
+                 eval_attacker_action_costs_norm: List[float] = None,
+                 eval_attacker_action_alerts: List[float] = None,
+                 eval_attacker_action_alerts_norm: List[float] = None,
+                 eval_2_attacker_action_costs: List[float] = None,
+                 eval_2_attacker_action_costs_norm: List[float] = None,
+                 eval_2_attacker_action_alerts: List[float] = None,
+                 eval_2_attacker_action_alerts_norm: List[float] = None
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -131,10 +143,22 @@ class TrainAgentLogDTO:
         self.eval_episode_var_log_baseline_rewards = eval_episode_var_log_baseline_rewards
         self.eval_2_episode_var_log_baseline_rewards = eval_2_episode_var_log_baseline_rewards
         self.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
+        self.attacker_action_costs = attacker_action_costs
+        self.attacker_action_costs_norm = attacker_action_costs_norm
+        self.attacker_action_alerts = attacker_action_alerts
+        self.attacker_action_alerts_norm = attacker_action_alerts_norm
+        self.eval_attacker_action_costs = eval_attacker_action_costs
+        self.eval_attacker_action_costs_norm = eval_attacker_action_costs_norm
+        self.eval_attacker_action_alerts = eval_attacker_action_alerts
+        self.eval_attacker_action_alerts_norm = eval_attacker_action_alerts_norm
+        self.eval_2_attacker_action_costs = eval_2_attacker_action_costs
+        self.eval_2_attacker_action_costs_norm = eval_2_attacker_action_costs_norm
+        self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
+        self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
 
 
     def initialize(self):
-        self.iteration = 1
+        self.iteration = 0
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
         self.attacker_episode_rewards = []
@@ -206,7 +230,18 @@ class TrainAgentLogDTO:
         self.episode_snort_severe_baseline_rewards = []
         self.eval_episode_snort_severe_baseline_rewards = []
         self.eval_episode_snort_warning_baseline_rewards = []
-
+        self.attacker_action_costs = []
+        self.attacker_action_costs_norm = []
+        self.attacker_action_alerts = []
+        self.attacker_action_alerts_norm = []
+        self.eval_attacker_action_costs = []
+        self.eval_attacker_action_costs_norm = []
+        self.eval_attacker_action_alerts = []
+        self.eval_attacker_action_alerts_norm = []
+        self.eval_2_attacker_action_costs = []
+        self.eval_2_attacker_action_costs_norm = []
+        self.eval_2_attacker_action_alerts = []
+        self.eval_2_attacker_action_alerts_norm = []
 
     def copy(self):
         c = TrainAgentLogDTO()
@@ -278,8 +313,18 @@ class TrainAgentLogDTO:
         c.eval_episode_var_log_baseline_rewards = self.eval_episode_var_log_baseline_rewards
         c.eval_2_episode_var_log_baseline_rewards = self.eval_2_episode_var_log_baseline_rewards
         c.eval_2_episode_snort_critical_baseline_rewards = self.eval_2_episode_snort_critical_baseline_rewards
-
-
+        c.attacker_action_costs = self.attacker_action_costs
+        c.attacker_action_costs_norm = self.attacker_action_costs_norm
+        c.attacker_action_alerts = self.attacker_action_alerts
+        c.attacker_action_alerts_norm = self.attacker_action_alerts_norm
+        c.eval_attacker_action_costs = self.eval_attacker_action_costs
+        c.eval_attacker_action_costs_norm = self.eval_attacker_action_costs_norm
+        c.eval_attacker_action_alerts = self.eval_attacker_action_alerts
+        c.eval_attacker_action_alerts_norm = self.eval_attacker_action_alerts_norm
+        c.eval_2_attacker_action_costs = self.eval_2_attacker_action_costs
+        c.eval_2_attacker_action_costs_norm = self.eval_2_attacker_action_costs_norm
+        c.eval_2_attacker_action_alerts = self.eval_2_attacker_action_alerts
+        c.eval_2_attacker_action_alerts_norm = self.eval_2_attacker_action_alerts_norm
 
     def copy_saved_env_2(self, saved_log_dto):
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards
@@ -299,6 +344,10 @@ class TrainAgentLogDTO:
         self.eval_2_env_specific_steps = saved_log_dto.eval_2_env_specific_steps
         self.eval_2_env_specific_flags = saved_log_dto.eval_2_env_specific_flags
         self.eval_2_env_specific_flags_percentage = saved_log_dto.eval_2_env_specific_flags_percentage
+        self.eval_2_attacker_action_costs = saved_log_dto.eval_2_attacker_action_costs
+        self.eval_2_attacker_action_costs_norm = saved_log_dto.eval_2_attacker_action_costs_norm
+        self.eval_2_attacker_action_alerts = saved_log_dto.eval_2_attacker_action_alerts
+        self.eval_2_attacker_action_alerts_norm = saved_log_dto.eval_2_attacker_action_alerts_norm
 
     def eval_update_env_specific_metrics(self, env_config, infos, i):
         if env_config.emulation_config is not None:

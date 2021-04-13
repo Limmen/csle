@@ -3,6 +3,7 @@ Configuration for training agents
 """
 import csv
 
+
 class AgentConfig:
     """
     DTO with configuration for training agents
@@ -50,7 +51,7 @@ class AgentConfig:
                  dr_min_num_users: int = 1, dr_max_num_users : int = 1,
                  dr_use_base : bool = False, log_regret : bool = False, running_avg: int = 10,
                  attacker_opponent_baseline_type: int = 6, defender_opponent_baseline_type: int = 7,
-                 snort_baseline_simulate: bool = False, quick_eval_freq : int = 1
+                 snort_baseline_simulate: bool = False, quick_eval_freq : int = 1, static_eval_defender : bool = False
                  ):
         """
         Initialize environment and hyperparameters
@@ -135,6 +136,7 @@ class AgentConfig:
         :param n_deterministic_eval_iter: number of iterations for determinisitic eval
         :param snort_baseline_simulate: whether to simulate snort vs opponent
         :param quick_eval_freq: frequency of running quick-eval
+        :param static_eval_defender: whether to perform static evaluation of the defender
         """
         self.gamma = gamma
         self.alpha = alpha
@@ -242,6 +244,7 @@ class AgentConfig:
         self.defender_opponent_baseline_type = defender_opponent_baseline_type
         self.snort_baseline_simulate = snort_baseline_simulate
         self.quick_eval_freq = quick_eval_freq
+        self.static_eval_defender = static_eval_defender
 
 
     def to_str(self) -> str:
@@ -274,7 +277,7 @@ class AgentConfig:
                "dr_max_num_nodes:{86},dr_min_num_nodes:{87},dr_min_num_flags:{88}," \
                "dr_max_num_flags:{89},dr_min_num_users:{90},dr_max_num_users:{91},dr_use_base:{92},log_regret:{93}," \
                "running_avg:{94},attacker_opponent_baseline_type:{95},defender_opponent_baseline_type:{96}," \
-               "snort_baseline_simulate:{97},quick_eval_iter:{98}".format(
+               "snort_baseline_simulate:{97},quick_eval_iter:{98},static_eval_defender:{99}".format(
             self.gamma, self.alpha, self.epsilon, self.render, self.eval_sleep, self.epsilon_decay,
             self.min_epsilon, self.eval_episodes, self.train_log_frequency, self.eval_log_frequency, self.video,
             self.video_fps, self.video_dir, self.num_episodes, self.eval_render, self.gifs, self.gif_dir,
@@ -297,7 +300,7 @@ class AgentConfig:
             self.dr_max_num_nodes, self.dr_min_num_nodes, self.dr_min_num_flags, self.dr_max_num_flags,
             self.dr_min_num_users, self.dr_max_num_users, self.dr_use_base, self.log_regret, self.running_avg,
             self.attacker_opponent_baseline_type, self.defender_opponent_baseline_type, self.snort_baseline_simulate,
-            self.quick_eval_freq)
+            self.quick_eval_freq, self.static_eval_defender)
 
     def to_csv(self, file_path: str) -> None:
         """
@@ -400,6 +403,7 @@ class AgentConfig:
             writer.writerow(["defender_opponent_baseline_type", str(self.defender_opponent_baseline_type)])
             writer.writerow(["snort_baseline_simulate", str(self.snort_baseline_simulate)])
             writer.writerow(["quick_eval_freq", str(self.quick_eval_freq)])
+            writer.writerow(["static_eval_defender", str(self.static_eval_defender)])
 
 
     def hparams_dict(self):
@@ -483,4 +487,5 @@ class AgentConfig:
         hparams["defender_opponent_baseline_type"] = self.defender_opponent_baseline_type
         hparams["snort_baseline_simulate"] = self.snort_baseline_simulate
         hparams["quick_eval_freq"] = self.quick_eval_freq
+        hparams["static_eval_defender"] = self.static_eval_defender
         return hparams

@@ -13,6 +13,7 @@ from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.action_results.user_command_cache import UserCommandCache
 from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
 
+
 class EnvConfig:
     """
     Class containing the complete configuration of a pycrctf env
@@ -59,6 +60,8 @@ class EnvConfig:
         self.simulate_detection = simulate_detection
         self.attacker_detection_reward = detection_reward
         self.base_detection_p = base_detection_p
+        self.detection_alerts_threshold = 100
+        self.emulate_detection = False
         self.hacker_ip = hacker_ip
         self.router_ip = router_ip
 
@@ -193,6 +196,9 @@ class EnvConfig:
         self.snort_warning_baseline_threshold = 0
         self.var_log_baseline_threshold = 0
 
+        self.normalize_alerts_max = 5
+        self.normalize_costs_max = 5
+
     def get_port_forward_port(self) -> int:
         """
         :return: Gets the next port to forward
@@ -212,7 +218,12 @@ class EnvConfig:
         else:
             return None
 
-    def scale_rewards_prep_attacker(self):
+    def scale_rewards_prep_attacker(self) -> None:
+        """
+        Utility function for scaling costs for the attacker to be used in the reward function
+
+        :return: None
+        """
         sum_costs = sum(list(map(lambda x: x.cost, self.attacker_action_conf.actions)))
         max_costs = max(max(list(map(lambda x: x.cost, self.attacker_action_conf.actions))), 1)
         self.attacker_sum_costs = sum_costs
@@ -224,14 +235,22 @@ class EnvConfig:
             self.attacker_max_alerts = max_alerts
 
 
-    def scale_rewards_prep_defender(self):
-        sum_costs = sum(list(map(lambda x: x.cost, self.attacker_action_conf.actions)))
-        max_costs = max(max(list(map(lambda x: x.cost, self.attacker_action_conf.actions))), 1)
+    def scale_rewards_prep_defender(self) -> None:
+        """
+        Utility function for scaling costs for the defender to be used in the reward function
+
+        :return:  None
+        """
+        sum_costs = sum(list(map(lambda x: x.cost, self.defender_action_conf.actions)))
+        max_costs = max(max(list(map(lambda x: x.cost, self.defender_action_conf.actions))), 1)
         self.defender_sum_costs = sum_costs
         self.defender_max_costs = max_costs
 
 
     def copy(self):
+        """
+        :return: a copy of the environment configuration
+        """
         env_config = EnvConfig(
             network_conf=self.network_conf, attacker_action_conf=self.attacker_action_conf,
             defender_action_conf=self.defender_action_conf,
@@ -352,4 +371,7 @@ class EnvConfig:
         env_config.snort_warning_baseline_threshold = self.snort_warning_baseline_threshold
         env_config.snort_critical_baseline_threshold = self.snort_critical_baseline_threshold
         env_config.var_log_baseline_threshold = self.var_log_baseline_threshold
+        env_config.emulate_detection = self.emulate_detection
+        env_config.normalize_alerts_max = self.normalize_alerts_max
+        env_config.normalize_costs_max = self.normalize_costs_max
         return env_config

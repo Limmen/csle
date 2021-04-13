@@ -15,7 +15,7 @@ class DefenderUpdateStateMiddleware:
     """
 
     @staticmethod
-    def update_belief_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def update_belief_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Updates the defender's state by measuring the emulation
 
@@ -97,7 +97,7 @@ class DefenderUpdateStateMiddleware:
         return s_prime, 0, False
 
     @staticmethod
-    def initialize_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def initialize_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Initializes the defender's state by measuring the emulation
 
@@ -184,7 +184,7 @@ class DefenderUpdateStateMiddleware:
         return s_prime, 0, False
 
     @staticmethod
-    def reset_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, int, bool]:
+    def reset_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Resets the defender's state
 
