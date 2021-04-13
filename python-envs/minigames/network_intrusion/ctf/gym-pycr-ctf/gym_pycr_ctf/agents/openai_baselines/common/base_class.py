@@ -119,6 +119,7 @@ class BaseAlgorithm(ABC):
         self.eval_result = ExperimentResult()
         self.attacker_opponent = attacker_opponent
         self.defender_opponent = defender_opponent
+        self.training_start = time.time()
 
         try:
             self.tensorboard_writer = SummaryWriter(self.attacker_agent_config.tensorboard_dir)
@@ -239,29 +240,31 @@ class BaseAlgorithm(ABC):
             env = VecTransposeImage(env)
         return env
 
-    def log_metrics_attacker(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) -> None:
+    def log_metrics_attacker(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) \
+            -> TrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
         :param train_log_dto: DTO with the information to log
         :param eps: machine eps
         :param eval: flag whether it is evaluation or not
-        :return: None
+        :return: the updated train agent log dto
         """
-        LogUtil.log_metrics_attacker(train_log_dto=train_log_dto, eps=eps, eval=eval,
+        return LogUtil.log_metrics_attacker(train_log_dto=train_log_dto, eps=eps, eval=eval,
                                      attacker_agent_config=self.attacker_agent_config, env=self.env,
                                      env_2=self.env_2, tensorboard_writer=self.tensorboard_writer)
 
-    def log_metrics_defender(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) -> None:
+    def log_metrics_defender(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) \
+            -> TrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
         :param train_log_dto: DTO with the information to log
         :param eps: machine eps
         :param eval: flag whether it is evaluation or not
-        :return: None
+        :return: the updated train agent log dto
         """
-        LogUtil.log_metrics_defender(train_log_dto=train_log_dto, eps=eps, eval=eval, env=self.env,
+        return LogUtil.log_metrics_defender(train_log_dto=train_log_dto, eps=eps, eval=eval, env=self.env,
                                      env_2=self.env_2, defender_agent_config=self.defender_agent_config,
                                      tensorboard_writer=self.tensorboard_writer)
 

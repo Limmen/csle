@@ -88,7 +88,8 @@ class ExperimentResult:
                  eval_2_attacker_action_costs: List[float] = None,
                  eval_2_attacker_action_costs_norm: List[float] = None,
                  eval_2_attacker_action_alerts: List[float] = None,
-                 eval_2_attacker_action_alerts_norm: List[float] = None
+                 eval_2_attacker_action_alerts_norm: List[float] = None,
+                 time_elapsed : List[float] = None
                  ):
         """
         Constructor, initializes the DTO
@@ -150,6 +151,7 @@ class ExperimentResult:
         :param eval_var_log_baseline_rewards: eval rewards of the var_log  baseline
         :param eval_2_snort_critical_baseline_rewards: eval 2 rewards of the snort critical baseline
         :param eval_2_var_log_baseline_rewards: eval 2 rewards of the var_log  baseline
+        :param time_elapsed: the time elapsed from start of training
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -237,7 +239,6 @@ class ExperimentResult:
         self.eval_var_log_baseline_rewards = eval_var_log_baseline_rewards
         self.eval_2_snort_critical_baseline_rewards = eval_2_snort_critical_baseline_rewards
         self.eval_2_var_log_baseline_rewards = eval_2_var_log_baseline_rewards
-
         self.attacker_action_costs = attacker_action_costs
         self.attacker_action_costs_norm = attacker_action_costs_norm
         self.attacker_action_alerts = attacker_action_alerts
@@ -250,6 +251,7 @@ class ExperimentResult:
         self.eval_2_attacker_action_costs_norm = eval_2_attacker_action_costs_norm
         self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
         self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
+        self.time_elapsed = time_elapsed
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -447,6 +449,8 @@ class ExperimentResult:
             self.eval_2_attacker_action_alerts = []
         if eval_2_attacker_action_alerts_norm is None:
             self.eval_2_attacker_action_alerts_norm = []
+        if time_elapsed is None:
+            self.time_elapsed = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -489,7 +493,8 @@ class ExperimentResult:
                    self.eval_attacker_action_costs, self.eval_attacker_action_costs_norm,
                    self.eval_attacker_action_alerts, self.eval_attacker_action_alerts_norm,
                    self.eval_2_attacker_action_costs, self.eval_2_attacker_action_costs_norm,
-                   self.eval_2_attacker_action_alerts, self.eval_2_attacker_action_alerts_norm
+                   self.eval_2_attacker_action_alerts, self.eval_2_attacker_action_alerts_norm,
+                   self.time_elapsed
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -522,7 +527,8 @@ class ExperimentResult:
                          "eval_attacker_action_costs", "eval_attacker_action_costs_norm",
                          "eval_attacker_action_alerts", "eval_attacker_action_alerts_norm",
                          "eval_2_attacker_action_costs", "eval_2_attacker_action_costs_norm",
-                         "eval_2_attacker_action_alerts", "eval_2_attacker_action_alerts_norm"
+                         "eval_2_attacker_action_alerts", "eval_2_attacker_action_alerts_norm",
+                         "time_elapsed"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
@@ -638,6 +644,10 @@ class ExperimentResult:
             if len(self.eval_2_env_specific_flags_percentage[key]) > 0:
                 filtered_metrics.append(self.eval_2_env_specific_flags_percentage[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_flags_percentage")
+
+
+        # for i in range(len(filtered_metrics)):
+        #     print("filtered metric: {}, len:{}".format(filtered_metric_labels[i], len(filtered_metrics[i])))
 
         rows = zip(*filtered_metrics)
         with open(file_path, "w") as f:

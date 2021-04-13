@@ -1,10 +1,12 @@
 import numpy as np
 import sys
+import time
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env import SubprocVecEnv
-from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 import gym_pycr_ctf.envs_model.logic.common.util as pycr_util
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
+from gym_pycr_ctf.dao.agent.tensorboard_data_dto import TensorboardDataDTO
 
 
 class LogUtil:
@@ -15,7 +17,7 @@ class LogUtil:
     @staticmethod
     def log_metrics_attacker(train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False,
                              env=None, env_2 = None, attacker_agent_config : AgentConfig = None,
-                             tensorboard_writer = None) -> None:
+                             tensorboard_writer = None) -> TrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -26,7 +28,7 @@ class LogUtil:
         :param env_2: the evaluation env
         :param attacker_agent_config: the agent config of the attacker
         :param tensorboard_writer: the tensorobard writer
-        :return: None
+        :return: updated train log dto
         """
         if eps is None:
             eps = 0.0
@@ -35,6 +37,9 @@ class LogUtil:
             result = train_log_dto.train_result
         else:
             result = train_log_dto.eval_result
+
+        training_time = time.time() - train_log_dto.start_time
+        training_time_hours = training_time/3600
 
         avg_episode_rewards = np.mean(train_log_dto.attacker_episode_rewards)
         avg_episode_flags = np.mean(train_log_dto.episode_flags)
@@ -147,6 +152,8 @@ class LogUtil:
 
         if train_log_dto.attacker_lr is None:
             lr = 0.0
+        else:
+            lr = train_log_dto.attacker_lr
         if not eval and train_log_dto.attacker_episode_avg_loss is not None:
             avg_episode_loss = np.mean(train_log_dto.attacker_episode_avg_loss)
         else:
@@ -156,6 +163,11 @@ class LogUtil:
             eval_avg_episode_rewards = np.mean(train_log_dto.attacker_eval_episode_rewards)
         else:
             eval_avg_episode_rewards = 0.0
+
+        if not eval and train_log_dto.attacker_eval_2_episode_rewards is not None:
+            eval_2_avg_episode_rewards = np.mean(train_log_dto.attacker_eval_2_episode_rewards)
+        else:
+            eval_2_avg_episode_rewards = 0.0
         if attacker_agent_config.log_regret:
             if env.env_config is not None:
                 if len(env.envs[0].env_config.pi_star_rew_list_attacker) >= len(
@@ -239,17 +251,24 @@ class LogUtil:
 
             if env_2 is not None:
                 if env_2.env_config is not None:
-                    pi_star_rews_attacker = env_2.envs[0].env_config.pi_star_rew_list_attacker[
-                                            -len(train_log_dto.attacker_eval_2_episode_rewards):]
-                    r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i],
-                                                r=train_log_dto.attacker_eval_2_episode_rewards[i])
-                         for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
-                    avg_regret_2 = np.mean(np.array(r))
+                    if len(env_2.envs[0].env_config.pi_star_rew_list_attacker) >= len(
+                            train_log_dto.attacker_eval_2_episode_rewards):
+                        pi_star_rews_attacker = env_2.envs[0].env_config.pi_star_rew_list_attacker[
+                                                -len(train_log_dto.attacker_eval_2_episode_rewards):]
+                        r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i],
+                                                    r=train_log_dto.attacker_eval_2_episode_rewards[i])
+                             for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
+                        avg_regret_2 = np.mean(np.array(r))
 
-                    of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_eval_2_episode_rewards[i],
-                                                   opt_r=pi_star_rews_attacker[i])
-                          for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
-                    avg_opt_frac_2 = np.mean(np.array(of))
+                        of = [LogUtil.compute_opt_frac(r=train_log_dto.attacker_eval_2_episode_rewards[i],
+                                                       opt_r=pi_star_rews_attacker[i])
+                              for i in range(len(train_log_dto.attacker_eval_2_episode_rewards))]
+                        avg_opt_frac_2 = np.mean(np.array(of))
+                    else:
+                        avg_regret_2 = LogUtil.compute_regret(opt_r=env_2.envs[0].env_config.pi_star_rew_attacker,
+                                                                 r=eval_2_avg_episode_rewards)
+                        avg_opt_frac_2 = LogUtil.compute_opt_frac(r=eval_2_avg_episode_rewards,
+                                                                  opt_r=env_2.envs[0].env_config.pi_star_rew_attacker)
                 else:
                     regrets_2 = []
                     pi_star_rew_per_env_2 = env_2.get_pi_star_rew()
@@ -423,10 +442,6 @@ class LogUtil:
         else:
             eval_avg_episode_alerts_norm = 0.0
 
-        if not eval and train_log_dto.attacker_eval_2_episode_rewards is not None:
-            eval_2_avg_episode_rewards = np.mean(train_log_dto.attacker_eval_2_episode_rewards)
-        else:
-            eval_2_avg_episode_rewards = 0.0
         if not eval and train_log_dto.eval_2_episode_flags is not None:
             eval_2_avg_episode_flags = np.mean(train_log_dto.eval_2_episode_flags)
         else:
@@ -493,77 +508,51 @@ class LogUtil:
         else:
             avg_weight_update_times = 0.0
 
-        if eval:
-            log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
-                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
-                      "n_af:{},n_d:{}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
-                      "alerts_N:{:.2f}".format(
-                train_log_dto.iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, train_log_dto.attacker_lr, avg_episode_flags,
-                avg_episode_flags_percentage, train_log_dto.n_af, train_log_dto.n_d,
-                episode_caught_frac, episode_early_stopped_frac,  episode_successful_intrusion_frac,
-                avg_episode_costs, avg_episode_costs_norm, avg_episode_alerts, avg_episode_alerts_norm
-            )
-        else:
-            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
-                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
-                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
-                      "avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
-                      "avg_R_E2:{:.2f},Avg_Reg_E2:{:.2f},Opt_frac_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f}," \
-                      "avg_F_E2%:{:.2f},epsilon:{:.2f}" \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f}," \
-                      "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
-                      "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
-                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}".format(
-                train_log_dto.iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_steps, rolling_avg_steps, avg_episode_loss,
-                train_log_dto.attacker_lr, train_log_dto.total_num_episodes, avg_episode_flags, avg_episode_flags_percentage, eps,
-                train_log_dto.n_af, train_log_dto.n_d,
-                eval_avg_episode_rewards, avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
-                eval_avg_episode_flags,
-                eval_avg_episode_flags_percentage, eval_2_avg_episode_rewards, avg_regret_2, avg_opt_frac_2,
-                eval_2_avg_episode_steps,
-                eval_2_avg_episode_flags, eval_2_avg_episode_flags_percentage, attacker_agent_config.epsilon,
-                episode_caught_frac, episode_early_stopped_frac, episode_successful_intrusion_frac,
-                eval_episode_caught_frac, eval_episode_early_stopped_frac, eval_episode_successful_intrusion_frac,
-                eval_2_episode_caught_frac, eval_2_episode_early_stopped_frac, eval_2_episode_successful_intrusion_frac,
-                avg_episode_costs, avg_episode_costs_norm, avg_episode_alerts, avg_episode_alerts_norm,
-                eval_avg_episode_costs, eval_avg_episode_costs_norm, eval_avg_episode_alerts,
-                eval_avg_episode_alerts_norm, eval_2_avg_episode_costs, eval_2_avg_episode_costs_norm,
-                eval_2_avg_episode_alerts, eval_avg_episode_alerts_norm
-            )
+        tensorboard_data_dto = TensorboardDataDTO(
+            iteration=train_log_dto.iteration, avg_episode_rewards=avg_episode_rewards,
+            avg_episode_steps=avg_episode_steps,
+            avg_episode_loss=avg_episode_loss, eps=eps, lr=lr, eval=eval,
+            avg_flags_catched=avg_episode_flags, avg_episode_flags_percentage=avg_episode_flags_percentage,
+            eval_avg_episode_rewards=eval_avg_episode_rewards, eval_avg_episode_steps=eval_avg_episode_steps,
+            eval_avg_episode_flags=eval_avg_episode_flags,
+            eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage,
+            eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
+            eval_2_avg_episode_steps=eval_2_avg_episode_steps,
+            eval_2_avg_episode_flags=eval_2_avg_episode_flags,
+            eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage,
+            rolling_avg_episode_rewards=rolling_avg_rewards,
+            rolling_avg_episode_steps=rolling_avg_steps,
+            tensorboard_writer=tensorboard_writer,
+            episode_caught_frac=episode_caught_frac,
+            episode_early_stopped_frac=episode_early_stopped_frac,
+            episode_successful_intrusion_frac=episode_successful_intrusion_frac,
+            eval_episode_caught_frac=eval_episode_caught_frac,
+            eval_episode_early_stopped_frac=eval_episode_early_stopped_frac,
+            eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
+            eval_2_episode_caught_frac=eval_2_episode_caught_frac,
+            eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
+            eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac,
+            avg_regret=avg_regret, avg_opt_frac=avg_opt_frac, rolling_avg_rewards=rolling_avg_rewards,
+            rolling_avg_steps=rolling_avg_steps, avg_episode_flags=avg_episode_flags,
+            n_af=train_log_dto.n_af, n_d=train_log_dto.n_d, avg_episode_costs=avg_episode_costs,
+            avg_episode_costs_norm=avg_episode_costs_norm,
+            avg_episode_alerts=avg_episode_alerts, avg_episode_alerts_norm=avg_episode_alerts_norm,
+            eval_avg_episode_costs=eval_avg_episode_costs, eval_avg_episode_costs_norm=eval_avg_episode_costs_norm,
+            eval_avg_episode_alerts=eval_avg_episode_alerts, eval_avg_episode_alerts_norm=eval_avg_episode_alerts_norm,
+            eval_2_avg_episode_costs=eval_2_avg_episode_costs,
+            eval_2_avg_episode_costs_norm=eval_2_avg_episode_costs_norm,
+            eval_2_avg_episode_alerts=eval_2_avg_episode_alerts,
+            eval_2_avg_episode_alerts_norm=eval_2_avg_episode_alerts_norm,
+            total_num_episodes=train_log_dto.total_num_episodes, avg_eval_regret=avg_eval_regret,
+            eval_avg_opt_frac=eval_avg_opt_frac,avg_regret_2=avg_regret_2,
+            avg_opt_frac_2=avg_opt_frac_2, epsilon=attacker_agent_config.epsilon,
+            training_time_hours=training_time_hours)
+        log_str = tensorboard_data_dto.log_str_attacker()
         attacker_agent_config.logger.info(log_str)
         print(log_str)
         sys.stdout.flush()
         if attacker_agent_config.tensorboard:
-            LogUtil.log_tensorboard_attacker(train_log_dto.iteration, avg_episode_rewards, avg_episode_steps,
-                                          avg_episode_loss, eps, train_log_dto.attacker_lr, eval=eval,
-                                          avg_flags_catched=avg_episode_flags,
-                                          avg_episode_flags_percentage=avg_episode_flags_percentage,
-                                          eval_avg_episode_rewards=eval_avg_episode_rewards,
-                                          eval_avg_episode_steps=eval_avg_episode_steps,
-                                          eval_avg_episode_flags=eval_avg_episode_flags,
-                                          eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage,
-                                          eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
-                                          eval_2_avg_episode_steps=eval_2_avg_episode_steps,
-                                          eval_2_avg_episode_flags=eval_2_avg_episode_flags,
-                                          eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage,
-                                          rolling_avg_episode_rewards=rolling_avg_rewards,
-                                          rolling_avg_episode_steps=rolling_avg_steps,
-                                          tensorboard_writer=tensorboard_writer,
-                                         episode_caught_frac=episode_caught_frac,
-                                         episode_early_stopped_frac=episode_early_stopped_frac,
-                                         episode_successful_intrusion_frac=episode_successful_intrusion_frac,
-                                         eval_episode_caught_frac=eval_episode_caught_frac,
-                                         eval_episode_early_stopped_frac=eval_episode_early_stopped_frac,
-                                         eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
-                                         eval_2_episode_caught_frac=eval_2_episode_caught_frac,
-                                         eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
-                                         eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac,
-                                          )
+            tensorboard_data_dto.log_tensorboard_attacker()
 
         result.avg_episode_steps.append(avg_episode_steps)
         result.attacker_avg_episode_rewards.append(avg_episode_rewards)
@@ -612,6 +601,7 @@ class LogUtil:
         result.eval_2_attacker_action_costs_norm.append(eval_2_avg_episode_costs_norm)
         result.eval_2_attacker_action_alerts.append(eval_2_avg_episode_alerts)
         result.eval_2_attacker_action_alerts_norm.append(eval_2_avg_episode_alerts_norm)
+        result.time_elapsed.append(training_time)
 
         if train_log_dto.attacker_train_episode_env_specific_rewards is not None:
             for key in train_log_dto.attacker_train_episode_env_specific_rewards.keys():
@@ -756,117 +746,18 @@ class LogUtil:
                 else:
                     env_2.envs[0].env_config.pi_star_rew_list_attacker = [
                         env_2.envs[0].env_config.pi_star_rew_attacker]
-
-    @staticmethod
-    def log_tensorboard_attacker(
-            episode: int, avg_episode_rewards: float, avg_episode_steps: float, episode_avg_loss: float,
-            epsilon: float, lr: float, eval=False, avg_flags_catched: int = 0,
-            avg_episode_flags_percentage: list = None,
-            eval_avg_episode_rewards: float = 0.0,
-            eval_avg_episode_steps: float = 0.0,
-            eval_avg_episode_flags: float = 0.0,
-            eval_avg_episode_flags_percentage: float = 0.0,
-            eval_2_avg_episode_rewards: float = 0.0,
-            eval_2_avg_episode_steps: float = 0.0,
-            eval_2_avg_episode_flags: float = 0.0,
-            eval_2_avg_episode_flags_percentage: float = 0.0,
-            rolling_avg_episode_rewards: float = 0.0,
-            rolling_avg_episode_steps: float = 0.0,
-            tensorboard_writer = None,
-            episode_caught_frac=0.0, episode_early_stopped_frac=0.0,
-            eval_episode_caught_frac=0.0, eval_episode_early_stopped_frac=0.0,
-            eval_2_episode_caught_frac=0.0, eval_2_episode_early_stopped_frac=0.0,
-            episode_successful_intrusion_frac=0.0, eval_episode_successful_intrusion_frac=0.0,
-            eval_2_episode_successful_intrusion_frac=0.0) -> None:
-        """
-        Log metrics to tensorboard for attacker
-
-        :param episode: the episode
-        :param avg_episode_rewards: the average attacker episode reward
-        :param avg_episode_steps: the average number of episode steps
-        :param episode_avg_loss: the average episode loss
-        :param epsilon: the exploration rate
-        :param lr: the learning rate of the attacker
-        :param eval: boolean flag whether eval or not
-        :param avg_flags_catched: avg number of flags catched per episode
-        :param avg_episode_flags_percentage: avg percentage of flags catched per episode
-        :param eval_avg_episode_rewards: average reward eval deterministic policy
-        :param eval_avg_episode_steps: average steps eval deterministic policy
-        :param eval_avg_episode_flags: average flags eval deterministic policy
-        :param eval_avg_episode_flags_percentage: average flags_percentage eval deterministic policy
-        :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
-        :param eval_avg_episode_steps: average steps 2nd eval deterministic policy
-        :param eval_avg_episode_flags: average flags 2nd eval deterministic policy
-        :param eval_avg_episode_flags_percentage: average flags_percentage 2nd eval deterministic policy
-        :param episode_caught_frac: fraction that the attacker was caught successfully
-        :param episode_early_stopped_frac: fraction that the defender stopped too early
-        :param episode_successful_intrusion_frac: fraction that the attacker succeeded with intrusion
-        :param eval_episode_caught_frac: eval fraction that the attacker was caught successfully
-        :param eval_episode_early_stopped_frac: eval fraction that the defender stopped too early
-        :param eval_episode_successful_intrusion_frac: eval fraction that the attacker succeeded with intrusion
-        :param eval_2_episode_caught_frac: eval2 fraction that the attacker was caught successfully
-        :param eval_2_episode_early_stopped_frac: eval2 fraction that the defender stopped too early
-        :param eval_2_episode_successful_intrusion_frac: eval2 fraction that the attacker succeeded with intrusion
-        :return: None
-        """
-        train_or_eval = "eval" if eval else "train"
-        tensorboard_writer.add_scalar('attacker/avg_episode_rewards/' + train_or_eval,
-                                           avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('attacker/rolling_avg_episode_rewards/' + train_or_eval,
-                                           rolling_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('attacker/avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
-        tensorboard_writer.add_scalar('attacker/rolling_avg_episode_steps/' + train_or_eval,
-                                           rolling_avg_episode_steps, episode)
-        tensorboard_writer.add_scalar('attacker/episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
-        tensorboard_writer.add_scalar('attacker/epsilon/' + train_or_eval, epsilon, episode)
-        tensorboard_writer.add_scalar('attacker/avg_episode_flags/' + train_or_eval, avg_flags_catched, episode)
-        tensorboard_writer.add_scalar('attacker/avg_episode_flags_percentage/' + train_or_eval,
-                                           avg_episode_flags_percentage, episode)
-        tensorboard_writer.add_scalar('attacker/eval_avg_episode_rewards/' + train_or_eval,
-                                           eval_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('attacker/eval_avg_episode_steps/' + train_or_eval, eval_avg_episode_steps,
-                                           episode)
-        tensorboard_writer.add_scalar('attacker/eval_avg_episode_flags/' + train_or_eval, eval_avg_episode_flags,
-                                           episode)
-        tensorboard_writer.add_scalar('attacker/eval_avg_episode_flags_percentage/' + train_or_eval,
-                                           eval_avg_episode_flags_percentage, episode)
-
-        tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_rewards/' + train_or_eval,
-                                           eval_2_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_steps/' + train_or_eval,
-                                           eval_2_avg_episode_steps, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_flags/' + train_or_eval,
-                                           eval_2_avg_episode_flags, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_avg_episode_flags_percentage/' + train_or_eval,
-                                           eval_2_avg_episode_flags_percentage, episode)
-
-        tensorboard_writer.add_scalar('attacker/episode_caught_frac/' + train_or_eval,
-                                      episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('attacker/episode_early_stopped_frac/' + train_or_eval,
-                                      episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('attacker/episode_successful_intrusion_frac/' + train_or_eval,
-                                      episode_successful_intrusion_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_episode_caught_frac/' + train_or_eval,
-                                      eval_episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_episode_early_stopped_frac/' + train_or_eval,
-                                      eval_episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_episode_successful_intrusion_frac/' + train_or_eval,
-                                      eval_episode_successful_intrusion_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_episode_caught_frac/' + train_or_eval,
-                                      eval_2_episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_episode_early_stopped_frac/' + train_or_eval,
-                                      eval_2_episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('attacker/eval_2_episode_successful_intrusion_frac/' + train_or_eval,
-                                      eval_2_episode_successful_intrusion_frac, episode)
-
         if not eval:
-            tensorboard_writer.add_scalar('attacker/lr', lr, episode)
+            train_log_dto.train_result = result
+        else:
+            train_log_dto.eval_result = result
+        return train_log_dto
 
 
     @staticmethod
     def log_metrics_defender(train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False,
                              env=None, env_2 = None, defender_agent_config : AgentConfig = None,
-                             tensorboard_writer = None, train_mode: TrainMode = TrainMode.TRAIN_ATTACKER) -> None:
+                             tensorboard_writer = None, train_mode: TrainMode = TrainMode.TRAIN_ATTACKER) \
+            -> TrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -878,7 +769,7 @@ class LogUtil:
         :param defender_agent_config: the agent config of the defender
         :param tensorboard_writer: the tensorboard writer
         :param train_mode: the training mode
-        :return: None
+        :return: updated train logs dto
         """
         if eps is None:
             eps = 0.0
@@ -887,6 +778,9 @@ class LogUtil:
             result = train_log_dto.train_result
         else:
             result = train_log_dto.eval_result
+
+        training_time = time.time() - train_log_dto.start_time
+        training_time_hours = training_time / 3600
 
         avg_episode_rewards = np.mean(train_log_dto.defender_episode_rewards)
         avg_episode_steps = np.mean(train_log_dto.episode_steps)
@@ -1104,6 +998,8 @@ class LogUtil:
 
         if train_log_dto.defender_lr is None:
             lr = 0.0
+        else:
+            lr = train_log_dto.defender_lr
         if not eval and train_log_dto.defender_episode_avg_loss is not None:
             avg_episode_loss = np.mean(train_log_dto.defender_episode_avg_loss)
         else:
@@ -1170,87 +1066,59 @@ class LogUtil:
             # if self.env_2 is not None:
             #     if self.env_2.env_config is not None:
 
-        if eval:
-            log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
-                      "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f}," \
-                      "S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
-                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
-                train_log_dto.iteration, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_snort_severe_baseline_rewards, avg_episode_snort_warning_baseline_rewards,
-                avg_episode_snort_critical_baseline_rewards, avg_episode_var_log_baseline_rewards,
-                avg_episode_steps, rolling_avg_steps, train_log_dto.defender_lr, episode_caught_frac,
-                episode_early_stopped_frac,  episode_successful_intrusion_frac)
-        else:
-            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
-                      "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
-                      "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
-                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
-                      "avg_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
-                      "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}," \
-                      "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
-                      "avg_t_E:{:.2f}," \
-                      "avg_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
-                      "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f}," \
-                      "avg_t_E2:{:.2f}," \
-                      "epsilon:{:.2f}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
-                      "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f}".format(
-                train_log_dto.iteration, avg_regret, avg_opt_frac, avg_episode_rewards, rolling_avg_rewards,
-                avg_episode_snort_severe_baseline_rewards, avg_episode_snort_warning_baseline_rewards,
-                avg_episode_snort_critical_baseline_rewards, avg_episode_var_log_baseline_rewards,
-                avg_episode_steps, rolling_avg_steps, avg_episode_loss,
-                train_log_dto.defender_lr, train_log_dto.total_num_episodes, eps,
-                eval_avg_episode_rewards, eval_avg_episode_snort_severe_baseline_rewards,
-                eval_avg_episode_snort_warning_baseline_rewards, eval_avg_episode_snort_critical_baseline_rewards,
-                eval_avg_episode_var_log_baseline_rewards,
-                avg_eval_regret, eval_avg_opt_frac, eval_avg_episode_steps,
-                eval_2_avg_episode_rewards, eval_2_avg_episode_snort_severe_baseline_rewards,
-                eval_2_avg_episode_snort_warning_baseline_rewards, eval_2_avg_episode_snort_critical_baseline_rewards,
-                eval_2_avg_episode_var_log_baseline_rewards,
-                eval_2_avg_episode_steps, defender_agent_config.epsilon,
-                episode_caught_frac, episode_early_stopped_frac, episode_successful_intrusion_frac,
-                train_log_dto.n_af, eval_episode_caught_frac, eval_episode_early_stopped_frac,
-                eval_episode_successful_intrusion_frac,
-                eval_2_episode_caught_frac, eval_2_episode_early_stopped_frac, eval_2_episode_successful_intrusion_frac
-            )
+        tensorboard_data_dto = TensorboardDataDTO(
+            iteration=train_log_dto.iteration, avg_episode_rewards=avg_episode_rewards,
+            avg_episode_steps=avg_episode_steps,
+            avg_episode_loss=avg_episode_loss, eps=eps, lr=lr, eval=eval,
+            eval_avg_episode_rewards=eval_avg_episode_rewards, eval_avg_episode_steps=eval_avg_episode_steps,
+            eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
+            eval_2_avg_episode_steps=eval_2_avg_episode_steps,
+            rolling_avg_episode_rewards=rolling_avg_rewards,
+            rolling_avg_episode_steps=rolling_avg_steps,
+            tensorboard_writer=tensorboard_writer,
+            episode_caught_frac=episode_caught_frac,
+            episode_early_stopped_frac=episode_early_stopped_frac,
+            episode_successful_intrusion_frac=episode_successful_intrusion_frac,
+            eval_episode_caught_frac=eval_episode_caught_frac,
+            eval_episode_early_stopped_frac=eval_episode_early_stopped_frac,
+            eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
+            eval_2_episode_caught_frac=eval_2_episode_caught_frac,
+            eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
+            eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac,
+            avg_regret=avg_regret, avg_opt_frac=avg_opt_frac, rolling_avg_rewards=rolling_avg_rewards,
+            rolling_avg_steps=rolling_avg_steps,
+            n_af=train_log_dto.n_af, n_d=train_log_dto.n_d, avg_episode_costs=avg_episode_costs,
+            avg_episode_costs_norm=avg_episode_costs_norm,
+            avg_episode_alerts=avg_episode_alerts, avg_episode_alerts_norm=avg_episode_alerts_norm,
+            eval_avg_episode_costs=eval_avg_episode_costs, eval_avg_episode_costs_norm=eval_avg_episode_costs_norm,
+            eval_avg_episode_alerts=eval_avg_episode_alerts, eval_avg_episode_alerts_norm=eval_avg_episode_alerts_norm,
+            eval_2_avg_episode_costs=eval_2_avg_episode_costs,
+            eval_2_avg_episode_costs_norm=eval_2_avg_episode_costs_norm,
+            eval_2_avg_episode_alerts=eval_2_avg_episode_alerts,
+            eval_2_avg_episode_alerts_norm=eval_2_avg_episode_alerts_norm,
+            total_num_episodes=train_log_dto.total_num_episodes, avg_eval_regret=avg_eval_regret,
+            eval_avg_opt_frac=eval_avg_opt_frac,
+            epsilon=defender_agent_config.epsilon, training_time_hours=training_time_hours,
+            avg_episode_snort_severe_baseline_rewards=avg_episode_snort_severe_baseline_rewards,
+            avg_episode_snort_warning_baseline_rewards=avg_episode_snort_warning_baseline_rewards,
+            eval_avg_episode_snort_severe_baseline_rewards=eval_avg_episode_snort_severe_baseline_rewards,
+            eval_avg_episode_snort_warning_baseline_rewards=eval_avg_episode_snort_warning_baseline_rewards,
+            eval_avg_2_episode_snort_severe_baseline_rewards=eval_2_avg_episode_snort_severe_baseline_rewards,
+            eval_avg_2_episode_snort_warning_baseline_rewards=eval_2_avg_episode_snort_warning_baseline_rewards,
+            avg_episode_snort_critical_baseline_rewards=avg_episode_snort_critical_baseline_rewards,
+            avg_episode_var_log_baseline_rewards=avg_episode_var_log_baseline_rewards,
+            eval_avg_episode_snort_critical_baseline_rewards=eval_avg_episode_snort_critical_baseline_rewards,
+            eval_avg_episode_var_log_baseline_rewards=eval_avg_episode_var_log_baseline_rewards,
+            eval_avg_2_episode_snort_critical_baseline_rewards=eval_2_avg_episode_snort_critical_baseline_rewards,
+            eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards
+        )
+        log_str = tensorboard_data_dto.log_str_defender()
         defender_agent_config.logger.info(log_str)
         print(log_str)
         sys.stdout.flush()
         if defender_agent_config.tensorboard:
-            LogUtil.log_tensorboard_defender(train_log_dto.iteration, avg_episode_rewards, avg_episode_steps,
-                                          avg_episode_loss, eps, train_log_dto.defender_lr, eval=eval,
-                                          eval_avg_episode_rewards=eval_avg_episode_rewards,
-                                          eval_avg_episode_steps=eval_avg_episode_steps,
-                                          eval_2_avg_episode_rewards=eval_2_avg_episode_rewards,
-                                          eval_2_avg_episode_steps=eval_2_avg_episode_steps,
-                                          rolling_avg_episode_rewards=rolling_avg_rewards,
-                                          rolling_avg_episode_steps=rolling_avg_steps,
-                                          episode_caught_frac=episode_caught_frac,
-                                          episode_early_stopped_frac=episode_early_stopped_frac,
-                                          episode_successful_intrusion_frac=episode_successful_intrusion_frac,
-                                          eval_episode_caught_frac=eval_episode_caught_frac,
-                                          eval_episode_early_stopped_frac=eval_episode_early_stopped_frac,
-                                          eval_episode_successful_intrusion_frac=eval_episode_successful_intrusion_frac,
-                                          eval_2_episode_caught_frac=eval_2_episode_caught_frac,
-                                          eval_2_episode_early_stopped_frac=eval_2_episode_early_stopped_frac,
-                                          eval_2_episode_successful_intrusion_frac=eval_2_episode_successful_intrusion_frac,
-                                          avg_episode_snort_severe_baseline_rewards=avg_episode_snort_severe_baseline_rewards,
-                                          avg_episode_snort_warning_baseline_rewards=avg_episode_snort_warning_baseline_rewards,
-                                          eval_avg_episode_snort_severe_baseline_rewards=eval_avg_episode_snort_severe_baseline_rewards,
-                                          eval_avg_episode_snort_warning_baseline_rewards=eval_avg_episode_snort_warning_baseline_rewards,
-                                          eval_avg_2_episode_snort_severe_baseline_rewards=eval_2_avg_episode_snort_severe_baseline_rewards,
-                                          eval_avg_2_episode_snort_warning_baseline_rewards=eval_2_avg_episode_snort_warning_baseline_rewards,
-                                          avg_episode_snort_critical_baseline_rewards=avg_episode_snort_critical_baseline_rewards,
-                                          avg_episode_var_log_baseline_rewards=avg_episode_var_log_baseline_rewards,
-                                          eval_avg_episode_snort_critical_baseline_rewards=eval_avg_episode_snort_critical_baseline_rewards,
-                                          eval_avg_episode_var_log_baseline_rewards=eval_avg_episode_var_log_baseline_rewards,
-                                          eval_avg_2_episode_snort_critical_baseline_rewards=eval_2_avg_episode_snort_critical_baseline_rewards,
-                                          eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards,
-                                          tensorboard_writer=tensorboard_writer
-                                          )
+            tensorboard_data_dto.log_tensorboard_defender()
+
         # Defender specific metrics
         result.defender_avg_episode_rewards.append(avg_episode_rewards)
         result.defender_avg_episode_loss.append(avg_episode_loss)
@@ -1354,141 +1222,11 @@ class LogUtil:
                         result.eval_2_env_specific_steps[key].append(avg)
                     else:
                         result.eval_2_env_specific_steps[key] = [avg]
-
-    @staticmethod
-    def log_tensorboard_defender(episode: int, avg_episode_rewards: float,
-                                 avg_episode_steps: float, episode_avg_loss: float,
-                                 epsilon: float, lr: float, eval=False,
-                                 eval_avg_episode_rewards: float = 0.0,
-                                 eval_avg_episode_steps: float = 0.0,
-                                 eval_2_avg_episode_rewards: float = 0.0,
-                                 eval_2_avg_episode_steps: float = 0.0,
-                                 rolling_avg_episode_rewards: float = 0.0,
-                                 rolling_avg_episode_steps: float = 0.0,
-                                 episode_caught_frac=0.0, episode_early_stopped_frac=0.0,
-                                 eval_episode_caught_frac=0.0, eval_episode_early_stopped_frac=0.0,
-                                 eval_2_episode_caught_frac=0.0, eval_2_episode_early_stopped_frac=0.0,
-                                 episode_successful_intrusion_frac=0.0, eval_episode_successful_intrusion_frac=0.0,
-                                 eval_2_episode_successful_intrusion_frac=0.0,
-                                 avg_episode_snort_severe_baseline_rewards=0.0,
-                                 avg_episode_snort_warning_baseline_rewards=0.0,
-                                 eval_avg_episode_snort_severe_baseline_rewards=0.0,
-                                 eval_avg_episode_snort_warning_baseline_rewards=0.0,
-                                 eval_avg_2_episode_snort_severe_baseline_rewards=0.0,
-                                 eval_avg_2_episode_snort_warning_baseline_rewards=0.0,
-                                 avg_episode_snort_critical_baseline_rewards=0.0,
-                                 avg_episode_var_log_baseline_rewards=0.0,
-                                 eval_avg_episode_snort_critical_baseline_rewards=0.0,
-                                 eval_avg_episode_var_log_baseline_rewards=0.0,
-                                 eval_avg_2_episode_snort_critical_baseline_rewards=0.0,
-                                 eval_avg_2_episode_var_log_baseline_rewards=0.0,
-                                 tensorboard_writer = None
-                                 ) -> None:
-        """
-        Log metrics to tensorboard for defender
-
-        :param episode: the episode
-        :param avg_episode_rewards: the average attacker episode reward
-        :param avg_episode_steps: the average number of episode steps
-        :param episode_avg_loss: the average episode loss
-        :param epsilon: the exploration rate
-        :param lr: the learning rate of the attacker
-        :param eval: boolean flag whether eval or not
-        :param eval_avg_episode_rewards: average reward eval deterministic policy
-        :param eval_avg_episode_steps: average steps eval deterministic policy
-        :param eval_avg_episode_rewards: average reward 2nd eval deterministic policy
-        :param eval_avg_episode_steps: average steps 2nd eval deterministic policy
-        :param episode_caught_frac: fraction that the attacker was caught successfully
-        :param episode_early_stopped_frac: fraction that the defender stopped too early
-        :param episode_successful_intrusion_frac: fraction that the attacker succeeded with intrusion
-        :param eval_episode_caught_frac: eval fraction that the attacker was caught successfully
-        :param eval_episode_early_stopped_frac: eval fraction that the defender stopped too early
-        :param eval_episode_successful_intrusion_frac: eval fraction that the attacker succeeded with intrusion
-        :param eval_2_episode_caught_frac: eval2 fraction that the attacker was caught successfully
-        :param eval_2_episode_early_stopped_frac: eval2 fraction that the defender stopped too early
-        :param eval_2_episode_successful_intrusion_frac: eval2 fraction that the attacker succeeded with intrusion
-        :param avg_episode_snort_severe_baseline_rewards: avg_rewards for snort severe baseline
-        :param avg_episode_snort_warning_baseline_rewards: avg_rewards for snort warning baseline
-        :param eval_avg_episode_snort_severe_baseline_rewards: avg_eval rewards for snort severe baseline
-        :param eval_avg_episode_snort_warning_baseline_rewards: avg_eval rewards for snort warning baseline
-        :param eval_2_avg_episode_snort_severe_baseline_rewards: avg_eval 2 rewards for snort severe baseline
-        :param eval_2_avg_episode_snort_warning_baseline_rewards: avg_eval 2 rewards for snort warning baseline
-        :param avg_episode_snort_critical_baseline_rewards: avg_rewards for snort critical baseline
-        :param avg_episode_var_log_baseline_rewards: avg_rewards for var_log baseline
-        :param eval_avg_episode_snort_critical_baseline_rewards: eval avg_rewards for snort critical baseline
-        :param eval_avg_episode_var_log_baseline_rewards: eval avg_rewards for var_log baseline
-        :param eval_2_avg_episode_snort_critical_baseline_rewards: eval 2 avg_rewards for snort critical baseline
-        :param eval_2_avg_episode_var_log_baseline_rewards: eval 2 avg_rewards for var_log baseline
-        :return: None
-        """
-        train_or_eval = "eval" if eval else "train"
-        tensorboard_writer.add_scalar('defender/avg_episode_rewards/' + train_or_eval,
-                                           avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('defender/rolling_avg_episode_rewards/' + train_or_eval,
-                                           rolling_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('defender/avg_episode_steps/' + train_or_eval, avg_episode_steps, episode)
-        tensorboard_writer.add_scalar('defender/rolling_avg_episode_steps/' + train_or_eval,
-                                           rolling_avg_episode_steps,
-                                           episode)
-        tensorboard_writer.add_scalar('defender/episode_avg_loss/' + train_or_eval, episode_avg_loss, episode)
-        tensorboard_writer.add_scalar('defender/epsilon/' + train_or_eval, epsilon, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_rewards/' + train_or_eval,
-                                           eval_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_steps/' + train_or_eval, eval_avg_episode_steps,
-                                           episode)
-        tensorboard_writer.add_scalar('defender/eval_2_avg_episode_rewards/' + train_or_eval,
-                                           eval_2_avg_episode_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_2_avg_episode_steps/' + train_or_eval,
-                                           eval_2_avg_episode_steps,
-                                           episode)
-
-        tensorboard_writer.add_scalar('defender/episode_caught_frac/' + train_or_eval,
-                                           episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('defender/episode_early_stopped_frac/' + train_or_eval,
-                                           episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('defender/episode_successful_intrusion_frac/' + train_or_eval,
-                                           episode_successful_intrusion_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_episode_caught_frac/' + train_or_eval,
-                                           eval_episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_episode_early_stopped_frac/' + train_or_eval,
-                                           eval_episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_episode_successful_intrusion_frac/' + train_or_eval,
-                                           eval_episode_successful_intrusion_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_2_episode_caught_frac/' + train_or_eval,
-                                           eval_2_episode_caught_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_2_episode_early_stopped_frac/' + train_or_eval,
-                                           eval_2_episode_early_stopped_frac, episode)
-        tensorboard_writer.add_scalar('defender/eval_2_episode_successful_intrusion_frac/' + train_or_eval,
-                                           eval_2_episode_successful_intrusion_frac, episode)
-        tensorboard_writer.add_scalar('defender/avg_episode_snort_severe_baseline_rewards/' + train_or_eval,
-                                           avg_episode_snort_severe_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/avg_episode_snort_warning_baseline_rewards/' + train_or_eval,
-                                           avg_episode_snort_warning_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_severe_baseline_rewards/' + train_or_eval,
-                                           eval_avg_episode_snort_severe_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_warning_baseline_rewards/' + train_or_eval,
-                                           eval_avg_episode_snort_warning_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_2_episode_snort_severe_baseline_rewards/' + train_or_eval,
-                                           eval_avg_2_episode_snort_severe_baseline_rewards, episode)
-        tensorboard_writer.add_scalar(
-            'defender/eval_avg_2_episode_snort_warning_baseline_rewards/' + train_or_eval,
-            eval_avg_2_episode_snort_warning_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/avg_episode_snort_critical_baseline_rewards/' + train_or_eval,
-                                           avg_episode_snort_critical_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/avg_episode_var_log_baseline_rewards/' + train_or_eval,
-                                           avg_episode_var_log_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_critical_baseline_rewards/' + train_or_eval,
-                                           eval_avg_episode_snort_critical_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_episode_var_log_baseline_rewards/' + train_or_eval,
-                                           eval_avg_episode_var_log_baseline_rewards, episode)
-        tensorboard_writer.add_scalar(
-            'defender/eval_avg_2_episode_snort_critical_baseline_rewards/' + train_or_eval,
-            eval_avg_2_episode_snort_critical_baseline_rewards, episode)
-        tensorboard_writer.add_scalar('defender/eval_avg_2_episode_var_log_baseline_rewards/' + train_or_eval,
-                                           eval_avg_2_episode_var_log_baseline_rewards, episode)
-        if not eval:
-            tensorboard_writer.add_scalar('defender/lr', lr, episode)
-
+            if not eval:
+                train_log_dto.train_result = result
+            else:
+                train_log_dto.eval_result = result
+            return train_log_dto
 
     @staticmethod
     def compute_opt_frac(r: float, opt_r: float) -> float:

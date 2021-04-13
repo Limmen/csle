@@ -19,8 +19,10 @@ Moreover, the repository contains code to reproduce baseline results for various
 - NumPy
 - Pyglet (OpenGL 3D graphics)
 - GPU for 3D graphics acceleration (optional)
-- jsonpickle (for configuration files)
-- torch (for baseline algorithms)
+- Jsonpickle (for configuration files)
+- Torch (for baseline algorithms)
+- Paramiko (for SSH tunnels)
+- Docker (for interacting with the emulations)
 
 
 ## Installation & Tests

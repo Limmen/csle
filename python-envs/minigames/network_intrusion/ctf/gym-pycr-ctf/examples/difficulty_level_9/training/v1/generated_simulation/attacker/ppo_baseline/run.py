@@ -18,12 +18,12 @@ def default_config() -> ClientConfig:
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=15,
+                               num_iterations=200,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=50, input_dim=(20)*33,
+                               checkpoint_freq=25, input_dim=(20)*33,
                                output_dim=372,
                                pi_hidden_dim=64, pi_hidden_layers=2,
                                vf_hidden_dim=64, vf_hidden_layers=2,
@@ -38,13 +38,14 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=1, attacker_opponent_baseline_type=8,
-                               running_avg=50, n_quick_eval_iter=10,
+                               attacker_opponent_baseline_type=8,
+                               running_avg=50, n_quick_eval_iter=5, n_deterministic_eval_iter=5,
                                log_regret=True, snort_baseline_simulate=False, quick_eval_freq=1,
                                eval_deterministic=False
                                )
     env_name = "pycr-ctf-level-9-generated-sim-v1"
-    eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
+    eval_env_name = "pycr-ctf-level-9-emulation-v1"
+    #eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
 
     # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
     #                                    server_connection=False, port_forward_next_port=4000)
@@ -57,7 +58,8 @@ def default_config() -> ClientConfig:
     eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
                                    agent_username="agent", agent_pw="agent", server_connection=True,
                                    server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim", port_forward_next_port=5000)
+                                   server_username="kim", port_forward_next_port=5000,
+                                   warmup=True, warmup_iterations = 100)
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
@@ -80,7 +82,9 @@ def default_config() -> ClientConfig:
                                  title="PPO level_9 v1 gensim",
                                  run_many=True, random_seeds=[0, 999, 299],
                                  random_seed=299, emulation_config=emulation_config,
-                                 mode=RunnerMode.TRAIN_ATTACKER.value,train_mode=TrainMode.TRAIN_ATTACKER
+                                 mode=RunnerMode.TRAIN_ATTACKER.value,train_mode=TrainMode.TRAIN_ATTACKER,
+                                 eval_emulation_config=eval_emulation_config,
+                                 eval_env=True, eval_env_name=eval_env_name
                                  )
     #random_seeds = [0, 999, 299, 399, 499],
     return client_config

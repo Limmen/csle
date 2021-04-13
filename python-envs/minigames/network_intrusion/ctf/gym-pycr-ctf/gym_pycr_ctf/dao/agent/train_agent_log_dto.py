@@ -73,7 +73,8 @@ class TrainAgentLogDTO:
                  eval_2_attacker_action_costs: List[float] = None,
                  eval_2_attacker_action_costs_norm: List[float] = None,
                  eval_2_attacker_action_alerts: List[float] = None,
-                 eval_2_attacker_action_alerts_norm: List[float] = None
+                 eval_2_attacker_action_alerts_norm: List[float] = None,
+                 start_time: float = 0.0
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -155,9 +156,11 @@ class TrainAgentLogDTO:
         self.eval_2_attacker_action_costs_norm = eval_2_attacker_action_costs_norm
         self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
         self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
+        self.start_time = start_time
 
 
     def initialize(self):
+        self.start_time = 0.0
         self.iteration = 0
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
@@ -325,6 +328,7 @@ class TrainAgentLogDTO:
         c.eval_2_attacker_action_costs_norm = self.eval_2_attacker_action_costs_norm
         c.eval_2_attacker_action_alerts = self.eval_2_attacker_action_alerts
         c.eval_2_attacker_action_alerts_norm = self.eval_2_attacker_action_alerts_norm
+        c.start_time = self.start_time
 
     def copy_saved_env_2(self, saved_log_dto):
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards

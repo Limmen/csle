@@ -95,6 +95,42 @@ Creative Commons
 
 (C) 2021, Kim Hammar
 
+## Publications
+
+- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (https://arxiv.org/abs/2009.08120)**
+```
+@INPROCEEDINGS{Hamm2011:Finding,
+AUTHOR="Kim Hammar and Rolf Stadler",
+TITLE="Finding Effective Security Strategies through Reinforcement Learning and
+{Self-Play}",
+BOOKTITLE="International Conference on Network and Service Management (CNSM 2020)
+(CNSM 2020)",
+ADDRESS="Izmir, Turkey",
+DAYS=1,
+MONTH=nov,
+YEAR=2020,
+KEYWORDS="Network Security; Reinforcement Learning; Markov Security Games",
+ABSTRACT="We present a method to automatically find security strategies for the use
+case of intrusion prevention. Following this method, we model the
+interaction between an attacker and a defender as a Markov game and let
+attack and defense strategies evolve through reinforcement learning and
+self-play without human intervention. Using a simple infrastructure
+configuration, we demonstrate that effective security strategies can emerge
+from self-play. This shows that self-play, which has been applied in other
+domains with great success, can be effective in the context of network
+security. Inspection of the converged policies show that the emerged
+policies reflect common-sense knowledge and are similar to strategies of
+humans. Moreover, we address known challenges of reinforcement learning in
+this domain and present an approach that uses function approximation, an
+opponent pool, and an autoregressive policy representation. Through
+evaluations we show that our method is superior to two baseline methods but
+that policy convergence in self-play remains a challenge."
+}
+```
+
+## See also
+
+- [gym-idsgame](https://github.com/Limmen/gym-idsgame)
 
 ## Disclaimer
 All code and software in this repository is for Educational purpose ONLY. 

@@ -388,6 +388,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         train_log_dto.train_result = self.train_result
         train_log_dto.eval_result = self.eval_result
         train_log_dto.iteration = self.iteration
+        train_log_dto.start_time = self.training_start
 
         num_iterations = self.attacker_agent_config.num_iterations
         if self.train_mode == TrainMode.TRAIN_DEFENDER:
@@ -529,11 +530,16 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 train_log_dto.n_af = n_af
                 train_log_dto.n_d = n_d
                 if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
-                    self.log_metrics_attacker(train_log_dto=train_log_dto, eval=False)
+                    train_log_dto = self.log_metrics_attacker(train_log_dto=train_log_dto, eval=False)
                 if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
-                    self.log_metrics_defender(train_log_dto=train_log_dto, eval=False)
-
+                    train_log_dto = self.log_metrics_defender(train_log_dto=train_log_dto, eval=False)
+                self.train_result = train_log_dto.train_result
+                self.eval_result = train_log_dto.eval_result
                 train_log_dto.initialize()
+                train_log_dto.train_result = self.train_result
+                train_log_dto.eval_result = self.eval_result
+                train_log_dto.iteration = self.iteration
+                train_log_dto.start_time = self.training_start
                 self.num_episodes = 0
 
             # Save models every <self.config.checkpoint_frequency> iterations

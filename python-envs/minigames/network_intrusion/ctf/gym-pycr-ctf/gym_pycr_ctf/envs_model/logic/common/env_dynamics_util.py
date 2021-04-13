@@ -530,7 +530,7 @@ class EnvDynamicsUtil:
         cost = EnvDynamicsUtil.normalize_action_costs(action=action, env_config=env_config)
 
         alerts_pts = 0
-        if env_config.ids_router and net_outcome.alerts is not None:
+        if env_config.ids_router and action.alerts is not None:
             alerts_pts = EnvDynamicsUtil.normalize_action_alerts(action=action, env_config=env_config)
 
         reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
@@ -539,6 +539,14 @@ class EnvDynamicsUtil:
     @staticmethod
     def emulate_detection(net_outcome: NetworkOutcome, env_config: EnvConfig = None,
                           action: AttackerAction = None) -> Tuple[bool, int]:
+        """
+        Emulates a detection by the IDS by implementing a threshold policy
+
+        :param net_outcome: the observed network outcome
+        :param env_config: the environment configuration
+        :param action: the action
+        :return: detected, reward
+        """
         if env_config.emulate_detection:
             detected = False
             if action.alerts is not None:
@@ -559,8 +567,6 @@ class EnvDynamicsUtil:
         else:
             return False, 0
 
-
-
     @staticmethod
     def is_all_flags_collected(s: EnvState, env_config: EnvConfig) -> bool:
         """
@@ -577,7 +583,6 @@ class EnvDynamicsUtil:
         for node in s.attacker_obs_state.machines:
             found_flags = found_flags.union(node.flags_found)
         return total_flags == found_flags
-
 
     @staticmethod
     def check_if_ssh_connection_is_alive(conn) -> bool:
