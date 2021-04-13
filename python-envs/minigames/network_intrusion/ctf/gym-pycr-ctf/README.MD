@@ -88,7 +88,7 @@ ManualAttackerAgent(env=env, env_config=env.env_config)
 ## GUI
 
 <p align="center">
-<img src="docs/gui_1.png" width="600">
+<img src="docs/gui_1.png" width="1200">
 </p>
 
 ## Author & Maintainer
