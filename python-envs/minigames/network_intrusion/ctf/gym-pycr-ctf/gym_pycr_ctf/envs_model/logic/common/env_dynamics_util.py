@@ -541,14 +541,18 @@ class EnvDynamicsUtil:
                           action: AttackerAction = None) -> Tuple[bool, int]:
         if env_config.emulate_detection:
             detected = False
-            if net_outcome.alerts is not None:
-                num_alerts = net_outcome.alerts[0]
+            if action.alerts is not None:
+                num_alerts = action.alerts[0]
             else:
                 num_alerts = 0
 
-            if num_alerts > env_config.attacker_alerts_coefficient:
-                print("detection probability:{}".format((num_alerts / env_config.attacker_max_alerts)))
-                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts)
+            if num_alerts > env_config.detection_alerts_threshold:
+                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts) * 0.1
+                if (num_alerts / env_config.attacker_max_alerts) * 0.1 > 0.01:
+                    print("detection probability:{}".format((num_alerts / env_config.attacker_max_alerts)*0.1))
+                    print("action:{}, descr:{}".format(action.name, action.descr))
+                if detected:
+                    print("DETECTED")
 
             r = env_config.attacker_detection_reward
 

@@ -48,6 +48,8 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_cost_coefficient = 1
             env_config.attacker_base_step_reward = 0
             env_config.use_upper_bound_pi_star_attacker = False
+            env_config.detection_alerts_threshold = 50
+            env_config.emulate_detection = True
 
         super().__init__(env_config=env_config)
 

@@ -566,8 +566,6 @@ class LogUtil:
                                           )
 
         result.avg_episode_steps.append(avg_episode_steps)
-        print("avg episode steps:{}".format(result.avg_episode_steps))
-        print("appended:{}".format(avg_episode_steps))
         result.attacker_avg_episode_rewards.append(avg_episode_rewards)
         result.epsilon_values.append(attacker_agent_config.epsilon)
         result.attacker_avg_episode_loss.append(avg_episode_loss)
