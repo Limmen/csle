@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='gym_pycr_ctf',
       version='0.0.1',
       install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
-                        'random_username'],
+                        'random_username', 'jsonpickle'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='Python Agent Cyber Range CTF MiniGame',
