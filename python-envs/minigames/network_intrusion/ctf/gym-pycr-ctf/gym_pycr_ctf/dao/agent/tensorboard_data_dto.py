@@ -209,7 +209,7 @@ class TensorboardDataDTO:
                       "n_af:{},n_d:{},avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
                       "avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
                       "avg_R_E2:{:.2f},Avg_Reg_E2:{:.2f},Opt_frac_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f}," \
-                      "avg_F_E2%:{:.2f},epsilon:{:.2f}" \
+                      "avg_F_E2%:{:.2f},epsilon:{:.2f}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f}," \
                       "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
                       "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
