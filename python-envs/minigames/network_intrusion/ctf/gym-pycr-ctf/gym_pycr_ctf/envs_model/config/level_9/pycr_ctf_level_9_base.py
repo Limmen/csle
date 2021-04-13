@@ -280,6 +280,7 @@ class PyCrCTFLevel9Base:
         :return: the render config
         """
         render_config = RenderConfig(num_levels=6, num_nodes_per_level=10)
+        render_config.render_adj_matrix = False
         return render_config
 
     @staticmethod

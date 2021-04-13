@@ -88,10 +88,11 @@ class ManualAttackerAgent:
                                 cumulative_reward += attacker_rew
                                 history.append(a)
                                 if done:
-                                    print("done:{}, attacker_caught:{}, stopped:{}, all_flags:{}".format(
+                                    print("done:{}, attacker_caught:{}, stopped:{}, all_flags:{}, rew:{}".format(
                                         done, env.env_state.defender_obs_state.caught_attacker,
                                         env.env_state.defender_obs_state.stopped,
-                                        env.env_state.attacker_obs_state.all_flags
+                                        env.env_state.attacker_obs_state.all_flags,
+                                        latest_rew
                                     ))
                             else:
                                 print("action:{} is illegal".format(a))

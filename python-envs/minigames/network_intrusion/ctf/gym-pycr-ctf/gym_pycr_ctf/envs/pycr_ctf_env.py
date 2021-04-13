@@ -382,7 +382,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Parse result of action
         if done:
-            attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient * self.attacker_agent_state.time_step
+            attacker_reward = attacker_reward - self.env_config.attacker_final_steps_reward_coefficient \
+                              * self.attacker_agent_state.time_step
         if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
             done = True
 
@@ -394,7 +395,6 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
-            attacker_reward = attacker_reward - self.env_config.attacker_detection_reward
             info["caught_attacker"] = True
         info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
@@ -661,7 +661,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.__checkpoint_log()
         self.__checkpoint_trajectories()
         if self.env_state.attacker_obs_state.detected:
-            print("detected")
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.attacker_obs_state.all_flags:
             self.attacker_agent_state.num_all_flags += 1

@@ -9,6 +9,7 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 
+
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
@@ -17,7 +18,7 @@ def default_config() -> ClientConfig:
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=10,
+                               num_iterations=15,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
@@ -168,3 +169,5 @@ if __name__ == '__main__':
                 eval_csv_paths.append(eval_csv_path)
 
             plotting_util_basic.plot_csv_files(train_csv_paths, config.output_dir + "/results/plots/")
+
+# Test case: 99,33,1,70,104,105,106,107,99,165,200,58,104,105,106,331,99,266,104,105,106,99,113,104,105

@@ -96,3 +96,5 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
 if __name__ == '__main__':
     start_explore_threads(num_threads=15, env_name="pycr-ctf-level-9-emulation-v1",
                           num_steps=10000000)
+
+# Test case: 99,33,1,70,104,105,106,107,99,165,200,58,104,105,106,331,99,266,104,105,106,99,113,104,105

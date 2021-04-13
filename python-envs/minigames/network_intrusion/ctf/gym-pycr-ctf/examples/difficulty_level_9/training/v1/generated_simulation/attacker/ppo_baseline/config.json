@@ -65,7 +65,7 @@
         "n_deterministic_eval_iter": 1,
         "n_quick_eval_iter": 10,
         "num_episodes": 5000,
-        "num_iterations": 10,
+        "num_iterations": 15,
         "num_nodes": 10,
         "optimization_iterations": 10,
         "optimizer": "Adam",

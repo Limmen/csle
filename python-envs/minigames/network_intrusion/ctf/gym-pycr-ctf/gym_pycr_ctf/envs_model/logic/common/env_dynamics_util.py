@@ -547,17 +547,14 @@ class EnvDynamicsUtil:
                 num_alerts = 0
 
             if num_alerts > env_config.detection_alerts_threshold:
-                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts) * 0.1
-                if (num_alerts / env_config.attacker_max_alerts) * 0.1 > 0.01:
-                    print("detection probability:{}".format((num_alerts / env_config.attacker_max_alerts)*0.1))
-                    print("action:{}, descr:{}".format(action.name, action.descr))
-                if detected:
-                    print("DETECTED")
+                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts) * \
+                           env_config.detection_prob_factor
 
             r = env_config.attacker_detection_reward
 
             if not detected:
                 r = 0
+
             return detected, r
         else:
             return False, 0

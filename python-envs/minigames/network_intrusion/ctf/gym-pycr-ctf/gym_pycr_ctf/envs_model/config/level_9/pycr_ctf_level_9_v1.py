@@ -166,7 +166,7 @@ class PyCrCTFLevel9V1:
         env_config.attacker_osvdb_vuln_found_reward_mult = 0
         env_config.attacker_root_found_reward_mult = 0
         env_config.attacker_cost_coefficient = 0
-        env_config.attacker_detection_reward = 0
+        env_config.attacker_detection_reward = -100
         env_config.attacker_alerts_coefficient = 0
 
         env_config.max_episode_length = 10000

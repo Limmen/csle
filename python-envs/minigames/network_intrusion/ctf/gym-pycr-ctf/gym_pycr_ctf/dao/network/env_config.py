@@ -61,6 +61,7 @@ class EnvConfig:
         self.attacker_detection_reward = detection_reward
         self.base_detection_p = base_detection_p
         self.detection_alerts_threshold = 100
+        self.detection_prob_factor = 0.05
         self.emulate_detection = False
         self.hacker_ip = hacker_ip
         self.router_ip = router_ip
@@ -374,4 +375,5 @@ class EnvConfig:
         env_config.emulate_detection = self.emulate_detection
         env_config.normalize_alerts_max = self.normalize_alerts_max
         env_config.normalize_costs_max = self.normalize_costs_max
+        env_config.detection_prob_factor = self.detection_prob_factor
         return env_config

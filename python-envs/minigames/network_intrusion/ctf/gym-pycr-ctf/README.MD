@@ -85,6 +85,12 @@ env = gym.make("pycr-ctf-level-7-emulation-v1", env_config=None, emulation_confi
 ManualAttackerAgent(env=env, env_config=env.env_config)
 ```
 
+## GUI
+
+<p align="center">
+<img src="docs/gui_1.png" width="600">
+</p>
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>

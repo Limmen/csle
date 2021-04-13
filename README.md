@@ -1,11 +1,13 @@
 # `pycr` The Python Cyber Range for Self-Learning Cyber Security Systems
 
+TODO abstract
+
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
-        <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>    
+        <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
+    <a href="https://img.shields.io/badge/version-0.0.1-blue">
+        <img src="https://img.shields.io/badge/version-0.0.1-blue" /></a>               
 </p>
-
-TODO abstract
 
 ## Outline
 

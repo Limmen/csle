@@ -153,6 +153,7 @@ class SERVICES:
     service_lookup["microsoft-ds"] = 107
     service_lookup["vrace"] = 108
     service_lookup["wap-wsp"] = 109
+    service_lookup["elasticsearch"] = 110
 
     #
     service_lookup_inv = {v: k for k, v in service_lookup.items()}
