@@ -48,14 +48,14 @@ def default_config() -> ClientConfig:
     eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
 
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=8900)
+                                       server_connection=False, port_forward_next_port=8500)
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                         agent_username="agent", agent_pw="agent", server_connection=True,
     #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                         server_username="kim", port_forward_next_port=4000)
     eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                            server_connection=False, port_forward_next_port=8800,
-                                            warmup=False, warmup_iterations = 100)
+                                            server_connection=False, port_forward_next_port=8700,
+                                            warmup=True, warmup_iterations = 100)
     # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",

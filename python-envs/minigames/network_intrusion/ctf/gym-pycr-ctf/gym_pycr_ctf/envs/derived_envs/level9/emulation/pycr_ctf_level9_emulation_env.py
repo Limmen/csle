@@ -37,6 +37,18 @@ class PyCRCTFLevel9EmulationBaseEnv(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.simulate_detection = False
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 500
+            env_config.attacker_max_exploration_trajectories = 10
+            env_config.max_episode_length = 50000
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
+            env_config.attacker_base_step_reward = 0
+            env_config.use_upper_bound_pi_star_attacker = False
+            env_config.detection_alerts_threshold = 10
+            env_config.emulate_detection = True
+            env_config.detection_prob_factor = 0.05
         super().__init__(env_config=env_config)
 
 
@@ -69,6 +81,18 @@ class PyCRCTFLevel9Emulation1Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
+            env_config.simulate_detection = False
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 500
+            env_config.attacker_max_exploration_trajectories = 10
+            env_config.max_episode_length = 100
+            env_config.attacker_alerts_coefficient = 1
+            env_config.attacker_cost_coefficient = 1
+            env_config.attacker_base_step_reward = 0
+            env_config.use_upper_bound_pi_star_attacker = False
+            env_config.detection_alerts_threshold = 10
+            env_config.emulate_detection = True
+            env_config.detection_prob_factor = 0.05
         super().__init__(env_config=env_config)
 
 

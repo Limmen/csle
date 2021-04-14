@@ -299,7 +299,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-        attacker_m_obs = attacker_m_obs.flatten()
+        attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.defender_last_obs = defender_obs
         self.attacker_last_obs = attacker_m_obs
@@ -357,9 +357,12 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = False
             info["flags"] = self.env_state.attacker_obs_state.catched_flags
             self.agent_state.time_step += 1
+            attacker_reward = self.env_config.illegal_reward_action
             if self.agent_state.time_step > self.env_config.max_episode_length:
                 done = True
-            return self.env_config.illegal_reward_action, defender_reward, done, info
+                attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
+
+            return attacker_reward, defender_reward, done, info
         if attacker_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
             raise ValueError("Action ID: {} not recognized".format(attacker_action_id))
 
@@ -386,6 +389,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                               * self.attacker_agent_state.time_step
         if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
             done = True
+            attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
+            info["caught_attacker"] = True
 
         if s_prime.attacker_obs_state.all_flags:
             info["successful_intrusion"] = True
@@ -503,6 +508,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         #                       self.defender_time_step
         if self.defender_time_step > self.env_config.max_episode_length:
             done = True
+            attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
         self.env_state = s_prime
 
@@ -565,6 +571,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             # Extract observations
             defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
             attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+            attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
             defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
             self.defender_last_obs = defender_obs
             self.attacker_last_obs = attacker_m_obs
@@ -667,7 +674,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.reset_state()
 
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-        attacker_m_obs = attacker_m_obs.flatten()
+        attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.attacker_last_obs = attacker_m_obs

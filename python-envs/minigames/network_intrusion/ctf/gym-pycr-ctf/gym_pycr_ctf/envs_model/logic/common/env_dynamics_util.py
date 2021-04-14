@@ -555,8 +555,8 @@ class EnvDynamicsUtil:
                 num_alerts = 0
 
             if num_alerts > env_config.detection_alerts_threshold:
-                detected = np.random.rand() < (num_alerts / env_config.attacker_max_alerts) * \
-                           env_config.detection_prob_factor
+                det_p = (num_alerts / env_config.attacker_max_alerts) * env_config.detection_prob_factor
+                detected = np.random.rand() < det_p
 
             r = env_config.attacker_detection_reward
 

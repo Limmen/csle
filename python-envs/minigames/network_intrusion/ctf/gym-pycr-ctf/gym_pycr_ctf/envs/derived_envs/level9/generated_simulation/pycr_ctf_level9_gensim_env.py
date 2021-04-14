@@ -43,7 +43,7 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
-            env_config.max_episode_length = 50000
+            env_config.max_episode_length = 100
             env_config.attacker_alerts_coefficient = 1
             env_config.attacker_cost_coefficient = 1
             env_config.attacker_base_step_reward = 0

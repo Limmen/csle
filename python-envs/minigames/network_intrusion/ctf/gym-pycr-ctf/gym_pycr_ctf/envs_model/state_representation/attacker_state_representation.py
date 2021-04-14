@@ -360,9 +360,9 @@ class AttackerStateRepresentation:
         """
         num_m_features = 20
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features + 1,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features + 1,))
         network_orig_shape = (obs_state.num_machines, num_m_features)
         machine_orig_shape = (num_m_features,)
         m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(num_m_features,))

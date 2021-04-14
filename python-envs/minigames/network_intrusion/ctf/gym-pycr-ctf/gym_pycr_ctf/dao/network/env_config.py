@@ -199,6 +199,7 @@ class EnvConfig:
 
         self.normalize_alerts_max = 5
         self.normalize_costs_max = 5
+        self.max_episode_length_reward = -100
 
     def get_port_forward_port(self) -> int:
         """
