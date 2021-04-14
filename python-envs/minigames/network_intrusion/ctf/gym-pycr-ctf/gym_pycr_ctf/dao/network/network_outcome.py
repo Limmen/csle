@@ -4,6 +4,9 @@ from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state im
 
 
 class NetworkOutcome:
+    """
+    DTO that represents the observed outcome of an action for the attacker in the environment
+    """
 
     def __init__(self, attacker_machine_observations: List[AttackerMachineObservationState] = None,
                  attacker_machine_observation: AttackerMachineObservationState = None,
@@ -33,6 +36,9 @@ class NetworkOutcome:
         self.alerts = alerts
 
     def copy(self):
+        """
+        :return: a copy of the object
+        """
         net_outcome = NetworkOutcome(
             attacker_machine_observations=copy.deepcopy(self.attacker_machine_observations),
             attacker_machine_observation=self.attacker_machine_observation.copy(),
@@ -51,7 +57,10 @@ class NetworkOutcome:
         )
         return net_outcome
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "attacker_machine_observations:{},attacker_machine_observation:{}" \
                "total_new_ports_found:{},total_new_os_found:{}," \
                "total_new_cve_vuln_found:{},total_new_machines_found:{},total_new_shell_access:{}," \
@@ -66,8 +75,13 @@ class NetworkOutcome:
             self.total_new_tools_installed, self.total_new_backdoors_installed, self.cost,
             self.alerts)
 
+    def update_counts(self, net_outcome) -> None:
+        """
+        Utility function for merging the net outcome with another outcome.
 
-    def update_counts(self, net_outcome):
+        :param net_outcome: the outcome to merge with
+        :return: None
+        """
         self.total_new_ports_found += net_outcome.total_new_ports_found
         self.total_new_os_found += net_outcome.total_new_os_found
         self.total_new_cve_vuln_found += net_outcome.total_new_cve_vuln_found
@@ -80,7 +94,13 @@ class NetworkOutcome:
         self.total_new_tools_installed += net_outcome.total_new_tools_installed
         self.total_new_backdoors_installed += net_outcome.total_new_backdoors_installed
 
-    def update_counts_machine(self, machine: AttackerMachineObservationState):
+    def update_counts_machine(self, machine: AttackerMachineObservationState) -> None:
+        """
+        Utility function for updating the counts based on a newly observed machine
+
+        :param machine: the newly observed machine
+        :return: None
+        """
         self.total_new_ports_found += len(machine.ports)
         new_os = 0 if machine.os == "unknown" else 1
         self.total_new_os_found += new_os

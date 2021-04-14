@@ -28,7 +28,7 @@ def default_config() -> ClientConfig:
                                pi_hidden_dim=64, pi_hidden_layers=2,
                                vf_hidden_dim=64, vf_hidden_layers=2,
                                shared_hidden_layers=2, shared_hidden_dim=64,
-                               batch_size=10000,
+                               batch_size=1000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -48,13 +48,13 @@ def default_config() -> ClientConfig:
     #eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
 
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=4000)
+                                       server_connection=False, port_forward_next_port=7000)
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                         agent_username="agent", agent_pw="agent", server_connection=True,
     #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                         server_username="kim", port_forward_next_port=4000)
     eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                            server_connection=False, port_forward_next_port=5000,
+                                            server_connection=False, port_forward_next_port=8000,
                                             warmup=True, warmup_iterations = 100)
     # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,

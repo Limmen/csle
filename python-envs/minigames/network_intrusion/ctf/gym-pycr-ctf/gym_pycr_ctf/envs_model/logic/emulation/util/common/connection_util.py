@@ -14,6 +14,7 @@ from gym_pycr_ctf.envs_model.logic.emulation.tunnel.forward_tunnel_thread import
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
+from gym_pycr_ctf.dao.network.connection_setup_dto import ConnectionSetupDTO
 
 
 class ConnectionUtil:
@@ -38,6 +39,8 @@ class ConnectionUtil:
         target_machine = None
         non_used_credentials = []
         root = False
+        non_failed_credentials = []
+        net_outcome = NetworkOutcome()
         for m in s.attacker_obs_state.machines:
             if m.ip == a.ip:
                 target_machine = m
@@ -163,29 +166,25 @@ class ConnectionUtil:
             if len(ssh_connections_sorted_by_root) > 0:
                 proxy_connections.append(ssh_connections_sorted_by_root[0])
 
+        connection_setup_dto = ConnectionSetupDTO()
         if service_name == constants.SSH.SERVICE_NAME:
-            connected, users, target_connections, ports, cost, non_failed_credentials, proxies = \
-                ConnectionUtil._ssh_setup_connection(
+            connection_setup_dto = ConnectionUtil._ssh_setup_connection(
                     a=a, env_config=env_config, credentials=non_used_nor_cached_credentials,
                     proxy_connections=proxy_connections, s=s)
         elif service_name == constants.TELNET.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, cost, non_failed_credentials, \
-            proxies = \
-                ConnectionUtil._telnet_setup_connection(a=a, env_config=env_config,
+            connection_setup_dto = ConnectionUtil._telnet_setup_connection(a=a, env_config=env_config,
                                                      credentials=non_used_nor_cached_credentials,
                                                      proxy_connections=proxy_connections, s=s)
         elif service_name == constants.FTP.SERVICE_NAME:
-            connected, users, target_connections, tunnel_threads, forward_ports, ports, i_shells, \
-            cost, non_failed_credentials, proxies = \
-                ConnectionUtil._ftp_setup_connection(a=a, env_config=env_config,
+            connection_setup_dto = ConnectionUtil._ftp_setup_connection(a=a, env_config=env_config,
                                                   credentials=non_used_nor_cached_credentials,
                                                   proxy_connections=proxy_connections,
                                                   s=s)
 
         s_prime = s
-        if len(non_failed_credentials) > 0:
-            total_cost += cost
-            if connected:
+        if len(connection_setup_dto.non_failed_credentials) > 0:
+            total_cost += connection_setup_dto.total_time
+            if connection_setup_dto.connected:
                 root = False
                 target_machine.logged_in = True
                 target_machine.shell_access_credentials = non_failed_credentials
@@ -193,28 +192,21 @@ class ConnectionUtil:
                     target_machine.logged_in_services.append(service_name)
                 if service_name not in target_machine.root_services:
                     target_machine.root_services.append(service_name)
-                for i in range(len(target_connections)):
+                for i in range(len(connection_setup_dto.target_connections)):
                     # Check if root
                     c_root = False
+                    cost = 0.0
                     if service_name == constants.SSH.SERVICE_NAME:
-                        c_root, cost = ConnectionUtil._ssh_finalize_connection(target_machine=target_machine, users=users,
-                                                                            target_connections=target_connections, i=i,
-                                                                            ports=ports, proxies=proxies,
-                                                                            env_config=env_config)
+                        c_root, cost = ConnectionUtil._ssh_finalize_connection(
+                            target_machine=target_machine, i=i, env_config=env_config,
+                            connection_setup_dto=connection_setup_dto)
                     elif service_name == constants.TELNET.SERVICE_NAME:
-                        c_root, cost = ConnectionUtil._telnet_finalize_connection(target_machine=target_machine,
-                                                                               users=users,
-                                                                               target_connections=target_connections,
-                                                                               i=i, tunnel_threads=tunnel_threads,
-                                                                               forward_ports=forward_ports, ports=ports,
-                                                                               proxies=proxies, env_config=env_config)
+                        c_root, cost = ConnectionUtil._telnet_finalize_connection(
+                            target_machine=target_machine, i=i, env_config=env_config,
+                            connection_setup_dto=connection_setup_dto)
                     elif service_name == constants.FTP.SERVICE_NAME:
-                        c_root, cost = ConnectionUtil._ftp_finalize_connection(target_machine=target_machine, users=users,
-                                                                            target_connections=target_connections,
-                                                                            i=i, tunnel_threads=tunnel_threads,
-                                                                            forward_ports=forward_ports, ports=ports,
-                                                                            interactive_shells=i_shells,
-                                                                            proxies=proxies)
+                        c_root, cost = ConnectionUtil._ftp_finalize_connection(
+                            target_machine=target_machine, i=i, connection_setup_dto=connection_setup_dto)
                     total_cost += cost
                     if c_root:
                         root = True
@@ -231,8 +223,7 @@ class ConnectionUtil:
     @staticmethod
     def _ssh_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List[ConnectionObservationState],
-                              s: EnvState) \
-            -> Tuple[bool, List[str], List, List[int], float, List[Credential], List[ConnectionObservationState]]:
+                              s: EnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a SSH connection
 
@@ -241,16 +232,10 @@ class ConnectionUtil:
         :param credentials: list of credentials to try
         :param proxy_connections: list of proxy connections to try
         :param s: env state
-        :return: boolean whether connected or not, list of connected users, list of connection handles, list of ports,
-                 cost, non_failed_credentials, proxies
+        :return: a DTO with connection setup information
         """
-        connected = False
-        users = []
-        target_connections = []
-        proxies = []
-        ports = []
+        connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
-        non_failed_credentials = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
@@ -272,12 +257,12 @@ class ConnectionUtil:
                         target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                         target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel,
                                             timeout=3)
-                        connected = True
-                        users.append(cr.username)
-                        target_connections.append(target_conn)
-                        proxies.append(proxy_conn)
-                        ports.append(cr.port)
-                        non_failed_credentials.append(cr)
+                        connection_setup_dto.connected = True
+                        connection_setup_dto.users.append(cr.username)
+                        connection_setup_dto.target_connections.append(target_conn)
+                        connection_setup_dto.proxies.append(proxy_conn)
+                        connection_setup_dto.ports.append(cr.port)
+                        connection_setup_dto.non_failed_credentials.append(cr)
                     except Exception as e:
                         print("SSH exception :{}".format(str(e)))
                         print("user:{}, pw:{}".format(cr.username, cr.pw))
@@ -286,35 +271,32 @@ class ConnectionUtil:
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                         print("Action:{}, {}, {}".format(a.id, a.ip, a.descr))
                 else:
-                    non_failed_credentials.append(cr)
-            if connected:
+                    connection_setup_dto.non_failed_credentials.append(cr)
+            if connection_setup_dto.connected:
                 break
         end = time.time()
-        total_time = end - start
-        return connected, users, target_connections, ports, total_time, non_failed_credentials, proxies
+        connection_setup_dto.total_time = end - start
+        return connection_setup_dto
 
     @staticmethod
-    def _ssh_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str],
-                                 target_connections: List, i: int, ports: List[int],
-                                 proxies: List, env_config: EnvConfig) -> Tuple[bool, float]:
+    def _ssh_finalize_connection(target_machine: AttackerMachineObservationState, env_config: EnvConfig,
+                                 connection_setup_dto: ConnectionSetupDTO, i: int) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
         :param target_machine: the target machine to connect to
-        :param users: list of connected users
-        :param target_connections: list of connection handles
         :param i: current index
-        :param ports: list of ports of the connections
-        :param proxies: proxy connections
         :param env_config: environment config
+        :param connection_setup_dto: DTO with connection setup information
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
+        root = False
         for j in range(env_config.attacker_retry_check_root):
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd="sudo -l",
-                                                                         conn=target_connections[i])
+                                                                         conn=connection_setup_dto.target_connections[i])
             root = False
-            if not "may not run sudo".format(users[i]) in errdata.decode("utf-8") \
+            if not "may not run sudo".format(connection_setup_dto.users[i]) in errdata.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in outdata.decode("utf-8") or
                          "(ALL : ALL) ALL" in outdata.decode("utf-8")):
                 root = True
@@ -322,10 +304,12 @@ class ConnectionUtil:
                 break
             else:
                 time.sleep(1)
-        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i],
+        connection_dto = ConnectionObservationState(conn=connection_setup_dto.target_connections[i],
+                                                    username=connection_setup_dto.users[i],
                                                     root=root,
                                                     service=constants.SSH.SERVICE_NAME,
-                                                    port=ports[i], proxy=proxies[i], ip=target_machine.ip)
+                                                    port=connection_setup_dto.ports[i], proxy=connection_setup_dto.proxies[i],
+                                                    ip=target_machine.ip)
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -334,9 +318,7 @@ class ConnectionUtil:
     @staticmethod
     def _telnet_setup_connection(a: AttackerAction, env_config: EnvConfig,
                                  credentials: List[Credential], proxy_connections: List,
-                                 s: EnvState) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential],
-                     List[ConnectionObservationState]]:
+                                 s: EnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a Telnet connection to a target machine
 
@@ -345,18 +327,10 @@ class ConnectionUtil:
         :param credentials: list of credentials to try
         :param proxies: proxy connections
         :param s: env state
-        :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports, cost, proxies
+        :return: a DTO with the connection setup information
         """
-        connected = False
-        users = []
-        target_connections = []
-        tunnel_threads = []
-        forward_ports = []
-        ports = []
+        connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
-        non_failed_credentials = []
-        proxies = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
@@ -387,14 +361,14 @@ class ConnectionUtil:
                         response = target_conn.read_until(constants.TELNET.PROMPT, timeout=3)
                         response = response.decode()
                         if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
-                            connected = True
-                            users.append(cr.username)
-                            target_connections.append(target_conn)
-                            proxies.append(proxy_conn)
-                            tunnel_threads.append(tunnel_thread)
-                            forward_ports.append(forward_port)
-                            ports.append(cr.port)
-                        non_failed_credentials.append(cr)
+                            connection_setup_dto.connected = True
+                            connection_setup_dto.users.append(cr.username)
+                            connection_setup_dto.target_connections.append(target_conn)
+                            connection_setup_dto.proxies.append(proxy_conn)
+                            connection_setup_dto.tunnel_threads.append(tunnel_thread)
+                            connection_setup_dto.forward_ports.append(forward_port)
+                            connection_setup_dto.ports.append(cr.port)
+                        connection_setup_dto.non_failed_credentials.append(cr)
                     except Exception as e:
                         print("telnet exception:{}".format(str(e)))
                         #print("Target:{} reachable from {}, {}".format(a.ip, m.ip, a.ip in m.reachable))
@@ -402,51 +376,45 @@ class ConnectionUtil:
                         print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
-                    non_failed_credentials.append(cr)
-            if connected:
+                    connection_setup_dto.non_failed_credentials.append(cr)
+            if connection_setup_dto.connected:
                 break
         end = time.time()
-        total_time = end - start
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, \
-               total_time, non_failed_credentials, proxies
+        connection_setup_dto.total_time = end - start
+        return connection_setup_dto
 
     @staticmethod
-    def _telnet_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str], target_connections: List,
-                                    i: int,
-                                    tunnel_threads: List, forward_ports: List[int], ports: List[int],
-                                    proxies: List, env_config: EnvConfig) \
-            -> Tuple[bool, float]:
+    def _telnet_finalize_connection(target_machine: AttackerMachineObservationState, i: int,env_config: EnvConfig,
+                                    connection_setup_dto: ConnectionSetupDTO) -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
 
         :param target_machine: the target machine to connect to
-        :param users: list of connected users
-        :param target_connections: list of connection handles
         :param i: current index
-        :param tunnel_threads: list of tunnel threads
-        :param forward_ports: list of forwarded ports
-        :param ports: list of ports of the connections
-        :param proxies: proxies
         :param env_config: environment config
+        :param connection_setup_dto: DTO with information about the connection setup
         :return: boolean whether the connection has root privileges or not, cost
         """
         start = time.time()
+        root = False
         for i in range(env_config.attacker_retry_check_root):
-            target_connections[i].write("sudo -l\n".encode())
-            response = target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
+            connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
+            response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
             root = False
-            if not "may not run sudo".format(users[i]) in response.decode("utf-8") \
+            if not "may not run sudo".format(connection_setup_dto.users[i]) in response.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in response.decode("utf-8") or
                          "(ALL : ALL) ALL" in response.decode("utf-8")):
                 root = True
                 break
             else:
                 time.sleep(1)
-        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
+        connection_dto = ConnectionObservationState(conn=connection_setup_dto.target_connections[i],
+                                                    username=connection_setup_dto.users[i], root=root,
                                                     service=constants.TELNET.SERVICE_NAME,
-                                                    tunnel_thread=tunnel_threads[i],
-                                                    tunnel_port=forward_ports[i],
-                                                    port=ports[i], proxy=proxies[i], ip=target_machine.ip)
+                                                    tunnel_thread=connection_setup_dto.tunnel_threads[i],
+                                                    tunnel_port=connection_setup_dto.forward_ports[i],
+                                                    port=connection_setup_dto.ports[i],
+                                                    proxy=connection_setup_dto.proxies[i], ip=target_machine.ip)
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -455,9 +423,7 @@ class ConnectionUtil:
     @staticmethod
     def _ftp_setup_connection(a: AttackerAction, env_config: EnvConfig,
                               credentials: List[Credential], proxy_connections: List,
-                              s: EnvState) \
-            -> Tuple[bool, List[str], List, List[ForwardTunnelThread], List[int], List[int], float, List[Credential],
-            List[ConnectionObservationState]]:
+                              s: EnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a FTP connection
 
@@ -466,19 +432,10 @@ class ConnectionUtil:
         :param credentials: list of credentials to try
         :param proxy_connections: proxy connections
         :param env_state: env state
-        :return: connected (bool), connected users, connection handles, list of tunnel threads, list of forwarded ports,
-                 list of ports, cost, non_failed_credentials, proxies
+        :return: a DTO with connection setup information
         """
-        connected = False
-        users = []
-        target_connections = []
-        tunnel_threads = []
-        forward_ports = []
-        ports = []
-        interactive_shells = []
+        connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
-        non_failed_credentials = []
-        proxies = []
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
@@ -505,13 +462,13 @@ class ConnectionUtil:
                         target_conn.connect(host=constants.FTP.LOCALHOST, port=forward_port, timeout=5)
                         login_result = target_conn.login(cr.username, cr.pw)
                         if constants.FTP.INCORRECT_LOGIN not in login_result:
-                            connected = True
-                            users.append(cr.username)
-                            target_connections.append(target_conn)
-                            proxies.append(proxy_conn)
-                            tunnel_threads.append(tunnel_thread)
-                            forward_ports.append(forward_port)
-                            ports.append(cr.port)
+                            connection_setup_dto.connected = True
+                            connection_setup_dto.users.append(cr.username)
+                            connection_setup_dto.target_connections.append(target_conn)
+                            connection_setup_dto.proxies.append(proxy_conn)
+                            connection_setup_dto.tunnel_threads.append(tunnel_thread)
+                            connection_setup_dto.forward_ports.append(forward_port)
+                            connection_setup_dto.ports.append(cr.port)
                             # Create LFTP connection too to be able to search file system
                             shell = proxy_conn.conn.invoke_shell()
                             # clear output
@@ -522,54 +479,49 @@ class ConnectionUtil:
                             # clear output
                             if shell.recv_ready():
                                 o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                            interactive_shells.append(shell)
-                            non_failed_credentials.append(cr)
+                            connection_setup_dto.interactive_shells.append(shell)
+                            connection_setup_dto.non_failed_credentials.append(cr)
                     except Exception as e:
                         print("FTP exception: {}".format(str(e)))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
                         print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
-                    non_failed_credentials.append(cr)
-            if connected:
+                    connection_setup_dto.non_failed_credentials.append(cr)
+            if connection_setup_dto.connected:
                 break
         end = time.time()
-        total_time = end - start
-        return connected, users, target_connections, tunnel_threads, forward_ports, ports, interactive_shells, total_time, \
-               non_failed_credentials, proxies
+        connection_setup_dto.total_time = end - start
+        return connection_setup_dto
 
     @staticmethod
-    def _ftp_finalize_connection(target_machine: AttackerMachineObservationState, users: List[str], target_connections: List,
-                                 i: int,
-                                 tunnel_threads: List, forward_ports: List[int], ports: List[int],
-                                 interactive_shells: List, proxies: List) -> Tuple[bool, float]:
+    def _ftp_finalize_connection(target_machine: AttackerMachineObservationState, i: int,
+                                 connection_setup_dto : ConnectionSetupDTO) -> Tuple[bool, float]:
         """
         Helper function for creating the connection DTO for FTP
 
         :param target_machine: the target machine to connect to
         :param users: list of users that are connected
-        :param target_connections: list of connections to the target
         :param i: current index
-        :param tunnel_threads: list of tunnel threads to the target
-        :param forward_ports: list of forwarded ports to the target
-        :param ports: list of ports of the connections
-        :param interactive_shells: shells for LFTP
+        :param connection_setup_dto: DTO with information about the connection setup
         :return: boolean, whether the connection has root privileges, cost
         """
         root = False
-        connection_dto = ConnectionObservationState(conn=target_connections[i], username=users[i], root=root,
+        connection_dto = ConnectionObservationState(conn=connection_setup_dto.target_connections[i],
+                                                    username=connection_setup_dto.users[i], root=root,
                                                     service=constants.FTP.SERVICE_NAME,
-                                                    tunnel_thread=tunnel_threads[i],
-                                                    tunnel_port=forward_ports[i],
-                                                    port=ports[i],
-                                                    interactive_shell=interactive_shells[i], ip=target_machine.ip,
-                                                    proxy=proxies[i])
+                                                    tunnel_thread=connection_setup_dto.tunnel_threads[i],
+                                                    tunnel_port=connection_setup_dto.forward_ports[i],
+                                                    port=connection_setup_dto.ports[i],
+                                                    interactive_shell=connection_setup_dto.interactive_shells[i],
+                                                    ip=target_machine.ip,
+                                                    proxy=connection_setup_dto.proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
 
 
     @staticmethod
-    def find_jump_host_connection(ip, s: AttackerMachineObservationState, env_config: EnvConfig) -> ConnectionObservationState:
+    def find_jump_host_connection(ip, s: EnvState, env_config: EnvConfig) -> ConnectionObservationState:
         """
         Utility function for finding a jump-host from the set of compromised machines to reach a target IP
 
@@ -612,7 +564,7 @@ class ConnectionUtil:
         :param c: the connection to thest
         :return: True if the connection is alive, otherwise false
         """
-        cmd = "whoami"
+        cmd = constants.AUXILLARY_COMMANDS.WHOAMI
         outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
         if outdata is not None and outdata != "":
             return True

@@ -608,6 +608,9 @@ class SYSTEM_IDENTIFICATION:
     NETWORK_CONF_FILE = "network_conf.pickle"
     DEFENDER_DYNAMICS_MODEL_FILE = "defender_dynamics_model.json"
 
+class AUXILLARY_COMMANDS:
+    WHOAMI = "whoami"
+
 # Log files:
 # /var/log/vsftpd.log
 # /var/log/auth.log

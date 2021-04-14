@@ -11,6 +11,8 @@ from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state im
 from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.connection_util import ConnectionUtil
+from gym_pycr_ctf.dao.network.connection_setup_dto import ConnectionSetupDTO
+
 
 class ShellUtil:
     """
@@ -676,17 +678,17 @@ class ShellUtil:
                         new_m_obs.shell_access_credentials.append(credential)
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
-                        connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
-                            ConnectionUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[c.proxy], s=s)
-                        ssh_cost += total_time
+                        setup_connection_dto = ConnectionUtil._ssh_setup_connection(
+                            a=a, env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                        ssh_cost += setup_connection_dto.total_time
 
-                        connection_dto = ConnectionObservationState(conn=target_connections[0],
+                        connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                     username=credential.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=credential.port,
-                                                                    proxy=proxies[0], ip=machine.ip)
+                                                                    proxy=setup_connection_dto.proxies[0],
+                                                                    ip=machine.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -734,16 +736,16 @@ class ShellUtil:
                         new_m_obs.shell_access_credentials.append(credential)
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ip = machine.ip
-                        connected, users, target_connections, ports, total_time, non_failed_credentials, proxies = \
-                            ConnectionUtil._ssh_setup_connection(a=a, env_config=env_config, credentials=[credential],
-                                                              proxy_connections=[c.proxy], s=s)
-                        telnet_cost += total_time
-                        connection_dto = ConnectionObservationState(conn=target_connections[0],
+                        setup_connection_dto = ConnectionUtil._ssh_setup_connection(
+                            a=a, env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                        telnet_cost += setup_connection_dto.total_time
+                        connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                     username=credential.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
                                                                     port=credential.port,
-                                                                    proxy=proxies[0], ip=machine.ip)
+                                                                    proxy=setup_connection_dto.proxies[0],
+                                                                    ip=machine.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
