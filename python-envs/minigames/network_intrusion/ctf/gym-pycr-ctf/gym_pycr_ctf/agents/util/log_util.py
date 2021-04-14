@@ -40,7 +40,6 @@ class LogUtil:
 
         training_time = time.time() - train_log_dto.start_time
         training_time_hours = training_time/3600
-
         avg_episode_rewards = np.mean(train_log_dto.attacker_episode_rewards)
         avg_episode_flags = np.mean(train_log_dto.episode_flags)
         avg_episode_flags_percentage = np.mean(train_log_dto.episode_flags_percentage)

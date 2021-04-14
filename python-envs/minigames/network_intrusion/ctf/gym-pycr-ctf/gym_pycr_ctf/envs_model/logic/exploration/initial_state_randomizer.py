@@ -19,6 +19,8 @@ class InitialStateRandomizer:
         :param max_steps: number of steps to take to find the starting state
         :return: The final observation
         """
+        if max_steps < 1:
+            return False
         done = False
         step = 0
         defender_action = None

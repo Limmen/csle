@@ -215,7 +215,8 @@ class TensorboardDataDTO:
                       "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
                       "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
                       "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
-                      "tt_h:{:.2f}".format(
+                      "tt_h:{:.2f},avg_F_T_E:{:.2f},avg_F_T_E%:{:.2f}," \
+                      "avg_F_T_E2:{:.2f},avg_F_T_E2%:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards, self.rolling_avg_rewards,
                 self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
                 self.lr, self.total_num_episodes, self.avg_episode_flags,
@@ -237,7 +238,9 @@ class TensorboardDataDTO:
                 self.avg_episode_alerts_norm,
                 self.eval_avg_episode_costs, self.eval_avg_episode_costs_norm, self.eval_avg_episode_alerts,
                 self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
-                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm, self.training_time_hours
+                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm, self.training_time_hours,
+                self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage,
+                self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage
             )
         return log_str
 

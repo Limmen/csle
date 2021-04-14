@@ -50,11 +50,20 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
                                                                  callback=callback, train_episode=train_episode,
                                                                  model=model, env_config=env_config,
                                                                  env_configs=env_configs)
+
     if env_2 is not None:
+        randomize_starting_states = []
+        for i in range(env_2.num_envs):
+            randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
+            env_2.envs[i].env_config.randomize_attacker_starting_state = False
+
         eval_mean_reward, eval_std_reward = _eval_helper(
             env=env_2, attacker_agent_config=attacker_agent_config, n_eval_episodes=n_eval_episodes,  deterministic=deterministic,
             callback=callback, train_episode=train_episode, model=model, env_config=env_config,
             env_configs=env_configs)
+
+        for i in range(env_2.num_envs):
+            env_2.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
     return train_eval_mean_reward, train_eval_std_reward, eval_mean_reward, eval_std_reward
 
 
@@ -210,13 +219,26 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     :param attacker_agent_config: agent config
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
+    randomize_starting_states = []
+    for i in range(env.num_envs):
+        randomize_starting_states.append(env.envs[i].env_config.randomize_attacker_starting_state)
+        env.envs[i].env_config.randomize_attacker_starting_state = False
+
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
         n_eval_episodes=n_eval_episodes_train, deterministic=True, env_config=env_config, train_mode=train_mode,
         env_configs =env_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent,
         train_log_dto=train_dto, eval_2=False)
 
+    for i in range(env.num_envs):
+        env.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
+
     if env_2 is not None:
+        randomize_starting_states = []
+        for i in range(env_2.num_envs):
+            randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
+            env_2.envs[i].env_config.randomize_attacker_starting_state = False
+
         train_dto = _quick_eval_helper(
             env=env_2, attacker_model=attacker_model, defender_model=defender_model,
             n_eval_episodes=n_eval_episodes_eval2, deterministic=deterministic, env_config=eval_env_config,
@@ -224,6 +246,8 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             env_configs=eval_envs_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent,
             emulation_env=True, eval_2=True, train_log_dto=train_dto
         )
+        for i in range(env_2.num_envs):
+            env_2.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
     return train_dto
 
 

@@ -14,20 +14,20 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=1, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=400,
+                               num_iterations=1000,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=25, input_dim=(20)*33,
+                               checkpoint_freq=25, input_dim=(1 + (20)*33),
                                output_dim=372,
-                               pi_hidden_dim=64, pi_hidden_layers=2,
-                               vf_hidden_dim=64, vf_hidden_layers=2,
-                               shared_hidden_layers=2, shared_hidden_dim=64,
+                               pi_hidden_dim=256, pi_hidden_layers=1,
+                               vf_hidden_dim=256, vf_hidden_layers=1,
+                               shared_hidden_layers=2, shared_hidden_dim=256,
                                batch_size=10000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
@@ -44,18 +44,18 @@ def default_config() -> ClientConfig:
                                eval_deterministic=False
                                )
     env_name = "pycr-ctf-level-9-generated-sim-v1"
-    eval_env_name = "pycr-ctf-level-9-emulation-v1"
-    #eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
+    #eval_env_name = "pycr-ctf-level-9-emulation-v1"
+    eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
 
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=4000)
+                                       server_connection=False, port_forward_next_port=2500)
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                         agent_username="agent", agent_pw="agent", server_connection=True,
     #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                         server_username="kim", port_forward_next_port=4000)
     eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                            server_connection=False, port_forward_next_port=5000,
-                                            warmup=True, warmup_iterations = 100)
+                                            server_connection=False, port_forward_next_port=2700,
+                                            warmup=False, warmup_iterations = 100)
     # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",

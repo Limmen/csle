@@ -92,7 +92,7 @@ class PPOBaselineAgent(TrainAgent):
         if self.attacker_opponent_type == AgentType.RANDOM_ATTACKER:
             attacker_opponent = RandomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
         elif self.attacker_opponent_type == AgentType.CUSTOM_ATTACKER:
-            attacker_opponent = CustomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
+            attacker_opponent = CustomAttackerBotAgent(env_config=self.env.env_config, env=self.env, strategy=[])
 
         # Create model
         model = PPO(policy_attacker, policy_defender,

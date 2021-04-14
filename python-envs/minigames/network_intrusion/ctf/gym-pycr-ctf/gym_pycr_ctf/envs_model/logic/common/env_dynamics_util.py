@@ -849,7 +849,7 @@ class EnvDynamicsUtil:
         :param env_config: the environment configuration
         :return: the normalized cost
         """
-        return ((action.cost * env_config.attacker_cost_coefficient) / env_config.attacker_max_costs) \
+        return ((action.cost) / env_config.attacker_max_costs) \
         * env_config.normalize_costs_max
 
     @staticmethod
@@ -861,6 +861,5 @@ class EnvDynamicsUtil:
         :param env_config: the environment configuration
         :return: the normalized alerts pts
         """
-        return ((action.alerts[0]
-          * env_config.attacker_alerts_coefficient) / env_config.attacker_max_alerts) \
+        return ((action.alerts[0]) / env_config.attacker_max_alerts) \
           * env_config.normalize_alerts_max

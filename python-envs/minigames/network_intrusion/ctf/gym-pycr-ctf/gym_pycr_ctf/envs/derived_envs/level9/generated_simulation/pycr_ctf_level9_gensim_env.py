@@ -8,6 +8,7 @@ from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v2 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v3 import PyCrCTFLevel9V3
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v4 import PyCrCTFLevel9V4
 from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
+from gym_pycr_ctf.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 
 
 # -------- Version 1 ------------
@@ -44,16 +45,23 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
             env_config.max_episode_length = 100
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 1
+            env_config.attacker_alerts_coefficient = 0
+            env_config.attacker_cost_coefficient = 0
             env_config.attacker_base_step_reward = 0
             env_config.use_upper_bound_pi_star_attacker = False
             env_config.detection_alerts_threshold = 10
             env_config.emulate_detection = True
             env_config.randomize_attacker_starting_state = True
             env_config.detection_prob_factor = 0.05
-            env_config.randomize_state_min_steps = 30
-            env_config.randomize_state_max_steps = 60
+            env_config.randomize_starting_state_policy = CustomExplorationPolicy(
+                num_actions=env_config.attacker_action_conf.num_actions,
+                strategy=[100,33,104,105,106,1,104,105,106,70,104,105,107,100,165,104,105,106,200,104,105,106,58,104,
+                          105,331,105,100,266,104,105,106,100,113,104,105])
+            env_config.randomize_state_min_steps = 0
+            env_config.randomize_state_max_steps = len(env_config.randomize_starting_state_policy.strategy) - 1
+            env_config.randomize_state_steps_list = None
+            #env_config.randomize_state_steps_list = [30, 30, 30, 30, 30, 30, 30, 30]
+            #env_config.randomize_state_steps_list = [0,0,0,0,0,0,5, 9, 13, 17, 20, 25, 30, 30, 30, 30, 30, 30, 30, 30]
 
         super().__init__(env_config=env_config)
 

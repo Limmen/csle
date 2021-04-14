@@ -203,6 +203,8 @@ class EnvConfig:
         self.randomize_attacker_starting_state = False
         self.randomize_state_min_steps = 10
         self.randomize_state_max_steps = 20
+        self.randomize_starting_state_policy = None
+        self.randomize_state_steps_list = [0, 8, 16, 23]
 
     def get_port_forward_port(self) -> int:
         """

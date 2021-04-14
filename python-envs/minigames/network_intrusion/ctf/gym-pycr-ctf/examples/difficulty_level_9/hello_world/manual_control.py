@@ -27,8 +27,9 @@ def manual_control():
     # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion" \
     #                                                 "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     emulation_config.skip_exploration = True
-    env = gym.make("pycr-ctf-level-9-emulation-v1", env_config=None, emulation_config=emulation_config)
-    #env = gym.make("pycr-ctf-level-9-generated-sim-v1", env_config=None, emulation_config=emulation_config)
+    #env = gym.make("pycr-ctf-level-9-emulation-v1", env_config=None, emulation_config=emulation_config)
+    env = gym.make("pycr-ctf-level-9-generated-sim-v1", env_config=None, emulation_config=emulation_config)
+    env.env_config.randomize_attacker_starting_state = False
     ManualAttackerAgent(env=env, env_config=env.env_config, render=False)
 
 
@@ -37,3 +38,5 @@ if __name__ == '__main__':
 
 # Test case: 99,33,1,70,104,105,106,107,99,165,200,58,104,105,106,331,99,266,104,105,106,99,113,104,105
 # Test case: 100,33,1,70,104,105,106,107,100,165,200,58,104,105,106,331,100,266,104,105,106,100,113,104,105
+
+# Test case: 100,33,104,105,106,1,104,105,106,70,104,105,107,100,165,104,105,106,200,104,105,106,58,104,105,331,105,100,266,104,105,106,100,113,104,105

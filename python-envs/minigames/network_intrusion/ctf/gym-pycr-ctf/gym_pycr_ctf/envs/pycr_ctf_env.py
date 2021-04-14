@@ -397,6 +397,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             info["successful_intrusion"] = True
 
         if s_prime.attacker_obs_state.all_flags:
+            attacker_reward = attacker_reward - self.env_state.attacker_obs_state.cost_norm \
+                              - self.env_state.attacker_obs_state.alerts_norm
             defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
         self.env_state = s_prime
@@ -639,7 +641,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                     and s_prime.defender_obs_state.var_log_baseline_stopped:
                 done = True
 
-    def reset(self, soft : bool = False) -> np.ndarray:
+    def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -666,14 +668,19 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.reset_metrics()
 
         # Randomize the starting state
-        if self.env_config.randomize_attacker_starting_state \
-                and self.env_config.attacker_exploration_policy is not None:
-            max_steps = np.random.randint(self.env_config.randomize_state_min_steps,
-                                          self.env_config.randomize_state_max_steps)
+        if self.env_config.randomize_attacker_starting_state:
+            if self.env_config.randomize_state_steps_list is None:
+                max_steps = np.random.randint(self.env_config.randomize_state_min_steps,
+                                              self.env_config.randomize_state_max_steps)
+            else:
+                max_steps = np.random.choice(np.array(self.env_config.randomize_state_steps_list))
+            exp_policy = self.env_config.attacker_exploration_policy
+            if self.env_config.randomize_starting_state_policy is not None:
+                exp_policy = self.env_config.randomize_starting_state_policy
             d = True
             while d:
                 d2 = InitialStateRandomizer.randomize_starting_state(
-                    exp_policy=self.env_config.attacker_exploration_policy,
+                    exp_policy=exp_policy,
                     env_config=self.env_config, env=self, max_steps=max_steps)
                 d = d2
                 if d:

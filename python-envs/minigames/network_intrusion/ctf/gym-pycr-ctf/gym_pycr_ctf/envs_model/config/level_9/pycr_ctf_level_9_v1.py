@@ -147,15 +147,15 @@ class PyCrCTFLevel9V1:
         env_config.num_flags = 6
         env_config.blacklist_ips = ["172.18.9.1", "172.18.9.254"]
 
-        env_config.attacker_shell_access_found_reward_mult = 0
-        env_config.attacker_new_tools_installed_reward_mult = 0
-        env_config.attacker_new_backdoors_installed_reward_mult = 0
-        env_config.attacker_new_login_reward_mult = 0
-        env_config.attacker_machine_found_reward_mult = 0
+        env_config.attacker_shell_access_found_reward_mult = 2
+        env_config.attacker_new_tools_installed_reward_mult = 2
+        env_config.attacker_new_backdoors_installed_reward_mult = 2
+        env_config.attacker_new_login_reward_mult = 2
+        env_config.attacker_machine_found_reward_mult=0.1
 
         env_config.attacker_final_steps_reward_coefficient = 0
 
-        env_config.attacker_flag_found_reward_mult = 20
+        env_config.attacker_flag_found_reward_mult = 10
         env_config.attacker_all_flags_reward = 100
         env_config.attacker_base_step_reward = -1
         env_config.attacker_illegal_reward_action = 0
@@ -176,7 +176,7 @@ class PyCrCTFLevel9V1:
         env_config.attacker_exploration_filter_illegal = True
         env_config.compute_pi_star_attacker = False
         env_config.use_upper_bound_pi_star_attacker = False
-        env_config.pi_star_rew_attacker = 10
+        env_config.pi_star_rew_attacker = 200
         env_config.pi_star_tau_attacker = None
         env_config.pi_star_rew_list_attacker.append(env_config.pi_star_rew_attacker)
 

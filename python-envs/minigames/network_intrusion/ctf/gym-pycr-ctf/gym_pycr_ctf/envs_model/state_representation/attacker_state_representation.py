@@ -460,12 +460,11 @@ class AttackerStateRepresentation:
         :param obs_state: the observation state
         :return: m_selection_obs_space (for AR), network_orig_shape, machine_orig_shape, m_action_obs_space (for AR)
         """
-        num_m_features = 3
-        num_network_features = 1
+        num_m_features = 7
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features + num_network_features,))
+            obs_state.num_machines * num_m_features + 1,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features + num_network_features,))
+            obs_state.num_machines * num_m_features + 1,))
         network_orig_shape = (obs_state.num_machines, num_m_features)
         machine_orig_shape = (num_m_features,)
         m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(num_m_features,))
@@ -486,9 +485,9 @@ class AttackerStateRepresentation:
                  machine_orig_shape, m_action_obs_space (for AR)
         """
         obs_state.sort_machines()
-        num_m_features = 3
-        num_network_features = 1
+        num_m_features = 7
         machines_obs = np.zeros((num_machines, num_m_features))
+        ports_protocols_obs = np.zeros((num_machines, num_ports))
         for i in range(num_machines):
             if len(obs_state.machines) > i:
                 machines_obs[i][0] = 1  # machine found
@@ -499,7 +498,17 @@ class AttackerStateRepresentation:
                 # Logged in
                 machines_obs[i][2] = int(obs_state.machines[i].logged_in)
 
-        network_obs = np.zeros(num_network_features)
-        network_obs[0] = obs_state.step
+                # Backdoor installed
+                machines_obs[i][3] = int(obs_state.machines[i].backdoor_installed)
 
-        return machines_obs, network_obs
+                # Tools installed
+                machines_obs[i][4] = int(obs_state.machines[i].tools_installed)
+
+                # Filesystem searched
+                machines_obs[i][5] = int(
+                    obs_state.machines[i].filesystem_searched)
+
+                # Untried credentials
+                machines_obs[i][6] = int(obs_state.machines[i].untried_credentials)
+
+        return machines_obs, ports_protocols_obs
