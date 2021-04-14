@@ -50,7 +50,10 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.use_upper_bound_pi_star_attacker = False
             env_config.detection_alerts_threshold = 10
             env_config.emulate_detection = True
+            env_config.randomize_attacker_starting_state = True
             env_config.detection_prob_factor = 0.05
+            env_config.randomize_state_min_steps = 30
+            env_config.randomize_state_max_steps = 60
 
         super().__init__(env_config=env_config)
 

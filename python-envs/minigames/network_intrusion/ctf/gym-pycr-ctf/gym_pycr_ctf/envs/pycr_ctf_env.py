@@ -26,6 +26,7 @@ from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star import FindPiStar
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
+from gym_pycr_ctf.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 
 
 class PyCRCTFEnv(gym.Env, ABC):
@@ -356,9 +357,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             sys.exit(0)
             done = False
             info["flags"] = self.env_state.attacker_obs_state.catched_flags
-            self.agent_state.time_step += 1
+            self.attacker_agent_state.time_step += 1
             attacker_reward = self.env_config.illegal_reward_action
-            if self.agent_state.time_step > self.env_config.max_episode_length:
+            if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
                 done = True
                 attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
@@ -660,31 +661,26 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_config.pi_star_tau = attacker_pi_star_tau
                 self.env_config.pi_star_rew = attacker_pi_star_rew
                 self.env_config.pi_star_rew_list.append(attacker_pi_star_rew)
-            total_attacker_actions = list(range(self.attacker_num_actions))
-            self.attacker_initial_illegal_actions = list(filter(lambda attack_action: not PyCRCTFEnv.is_attack_action_legal(
-                attack_action, env_config=self.env_config,
-                env_state=self.env_state), total_attacker_actions))
 
-        self.__checkpoint_log()
-        self.__checkpoint_trajectories()
-        if self.env_state.attacker_obs_state.detected:
-            self.attacker_agent_state.num_detections += 1
-        elif self.env_state.attacker_obs_state.all_flags:
-            self.attacker_agent_state.num_all_flags += 1
-        self.reset_state()
 
-        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-        attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
-        defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
-        defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
-        self.attacker_last_obs = attacker_m_obs
-        self.attacker_agent_state.num_episodes += 1
-        self.attacker_agent_state.cumulative_reward += self.attacker_agent_state.episode_reward
-        self.attacker_agent_state.time_step = 0
-        self.attacker_agent_state.episode_reward = 0
-        self.defender_time_step = 0
-        self.attacker_agent_state.env_log.reset()
-        self.attacker_agent_state.attacker_obs_state = self.env_state.attacker_obs_state
+        self.reset_metrics()
+
+        # Randomize the starting state
+        if self.env_config.randomize_attacker_starting_state \
+                and self.env_config.attacker_exploration_policy is not None:
+            max_steps = np.random.randint(self.env_config.randomize_state_min_steps,
+                                          self.env_config.randomize_state_max_steps)
+            d = True
+            while d:
+                d2 = InitialStateRandomizer.randomize_starting_state(
+                    exp_policy=self.env_config.attacker_exploration_policy,
+                    env_config=self.env_config, env=self, max_steps=max_steps)
+                d = d2
+                if d:
+                    d = d2
+                    self.reset_metrics()
+
+
         #self.viewer.mainframe.set_state(self.agent_state)
         if self.viewer is not None and self.viewer.mainframe is not None:
             self.viewer.mainframe.reset_state()
@@ -692,7 +688,37 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state.agent_reachable = self.env_config.network_conf.agent_reachable
         self.env_config.cache_misses = 0
         sys.stdout.flush()
+
+        total_attacker_actions = list(range(self.attacker_num_actions))
+        self.attacker_initial_illegal_actions = list(filter(lambda attack_action: not PyCRCTFEnv.is_attack_action_legal(
+            attack_action, env_config=self.env_config,
+            env_state=self.env_state), total_attacker_actions))
+
+        attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
+        attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
+        defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
+        defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
+        self.attacker_last_obs = attacker_m_obs
+        self.attacker_agent_state.attacker_obs_state = self.env_state.attacker_obs_state
+
         return attacker_m_obs, defender_obs
+
+    def reset_metrics(self):
+        self.__checkpoint_log()
+        self.__checkpoint_trajectories()
+        if self.env_state.attacker_obs_state.detected:
+            self.attacker_agent_state.num_detections += 1
+        elif self.env_state.attacker_obs_state.all_flags:
+            self.attacker_agent_state.num_all_flags += 1
+
+        self.reset_state()
+        self.attacker_agent_state.num_episodes += 1
+        self.attacker_agent_state.cumulative_reward += self.attacker_agent_state.episode_reward
+        self.attacker_agent_state.time_step = 0
+        self.attacker_agent_state.episode_reward = 0
+        self.defender_time_step = 0
+        self.attacker_agent_state.env_log.reset()
+
 
     def render(self, mode: str = 'human'):
         """

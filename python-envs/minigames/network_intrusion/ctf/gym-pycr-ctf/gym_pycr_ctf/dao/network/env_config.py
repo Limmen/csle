@@ -200,6 +200,9 @@ class EnvConfig:
         self.normalize_alerts_max = 5
         self.normalize_costs_max = 5
         self.max_episode_length_reward = -100
+        self.randomize_attacker_starting_state = False
+        self.randomize_state_min_steps = 10
+        self.randomize_state_max_steps = 20
 
     def get_port_forward_port(self) -> int:
         """
@@ -377,4 +380,7 @@ class EnvConfig:
         env_config.normalize_alerts_max = self.normalize_alerts_max
         env_config.normalize_costs_max = self.normalize_costs_max
         env_config.detection_prob_factor = self.detection_prob_factor
+        env_config.randomize_attacker_starting_state = self.randomize_attacker_starting_state
+        env_config.randomize_state_min_steps = self.randomize_state_min_steps
+        env_config.randomize_state_max_steps = self.randomize_state_max_steps
         return env_config
