@@ -176,7 +176,7 @@ class PyCrCTFLevel9V1:
         env_config.attacker_exploration_filter_illegal = True
         env_config.compute_pi_star_attacker = False
         env_config.use_upper_bound_pi_star_attacker = False
-        env_config.pi_star_rew_attacker = 190
+        env_config.pi_star_rew_attacker = 98
         env_config.pi_star_tau_attacker = None
         env_config.pi_star_rew_list_attacker.append(env_config.pi_star_rew_attacker)
 

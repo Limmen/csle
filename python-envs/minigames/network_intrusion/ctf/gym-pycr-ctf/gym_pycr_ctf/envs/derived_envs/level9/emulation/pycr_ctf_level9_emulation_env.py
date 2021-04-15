@@ -85,9 +85,9 @@ class PyCRCTFLevel9Emulation1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
             env_config.max_episode_length = 100
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 1
-            env_config.attacker_base_step_reward = 0
+            env_config.attacker_alerts_coefficient = 0
+            env_config.attacker_cost_coefficient = 0
+            env_config.attacker_base_step_reward = -1
             env_config.use_upper_bound_pi_star_attacker = False
             env_config.detection_alerts_threshold = 10
             env_config.emulate_detection = True
