@@ -74,8 +74,6 @@ class PyCRCTFLevel9Emulation1Env(PyCRCTFEnv):
                                                     attacker_action_conf=attacker_action_conf,
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 0
             env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
