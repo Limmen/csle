@@ -226,7 +226,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
 
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
-        n_eval_episodes=n_eval_episodes_train, deterministic=True, env_config=env_config, train_mode=train_mode,
+        n_eval_episodes=n_eval_episodes_train, deterministic=deterministic, env_config=env_config, train_mode=train_mode,
         env_configs =env_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent,
         train_log_dto=train_dto, eval_2=False)
 
