@@ -880,6 +880,10 @@ class PyCRCTFEnv(gym.Env, ABC):
                                                                        or machine_root_login):
             return False
 
+        # Exploit only legal if we have not already compromised the node
+        if action.type == AttackerActionType.EXPLOIT and machine_logged_in and root_login:
+            return False
+
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT
                                    or action.type == AttackerActionType.PRIVILEGE_ESCALATION):
