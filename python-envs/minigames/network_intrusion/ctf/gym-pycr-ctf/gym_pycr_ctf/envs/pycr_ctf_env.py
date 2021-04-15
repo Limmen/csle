@@ -16,6 +16,7 @@ from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs_model.logic.common.util as util
 from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -842,6 +843,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         uninstalled_tools = False
         machine_w_tools = False
         uninstalled_backdoor = False
+        target_untried_credentials = False
 
         for m in env_state.attacker_obs_state.machines:
             if m_index == -1:
@@ -867,6 +869,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                     machine_logged_in = True
                     if m.root:
                         machine_root_login = True
+                if m.untried_credentials:
+                    target_untried_credentials = m.untried_credentials
             # if m.shell_access and not m.logged_in:
             #     untried_credentials = True
             if m.untried_credentials:
@@ -882,6 +886,17 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Exploit only legal if we have not already compromised the node
         if action.type == AttackerActionType.EXPLOIT and machine_logged_in and root_login:
+            return False
+
+        # Shell-access Exploit only legal if we do not already have untried credentials
+        if action.type == AttackerActionType.EXPLOIT and action.action_outcome == AttackerActionOutcome.SHELL_ACCESS \
+                and target_untried_credentials:
+            return False
+
+        # Priv-Esc Exploit only legal if we are already logged in and do not have root
+        if action.type == AttackerActionType.EXPLOIT \
+                and action.action_outcome == AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT \
+                and (not machine_logged_in or root_login):
             return False
 
         # If IP is discovered, then IP specific action without other prerequisites is legal

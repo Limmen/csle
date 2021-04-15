@@ -14,11 +14,11 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=1, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=1000,
+                               num_iterations=2000,
                                eval_render=False, gifs=False,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
@@ -39,13 +39,13 @@ def default_config() -> ClientConfig:
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                attacker_opponent_baseline_type=8,
-                               running_avg=50, n_quick_eval_iter=5, n_deterministic_eval_iter=0,
+                               running_avg=50, n_quick_eval_iter=25, n_deterministic_eval_iter=25,
                                log_regret=True, snort_baseline_simulate=False, quick_eval_freq=1,
                                eval_deterministic=False
                                )
     env_name = "pycr-ctf-level-9-generated-sim-v1"
-    #eval_env_name = "pycr-ctf-level-9-emulation-v1"
-    eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
+    eval_env_name = "pycr-ctf-level-9-emulation-v1"
+    #eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
 
     # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
     #                                    server_connection=False, port_forward_next_port=8500)
@@ -60,7 +60,7 @@ def default_config() -> ClientConfig:
                                    agent_username="agent", agent_pw="agent", server_connection=True,
                                    server_private_key_file="/home/kim/.ssh/id_rsa",
                                    server_username="kim", port_forward_next_port=5000,
-                                   warmup=False, warmup_iterations = 100)
+                                   warmup=True, warmup_iterations = 100)
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
