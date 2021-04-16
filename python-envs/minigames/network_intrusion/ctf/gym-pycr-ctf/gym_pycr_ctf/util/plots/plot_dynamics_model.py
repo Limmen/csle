@@ -1,20 +1,21 @@
+from typing import Tuple
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCrCTFLevel4Base
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.util.plots import plotting_action_costs
 import numpy as np
 import matplotlib.pyplot as plt
 
-def read_model():
+def read_model(model_path):
     #model_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
-    model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
+    #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
     defender_dynamics_model = DefenderDynamicsModel()
     defender_dynamics_model.read_model_path(model_path)
     defender_dynamics_model.normalize()
     return defender_dynamics_model
 
-def plot_all():
-    defender_dynamics_model = read_model()
+def plot_all(defender_dynamics_model, num_colors : int = 75):
     action_cfg = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=10, subnet_mask="test", hacker_ip = "test")
     total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles, \
     total_row_x_labels, total_row_y_labels,row_labels = plot_machines_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
@@ -31,7 +32,7 @@ def plot_all():
                                   ncols=len(total_row_x_labels[0]),
                                   nrows=len(total_row_x_labels), figsize=(3, 2.2), fontsize=3.2, labelsize=2.5,
                                   suptitle="Estimated Emulation Dynamics", ms=0.4, title_fontsize=4.5, lw=0.2,
-                                  row_labels=row_labels, wspace=0.03, hspace=0.18, top=0.92, num_colors=74)
+                                  row_labels=row_labels, wspace=0.03, hspace=0.18, top=0.92, num_colors=num_colors)
 
 def plot_machines_dynamics(defender_dynamics_model, action_cfg):
     total_row_dists = []
@@ -57,12 +58,12 @@ def plot_machines_dynamics(defender_dynamics_model, action_cfg):
         row_labels.append(machine_ip)
         total_row_short_titles.append(row_short_titles)
 
-    plot_complete_model(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,
-                        total_row_x_labels, total_row_y_labels, file_name="total_model_machines", ncols=len(total_row_x_labels[0]),
-                        nrows=len(total_row_x_labels), figsize=(3,2.1), fontsize=3.5, labelsize=1.75,
-                        suptitle="Estimated Dynamics of Nodes in the Emulation", ms=0.45, title_fontsize=4, lw=0.2,
-                        row_labels=row_labels, wspace=0.00, hspace=0.00, top=0.925,
-                        num_colors = 74)
+    # plot_complete_model(total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,
+    #                     total_row_x_labels, total_row_y_labels, file_name="total_model_machines", ncols=len(total_row_x_labels[0]),
+    #                     nrows=len(total_row_x_labels), figsize=(3,2.1), fontsize=3.5, labelsize=1.75,
+    #                     suptitle="Estimated Dynamics of Nodes in the Emulation", ms=0.45, title_fontsize=4, lw=0.2,
+    #                     row_labels=row_labels, wspace=0.00, hspace=0.00, top=0.925,
+    #                     num_colors = 75)
     return total_row_dists, total_row_xks, total_row_a_ids, total_row_b_ids, total_row_short_titles,\
            total_row_x_labels, total_row_y_labels, row_labels
 
@@ -197,10 +198,10 @@ def plot_machine_dynamics(machine_ip, machine_dynamics, action_cfg):
     row_y_labels.append(ylabel)
     row_short_titles.append(short_title)
 
-    plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
-                              machine_ip + "_row_dynamics", ncols=3, ip=machine_ip, figsize=(8, 4.5),
-                              fontsize=8, labelsize=6, suptitle="Node IP: " + machine_ip,
-                              lw=1.5, ms=4)
+    # plot_ids_dynamics_two_row(row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels,
+    #                           machine_ip + "_row_dynamics", ncols=3, ip=machine_ip, figsize=(8, 4.5),
+    #                           fontsize=8, labelsize=6, suptitle="Node IP: " + machine_ip,
+    #                           lw=1.5, ms=4)
 
 
     return row_dists, row_xks, row_a_ids, row_b_ids, row_subtitles, row_x_labels, row_y_labels, row_short_titles
@@ -344,7 +345,7 @@ def plot_specific_dynamics(data_dict, action_cfg, subtitle, xlabel, ylabel, file
 def plot_complete_model(dists, xks, a_ids, b_ids, subtitles, xlabels, ylabels, file_name, ncols=6,
                         figsize=(6, 4.5), fontsize=10, labelsize=6, suptitle="", nrows = 6, ms=2.5,
                         title_fontsize=8, lw=0.5, row_labels = None, wspace=0.03, hspace=0.07, top=0.9,
-                        num_colors: int = 74):
+                        num_colors: int = 75):
     cm = plt.cm.get_cmap('RdYlBu_r')
     colors = plt.cm.viridis(np.linspace(0.3, 1,num_colors))[-num_colors:]
     colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
@@ -438,7 +439,7 @@ def plot_complete_model_full_span(dists, xks, a_ids, b_ids, subtitles, xlabels, 
                                   ids_row_x_labels, ids_row_y_labels,file_name, ncols=6,
                                   figsize=(6, 4.5), fontsize=10, labelsize=6, suptitle="", nrows = 6, ms=2.5,
                         title_fontsize=8, lw=0.5, row_labels = None, wspace=0.03, hspace=0.07, top=0.9,
-                                  num_colors: int = 74):
+                                  num_colors: int = 75):
     cm = plt.cm.get_cmap('RdYlBu_r')
     colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
     colors = plt.cm.viridis(np.linspace(0.3, 1, num_colors))[-num_colors:]
@@ -463,7 +464,8 @@ def plot_complete_model_full_span(dists, xks, a_ids, b_ids, subtitles, xlabels, 
             label = "$(b_{" + str(ids_row_b_ids[0][i]) + "},a_{" + str(ids_row_a_ids[0][i]) + "})$"
             plt.plot(ids_row_xks[0][i], ids_row_dists[0][i].pmf(ids_row_xks[0][i]), 'ro', ms=ms, mec=colors[i], color=colors[i],
                             label=label)
-            plt.vlines(ids_row_xks[0][i], 0, ids_row_dists[0][i].pmf(ids_row_xks[0][i]), colors=colors[i], linestyles='-', lw=lw)
+            plt.vlines(ids_row_xks[0][i], 0, ids_row_dists[0][i].pmf(ids_row_xks[0][i]), colors=colors[i],
+                       linestyles='-', lw=lw)
         else:
             label = "..."
             if i > 2:
@@ -844,6 +846,198 @@ def plot(dist, xk, k, action_dto: AttackerAction, logged_in_ips, subtitle : str,
 
     fig.tight_layout()
     plt.show()
+
+def plot_ids_infra_and_one_machine(defender_dynamics_model):
+    action_cfg = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=10, subnet_mask="test", hacker_ip="test")
+    machine_row_dists, machine_row_xks, machine_row_a_ids, machine_row_b_ids, machine_row_short_titles, \
+    machine_row_x_labels, machine_row_y_labels, machine_row_labels = plot_machines_dynamics(
+        defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
+    machine_row_dists = machine_row_dists[0:1][0]
+    machine_row_xks = machine_row_xks[0:1][0]
+    machine_row_a_ids = machine_row_a_ids[0:1]
+    machine_row_b_ids = machine_row_b_ids[0:1]
+    machine_row_short_titles = machine_row_short_titles[0:1][0]
+    machine_row_x_labels = machine_row_x_labels[0:1][0]
+    machine_row_y_labels = machine_row_y_labels[0:1][0]
+    machine_row_labels = machine_row_labels[0:1][0]
+
+    print(machine_row_short_titles)
+    print(machine_row_x_labels)
+    print(machine_row_y_labels)
+    print(machine_row_labels)
+
+    ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles, ids_row_x_labels, ids_row_y_labels = \
+        plot_ids_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
+
+    ids_row_dists = ids_row_dists[0:2]
+    ids_row_xks = ids_row_xks[0:2]
+    ids_row_a_ids = ids_row_a_ids[0:2]
+    ids_row_b_ids = ids_row_b_ids[0:2]
+    ids_row_subtitles = ids_row_subtitles[0:2]
+    ids_row_x_labels = ids_row_x_labels[0:2]
+    ids_row_y_labels = ids_row_y_labels[0:2]
+
+    print(ids_row_subtitles)
+
+    path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_6/plots/merged.zip"
+    costs_data, costs_data_factors, bin_edges, costs_factors = plotting_action_costs.read_action_costs(
+        zip_file=path,
+        num_bins=100, factors=[2, 3, 4])
+    print("loaded the data")
+
+    plot_ids_infra_and_one_machine_impl(num_colors=75, machine_row_dists=machine_row_dists,
+                                        machine_row_xks=machine_row_xks,
+                                        machine_row_short_titles=machine_row_short_titles,
+                                        machine_row_x_labels=machine_row_x_labels,
+                                        machine_row_y_labels=machine_row_y_labels,
+                                        ids_row_xks=ids_row_xks, ids_row_a_ids=ids_row_a_ids,
+                                        ids_row_b_ids=ids_row_b_ids, ids_row_x_labels=ids_row_x_labels,
+                                        ids_row_y_labels=ids_row_y_labels, ids_row_dists=ids_row_dists,
+                                        ids_row_subtitles=ids_row_subtitles, machine_row_labels=machine_row_labels,
+                                        costs_data=costs_data, costs_data_factors=costs_data_factors,
+                                        bin_edges=bin_edges, costs_factors=costs_factors
+                                        )
+
+def plot_ids_infra_and_one_machine_impl(num_colors : int = 75, fontsize : int = 6.5, figsize: Tuple[int,int] =  (3.75, 3.4),
+                                        nrows: int = 3, ncols: int = 2, file_name="test",
+                                        machine_row_dists = None, machine_row_xks = None,
+                                        machine_row_short_titles = None,
+                                        machine_row_x_labels = None, machine_row_y_labels = None, ids_row_dists = None,
+                                        ids_row_xks = None, ids_row_a_ids = None, ids_row_b_ids = None,
+                                        ids_row_x_labels = None, ids_row_y_labels = None, ms=2.5,
+                                        title_fontsize=8, lw=0.5, wspace=0.02, hspace=0.3, top=0.9,
+                                        labelsize=6, ids_row_subtitles=None, machine_row_labels = None,
+                                        costs_data=None, costs_data_factors=None, bin_edges=None, costs_factors=None
+                                        ):
+    cm = plt.cm.get_cmap('RdYlBu_r')
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1, num_colors))[-num_colors:]
+
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['axes.titlepad'] = 0.02
+    # plt.rcParams['xtick.major.pad'] = 0.5
+    plt.rcParams['ytick.major.pad'] = 0.05
+    #plt.rcParams['axes.labelpad'] = 0.8
+    plt.rcParams['axes.linewidth'] = 0.1
+    plt.rcParams.update({'font.size': fontsize})
+
+    # plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
+
+    for i in range(len(ids_row_dists[0])):
+        ax[0][0].plot(ids_row_xks[0][i], ids_row_dists[0][i].pmf(ids_row_xks[0][i]), 'ro', ms=ms,
+                 mec=colors[i], color=colors[i],
+                 label="")
+        ax[0][0].vlines(ids_row_xks[0][i], 0, ids_row_dists[0][i].pmf(ids_row_xks[0][i]), colors=colors[i], linestyles='-',
+                   lw=lw)
+
+    for i in range(len(ids_row_dists[1])):
+        ax[0][1].plot(ids_row_xks[1][i], ids_row_dists[1][i].pmf(ids_row_xks[1][i]), 'ro', ms=ms,
+                 mec=colors[i], color=colors[i],
+                 label="")
+        ax[0][1].vlines(ids_row_xks[1][i], 0, ids_row_dists[1][i].pmf(ids_row_xks[1][i]), colors=colors[i], linestyles='-',
+                   lw=lw)
+
+    ax[0][0].grid('on')
+    #ax[0][0].set_xlabel("", fontsize=labelsize)
+    ax[0][0].set_ylabel(r"$\mathbb{P}[ \cdot | (s_i, a_i)]$", fontsize=labelsize)
+    xlab = ax[0][0].xaxis.get_label()
+    ylab = ax[0][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+    ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
+    ax[0][0].set_ylim(0, 1.1)
+    ax[0][0].set_title("\# New IDS Alerts", fontsize=fontsize)
+
+    ax[0][1].grid('on')
+    #ax[0][1].set_ylabel(r"$\mathbb{P}[ \cdot | (s_i, a_i)]$", fontsize=labelsize)
+    xlab = ax[0][1].xaxis.get_label()
+    ylab = ax[0][1].yaxis.get_label()
+    ax[0][1].set_yticks([])
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+    ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
+    ax[0][1].set_ylim(0, 1.1)
+    ax[0][1].set_title("\# New Severe IDS Alerts", fontsize=fontsize)
+
+    for i in range(len(machine_row_xks[0])):
+        ax[1][0].plot(machine_row_xks[0][i], machine_row_dists[0][i].pmf(machine_row_xks[0][i]), 'ro', ms=ms, mec=colors[i],
+                          color=colors[i],
+                          label="")
+        ax[1][0].vlines(machine_row_xks[0][i], 0, machine_row_dists[0][i].pmf(machine_row_xks[0][i]), colors=colors[i],
+                        linestyles='-',
+                            lw=lw)
+
+    for i in range(len(machine_row_xks[1])):
+        ax[1][1].plot(machine_row_xks[1][i], machine_row_dists[1][i].pmf(machine_row_xks[1][i]), 'ro', ms=ms, mec=colors[i],
+                          color=colors[i],
+                          label="")
+        ax[1][1].vlines(machine_row_xks[1][i], 0, machine_row_dists[1][i].pmf(machine_row_xks[1][i]), colors=colors[i],
+                        linestyles='-', lw=lw)
+
+    ax[1][0].grid('on')
+    ax[1][0].set_ylabel(r"$\mathbb{P}[ \cdot | (s_i, a_i)]$", fontsize=labelsize)
+    xlab = ax[1][0].xaxis.get_label()
+    ylab = ax[1][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+    ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
+    ax[1][0].set_ylim(0, 1.1)
+    ax[1][0].set_title("\# New Connections 172.18.4.2", fontsize=fontsize)
+
+    ax[1][1].grid('on')
+    ax[1][1].set_yticks([])
+    #ax[1][1].set_ylabel(r"$\mathbb{P}[ \cdot | (s_i, a_i)]$", fontsize=labelsize)
+    xlab = ax[1][1].xaxis.get_label()
+    ylab = ax[1][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+    ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
+    ax[1][1].set_ylim(0, 1.1)
+    ax[1][1].set_title("\# New Failed Logins 172.18.4.2", fontsize=fontsize)
+
+    plt.subplot(nrows, ncols, (5, 6))
+
+    colors = plt.cm.viridis(np.linspace(0.3, 1, 4))[-4:]
+
+    histo, bin_edges = np.histogram(costs_factors[3], 30, (0, 2300))
+    bin_middles = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    print(np.array(costs_factors[3]) * 0.01)
+    plt.hist(costs_factors[3], bins=30, alpha=1, range=(0, 2300),
+                  label="test", stacked=False, log=True, color=colors[0], density=True, edgecolor='black', ls="-")
+
+    normalisation = 30 / (len(costs_factors[3]) * (2300 - 0))
+    y_err = np.sqrt(histo) * normalisation
+    y = histo * normalisation
+    y_err[0] = y_err[0] + 0.0025
+    y_err[1] = y_err[1] + 0.0001
+    plt.errorbar(bin_middles, y, fmt='.k', color="black", yerr=y_err)
+
+    plt.grid('on')
+    #plt.set_yticks([])
+    # ax[1][1].set_ylabel(r"$\mathbb{P}[ \cdot | (s_i, a_i)]$", fontsize=labelsize)
+    # xlab = plt.xaxis.get_label()
+    # ylab = plt.yaxis.get_label()
+    # xlab.set_size(labelsize)
+    # ylab.set_size(fontsize)
+    plt.ylabel(r"Normalized frequency", fontsize=labelsize)
+    plt.tick_params(axis='both', which='major', labelsize=labelsize, length=1.2, width=0.2)
+    plt.tick_params(axis='both', which='minor', labelsize=labelsize, length=1.2, width=0.2)
+    #plt.ylim(0, 1.1)
+    plt.xlim(0, 2300)
+    plt.title("Wallclock time (s) of executing actions", fontsize=fontsize)
+
+    fig.tight_layout()
+    fig.subplots_adjust(wspace=wspace, hspace=hspace, top=top)
+
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
 
 if __name__ == '__main__':
     plot_all()
