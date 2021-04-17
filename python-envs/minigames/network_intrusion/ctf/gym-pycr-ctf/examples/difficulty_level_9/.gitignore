@@ -15,3 +15,5 @@ tensorboard
 results_backup
 results
 results_backup
+*.png
+*.pdf
