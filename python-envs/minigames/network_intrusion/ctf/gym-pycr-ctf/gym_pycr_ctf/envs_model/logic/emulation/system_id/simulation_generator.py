@@ -64,7 +64,7 @@ class SimulationGenerator:
 
             # Step in the environment
             action = (attacker_action, defender_action)
-            print("step")
+            print("step, action:{}".format(attacker_action))
             obs, reward, done, info = env.step(action)
             s_prime = env.env_state
             sys.stdout.flush()

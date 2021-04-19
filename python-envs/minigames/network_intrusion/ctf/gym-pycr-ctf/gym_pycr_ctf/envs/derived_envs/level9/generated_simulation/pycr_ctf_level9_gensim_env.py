@@ -375,10 +375,10 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             # env_config.attacker_exploration_policy = exp_policy
             env_config.attacker_exploration_policy = CustomExplorationPolicy(
                 num_actions=env_config.attacker_action_conf.num_actions,
-                strategy=[372, 100, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372,
-                          106, 372, 70, 372, 104, 105, 107, 372, 100, 372, 165, 372, 104, 372, 105, 372, 106, 372,
+                strategy=[372, 99, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372,
+                          106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372,
                           200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
-                          105, 100, 266, 372, 104, 105, 106, 100, 372, 113, 104, 372, 105])
+                          105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 500
