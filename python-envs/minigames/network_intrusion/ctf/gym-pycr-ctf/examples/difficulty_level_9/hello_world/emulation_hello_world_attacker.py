@@ -90,7 +90,8 @@ def test_all():
     #test_env("pycr-ctf-level-9-emulation-v2", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-emulation-v3", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-emulation-v1", num_steps=1000000000)
-    test_env("pycr-ctf-level-9-generated-sim-v1", num_steps=1000000000)
+    #test_env("pycr-ctf-level-9-generated-sim-v1", num_steps=1000000000)
+    test_env("pycr-ctf-level-9-generated-sim-v5", num_steps=1000000000)
 
 if __name__ == '__main__':
     test_all()

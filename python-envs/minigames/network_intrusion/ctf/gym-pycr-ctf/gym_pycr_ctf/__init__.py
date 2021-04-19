@@ -1031,7 +1031,14 @@ register(
     kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
 
-# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 4 ------------
+# -------- Difficulty Level: Level9, Mode: emulation, Version: 5 ------------
+register(
+    id='pycr-ctf-level-9-emulation-v5',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env:PyCRCTFLevel9Emulation5Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 1 ------------
 register(
     id='pycr-ctf-level-9-generated-sim-v1',
     entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim1Env',
@@ -1084,5 +1091,12 @@ register(
 register(
     id='pycr-ctf-level-9-generated-sim-costs-v4',
     entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSimWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level9, Mode: Generated Simulation, Version: 5 ------------
+register(
+    id='pycr-ctf-level-9-generated-sim-v5',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim5Env',
     kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )

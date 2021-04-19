@@ -7,6 +7,7 @@ from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v1 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v2 import PyCrCTFLevel9V2
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v3 import PyCrCTFLevel9V3
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v4 import PyCrCTFLevel9V4
+from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v5 import PyCrCTFLevel9V5
 from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from gym_pycr_ctf.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 
@@ -337,3 +338,63 @@ class PyCRCTFLevel9GeneratedSimWithCosts4Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_trajectories = 10
         super().__init__(env_config=env_config)
 
+
+
+# -------- Version 5 ------------
+
+class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
+    """
+    Generated Simulation.
+
+    An extension of V1 but allows the attacker to peform "no-op" actions and is intended for playing with defender agent.
+    Does not take action costs into account.
+    """
+    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+        if env_config is None:
+            if emulation_config is None:
+                emulation_config = PyCrCTFLevel9Base.emulation_config()
+            render_config = PyCrCTFLevel9Base.render_conf()
+            emulation_config.ids_router = True
+            emulation_config.ids_router_ip = PyCrCTFLevel9Base.router_ip()
+            network_conf = PyCrCTFLevel9Base.network_conf(generate=True)
+            attacker_action_conf = PyCrCTFLevel9V5.attacker_actions_conf(num_nodes=PyCrCTFLevel9Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel9Base.subnet_mask(),
+                                                                hacker_ip=PyCrCTFLevel9Base.hacker_ip())
+            defender_action_conf = PyCrCTFLevel9V5.defender_actions_conf(num_nodes=PyCrCTFLevel9Base.num_nodes(),
+                                                                subnet_mask=PyCrCTFLevel9Base.subnet_mask())
+            env_config = PyCrCTFLevel9V5.env_config(network_conf=network_conf,
+                                                    attacker_action_conf=attacker_action_conf,
+                                                    defender_action_conf=defender_action_conf,
+                                                    emulation_config=emulation_config, render_conf=render_config)
+            env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
+            env_config.checkpoint_dir = checkpoint_dir
+            env_config.checkpoint_freq = 1000
+            # exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
+            # env_config.attacker_exploration_policy = exp_policy
+            env_config.attacker_exploration_policy = CustomExplorationPolicy(
+                num_actions=env_config.attacker_action_conf.num_actions,
+                strategy=[372, 100, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372,
+                          106, 372, 70, 372, 104, 105, 107, 372, 100, 372, 165, 372, 104, 372, 105, 372, 106, 372,
+                          200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
+                          105, 100, 266, 372, 104, 105, 106, 100, 372, 113, 104, 372, 105])
+            env_config.domain_randomization = False
+            env_config.attacker_max_exploration_steps = 500
+            env_config.attacker_max_exploration_trajectories = 500
+            env_config.max_episode_length = 1000
+            env_config.attacker_alerts_coefficient = 0
+            env_config.attacker_cost_coefficient = 0
+            env_config.attacker_base_step_reward = -1
+            env_config.use_upper_bound_pi_star_attacker = False
+            env_config.detection_alerts_threshold = 10
+            env_config.emulate_detection = False
+            env_config.detection_prob_factor = 0.05
+            env_config.randomize_attacker_starting_state = False
+
+            env_config.explore_defense_states = True
+            env_config.defender_update_state = True
+            env_config.attacker_continue_action_sleep = 30
+            env_config.defender_sleep_before_state_update = 15
+
+        super().__init__(env_config=env_config)

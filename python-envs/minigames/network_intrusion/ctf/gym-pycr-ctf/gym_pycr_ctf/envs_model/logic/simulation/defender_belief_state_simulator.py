@@ -172,6 +172,9 @@ class DefenderBeliefStateSimulator:
 
         # Update logs timestamps and reset machine states
         for m in s_prime.defender_obs_state.machines:
+            if m.ip not in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
+                print("warning, ip:{} not found in the dynamics model, is it complete?".format(m.ip))
+                continue
             m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
 
             m.num_users = 0

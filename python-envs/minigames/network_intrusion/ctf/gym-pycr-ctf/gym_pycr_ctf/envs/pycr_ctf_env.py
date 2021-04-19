@@ -154,7 +154,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         # System Identification and Build Model
         if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
                 and not self.env_config.emulation_config.skip_exploration:
-
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
                 exp_policy=env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
             self.env_state.attacker_obs_state = obs_state
