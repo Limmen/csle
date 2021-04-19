@@ -48,21 +48,38 @@ Once the environment has been created, the API functions
 your preference.
 
 ```python
+import numpy as np
 import gym
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration to connect to the emulation
-emulation_config = emulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+emulation_config = EmulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
 
 # Create gym interface
-env_name = "pycr-ctf-level-7-emulation-v1"
+env_name = "pycr-ctf-level-9-emulation-v1"
 env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
+num_actions_attacker = env.env_config.attacker_action_conf.num_actions
+attacker_actions = np.array(list(range(num_actions_attacker)))
+num_actions_defender = env.env_config.defender_action_conf.num_actions
+defender_actions = np.array(list(range(num_actions_defender)))
+for i in range(100):
+    legal_attacker_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), attacker_actions))
+    legal_defender_actions = list(filter(lambda x: env.is_defense_action_legal(x, env.env_config, env.env_state), defender_actions))    
+    attacker_action = np.random.choice(legal_attacker_actions )
+    defender_action = np.random.choice(legal_defender_actions )
+    action = (attacker_action, defender_action)
+    obs, reward, done, info = env.step(action)
+    attacker_reward, defender_reward = reward
+    
+    # env.render()
 
-# Manual Control with GUI
-ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
+    if done:        
+        env.reset()
+
+env.reset()
+env.close()
 ```
 
 ## Manual Control
@@ -75,7 +92,7 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration for connecting to the emulation
-emulation_config = emulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+emulation_config = EmulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
                                    port_forward_next_port=4600,
                                    server_connection=True, warmup=False, warmup_iterations=500,
                                    server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
@@ -84,6 +101,8 @@ emulation_config = emulationConfig(agent_ip="172.18.7.191", agent_username="agen
 
 # Create gym interface
 env = gym.make("pycr-ctf-level-7-emulation-v1", env_config=None, emulation_config=emulation_config)
+
+# Manual Control with GUI
 ManualAttackerAgent(env=env, env_config=env.env_config)
 ```
 
