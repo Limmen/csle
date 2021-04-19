@@ -861,6 +861,7 @@ class NmapUtil:
                 for c in ssh_connections_sorted_by_root:
 
                     # Check in-memory cache
+                    cache_result = None
                     if env_config.attacker_use_nmap_cache:
                         scan_result = env_config.attacker_nmap_scan_cache.get(cache_id)
                         if scan_result is not None:
