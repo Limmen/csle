@@ -37,38 +37,74 @@ class IdsAlert:
 
     @staticmethod
     def parse_from_str(csv_str_record : str, year: int):
+        if year is None:
+            year = datetime.datetime.now().year
         a_fields = csv_str_record.split(",")
         alert_dao = IdsAlert()
-        alert_dao.timestamp = a_fields[0]
-        alert_dao.timestamp = str(year) + " " + alert_dao.timestamp
-        if alert_dao.timestamp is not None and alert_dao.timestamp != "":
-            alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
-        alert_dao.sig_generator = a_fields[1]
-        alert_dao.sig_id = a_fields[2]
-        alert_dao.sig_rev = a_fields[3]
-        alert_dao.msg = a_fields[4]
-        alert_dao.proto = a_fields[5]
-        alert_dao.src_ip = a_fields[6]
-        alert_dao.src_port = a_fields[7]
-        alert_dao.dst_ip = a_fields[8]
-        alert_dao.dst_port = a_fields[9]
-        alert_dao.eth_src = a_fields[10]
-        alert_dao.eth_dst = a_fields[11]
-        alert_dao.eth_len = a_fields[12]
-        alert_dao.tcp_flags = a_fields[13]
-        alert_dao.tcp_seq = a_fields[14]
-        alert_dao.tcp_ack = a_fields[15]
-        alert_dao.tcp_len = a_fields[16]
-        alert_dao.tcp_window = a_fields[17]
-        alert_dao.ttl = a_fields[18]
-        alert_dao.tos = a_fields[19]
-        alert_dao.id = a_fields[20]
-        alert_dao.dgm_len = a_fields[21]
-        alert_dao.ip_len = a_fields[22]
-        alert_dao.icmp_type = a_fields[23]
-        alert_dao.icmp_code = a_fields[24]
-        alert_dao.icmp_id = a_fields[25]
-        alert_dao.icmp_seq = a_fields[26]
+        if len(a_fields) > 1:
+            alert_dao.timestamp = a_fields[0]
+            if alert_dao.timestamp is not None and alert_dao.timestamp != "" and alert_dao.timestamp != "0":
+                alert_dao.timestamp = str(year) + " " + alert_dao.timestamp
+                try:
+                    alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                except:
+                    alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+            else:
+                alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+        else:
+            alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+        if len(a_fields) > 1:
+            alert_dao.sig_generator = a_fields[1]
+        if len(a_fields) > 2:
+            alert_dao.sig_id = a_fields[2]
+        if len(a_fields) > 3:
+            alert_dao.sig_rev = a_fields[3]
+        if len(a_fields) > 4:
+            alert_dao.msg = a_fields[4]
+        if len(a_fields) > 5:
+            alert_dao.proto = a_fields[5]
+        if len(a_fields) > 6:
+            alert_dao.src_ip = a_fields[6]
+        if len(a_fields) > 7:
+            alert_dao.src_port = a_fields[7]
+        if len(a_fields) > 8:
+            alert_dao.dst_ip = a_fields[8]
+        if len(a_fields) > 9:
+            alert_dao.dst_port = a_fields[9]
+        if len(a_fields) > 10:
+            alert_dao.eth_src = a_fields[10]
+        if len(a_fields) > 11:
+            alert_dao.eth_dst = a_fields[11]
+        if len(a_fields) > 12:
+            alert_dao.eth_len = a_fields[12]
+        if len(a_fields) > 13:
+            alert_dao.tcp_flags = a_fields[13]
+        if len(a_fields) > 14:
+            alert_dao.tcp_seq = a_fields[14]
+        if len(a_fields) > 15:
+            alert_dao.tcp_ack = a_fields[15]
+        if len(a_fields) > 16:
+            alert_dao.tcp_len = a_fields[16]
+        if len(a_fields) > 17:
+            alert_dao.tcp_window = a_fields[17]
+        if len(a_fields) > 18:
+            alert_dao.ttl = a_fields[18]
+        if len(a_fields) > 19:
+            alert_dao.tos = a_fields[19]
+        if len(a_fields) > 20:
+            alert_dao.id = a_fields[20]
+        if len(a_fields) > 21:
+            alert_dao.dgm_len = a_fields[21]
+        if len(a_fields) > 22:
+            alert_dao.ip_len = a_fields[22]
+        if len(a_fields) > 23:
+            alert_dao.icmp_type = a_fields[23]
+        if len(a_fields) > 24:
+            alert_dao.icmp_code = a_fields[24]
+        if len(a_fields) > 25:
+            alert_dao.icmp_id = a_fields[25]
+        if len(a_fields) > 26:
+            alert_dao.icmp_seq = a_fields[26]
         alert_dao.priority = 1
         return alert_dao
 
@@ -82,11 +118,19 @@ class IdsAlert:
         if len(priorities) > 0:
             temp = priorities[0].replace("Priority: ", "")
             priority = int(temp)
+        else:
+            priority = 1
         ts = fast_log_str.split(" ")[0]
-        ts = ts.strip()
-        ts = str(year) + " " + ts
         if ts is not None and ts != "":
-            ts = datetime.datetime.strptime(ts.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
+            ts = ts.strip()
+            if ts != "":
+                ts = str(year) + " " + ts
+                try:
+                    ts = datetime.datetime.strptime(ts.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                except:
+                    ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+            else:
+                ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
         return priority, ts
 
 

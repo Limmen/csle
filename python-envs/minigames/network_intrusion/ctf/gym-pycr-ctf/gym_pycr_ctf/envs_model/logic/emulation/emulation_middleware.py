@@ -62,7 +62,7 @@ class EmulationMiddleware:
             return EmulationMiddleware.defender_stopping_action(s=s, defender_action=defender_action,
                                                                 attacker_action=attacker_action,
                                                                 env_config=env_config)
-        if defender_action.type == DefenderActionType.STATE_UPDATE:
+        if defender_action.type == DefenderActionType.STATE_UPDATE:            
             return EmulationMiddleware.defender_update_state_action(s=s, a=defender_action, env_config=env_config)
         else:
             raise ValueError("Action type not recognized")

@@ -364,6 +364,7 @@ class DefenderDynamicsModel:
         :param d: the input dict
         :return: None
         """
+        print("from dict:{}".format(d))
         self.num_new_alerts = d["num_new_alerts"]
         self.num_new_priority = d["num_new_priority"]
         self.num_new_severe_alerts = d["num_new_severe_alerts"]
@@ -411,6 +412,8 @@ class DefenderDynamicsModel:
             with open(load_dir, 'r') as fp:
                 d = json.load(fp)
                 self.from_dict(d)
+        else:
+            print("Warning: Could not read dynamics model, path does not exist:{}".format(load_dir))
 
     def read_model_path(self, path: str) -> None:
         """

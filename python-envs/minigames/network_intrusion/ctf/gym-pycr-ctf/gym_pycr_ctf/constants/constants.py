@@ -512,9 +512,9 @@ class IDS_ROUTER:
     MAX_ALERTS = 200
     FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
-    TAIL_ALERTS_COMMAND = "tail -" + str(MAX_ALERTS)
-    TAIL_FAST_LOG_COMMAND = "tail -" + str(str(MAX_ALERTS))
-    TAIL_ALERTS_LATEST_COMMAND = "tail -1"
+    TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
+    TAIL_FAST_LOG_COMMAND = "sudo tail -" + str(str(MAX_ALERTS))
+    TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"
     PRIORITY_REGEX = re.compile(r"Priority: \d")
 
 class SUB_PROC_ENV:

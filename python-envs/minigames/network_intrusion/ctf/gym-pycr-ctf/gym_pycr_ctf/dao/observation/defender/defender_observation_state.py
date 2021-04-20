@@ -24,7 +24,7 @@ class DefenderObservationState:
         self.caught_attacker = False
         self.stopped = False
         self.adj_matrix = np.array(0)
-        self.ids_last_alert_ts = None
+        self.last_alert_ts = None
         self.step = 0
         self.snort_warning_baseline_reward = 0
         self.snort_severe_baseline_reward = 0
@@ -74,6 +74,7 @@ class DefenderObservationState:
         c.snort_critical_baseline_stopped = self.snort_critical_baseline_stopped
         c.var_log_baseline_reward = self.var_log_baseline_reward
         c.var_log_baseline_stopped = self.var_log_baseline_stopped
+        c.last_alert_ts = self.last_alert_ts
         for m in self.machines:
             c.machines.append(m.copy())
         return c
@@ -85,12 +86,12 @@ class DefenderObservationState:
                 " stopped:{}, step:{}, snort_severe_baseline_reward:{}, snort_warning_baseline_reward:{}," \
                 "snort_severe_baseline_stopped:{}, snort_warning_baseline_stopped:{}," \
                 "snort_critical_baseline_reward:{}, snort_critical_baseline_stopped:{}," \
-                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}".format(
+                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}, last_alert_ts:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
             self.caught_attacker, self.stopped, self.step, self.snort_severe_baseline_reward,
             self.snort_warning_baseline_reward, self.snort_severe_baseline_stopped,
             self.snort_warning_baseline_stopped, self.snort_critical_baseline_reward,
-            self.snort_critical_baseline_stopped) + "\n" + \
+            self.snort_critical_baseline_stopped, self.last_alert_ts) + "\n" + \
                 "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

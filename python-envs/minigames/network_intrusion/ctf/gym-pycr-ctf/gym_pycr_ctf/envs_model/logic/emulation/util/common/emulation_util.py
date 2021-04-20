@@ -491,23 +491,27 @@ class EmulationUtil:
             if not EmulationUtil.is_connection_active(env_config.emulation_config.agent_conn):
                 env_config.emulation_config.connect_agent()
             env_config.emulation_config.connect_router()
-        stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
-            constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+        cmd = constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE
+        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
+            cmd=cmd, conn=env_config.emulation_config.router_conn)
+        year = datetime.datetime.now().year
         alerts = []
         year = datetime.datetime.now().year
-        for line in stdout:
-            a_str = line.replace("\n", "")
-            alerts.append(IdsAlert.parse_from_str(a_str, year=year))
+        for line in outdata.decode().split("\n"):
+            if line != "" and line != None and line != " ":
+                a_str = line.replace("\n", "")
+                alerts.append(IdsAlert.parse_from_str(a_str, year=year))
         if len(alerts) == 0:
             # retry once
-            stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
-                constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
+                cmd=cmd, conn=env_config.emulation_config.router_conn)
             alerts = []
-            for line in stdout:
-                a_str = line.replace("\n", "")
-                alerts.append(IdsAlert.parse_from_str(a_str))
+            for line in outdata.decode().split("\n"):
+                if line != "" and line != None and line != " ":
+                    a_str = line.replace("\n", "")
+                    alerts.append(IdsAlert.parse_from_str(a_str, year=year))
             if len(alerts) == 0:
-                return None
+                return datetime.datetime.now().timestamp()
             else:
                 return alerts[0].timestamp
         else:
@@ -523,11 +527,11 @@ class EmulationUtil:
         """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
-        stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
-            constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE)
+        cmd = constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE
+        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.emulation_config.router_conn)
         alerts = []
         year = datetime.datetime.now().year
-        for line in stdout:
+        for line in outdata.decode().split("\n"):
             a_str = line.replace("\n", "")
             alerts.append(IdsAlert.parse_from_str(a_str, year=year))
         return alerts
@@ -542,14 +546,15 @@ class EmulationUtil:
         """
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
-        stdin, stdout, stderr = env_config.emulation_config.router_conn.exec_command(
-            constants.IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.IDS_ROUTER.FAST_LOG_FILE)
+        cmd = constants.IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.IDS_ROUTER.FAST_LOG_FILE
+        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.emulation_config.router_conn)
         fast_logs = []
         year = datetime.datetime.now().year
-        for line in stdout:
-            a_str = line.replace("\n", "")
-            priority, ts = IdsAlert.fast_log_parse(a_str, year=year)
-            fast_logs.append((priority, ts))
+        for line in outdata.decode().split("\n"):
+            if line != None and line != "" and line != " ":
+                a_str = line.replace("\n", "")
+                priority, ts = IdsAlert.fast_log_parse(a_str, year=year)
+                fast_logs.append((priority, ts))
         return fast_logs
 
     @staticmethod
