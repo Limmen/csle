@@ -31,6 +31,9 @@ list_running:
 list_images:
 	python manage_containers.py --c list_images
 
+list_networks:
+	python manage_containers.py --c list_networks
+
 stop_running:
 	python manage_containers.py --c stop_running
 
