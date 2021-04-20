@@ -36,11 +36,12 @@ def test_env(env_name : str, num_steps : int):
     print(defender_dynamics_model)
     print(defender_dynamics_model.num_new_alerts)
     for k,v in defender_dynamics_model.num_new_alerts.items():
-        print("action:{}".format(k))
-        for k2,v2 in v.items():
-            for k3,v3 in v2.items():
-                print("value:{}".format(k3))
-                print("count:{}".format(v3))
+        if int(k) == 85 or int(k) == 19:
+            print("action:{}".format(k))
+            for k2,v2 in v.items():
+                for k3,v3 in v2.items():
+                    print("value:{}".format(k3))
+                    print("count:{}".format(v3))
     defender_dynamics_model.normalize()
     # print(defender_dynamics_model.norm_num_new_alerts)
     print("85:")
