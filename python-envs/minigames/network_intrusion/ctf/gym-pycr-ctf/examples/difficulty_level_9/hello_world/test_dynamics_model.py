@@ -43,9 +43,13 @@ def test_env(env_name : str, num_steps : int):
                 print("count:{}".format(v3))
     defender_dynamics_model.normalize()
     # print(defender_dynamics_model.norm_num_new_alerts)
-    # print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].mean())
-    # print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].std())
-    # print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].var())
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].mean())
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].std())
+    print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].var())
+
+    print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].mean())
+    print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].std())
+    print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].var())
 
     # env.reset()
     # env.close()

@@ -19,8 +19,12 @@ def manual_control():
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim", server_ip="172.31.212.92"
     #                                )
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False, port_forward_next_port=3600)
+    emulation_config = EmulationConfig(server_ip="172.31.212.87", agent_ip="172.18.9.191",
+                                     agent_username="agent", agent_pw="agent", server_connection=True,
+                                     server_private_key_file="/home/kim/.ssh/id_rsa",
+                                     server_username="kim", port_forward_next_port=3600)
+    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False, port_forward_next_port=3600)
 
     emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
                                                "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
@@ -43,3 +47,5 @@ if __name__ == '__main__':
 # Test case: 100, 33, 104, 105, 106, 1, 104, 105, 106, 70, 104, 105, 107, 100, 165, 104, 105, 106, 200, 104, 105, 106, 58, 104, 105, 331, 105, 100, 266, 104, 105, 106, 100, 113, 104, 105
 
 # Test case: 372, 100, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372, 106, 372, 70, 372, 104, 105, 107, 372, 100, 372, 165, 372, 104, 372, 105, 372, 106, 372, 200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372, 105, 100, 266, 372, 104, 105, 106, 100, 372, 113, 104, 372, 105
+
+#372, 99, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372, 106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372, 200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372, 105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105
