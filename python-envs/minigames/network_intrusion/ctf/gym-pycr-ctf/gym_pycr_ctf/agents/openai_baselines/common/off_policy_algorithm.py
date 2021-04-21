@@ -58,13 +58,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
     :param monitor_wrapper: When creating an environment, whether to wrap it
         or not in a Monitor wrapper.
     :param seed: Seed for the pseudo random generators
-    :param use_sde: Whether to use State Dependent Exploration (SDE)
-        instead of action noise exploration (default: False)
-    :param sde_sample_freq: Sample a new noise matrix every n steps when using gSDE
-        Default: -1 (only sample at the beginning of the rollout)
-    :param use_sde_at_warmup: Whether to use gSDE instead of uniform sampling
-        during the warm up phase (before learning starts)
-    :param sde_support: Whether the model support gSDE or not
     """
 
     def __init__(
@@ -90,10 +83,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         create_eval_env: bool = False,
         monitor_wrapper: bool = True,
         seed: Optional[int] = None,
-        use_sde: bool = False,
-        sde_sample_freq: int = -1,
-        use_sde_at_warmup: bool = False,
-        sde_support: bool = True,
         agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None
     ):
@@ -110,8 +99,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             create_eval_env=create_eval_env,
             monitor_wrapper=monitor_wrapper,
             seed=seed,
-            use_sde=use_sde,
-            sde_sample_freq=sde_sample_freq,
             agent_config=agent_config,
             env_2=env_2
         )
@@ -138,12 +125,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
 
         self.actor = None  # type: Optional[th.nn.Module]
         self.replay_buffer = None  # type: Optional[ReplayBuffer]
-        # Update policy keyword arguments
-        if sde_support:
-            self.policy_kwargs["use_sde"] = self.use_sde
-        # For gSDE only
-        self.use_sde_at_warmup = use_sde_at_warmup
-
         self.iteration = 0
         self.num_episodes = 0
         self.num_episodes_total = 0
@@ -352,7 +333,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             The two differs when the action space is not normalized (bounds are not [-1, 1]).
         """
         # Select action randomly or according to policy
-        if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
+        if self.num_timesteps < learning_starts:
             # Warmup phase
             legal_actions = list(range(self.agent_config.output_dim))
             if self.agent_config.filter_illegal_actions:
@@ -418,9 +399,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         assert isinstance(env, VecEnv), "You must pass a VecEnv"
         assert env.num_envs == 1, "OffPolicyAlgorithm only support single environment"
 
-        if self.use_sde:
-            self.actor.reset_noise()
-
         callback.on_rollout_start()
         continue_training = True
 
@@ -429,10 +407,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             episode_reward, episode_timesteps = 0.0, 0
 
             while not done:
-
-                if self.use_sde and self.sde_sample_freq > 0 and total_steps % self.sde_sample_freq == 0:
-                    # Sample a new noise matrix
-                    self.actor.reset_noise()
 
                 # Select action randomly or according to policy
                 action, buffer_action = self._sample_action(learning_starts, action_noise)

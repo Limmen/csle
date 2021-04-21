@@ -35,10 +35,6 @@ class A2C(OnPolicyAlgorithm):
     :param rms_prop_eps: RMSProp epsilon. It stabilizes square root computation in denominator
         of RMSProp update
     :param use_rms_prop: Whether to use RMSprop (default) or Adam as optimizer
-    :param use_sde: Whether to use generalized State Dependent Exploration (gSDE)
-        instead of action noise exploration (default: False)
-    :param sde_sample_freq: Sample a new noise matrix every n steps when using gSDE
-        Default: -1 (only sample at the beginning of the rollout)
     :param normalize_advantage: Whether to normalize or not the advantage
     :param tensorboard_log: the log location for tensorboard (if None, no logging)
     :param create_eval_env: Whether to create a second environment that will be
@@ -64,8 +60,6 @@ class A2C(OnPolicyAlgorithm):
         max_grad_norm: float = 0.5,
         rms_prop_eps: float = 1e-5,
         use_rms_prop: bool = True,
-        use_sde: bool = False,
-        sde_sample_freq: int = -1,
         normalize_advantage: bool = False,
         create_eval_env: bool = False,
         policy_kwargs: Optional[Dict[str, Any]] = None,
@@ -87,8 +81,6 @@ class A2C(OnPolicyAlgorithm):
             ent_coef=ent_coef,
             vf_coef=vf_coef,
             max_grad_norm=max_grad_norm,
-            use_sde=use_sde,
-            sde_sample_freq=sde_sample_freq,
             policy_kwargs=policy_kwargs,
             verbose=verbose,
             device=device,

@@ -81,10 +81,6 @@ class BaseAlgorithm(ABC):
     :param monitor_wrapper: (bool) When creating an environment, whether to wrap it
         or not in a Monitor wrapper.
     :param seed: (Optional[int]) Seed for the pseudo random generators
-    :param use_sde: (bool) Whether to use generalized State Dependent Exploration (gSDE)
-        instead of action noise exploration (default: False)
-    :param sde_sample_freq: (int) Sample a new noise matrix every n steps when using gSDE
-        Default: -1 (only sample at the beginning of the rollout)
     """
 
     def __init__(
@@ -104,21 +100,15 @@ class BaseAlgorithm(ABC):
             create_eval_env: bool = False,
             monitor_wrapper: bool = True,
             seed: Optional[int] = None,
-            use_sde: bool = False,
-            sde_sample_freq: int = -1,
             attacker_agent_config: AgentConfig = None,
             defender_agent_config: AgentConfig = None,
             env_2: Union[GymEnv, str, None] = None,
-            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER,
-            attacker_opponent=None,
-            defender_opponent=None
+            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER
     ):
         self.attacker_agent_config = attacker_agent_config
         self.defender_agent_config = defender_agent_config
         self.train_result = ExperimentResult()
         self.eval_result = ExperimentResult()
-        self.attacker_opponent = attacker_opponent
-        self.defender_opponent = defender_opponent
         self.training_start = time.time()
 
         try:
@@ -174,9 +164,6 @@ class BaseAlgorithm(ABC):
         # When using VecNormalize:
         self._last_original_obs = None  # type: Optional[np.ndarray]
         self._episode_num = 0
-        # Used for gSDE only
-        self.use_sde = use_sde
-        self.sde_sample_freq = sde_sample_freq
         # Track the training progress remaining (from 1 to 0)
         # this is used to update the learning rate
         self._current_progress_remaining = 1
@@ -222,12 +209,6 @@ class BaseAlgorithm(ABC):
                 raise ValueError(
                     "Error: the model does not support multiple envs; it requires " "a single vectorized environment."
                 )
-
-        if self.use_sde and not isinstance(self.attacker_observation_space, gym.spaces.Box):
-            raise ValueError("generalized State-Dependent Exploration (gSDE) can only be used with continuous actions.")
-
-        if self.use_sde and not isinstance(self.defender_observation_space, gym.spaces.Box):
-            raise ValueError("generalized State-Dependent Exploration (gSDE) can only be used with continuous actions.")
 
     def _wrap_env(self, env: GymEnv) -> VecEnv:
         if not isinstance(env, VecEnv):
@@ -494,11 +475,6 @@ class BaseAlgorithm(ABC):
             for name in tensors:
                 recursive_setattr(model, name, tensors[name])
 
-        # Sample gSDE exploration matrix, so it uses the right device
-        # see issue #44
-        if model.use_sde:
-            model.attacker_policy.reset_noise()  # pytype: disable=attribute-error
-            model.defender_policy.reset_noise()  # pytype: disable=attribute-error
         return model
 
     def set_random_seed(self, seed: Optional[int] = None) -> None:
@@ -759,8 +735,7 @@ class BaseAlgorithm(ABC):
                     self.defender_agent_config.env_configs = None
                     self.defender_agent_config.eval_env_config = None
                     self.defender_agent_config.eval_env_configs = None
-            self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env", "attacker_opponent",
-                                     "defender_opponent"])
+            self.save(path, exclude=["tensorboard_writer", "eval_env", "env_2", "env"])
             if self.attacker_agent_config is not None:
                 self.attacker_agent_config.env_config = env_config
                 self.attacker_agent_config.env_configs = env_configs

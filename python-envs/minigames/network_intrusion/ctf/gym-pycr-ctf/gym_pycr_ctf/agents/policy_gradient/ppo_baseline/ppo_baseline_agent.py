@@ -86,14 +86,6 @@ class PPOBaselineAgent(TrainAgent):
             device_defender = "cpu" if not self.defender_config.gpu else "cuda:" + str(self.defender_config.gpu_id)
             policy_defender = "MlpPolicy"
 
-        # Setup baseline opponents
-        attacker_opponent = None
-        defender_opponent = None
-        if self.attacker_opponent_type == AgentType.RANDOM_ATTACKER:
-            attacker_opponent = RandomAttackerBotAgent(env_config=self.env.env_config, env=self.env)
-        elif self.attacker_opponent_type == AgentType.CUSTOM_ATTACKER:
-            attacker_opponent = CustomAttackerBotAgent(env_config=self.env.env_config, env=self.env, strategy=[])
-
         # Create model
         model = PPO(policy_attacker, policy_defender,
                     self.env,
@@ -121,12 +113,8 @@ class PPOBaselineAgent(TrainAgent):
                     defender_vf_coef=self.defender_config.vf_coef,
                     attacker_ent_coef=self.attacker_config.ent_coef,
                     defender_ent_coef=self.defender_config.ent_coef,
-                    use_sde=self.attacker_config.use_sde,
-                    sde_sample_freq=self.attacker_config.sde_sample_freq,
                     env_2=self.eval_env,
-                    train_mode = self.train_mode,
-                    attacker_opponent = attacker_opponent,
-                    defender_opponent = defender_opponent
+                    train_mode = self.train_mode
                     )
 
         if self.attacker_config.load_path is not None:

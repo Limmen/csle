@@ -1,0 +1,11 @@
+./.ipynb_checkpoints
+./*.pdf
+./*.png
+*.pdf
+*.png
+*.zip
+backup
+backup2
+./results_backup3
+results_backup3
+backup*

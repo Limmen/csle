@@ -38,10 +38,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
     :param attacker_ent_coef: (float) Entropy coefficient for the loss calculation
     :param attacker_vf_coef: (float) Value function coefficient for the loss calculation
     :param attacker_max_grad_norm: (float) The maximum value for the gradient clipping
-    :param use_sde: (bool) Whether to use generalized State Dependent Exploration (gSDE)
-        instead of action noise exploration (default: False)
-    :param sde_sample_freq: (int) Sample a new noise matrix every n steps when using gSDE
-        Default: -1 (only sample at the beginning of the rollout)
     :param tensorboard_log: (str) the log location for tensorboard (if None, no logging)
     :param create_eval_env: (bool) Whether to create a second environment that will be
         used for evaluating the agent periodically. (Only available when passing string for the environment)
@@ -73,8 +69,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         defender_vf_coef: float,
         attacker_max_grad_norm: float,
         defender_max_grad_norm: float,
-        use_sde: bool,
-        sde_sample_freq: int,
         create_eval_env: bool = False,
         attacker_policy_kwargs: Optional[Dict[str, Any]] = None,
         defender_policy_kwargs: Optional[Dict[str, Any]] = None,
@@ -85,9 +79,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
-        attacker_opponent=None,
-        defender_opponent = None
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -102,17 +94,13 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_policy_kwargs=defender_policy_kwargs,
             verbose=verbose,
             device=device,
-            use_sde=use_sde,
-            sde_sample_freq=sde_sample_freq,
             create_eval_env=create_eval_env,
             support_multi_env=True,
             seed=seed,
             attacker_agent_config = attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode,
-            attacker_opponent = attacker_opponent,
-            defender_opponent = defender_opponent
+            train_mode=train_mode
         )
 
         self.n_steps = n_steps
@@ -179,7 +167,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.attacker_observation_space,
                 self.attacker_action_space,
                 self.attacker_lr_schedule,
-                use_sde=self.use_sde,
                 agent_config = self.attacker_agent_config,
                 **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
             )
@@ -189,7 +176,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.env.envs[0].attacker_m_selection_observation_space,
                 self.env.envs[0].attacker_m_selection_action_space,
                 self.attacker_lr_schedule,
-                use_sde=self.use_sde,
                 agent_config=self.attacker_agent_config,
                 m_selection = True,
                 **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
@@ -199,7 +185,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 self.env.envs[0].attacker_m_action_observation_space,
                 self.env.envs[0].attacker_m_action_space,
                 self.attacker_lr_schedule,
-                use_sde=self.use_sde,
                 agent_config=self.attacker_agent_config,
                 m_action = True,
                 **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
@@ -210,7 +195,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.defender_observation_space,
             self.defender_action_space,
             self.defender_lr_schedule,
-            use_sde=self.use_sde,
             agent_config=self.defender_agent_config,
             **self.attacker_policy_kwargs  # pytype:disable=not-instantiable
         )
@@ -234,12 +218,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         """
         assert self._last_obs is not None, "No previous observation was provided"
         n_steps = 0
+
+        # Reset rollout buffers
         attacker_rollout_buffer.reset()
         defender_rollout_buffer.reset()
-        # Sample new weights for the state dependent exploration
-        if self.use_sde:
-            self.attacker_policy.reset_noise(env.num_envs)
-            self.defender_policy.reset_noise(env.num_envs)
 
         # Avg metrics
         rollout_data_dto = RolloutDataDTO()
@@ -256,10 +238,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         dones = False
         while n_steps < n_rollout_steps:
 
-            if self.use_sde and self.sde_sample_freq > 0 and n_steps % self.sde_sample_freq == 0:
-                # Sample a new noise matrix
-                self.attacker_policy.reset_noise(env.num_envs)
-                self.defender_policy.reset_noise(env.num_envs)
 
             if not self.attacker_agent_config.ar_policy:
                 new_obs, attacker_rewards, dones, infos, attacker_values, attacker_log_probs, attacker_actions, \
@@ -497,8 +475,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                               eval_env_config=eval_conf,
                                               eval_envs_configs=eval_env_configs,
                                               train_mode = self.train_mode,
-                                              attacker_opponent = self.attacker_opponent,
-                                              defender_opponent = self.defender_opponent,
                                               train_dto=train_log_dto
                                               )
                     if env2 is not None:
@@ -614,40 +590,24 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                                  attacker=False)
                 defender_actions = defender_actions.cpu().numpy()
 
-            if attacker_actions is None:
-                attacker_actions = np.array([self.attacker_opponent.action(env.envs[0].env_state,
-                                                                           env.envs[0].attacker_agent_state)])
+        if attacker_actions is None:
+            attacker_actions = np.array([None])
 
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             action_pred_time = end-start
 
-        # Rescale attacker action
-        clipped_attacker_actions = attacker_actions
-        # Clip the actions to avoid out of bound error
-        if isinstance(self.attacker_action_space, gym.spaces.Box):
-            clipped_attacker_actions = np.clip(attacker_actions, self.attacker_action_space.low, self.attacker_action_space.high)
-
-        if defender_actions is not None:
-            clipped_defender_actions = defender_actions
-            # Clip the actions to avoid out of bound error
-            if isinstance(self.defender_action_space, gym.spaces.Box):
-                clipped_defender_actions = np.clip(defender_actions, self.defender_action_space.low,
-                                                   self.defender_action_space.high)
-        else:
+        if defender_actions is None:
             defender_actions = np.array([None])
-            clipped_defender_actions = np.array([None])
 
         # Perform action
         if self.attacker_agent_config.performance_analysis:
             start = time.time()
 
         actions = []
-        for i in range(len(clipped_attacker_actions)):
-            if self.defender_agent_config.snort_baseline_simulate:
-                actions.append((clipped_attacker_actions[i], clipped_defender_actions[i], self.defender_agent_config.attacker_opponent_baseline_type))
-            else:
-                actions.append((clipped_attacker_actions[i], clipped_defender_actions[i]))
+        for i in range(len(attacker_actions)):
+            actions.append((attacker_actions[i], defender_actions[i]))
+
         new_obs, rewards, dones, infos = env.step(actions)
         attacker_rewards = rewards[0]
         defender_rewards = rewards[1]

@@ -364,7 +364,6 @@ class DefenderDynamicsModel:
         :param d: the input dict
         :return: None
         """
-        print("from dict:{}".format(d))
         self.num_new_alerts = d["num_new_alerts"]
         self.num_new_priority = d["num_new_priority"]
         self.num_new_severe_alerts = d["num_new_severe_alerts"]
@@ -394,7 +393,7 @@ class DefenderDynamicsModel:
         with open(save_dir, 'w') as fp:
             json.dump(d, fp)
 
-    def read_model(self, env_config):
+    def read_model(self, env_config) -> None:
         """
         Loads json model from disk (according to env config) and populates the model
 

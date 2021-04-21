@@ -204,7 +204,6 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
                           env_config: EnvConfig = None, env_configs : List[EnvConfig] = None,
                           eval_env_config: EnvConfig = None, eval_envs_configs: List[EnvConfig] = None,
                           train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
-                          attacker_opponent = None, defender_opponent = None,
                           train_dto : TrainAgentLogDTO = None
                           ):
     """
@@ -227,7 +226,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
         n_eval_episodes=n_eval_episodes_train, deterministic=deterministic, env_config=env_config, train_mode=train_mode,
-        env_configs =env_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent,
+        env_configs =env_configs,
         train_log_dto=train_dto, eval_2=False)
 
     for i in range(env.num_envs):
@@ -243,7 +242,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             env=env_2, attacker_model=attacker_model, defender_model=defender_model,
             n_eval_episodes=n_eval_episodes_eval2, deterministic=deterministic, env_config=eval_env_config,
             train_mode=train_mode,
-            env_configs=eval_envs_configs, attacker_opponent=attacker_opponent, defender_opponent=defender_opponent,
+            env_configs=eval_envs_configs,
             emulation_env=True, eval_2=True, train_log_dto=train_dto
         )
         for i in range(env_2.num_envs):
@@ -253,7 +252,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
 
 def _quick_eval_helper(env, attacker_model, defender_model,
                        n_eval_episodes, deterministic, env_config, train_mode, env_configs = None,
-                       attacker_opponent = None, defender_opponent = None, emulation_env : bool = False,
+                       emulation_env : bool = False,
                        train_log_dto : TrainAgentLogDTO = None, eval_2 : bool = False):
 
     for episode in range(n_eval_episodes):
@@ -306,7 +305,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                                                                      env_state=env_state,
                                                                      attacker=False)
                     if attacker_actions is None:
-                        attacker_actions = np.array([attacker_opponent.action(env_state, agent_state)])
+                        attacker_actions = np.array([None])
                 defender_action = defender_actions[0]
                 attacker_action = attacker_actions[0]
                 action = (attacker_action, defender_action)

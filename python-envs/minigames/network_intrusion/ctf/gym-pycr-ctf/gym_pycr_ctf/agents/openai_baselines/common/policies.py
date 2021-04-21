@@ -11,15 +11,11 @@ import torch as th
 from torch import nn as nn
 
 from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
-from stable_baselines3.common.utils import get_device, is_vectorized_observation
+from stable_baselines3.common.utils import get_device
 from gym_pycr_ctf.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, \
     FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.agents.openai_baselines.common.distributions import (
-    Distribution,
-    StateDependentNoiseDistribution,
-    make_proba_distribution,
-)
+from gym_pycr_ctf.agents.openai_baselines.common.distributions import (Distribution, make_proba_distribution)
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
@@ -269,18 +265,13 @@ class ActorCriticPolicy(BasePolicy):
     :param net_arch: ([int or dict]) The specification of the policy and value networks.
     :param activation_fn: (Type[nn.Module]) Activation function
     :param ortho_init: (bool) Whether to use or not orthogonal initialization
-    :param use_sde: (bool) Whether to use State Dependent Exploration or not
     :param log_std_init: (float) Initial value for the log standard deviation
     :param full_std: (bool) Whether to use (n_features x n_actions) parameters
-        for the std instead of only (n_features,) when using gSDE
-    :param sde_net_arch: ([int]) Network architecture for extracting features
-        when using gSDE. If None, the latent features from the policy will be used.
-        Pass an empty list to use the states as features.
+        for the std instead of only (n_features,)
     :param use_expln: (bool) Use ``expln()`` function instead of ``exp()`` to ensure
         a positive standard deviation (cf paper). It allows to keep variance
         above zero and prevent it from growing too fast. In practice, ``exp()`` is usually enough.
-    :param squash_output: (bool) Whether to squash the output using a tanh function,
-        this allows to ensure boundaries when using gSDE.
+    :param squash_output: (bool) Whether to squash the output using a tanh function
     :param features_extractor_class: (Type[BaseFeaturesExtractor]) Features extractor to use.
     :param features_extractor_kwargs: (Optional[Dict[str, Any]]) Keyword arguments
         to pass to the feature extractor.
@@ -300,10 +291,8 @@ class ActorCriticPolicy(BasePolicy):
         net_arch: Optional[List[Union[int, Dict[str, List[int]]]]] = None,
         activation_fn: Type[nn.Module] = nn.Tanh,
         ortho_init: bool = True,
-        use_sde: bool = False,
         log_std_init: float = 0.0,
         full_std: bool = True,
-        sde_net_arch: Optional[List[int]] = None,
         use_expln: bool = False,
         squash_output: bool = False,
         features_extractor_class: Type[BaseFeaturesExtractor] = FlattenExtractor,
@@ -353,22 +342,10 @@ class ActorCriticPolicy(BasePolicy):
         self.log_std_init = log_std_init
         dist_kwargs = None
 
-        # Keyword arguments for gSDE distribution
-        if use_sde:
-            dist_kwargs = {
-                "full_std": full_std,
-                "squash_output": squash_output,
-                "use_expln": use_expln,
-                "learn_features": sde_net_arch is not None,
-            }
-
-        self.sde_features_extractor = None
-        self.sde_net_arch = sde_net_arch
-        self.use_sde = use_sde
         self.dist_kwargs = dist_kwargs
 
         # Action distribution
-        self.action_dist = make_proba_distribution(action_space, use_sde=use_sde, dist_kwargs=dist_kwargs)
+        self.action_dist = make_proba_distribution(action_space, dist_kwargs=dist_kwargs)
 
         self._build(lr_schedule)
 
@@ -381,11 +358,9 @@ class ActorCriticPolicy(BasePolicy):
             dict(
                 net_arch=self.net_arch,
                 activation_fn=self.activation_fn,
-                use_sde=self.use_sde,
                 log_std_init=self.log_std_init,
                 squash_output=default_none_kwargs["squash_output"],
                 full_std=default_none_kwargs["full_std"],
-                sde_net_arch=default_none_kwargs["sde_net_arch"],
                 use_expln=default_none_kwargs["use_expln"],
                 lr_schedule=self._dummy_schedule,  # dummy lr schedule, not needed for loading policy alone
                 ortho_init=self.ortho_init,
@@ -397,15 +372,6 @@ class ActorCriticPolicy(BasePolicy):
         )
         return data
 
-    def reset_noise(self, n_envs: int = 1) -> None:
-        """
-        Sample new weights for the exploration matrix.
-
-        :param n_envs: (int)
-        """
-        assert isinstance(self.action_dist, StateDependentNoiseDistribution), "reset_noise() is only available when using gSDE"
-        self.action_dist.sample_weights(self.log_std, batch_size=n_envs)
-
     def _build(self, lr_schedule: Callable[[float], float]) -> None:
         """
         Create the networks and the optimizer.
@@ -416,12 +382,6 @@ class ActorCriticPolicy(BasePolicy):
         self.mlp_extractor = MlpExtractor(self.features_dim, net_arch=self.net_arch, activation_fn=self.activation_fn)
 
         latent_dim_pi = self.mlp_extractor.latent_dim_pi
-
-        # Separate feature extractor for gSDE
-        if self.sde_net_arch is not None:
-            self.sde_features_extractor, latent_sde_dim = create_sde_features_extractor(
-                self.features_dim, self.sde_net_arch, self.activation_fn
-            )
 
         self.action_net = self.action_dist.proba_distribution_net(latent_dim=latent_dim_pi)
         self.value_net = nn.Linear(self.mlp_extractor.latent_dim_vf, 1)
@@ -455,7 +415,7 @@ class ActorCriticPolicy(BasePolicy):
         :param deterministic: (bool) Whether to sample or use deterministic actions
         :return: (Tuple[th.Tensor, th.Tensor, th.Tensor]) action, value and log probability of the action
         """
-        latent_pi, latent_vf, latent_sde = self._get_latent(obs)
+        latent_pi, latent_vf = self._get_latent(obs)
         # Evaluate the values for the given observations
         values = self.value_net(latent_vf)
 
@@ -494,8 +454,7 @@ class ActorCriticPolicy(BasePolicy):
                         non_legal_actions_total.append(infos[i]["defender_non_legal_actions"])
                 else:
                     raise ValueError("Unrecognized env")
-        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde,
-                                                         non_legal_actions=non_legal_actions_total)
+        distribution = self._get_action_dist_from_latent(latent_pi, non_legal_actions=non_legal_actions_total)
         actions = distribution.get_actions(deterministic=deterministic)
         log_prob = distribution.log_prob(actions)
         return actions, values, log_prob
@@ -507,25 +466,20 @@ class ActorCriticPolicy(BasePolicy):
 
         :param obs: (th.Tensor) Observation
         :return: (Tuple[th.Tensor, th.Tensor, th.Tensor]) Latent codes
-            for the actor, the value function and for gSDE function
+            for the actor, the value function
         """
         # Preprocess the observation if needed
         features = self.extract_features(obs)
         latent_pi, latent_vf = self.mlp_extractor(features)
 
-        # Features for sde
-        latent_sde = latent_pi
-        if self.sde_features_extractor is not None:
-            latent_sde = self.sde_features_extractor(features)
-        return latent_pi, latent_vf, latent_sde
+        return latent_pi, latent_vf
 
-    def _get_action_dist_from_latent(self, latent_pi: th.Tensor, latent_sde: Optional[th.Tensor] = None,
+    def _get_action_dist_from_latent(self, latent_pi: th.Tensor,
                                      non_legal_actions : List[int] = None) -> Distribution:
         """
         Retrieve action distribution given the latent codes.
 
         :param latent_pi: (th.Tensor) Latent code for the actor
-        :param latent_sde: (Optional[th.Tensor]) Latent code for the gSDE exploration function
         :return: (Distribution) Action distribution
         """
         mean_actions = self.action_net(latent_pi)
@@ -559,7 +513,7 @@ class ActorCriticPolicy(BasePolicy):
         :param deterministic: (bool) Whether to use stochastic or deterministic actions
         :return: (th.Tensor) Taken action according to the policy
         """
-        latent_pi, _, latent_sde = self._get_latent(observation)
+        latent_pi, _ = self._get_latent(observation)
 
         # Masking legal actions
         if self.m_action:
@@ -599,7 +553,7 @@ class ActorCriticPolicy(BasePolicy):
                 pass
                 #raise ValueError("Unrecognized env: {}".format(env))
 
-        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde, non_legal_actions=non_legal_actions)
+        distribution = self._get_action_dist_from_latent(latent_pi, non_legal_actions=non_legal_actions)
         return distribution.get_actions(deterministic=deterministic)
 
     def evaluate_actions(self, obs: th.Tensor, actions: th.Tensor) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
@@ -612,8 +566,8 @@ class ActorCriticPolicy(BasePolicy):
         :return: (th.Tensor, th.Tensor, th.Tensor) estimated value, log likelihood of taking those actions
             and entropy of the action distribution.
         """
-        latent_pi, latent_vf, latent_sde = self._get_latent(obs)
-        distribution = self._get_action_dist_from_latent(latent_pi, latent_sde)
+        latent_pi, latent_vf = self._get_latent(obs)
+        distribution = self._get_action_dist_from_latent(latent_pi)
         log_prob = distribution.log_prob(actions.long())
         values = self.value_net(latent_vf)
         return values, log_prob, distribution.entropy()
@@ -630,18 +584,13 @@ class ActorCriticCnnPolicy(ActorCriticPolicy):
     :param net_arch: ([int or dict]) The specification of the policy and value networks.
     :param activation_fn: (Type[nn.Module]) Activation function
     :param ortho_init: (bool) Whether to use or not orthogonal initialization
-    :param use_sde: (bool) Whether to use State Dependent Exploration or not
     :param log_std_init: (float) Initial value for the log standard deviation
     :param full_std: (bool) Whether to use (n_features x n_actions) parameters
-        for the std instead of only (n_features,) when using gSDE
-    :param sde_net_arch: ([int]) Network architecture for extracting features
-        when using gSDE. If None, the latent features from the policy will be used.
-        Pass an empty list to use the states as features.
+        for the std instead of only (n_features,)
     :param use_expln: (bool) Use ``expln()`` function instead of ``exp()`` to ensure
         a positive standard deviation (cf paper). It allows to keep variance
         above zero and prevent it from growing too fast. In practice, ``exp()`` is usually enough.
-    :param squash_output: (bool) Whether to squash the output using a tanh function,
-        this allows to ensure boundaries when using gSDE.
+    :param squash_output: (bool) Whether to squash the output using a tanh function
     :param features_extractor_class: (Type[BaseFeaturesExtractor]) Features extractor to use.
     :param features_extractor_kwargs: (Optional[Dict[str, Any]]) Keyword arguments
         to pass to the feature extractor.
@@ -661,10 +610,8 @@ class ActorCriticCnnPolicy(ActorCriticPolicy):
         net_arch: Optional[List[Union[int, Dict[str, List[int]]]]] = None,
         activation_fn: Type[nn.Module] = nn.Tanh,
         ortho_init: bool = True,
-        use_sde: bool = False,
         log_std_init: float = 0.0,
         full_std: bool = True,
-        sde_net_arch: Optional[List[int]] = None,
         use_expln: bool = False,
         squash_output: bool = False,
         features_extractor_class: Type[BaseFeaturesExtractor] = NatureCNN,
@@ -680,10 +627,8 @@ class ActorCriticCnnPolicy(ActorCriticPolicy):
             net_arch,
             activation_fn,
             ortho_init,
-            use_sde,
             log_std_init,
             full_std,
-            sde_net_arch,
             use_expln,
             squash_output,
             features_extractor_class,
@@ -763,27 +708,6 @@ class ContinuousCritic(BaseModel):
         with th.no_grad():
             features = self.extract_features(obs)
         return self.q_networks[0](th.cat([features, actions], dim=1))
-
-
-def create_sde_features_extractor(
-    features_dim: int, sde_net_arch: List[int], activation_fn: Type[nn.Module]
-) -> Tuple[nn.Sequential, int]:
-    """
-    Create the neural network that will be used to extract features
-    for the gSDE exploration function.
-
-    :param features_dim: (int)
-    :param sde_net_arch: ([int])
-    :param activation_fn: (Type[nn.Module])
-    :return: (nn.Sequential, int)
-    """
-    # Special case: when using states as features (i.e. sde_net_arch is an empty list)
-    # don't use any activation function
-    sde_activation = activation_fn if len(sde_net_arch) > 0 else None
-    latent_sde_net = create_mlp(features_dim, -1, sde_net_arch, activation_fn=sde_activation, squash_output=False)
-    latent_sde_dim = sde_net_arch[-1] if len(sde_net_arch) > 0 else features_dim
-    sde_features_extractor = nn.Sequential(*latent_sde_net)
-    return sde_features_extractor, latent_sde_dim
 
 
 _policy_registry = dict()  # type: Dict[Type[BasePolicy], Dict[str, Type[BasePolicy]]]

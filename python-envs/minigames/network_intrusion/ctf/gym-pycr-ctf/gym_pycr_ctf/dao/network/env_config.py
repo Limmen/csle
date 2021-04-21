@@ -122,7 +122,7 @@ class EnvConfig:
         self.attacker_max_alerts = 1
         self.max_episode_length = 1000
         self.attacker_base_step_reward = -1
-        self.attacker_illegal_reward_action = 0
+        self.attacker_illegal_reward_action = -100
         self.attacker_final_steps_reward_coefficient = 1
 
         self.defender_final_steps_reward_coefficient = 0
@@ -168,22 +168,22 @@ class EnvConfig:
 
         self.attacker_install_tools_sleep_seconds = 3
         self.attacker_retry_check_root = 3
-        self.attacker_retry_sambacry = 2
-        self.attacker_retry_shellshock = 2
-        self.attacker_retry_dvwa_sql_injection = 2
-        self.attacker_retry_cve_2015_3306 = 2
-        self.attacker_retry_cve_2015_1427 = 2
-        self.attacker_retry_cve_2016_10033 = 2
-        self.attacker_retry_cve_2010_0426 = 2
-        self.attacker_retry_cve_2015_5602 = 2
-        self.attacker_sambacry_sleep_retry = 2
-        self.attacker_shellshock_sleep_retry = 2
-        self.attacker_dvwa_sql_injection_sleep_retry = 2
-        self.attacker_cve_2015_3306_sleep_retry = 2
-        self.attacker_cve_2015_1427_sleep_retry = 2
-        self.attacker_cve_2016_10033_sleep_retry = 2
-        self.attacker_cve_2010_0426_sleep_retry = 2
-        self.attacker_cve_2015_5602_sleep_retry = 2
+        self.attacker_retry_sambacry = 4
+        self.attacker_retry_shellshock = 4
+        self.attacker_retry_dvwa_sql_injection = 4
+        self.attacker_retry_cve_2015_3306 = 4
+        self.attacker_retry_cve_2015_1427 = 4
+        self.attacker_retry_cve_2016_10033 = 4
+        self.attacker_retry_cve_2010_0426 = 4
+        self.attacker_retry_cve_2015_5602 = 4
+        self.attacker_sambacry_sleep_retry = 4
+        self.attacker_shellshock_sleep_retry = 4
+        self.attacker_dvwa_sql_injection_sleep_retry = 4
+        self.attacker_cve_2015_3306_sleep_retry = 4
+        self.attacker_cve_2015_1427_sleep_retry = 4
+        self.attacker_cve_2016_10033_sleep_retry = 4
+        self.attacker_cve_2010_0426_sleep_retry = 4
+        self.attacker_cve_2015_5602_sleep_retry = 4
         self.attacker_continue_action_sleep = 30
 
         self.defender_update_state = False
@@ -205,6 +205,9 @@ class EnvConfig:
         self.randomize_state_max_steps = 20
         self.randomize_starting_state_policy = None
         self.randomize_state_steps_list = [0, 8, 16, 23]
+
+        self.attacker_static_opponent = None
+        self.snort_baseline_simulate = False
 
     def get_port_forward_port(self) -> int:
         """
@@ -385,4 +388,5 @@ class EnvConfig:
         env_config.randomize_attacker_starting_state = self.randomize_attacker_starting_state
         env_config.randomize_state_min_steps = self.randomize_state_min_steps
         env_config.randomize_state_max_steps = self.randomize_state_max_steps
+        env_config.snort_baseline_simulate = self.snort_baseline_simulate
         return env_config

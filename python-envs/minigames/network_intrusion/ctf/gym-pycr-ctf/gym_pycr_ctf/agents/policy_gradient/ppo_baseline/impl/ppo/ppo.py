@@ -44,10 +44,6 @@ class PPO(OnPolicyAlgorithm):
     :param attacker_ent_coef: (float) Entropy coefficient for the loss calculation
     :param attacker_vf_coef: (float) Value function coefficient for the loss calculation
     :param attacker_max_grad_norm: (float) The maximum value for the gradient clipping
-    :param use_sde: (bool) Whether to use generalized State Dependent Exploration (gSDE)
-        instead of action noise exploration (default: False)
-    :param sde_sample_freq: (int) Sample a new noise matrix every n steps when using gSDE
-        Default: -1 (only sample at the beginning of the rollout)
     :param target_kl: (float) Limit the KL divergence between updates,
         because the clipping is not enough to prevent large update
         see issue #213 (cf https://github.com/hill-a/stable-baselines/issues/213)
@@ -87,8 +83,6 @@ class PPO(OnPolicyAlgorithm):
         defender_vf_coef: float = 0.5,
         attacker_max_grad_norm: float = 0.5,
         defender_max_grad_norm: float = 0.5,
-        use_sde: bool = False,
-        sde_sample_freq: int = -1,
         target_kl: Optional[float] = None,
         create_eval_env: bool = False,
         attacker_policy_kwargs: Optional[Dict[str, Any]] = None,
@@ -100,9 +94,7 @@ class PPO(OnPolicyAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
-        attacker_opponent = None,
-        defender_opponent = None
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
     ):
 
         super(PPO, self).__init__(
@@ -121,8 +113,6 @@ class PPO(OnPolicyAlgorithm):
             defender_vf_coef=defender_vf_coef,
             attacker_max_grad_norm=attacker_max_grad_norm,
             defender_max_grad_norm=defender_max_grad_norm,
-            use_sde=use_sde,
-            sde_sample_freq=sde_sample_freq,
             attacker_policy_kwargs=attacker_policy_kwargs,
             defender_policy_kwargs=defender_policy_kwargs,
             verbose=verbose,
@@ -133,9 +123,7 @@ class PPO(OnPolicyAlgorithm):
             attacker_agent_config=attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode,
-            attacker_opponent = attacker_opponent,
-            defender_opponent = defender_opponent
+            train_mode=train_mode
         )
 
         self.batch_size = batch_size
@@ -258,12 +246,6 @@ class PPO(OnPolicyAlgorithm):
                 # Convert discrete action from float to long
                 actions = rollout_data.actions.long().flatten()
 
-            # Re-sample the noise matrix because the log_std has changed
-            # TODO: investigate why there is no issue with the gradient
-            # if that line is commented (as in SAC)
-            if self.use_sde:
-                self.attacker_policy.reset_noise(self.batch_size)
-
             values, log_prob, entropy = self.attacker_policy.evaluate_actions(rollout_data.observations, actions)
             values = values.flatten()
             # Normalize advantage
@@ -321,9 +303,6 @@ class PPO(OnPolicyAlgorithm):
             if self.attacker_agent_config.performance_analysis:
                 end = time.time()
                 weight_update_times_attacker.append(end - start)
-            #approx_kl_divs.append(th.mean(rollout_data.old_log_prob - log_prob).detach().cpu().numpy())
-
-        #all_kl_divs_attacker.append(np.mean(approx_kl_divs))
 
         return attacker_clip_range, pg_losses_attacker, clip_fractions_attacker, \
                attacker_clip_range_vf, value_losses_attacker, entropy_losses_attacker, \
@@ -332,6 +311,7 @@ class PPO(OnPolicyAlgorithm):
     def defender_rollout_buffer_pass(self, defender_clip_range, pg_losses_defender, clip_fractions_defender,
                                      defender_clip_range_vf, value_losses_defender, entropy_losses_defender,
                                      grad_comp_times_defender, weight_update_times_defender):
+
         # Do a complete pass on the defender's rollout buffer
         for rollout_data in self.defender_rollout_buffer.get(self.batch_size):
             if self.defender_agent_config.performance_analysis:
@@ -341,12 +321,6 @@ class PPO(OnPolicyAlgorithm):
             if isinstance(self.defender_action_space, spaces.Discrete):
                 # Convert discrete action from float to long
                 actions = rollout_data.actions.long().flatten()
-
-            # Re-sample the noise matrix because the log_std has changed
-            # TODO: investigate why there is no issue with the gradient
-            # if that line is commented (as in SAC)
-            if self.use_sde:
-                self.defender_policy.reset_noise(self.batch_size)
 
             values, log_prob, entropy = self.defender_policy.evaluate_actions(rollout_data.observations, actions)
             values = values.flatten()
@@ -415,6 +389,7 @@ class PPO(OnPolicyAlgorithm):
         Update policy using the currently gathered
         rollout buffer.
         """
+
         # Update optimizer learning rate
         self._update_learning_rate(self.m_selection_policy.optimizer)
         lr = self.m_selection_policy.optimizer.param_groups[0]["lr"]
@@ -450,13 +425,6 @@ class PPO(OnPolicyAlgorithm):
                 if isinstance(self.env.envs[0].m_action_space, spaces.Discrete):
                     # Convert discrete action from float to long
                     m_actions = rollout_data.m_actions.long().flatten()
-
-                # Re-sample the noise matrix because the log_std has changed
-                # TODO: investigate why there is no issue with the gradient
-                # if that line is commented (as in SAC)
-                if self.use_sde:
-                    self.m_selection_policy.reset_noise(self.batch_size)
-                    self.m_action_policy.reset_noise(self.batch_size)
 
                 m_selection_values, m_selection_log_prob, m_selection_entropy = \
                     self.m_selection_policy.evaluate_actions(rollout_data.network_observations, m_selection_actions)
@@ -510,6 +478,7 @@ class PPO(OnPolicyAlgorithm):
                     m_action_values_pred = rollout_data.m_action_old_values + th.clamp(
                         m_action_values - rollout_data.m_action_old_values, -clip_range_vf, clip_range_vf
                     )
+
                 # Value loss using the TD(gae_lambda) target
                 m_selection_value_loss = F.mse_loss(rollout_data.m_selection_returns, m_selection_values_pred)
                 value_losses_m_selection.append(m_selection_value_loss.item())
@@ -517,7 +486,7 @@ class PPO(OnPolicyAlgorithm):
                 m_action_value_loss = F.mse_loss(rollout_data.m_action_returns, m_action_values_pred)
                 value_losses_m.append(m_action_value_loss.item())
 
-                # Entropy loss favor exploration
+                # Entropy loss to favor exploration
                 if m_selection_entropy is None:
                     # Approximate entropy when no analytical form
                     m_selection_entropy_loss = -th.mean(-m_selection_log_prob)

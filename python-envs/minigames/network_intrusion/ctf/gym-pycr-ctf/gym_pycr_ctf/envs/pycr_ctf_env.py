@@ -24,9 +24,6 @@ from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import 
 from gym_pycr_ctf.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star import FindPiStar
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
-from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_pycr_ctf.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 
 
@@ -174,12 +171,14 @@ class PyCRCTFEnv(gym.Env, ABC):
                 and self.env_config.emulation_config.skip_exploration:
             defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
             if env_config.emulation_config.save_dynamics_model_dir is not None:
+                print('Loading Dynamics Model..')
                 defender_dynamics_model.read_model(env_config)
                 load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
                 if os.path.exists(load_dir):
                     env_config.network_conf = \
                         env_config.network_conf.load(load_dir)
+                print('Dynamics Model Loaded Successfully')
 
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
@@ -228,12 +227,11 @@ class PyCRCTFEnv(gym.Env, ABC):
             print("[WARNING]: This is a multi-agent environment where the input should be "
                   "(attacker_action, defender_action)")
         # Initialization
-        opponent_type = None
-        if action_id is not None and len(action_id) > 2:
-            attack_action_id, defense_action_id, opponent_type = action_id
-            opponent_type = AgentType(opponent_type)
-        else:
-            attack_action_id, defense_action_id = action_id
+        attack_action_id, defense_action_id = action_id
+
+        if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent is not None:
+            attack_action_id = self.env_config.attacker_static_opponent.action(
+                env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
 
         if attack_action_id is not None:
             attack_action_id = int(attack_action_id)
@@ -249,16 +247,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         if defense_action_id is not None:
             if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
                 time.sleep(self.env_config.defender_sleep_before_state_update)
-            attacker_opponent = None
-            if opponent_type is not None:
-                if opponent_type == AgentType.RANDOM_ATTACKER:
-                    attacker_opponent = RandomAttackerBotAgent(env_config=self.env_config, env=self)
-                elif opponent_type == AgentType.CUSTOM_ATTACKER:
-                    attacker_opponent = CustomAttackerBotAgent(env_config=self.env_config, env=self)
             defender_reward, attacker_reward, done, defender_info = \
                 self.step_defender(defender_action_id=defense_action_id,
                                    attacker_action=self.env_state.attacker_obs_state.last_attacker_action,
-                                   attacker_opponent=attacker_opponent)
+                                   attacker_opponent=self.env_config.attacker_static_opponent)
             attacker_reward = attacker_reward
         else:
             defender_info = {}
@@ -337,33 +329,11 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
-            print("illegal attack action:{}, idx:{}".format(attacker_action_id, self.idx))
-            actions = list(range(len(self.env_config.attacker_action_conf.actions)))
-            attacker_non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true illegal attack actions:{}, idx:{}".format(attacker_non_legal_actions, self.idx))
-            attacker_legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
-                action, env_config=self.env_config, env_state=self.env_state), actions))
-            print("true legal attack actions:{}, idx:{}".format(attacker_legal_actions, self.idx))
-            print("flags found:{}, idx:{}".format(self.env_state.num_flags, self.idx))
-            print("flags found:{}, idx:{}".format(
-                list(map(lambda x: x.flags_found, self.env_state.attacker_obs_state.machines)), self.idx))
-            print("flags found:{}, idx:{}".format(self.env_state.attacker_obs_state.catched_flags, self.idx))
-            print("total flags:{}, idx:{}".format(self.env_config.network_conf.flags_lookup, self.idx))
-            print(self.env_config.network_conf)
-            print("Idx:{}".format(self.idx))
-            # self.env_config.network_conf.save("./netconf" + str(self.idx) + ".pkl")
-            raise ValueError("Test")
-            sys.exit(0)
-            done = False
-            info["flags"] = self.env_state.attacker_obs_state.catched_flags
+            print("[Warning] illegal attack action:{}, idx:{}".format(attacker_action_id, self.idx))
             self.attacker_agent_state.time_step += 1
-            attacker_reward = self.env_config.illegal_reward_action
-            if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
-                done = True
-                attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
+            attacker_reward = self.env_config.attacker_illegal_reward_action
+            return attacker_reward, defender_reward, True, info
 
-            return attacker_reward, defender_reward, done, info
         if attacker_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
             raise ValueError("Action ID: {} not recognized".format(attacker_action_id))
 
@@ -528,10 +498,12 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
-        if attacker_opponent is not None and (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
-            not s_prime.defender_obs_state.snort_warning_baseline_stopped
-                        or not s_prime.defender_obs_state.snort_critical_baseline_stopped
-                                                        or not s_prime.defender_obs_state.var_log_baseline_stopped)):
+        if self.env_config.snort_baseline_simulate and \
+                attacker_opponent is not None and \
+                (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
+                           not s_prime.defender_obs_state.snort_warning_baseline_stopped
+                           or not s_prime.defender_obs_state.snort_critical_baseline_stopped
+                           or not s_prime.defender_obs_state.var_log_baseline_stopped)):
             self.simulate_snort_vs_opponent(attacker_opponent)
 
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
@@ -549,7 +521,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         i = 0
         while not done:
             i += 1
-            attacker_action_id = attacker_opponent.action(self.env_state, self.attacker_agent_state)
+            attacker_action_id = attacker_opponent.action(
+                env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
             if i > 100:
                 print("infinite loop..")
 

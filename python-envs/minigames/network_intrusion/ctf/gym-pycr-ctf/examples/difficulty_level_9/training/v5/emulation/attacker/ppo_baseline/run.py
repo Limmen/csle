@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO level_9 v1 emulation"
+    experiment_title = "PPO level_9 v5 emulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()
