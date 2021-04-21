@@ -17,6 +17,7 @@ from gym_pycr_ctf.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 
+
 class PPOBaselineAgent(TrainAgent):
     """
     An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines

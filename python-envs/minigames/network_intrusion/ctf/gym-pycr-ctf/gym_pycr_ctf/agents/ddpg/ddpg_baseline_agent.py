@@ -12,6 +12,7 @@ from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.ddpg.impl.ddpg import DDPG
 
+
 class DDPGBaselineAgent(TrainAgent):
     """
     An agent for the pycr-ctf env that uses the DDPG algorithm from OpenAI stable baselines

@@ -9,6 +9,7 @@ import numpy as np
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 
+
 class CustomAttackerBotAgent:
     """
     Class implementing an attack policy that acts according to a custom pre-defined policy
@@ -20,6 +21,7 @@ class CustomAttackerBotAgent:
 
         :param env_config: the environment configuration
         :param env: the environment
+        :param strategy: the strategy
         """
         self.env_config = env_config
         self.env = env
@@ -27,17 +29,13 @@ class CustomAttackerBotAgent:
         self.actions = np.array(list(range(self.num_actions)))
         self.strategy = strategy
         self.strategy = [18, 18, 15, 18, 18, 18, 5, 18, 18, 1, 18, 18, 14, 16, 15, 18, 18, 18, 17]
-        # if isinstance(self.env, PyCRCTFLevel4GeneratedSim5Env) or isinstance(self.env, PyCRCTFLevel4Emulation5Env):
-        #     self.strategy = [18, 18, 15, 18, 18, 18, 5, 16, 15, 18, 18, 18, 18, 1, 16, 15,
-        #                      18, 18, 18, 18, 14, 16, 15, 18, 18, 18, 17]
-        # else:
-        #     raise ValueError("Environment not recognized")
 
     def action(self, s: EnvState, agent_state) -> int:
         """
         Samples an action from the policy.
 
         :param s: the environment state
+        :param agent_state: the agent state
         :return: action_id
         """
         legal_actions = list(filter(lambda x: self.env.is_attack_action_legal(x, self.env_config, s), self.actions))
@@ -46,8 +44,4 @@ class CustomAttackerBotAgent:
         else:
             print("action illegal")
             action = np.random.choice(legal_actions)
-        # self.step += 1
-        # if self.step >= len(self.strategy):
-        #     self.step = 0
-        #print("custom action:{}".format(action))
         return action

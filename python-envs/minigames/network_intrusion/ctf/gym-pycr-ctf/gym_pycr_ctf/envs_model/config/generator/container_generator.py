@@ -6,7 +6,11 @@ from gym_pycr_ctf.dao.container_config.node_container_config import NodeContaine
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.util.experiments_util import util
 
+
 class ContainerGenerator:
+    """
+    Class implementing functionality for generating container configuraitons
+    """
 
     @staticmethod
     def generate(topology: Topology, vuln_cfg : VulnerabilitiesConfig,
@@ -16,6 +20,25 @@ class ContainerGenerator:
                  agent_ip: str, router_ip: str, agent_containers: List[Tuple[str, str]],
                  router_containers: List[Tuple[str, str]], subnet_prefix: str,
                  vulnerable_nodes: set = None) -> ContainersConfig:
+        """
+        Generates a containers configuration
+
+        :param topology: the topology
+        :param vuln_cfg: the vulnerabiltiy configurations
+        :param gateways: the gateways in the emulation
+        :param container_pool: the pool of containers
+        :param gw_vuln_compatible_containers: the list of containers that can be used as gateways
+        :param pw_vuln_compatible_containers: the list of containers that has pw vulnerabilities
+        :param subnet_id: the subnet id
+        :param num_flags: the number of flags
+        :param agent_ip: the ip of the agent
+        :param router_ip: the ip of the router
+        :param agent_containers: the containers that can be used to implement the agent
+        :param router_containers: the containers that can be used to implement the routers
+        :param subnet_prefix: the prefix of the subnetwork
+        :param vulnerable_nodes: the list of vulnerable nodes
+        :return: a containers configuration
+        """
 
         network = "pycr_net_" + str(subnet_id)
         minigame = "ctf"

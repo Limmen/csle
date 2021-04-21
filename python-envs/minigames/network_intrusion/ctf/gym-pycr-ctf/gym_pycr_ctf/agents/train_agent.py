@@ -11,6 +11,7 @@ from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 
+
 class TrainAgent(ABC):
     """
     Abstract Train Agent

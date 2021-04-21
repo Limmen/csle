@@ -7,6 +7,7 @@ from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 
+
 class RandomDefenderBotAgent:
     """
     Class implementing an defense policy that acts randomly

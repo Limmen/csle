@@ -10,6 +10,7 @@ from gym_pycr_ctf.envs import PyCRCTFEnv
 from gym_pycr_ctf.dao.agent.agent_type import AgentType
 import numpy as np
 
+
 class ManualAttackerAgent:
     """
     Class representing a manual attacker agent, controlled in the GUI by keyboard

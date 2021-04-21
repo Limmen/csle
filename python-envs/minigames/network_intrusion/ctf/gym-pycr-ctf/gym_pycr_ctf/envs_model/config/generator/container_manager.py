@@ -1,3 +1,4 @@
+from typing import List
 import docker
 from gym_pycr_ctf.envs_model.config.generator.env_info import EnvInfo
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
@@ -5,10 +6,19 @@ from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.envs_model.config.generator.container_generator import ContainerGenerator
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 
+
 class ContainerManager:
+    """
+    A class for managing Docker containers and virtual networks
+    """
 
     @staticmethod
-    def stop_all_running_containers():
+    def stop_all_running_containers() -> None:
+        """
+        Utility function for stopping all running containers
+
+        :return: None
+        """
         client1 = docker.from_env()
         containers = client1.containers.list()
         containers = list(filter(lambda x: "pycr" in x.name, containers))
@@ -17,7 +27,12 @@ class ContainerManager:
             c.stop()
 
     @staticmethod
-    def rm_all_stopped_containers():
+    def rm_all_stopped_containers() -> None:
+        """
+        A utility function for removing all stopped containers
+
+        :return: None
+        """
         client1 = docker.from_env()
         containers = client1.containers.list(all=True)
         containers = list(filter(lambda x: "pycr" in x.name and x.status == "exited" or x.status == "created", containers))
@@ -26,7 +41,12 @@ class ContainerManager:
             c.remove()
 
     @staticmethod
-    def rm_all_images():
+    def rm_all_images() -> None:
+        """
+        A utility function for removing all pycr images
+
+        :return: None
+        """
         client1 = docker.from_env()
         images = client1.images.list()
         images = list(filter(lambda x: "pycr" in ",".join(x.attrs["RepoTags"]), images))
@@ -45,7 +65,12 @@ class ContainerManager:
             client1.images.remove(image=img.attrs["RepoTags"][0], force=True)
 
     @staticmethod
-    def list_all_images():
+    def list_all_images() -> List[str]:
+        """
+        A utility function for listing all pycr images
+
+        :return: a list of the pycr images
+        """
         client1 = docker.from_env()
         images = client1.images.list()
         images = list(filter(lambda x: "pycr" in ",".join(x.attrs["RepoTags"]), images))
@@ -53,12 +78,24 @@ class ContainerManager:
         return images_names
 
     @staticmethod
-    def list_all_networks():
+    def list_all_networks() -> List[str]:
+        """
+        A utility function for listing all pycr networks
+
+        :return: a list of the networks
+        """
         networks, network_ids = EnvConfigGenerator.list_docker_networks()
         return networks
 
     @staticmethod
-    def run_container_config(containers_config: ContainersConfig, path: str = None):
+    def run_container_config(containers_config: ContainersConfig, path: str = None) -> None:
+        """
+        Starts all containers with a given set of configurations
+
+        :param containers_config: the container configurations
+        :param path: the path where to store created artifacts
+        :return: None
+        """
         if path == None:
             path = util.default_output_dir()
         client1 = docker.from_env()
@@ -82,7 +119,12 @@ class ContainerManager:
                                    publish_all_ports=True, cap_add=["NET_ADMIN"])
 
     @staticmethod
-    def start_all_stopped_containers():
+    def start_all_stopped_containers() -> None:
+        """
+        Starts all stopped pycr containers
+
+        :return: None
+        """
         client1 = docker.from_env()
         containers = client1.containers.list(all=True)
         containers = list(filter(lambda x: "pycr" in x.name and x.status == "exited" or x.status == "created", containers))
@@ -91,7 +133,12 @@ class ContainerManager:
             c.start()
 
     @staticmethod
-    def list_all_running_containers():
+    def list_all_running_containers() -> List[str]:
+        """
+        Lists all running pycr containers
+
+        :return: a list of the names of the running containers
+        """
         parsed_envs = EnvInfo.parse_env_infos()
         container_names = []
         for env in parsed_envs:
@@ -99,7 +146,12 @@ class ContainerManager:
         return container_names
 
     @staticmethod
-    def list_all_stopped_containers():
+    def list_all_stopped_containers() -> List[str]:
+        """
+        Stops all stopped pycr containers
+
+        :return: a list of the stopped containers
+        """
         client1 = docker.from_env()
         client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
         parsed_stopped_containers = EnvInfo.parse_stopped_containers(client1=client1, client2=client2)
@@ -107,7 +159,13 @@ class ContainerManager:
         return container_names
 
     @staticmethod
-    def run_command(cmd: str):
+    def run_command(cmd: str) -> None:
+        """
+        Runs a container management command
+
+        :param cmd: the command to run
+        :return:
+        """
 
         if cmd == "list_stopped":
             names = ContainerManager.list_all_stopped_containers()
@@ -134,15 +192,4 @@ class ContainerManager:
 
 
 if __name__ == '__main__':
-    # container_names = ContainerManager.list_all_running_containers()
-    # print(container_names)
-    # stopped_containers = ContainerManager.list_all_stopped_containers()
-    # print(stopped_containers)
-    # ContainerManager.stop_all_running_containers()
-    # ContainerManager.rm_all_stopped_containers()
-    # images_names = ContainerManager.list_all_images()
-    # print(images_names)
     ContainerManager.rm_all_images()
-    # containers_config = util.read_containers_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random/containers.json")
-    # ContainerManager.run_container_config(containers_config=containers_config)
-    #ContainerManager.start_all_stopped_containers()

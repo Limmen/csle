@@ -3,6 +3,7 @@ Type of state representations in the pycr-ctf environment
 """
 from enum import Enum
 
+
 class StateType(Enum):
     """
     Enum representing the different state types

@@ -10,6 +10,7 @@ from gym_pycr_ctf.envs import PyCRCTFEnv
 import numpy as np
 import torch
 
+
 class ManualDefenderAgent:
     """
     Class representing a manual defender agent, controlled in the GUI by keyboard

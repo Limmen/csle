@@ -12,6 +12,7 @@ from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.td3.impl.td3 import TD3
 
+
 class TD3BaselineAgent(TrainAgent):
     """
     An agent for the pycr-ctf env that uses the TD3 algorithm from OpenAI stable baselines

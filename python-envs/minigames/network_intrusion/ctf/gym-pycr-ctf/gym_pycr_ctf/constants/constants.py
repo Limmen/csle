@@ -35,7 +35,11 @@ class RENDERING:
                    (128,128,128), (51,153,255), (0, 153, 153), (204,255,153), (255, 204, 153), (255, 153, 153),
                    (51,51,255), (255, 229, 204)]
 
+
 class SERVICES:
+    """
+    Services constants
+    """
     service_lookup = {}
     service_lookup["none"] = 0
     service_lookup["finger"] = 1
@@ -158,7 +162,11 @@ class SERVICES:
     #
     service_lookup_inv = {v: k for k, v in service_lookup.items()}
 
+
 class VULNERABILITIES:
+    """
+    Vulnerabilities constants
+    """
     vuln_lookup = {}
     vuln_lookup["none"] = 0
     vuln_lookup["heartbleed"] = 1
@@ -193,6 +201,9 @@ class VULNERABILITIES:
 
     
 class OS:
+    """
+    Operating systems constants
+    """
     os_lookup = {}
     os_lookup["unknown"] = 0
     os_lookup["windows"] = 1
@@ -206,10 +217,18 @@ class OS:
     os_lookup["linux"] = 9
     os_lookup_inv = {v: k for k, v in os_lookup.items()}
 
+
 class SECLISTS:
+    """
+    Constants related to seclists
+    """
     TOP_USERNAMES_SHORTLIST = "/SecLists/Usernames/top-usernames-shortlist.txt"
 
+
 class NMAP:
+    """
+    Constants related to nmap commands
+    """
     SPEED_ARGS = "--min-rate 100000 --max-retries 1 -T5 -n"
     FILE_ARGS = "-oX"
     TELNET_BRUTE_SUBNET = "-p 23 --script telnet-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
@@ -254,12 +273,19 @@ class NMAP:
     HTTP_GREP = "--script=http-grep"
     FINGER = "--script=finger"
 
+
 class AUXILLARY:
+    """
+    Auxillary constants
+    """
     USER_PLACEHOLDER = "USER_PLACEHOLDER"
     PW_PLACEHOLDER = "USER_PLACEHOLDER"
 
 
 class NMAP_XML:
+    """
+    Constants related to nmap XML output
+    """
     HOST = "host"
     STATUS = "status"
     ADDRESS = "address"
@@ -321,12 +347,20 @@ class NMAP_XML:
     VERSION = "version"
     SERVICEFP = "servicefp"
 
+
 class SSH:
+    """
+    Constants related to the SSH service
+    """
     SERVICE_NAME ="ssh"
     DEFAULT_PORT = 22
     DIRECT_CHANNEL = "direct-tcpip"
 
+
 class TELNET:
+    """
+    Constants related to the Telnet service
+    """
     PROMPT = b':~$'
     LOCALHOST = "127.0.0.1"
     LOGIN_PROMPT = b"login: "
@@ -335,7 +369,11 @@ class TELNET:
     SERVICE_NAME="telnet"
     DEFAULT_PORT = 23
 
+
 class FTP:
+    """
+    Constants related to the FTP service
+    """
     INCORRECT_LOGIN = "Login incorrect"
     SERVICE_NAME = "ftp"
     DEFAULT_PORT = 21
@@ -345,25 +383,53 @@ class FTP:
     LFTP_PREFIX = "lftp ftp://"
     ACCESS_FAILED = "Access failed"
 
+
 class IRC:
+    """
+    Constants related to the IRC service
+    """
     SERVICE_NAME = "irc"
 
+
 class POSTGRES:
+    """
+    Constants related to the Postgres service
+    """
     SERVICE_NAME = "postgres"
 
+
 class SMTP:
+    """
+    Constants related to the SMTP service
+    """
     SERVICE_NAME = "smtp"
 
+
 class MYSQL:
+    """
+    Constants related to the MySQL service
+    """
     SERVICE_NAME = "mysql"
 
+
 class MONGO:
+    """
+    Constants related to the MongoDB service
+    """
     SERVICE_NAME = "mongo"
 
+
 class CASSANDRA:
+    """
+    Constants related to the Cassandra service
+    """
     SERVICE_NAME = "cassandra"
 
+
 class SAMBA:
+    """
+    Constants related to the Samba service
+    """
     SERVICE_NAME = "samba"
     USER="sambacry"
     PW="nosambanocry"
@@ -376,7 +442,11 @@ class SAMBA:
     VERIFYING = "Veryfying"
     VULNERABILITY_NAME = "cve-2017-7494"
 
+
 class CVE_2010_0426:
+    """
+    Constants related to CVE-2010-0426
+    """
     SERVICE_NAME = "sudoedit"
     BACKDOOR_USER="ssh_backdoor_cve10_0426pwn"
     BACKDOOR_PW="cve_2010_0426_pwnedpw"
@@ -385,72 +455,114 @@ class CVE_2010_0426:
 
 
 class CVE_2015_5602:
+    """
+    Constants related to CVE-2015-5602
+    """
     SERVICE_NAME = "sudoedit"
     BACKDOOR_USER="ssh_backdoor_cve15_5602pwn"
     BACKDOOR_PW="cve_2015_5602_pwnedpw"
     ROOT_PW="cve_2015_5602_temp_root_pw"
     VULNERABILITY_NAME = "cve-2015-5602"
 
+
 class CVE_2015_3306:
+    """
+    Constants related to CVE-2015-3306
+    """
     SERVICE_NAME = "proftpd"
     BACKDOOR_USER="ssh_backdoor_cve2015_3306_pwned"
     BACKDOOR_PW="cve2015_3306_pwnedpw"
     PORT=21
     VULNERABILITY_NAME="cve-2015-3306"
 
+
 class CVE_2016_10033:
+    """
+    Constants related to CVE-2016-10033
+    """
     SERVICE_NAME = "http"
     BACKDOOR_USER="ssh_backdoor_2016_10033_pwn"
     BACKDOOR_PW="cve_2016_10033_pwnedpw"
     PORT=80
     VULNERABILITY_NAME = "cve-2016-10033"
 
+
 class CVE_2015_1427:
+    """
+    Constants related to CVE-2015-1427
+    """
     SERVICE_NAME = "elasticsearch"
     BACKDOOR_USER="ssh_backdoor_cve_2015_1427_pwned"
     BACKDOOR_PW="cve_2015_1427_pwnedpw"
     PORT=9200
     VULNERABILITY_NAME = "cve-2015-1427"
 
+
 class SHELLSHOCK:
+    """
+    Constants related to ShellShock
+    """
     SERVICE_NAME = "http"
     BACKDOOR_USER="ssh_backdoor_shellshocked"
     BACKDOOR_PW="shellshockedpw"
     PORT=80
     VULNERABILITY_NAME = "cve-2014-6271"
 
+
 class DVWA_SQL_INJECTION:
+    """
+    Constants related to DVWA SQL Injection Vulnerabilities
+    """
     SERVICE_NAME = "http"
     EXPLOIT_USER="pablo"
     EXPLOIT_OUTPUT_FILENAME = "dvwa_sql_injection_result.txt"
     PORT=80
     VULNERABILITY_NAME="dvwa_sql_injection"
 
+
 class COMMON:
+    """
+    Common constants
+    """
     CVE_FILE = "/allitems_prep.csv"
     SERVICES_FILE = "/nmap-services"
     DEFAULT_RECV_SIZE = 5000
     LARGE_RECV_SIZE = 1000000
 
+
 class COMMANDS:
+    """
+    Constants related to arbitrary commands
+    """
     CHANNEL_WHOAMI = "whoami\n"
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "
     SUDO = "sudo"
 
+
 class FILE_PATTERNS:
+    """
+    Constants related to file patterns for parsing
+    """
     COST_FILE_SUFFIX = "_cost.txt"
     NMAP_ACTION_RESULT_SUFFIX = ".xml"
     ALERTS_FILE_SUFFIX = "_alerts.txt"
 
 
 class NIKTO:
+    """
+    Constants related to Nikto commands
+    """
     BASE_ARGS = "-port 80 -Format xml --maxtime 60s -timeout 5 "
     HOST_ARG = "-h "
     OUTPUT_ARG = "-output "
 
+
 class NIKTO_XML:
+    """
+    Constants related to Nikto XML parsing
+    """
     NIKTOSCAN = "niktoscan"
     SCANDETAILS = "scandetails"
     ITEM = "item"
@@ -467,22 +579,36 @@ class NIKTO_XML:
 
 
 class MASSCAN:
+    """
+    Constants related to Masscan commands
+    """
     BASE_ARGS = "-p0-1024 --max-rate 100000 --max-retries 1 --wait 0"
     HOST_ARG = "--source-ip "
     OUTPUT_ARG = "-oX "
 
 
 class SSH_BACKDOOR:
+    """
+    Constants related to creation of SSH backdoors
+    """
     BACKDOOR_PREFIX = "ssh_backdoor"
     DEFAULT_PW = "pycr_ctf"
 
+
 class SHELL:
+    """
+    Constants related to shell commands
+    """
     LIST_ALL_USERS = "cut -d: -f1 /etc/passwd"
     CHECK_FOR_SECLISTS = "test -e /SecLists && echo file exists || echo file not found"
     SAMBA_EXPLOIT = "/samba_exploit.py -e /libbindshell-samba.so -s data -r /data/libbindshell-samba.so -u " \
                     "sambacry -p nosambanocry -P 6699 -t "
 
+
 class EXPLOIT_VULNERABILITES:
+    """
+    Constants related to exploit vulnerabilities
+    """
     SSH_DICT_SAME_USER_PASS = "ssh-weak-password"
     FTP_DICT_SAME_USER_PASS = "ftp-weak-password"
     TELNET_DICTS_SAME_USER_PASS = "telnet-weak-password"
@@ -508,7 +634,11 @@ class EXPLOIT_VULNERABILITES:
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
 
+
 class IDS_ROUTER:
+    """
+    Constants related to the IDS
+    """
     MAX_ALERTS = 1000
     FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
@@ -517,11 +647,18 @@ class IDS_ROUTER:
     TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"
     PRIORITY_REGEX = re.compile(r"Priority: \d")
 
+
 class SUB_PROC_ENV:
+    """
+    Constants related to creation of Sub-proc-env environments
+    """
     SLEEP_TIME_STARTUP = 10
 
+
 class TRAFFIC_COMMANDS:
-    #"ftp1": ["ftp {}", "mongo --host {} --port 27017", "ssh {}", "curl {}:8080"],
+    """
+    Constants related to traffic commands
+    """
     DEFAULT_COMMANDS = {
         "ftp1": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
@@ -591,33 +728,38 @@ class TRAFFIC_COMMANDS:
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
 
+
 class PYCR_ADMIN:
+    """
+    Constants related to the PyCr admin account
+    """
     user="pycr_admin"
     pw="pycr@admin-pw_191"
 
+
 class DEFENDER:
+    """
+    Constants related to the defender's sensor commands
+    """
     LIST_LOGGED_IN_USERS_CMD = "users"
     LIST_OPEN_CONNECTIONS_CMD = "netstat -n"
     LIST_USER_ACCOUNTS = "cat /etc/passwd"
     LIST_FAILED_LOGIN_ATTEMPTS = "sudo tail -50 /var/log/auth.log"
-    #LIST_FAILED_LOGIN_ATTEMPTS = "sudo cat 400 /var/log/auth.log"
     LIST_SUCCESSFUL_LOGIN_ATTEMPTS = "last"
     LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
+
 class SYSTEM_IDENTIFICATION:
+    """
+    Constants related to the system identification process
+    """
     NETWORK_CONF_FILE = "network_conf.pickle"
     DEFENDER_DYNAMICS_MODEL_FILE = "defender_dynamics_model.json"
     TRAJECTORIES_FILE = "taus.json"
 
-class AUXILLARY_COMMANDS:
-    WHOAMI = "whoami"
 
-# Log files:
-# /var/log/vsftpd.log
-# /var/log/auth.log
-# lastb -a | more
-# ls /var/log/btmp
-# tail -444f /var/log/apache2/access.log
-# netstat -a
-# who
-# last
+class AUXILLARY_COMMANDS:
+    """
+    Constants related to auxillary shell commands
+    """
+    WHOAMI = "whoami"

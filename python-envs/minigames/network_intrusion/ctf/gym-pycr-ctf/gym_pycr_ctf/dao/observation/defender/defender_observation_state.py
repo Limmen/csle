@@ -3,6 +3,7 @@ import numpy as np
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 
+
 class DefenderObservationState:
     """
     Represents the defender's agent's current belief state of the environment

@@ -1,14 +1,21 @@
+from typing import List
 from gym_pycr_ctf.dao.network.network_service import NetworkService
 from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.dao.network.vulnerability import Vulnerability
 from gym_pycr_ctf.dao.network.credential import Credential
 import gym_pycr_ctf.constants.constants as constants
 
-class BaseRandomizationSpace:
 
+class BaseRandomizationSpace:
+    """
+    Class representing the base domain randomization space
+    """
 
     @staticmethod
-    def base_services():
+    def base_services() -> List[NetworkService]:
+        """
+        :return: A list of base services
+        """
         services = [
             NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh",
                            credentials=[
@@ -53,7 +60,10 @@ class BaseRandomizationSpace:
         return services
 
     @staticmethod
-    def base_vulns():
+    def base_vulns() -> List[Vulnerability]:
+        """
+        :return: a list of base vulnerabilities
+        """
         vulns = [
             Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
                           cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
@@ -136,5 +146,8 @@ class BaseRandomizationSpace:
         return vulns
 
     @staticmethod
-    def base_os():
+    def base_os() -> List[str]:
+        """
+        :return: a list of base operating systems
+        """
         return list(constants.OS.os_lookup.keys())

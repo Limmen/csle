@@ -406,7 +406,11 @@ class AgentConfig:
             writer.writerow(["static_eval_defender", str(self.static_eval_defender)])
 
 
-    def hparams_dict(self):
+    def hparams_dict(self) -> dict:
+        """
+        Returns a dict with all of the hyperparameters
+        :return:
+        """
         hparams = {}
         hparams["gamma"] = self.gamma
         hparams["alpha"] = self.alpha

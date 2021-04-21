@@ -3,6 +3,7 @@ A FNN model defined in PyTorch
 """
 import torch
 
+
 class FNNwithLinear(torch.nn.Module):
     """
     Implements a FNN with parameterizable number of layers, dimensions, and hidden activations.

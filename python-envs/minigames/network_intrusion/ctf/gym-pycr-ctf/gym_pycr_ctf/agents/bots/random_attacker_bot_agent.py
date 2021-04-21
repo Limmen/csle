@@ -7,6 +7,7 @@ import numpy as np
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 
+
 class RandomAttackerBotAgent:
     """
     Class implementing an attack policy that acts randomly

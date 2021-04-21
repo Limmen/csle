@@ -12,7 +12,7 @@ class FFNActorCritic(torch.nn.Module):
     def __init__(self, input_dim: int, output_dim: int, hidden_dim: int, num_hidden_layers: int = 2,
                  hidden_activation: str = "ReLU"):
         """
-        Bulilds the model
+        Builds the model
 
         :param input_dim: the input dimension
         :param output_dim: the output dimension

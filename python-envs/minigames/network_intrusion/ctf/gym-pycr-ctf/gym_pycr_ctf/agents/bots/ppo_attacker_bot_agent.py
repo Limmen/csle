@@ -34,7 +34,6 @@ class PPOAttackerBotAgent:
         self.device = "cpu" if not self.agent_config.gpu else "cuda:" + str(self.agent_config.gpu_id)
         self.initialize_models()
 
-
     def initialize_models(self) -> None:
         """
         Initialize models

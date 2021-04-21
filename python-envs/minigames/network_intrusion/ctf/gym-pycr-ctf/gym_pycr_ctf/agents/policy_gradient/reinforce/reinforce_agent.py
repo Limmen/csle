@@ -6,13 +6,16 @@ import numpy as np
 import time
 import tqdm
 from gym_pycr_ctf.agents.models.fnn_w_softmax import FNNwithSoftmax
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.train_agent import TrainAgent
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 
+
 class ReinforceAgent(TrainAgent):
+    """
+    An agent implementing the REINFORCE policy gradient algorithm
+    """
 
     def __init__(self, env, config: AgentConfig):
         super(ReinforceAgent, self).__init__(env, config)
