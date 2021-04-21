@@ -58,7 +58,10 @@ class AttackerMachineObservationState:
         self.reachable = set()
 
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "ip:{},os:{},shell_access:{},logged_in:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{},num_ssh_connections:{}," \
                "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{},hostnames:{},trace:{}, " \
                "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
@@ -78,27 +81,55 @@ class AttackerMachineObservationState:
             self.shellshock_tried, self.dvwa_sql_injection_tried, self.cve_2015_3306_tried, self.cve_2015_1427_tried,
             self.cve_2016_10033_tried, self.cve_2010_0426_tried, self.cve_2015_5602_tried, self.flags_found)
 
-    def sort_ports(self):
+    def sort_ports(self) -> None:
+        """
+        Sorts the list of ports
+        :return: None
+        """
         for p in self.ports:
             p.port = int(p.port)
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
 
-    def sort_cve_vuln(self, vuln_lookup):
+    def sort_cve_vuln(self, vuln_lookup) -> None:
+        """
+        Sorts the list of vulnerabilities
+
+        :param vuln_lookup: a lookup table for converting vulnerabilities between ids and names
+        :return: None
+        """
         self.cve_vulns = sorted(self.cve_vulns, key=lambda x: self._vuln_lookup(name=x.name, lookup_table=vuln_lookup),
                                 reverse=False)
 
-    def sort_shell_access(self, service_lookup):
+    def sort_shell_access(self, service_lookup) -> None:
+        """
+        Sorts the list of shell access credentials
+
+        :param service_lookup: a lookup table for converting between service names and service ids
+        :return: None
+        """
         self.shell_access_credentials = sorted(self.shell_access_credentials,
                                                key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
                                                reverse=False)
 
-    def _vuln_lookup(self, name, lookup_table):
+    def _vuln_lookup(self, name, lookup_table) -> int:
+        """
+        Looks up the id of a vulnerability in a lookup table
+
+        :param name: the name of the vulnerability
+        :param lookup_table: the lookup table
+        :return: the id of the vulnerability
+        """
         if name in lookup_table:
             return lookup_table[name]
         else:
             return lookup_table["unknown"]
 
-    def sort_osvdb_vuln(self):
+    def sort_osvdb_vuln(self) -> None:
+        """
+        Sorts the OSVDB vulnerabilities
+
+        :return: None
+        """
         self.osvdb_vulns = sorted(self.osvdb_vulns, key=lambda x: x.osvdb_id, reverse=False)
 
     def cleanup(self):
@@ -116,7 +147,10 @@ class AttackerMachineObservationState:
             c.cleanup()
 
 
-    def copy(self):
+    def copy(self) -> "AttackerMachineObservationState":
+        """
+        :return: a copy of the DTO
+        """
         m_copy = AttackerMachineObservationState(ip=self.ip)
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
@@ -162,6 +196,11 @@ class AttackerMachineObservationState:
         return m_copy
 
     def to_node(self) -> Node:
+        """
+        Converts the observation to a node representation
+
+        :return: the node representation
+        """
         vulnerabilities = list(map(lambda x: x.to_vulnerability(), self.cve_vulns))
         services = []
         for port in self.ports:

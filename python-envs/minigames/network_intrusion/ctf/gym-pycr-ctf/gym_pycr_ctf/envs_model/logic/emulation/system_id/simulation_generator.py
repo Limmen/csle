@@ -15,7 +15,7 @@ from gym_pycr_ctf.dao.network.trajectory import Trajectory
 
 class SimulationGenerator:
     """
-    Class for with functions for running an exploration policy in an environment to build a level_1 model
+    Class for with functions for running an exploration policy in an environment to build a model
     that later can be used for simulations
     """
 

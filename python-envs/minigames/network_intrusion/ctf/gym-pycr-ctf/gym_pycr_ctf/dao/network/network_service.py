@@ -5,6 +5,9 @@ import gym_pycr_ctf.constants.constants as constants
 
 
 class NetworkService:
+    """
+    DTO Class representing a serice in the network
+    """
 
     def __init__(self, protocol: TransportProtocol, port : int, name : str, credentials : List[Credential] = None):
         self.protocol = protocol
@@ -12,21 +15,28 @@ class NetworkService:
         self.name = name
         self.credentials = credentials
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the service
+        """
         cr = []
         if self.credentials is not None:
             list(map(lambda x: str(x), self.credentials))
         return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name, cr)
 
-
-    def copy(self):
+    def copy(self) -> "NetworkService":
+        """
+        :return: a copy of the DTO
+        """
         return NetworkService(
             protocol=self.protocol, port=self.port, name=self.name, credentials=self.credentials
         )
 
-
     @staticmethod
     def pw_vuln_services():
+        """
+        :return: a list of all vulnerabilities that involve weak passwords
+        """
         ssh_vuln_service = (NetworkService(protocol=TransportProtocol.TCP, port=22, name="ssh", credentials=[]),
                             constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS)
         ftp_vuln_service = (NetworkService(protocol=TransportProtocol.TCP, port=21, name="ftp", credentials=[]),

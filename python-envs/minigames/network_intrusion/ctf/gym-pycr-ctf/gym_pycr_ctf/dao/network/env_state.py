@@ -6,6 +6,8 @@ from gym_pycr_ctf.dao.observation.defender.defender_observation_state import Def
 from gym_pycr_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
 from gym_pycr_ctf.envs_model.state_representation.defender_state_representation import DefenderStateRepresentation
 from gym_pycr_ctf.dao.state_representation.state_type import StateType
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 
 class EnvState:
     """
@@ -185,7 +187,6 @@ class EnvState:
         self.attacker_machine_orig_shape = attacker_machine_orig_shape
         self.attacker_m_action_observation_space = attacker_m_action_observation_space
 
-
     def setup_defender_spaces(self) -> None:
         """
         Sets up the observation spaces used by RL defender agents
@@ -308,19 +309,34 @@ class EnvState:
 
         self.defender_obs_state.cleanup()
 
-    def get_attacker_machine(self, ip: str):
+    def get_attacker_machine(self, ip: str) -> AttackerMachineObservationState:
+        """
+        Utility function for extracting the attacker machine from the attacker's observation
+
+        :param ip: the ip of the attacker machine
+        :return: the machine if is found, otherwise None
+        """
         for m in self.attacker_obs_state.machines:
             if m.ip == ip:
                 return m
         return None
 
-    def get_defender_machine(self, ip: str):
+    def get_defender_machine(self, ip: str) -> DefenderMachineObservationState:
+        """
+        Utility function for extracting the defender machine from the defender's observation given an IP
+
+        :param ip: the ip of the machine
+        :return: the machine if found otherwise None
+        """
         for m in self.defender_obs_state.machines:
             if m.ip == ip:
                 return m
         return None
 
-    def copy(self):
+    def copy(self) -> "EnvState":
+        """
+        :return: a copy of the env state
+        """
         copy = EnvState(env_config=self.env_config, num_ports=self.num_ports, num_vuln=self.num_vuln,
                         num_sh=self.num_sh, num_flags=self.num_flags, num_nodes=self.num_nodes, vuln_lookup=self.vuln_lookup,
                         service_lookup=self.service_lookup, os_lookup=self.os_lookup, state_type=self.state_type,

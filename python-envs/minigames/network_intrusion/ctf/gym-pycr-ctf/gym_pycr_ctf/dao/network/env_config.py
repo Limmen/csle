@@ -16,7 +16,7 @@ from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
 
 class EnvConfig:
     """
-    Class containing the complete configuration of a pycrctf env
+    Class containing the complete configuration of a pycr-ctf env
     """
 
     def __init__(self, network_conf : NetworkConfig, attacker_action_conf : AttackerActionConfig,
@@ -257,7 +257,7 @@ class EnvConfig:
         self.defender_max_costs = max_costs
 
 
-    def copy(self):
+    def copy(self) -> "EnvConfig":
         """
         :return: a copy of the environment configuration
         """

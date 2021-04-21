@@ -11,7 +11,11 @@ from gym_pycr_ctf.dao.network.credential import Credential
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 
+
 class Node:
+    """
+    DTO class that represents a node in the network
+    """
 
     def __init__(self, ip: str, ip_id: int, id : int, type: NodeType, flags: List[Flag], level : int,
                  vulnerabilities : List[Vulnerability], services : List[NetworkService], os : str,
@@ -32,7 +36,10 @@ class Node:
         self.reachable_nodes = reachable_nodes
         self.firewall = firewall
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the node
+        """
         return "ip:{}, ip_id:{}, id:{}, type:{}, flags:{}, level:{}, vulnerabilities:{}, services:{}, os:{}," \
                " credentials:{}, root_usernames:{}, visible:{}, reachable_nodes:{}, firewall:{}".format(
             self.ip, self.ip_id, self.id, self.type, list(map(lambda x: str(x), self.flags)), self.level,
@@ -41,7 +48,13 @@ class Node:
             self.reachable_nodes, self.firewall
         )
 
-    def to_defender_machine_obs(self, service_lookup: dict):
+    def to_defender_machine_obs(self, service_lookup: dict) -> DefenderMachineObservationState:
+        """
+        Converts the node to a defender machine observation
+
+        :param service_lookup: a service lookup table
+        :return: the defender machine observation
+        """
         d_obs = DefenderMachineObservationState(self.ip)
         d_obs.os = self.os
         d_obs.num_flags = len(self.flags)

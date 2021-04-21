@@ -3,6 +3,7 @@ Transport protocols in the pycr-ctf environment
 """
 from enum import Enum
 
+
 class TransportProtocol(Enum):
     """
     Enum representing the different transport protocols in the network.

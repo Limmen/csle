@@ -1,11 +1,15 @@
-from typing import List, Union
+from typing import List, Tuple
 import pickle
 from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.network.node_type import NodeType
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 import numpy as np
 
+
 class NetworkConfig:
+    """
+    DTO Representing a network configuration
+    """
 
     def __init__(self, subnet_mask: str, nodes: List[Node], adj_matrix: np.ndarray, flags_lookup: dict,
                  agent_reachable: set, vulnerable_nodes = None):
@@ -22,13 +26,22 @@ class NetworkConfig:
         self.vulnerable_nodes = vulnerable_nodes
         self.defender_dynamics_model = DefenderDynamicsModel()
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the DTO
+        """
         return "subnet_mask:{}, nodes:{}, adj_matrix:{}, hacker:{}, router: {}, flags_lookup: {}, agent_reachable: {}, " \
                "vulnerable_nodes: {}, defender_dynamics_model:{}".format(
             self.subnet_mask, list(map(lambda x: str(x), self.nodes)), self.adj_matrix, self.hacker, self.router, self.flags_lookup,
             self.agent_reachable, self.vulnerable_nodes, self.defender_dynamics_model)
 
-    def create_lookup_dicts(self) -> Union[dict, Node, Node, dict]:
+    def create_lookup_dicts(self) -> Tuple[dict, Node, Node, dict]:
+        """
+        Utility function for creating lookup dictionaries, useful when rending the network
+
+        :return: A lookup dictionary for nodes, the hacker node, the router node, and a lookup dictionary
+                 for levels in the network
+        """
         levels_d = {}
         node_d = {}
         hacker = None
@@ -51,25 +64,33 @@ class NetworkConfig:
 
         return node_d, hacker, router, levels_d
 
-
     def copy(self):
+        """
+        :return: a copy of the network configuration
+        """
         return NetworkConfig(
             subnet_mask=self.subnet_mask, nodes=self.nodes, adj_matrix=self.adj_matrix, flags_lookup=self.flags_lookup,
             agent_reachable=self.agent_reachable)
 
-    def optimal_reward(self, flag_found_reward_mult : int, port_found_reward_mult : int, os_found_reward_mult: int,
-                       cve_vuln_found_reward_mult: int, machine_found_reward_mult: int, shell_access_found_reward_mult: int,
-                       root_found_reward_mult: int, osvdb_vuln_found_reward_mult: int, new_login_reward_mult : int,
-                       new_tools_installed_reward_mult: int, new_backdoors_installed_reward_mult : int
-                       ):
-        reward = len(self.flags_lookup)*flag_found_reward_mult
+    def shortest_paths(self) -> List[Tuple[List[str], List[int]]]:
+        """
+        Utility function for finding the shortest paths to find all flags using brute-force search
 
-
-    def shortest_paths(self):
+        :return: a list of the shortest paths (list of ips and flags)
+        """
         shortest_paths = self._find_nodes(reachable=self.agent_reachable, path=[], flags=[])
         return shortest_paths
 
-    def _find_nodes(self, reachable, path, flags):
+    def _find_nodes(self, reachable, path, flags) -> List[Tuple[List[str], List[int]]]:
+        """
+        Utility function for finding the next node in a brute-force-search procedure for finding all flags
+        in the network
+
+        :param reachable: the set of reachable nodes from the current attacker state
+        :param path: the current path
+        :param flags: the set of flags
+        :return: a list of the shortest paths (list of ips and flags)
+        """
         paths = []
         min_path_len = len(self.nodes)
         for n in self.nodes:
@@ -88,12 +109,24 @@ class NetworkConfig:
                     paths = paths + self._find_nodes(l_reachable, l_path, l_flags)
         return paths
 
-    def save(self, path):
+    def save(self, path: str) -> None:
+        """
+        Utility function for saving the network config to disk
+
+        :param path: the path to save it to
+        :return: None
+        """
         with open(path, 'wb') as file:
             pickle.dump(self, file)
 
     @staticmethod
-    def load(path):
+    def load(path) -> "NetworkConfig":
+        """
+        Utility function for loading the network config from a pickled file on disk
+
+        :param path: the path to load it from
+        :return: the loaded network config
+        """
         with open(path, 'rb') as file:
             obj = pickle.load(file)
             return obj

@@ -7,6 +7,7 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
 
+
 class EmulationConfig:
     """
     DTO with data for connecting to the emulation and executing commands
@@ -72,7 +73,6 @@ class EmulationConfig:
         self.router_conn = router_conn
         print("Router host connected successfully")
 
-
     def connect_agent(self):
         """
         Connects to the agent's host with SSH, either directly or through a jumphost
@@ -115,7 +115,6 @@ class EmulationConfig:
         #
         # print("Root access")
 
-
     def _su_root(self) -> None:
         """
         Uses an interactive channel to change to root account
@@ -143,7 +142,6 @@ class EmulationConfig:
             output_str = output.decode("utf-8")
             assert "root" in output_str
 
-
     def download_emulation_services(self) -> None:
         """
         Downloads a list of services from the server to populate the lookup table
@@ -165,7 +163,6 @@ class EmulationConfig:
         self.emulation_services = emulation_services
         print("{} services downloaded successfully".format(len(self.emulation_services)))
 
-
     def download_cves(self) -> None:
         """
         Downloads a list of CVEs from the server to populate the lookup table
@@ -186,7 +183,6 @@ class EmulationConfig:
         self.emulation_cves = cves
         print("{} cves downloaded successfully in {}s".format(len(self.emulation_cves), end - start))
 
-
     def close(self) -> None:
         """
         Closes the emulation connection
@@ -202,7 +198,6 @@ class EmulationConfig:
         if self.server_conn is not None:
             self.server_conn.close()
             self.server_conn = None
-
 
     def load_action_costs(self, actions: List[AttackerAction], dir: str, nmap_ids: List[AttackerActionId],
                           network_service_ids: List[AttackerActionId], shell_ids: List[AttackerActionId],
@@ -293,7 +288,7 @@ class EmulationConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
-                    user = self.extract_username(parts=parts, idx=4, terminal_key="_cost")
+                    user = EmulationConfig.extract_username(parts=parts, idx=4, terminal_key="_cost")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
@@ -324,7 +319,7 @@ class EmulationConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
-                    user = self.extract_username(parts=parts, idx=4, terminal_key="_cost")
+                    user = EmulationConfig.extract_username(parts=parts, idx=4, terminal_key="_cost")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
@@ -406,7 +401,7 @@ class EmulationConfig:
                     idx = parts[1]
                     ip = parts[2]
                     service = parts[3]
-                    user = self.extract_username(parts=parts, idx=4, terminal_key="_alerts")
+                    user = EmulationConfig.extract_username(parts=parts, idx=4, terminal_key="_alerts")
                     remote_file = None
                     remote_file = sftp_client.open(file, mode="r")
                     alerts_str = remote_file.read().decode()
@@ -429,14 +424,29 @@ class EmulationConfig:
 
         return action_alerts
 
+    @staticmethod
+    def extract_username(parts : List[str], idx :int, terminal_key: str) -> str:
+        """
+        Utility funciton for extracting usernames from a set of strings
 
-    def extract_username(self, parts : List[str], idx :int, terminal_key: str) -> str:
+        :param parts: the strings
+        :param idx: the idx
+        :param terminal_key: the terminal key when the usernames end
+        :return: the usernames
+        """
         rest = "_".join(parts[idx:])
         parts2 = rest.split(terminal_key)
         return parts2[0]
 
+    def copy(self, ip: str, username: str, pw: str) -> "EmulationConfig":
+        """
+        Creates a copy of the emulation config
 
-    def copy(self, ip: str, username: str, pw: str):
+        :param ip: the ip of the agent in the copy
+        :param username: the username of the agent in the copy
+        :param pw: the pw of the agent in the copy
+        :return: the copy
+        """
         c = EmulationConfig(agent_ip=ip, agent_username=username, agent_pw=pw, server_ip=self.server_ip,
                             server_connection=self.server_connection, server_private_key_file=self.server_private_key_file,
                             server_username=self.server_username, warmup=self.warmup,

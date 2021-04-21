@@ -10,20 +10,29 @@ class Flag:
         self.requires_root = requires_root
         self.score = score
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "name:{}, id:{}, path:{}, requires_root:{}, score:{}".format(
             self.name, self.id, self.path, self.requires_root, self.score
         )
 
-    def __hash__(self):
+    def __hash__(self) -> int:
+        """
+        :return: a hash representation of the object
+        """
         return hash(self.id)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
+        """
+        Tests equality with another flag
+
+        :param other: the flag to compare with
+        :return: True if equal otherwise False
+        """
         if not isinstance(other, Flag):
             # don't attempt to compare against unrelated types
             return NotImplemented
 
         return self.id == other.id and self.name == other.name and self.path == other.path
-
-    def __hash__(self):
-        return hash(self.id) + 31 * hash(self.name) + 31 * hash(self.path)

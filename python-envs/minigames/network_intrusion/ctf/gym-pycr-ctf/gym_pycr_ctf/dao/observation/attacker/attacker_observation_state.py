@@ -54,7 +54,12 @@ class AttackerObservationState:
                 return True
         return False
 
-    def sort_machines(self):
+    def sort_machines(self) -> None:
+        """
+        Sorts the machines in the observation
+
+        :return: None
+        """
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
 
     def cleanup(self) -> None:
@@ -178,7 +183,7 @@ class AttackerObservationState:
             return True
         return False
 
-    def copy(self):
+    def copy(self) -> "AttackerObservationState":
         """
         :return: a copy of the state
         """
@@ -199,7 +204,7 @@ class AttackerObservationState:
             c.machines.append(m.copy())
         return c
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation of the state
         """
