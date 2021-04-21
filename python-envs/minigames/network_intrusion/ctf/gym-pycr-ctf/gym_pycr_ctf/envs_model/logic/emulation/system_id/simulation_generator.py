@@ -92,7 +92,17 @@ class SimulationGenerator:
         return defender_dynamics_model, trajectory
 
     @staticmethod
-    def build_model(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) -> NetworkConfig:
+    def build_model(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) \
+            -> Tuple[NetworkConfig, np.ndarray]:
+        """
+        Builds a Model of the environment using System Identification, Random Walks, ML-estimation
+
+        :param exp_policy: the exploration policy for the random walks
+        :param env_config: the environment configuration
+        :param env: the environment
+        :param render: whether to render or not
+        :return: The learned model
+        """
         print("Starting System Identification Process to Estimate Model")
 
         # Initialize model
@@ -163,13 +173,29 @@ class SimulationGenerator:
         return env_config.network_conf, aggregated_observation
 
     @staticmethod
-    def initialize_defender_dynamics_model():
+    def initialize_defender_dynamics_model() -> DefenderDynamicsModel:
+        """
+        Utiltiy function for initializing a defender dynamics model
+
+        :return: the initialized defender dynamics model
+        """
         defender_dynamics_model = DefenderDynamicsModel()
         return defender_dynamics_model
 
-
-    def update_trajectory(self, trajectory: Trajectory, obs: Tuple[np.ndarray, np.ndarray],
+    @staticmethod
+    def update_trajectory(trajectory: Trajectory, obs: Tuple[np.ndarray, np.ndarray],
                           reward: Tuple[float, float], done : bool, info : dict, action: Tuple[int,int]) -> Trajectory:
+        """
+        Utility function for updating a trajectory with new information from a step in the environment
+
+        :param trajectory: the trajectory to update
+        :param obs: the new observations
+        :param reward: the new rewards
+        :param done: the new done (bool)
+        :param info: the new info
+        :param action: the actions
+        :return: the updated trajectory
+        """
         attacker_obs, defender_obs = obs
         attacker_reward, defender_reward = reward
         attacker_action, defender_action = action
@@ -183,7 +209,14 @@ class SimulationGenerator:
         trajectory.defender_actions.append(int(defender_action))
         return trajectory
 
-    def reset_trajectory(self, obs) -> Trajectory:
+    @staticmethod
+    def reset_trajectory(obs) -> Trajectory:
+        """
+        Utility function for resetting a trajectory DTO
+
+        :param obs: the reset observation
+        :return: the reset trajectory
+        """
         attacker_obs, defender_obs = obs
         trajectory = Trajectory()
         trajectory.attacker_rewards.append(0)
