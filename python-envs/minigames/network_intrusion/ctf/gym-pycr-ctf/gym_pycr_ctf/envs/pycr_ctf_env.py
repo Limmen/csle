@@ -229,7 +229,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Initialization
         attack_action_id, defense_action_id = action_id
 
-        if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent is not None:
+        if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent \
+                is not None:
             attack_action_id = self.env_config.attacker_static_opponent.action(
                 env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
 

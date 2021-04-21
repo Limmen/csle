@@ -1,3 +1,4 @@
+from typing import Tuple
 import numpy as np
 import os
 import sys
@@ -9,6 +10,7 @@ from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderD
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 import gym_pycr_ctf.constants.constants as constants
+from gym_pycr_ctf.dao.network.trajectory import Trajectory
 
 
 class SimulationGenerator:
@@ -31,10 +33,11 @@ class SimulationGenerator:
         :param explore_defense_states: boolean flag whether to explore defensive states or not
         :return: The final observation
         """
-        env.reset()
+        obs = env.reset()
         init_state = env.env_state.copy()
         done = False
         step = 0
+        trajectory = SimulationGenerator.reset_trajectory(obs)
         if not env_config.explore_defense_states:
             defender_action = None
             old_env_config = env_config
@@ -66,6 +69,8 @@ class SimulationGenerator:
             action = (attacker_action, defender_action)
             print("step, action:{}".format(attacker_action))
             obs, reward, done, info = env.step(action)
+            trajectory = SimulationGenerator.update_trajectory(trajectory=trajectory, obs=obs, reward=reward, done=done,
+                                                  info=info, action=action)
             s_prime = env.env_state
             sys.stdout.flush()
 
@@ -84,7 +89,7 @@ class SimulationGenerator:
         if step >= env_config.attacker_max_exploration_steps:
             print("maximum exploration steps reached")
         env.env_config = old_env_config
-        return defender_dynamics_model
+        return defender_dynamics_model, trajectory
 
     @staticmethod
     def build_model(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) -> NetworkConfig:
@@ -93,8 +98,10 @@ class SimulationGenerator:
         # Initialize model
         aggregated_observation = env.env_state.attacker_obs_state.copy()
         defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
+        trajectories = []
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             defender_dynamics_model.read_model(env_config)
+            trajectories = Trajectory.load_trajectories(env_config.save_dynamics_model_dir)
             load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
                        + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
             if os.path.exists(load_dir):
@@ -112,9 +119,10 @@ class SimulationGenerator:
                                                        env_config=env_config)
 
             # Collect trajectory
-            defender_dynamics_model = \
+            defender_dynamics_model, trajectory = \
                 SimulationGenerator.explore(attacker_exp_policy= exp_policy, env_config=env_config,
                                             env=env, render=render, defender_dynamics_model=defender_dynamics_model)
+            trajectories.append(trajectory)
 
             # Aggregate attacker's state
             observation = env.env_state.attacker_obs_state
@@ -140,8 +148,9 @@ class SimulationGenerator:
             env_config.network_conf.agent_reachable = aggregated_observation.agent_reachable
 
             # Save Models
-            print("checkpointing model")
+            print("Checkpointing models")
             defender_dynamics_model.save_model(env_config)
+            Trajectory.save_trajectories(env_config.save_dynamics_model_dir, trajectories)
             if env_config.emulation_config.save_dynamics_model_dir is not None:
                 save_path = env_config.emulation_config.save_dynamics_model_dir + "/" \
                             + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
@@ -157,3 +166,32 @@ class SimulationGenerator:
     def initialize_defender_dynamics_model():
         defender_dynamics_model = DefenderDynamicsModel()
         return defender_dynamics_model
+
+
+    def update_trajectory(self, trajectory: Trajectory, obs: Tuple[np.ndarray, np.ndarray],
+                          reward: Tuple[float, float], done : bool, info : dict, action: Tuple[int,int]) -> Trajectory:
+        attacker_obs, defender_obs = obs
+        attacker_reward, defender_reward = reward
+        attacker_action, defender_action = action
+        trajectory.attacker_rewards.append(float(attacker_reward))
+        trajectory.defender_rewards.append(float(defender_reward))
+        trajectory.attacker_observations.append(attacker_obs.tolist())
+        trajectory.defender_observations.append(defender_obs.tolist())
+        trajectory.infos.append(info)
+        trajectory.dones.append(done)
+        trajectory.attacker_actions.append(int(attacker_action))
+        trajectory.defender_actions.append(int(defender_action))
+        return trajectory
+
+    def reset_trajectory(self, obs) -> Trajectory:
+        attacker_obs, defender_obs = obs
+        trajectory = Trajectory()
+        trajectory.attacker_rewards.append(0)
+        trajectory.defender_rewards.append(0)
+        trajectory.attacker_observations.append(attacker_obs.tolist())
+        trajectory.defender_observations.append(defender_obs.tolist())
+        trajectory.infos.append({})
+        trajectory.dones.append(False)
+        trajectory.attacker_actions.append(-1)
+        trajectory.defender_actions.append(-1)
+        return trajectory
