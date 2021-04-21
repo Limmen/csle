@@ -35,14 +35,30 @@ class DefenderObservationState:
         self.snort_critical_baseline_stopped = False
         self.var_log_baseline_stopped = False
 
-    def sort_machines(self):
+    def sort_machines(self) -> None:
+        """
+        Sorts the machines in the observation
+
+        :return: None
+        """
         self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
 
-    def cleanup(self):
+    def cleanup(self) -> None:
+        """
+        Cleans up the machines in the observation
+
+        :return: None
+        """
         for m in self.machines:
             m.cleanup()
 
-    def get_action_ip(self, a : DefenderAction):
+    def get_action_ip(self, a : DefenderAction) -> str:
+        """
+        Gets the ip of the node that a defender action is targeted for
+
+        :param a: the action
+        :return: the ip of the target node
+        """
         if a.index == -1:
             self.sort_machines()
             ips = list(map(lambda x: x.ip, self.machines))
@@ -52,7 +68,10 @@ class DefenderObservationState:
             return self.machines[a.index].ip
         return a.ip
 
-    def copy(self):
+    def copy(self) -> "DefenderObservationState":
+        """
+        :return: a copy of the object
+        """
         c = DefenderObservationState(num_machines = self.num_machines, ids=self.ids)
         c.caught_attacker = self.caught_attacker
         c.stopped = self.stopped
@@ -79,7 +98,10 @@ class DefenderObservationState:
             c.machines.append(m.copy())
         return c
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return  "# alerts recent:{}, # severe alerts recent: {}, # warning alerts recent: {}, " \
                 "sum priority recent:{}, # alerts total:{} # severe alerts total: {}, " \
                 "# warning alerts total: {}, sum priority total: {}, caught_attacker:{}," \

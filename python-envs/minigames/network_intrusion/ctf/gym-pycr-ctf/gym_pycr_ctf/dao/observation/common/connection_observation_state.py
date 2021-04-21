@@ -1,5 +1,8 @@
 
 class ConnectionObservationState:
+    """
+    A DTO representing a connection observation DTO
+    """
 
     def __init__(self, conn, username : str, root: bool, service: str, port: int, tunnel_thread = None,
                  tunnel_port : int = None, interactive_shell = None, proxy = None, ip = None):
@@ -14,11 +17,19 @@ class ConnectionObservationState:
         self.proxy = proxy
         self.ip = ip
 
-
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the connection observation
+        """
         return "username:{},root:{},service:{},port:{}".format(self.username, self.root, self.service, self.port)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
+        """
+        Checks for equality with another connection
+
+        :param other: the other connection to compare with
+        :return: True if equal, otherwise False
+        """
         if not isinstance(other, ConnectionObservationState):
             # don't attempt to compare against unrelated types
             return NotImplemented
@@ -27,6 +38,9 @@ class ConnectionObservationState:
                and self.port == other.port and self.ip == other.ip
 
     def __hash__(self):
+        """
+        :return: a hash representation of the object
+        """
         return hash(self.username) + 31 * hash(self.root) + 31 * hash(self.service) + 31 * hash(self.port) \
                + 31 * hash(self.ip)
 

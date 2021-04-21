@@ -35,7 +35,10 @@ class DefenderMachineObservationState:
         self.failed_auth_last_ts = datetime.datetime.now().timestamp()
         self.login_last_ts = datetime.datetime.now().timestamp()
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "ip:{},os:{},num_ports:{},num_ssh_connections:{}," \
                "num_open_connections:{},num_failed_login_attempts:{},num_users:{}," \
                "num_logged_in_users:{},num_login_events:{},num_processes:{}," \
@@ -50,12 +53,17 @@ class DefenderMachineObservationState:
                          self.num_users_recent, self.num_logged_in_users_recent, self.num_login_events_recent,
                          self.num_processes_recent)
 
-    def sort_ports(self):
+    def sort_ports(self) -> None:
+        """
+        Sorts the list of ports
+
+        :return: None
+        """
         for p in self.ports:
             p.port = int(p.port)
         self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """
         Cleans up environment state. This method is particularly useful in emulation mode where there are
         SSH/Telnet/FTP... connections that should be cleaned up, as well as background threads.
@@ -65,7 +73,10 @@ class DefenderMachineObservationState:
         for c in self.ssh_connections:
             c.cleanup()
 
-    def copy(self):
+    def copy(self) -> "DefenderMachineObservationState":
+        """
+        :return: a copy of the object
+        """
         m_copy = DefenderMachineObservationState(ip=self.ip)
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
