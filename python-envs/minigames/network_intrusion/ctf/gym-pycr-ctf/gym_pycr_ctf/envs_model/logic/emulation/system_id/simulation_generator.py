@@ -101,7 +101,7 @@ class SimulationGenerator:
         trajectories = []
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             defender_dynamics_model.read_model(env_config)
-            trajectories = Trajectory.load_trajectories(env_config.save_dynamics_model_dir)
+            trajectories = Trajectory.load_trajectories(env_config.emulation_config.save_dynamics_model_dir)
             load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
                        + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
             if os.path.exists(load_dir):
@@ -150,7 +150,7 @@ class SimulationGenerator:
             # Save Models
             print("Checkpointing models")
             defender_dynamics_model.save_model(env_config)
-            Trajectory.save_trajectories(env_config.save_dynamics_model_dir, trajectories)
+            Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories)
             if env_config.emulation_config.save_dynamics_model_dir is not None:
                 save_path = env_config.emulation_config.save_dynamics_model_dir + "/" \
                             + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
