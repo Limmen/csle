@@ -16,8 +16,7 @@ class ManualDefenderAgent:
     Class representing a manual defender agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv, render: bool = False,
-                 attacker_opponent = None, model = None):
+    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv, render: bool = False, model = None):
         """
         Sets up manual defender environment
 
@@ -25,7 +24,6 @@ class ManualDefenderAgent:
         """
         self.env = env
         self.env_config = env_config
-        self.attacker_opponent = attacker_opponent
         self.model = model
 
         self.env.env_config.defender_action_conf.print_actions()
@@ -70,8 +68,6 @@ class ManualDefenderAgent:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
                     attacker_action = None
-                    if attacker_opponent is not None:
-                        attacker_action = attacker_opponent.action(env.env_state, env.attacker_agent_state)
                     if not digits_only:
                         print("Invalid action. Actions must be integers.")
                     else:

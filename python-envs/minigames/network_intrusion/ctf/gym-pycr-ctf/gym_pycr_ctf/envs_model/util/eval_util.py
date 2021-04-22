@@ -35,12 +35,13 @@ class EvalUtil:
         attacker_cost_norm_list = []
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
+        optimal_stopping_idx = 4
 
         for tau in trajectories:
             obs_tensor = torch.as_tensor(np.array(tau.defender_observations))
-            print("observations:{}".format(tau.defender_observations))
             actions, values = EvalUtil.predict(model, obs_tensor, env, deterministic=deterministic)
-            reward, early_stopping, succ_intrusion, caught = EvalUtil.compute_reward(actions, env.env_config)
+            reward, early_stopping, succ_intrusion, caught = EvalUtil.compute_reward(
+                actions, env.env_config, optimal_stopping_idx=optimal_stopping_idx)
             flags, flags_percentage, attacker_cost, attacker_cost_norm, attacker_alerts, \
             attacker_alerts_norm = EvalUtil.compute_info_metrics(
                 actions=actions, trajectory=tau, env_config=env.env_config)
@@ -53,9 +54,12 @@ class EvalUtil:
             attacker_cost_norm_list.append(attacker_cost_norm)
             attacker_alerts_list.append(attacker_alerts)
             attacker_alerts_norm_list.append(attacker_alerts_norm)
-            snort_warning_baseline_r = EvalUtil.compute_snort_warning_baseline(tau.defender_observations, env.env_config)
-            snort_severe_baseline_r = EvalUtil.compute_snort_severe_baseline(tau.defender_observations, env.env_config)
-            snort_critical_baseline_r = EvalUtil.compute_snort_critical_baseline(tau.defender_observations, env.env_config)
+            snort_warning_baseline_r = EvalUtil.compute_snort_warning_baseline(
+                tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx)
+            snort_severe_baseline_r = EvalUtil.compute_snort_severe_baseline(tau.defender_observations, env.env_config,
+                                                                             optimal_stopping_idx=optimal_stopping_idx)
+            snort_critical_baseline_r = EvalUtil.compute_snort_critical_baseline(
+                tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx)
             var_log_baseline = snort_warning_baseline_r
             steps_l = EvalUtil.compute_steps(actions)
             rewards.append(reward)
@@ -93,7 +97,7 @@ class EvalUtil:
         return trajectories
 
     @staticmethod
-    def compute_reward(actions, env_config) -> float:
+    def compute_reward(actions, env_config, optimal_stopping_idx : int = 6) -> float:
         """
         Utility function for computing the reward of a sequence of actions of the defender
 
@@ -103,12 +107,12 @@ class EvalUtil:
         """
         stopping_idx = EvalUtil.find_stopping_idx(actions)
         r = 0
-        print("stopping id:{}, actions:{}".format(stopping_idx, actions))
-        if stopping_idx < 7:
+        print("stopping id:{}".format(stopping_idx, actions))
+        if stopping_idx < optimal_stopping_idx:
             return env_config.defender_early_stopping, True, False, False
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward, False, True, False
-        if stopping_idx >= 7:
+        if stopping_idx >= optimal_stopping_idx:
             return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5),  False, False, True
 
     @staticmethod
@@ -140,7 +144,6 @@ class EvalUtil:
         for i in range(len(trajectory.infos)):
             if i == stopping_idx or trajectory.dones[i]:
                 if i > 0:
-                    print("previous action of the attacker:{}".format(trajectory.attacker_actions[i-1]))
                     flags = trajectory.infos[i]["flags"]
                     flags_percentage = flags / env_config.num_flags
                     #episode_caught = trajectory.infos[i]["caught_attacker"]
@@ -156,7 +159,7 @@ class EvalUtil:
         return flags, flags_percentage, attacker_cost, attacker_cost_norm, attacker_alerts, attacker_alerts_norm
 
     @staticmethod
-    def compute_snort_warning_baseline(tau, env_config) -> float:
+    def compute_snort_warning_baseline(tau, env_config, optimal_stopping_idx: int) -> float:
         """
         Utility function for computing the reward of the snort warning baseline
 
@@ -171,15 +174,15 @@ class EvalUtil:
                 stopping_idx = i
                 break
 
-        if stopping_idx < 7:
+        if stopping_idx < optimal_stopping_idx:
             return env_config.defender_early_stopping
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
-        if stopping_idx >= 7:
+        if stopping_idx >= optimal_stopping_idx:
             return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
 
     @staticmethod
-    def compute_snort_severe_baseline(tau, env_config) -> float:
+    def compute_snort_severe_baseline(tau, env_config, optimal_stopping_idx: int = 6) -> float:
         """
         Utility function for computing the reward of the snort severe baseline
 
@@ -194,15 +197,15 @@ class EvalUtil:
                 stopping_idx = i
                 break
 
-        if stopping_idx < 7:
+        if stopping_idx < optimal_stopping_idx:
             return env_config.defender_early_stopping
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
-        if stopping_idx >= 7:
+        if stopping_idx >= optimal_stopping_idx:
             return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
 
     @staticmethod
-    def compute_snort_critical_baseline(tau, env_config) -> float:
+    def compute_snort_critical_baseline(tau, env_config, optimal_stopping_idx: int = 6) -> float:
         """
         Utility function for computing the reward of the snort critical baseline
 
@@ -217,11 +220,11 @@ class EvalUtil:
                 stopping_idx = i
                 break
 
-        if stopping_idx < 7:
+        if stopping_idx < optimal_stopping_idx:
             return env_config.defender_early_stopping
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
-        if stopping_idx >= 7:
+        if stopping_idx >= optimal_stopping_idx:
             return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
 
     @staticmethod

@@ -26,7 +26,7 @@ def test_env(env_name : str, num_steps : int):
     defender_dynamics_model = DefenderDynamicsModel()
     if save_dynamics_model_dir is not None:
         print("loading dynamics model")
-        defender_dynamics_model.read_model(save_dynamics_model_dir, model_name="defender_dynamics_model_89.json")
+        defender_dynamics_model.read_model(save_dynamics_model_dir, model_name="defender_dynamics_model_85.json")
         print("model loaded")
         # if os.path.exists(load_dir):
         #     env.env_config.network_conf = \
