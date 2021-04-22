@@ -35,7 +35,7 @@ class EvalUtil:
         attacker_cost_norm_list = []
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
-        optimal_stopping_idx = 3
+        optimal_stopping_idx = 4
 
         for tau in trajectories:
             obs_tensor = torch.as_tensor(np.array(tau.defender_observations))
