@@ -421,7 +421,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Snort baselines
         if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
-            if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_severe_baseline_threshold:
+            if s_prime.defender_obs_state.num_severe_alerts_total > self.env_config.snort_severe_baseline_threshold:
                 s_prime.defender_obs_state.snort_severe_baseline_stopped = True
                 if self.env_state.attacker_obs_state.ongoing_intrusion():
                     s_prime.defender_obs_state.snort_severe_baseline_reward = \
@@ -447,7 +447,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                     s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
 
         if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
-            if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_critical_baseline_threshold:
+            if s_prime.defender_obs_state.num_severe_alerts_total > self.env_config.snort_critical_baseline_threshold:
                 s_prime.defender_obs_state.snort_critical_baseline_stopped = True
                 if self.env_state.attacker_obs_state.ongoing_intrusion():
                     s_prime.defender_obs_state.snort_critical_baseline_reward = \
@@ -554,10 +554,11 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.attacker_last_obs = attacker_m_obs
             self.defender_time_step += 1
             self.attacker_agent_state.time_step += 1
+            self.env_state.attacker_obs_state.step += 1
 
             # Snort baselines
             if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
-                if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_severe_baseline_threshold:
+                if s_prime.defender_obs_state.num_severe_alerts_total > self.env_config.snort_severe_baseline_threshold:
                     s_prime.defender_obs_state.snort_severe_baseline_stopped = True
                     if self.env_state.attacker_obs_state.ongoing_intrusion():
                         s_prime.defender_obs_state.snort_severe_baseline_reward = \
@@ -582,7 +583,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                         s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
 
             if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
-                if s_prime.defender_obs_state.num_severe_alerts_recent > self.env_config.snort_critical_baseline_threshold:
+                if s_prime.defender_obs_state.num_severe_alerts_total > self.env_config.snort_critical_baseline_threshold:
                     s_prime.defender_obs_state.snort_critical_baseline_stopped = True
                     if self.env_state.attacker_obs_state.ongoing_intrusion():
                         s_prime.defender_obs_state.snort_critical_baseline_reward = \
@@ -614,6 +615,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                     and s_prime.defender_obs_state.snort_critical_baseline_stopped \
                     and s_prime.defender_obs_state.var_log_baseline_stopped:
                 done = True
+            self.env_state = s_prime
 
     def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """

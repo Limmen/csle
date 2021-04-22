@@ -35,7 +35,7 @@ class EvalUtil:
         attacker_cost_norm_list = []
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
-        optimal_stopping_idx = 4
+        optimal_stopping_idx = 3
 
         for tau in trajectories:
             obs_tensor = torch.as_tensor(np.array(tau.defender_observations))
@@ -193,7 +193,7 @@ class EvalUtil:
         stopping_thresh = env_config.snort_severe_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][2] > stopping_thresh:
+            if tau[i][6] > stopping_thresh:
                 stopping_idx = i
                 break
 
@@ -216,7 +216,7 @@ class EvalUtil:
         stopping_thresh = env_config.snort_critical_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][2] > stopping_thresh:
+            if tau[i][6] > stopping_thresh:
                 stopping_idx = i
                 break
 
