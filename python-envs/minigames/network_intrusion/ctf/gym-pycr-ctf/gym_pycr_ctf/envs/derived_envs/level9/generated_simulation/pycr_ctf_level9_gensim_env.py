@@ -394,7 +394,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
 
             env_config.explore_defense_states = True
             env_config.defender_update_state = True
-            env_config.snort_baseline_simulate = True
+            env_config.snort_baseline_simulate = False
             env_config.attacker_continue_action_sleep = 30
             env_config.defender_sleep_before_state_update = 15
             env_config.attacker_illegal_reward_action = -100

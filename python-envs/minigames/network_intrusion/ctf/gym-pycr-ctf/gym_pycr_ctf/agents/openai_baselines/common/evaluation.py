@@ -219,9 +219,12 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     :return: episode_rewards, episode_steps, episode_flags_percentage, episode_flags
     """
     randomize_starting_states = []
+    simulate_snort = []
     for i in range(env.num_envs):
         randomize_starting_states.append(env.envs[i].env_config.randomize_attacker_starting_state)
+        simulate_snort.append(env.envs[i].env_config.snort_baseline_simulate)
         env.envs[i].env_config.randomize_attacker_starting_state = False
+        env.envs[i].env_config.snort_baseline_simulate = True
 
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
@@ -231,12 +234,16 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
 
     for i in range(env.num_envs):
         env.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
+        env.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
 
     if env_2 is not None:
         randomize_starting_states = []
+        simulate_snort = []
         for i in range(env_2.num_envs):
             randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
+            simulate_snort.append(env_2.envs[i].env_config.snort_baseline_simulate)
             env_2.envs[i].env_config.randomize_attacker_starting_state = False
+            env_2.envs[i].env_config.snort_baseline_simulate = True
 
         train_dto = _quick_eval_helper(
             env=env_2, attacker_model=attacker_model, defender_model=defender_model,
@@ -247,6 +254,8 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
         )
         for i in range(env_2.num_envs):
             env_2.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
+            env_2.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
+
     return train_dto
 
 

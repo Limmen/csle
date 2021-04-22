@@ -40,7 +40,7 @@ def default_config() -> ClientConfig:
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
                                n_deterministic_eval_iter=1, attacker_opponent_baseline_type = 8,
-                               running_avg=50, n_quick_eval_iter=50,
+                               running_avg=50, n_quick_eval_iter=100,
                                log_regret=True, snort_baseline_simulate=True, quick_eval_freq=1,
                                eval_deterministic = False, static_eval_defender=True
                                )
