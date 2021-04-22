@@ -11,13 +11,11 @@ class CustomExplorationPolicy(ExplorationPolicy):
         step = env.env_state.attacker_obs_state.step
         if step < len(self.strategy):
             action = self.strategy[step]
-            print("action:{}, step:{}".format(action, step))
         else:
             if filter_illegal:
                 legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state),
                                             self.actions))
             else:
                 legal_actions = self.action
-            print("random action")
             action = np.random.choice(legal_actions)
         return action
