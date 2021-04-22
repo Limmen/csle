@@ -278,7 +278,11 @@ class TensorboardDataDTO:
                       "epsilon:{:.2f}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
                       "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f}".format(
+                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E2:{:.2f},avg_F_T:{:.2f},avg_F_T%:{:.2f}," \
+                      "avg_F_E:{:.2f},avg_F_E%:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f}," \
+                      "costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
+                      "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
+                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards,
                 self.rolling_avg_rewards,
                 self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
@@ -300,7 +304,15 @@ class TensorboardDataDTO:
                 self.n_af, self.eval_episode_caught_frac, self.eval_episode_early_stopped_frac,
                 self.eval_episode_successful_intrusion_frac,
                 self.eval_2_episode_caught_frac,
-                self.eval_2_episode_early_stopped_frac, self.eval_2_episode_successful_intrusion_frac
+                self.eval_2_episode_early_stopped_frac, self.eval_2_episode_successful_intrusion_frac,
+                self.avg_episode_flags, self.avg_episode_flags_percentage, self.eval_avg_episode_flags,
+                self.eval_avg_episode_flags_percentage, self.eval_2_avg_episode_flags,
+                self.eval_2_avg_episode_flags_percentage,
+                self.avg_episode_costs, self.avg_episode_costs_norm, self.avg_episode_alerts,
+                self.avg_episode_alerts_norm,
+                self.eval_avg_episode_costs, self.eval_avg_episode_costs_norm, self.eval_avg_episode_alerts,
+                self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
+                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm
             )
         return log_str
     

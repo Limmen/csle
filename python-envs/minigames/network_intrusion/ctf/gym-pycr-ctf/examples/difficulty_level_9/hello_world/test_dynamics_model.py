@@ -19,30 +19,31 @@ def test_env(env_name : str, num_steps : int):
                                    server_username="kim")
     # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
     #                                  server_connection=False)
-    emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/" \
                                                "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
-    env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
+    #env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
 
     defender_dynamics_model = DefenderDynamicsModel()
-    if env.env_config.emulation_config.save_dynamics_model_dir is not None:
+    if save_dynamics_model_dir is not None:
         print("loading dynamics model")
-        defender_dynamics_model.read_model(env.env_config)
-        load_dir = env.env_config.emulation_config.save_dynamics_model_dir + "/" + \
-                   constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
-        if os.path.exists(load_dir):
-            env.env_config.network_conf = \
-                env.env_config.network_conf.load(load_dir)
+        defender_dynamics_model.read_model(save_dynamics_model_dir, model_name="defender_dynamics_model_89.json")
+        print("model loaded")
+        # if os.path.exists(load_dir):
+        #     env.env_config.network_conf = \
+        #         env.env_config.network_conf.load(load_dir)
 
-    print(defender_dynamics_model)
-    print(defender_dynamics_model.num_new_alerts)
-    for k,v in defender_dynamics_model.num_new_alerts.items():
-        if int(k) == 85 or int(k) == 19:
-            print("action:{}".format(k))
-            for k2,v2 in v.items():
-                for k3,v3 in v2.items():
-                    print("value:{}".format(k3))
-                    print("count:{}".format(v3))
+    #print(defender_dynamics_model)
+    #print(defender_dynamics_model.num_new_alerts)
+    # for k,v in defender_dynamics_model.num_new_alerts.items():
+    #     if int(k) == 85 or int(k) == 19:
+    #         print("action:{}".format(k))
+    #         for k2,v2 in v.items():
+    #             for k3,v3 in v2.items():
+    #                 print("value:{}".format(k3))
+    #                 print("count:{}".format(v3))
+    print("normalizing model counts")
     defender_dynamics_model.normalize()
+    print("model counts normalized")
     # print(defender_dynamics_model.norm_num_new_alerts)
     print("85:")
     print(defender_dynamics_model.norm_num_new_alerts[(85, '172.18.9.191')].mean())
@@ -54,7 +55,16 @@ def test_env(env_name : str, num_steps : int):
     print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].std())
     print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].var())
 
-    print(defender_dynamics_model.norm_num_new_alerts[(19, '172.18.9.191')].mean())
+    print("11:")
+    print(defender_dynamics_model.norm_num_new_alerts[(11, '172.18.9.191')].mean())
+    print(defender_dynamics_model.norm_num_new_alerts[(11, '172.18.9.191')].std())
+    print(defender_dynamics_model.norm_num_new_alerts[(11, '172.18.9.191')].var())
+
+    # print("12:")
+    # print(defender_dynamics_model.norm_num_new_alerts[(12, '172.18.9.191')].mean())
+    # print(defender_dynamics_model.norm_num_new_alerts[(12, '172.18.9.191')].std())
+    # print(defender_dynamics_model.norm_num_new_alerts[(12, '172.18.9.191')].var())
+
 
     # env.reset()
     # env.close()

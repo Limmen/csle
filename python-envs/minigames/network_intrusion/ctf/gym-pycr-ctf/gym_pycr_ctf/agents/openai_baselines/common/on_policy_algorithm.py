@@ -461,7 +461,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         if self.attacker_agent_config.domain_randomization:
                             if isinstance(self.env, DummyVecEnv):
                                 eval_conf = self.eval_env.env_config(0)
-
+                    if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
+                        env2 = None
                     train_log_dto = quick_evaluate_policy(attacker_model=self.attacker_policy,
                                               defender_model=self.defender_policy,
                                               env=self.env,
@@ -483,15 +484,32 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.copy_saved_env_2(self.saved_log_dto)
 
                     if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
-                        avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r, avg_baseline_critical_r, \
-                        avg_baseline_var_log_r = EvalUtil.eval_defender(self.env.envs[0], self)
+                        eval_2_defender_episode_rewards, eval_2_episode_steps, \
+                        eval_2_episode_snort_severe_baseline_rewards, eval_2_episode_snort_warning_baseline_rewards, \
+                        eval_2_episode_snort_critical_baseline_rewards, \
+                        eval_2_episode_var_log_baseline_rewards, eval_2_flags_list, eval_2_flags_percentage_list, \
+                        eval_2_episode_caught_list, eval_2_episode_early_stopped_list, \
+                        eval_2_episode_successful_intrusion_list, eval_2_attacker_cost_list, \
+                        eval_2_attacker_cost_norm_list, \
+                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list = \
+                            EvalUtil.eval_defender(self.env.envs[0], self,
+                                                   deterministic=self.attacker_agent_config.eval_deterministic)
 
-                        train_log_dto.eval_defender_episode_rewards = avg_reward
-                        train_log_dto.eval_episode_steps = avg_steps
-                        train_log_dto.eval_episode_snort_severe_baseline_rewards = avg_baseline_severe_r
-                        train_log_dto.eval_episode_snort_warning_baseline_rewards = avg_baseline_warning_r
-                        train_log_dto.eval_episode_snort_critical_baseline_rewards = avg_baseline_critical_r
-                        train_log_dto.eval_episode_var_log_baseline_rewards= avg_baseline_var_log_r
+                        train_log_dto.defender_eval_2_episode_rewards = eval_2_defender_episode_rewards
+                        train_log_dto.eval_2_episode_steps = eval_2_episode_steps
+                        train_log_dto.eval_2_episode_snort_severe_baseline_rewards = eval_2_episode_snort_severe_baseline_rewards
+                        train_log_dto.eval_2_episode_snort_warning_baseline_rewards = eval_2_episode_snort_warning_baseline_rewards
+                        train_log_dto.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
+                        train_log_dto.eval_2_episode_var_log_baseline_rewards= eval_2_episode_var_log_baseline_rewards
+                        train_log_dto.eval_2_episode_flags = eval_2_flags_list
+                        train_log_dto.eval_2_episode_flags_percentage = eval_2_flags_percentage_list
+                        train_log_dto.eval_2_episode_caught = eval_2_episode_caught_list
+                        train_log_dto.eval_2_episode_early_stopped = eval_2_episode_early_stopped_list
+                        train_log_dto.eval_2_episode_successful_intrusion = eval_2_episode_successful_intrusion_list
+                        train_log_dto.eval_2_attacker_action_costs = eval_2_attacker_cost_list
+                        train_log_dto.eval_2_attacker_action_costs_norm = eval_2_attacker_cost_norm_list
+                        train_log_dto.eval_2_attacker_action_alerts = eval_2_attacker_alerts_list
+                        train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

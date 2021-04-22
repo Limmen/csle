@@ -172,32 +172,31 @@ class DefenderBeliefStateSimulator:
 
         # Update logs timestamps and reset machine states
         for m in s_prime.defender_obs_state.machines:
-            if m.ip not in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
-                print("warning, ip:{} not found in the dynamics model, is it complete?".format(m.ip))
-                continue
-            m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
 
             m.num_users = 0
             m.num_logged_in_users = 0
             m.num_processes = 0
             m.num_open_connections = 0
 
-            # Sample initial states
-            if m_dynamics.norm_num_new_open_connections is not None:
-                init_open_connections = m_dynamics.norm_init_open_connections.rvs()
-                m.num_open_connections = init_open_connections
+            if m.ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
+                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
 
-            if m_dynamics.norm_init_users is not None:
-                init_users = m_dynamics.norm_init_users.rvs()
-                m.num_users = init_users
+                # Sample initial states
+                if m_dynamics.norm_num_new_open_connections is not None:
+                    init_open_connections = m_dynamics.norm_init_open_connections.rvs()
+                    m.num_open_connections = init_open_connections
 
-            if m_dynamics.norm_init_logged_in_users is not None:
-                init_logged_in_users = m_dynamics.norm_init_logged_in_users.rvs()
-                m.num_logged_in_users = init_logged_in_users
+                if m_dynamics.norm_init_users is not None:
+                    init_users = m_dynamics.norm_init_users.rvs()
+                    m.num_users = init_users
 
-            if m_dynamics.norm_init_processes is not None:
-                init_processes = m_dynamics.norm_init_processes.rvs()
-                m.num_processes = init_processes
+                if m_dynamics.norm_init_logged_in_users is not None:
+                    init_logged_in_users = m_dynamics.norm_init_logged_in_users.rvs()
+                    m.num_logged_in_users = init_logged_in_users
+
+                if m_dynamics.norm_init_processes is not None:
+                    init_processes = m_dynamics.norm_init_processes.rvs()
+                    m.num_processes = init_processes
 
             m.num_failed_login_attempts = 0
             m.num_login_events = 0

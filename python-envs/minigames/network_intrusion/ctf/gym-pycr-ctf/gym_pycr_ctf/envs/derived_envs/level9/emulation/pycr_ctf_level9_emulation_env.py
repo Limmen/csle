@@ -365,5 +365,10 @@ class PyCRCTFLevel9Emulation5Env(PyCRCTFEnv):
             env_config.defender_update_state = True
             env_config.attacker_continue_action_sleep = 30
             env_config.defender_sleep_before_state_update = 15
+            env_config.attacker_illegal_reward_action = -100
+
+            env_config.defender_caught_attacker_reward = 100
+            env_config.defender_early_stopping = -100
+            env_config.defender_intrusion_reward = -100
         super().__init__(env_config=env_config)
 

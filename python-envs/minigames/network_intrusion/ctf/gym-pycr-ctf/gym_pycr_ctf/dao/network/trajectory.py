@@ -87,14 +87,17 @@ class Trajectory:
             json.dump({"trajectories": trajectories}, fp)
 
     @staticmethod
-    def load_trajectories(trajectories_save_dir) -> List["Trajectory"]:
+    def load_trajectories(trajectories_save_dir, trajectories_file : str = None) -> List["Trajectory"]:
         """
         Utility function for loading a list of trajectories from a json file
 
         :param trajectories_save_dir: the directory where to load the trajectories from
+        :param trajectories_file: (optional) a custom name of the trajectories file
         :return: a list of the loaded trajectories
         """
-        path = trajectories_save_dir + "/" + constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
+        if trajectories_file is None:
+            trajectories_file =  constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
+        path = trajectories_save_dir + "/" + trajectories_file
         if os.path.exists(path):
             with open(path, 'r') as fp:
                 d = json.load(fp)

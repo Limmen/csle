@@ -382,7 +382,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 500
-            env_config.max_episode_length = 1000
+            env_config.max_episode_length = 100
             env_config.attacker_alerts_coefficient = 0
             env_config.attacker_cost_coefficient = 0
             env_config.attacker_base_step_reward = -1
@@ -404,5 +404,9 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
                           106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372,
                           200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
                           105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
+
+            env_config.defender_caught_attacker_reward = 100
+            env_config.defender_early_stopping = -100
+            env_config.defender_intrusion_reward = -100
 
         super().__init__(env_config=env_config)

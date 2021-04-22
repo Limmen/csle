@@ -110,7 +110,7 @@ class SimulationGenerator:
         defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
         trajectories = []
         if env_config.emulation_config.save_dynamics_model_dir is not None:
-            defender_dynamics_model.read_model(env_config)
+            defender_dynamics_model.read_model(env.env_config.emulation_config.save_dynamics_model_dir)
             trajectories = Trajectory.load_trajectories(env_config.emulation_config.save_dynamics_model_dir)
             load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
                        + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE

@@ -25,7 +25,7 @@ def test_env(env_name : str, num_steps : int):
 
     defender_dynamics_model = DefenderDynamicsModel()
     if env.env_config.emulation_config.save_dynamics_model_dir is not None:
-        defender_dynamics_model.read_model(env.env_config)
+        defender_dynamics_model.read_model(env.env_config.emulation_config.save_dynamics_model_dir)
         load_dir = env.env_config.emulation_config.save_dynamics_model_dir + "/" + \
                    constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
         if os.path.exists(load_dir):

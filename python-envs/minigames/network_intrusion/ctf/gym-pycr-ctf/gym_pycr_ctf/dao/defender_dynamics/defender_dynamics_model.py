@@ -393,20 +393,21 @@ class DefenderDynamicsModel:
         with open(save_dir, 'w') as fp:
             json.dump(d, fp)
 
-    def read_model(self, env_config) -> None:
+    def read_model(self, dir_path:str, model_name : str = None) -> None:
         """
         Loads json model from disk (according to env config) and populates the model
 
-        :param env_config: the environment configuration
+        :param dir_path: the path to the dir where the model is stored
+        :param model_name: (optional) a custom model name
         :return: None
         """
+        if model_name is None:
+            model_name = constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         load_dir = None
-        if env_config.emulation_config.save_dynamics_model_dir is not None:
-            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" + \
-                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
+        if dir_path is not None:
+            load_dir = dir_path + model_name
         else:
-            load_dir = util.get_script_path() + "/" + \
-                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
+            load_dir = util.get_script_path() + "/" + model_name
         if os.path.exists(load_dir):
             with open(load_dir, 'r') as fp:
                 d = json.load(fp)

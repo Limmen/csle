@@ -792,6 +792,9 @@ class LogUtil:
         avg_episode_alerts = np.mean(train_log_dto.attacker_action_alerts)
         avg_episode_alerts_norm = np.mean(train_log_dto.attacker_action_alerts_norm)
 
+        avg_episode_flags = np.mean(train_log_dto.episode_flags)
+        avg_episode_flags_percentage = np.mean(train_log_dto.episode_flags_percentage)
+
         if train_log_dto.episode_caught is not None and train_log_dto.episode_early_stopped is not None \
                 and train_log_dto.episode_successful_intrusion is not None:
             total_c_s_i = sum(list(map(lambda x: int(x), train_log_dto.episode_caught))) \
@@ -871,6 +874,24 @@ class LogUtil:
                                                                                                                  eval_2_total_c_s_i)
         else:
             eval_2_episode_early_stopped_frac = 0
+
+        if not eval and train_log_dto.eval_episode_flags is not None:
+            eval_avg_episode_flags = np.mean(train_log_dto.eval_episode_flags)
+        else:
+            eval_avg_episode_flags = 0.0
+        if not eval and train_log_dto.eval_episode_flags_percentage is not None:
+            eval_avg_episode_flags_percentage = np.mean(train_log_dto.eval_episode_flags_percentage)
+        else:
+            eval_avg_episode_flags_percentage = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_flags is not None:
+            eval_2_avg_episode_flags = np.mean(train_log_dto.eval_2_episode_flags)
+        else:
+            eval_2_avg_episode_flags = 0.0
+        if not eval and train_log_dto.eval_2_episode_flags_percentage is not None:
+            eval_2_avg_episode_flags_percentage = np.mean(train_log_dto.eval_2_episode_flags_percentage)
+        else:
+            eval_2_avg_episode_flags_percentage = 0.0
 
         if not eval and train_log_dto.eval_episode_steps is not None:
             eval_avg_episode_steps = np.mean(train_log_dto.eval_episode_steps)
@@ -1109,7 +1130,12 @@ class LogUtil:
             eval_avg_episode_snort_critical_baseline_rewards=eval_avg_episode_snort_critical_baseline_rewards,
             eval_avg_episode_var_log_baseline_rewards=eval_avg_episode_var_log_baseline_rewards,
             eval_avg_2_episode_snort_critical_baseline_rewards=eval_2_avg_episode_snort_critical_baseline_rewards,
-            eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards
+            eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards,
+            avg_flags_catched=avg_episode_flags, avg_episode_flags_percentage=avg_episode_flags_percentage,
+            eval_avg_episode_flags=eval_avg_episode_flags,
+            eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage,
+            eval_2_avg_episode_flags=eval_2_avg_episode_flags,
+            eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage
         )
         log_str = tensorboard_data_dto.log_str_defender()
         defender_agent_config.logger.info(log_str)

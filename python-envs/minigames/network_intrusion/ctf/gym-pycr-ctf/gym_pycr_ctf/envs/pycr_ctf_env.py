@@ -137,8 +137,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                 and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION
                      or self.env_config.env_mode == EnvMode.EMULATION):
             EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(
-                num_actions=env_config.attacker_action_conf.num_actions),
-                num_warmup_steps=env_config.emulation_config.warmup_iterations,
+                num_actions=self.env_config.attacker_action_conf.num_actions),
+                num_warmup_steps=self.env_config.emulation_config.warmup_iterations,
                 env=self, render = False)
             print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
                   "cache_misses:{}".format(
@@ -152,7 +152,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
                 and not self.env_config.emulation_config.skip_exploration:
             self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
-                exp_policy=env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
+                exp_policy=self.env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
             self.env_state.attacker_obs_state = obs_state
             self.env_config.env_mode = EnvMode.SIMULATION
             self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
@@ -170,14 +170,16 @@ class PyCRCTFEnv(gym.Env, ABC):
         elif self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
                 and self.env_config.emulation_config.skip_exploration:
             defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
-            if env_config.emulation_config.save_dynamics_model_dir is not None:
+            if self.env_config.emulation_config.save_dynamics_model_dir is not None:
                 print('Loading Dynamics Model..')
-                defender_dynamics_model.read_model(env_config)
-                load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
+                defender_dynamics_model.read_model(self.env_config.emulation_config.save_dynamics_model_dir)
+                load_dir = self.env_config.emulation_config.save_dynamics_model_dir + "/" \
                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
                 if os.path.exists(load_dir):
-                    env_config.network_conf = \
-                        env_config.network_conf.load(load_dir)
+                    self.env_config.network_conf = \
+                        self.env_config.network_conf.load(load_dir)
+                self.env_config.network_conf.defender_dynamics_model = defender_dynamics_model
+                self.env_config.network_conf.defender_dynamics_model.normalize()
                 print('Dynamics Model Loaded Successfully')
 
             if self.env_config.defender_update_state:
@@ -228,9 +230,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                   "(attacker_action, defender_action)")
         # Initialization
         attack_action_id, defense_action_id = action_id
-
-        if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent \
-                is not None:
+        if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent is not None:
             attack_action_id = self.env_config.attacker_static_opponent.action(
                 env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
 
