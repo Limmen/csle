@@ -74,16 +74,19 @@ class Trajectory:
 
 
     @staticmethod
-    def save_trajectories(trajectories_save_dir, trajectories : List["Trajectory"]) -> None:
+    def save_trajectories(trajectories_save_dir, trajectories : List["Trajectory"], trajectories_file : str = None) -> None:
         """
         Utility function for saving a list of trajectories to a json file
 
         :param trajectories_save_dir: the directory where to save the trajectories
         :param trajectories: the trajectories to save
+        :param trajectories_file: the filename of the trajectories file
         :return: None
         """
+        if trajectories_file is None:
+            trajectories_file =  constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
         trajectories = list(map(lambda x: x.to_dict(), trajectories))
-        with open(trajectories_save_dir + "/" + constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE, 'w') as fp:
+        with open(trajectories_save_dir + "/" + trajectories_file, 'w') as fp:
             json.dump({"trajectories": trajectories}, fp)
 
     @staticmethod

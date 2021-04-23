@@ -61,7 +61,7 @@ class ManualDefenderAgent:
                 elif raw_input == "H":
                     print(history)
                 elif raw_input == "O":
-                    print(latest_obs)
+                    print(latest_obs[1].tolist())
                 elif raw_input == "U":
                     print(latest_rew)
                 else:
