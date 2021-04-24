@@ -263,10 +263,10 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_info["var_log_baseline_reward"] = 0
 
         defender_info["successful_intrusion"] = False
-        defender_info["attacker_cost"] = 0.0
-        defender_info["attacker_cost_norm"] = 0.0
-        defender_info["attacker_alerts"] = 0.0
-        defender_info["attacker_alerts_norm"] = 0.0
+        defender_info["attacker_cost"] = self.env_state.attacker_obs_state.cost
+        defender_info["attacker_cost_norm"] = self.env_state.attacker_obs_state.cost_norm
+        defender_info["attacker_alerts"] = self.env_state.attacker_obs_state.alerts
+        defender_info["attacker_alerts_norm"] = self.env_state.attacker_obs_state.alerts_norm
 
         if not done:
             # Second step attacker

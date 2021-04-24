@@ -1071,6 +1071,13 @@ class LogUtil:
             else:
                 avg_eval_regret = 0.0
 
+            if train_log_dto.defender_eval_2_episode_rewards is not None \
+                    and train_log_dto.defender_eval_2_env_specific_rewards != {}:
+                avg_eval_2_regret = LogUtil.compute_regret(opt_r=env.envs[0].env_config.pi_star_rew_defender,
+                                                         r=eval_2_avg_episode_rewards)
+            else:
+                avg_eval_2_regret = 0.0
+
             # Opt frac
             if env.env_config is not None:
                 avg_opt_frac = LogUtil.compute_opt_frac(r=avg_episode_rewards,
@@ -1082,6 +1089,11 @@ class LogUtil:
                 eval_avg_opt_frac = eval_avg_episode_rewards / env.envs[0].env_config.pi_star_rew_defender
             else:
                 eval_avg_opt_frac = 0.0
+
+            if train_log_dto.defender_eval_2_episode_rewards is not None:
+                eval_2_avg_opt_frac = eval_2_avg_episode_rewards / env.envs[0].env_config.pi_star_rew_defender
+            else:
+                eval_2_avg_opt_frac = 0.0
 
             # if self.env_2 is not None:
             #     if self.env_2.env_config is not None:
@@ -1165,8 +1177,8 @@ class LogUtil:
         result.eval_var_log_baseline_rewards.append(eval_avg_episode_var_log_baseline_rewards)
         result.eval_2_snort_critical_baseline_rewards.append(eval_2_avg_episode_snort_critical_baseline_rewards)
         result.eval_2_var_log_baseline_rewards.append(eval_2_avg_episode_var_log_baseline_rewards)
-        # result.defender_eval_2_avg_regret.append(avg_regret_2)
-        # result.defender_eval_2_avg_opt_frac.append(avg_opt_frac_2)
+        result.defender_eval_2_avg_regret.append(avg_eval_2_regret)
+        result.defender_eval_2_avg_opt_frac.append(eval_2_avg_opt_frac)
 
         if train_log_dto.defender_train_episode_env_specific_rewards is not None:
             for key in train_log_dto.defender_train_episode_env_specific_rewards.keys():
@@ -1225,6 +1237,13 @@ class LogUtil:
             result.eval_2_attacker_action_costs_norm.append(eval_2_avg_episode_costs_norm)
             result.eval_2_attacker_action_alerts.append(eval_2_avg_episode_alerts)
             result.eval_2_attacker_action_alerts_norm.append(eval_2_avg_episode_alerts_norm)
+            result.avg_episode_flags.append(avg_episode_flags)
+            result.avg_episode_flags_percentage.append(avg_episode_flags_percentage)
+            result.eval_avg_episode_flags.append(eval_avg_episode_flags)
+            result.eval_avg_episode_flags_percentage.append(eval_avg_episode_flags_percentage)
+            result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
+            result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
+
 
             if train_log_dto.train_env_specific_steps is not None:
                 for key in train_log_dto.train_env_specific_steps.keys():
