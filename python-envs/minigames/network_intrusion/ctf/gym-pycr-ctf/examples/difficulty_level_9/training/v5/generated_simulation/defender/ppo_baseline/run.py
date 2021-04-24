@@ -24,7 +24,7 @@ def default_config() -> ClientConfig:
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=1, input_dim=(9),
+                               checkpoint_freq=10, input_dim=(9),
                                output_dim=2,
                                pi_hidden_dim=32, pi_hidden_layers=1,
                                vf_hidden_dim=32, vf_hidden_layers=1,
