@@ -281,6 +281,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 for k,v in defender_info.items():
                     if k not in info:
                         info[k] = v
+        info["attacker_action"] = attack_action_id
 
         # Update state
         if self.env_config.defender_update_state and not done:
@@ -293,13 +294,14 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Extract observations
         defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
         attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-        attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
+        attacker_m_obs = np.append(np.array([self.attacker_agent_state.time_step]), attacker_m_obs.flatten())
         defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
         self.defender_last_obs = defender_obs
         self.attacker_last_obs = attacker_m_obs
         self.defender_time_step += 1
         self.attacker_agent_state.time_step += 1
-        self.env_state.attacker_obs_state.step += 1
+        if attack_action_id != 372:
+            self.env_state.attacker_obs_state.step += 1
 
         # Update trajectories
         if self.env_config.save_trajectories:
@@ -548,13 +550,14 @@ class PyCRCTFEnv(gym.Env, ABC):
             # Extract observations
             defender_m_obs, defender_network_obs = self.env_state.get_defender_observation()
             attacker_m_obs, attacker_p_obs = self.env_state.get_attacker_observation()
-            attacker_m_obs = np.append(np.array([self.env_state.attacker_obs_state.step]), attacker_m_obs.flatten())
+            attacker_m_obs = np.append(np.array([self.attacker_agent_state.time_step]), attacker_m_obs.flatten())
             defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
             self.defender_last_obs = defender_obs
             self.attacker_last_obs = attacker_m_obs
             self.defender_time_step += 1
             self.attacker_agent_state.time_step += 1
-            self.env_state.attacker_obs_state.step += 1
+            if attacker_action_id != 372:
+                self.env_state.attacker_obs_state.step += 1
 
             # Snort baselines
             if not s_prime.defender_obs_state.snort_severe_baseline_stopped:

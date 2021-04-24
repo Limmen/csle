@@ -192,7 +192,7 @@ class EnvConfig:
         self.explore_defense_states = False
         self.defender_sleep_before_state_update = 15
         self.stop_after_failed_detection = False
-        self.snort_critical_baseline_threshold = 1000
+        self.snort_critical_baseline_threshold = 400
         self.snort_severe_baseline_threshold = 0
         self.snort_warning_baseline_threshold = 0
         self.var_log_baseline_threshold = 0

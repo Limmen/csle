@@ -177,7 +177,7 @@ class EvalUtil:
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
         if stopping_idx >= optimal_stopping_idx:
-            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
+            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - optimal_stopping_idx)
 
     @staticmethod
     def compute_snort_severe_baseline(tau, env_config, optimal_stopping_idx: int = 6) -> float:
@@ -200,7 +200,7 @@ class EvalUtil:
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
         if stopping_idx >= optimal_stopping_idx:
-            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
+            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - optimal_stopping_idx)
 
     @staticmethod
     def compute_snort_critical_baseline(tau, env_config, optimal_stopping_idx: int = 6) -> float:
@@ -223,7 +223,7 @@ class EvalUtil:
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward
         if stopping_idx >= optimal_stopping_idx:
-            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5)
+            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - optimal_stopping_idx)
 
     @staticmethod
     def predict(model, obs_tensor, env, deterministic: bool = False) -> Tuple[List[int], List[float]]:

@@ -398,15 +398,22 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.attacker_continue_action_sleep = 30
             env_config.defender_sleep_before_state_update = 15
             env_config.attacker_illegal_reward_action = -100
+            # env_config.attacker_static_opponent = CustomExplorationPolicy(
+            #     num_actions=env_config.attacker_action_conf.num_actions,
+            #     strategy=[372, 99, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372,
+            #               106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372,
+            #               200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
+            #               105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
             env_config.attacker_static_opponent = CustomExplorationPolicy(
                 num_actions=env_config.attacker_action_conf.num_actions,
-                strategy=[372, 99, 372, 33, 372, 104, 372, 105, 372, 106, 372, 1, 372, 104, 372, 372, 372, 105, 372,
-                          106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372,
-                          200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
-                          105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
+                strategy=[99, 33, 104, 105, 106, 1, 104, 105,
+                          106,70,104, 105, 107, 99, 165,104, 105, 106,
+                          200, 104, 105, 106, 58, 104, 105, 331,
+                          105, 99, 266, 104, 105, 106, 99,  113, 104,105])
 
             env_config.defender_caught_attacker_reward = 100
             env_config.defender_early_stopping = -100
             env_config.defender_intrusion_reward = -100
+            env_config.snort_critical_baseline_threshold = 400
 
         super().__init__(env_config=env_config)

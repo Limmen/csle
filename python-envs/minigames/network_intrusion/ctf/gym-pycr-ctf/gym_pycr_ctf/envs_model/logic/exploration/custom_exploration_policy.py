@@ -9,7 +9,13 @@ class CustomExplorationPolicy(ExplorationPolicy):
 
     def action(self, env, filter_illegal: bool = True) -> int:
         step = env.env_state.attacker_obs_state.step
-        action = self.strategy[step]
+        if step < 2:
+            if np.random.rand() < 0.75:
+                action = 372
+            else:
+                action = self.strategy[step]
+        else:
+            action = self.strategy[step]
         # if step < len(self.strategy):
         #     action = self.strategy[step]
         # else:

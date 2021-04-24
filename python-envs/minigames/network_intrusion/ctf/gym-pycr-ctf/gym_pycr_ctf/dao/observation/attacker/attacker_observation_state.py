@@ -39,8 +39,8 @@ class AttackerObservationState:
         :return: true if there is an intrusion, otherwise false
         """
 
-        # if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
-        #     return True
+        if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
+            return True
 
         if self.catched_flags > 0:
             return True

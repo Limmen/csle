@@ -66,12 +66,12 @@ def test_env(env_name : str, num_trajectories : int):
             trajectory.defender_observations.append(defender_obs.tolist())
             trajectory.infos.append(info)
             trajectory.dones.append(done)
-            trajectory.attacker_actions.append(int(0))
+            trajectory.attacker_actions.append(int(info["attacker_action"]))
             trajectory.defender_actions.append(int(defender_action))
 
         trajectories.append(trajectory)
 
-    Trajectory.save_trajectories(emulation_config.save_dynamics_model_dir, trajectories, trajectories_file="taus.json")
+    Trajectory.save_trajectories(emulation_config.save_dynamics_model_dir, trajectories, trajectories_file="taus2.json")
 
     env.reset()
     env.close()
