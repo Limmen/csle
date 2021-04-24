@@ -9,18 +9,18 @@ def test_env(env_name : str, num_trajectories : int):
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-    #                                agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                server_username="kim")
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                     server_connection=False, port_forward_next_port=3200)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+                                   agent_username="agent", agent_pw="agent", server_connection=True,
+                                   server_private_key_file="/home/kim/.ssh/id_rsa",
+                                   server_username="kim")
+    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    #                                  server_connection=False, port_forward_next_port=3200)
 
-    # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
-    #                                            "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/" \
-    #                                            "hello_world/"
-    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                               "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+                                               "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/" \
+                                               "hello_world/"
+    # emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     trajectories_save_dir = emulation_config.save_dynamics_model_dir
     emulation_config.skip_exploration = True
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
@@ -71,7 +71,7 @@ def test_env(env_name : str, num_trajectories : int):
 
         trajectories.append(trajectory)
 
-    Trajectory.save_trajectories(emulation_config.save_dynamics_model_dir, trajectories, trajectories_file="taus6.json")
+    Trajectory.save_trajectories(emulation_config.save_dynamics_model_dir, trajectories, trajectories_file="taus.json")
 
     env.reset()
     env.close()
@@ -83,7 +83,7 @@ def test_all():
     #test_env("pycr-ctf-level-9-emulation-v3", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-emulation-v1", num_steps=1000000000)
     #test_env("pycr-ctf-level-9-generated-sim-v1", num_steps=1000000000)
-    test_env("pycr-ctf-level-9-generated-sim-v5", num_trajectories=100)
+    test_env("pycr-ctf-level-9-generated-sim-v5", num_trajectories=50)
 
 if __name__ == '__main__':
     test_all()

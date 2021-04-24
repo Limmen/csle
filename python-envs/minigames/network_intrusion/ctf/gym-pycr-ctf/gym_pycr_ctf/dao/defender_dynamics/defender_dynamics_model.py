@@ -364,10 +364,10 @@ class DefenderDynamicsModel:
         :param d: the input dict
         :return: None
         """
-        self.num_new_alerts = d["num_new_alerts"]
-        self.num_new_priority = d["num_new_priority"]
-        self.num_new_severe_alerts = d["num_new_severe_alerts"]
-        self.num_new_warning_alerts = d["num_new_warning_alerts"]
+        self.num_new_alerts = d["num_new_alerts"].copy()
+        self.num_new_priority = d["num_new_priority"].copy()
+        self.num_new_severe_alerts = d["num_new_severe_alerts"].copy()
+        self.num_new_warning_alerts = d["num_new_warning_alerts"].copy()
         m_dynamics_model_new = {}
         for k, v in d["machines_dynamics_model"].items():
             m = DefenderMachineDynamicsModel()

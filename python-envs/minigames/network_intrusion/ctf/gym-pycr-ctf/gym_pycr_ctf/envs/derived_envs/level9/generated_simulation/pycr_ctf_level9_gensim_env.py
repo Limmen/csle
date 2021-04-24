@@ -405,7 +405,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
                           200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
                           105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
 
-            env_config.defender_cauht_attacker_reward = 100
+            env_config.defender_caught_attacker_reward = 100
             env_config.defender_early_stopping = -100
             env_config.defender_intrusion_reward = -100
 

@@ -33,17 +33,17 @@ class DefenderBeliefStateSimulator:
         num_new_warning_alerts = 0
 
         # Sample transitions
-        if (attacker_action.id.value, logged_in_ips_str) in \
-                env_config.network_conf.defender_dynamics_model.norm_num_new_alerts:
-            num_new_alerts = \
-                env_config.network_conf.defender_dynamics_model.norm_num_new_alerts[
-                    (attacker_action.id.value, logged_in_ips_str)].rvs()
+        # if (attacker_action.id.value, logged_in_ips_str) in \
+        #         env_config.network_conf.defender_dynamics_model.norm_num_new_alerts:
+        #     num_new_alerts = \
+        #         env_config.network_conf.defender_dynamics_model.norm_num_new_alerts[
+        #             (attacker_action.id.value, logged_in_ips_str)].rvs()
 
-        if (attacker_action.id.value, logged_in_ips_str) in \
-                env_config.network_conf.defender_dynamics_model.norm_num_new_priority:
-            num_new_priority = \
-                env_config.network_conf.defender_dynamics_model.norm_num_new_priority[
-                    (attacker_action.id.value, logged_in_ips_str)].rvs()
+        # if (attacker_action.id.value, logged_in_ips_str) in \
+        #         env_config.network_conf.defender_dynamics_model.norm_num_new_priority:
+        #     num_new_priority = \
+        #         env_config.network_conf.defender_dynamics_model.norm_num_new_priority[
+        #             (attacker_action.id.value, logged_in_ips_str)].rvs()
 
         if (attacker_action.id.value, logged_in_ips_str) in \
                 env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
@@ -56,6 +56,9 @@ class DefenderBeliefStateSimulator:
             num_new_warning_alerts = \
                 env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[
                     (attacker_action.id.value, logged_in_ips_str)].rvs()
+
+        num_new_alerts = num_new_severe_alerts + num_new_warning_alerts
+        num_new_priority = num_new_severe_alerts*3 + num_new_warning_alerts*1
 
         # Update network state
         s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total + num_new_alerts

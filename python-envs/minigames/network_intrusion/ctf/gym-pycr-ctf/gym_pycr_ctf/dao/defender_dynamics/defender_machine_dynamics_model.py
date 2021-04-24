@@ -494,16 +494,16 @@ class DefenderMachineDynamicsModel:
         :param d: the dict to use to populate the model
         :return: None
         """
-        self.num_new_open_connections = d["num_new_open_connections"]
-        self.num_new_failed_login_attempts = d["num_new_failed_login_attempts"]
-        self.num_new_users = d["num_new_users"]
-        self.num_new_logged_in_users = d["num_new_logged_in_users"]
-        self.num_new_login_events = d["num_new_login_events"]
-        self.num_new_processes = d["num_new_processes"]
-        self.init_open_connections = d["init_open_connections"]
-        self.init_users = d["init_users"]
-        self.init_logged_in_users = d["init_logged_in_users"]
-        self.init_processes = d["init_processes"]
+        self.num_new_open_connections = d["num_new_open_connections"].copy()
+        self.num_new_failed_login_attempts = d["num_new_failed_login_attempts"].copy()
+        self.num_new_users = d["num_new_users"].copy()
+        self.num_new_logged_in_users = d["num_new_logged_in_users"].copy()
+        self.num_new_login_events = d["num_new_login_events"].copy()
+        self.num_new_processes = d["num_new_processes"].copy()
+        self.init_open_connections = d["init_open_connections"].copy()
+        self.init_users = d["init_users"].copy()
+        self.init_logged_in_users = d["init_logged_in_users"].copy()
+        self.init_processes = d["init_processes"].copy()
 
 
 

@@ -77,12 +77,10 @@ class EvalUtil:
 
     @staticmethod
     def find_stopping_idx(actions) -> int:
-        stopping_idx = -1
         for i in range(len(actions)):
             if actions[i] == 0:
-                stopping_idx = i
-                break
-        return stopping_idx
+                return i
+        return -1
 
 
     @staticmethod
@@ -107,13 +105,13 @@ class EvalUtil:
         """
         stopping_idx = EvalUtil.find_stopping_idx(actions)
         r = 0
-        print("stopping id:{}".format(stopping_idx, actions))
+        print("stopping id:{}".format(stopping_idx))
         if stopping_idx < optimal_stopping_idx:
             return env_config.defender_early_stopping, True, False, False
         if stopping_idx == -1:
             return env_config.defender_intrusion_reward, False, True, False
         if stopping_idx >= optimal_stopping_idx:
-            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - 5),  False, False, True
+            return env_config.defender_caught_attacker_reward / max(1, stopping_idx - optimal_stopping_idx),  False, False, True
 
     @staticmethod
     def compute_steps(actions) -> int:
