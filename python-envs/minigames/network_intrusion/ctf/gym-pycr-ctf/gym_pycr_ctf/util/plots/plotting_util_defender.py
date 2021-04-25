@@ -963,7 +963,7 @@ def plot_flags_int_r_steps_costs_alerts(
 
     ax[0][2].plot(
         np.array(list(range(len(avg_train_snort_severe_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-        avg_train_snort_severe_rewards_means_v1[::sample_step], label=r"Snort 1",
+        avg_train_snort_severe_rewards_means_v1[::sample_step], label=r"\textsc{Snort-1}",
         marker="^", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(avg_train_snort_severe_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -974,7 +974,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[0][2].plot(
         np.array(list(
             range(len(avg_train_snort_critical_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-        avg_train_snort_critical_rewards_means_v1[::sample_step], label=r"Snort 2",
+        avg_train_snort_critical_rewards_means_v1[::sample_step], label=r"\textsc{Snort-2}",
         marker="v", ls='-', color="#661D98", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(
