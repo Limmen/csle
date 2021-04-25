@@ -10,7 +10,7 @@
         "attacker_opponent_baseline_type": 8,
         "batch_size": 8000,
         "buffer_size": 1000000,
-        "checkpoint_freq": 1,
+        "checkpoint_freq": 10,
         "clip_gradient": false,
         "critic_loss_fn": "MSE",
         "defender_opponent_baseline_type": 7,
