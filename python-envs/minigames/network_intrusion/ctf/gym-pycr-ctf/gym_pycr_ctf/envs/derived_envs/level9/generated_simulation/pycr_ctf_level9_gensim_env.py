@@ -415,5 +415,9 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.defender_early_stopping = -100
             env_config.defender_intrusion_reward = -100
             env_config.snort_critical_baseline_threshold = 400
+            env_config.emulate_detection = False
+            env_config.simulate_detection = False
+            env_config.attacker_early_stopping_reward = -100
+            env_config.use_attacker_action_stats_to_update_defender_state = True
 
         super().__init__(env_config=env_config)

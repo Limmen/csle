@@ -224,7 +224,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
         randomize_starting_states.append(env.envs[i].env_config.randomize_attacker_starting_state)
         simulate_snort.append(env.envs[i].env_config.snort_baseline_simulate)
         env.envs[i].env_config.randomize_attacker_starting_state = False
-        env.envs[i].env_config.snort_baseline_simulate = True
+        env.envs[i].env_config.snort_baseline_simulate = False
 
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
@@ -243,7 +243,7 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
             simulate_snort.append(env_2.envs[i].env_config.snort_baseline_simulate)
             env_2.envs[i].env_config.randomize_attacker_starting_state = False
-            env_2.envs[i].env_config.snort_baseline_simulate = True
+            env_2.envs[i].env_config.snort_baseline_simulate = False
 
         train_dto = _quick_eval_helper(
             env=env_2, attacker_model=attacker_model, defender_model=defender_model,
@@ -319,7 +319,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 attacker_action = attacker_actions[0]
                 action = (attacker_action, defender_action)
                 # if emulation_env:
-                #     print("taking eval step in emulation")
+                #     print("taking eval step in emulation: {}".format(action))
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)
                 elif isinstance(env, DummyVecEnv):

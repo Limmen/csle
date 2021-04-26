@@ -24,7 +24,7 @@ class DummyVecEnv(VecEnv):
         self.envs = []
         for fn in env_fns:
             print("sleeping")
-            time.sleep(constants.SUB_PROC_ENV.SLEEP_TIME_STARTUP)
+            time.sleep(constants.DUMMY_VEC_ENV.SLEEP_TIME_STARTUP)
             print("sleep finished")
             self.envs.append(fn())
         self.envs = [fn() for fn in env_fns]

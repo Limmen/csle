@@ -39,19 +39,19 @@ class AttackerObservationState:
         :return: true if there is an intrusion, otherwise false
         """
 
-        if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
-            return True
+        # if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
+        #     return True
 
         if self.catched_flags > 0:
             return True
 
-        for m in self.machines:
-            if m.shell_access:
-                return True
-            if self.exploit_executed(m):
-                return True
-            if m.logged_in:
-                return True
+        # for m in self.machines:
+        #     if m.shell_access:
+        #         return True
+        #     if self.exploit_executed(m):
+        #         return True
+        #     if m.logged_in:
+        #         return True
         return False
 
     def sort_machines(self) -> None:

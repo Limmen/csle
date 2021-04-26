@@ -2,6 +2,7 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.envs_model.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
 from gym_pycr_ctf.envs_model.logic.emulation.util.defender.shell_util import ShellUtil
 from gym_pycr_ctf.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
@@ -15,12 +16,14 @@ class DefenderUpdateStateMiddleware:
     """
 
     @staticmethod
-    def update_belief_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def update_belief_state(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                            env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Updates the defender's state by measuring the emulation
 
         :param s: the current state
-        :param a: the action to take
+        :param defender_action: the action to take
+        :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
@@ -28,23 +31,31 @@ class DefenderUpdateStateMiddleware:
 
         # Measure IDS
         if env_config.ids_router:
-            num_alerts, num_severe_alerts, num_warning_alerts, sum_priority_alerts = \
-                ReadLogsUtil.read_ids_data(env_config=env_config,
-                                           episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
+
+            if env_config.use_attacker_action_stats_to_update_defender_state:
+                num_new_alerts = attacker_action.alerts[0]
+                num_new_priority = attacker_action.alerts[1]
+                num_new_severe_alerts = num_new_alerts / 2
+                num_new_warning_alerts = num_new_alerts / 2
+            else:
+
+                num_new_alerts, num_new_severe_alerts, num_new_warning_alerts, num_new_priority = \
+                    ReadLogsUtil.read_ids_data(env_config=env_config,
+                                               episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
 
             s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total + \
-                                                          num_alerts
+                                                          num_new_alerts
             s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total + \
-                                                                 num_severe_alerts
+                                                                 num_new_severe_alerts
             s_prime.defender_obs_state.num_warning_alerts_total = s_prime.defender_obs_state.num_warning_alerts_total + \
-                                                                  num_warning_alerts
+                                                                  num_new_warning_alerts
             s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
-                                                                   sum_priority_alerts
+                                                                   num_new_priority
 
-            s_prime.defender_obs_state.num_alerts_recent = num_alerts
-            s_prime.defender_obs_state.num_severe_alerts_recent = num_severe_alerts
-            s_prime.defender_obs_state.num_warning_alerts_recent = num_warning_alerts
-            s_prime.defender_obs_state.sum_priority_alerts_recent = sum_priority_alerts
+            s_prime.defender_obs_state.num_alerts_recent = num_new_alerts
+            s_prime.defender_obs_state.num_severe_alerts_recent = num_new_severe_alerts
+            s_prime.defender_obs_state.num_warning_alerts_recent = num_new_warning_alerts
+            s_prime.defender_obs_state.sum_priority_alerts_recent = num_new_priority
 
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
@@ -97,12 +108,14 @@ class DefenderUpdateStateMiddleware:
         return s_prime, 0, False
 
     @staticmethod
-    def initialize_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def initialize_state(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                         env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Initializes the defender's state by measuring the emulation
 
         :param s: the current state
-        :param a: the action to take
+        :param defender_action: the action to take
+        :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
@@ -184,12 +197,14 @@ class DefenderUpdateStateMiddleware:
         return s_prime, 0, False
 
     @staticmethod
-    def reset_state(s: EnvState, a: DefenderAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def reset_state(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+                    attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
         """
         Resets the defender's state
 
         :param s: the current state
-        :param a: the action to take
+        :param defender_action: the action to take
+        :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """

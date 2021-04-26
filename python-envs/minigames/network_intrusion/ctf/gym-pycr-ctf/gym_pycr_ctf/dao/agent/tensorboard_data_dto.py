@@ -190,7 +190,7 @@ class TensorboardDataDTO:
         :return: a string representation of the DTO for the attacker
         """
         if self.eval:
-            log_str = "[Eval] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
+            log_str = "[Eval A] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
                       "n_af:{},n_d:{}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
@@ -203,7 +203,7 @@ class TensorboardDataDTO:
                 self.avg_episode_alerts_norm
             )
         else:
-            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
+            log_str = "[Train A] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
                       "n_af:{},n_d:{},avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
@@ -249,7 +249,7 @@ class TensorboardDataDTO:
         :return: a string representation of the DTO for the attacker
         """
         if self.eval:
-            log_str = "[Eval] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
+            log_str = "[Eval D] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f}," \
                       "S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
@@ -263,7 +263,7 @@ class TensorboardDataDTO:
                 self.lr, self.episode_caught_frac,
                 self.episode_early_stopped_frac, self.episode_successful_intrusion_frac)
         else:
-            log_str = "[Train] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
+            log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
                       "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \

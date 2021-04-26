@@ -205,9 +205,10 @@ class EnvConfig:
         self.randomize_state_max_steps = 20
         self.randomize_starting_state_policy = None
         self.randomize_state_steps_list = [0, 8, 16, 23]
-
         self.attacker_static_opponent = None
         self.snort_baseline_simulate = False
+        self.attacker_early_stopping_reward = 10
+        self.use_attacker_action_stats_to_update_defender_state = False
 
     def get_port_forward_port(self) -> int:
         """
@@ -389,4 +390,6 @@ class EnvConfig:
         env_config.randomize_state_min_steps = self.randomize_state_min_steps
         env_config.randomize_state_max_steps = self.randomize_state_max_steps
         env_config.snort_baseline_simulate = self.snort_baseline_simulate
+        env_config.attacker_early_stopping_reward = self.attacker_early_stopping_reward
+        env_config.use_attacker_action_stats_to_update_defender_state = self.use_attacker_action_stats_to_update_defender_state
         return env_config

@@ -182,5 +182,6 @@ class PyCrCTFLevel9V5:
         env_config.pi_star_rew_attacker = 160
         env_config.pi_star_tau_attacker = None
         env_config.pi_star_rew_list_attacker.append(env_config.pi_star_rew_attacker)
-
+        env_config.attacker_early_stopping_reward = 10
+        env_config.use_attacker_action_stats_to_update_defender_state = True
         return env_config

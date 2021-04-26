@@ -39,7 +39,8 @@ class Runner:
         :param config: configuration for the run
         :return: the result
         """
-        if config.mode == RunnerMode.TRAIN_ATTACKER.value or config.mode == RunnerMode.TRAIN_DEFENDER.value:
+        if config.mode == RunnerMode.TRAIN_ATTACKER.value or config.mode == RunnerMode.TRAIN_DEFENDER.value \
+                or config.mode == RunnerMode.SELF_PLAY.value:
             return Runner.train(config)
         elif config.mode == RunnerMode.SIMULATE.value:
             return Runner.simulate(config)
@@ -318,13 +319,13 @@ class Runner:
         base_env = gym.make(config.env_name, env_config=config.env_config, emulation_config=emulation_config_temp,
                             checkpoint_dir=config.env_checkpoint_dir)
 
-        if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
-            if base_env is not None:
-                base_env.env_config.attacker_use_nmap_cache = False
-                base_env.env_config.attacker_nmap_scan_cache = False
-                base_env.env_config.attacker_use_nikto_cache = False
-                base_env.env_config.attacker_use_file_system_cache = False
-                base_env.env_config.attacker_use_user_command_cache = False
+        # if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
+        #     if base_env is not None:
+        #         base_env.env_config.attacker_use_nmap_cache = False
+        #         base_env.env_config.attacker_nmap_scan_cache = False
+        #         base_env.env_config.attacker_use_nikto_cache = False
+        #         base_env.env_config.attacker_use_file_system_cache = False
+        #         base_env.env_config.attacker_use_user_command_cache = False
 
         env_kwargs = {"env_config": config.env_config, "emulation_config": config.emulation_config,
                       "checkpoint_dir": config.env_checkpoint_dir}

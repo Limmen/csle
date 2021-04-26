@@ -84,7 +84,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             # Connect to emulation
             self.env_config.emulation_config.connect_agent()
 
-            if self.env_config.defender_update_state:
+            if self.env_config.env_mode == EnvMode.EMULATION and self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = self.env_config.defender_action_conf.state_init_action
                 s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
@@ -182,6 +182,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_config.network_conf.defender_dynamics_model.normalize()
                 print('Dynamics Model Loaded Successfully')
 
+            self.env_config.env_mode = EnvMode.SIMULATION
+
             if self.env_config.defender_update_state:
                 # Initialize Defender's state
                 defender_init_action = env_config.defender_action_conf.state_init_action
@@ -190,7 +192,6 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_state = s_prime
                 self.env_config.network_conf.defender_dynamics_model.normalize()
 
-            self.env_config.env_mode = EnvMode.SIMULATION
 
         # Reset and setup action spaces
         self.reset()
@@ -246,7 +247,10 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # First step defender
         if defense_action_id is not None:
-            if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+            if (self.env_config.env_mode == EnvMode.EMULATION \
+                    or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
+                    and not self.env_config.use_attacker_action_stats_to_update_defender_state:
+                print("sleep")
                 time.sleep(self.env_config.defender_sleep_before_state_update)
             defender_reward, attacker_reward, done, defender_info = \
                 self.step_defender(defender_action_id=defense_action_id,
@@ -365,6 +369,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
             info["caught_attacker"] = True
+            if not s_prime.attacker_obs_state.all_flags and s_prime.attacker_obs_state.ongoing_intrusion():
+                defender_reward = self.env_config.defender_intrusion_reward
+
 
         if s_prime.attacker_obs_state.all_flags:
             info["successful_intrusion"] = True
@@ -484,6 +491,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         #                       self.defender_time_step
         if self.defender_time_step > self.env_config.max_episode_length:
             done = True
+            if not s_prime.attacker_obs_state.all_flags and s_prime.attacker_obs_state.ongoing_intrusion():
+                defender_reward = self.env_config.defender_intrusion_reward
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
         self.env_state = s_prime
@@ -495,6 +504,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
             defender_reward = defender_reward + self.env_config.defender_early_stopping
+            attacker_reward = self.env_config.attacker_early_stopping_reward
 
         if self.env_config.stop_after_failed_detection and not done and \
                 self.env_state.attacker_obs_state.ongoing_intrusion():
