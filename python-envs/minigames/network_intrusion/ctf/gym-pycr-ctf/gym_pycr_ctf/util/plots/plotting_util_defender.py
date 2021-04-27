@@ -1222,7 +1222,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ylab.set_size(fontsize)
     ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][0].set_ylim(0, 50)
+    ax[0][0].set_ylim(0, 80)
     ax[0][0].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][0].set_title(r"\% Flags captured per episode", fontsize=fontsize)
 
@@ -1232,7 +1232,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[0][1].plot(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_eval_2_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ Attacker $\pi_{\theta}$ emulation",
-        marker="*", ls='-', color="#599ad3",
+        marker="p", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -1301,7 +1301,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
 
     ax[0][2].plot(np.array(list(range(len(defender_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
                   defender_avg_eval_2_rewards_means_v1[::sample_step], label=r"Defender $\pi^D_{\theta}$ emulation",
-                  marker="s", ls='-', color="#661D98", markevery=markevery, markersize=markersize, lw=lw)
+                  marker="d", ls='-', color="#661D98", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(defender_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         defender_avg_eval_2_rewards_means_v1[::sample_step] - defender_avg_eval_2_rewards_stds_v1[::sample_step],
@@ -1345,7 +1345,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ylab.set_size(fontsize)
     ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][2].set_ylim(-100, 110)
+    ax[0][2].set_ylim(-150, 110)
     ax[0][2].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][2].set_title(r"Reward per episode", fontsize=fontsize)
 
@@ -1377,7 +1377,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ylab.set_size(fontsize)
     ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[1][0].set_ylim(0, 25)
+    ax[1][0].set_ylim(0, 150)
     ax[1][0].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[1][0].set_title(r"Episode length (steps)", fontsize=fontsize)
 
@@ -1385,24 +1385,24 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[1][1].plot(
         np.array(list(range(len(avg_eval_2_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_eval_2_early_stopping_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
-        marker="*", ls='-', color="#599ad3",
+        marker="h", ls='-', color="#f9a65a",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[1][1].fill_between(
         np.array(list(range(len(avg_eval_2_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_eval_2_early_stopping_means_v1[::sample_step] - avg_eval_2_early_stopping_stds_v1[::sample_step],
         avg_eval_2_early_stopping_means_v1[::sample_step] + avg_eval_2_early_stopping_stds_v1[::sample_step],
-        alpha=0.35, color="#599ad3")
+        alpha=0.35, color="#f9a65a")
 
     ax[1][1].plot(
         np.array(list(range(len(avg_train_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_train_early_stopping_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ simulation",
-        marker="s", ls='-', color="r",
+        marker="d", ls='-', color="#661D98",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[1][1].fill_between(
         np.array(list(range(len(avg_train_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_train_early_stopping_means_v1[::sample_step] - avg_train_early_stopping_stds_v1[::sample_step],
         avg_train_early_stopping_means_v1[::sample_step] + avg_train_early_stopping_stds_v1[::sample_step],
-        alpha=0.35, color="r")
+        alpha=0.35, color="#661D98")
 
     # ax[0][1].plot(np.array(list(range(len(avg_train_flags_means_v1)))) * iterations_per_step,
     #               [0] * len(avg_train_flags_means_v1), label=r"upper bound",

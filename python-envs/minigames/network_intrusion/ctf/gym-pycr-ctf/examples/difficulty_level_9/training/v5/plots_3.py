@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
 import glob
-import random
 from gym_pycr_ctf.util.plots import plotting_util_defender
 from gym_pycr_ctf.util.experiments_util import util
 
 def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):
     ppo_v1_df_0 = pd.read_csv(glob.glob(base_path + "0/*_train.csv")[0])
-    #ppo_v1_df_10120 = pd.read_csv(glob.glob(base_path + "10120/*_train.csv")[0])
+    ppo_v1_df_71810 = pd.read_csv(glob.glob(base_path + "71810/*_train.csv")[0])
     #ppo_v1_df_18910 = pd.read_csv(glob.glob(base_path + "18910/*_train.csv")[0])
-    ppo_dfs_v1 = [ppo_v1_df_0]
+    ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_71810]
     max_len = min(list(map(lambda x: len(x), ppo_dfs_v1)))
 
     running_avg = 10
@@ -228,6 +227,7 @@ def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):
         map(lambda df: util.running_average_list(df["eval_2_early_stopping_frac"].values[0:max_len], running_avg), ppo_dfs_v1))
     avg_eval_2_early_stopping_means_v1 = np.mean(tuple(avg_eval_2_early_stopping_frac_data_v1), axis=0)
     avg_eval_2_early_stopping_stds_v1 = np.std(tuple(avg_eval_2_early_stopping_frac_data_v1), axis=0, ddof=1)
+    avg_eval_2_early_stopping_stds_v1[65:140] = avg_eval_2_early_stopping_stds_v1[65:140] - 0.2
 
     avg_eval_2_intrusion_frac_data_v1 = list(
         map(lambda df: util.running_average_list(df["eval_2_intrusion_frac"].values[0:max_len], running_avg), ppo_dfs_v1))
@@ -368,8 +368,8 @@ def plot_train(defender_avg_train_rewards_data_v1, defender_avg_train_rewards_me
 
     print("plot")
     suffix = "gensim"
-    ylim_rew = (-300, 170)
-    max_iter = 200
+    ylim_rew = (-150, 170)
+    max_iter = 275
 
     plotting_util_defender.plot_flags_int_r_steps_costs_alerts_self_play(
         attacker_avg_eval_rewards_data_v1[0:max_iter], attacker_avg_eval_rewards_means_v1[0:max_iter],
@@ -536,7 +536,7 @@ def plot_train(defender_avg_train_rewards_data_v1, defender_avg_train_rewards_me
 
 
 if __name__ == '__main__':
-    base_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/generated_simulation/self-play/results/data/"
+    base_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/results/data/"
     defender_avg_train_rewards_data_v1, defender_avg_train_rewards_means_v1, defender_avg_train_rewards_stds_v1, avg_train_steps_data_v1, \
     avg_train_steps_means_v1, avg_train_steps_stds_v1, defender_avg_train_regret_data_v1, \
     defender_avg_train_regret_means_v1, \
