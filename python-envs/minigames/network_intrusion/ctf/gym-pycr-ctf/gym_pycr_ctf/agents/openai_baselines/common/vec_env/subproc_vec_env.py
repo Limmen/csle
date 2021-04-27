@@ -17,14 +17,18 @@ def _worker(remote, parent_remote, env_fn_wrapper):
             cmd, data = remote.recv()
             if cmd == "step":
                 observation, reward, done, info = env.step(data)
-                actions = list(range(env.num_actions))
+                attacker_actions = list(range(env.attacker_num_actions))
+                defender_actions = list(range(env.defender_num_actions))
                 if done:
                     # save final observation where user can get it, then reset
                     info["terminal_observation"] = observation
                     observation = env.reset()
-                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                    action, env_config=env.env_config, env_state=env.env_state), actions))
-                info["non_legal_actions"] = non_legal_actions
+                attacker_non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                    action, env_config=env.env_config, env_state=env.env_state), attacker_actions))
+                defender_non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
+                    action, env_config=env.env_config, env_state=env.env_state), defender_actions))
+                info["attacker_non_legal_actions"] = attacker_non_legal_actions
+                info["defender_non_legal_actions"] = defender_non_legal_actions
                 info["idx"] = env.idx
                 remote.send((observation, reward, done, info))
             elif cmd == "seed":
@@ -41,10 +45,14 @@ def _worker(remote, parent_remote, env_fn_wrapper):
             elif cmd == "cleanup":
                 env.cleanup()
                 remote.send(1)
-            elif cmd == "get_spaces":
-                remote.send((env.observation_space, env.action_space))
-            elif cmd == "initial_illegal_actions":
-                remote.send(env.initial_illegal_actions)
+            elif cmd == "get_attacker_spaces":
+                remote.send((env.attacker_observation_space, env.attacker_action_space))
+            elif cmd == "get_defender_spaces":
+                remote.send((env.defender_observation_space, env.defender_action_space))
+            elif cmd == "attacker_initial_illegal_actions":
+                remote.send(env.attacker_initial_illegal_actions)
+            elif cmd == "defender_initial_illegal_actions":
+                remote.send(env.defender_initial_illegal_actions)
             elif cmd == "network_conf":
                 remote.send(env.env_config.network_conf)
             elif cmd == "pi_star_rew":
@@ -127,15 +135,23 @@ class SubprocVecEnv(VecEnv):
             self.processes.append(process)
             work_remote.close()
 
-        self.remotes[0].send(("get_spaces", None))
-        observation_space, action_space = self.remotes[0].recv()
+        self.remotes[0].send(("get_attacker_spaces", None))
+        attacker_observation_space, attacker_action_space = self.remotes[0].recv()
 
-        self.remotes[0].send(("initial_illegal_actions", None))
-        initial_illegal_actions = self.remotes[0].recv()
-        self.initial_illegal_actions = initial_illegal_actions
+        self.remotes[0].send(("get_defender_spaces", None))
+        defender_observation_space, defender_action_space = self.remotes[0].recv()
+
+        self.remotes[0].send(("attacker_initial_illegal_actions", None))
+        attacker_initial_illegal_actions = self.remotes[0].recv()
+        self.attacker_initial_illegal_actions = attacker_initial_illegal_actions
+
+        self.remotes[0].send(("defender_initial_illegal_actions", None))
+        defender_initial_illegal_actions = self.remotes[0].recv()
+        self.defender_initial_illegal_actions = defender_initial_illegal_actions
 
         self.get_network_confs()
-        VecEnv.__init__(self, len(env_fns), observation_space, action_space)
+        VecEnv.__init__(self, len(env_fns), attacker_observation_space, attacker_action_space,
+                        defender_observation_space, defender_action_space)
 
     def step_async(self, actions):
         for remote, action in zip(self.remotes, actions):
@@ -146,7 +162,18 @@ class SubprocVecEnv(VecEnv):
         results = [remote.recv() for remote in self.remotes]
         self.waiting = False
         obs, rews, dones, infos = zip(*results)
-        return _flatten_obs(obs, self.observation_space), np.stack(rews), np.stack(dones), infos
+        if len(obs) > 2:
+            attacker_obs = []
+            defender_obs = []
+            for i in range(len(obs)):
+                attacker_obs.append(obs[i][0])
+                defender_obs.append(obs[i][1])
+            attacker_obs = np.array(attacker_obs)
+            defender_obs = np.array(defender_obs)
+            attacker_obs = attacker_obs.astype("float64")
+            defender_obs = defender_obs.astype("float64")
+            obs = (attacker_obs, defender_obs)
+        return obs, np.stack(rews), np.stack(dones), infos
 
     def seed(self, seed=None):
         for idx, remote in enumerate(self.remotes):
@@ -157,12 +184,12 @@ class SubprocVecEnv(VecEnv):
         for remote in self.remotes:
             remote.send(("reset", None))
         obs = [remote.recv() for remote in self.remotes]
-        return _flatten_obs(obs, self.observation_space)
+        return obs
 
     def eval_reset(self, idx : int):
         self.remotes[idx].send(("reset", None))
         obs = self.remotes[idx].recv()
-        obs = _flatten_obs([obs], self.observation_space)
+        obs = [obs]
         return obs
 
     def get_network_confs(self):
@@ -200,7 +227,7 @@ class SubprocVecEnv(VecEnv):
         self.remotes[idx].send(("step", action))
         result = self.remotes[idx].recv()
         obs, rews, dones, infos = result
-        return _flatten_obs([obs], self.observation_space), rews, dones, infos
+        return [obs], rews, dones, infos
 
     def close(self):
         if self.closed:

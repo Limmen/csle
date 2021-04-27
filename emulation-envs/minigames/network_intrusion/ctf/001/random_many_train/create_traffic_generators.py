@@ -2,6 +2,7 @@ from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
 
+
 def apply_config():
     containers_config = util.read_containers_config(util.default_containers_path())
     traffic_config = util.read_traffic_config(util.default_traffic_path())

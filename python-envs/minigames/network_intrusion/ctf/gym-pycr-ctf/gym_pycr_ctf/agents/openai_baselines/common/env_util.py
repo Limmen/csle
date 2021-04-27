@@ -166,7 +166,7 @@ def make_env(rank, env_kwargs, env_id, seed, monitor_dir, wrapper_class, monitor
 
         if seed is not None:
             env.seed(seed + rank)
-            env.action_space.seed(seed + rank)
+            env.attacker_action_space.seed(seed + rank)
         # Wrap the env in a Monitor wrapper
         # to have additional training information
         monitor_path = os.path.join(monitor_dir, str(rank)) if monitor_dir is not None else None

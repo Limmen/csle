@@ -362,7 +362,8 @@ class Runner:
     def eval_multi_env_creation(config: ClientConfig, emulation_config_temps):
         base_envs = [gym.make(config.eval_env_name, env_config=config.env_config, emulation_config=emulation_config_temps[i],
                               checkpoint_dir=config.env_checkpoint_dir, containers_configs=config.eval_env_containers_configs,
-                              flags_configs=config.eval_env_flags_configs, idx=i) for i in range(len(config.eval_env_containers_configs))]
+                              flags_configs=config.eval_env_flags_configs, idx=i,
+                              num_nodes= config.attacker_agent_config.num_nodes) for i in range(len(config.eval_env_containers_configs))]
 
         if config.train_mode == TrainMode.TRAIN_DEFENDER or config.train_mode == TrainMode.SELF_PLAY:
             for i in range(len(base_envs)):

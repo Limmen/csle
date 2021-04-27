@@ -75,3 +75,21 @@ class ContainerEnvConfig:
             self.sql_injection_vuln_compatible_containers, self.priv_esc_vuln_compatible_containers,
             self.agent_containers, self.router_containers,
             self.path, self.subnet_id_blacklist, self.subnet_prefix, self.subnet_id, self.num_flags, self.num_nodes)
+
+    def copy(self) -> "ContainerEnvConfig":
+        """
+        :return: a copy of the object
+        """
+        return ContainerEnvConfig(
+            min_num_users=self.min_num_users, max_num_users=self.max_num_users,  min_num_flags=self.min_num_flags,
+            max_num_flags=self.max_num_flags, min_num_nodes=self.min_num_nodes, max_num_nodes=self.max_num_nodes,
+            container_pool=self.container_pool, gw_vuln_compatible_containers=self.gw_vuln_compatible_containers,
+            pw_vuln_compatible_containers=self.pw_vuln_compatible_containers,
+            rce_vuln_compatible_containers=self.rce_vuln_compatible_containers,
+            sql_injection_vuln_compatible_containers=self.sql_injection_vuln_compatible_containers,
+            priv_esc_vuln_compatible_containers=self.priv_esc_vuln_compatible_containers,
+            agent_containers=self.agent_containers, router_containers=self.router_containers,
+            path=self.path, subnet_id_blacklist=self.subnet_id_blacklist.copy(),
+            subnet_prefix=self.subnet_prefix, subnet_id=self.subnet_id, num_flags=self.num_flags,
+            num_nodes=self.num_nodes
+        )

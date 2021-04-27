@@ -56,9 +56,11 @@ class Monitor(gym.Wrapper):
         self.reset_keywords = reset_keywords
         self.info_keywords = info_keywords
         self.allow_early_resets = allow_early_resets
-        self.rewards = None
+        self.attacker_rewards = None
+        self.defender_rewards = None
         self.needs_reset = True
-        self.episode_rewards = []
+        self.attacker_episode_rewards = []
+        self.defender_episode_rewards = []
         self.episode_lengths = []
         self.episode_times = []
         self.total_steps = 0
@@ -76,7 +78,8 @@ class Monitor(gym.Wrapper):
                 "Tried to reset an environment before done. If you want to allow early resets, "
                 "wrap your env with Monitor(env, path, allow_early_resets=True)"
             )
-        self.rewards = []
+        self.attacker_rewards = []
+        self.defender_rewards = []
         self.needs_reset = False
         for key in self.reset_keywords:
             value = kwargs.get(key)
@@ -95,15 +98,19 @@ class Monitor(gym.Wrapper):
         if self.needs_reset:
             raise RuntimeError("Tried to step environment that needs reset")
         observation, reward, done, info = self.env.step(action)
-        self.rewards.append(reward)
+        attacker_reward, defender_reward = reward
+        self.attacker_rewards.append(attacker_reward)
+        self.defender_rewards.append(defender_reward)
         if done:
             self.needs_reset = True
-            ep_rew = sum(self.rewards)
-            ep_len = len(self.rewards)
-            ep_info = {"r": round(ep_rew, 6), "l": ep_len, "t": round(time.time() - self.t_start, 6)}
+            ep_rew_attacker = sum(self.attacker_rewards)
+            ep_rew_defender = sum(self.defender_rewards)
+            ep_len = len(self.attacker_rewards)
+            ep_info = {"r": round(ep_rew_attacker, 6), "r_d": round(ep_rew_defender, 6), "l": ep_len, "t": round(time.time() - self.t_start, 6)}
             for key in self.info_keywords:
                 ep_info[key] = info[key]
-            self.episode_rewards.append(ep_rew)
+            self.attacker_episode_rewards.append(ep_rew_attacker)
+            self.defender_episode_rewards.append(ep_rew_defender)
             self.episode_lengths.append(ep_len)
             self.episode_times.append(time.time() - self.t_start)
             ep_info.update(self.current_reset_info)
@@ -136,7 +143,7 @@ class Monitor(gym.Wrapper):
 
         :return:
         """
-        return self.episode_rewards
+        return self.attacker_episode_rewards
 
     def get_episode_lengths(self) -> List[int]:
         """

@@ -583,17 +583,17 @@ class BaseAlgorithm(ABC):
         # Avoid resetting the environment when calling ``.learn()`` consecutive times
         if reset_num_timesteps or self._last_obs is None:
             self._last_obs = self.env.reset()
-            if len(self._last_obs[0].shape) == 3:
-                self._last_obs = (self._last_obs[0].reshape((self._last_obs[0].shape[0], self.attacker_observation_space.shape[0])),
-                                  self._last_obs[1].reshape((self._last_obs[1].shape[0], self.defender_observation_space.shape[0])))
+            # if len(self._last_obs[0].shape) == 3:
+            #     self._last_obs = (self._last_obs[0].reshape((self._last_obs[0].shape[0], self.attacker_observation_space.shape[0])),
+            #                       self._last_obs[1].reshape((self._last_obs[1].shape[0], self.defender_observation_space.shape[0])))
             self._last_dones = np.zeros((self.env.num_envs,), dtype=np.bool)
             if isinstance(self.env, SubprocVecEnv):
-                self._last_infos = np.array([{"attacker_non_legal_actions": self.env.attacker_initial_illegal_actions} for i in range(self.env.num_envs)])
-                self._last_infos = np.array(
-                    [{"defender_non_legal_actions": self.env.defender_initial_illegal_actions} for i in range(self.env.num_envs)])
+                self._last_infos = np.array([{"attacker_non_legal_actions": self.env.attacker_initial_illegal_actions,
+                                              "defender_non_legal_actions": self.env.defender_initial_illegal_actions
+                                              } for i in range(self.env.num_envs)])
             else:
-                self._last_infos = np.array([{"attacker_non_legal_actions": []} for i in range(self.env.num_envs)])
-                self._last_infos = np.array([{"defender_non_legal_actions": []} for i in range(self.env.num_envs)])
+                self._last_infos = np.array([{"attacker_non_legal_actions": [],
+                                              "defender_non_legal_actions": []} for i in range(self.env.num_envs)])
 
             # Retrieve unnormalized observation for saving into the buffer
             if self._vec_normalize_env is not None:

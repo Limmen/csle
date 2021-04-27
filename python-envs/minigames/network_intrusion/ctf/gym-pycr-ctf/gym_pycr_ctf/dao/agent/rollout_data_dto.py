@@ -88,6 +88,8 @@ class RolloutDataDTO:
                 agent_ip = agent_config.env_configs[i].idx
             num_flags = agent_config.env_configs[infos[i]["idx"]].num_flags
 
+        print("i:{}".format(i))
+        print(self.attacker_episode_rewards)
         if agent_ip not in self.attacker_env_specific_rewards:
             self.attacker_env_specific_rewards[agent_ip] = [self.attacker_episode_rewards[i]]
         else:

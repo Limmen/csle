@@ -23,14 +23,23 @@ def default_config() -> ClientConfig:
     #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
     #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
@@ -47,7 +56,7 @@ def default_config() -> ClientConfig:
                                eval_frequency=100, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=50,
-                               input_dim=num_nodes * 12,
+                               input_dim=((num_nodes * 20) + 1),
                                # input_dim=7,
                                # input_dim=11 * 8,
                                # output_dim=9,

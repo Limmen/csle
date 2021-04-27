@@ -260,7 +260,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             episode_reward_defender += defender_rewards
             episode_step += 1
             if dones.any():
-                for i in range(len(dones)):
+                for i in range(len(list(filter(lambda x: x, dones)))):
                     if dones[i]:
                         # Record episode metrics
                         self.num_episodes += 1
@@ -589,7 +589,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         with th.no_grad():
             # Convert to pytorch tensor
-            attacker_obs, defender_obs = self._last_obs
+            if isinstance(self._last_obs, tuple):
+                attacker_obs, defender_obs = self._last_obs
+            else:
+                attacker_obs = []
+                defender_obs = []
+                for i in range(len(self._last_obs)):
+                    attacker_obs.append(self._last_obs[i][0])
+                    defender_obs.append(self._last_obs[i][1])
+                attacker_obs = np.array(attacker_obs)
+                defender_obs = np.array(defender_obs)
+                attacker_obs = attacker_obs.astype("float64")
+                defender_obs = defender_obs.astype("float64")
             obs_tensor_attacker = th.as_tensor(attacker_obs).to(self.device)
             obs_tensor_defender = th.as_tensor(defender_obs).to(self.device)
             attacker_actions = None
@@ -599,6 +610,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_values = None
             defender_log_probs = None
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
+                print("obs tensor attacker shape:{}".format(obs_tensor_attacker.shape))
                 attacker_actions, attacker_values, attacker_log_probs = \
                     self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True)
                 attacker_actions = attacker_actions.cpu().numpy()
@@ -609,14 +621,14 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 defender_actions = defender_actions.cpu().numpy()
 
         if attacker_actions is None:
-            attacker_actions = np.array([None])
+            attacker_actions = np.array([None]*len(defender_actions))
 
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             action_pred_time = end-start
 
         if defender_actions is None:
-            defender_actions = np.array([None])
+            defender_actions = np.array([None]*len(attacker_actions))
 
         # Perform action
         if self.attacker_agent_config.performance_analysis:
@@ -624,11 +636,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         actions = []
         for i in range(len(attacker_actions)):
+            print("attacker actions len:{}, defender actions len:{}".format(len(attacker_actions), len(defender_actions)))
             actions.append((attacker_actions[i], defender_actions[i]))
 
         new_obs, rewards, dones, infos = env.step(actions)
-        attacker_rewards = rewards[0]
-        defender_rewards = rewards[1]
         if self.attacker_agent_config.performance_analysis:
             end = time.time()
             env_step_time = end-start
@@ -644,13 +655,18 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             # Reshape in case of discrete action
             defender_actions = defender_actions.reshape(-1, 1)
 
+        attacker_obs, defender_obs = self.get_attacker_and_defender_obs(self._last_obs)
+        attacker_rewards, defender_rewards = self.get_attacker_and_defender_reward(rewards)
         if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
-            attacker_rollout_buffer.add(self._last_obs[0], attacker_actions, attacker_rewards, self._last_dones,
+            attacker_rollout_buffer.add(attacker_obs, attacker_actions, attacker_rewards, self._last_dones,
                                         attacker_values, attacker_log_probs)
         if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
-            defender_rollout_buffer.add(self._last_obs[1], defender_actions, defender_rewards, self._last_dones,
+            defender_rollout_buffer.add(defender_obs, defender_actions, defender_rewards, self._last_dones,
                                         defender_values, defender_log_probs)
 
+        print("new obs:{}".format(new_obs))
+        print("new obs len:{}".format(len(new_obs)))
+        print("new obs type:{}".format(type(new_obs)))
         self._last_obs = new_obs
         self._last_dones = dones
         self._last_infos = infos
@@ -701,3 +717,38 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         return new_obs, machine_obs, rewards, dones, infos, m_selection_values, m_action_values, m_selection_log_probs, \
                m_action_log_probs, m_selection_actions, m_actions
+
+
+    def get_attacker_and_defender_obs(self, obs):
+        if isinstance(obs, tuple):
+            return obs[0], obs[1]
+        else:
+            attacker_obs = []
+            defender_obs = []
+            for i in range(len(obs)):
+                a_o = obs[i][0]
+                d_o = obs[i][1]
+                attacker_obs.append(a_o)
+                defender_obs.append(d_o)
+            attacker_obs = np.array(attacker_obs)
+            defender_obs = np.array(defender_obs)
+            attacker_obs = attacker_obs.astype("float64")
+            defender_obs = defender_obs.astype("float64")
+            return attacker_obs, defender_obs
+
+    def get_attacker_and_defender_reward(self, rewards):
+        if isinstance(rewards, tuple):
+            return rewards[0], rewards[1]
+        else:
+            attacker_reward = []
+            defender_reward = []
+            for i in range(len(rewards)):
+                a_r = rewards[i][0]
+                d_r = rewards[i][1]
+                attacker_reward.append(a_r)
+                defender_reward.append(d_r)
+            attacker_reward = np.array(attacker_reward)
+            defender_reward = np.array(defender_reward)
+            attacker_reward = attacker_reward.astype("float64")
+            defender_reward = defender_reward.astype("float64")
+            return attacker_reward, defender_reward

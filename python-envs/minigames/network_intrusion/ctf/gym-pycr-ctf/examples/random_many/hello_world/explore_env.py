@@ -33,21 +33,22 @@ class ExploreThread(threading.Thread):
         emulation_config = EmulationConfig(agent_ip=self.containers_configs[self.idx].agent_ip, agent_username="agent",
                                          agent_pw="agent",
                                          server_connection=False, port_forward_next_port=self.port_start + 100*self.idx)
-        env = gym.make(self.env_name, env_config=None, emulation_config=emulation_config, containers_configs=self.containers_configs,
+        env = gym.make(self.env_name, env_config=None, emulation_config=emulation_config,
+                       containers_configs=self.containers_configs,
                        flags_configs=self.flags_configs, idx=self.idx, num_nodes=self.num_nodes)
         env.env_config.max_episode_length = 1000000000
         env.reset()
         num_actions = env.env_config.attacker_action_conf.num_actions
         actions = np.array(list(range(num_actions)))
         print("num actions:{}".format(num_actions))
-        masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
+        #masscan_actions = [251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262]
         trajectory = []
         for i in range(self.num_steps):
             print(i)
             legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
-
-            legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
+            #legal_actions = list(filter(lambda x: not x in masscan_actions, legal_actions))
             if len(legal_actions) == 0:
+                print("idx:{}".format(self.idx))
                 print("cont, trajectory:{}".format(trajectory))
                 print("all actions illegal, actions tried: ")
                 print(env.env_state.attacker_obs_state.actions_tried)
@@ -63,13 +64,15 @@ class ExploreThread(threading.Thread):
                 env.reset()
                 trajectory = []
                 continue
-            action = np.random.choice(legal_actions)
+            attacker_action = np.random.choice(legal_actions)
+            action = (attacker_action, None)
             obs, reward, done, info = env.step(action)
             if not done and EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config):
                 print("not done but got all flags???")
-            trajectory.append(action)
+            trajectory.append(attacker_action)
             #env.render()
             if done:
+                print("done, idx:{}".format(self.idx))
                 env.reset()
                 trajectory = []
             # time.sleep(0.001)
@@ -97,15 +100,19 @@ def start_explore_threads(num_threads : int, env_name : str, num_steps: int = 10
         t.join()
 
 if __name__ == '__main__':
-    containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
-    flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
-    eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
-    eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config("/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
-    max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    #max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
-    max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
+    #max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
+    #max_num_nodes = max_num_nodes_train
+    max_num_nodes = max_num_nodes_eval
     start_explore_threads(num_threads=1, env_name="pycr-ctf-random-many-emulation-v1",
                           num_steps=10000000, containers_configs=eval_containers_configs,
                           flags_configs=eval_flags_configs, num_nodes=max_num_nodes)

@@ -1,4 +1,4 @@
-all: run users topology vuln flags
+all: run users topology vuln flags traffic
 
 .PHONY: run
 
@@ -16,6 +16,9 @@ flags:
 
 vuln:
 	python make_cmd.py --c vuln
+
+traffic:
+	python make_cmd.py --c traffic
 
 clean_config:
 	python make_cmd.py --c clean_config
@@ -42,3 +45,5 @@ clean_envs:
 	python make_cmd.py --c clean_envs
 
 
+clean_fs_cache:
+	python make_cmd.py --c clean_fs_cache

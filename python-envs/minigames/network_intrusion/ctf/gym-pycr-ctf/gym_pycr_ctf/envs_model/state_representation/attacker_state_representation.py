@@ -18,11 +18,11 @@ class AttackerStateRepresentation:
         """
         num_m_features = 17 + obs_state.num_ports + obs_state.num_vuln + obs_state.num_sh
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         network_orig_shape = (obs_state.num_machines, num_m_features)
-        machine_orig_shape = (num_m_features,)
+        machine_orig_shape = (num_m_features+ 1,)
         m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(num_m_features,))
         return observation_space, m_selection_observation_space, \
                network_orig_shape, machine_orig_shape, m_action_observation_space
@@ -143,11 +143,11 @@ class AttackerStateRepresentation:
         """
         num_m_features = 3
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         network_orig_shape = (obs_state.num_machines, num_m_features)
-        machine_orig_shape = (num_m_features,)
+        machine_orig_shape = (num_m_features+ 1,)
         m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(num_m_features,))
         return observation_space, m_selection_observation_space, \
                network_orig_shape, machine_orig_shape, m_action_observation_space
@@ -206,9 +206,9 @@ class AttackerStateRepresentation:
         """
         num_m_features = 12
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
-            obs_state.num_machines * num_m_features,))
+            obs_state.num_machines * num_m_features+ 1,))
         network_orig_shape = (obs_state.num_machines, num_m_features)
         machine_orig_shape = (num_m_features,)
         m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(num_m_features,))
@@ -285,11 +285,11 @@ class AttackerStateRepresentation:
         :return: m_selection_obs_space (for AR), network_orig_shape, machine_orig_shape, m_action_obs_space (for AR)
         """
         total_features = 7
-        observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features,))
-        m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features,))
+        observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features + 1,))
+        m_selection_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features + 1,))
         network_orig_shape = (total_features)
         machine_orig_shape = (total_features)
-        m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features,))
+        m_action_observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(total_features+ 1,))
         return observation_space, m_selection_observation_space, \
                network_orig_shape, machine_orig_shape, m_action_observation_space
 

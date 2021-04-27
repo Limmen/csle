@@ -51,7 +51,7 @@ class DefenderStateRepresentation:
             network_obs[6] = obs_state.num_severe_alerts_total
             network_obs[7] = obs_state.num_warning_alerts_total
         else:
-            network_obs = np.zeros(0)
+            network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
 
             if len(obs_state.machines) > i:
@@ -151,7 +151,7 @@ class DefenderStateRepresentation:
             network_obs[7] = obs_state.num_warning_alerts_total
             network_obs[8] = obs_state.step
         else:
-            network_obs = np.zeros(0)
+            network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
 
             if len(obs_state.machines) > i:
@@ -227,7 +227,7 @@ class DefenderStateRepresentation:
             network_obs[2] = obs_state.num_severe_alerts_recent
             network_obs[3] = obs_state.num_warning_alerts_recent
         else:
-            network_obs = np.zeros(0)
+            network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
 
             if len(obs_state.machines) > i:
@@ -284,7 +284,7 @@ class DefenderStateRepresentation:
             network_obs[2] = obs_state.num_severe_alerts_recent
             network_obs[3] = obs_state.num_warning_alerts_recent
         else:
-            network_obs = np.zeros(0)
+            network_obs = np.zeros(num_network_features)
 
         return machines_obs, network_obs
 
@@ -332,7 +332,7 @@ class DefenderStateRepresentation:
             network_obs[7] = obs_state.num_warning_alerts_total
             network_obs[8] = obs_state.step
         else:
-            network_obs = np.zeros(0)
+            network_obs = np.zeros(num_network_features)
 
         return machines_obs, network_obs
 

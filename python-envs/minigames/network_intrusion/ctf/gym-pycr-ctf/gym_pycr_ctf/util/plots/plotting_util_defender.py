@@ -907,7 +907,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[0][1].plot(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_eval_2_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
-        marker="*", ls='-', color="#599ad3",
+        marker="p", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -943,7 +943,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[0][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
 
     ax[0][2].plot(np.array(list(range(len(avg_train_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-            avg_train_rewards_means_v1[::sample_step], label=r"$\pi_{\theta}$ simulation",
+            avg_train_rewards_means_v1[::sample_step], label=r"Defender $\pi_{\theta^D}$ simulation",
             marker="s", ls='-', color="r",
             markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
@@ -953,7 +953,7 @@ def plot_flags_int_r_steps_costs_alerts(
         alpha=0.35, color="r")
 
     ax[0][2].plot(np.array(list(range(len(avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-            avg_eval_2_rewards_means_v1[::sample_step], label=r"$\pi_{\theta}$ emulation",
+            avg_eval_2_rewards_means_v1[::sample_step], label=r"Defender $\pi_{\theta^D}$ emulation",
             marker="p", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -1037,7 +1037,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[1][1].plot(
         np.array(list(range(len(avg_eval_2_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
         avg_eval_2_early_stopping_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
-        marker="*", ls='-', color="#599ad3",
+        marker="p", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[1][1].fill_between(
         np.array(list(range(len(avg_eval_2_early_stopping_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -1269,7 +1269,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
 
     ax[0][2].plot(np.array(
         list(range(len(attacker_avg_train_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-                  attacker_avg_train_rewards_means_v1[::sample_step], label=r"Attacker $\pi^A_{\theta}$ simulation",
+                  attacker_avg_train_rewards_means_v1[::sample_step], label=r"Attacker $\pi_{\theta^A}$ simulation",
                   marker="s", ls='-', color="r",
                   markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
@@ -1281,7 +1281,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
 
     ax[0][2].plot(
         np.array(list(range(len(attacker_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-        attacker_avg_eval_2_rewards_means_v1[::sample_step], label=r"Attacker $\pi^A_{\theta}$ emulation",
+        attacker_avg_eval_2_rewards_means_v1[::sample_step], label=r"Attacker $\pi_{\theta^A}$ emulation",
         marker="p", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(attacker_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -1290,7 +1290,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
         alpha=0.35, color="#599ad3")
 
     ax[0][2].plot(np.array(list(range(len(defender_avg_train_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-                  defender_avg_train_rewards_means_v1[::sample_step], label=r"Defender $\pi^D_{\theta}$ simulation",
+                  defender_avg_train_rewards_means_v1[::sample_step], label=r"Defender $\pi_{\theta^D}$ simulation",
                   marker="h", ls='-', color="#f9a65a",
                   markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
@@ -1300,7 +1300,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
         alpha=0.35, color="#f9a65a")
 
     ax[0][2].plot(np.array(list(range(len(defender_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-                  defender_avg_eval_2_rewards_means_v1[::sample_step], label=r"Defender $\pi^D_{\theta}$ emulation",
+                  defender_avg_eval_2_rewards_means_v1[::sample_step], label=r"Defender $\pi_{\theta^D}$ emulation",
                   marker="d", ls='-', color="#661D98", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(defender_avg_eval_2_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -1485,7 +1485,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[1][2].set_title(r"\# IDS Alerts per episode", fontsize=fontsize)
 
     handles, labels = ax[0][2].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.50, 0.09),
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.51, 0.09),
                ncol=5, fancybox=True, shadow=True)
 
     fig.tight_layout()

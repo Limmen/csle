@@ -126,7 +126,7 @@ def plot_3d(model):
     ax.plot_surface(num_severe_alerts_recent, num_severe_alerts_total, action_val, rstride=12, cstride=12,
                     cmap='cividis')
 
-    ax.set_title(r"$\pi_{\theta}(\text{stop} | w_a, s_a)$", fontsize=12.5)
+    ax.set_title(r"$\pi_{\theta^D}(\text{stop} | w_a, s_a)$", fontsize=12.5)
     ax.set_xlabel(r"warn alerts $w_a$")
     ax.set_ylabel(r"sev alerts $s_a$")
     ax.xaxis.labelpad = 0
@@ -197,7 +197,7 @@ def plot_stopping_num_alerts(model):
             linestyle="dashed")
 
 
-    ax.set_title(r"$\pi_{\theta}(\text{stop}|a)$", fontsize=12.5)
+    ax.set_title(r"$\pi_{\theta^D}(\text{stop}|a)$", fontsize=12.5)
     ax.set_xlabel(r"\# Alerts $a$", fontsize=11.5)
     #ax.set_ylabel(r"$\mathbb{P}[\text{stop}|w]$", fontsize=12)
     ax.set_xlim(0, len(x))
@@ -269,7 +269,7 @@ def plot_value_logged_in(model, env):
 
     ax.plot_surface(num_severe_alerts_recent, num_severe_alerts_total, action_val, rstride=12, cstride=12, cmap='cividis')
 
-    ax.set_title(r"$\pi_{\theta}(stop | w_a, s_a)$", fontsize=16)
+    ax.set_title(r"$\pi_{\theta^D}(stop | w_a, s_a)$", fontsize=16)
     ax.set_xlabel(r"warning alerts $w_a$")
     ax.set_ylabel(r"severe alerts $s_a$")
     xlab = ax.xaxis.get_label()

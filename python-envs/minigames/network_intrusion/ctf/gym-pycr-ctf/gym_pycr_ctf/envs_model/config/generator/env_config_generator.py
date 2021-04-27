@@ -36,7 +36,7 @@ class EnvConfigGenerator:
         """
         env_dirs = EnvConfigGenerator.get_env_dirs(path=path)
         cmds = ["clean", "clean_config", "gen_config", "apply_config", "run", "stop", "start", "topology", "users",
-                "flags", "vuln", "all", "clean_fs_cache"]
+                "flags", "vuln", "all", "clean_fs_cache", "traffic"]
         if cmd in cmds:
             for dir in env_dirs:
                 cmd_full = "make " + cmd
@@ -78,7 +78,11 @@ class EnvConfigGenerator:
                             os.path.join(env_path, "./create_vuln.py"))
             shutil.copyfile(os.path.join(envs_dirs_path, "./create_users.py"),
                             os.path.join(env_path, "./create_users.py"))
-            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(container_env_config)
+            shutil.copyfile(os.path.join(envs_dirs_path, "./create_traffic_generators.py"),
+                            os.path.join(env_path, "./create_traffic_generators.py"))
+            container_env_config_c = container_env_config.copy()
+            container_env_config_c.path = env_path
+            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(container_env_config_c)
             container_env_config.subnet_id_blacklist.add(subnet_id)
             os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + gen_subnet_prefix)
         return container_env_config.subnet_id_blacklist

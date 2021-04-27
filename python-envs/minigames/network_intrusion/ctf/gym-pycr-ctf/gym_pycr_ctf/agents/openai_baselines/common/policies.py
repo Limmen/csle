@@ -415,6 +415,7 @@ class ActorCriticPolicy(BasePolicy):
         :param deterministic: (bool) Whether to sample or use deterministic actions
         :return: (Tuple[th.Tensor, th.Tensor, th.Tensor]) action, value and log probability of the action
         """
+
         latent_pi, latent_vf = self._get_latent(obs)
         # Evaluate the values for the given observations
         values = self.value_net(latent_vf)
