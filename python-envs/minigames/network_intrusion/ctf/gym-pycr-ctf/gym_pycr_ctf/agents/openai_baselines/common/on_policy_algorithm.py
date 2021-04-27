@@ -610,7 +610,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_values = None
             defender_log_probs = None
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
-                print("obs tensor attacker shape:{}".format(obs_tensor_attacker.shape))
                 attacker_actions, attacker_values, attacker_log_probs = \
                     self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True)
                 attacker_actions = attacker_actions.cpu().numpy()
@@ -636,7 +635,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         actions = []
         for i in range(len(attacker_actions)):
-            print("attacker actions len:{}, defender actions len:{}".format(len(attacker_actions), len(defender_actions)))
             actions.append((attacker_actions[i], defender_actions[i]))
 
         new_obs, rewards, dones, infos = env.step(actions)
@@ -664,9 +662,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_rollout_buffer.add(defender_obs, defender_actions, defender_rewards, self._last_dones,
                                         defender_values, defender_log_probs)
 
-        print("new obs:{}".format(new_obs))
-        print("new obs len:{}".format(len(new_obs)))
-        print("new obs type:{}".format(type(new_obs)))
         self._last_obs = new_obs
         self._last_dones = dones
         self._last_infos = infos
