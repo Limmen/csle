@@ -60,8 +60,7 @@ class EnvConfigGenerator:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
         envs_dirs_path = container_env_config.path
-        if container_env_config.subnet_id_blacklist is None:
-            subnet_id_blacklist = set()
+
         for i in range(num_envs):
             dir_name = "env_" + str(start_idx + i)
             dir_path = os.path.join(envs_dirs_path, dir_name)
@@ -131,9 +130,6 @@ class EnvConfigGenerator:
         :return: (subnet_prefix, subnet_id) of the created environment
         """
 
-        if container_env_config.subnet_id_blacklist is None:
-            subnet_id_blacklist = set()
-
         EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
 
         networks, network_ids = EnvConfigGenerator.list_docker_networks()
@@ -143,10 +139,11 @@ class EnvConfigGenerator:
         available_network_ids = list(filter(lambda x: x != 0 and
                                                       (x not in network_ids_in_use and
                                                        x not in container_env_config.subnet_id_blacklist), network_ids))
-        subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
+        container_env_config.subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
         container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
                                                         container_env_config.max_num_nodes)
-        container_env_config.subnet_prefix = container_env_config.subnet_prefix + str(subnet_id) + "."
+        container_env_config.subnet_prefix = container_env_config.subnet_prefix + \
+                                             str(container_env_config.subnet_id) + "."
         container_env_config.num_flags = random.randint(container_env_config.min_num_flags,
                                                         min(container_env_config.max_num_flags,
                                                             container_env_config.num_nodes - 3))
@@ -165,7 +162,7 @@ class EnvConfigGenerator:
         TrafficGenerator.write_traffic_config(created_env_config.traffic_config, path=container_env_config.path)
 
         EnvConfigGenerator.create_container_dirs(created_env_config.containers_config, path=container_env_config.path)
-        return container_env_config.subnet_prefix, subnet_id
+        return container_env_config.subnet_prefix, container_env_config.subnet_id
 
     @staticmethod
     def list_docker_networks() -> Tuple[List[str], List[int]]:
@@ -328,7 +325,7 @@ class EnvConfigGenerator:
         if os.path.exists(util.default_containers_folders_path(out_dir=path)):
             shutil.rmtree(util.default_containers_folders_path(out_dir=path))
         if os.path.exists(util.default_traffic_path(out_dir=path)):
-            shutil.rmtree(util.default_traffic_path(out_dir=path))
+            os.remove(util.default_traffic_path(out_dir=path))
         # except Exception as e:
         #     pass
 

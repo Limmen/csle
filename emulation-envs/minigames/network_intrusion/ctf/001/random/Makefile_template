@@ -14,12 +14,16 @@ flags: ./create_flags.py
 vuln: ./create_vuln.py
 	python create_vuln.py
 
+traffic: ./create_traffic_generators.py
+	python create_traffic_generators.py
+
 clean_config:
 	rm -rf ./users.json
 	rm -rf ./vulnerabilities.json
 	rm -rf ./flags.json
 	rm -rf ./containers.json
 	rm -rf ./topology.json
+	rm -rf ./traffic.json
 	rm -rf ./containers
 
 gen_config:
@@ -28,7 +32,6 @@ gen_config:
 
 clean_fs_cache:
 	python clean_fs_cache.py
-
 
 
 apply_config: users vuln topology flags
