@@ -30,5 +30,46 @@ clean_fs_cache:
 	python clean_fs_cache.py
 
 
+
 apply_config: users vuln topology flags
+
+run:
+	cd containers/hacker_kali1_1/ && $(MAKE) run
+	cd containers/cve_2015_1427_1_1/ && $(MAKE) run
+	cd containers/sql_injection1_1/ && $(MAKE) run
+	cd containers/honeypot1_1/ && $(MAKE) run
+	cd containers/shellshock1_1/ && $(MAKE) run
+	cd containers/ssh1_1/ && $(MAKE) run
+	cd containers/router1_1/ && $(MAKE) run
+
+
+stop:
+	cd containers/hacker_kali1_1/ && $(MAKE) stop
+	cd containers/cve_2015_1427_1_1/ && $(MAKE) stop
+	cd containers/sql_injection1_1/ && $(MAKE) stop
+	cd containers/honeypot1_1/ && $(MAKE) stop
+	cd containers/shellshock1_1/ && $(MAKE) stop
+	cd containers/ssh1_1/ && $(MAKE) stop
+	cd containers/router1_1/ && $(MAKE) stop
+
+
+start:
+	cd containers/hacker_kali1_1/ && $(MAKE) start
+	cd containers/cve_2015_1427_1_1/ && $(MAKE) start
+	cd containers/sql_injection1_1/ && $(MAKE) start
+	cd containers/honeypot1_1/ && $(MAKE) start
+	cd containers/shellshock1_1/ && $(MAKE) start
+	cd containers/ssh1_1/ && $(MAKE) start
+	cd containers/router1_1/ && $(MAKE) start
+
+
+clean:
+	cd containers/hacker_kali1_1/ && $(MAKE) clean
+	cd containers/cve_2015_1427_1_1/ && $(MAKE) clean
+	cd containers/sql_injection1_1/ && $(MAKE) clean
+	cd containers/honeypot1_1/ && $(MAKE) clean
+	cd containers/shellshock1_1/ && $(MAKE) clean
+	cd containers/ssh1_1/ && $(MAKE) clean
+	cd containers/router1_1/ && $(MAKE) clean
+
 

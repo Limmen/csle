@@ -13,12 +13,16 @@ import gym_pycr_ctf.constants.constants as constants
 class TrafficGenerator:
 
     @staticmethod
-    def generate(topology: Topology, containers_config: ContainersConfig) -> TrafficConfig:
+    def generate(topology: Topology, containers_config: ContainersConfig, agent_container_names : List[str],
+                 router_container_names : List[str]) \
+            -> TrafficConfig:
         """
         Generates a traffic configuration
 
         :param topology: topology of the environment
         :param containers_config: container configuration of the envirinment
+        :param agent_container_names: list of agent container names
+        :param router_container_names: list of router container names
         :return: the created traffic configuration
         """
         jumphosts_dict = {}
@@ -43,9 +47,11 @@ class TrafficGenerator:
         for node in topology.node_configs:
             commands = []
             for target in targethosts_dict[node.ip]:
-                template_commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[target]]
-                for tc in template_commands:
-                    commands.append(tc.format(target))
+                if containers_dict[target] not in agent_container_names \
+                        and containers_dict[target] not in router_container_names:
+                    template_commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[target]]
+                    for tc in template_commands:
+                        commands.append(tc.format(target))
 
             node_traffic_config = NodeTrafficConfig(ip=node.ip, jumphosts=targethosts_dict[node.ip],
                                                     target_hosts=targethosts_dict[node.ip], commands=commands)

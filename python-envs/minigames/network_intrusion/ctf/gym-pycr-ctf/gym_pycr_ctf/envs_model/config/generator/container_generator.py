@@ -87,7 +87,7 @@ class ContainerGenerator:
         return containers_cfg
 
     @staticmethod
-    def write_containers_config(containers_cfg: VulnerabilitiesConfig, path: str = None) -> None:
+    def write_containers_config(containers_cfg: ContainersConfig, path: str = None) -> None:
         """
         Writes the default configuration to a json file
 

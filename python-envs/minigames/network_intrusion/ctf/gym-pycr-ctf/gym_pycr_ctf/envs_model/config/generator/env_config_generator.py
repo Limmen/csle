@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Set
 import io
 import shutil
 import random
@@ -12,17 +12,28 @@ from gym_pycr_ctf.envs_model.config.generator.vuln_generator import Vulnerabilit
 from gym_pycr_ctf.envs_model.config.generator.flags_generator import FlagsGenerator
 from gym_pycr_ctf.envs_model.config.generator.users_generator import UsersGenerator
 from gym_pycr_ctf.envs_model.config.generator.container_generator import ContainerGenerator
+from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.flags_config import FlagsConfig
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
+from gym_pycr_ctf.dao.container_config.container_env_config import ContainerEnvConfig
+from gym_pycr_ctf.dao.container_config.created_env_config import CreatedEnvConfig
+
 
 class EnvConfigGenerator:
+    """
+    A Utility Class for generating emulation environments from given configurations
+    """
 
     @staticmethod
-    def execute_env_cmd(path :str, cmd: str):
+    def execute_env_cmd(path :str, cmd: str) -> None:
+        """
+        Utility function for executing make commands for an emulation
+
+        :param path: the path to where the emulation config is stored
+        :param cmd: the make command
+        :return: None
+        """
         env_dirs = EnvConfigGenerator.get_env_dirs(path=path)
         cmds = ["clean", "clean_config", "gen_config", "apply_config", "run", "stop", "start", "topology", "users",
                 "flags", "vuln", "all", "clean_fs_cache"]
@@ -34,19 +45,22 @@ class EnvConfigGenerator:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
     @staticmethod
-    def generate_envs(num_envs: int, container_pool: List[Tuple[str, str]] = None,
-                 gw_vuln_compatible_containers: List[Tuple[str, str]] = None,
-                 pw_vuln_compatible_containers: List[Tuple[str, str]] = None, subnet_id: int = 1,
-                 agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None,
-                 path: str = None, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
-                 max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
-                 subnet_prefix: str = "172.18.", cleanup_old_envs : bool = True, start_idx : int = 0,
-                 subnet_id_blacklist = None):
+    def generate_envs(container_env_config: ContainerEnvConfig, num_envs: int,
+                 cleanup_old_envs : bool = True, start_idx : int = 0) -> Set:
+        """
+        Generates a <num_envs> number of emulation environments
+
+        :param container_env_config: the environment configuration
+        :param num_envs: the number of environments
+        :param cleanup_old_envs: boolean flag whether to clean up old environments or not
+        :param start_idx: the start idx of the first environment to create
+        :return: the blacklist of subnet ids
+        """
         if cleanup_old_envs:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
-        envs_dirs_path = path
-        if subnet_id_blacklist is None:
+        envs_dirs_path = container_env_config.path
+        if container_env_config.subnet_id_blacklist is None:
             subnet_id_blacklist = set()
         for i in range(num_envs):
             dir_name = "env_" + str(start_idx + i)
@@ -65,93 +79,101 @@ class EnvConfigGenerator:
                             os.path.join(env_path, "./create_vuln.py"))
             shutil.copyfile(os.path.join(envs_dirs_path, "./create_users.py"),
                             os.path.join(env_path, "./create_users.py"))
-            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(min_num_users=min_num_users,
-                                                                     max_num_users=max_num_users,
-                                                                     min_num_flags=min_num_flags,
-                                                                     max_num_flags=max_num_flags,
-                                                                     min_num_nodes=min_num_nodes,
-                                                                     max_num_nodes=max_num_nodes,
-                                                                     container_pool=container_pool,
-                                                                     gw_vuln_compatible_containers=gw_vuln_compatible_containers,
-                                                                     pw_vuln_compatible_containers=pw_vuln_compatible_containers,
-                                                                     agent_containers=agent_containers,
-                                                                     router_containers=router_containers,
-                                                                     path=env_path, subnet_prefix=subnet_prefix,
-                                                                     subnet_id_blacklist=subnet_id_blacklist)
-            subnet_id_blacklist.add(subnet_id)
+            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(container_env_config)
+            container_env_config.subnet_id_blacklist.add(subnet_id)
             os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + gen_subnet_prefix)
-        return subnet_id_blacklist
+        return container_env_config.subnet_id_blacklist
 
     @staticmethod
-    def generate(num_nodes: int = 5, subnet_prefix: str = "172.18.", num_flags: int = 1,
-                 max_num_users: int = 5,
-                 container_pool: List[Tuple[str, str]] = None,
-                 gw_vuln_compatible_containers: List[Tuple[str, str]] = None,
-                 pw_vuln_compatible_containers: List[Tuple[str, str]] = None, subnet_id: int = 1,
-                 agent_containers : List[Tuple[str, str]] = None, router_containers : List[Tuple[str, str]]= None) \
-            -> Tuple[Topology, VulnerabilitiesConfig, UsersConfig, FlagsConfig, ContainersConfig]:
+    def generate(container_env_config: ContainerEnvConfig) -> Tuple[CreatedEnvConfig]:
+        """
+        Generates a new emulation environment (creates the artifacts)
+
+        :param container_env_config: configuration of the new environment
+        :return: the configuration of the generated emulation environment
+        """
 
         adj_matrix, gws, topology, agent_ip, router_ip, node_id_d, node_id_d_inv = \
-            TopologyGenerator.generate(num_nodes=num_nodes, subnet_prefix=subnet_prefix)
+            TopologyGenerator.generate(num_nodes=container_env_config.num_nodes,
+                                       subnet_prefix=container_env_config.subnet_prefix)
         vulnerabilities, vulnerable_nodes = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
-                                                          subnet_prefix=subnet_prefix,
-                                                          num_flags=num_flags, access_vuln_types=[VulnType.WEAK_PW],
+                                                          subnet_prefix=container_env_config.subnet_prefix,
+                                                          num_flags=container_env_config.num_flags, access_vuln_types=[VulnType.WEAK_PW],
                                                           router_ip=router_ip)
-        users = UsersGenerator.generate(max_num_users=max_num_users, topology=topology, agent_ip=agent_ip)
-        flags = FlagsGenerator.generate(vuln_cfg=vulnerabilities, num_flags=num_flags)
+        users = UsersGenerator.generate(max_num_users=container_env_config.max_num_users, topology=topology, agent_ip=agent_ip)
+        flags = FlagsGenerator.generate(vuln_cfg=vulnerabilities, num_flags=container_env_config.num_flags)
         containers = ContainerGenerator.generate(
-            topology=topology, vuln_cfg=vulnerabilities, gateways=gws, container_pool=container_pool,
-            gw_vuln_compatible_containers=gw_vuln_compatible_containers,
-            pw_vuln_compatible_containers=pw_vuln_compatible_containers, subnet_id=subnet_id, num_flags=num_flags,
-            agent_ip=agent_ip, router_ip=router_ip, agent_containers=agent_containers,
-            router_containers=router_containers, subnet_prefix=subnet_prefix, vulnerable_nodes = vulnerable_nodes)
+            topology=topology, vuln_cfg=vulnerabilities, gateways=gws, container_pool=container_env_config.container_pool,
+            gw_vuln_compatible_containers=container_env_config.gw_vuln_compatible_containers,
+            pw_vuln_compatible_containers=container_env_config.pw_vuln_compatible_containers,
+            subnet_id=container_env_config.subnet_id, num_flags=container_env_config.num_flags,
+            agent_ip=agent_ip, router_ip=router_ip, agent_containers=container_env_config.agent_containers,
+            router_containers=container_env_config.router_containers,
+            subnet_prefix=container_env_config.subnet_prefix, vulnerable_nodes = vulnerable_nodes)
 
-        return topology, vulnerabilities, users, flags, containers
+        agent_container_names = list(map(lambda x: x[0], container_env_config.agent_containers))
+        gateway_container_names = list(map(lambda x: x[0], container_env_config.router_containers))
+        traffic = TrafficGenerator.generate(topology=topology, containers_config=containers,
+                                            agent_container_names=agent_container_names,
+                                            router_container_names = gateway_container_names
+                                            )
+        created_env_config = CreatedEnvConfig(
+            topology=topology, containers_config = containers, vuln_config=vulnerabilities,
+            users_config = users, flags_config = flags, traffic_config = traffic)
+        return created_env_config
 
     @staticmethod
-    def create_env(min_num_users: int, max_num_users: int, min_num_flags: int, max_num_flags: int, min_num_nodes: int,
-                   max_num_nodes: int,
-                   container_pool :list, gw_vuln_compatible_containers : list,
-                   pw_vuln_compatible_containers: list,
-                   agent_containers : list, router_containers: list, path: str = None,
-                   subnet_prefix: str = "172.18.", subnet_id_blacklist : set = None):
+    def create_env(container_env_config: ContainerEnvConfig) -> Tuple[str, id]:
+        """
+        Function that creates a new emulation environment given a configuration
 
-        if subnet_id_blacklist is None:
+        :param container_env_config: the configuration of the environment to create
+        :return: (subnet_prefix, subnet_id) of the created environment
+        """
+
+        if container_env_config.subnet_id_blacklist is None:
             subnet_id_blacklist = set()
 
-        EnvConfigGenerator.cleanup_env_config(path=path)
+        EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
 
         networks, network_ids = EnvConfigGenerator.list_docker_networks()
         running_containers = EnvConfigGenerator.list_running_containers()
         networks_in_use, network_ids_in_use = EnvConfigGenerator.find_networks_in_use(containers=running_containers)
 
-        available_network_ids = list(filter(lambda x: x != 0 and x not in network_ids_in_use and x not in subnet_id_blacklist, network_ids))
+        available_network_ids = list(filter(lambda x: x != 0 and
+                                                      (x not in network_ids_in_use and
+                                                       x not in container_env_config.subnet_id_blacklist), network_ids))
         subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
-        num_nodes = random.randint(min_num_nodes, max_num_nodes)
-        subnet_prefix = subnet_prefix + str(subnet_id) + "."
-        num_flags = random.randint(min_num_flags, min(max_num_flags, num_nodes - 3))
-        num_users = random.randint(min_num_users, max_num_users)
+        container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
+                                                        container_env_config.max_num_nodes)
+        container_env_config.subnet_prefix = container_env_config.subnet_prefix + str(subnet_id) + "."
+        container_env_config.num_flags = random.randint(container_env_config.min_num_flags,
+                                                        min(container_env_config.max_num_flags,
+                                                            container_env_config.num_nodes - 3))
+        container_env_config.num_users = random.randint(container_env_config.min_num_users,
+                                                        container_env_config.max_num_users)
 
+        created_env_config = EnvConfigGenerator.generate(container_env_config)
 
-        topology, vulnerabilities, users, flags, containers = EnvConfigGenerator.generate(
-            num_nodes=num_nodes, subnet_prefix=subnet_prefix, num_flags=num_flags, max_num_users=num_users,
-            container_pool=container_pool,
-            gw_vuln_compatible_containers=gw_vuln_compatible_containers,
-            pw_vuln_compatible_containers=pw_vuln_compatible_containers, subnet_id=subnet_id,
-            agent_containers=agent_containers,
-            router_containers=router_containers)
+        UsersGenerator.write_users_config(created_env_config.users_config, path=container_env_config.path)
+        TopologyGenerator.write_topology(created_env_config.topology, path=container_env_config.path)
+        FlagsGenerator.write_flags_config(created_env_config.flags_config, path=container_env_config.path)
+        VulnerabilityGenerator.write_vuln_config(created_env_config.vuln_config,
+                                                 path=container_env_config.path)
+        ContainerGenerator.write_containers_config(created_env_config.containers_config,
+                                                   path=container_env_config.path)
+        TrafficGenerator.write_traffic_config(created_env_config.traffic_config, path=container_env_config.path)
 
-        UsersGenerator.write_users_config(users, path=path)
-        TopologyGenerator.write_topology(topology, path=path)
-        FlagsGenerator.write_flags_config(flags, path=path)
-        VulnerabilityGenerator.write_vuln_config(vulnerabilities, path=path)
-        ContainerGenerator.write_containers_config(containers, path=path)
-
-        EnvConfigGenerator.create_container_dirs(containers, path=path)
-        return subnet_prefix, subnet_id
+        EnvConfigGenerator.create_container_dirs(created_env_config.containers_config, path=container_env_config.path)
+        return container_env_config.subnet_prefix, subnet_id
 
     @staticmethod
-    def list_docker_networks():
+    def list_docker_networks() -> Tuple[List[str], List[int]]:
+        """
+        Lists the PyCR docker networks
+
+        :return: (network names, network ids)
+        """
         cmd = "docker network ls"
         stream = os.popen(cmd)
         networks = stream.read()
@@ -165,7 +187,12 @@ class EnvConfigGenerator:
 
 
     @staticmethod
-    def list_running_containers():
+    def list_running_containers() -> List[str]:
+        """
+        Lists the running containers
+
+        :return: names of the running containers
+        """
         cmd = "docker ps -q"
         stream = os.popen(cmd)
         running_containers = stream.read()
@@ -175,7 +202,13 @@ class EnvConfigGenerator:
 
 
     @staticmethod
-    def find_networks_in_use(containers: List[str]):
+    def find_networks_in_use(containers: List[str]) -> Tuple[List[str], List[str]]:
+        """
+        Utility function for querying Docker to see which networks are currently in use
+
+        :param containers: the list of containers to check the networks for
+        :return: (list of networks in use, list of network ids in use
+        """
         networks_in_use = []
         network_ids_in_use = []
         for c in containers:
@@ -192,7 +225,14 @@ class EnvConfigGenerator:
 
 
     @staticmethod
-    def create_container_dirs(container_config: ContainersConfig, path: str = None):
+    def create_container_dirs(container_config: ContainersConfig, path: str = None) -> None:
+        """
+        Utility function for creating the container directories with the start scripts
+
+        :param container_config: the configuration of the containers
+        :param path: the path where to create the directories
+        :return: None
+        """
         containers_folders_dir = util.default_containers_folders_path(out_dir=path)
         if not os.path.exists(containers_folders_dir):
             os.makedirs(containers_folders_dir)
@@ -233,7 +273,14 @@ class EnvConfigGenerator:
         EnvConfigGenerator.create_makefile(container_names, path=path)
 
     @staticmethod
-    def create_makefile(container_names, path: str = None):
+    def create_makefile(container_names, path: str = None) -> None:
+        """
+        Utility function for automatically generating the Makefile for managing a newly created emulation environment
+
+        :param container_names: the names of the containers
+        :param path: the path to where the Makefile will be stored
+        :return: None
+        """
         with io.open(util.default_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
             makefile_template_str = f.read()
 
@@ -260,7 +307,13 @@ class EnvConfigGenerator:
             f.write(makefile_template_str)
 
     @staticmethod
-    def cleanup_env_config(path: str = None):
+    def cleanup_env_config(path: str = None) -> None:
+        """
+        A utility function for cleaning up the environment configuration
+
+        :param path: the path to where the configuration is stored
+        :return: None
+        """
         # try:
         if os.path.exists(util.default_users_path(out_dir=path)):
             os.remove(util.default_users_path(out_dir=path))
@@ -274,11 +327,19 @@ class EnvConfigGenerator:
             os.remove(util.default_containers_path(out_dir=path))
         if os.path.exists(util.default_containers_folders_path(out_dir=path)):
             shutil.rmtree(util.default_containers_folders_path(out_dir=path))
+        if os.path.exists(util.default_traffic_path(out_dir=path)):
+            shutil.rmtree(util.default_traffic_path(out_dir=path))
         # except Exception as e:
         #     pass
 
     @staticmethod
-    def cleanup_envs(path: str = None):
+    def cleanup_envs(path: str = None) -> None:
+        """
+        Utility function for cleaning up the artifacts of a created emulation environment
+
+        :param path: the path where the emulation is created
+        :return: None
+        """
         if path == None:
             path = util.default_output_dir()
         for f in os.listdir(path):
@@ -286,7 +347,13 @@ class EnvConfigGenerator:
                 shutil.rmtree(os.path.join(path, f))
 
     @staticmethod
-    def get_env_dirs(path: str = None):
+    def get_env_dirs(path: str = None) -> List[str]:
+        """
+        Utility function for getting the directories of the emulation environment
+
+        :param path: path to where the directories should be stored
+        :return: A list of the directories
+        """
         if path == None:
             path = util.default_output_dir()
         env_dirs = []
@@ -297,6 +364,12 @@ class EnvConfigGenerator:
 
     @staticmethod
     def get_all_envs_containers_config(path: str = None) -> List[ContainersConfig]:
+        """
+        Utility function for getting the configuration of all containers in the emulation environment
+
+        :param path: the path to where the configuration should be stored
+        :return: a list of container configurations
+        """
         if path == None:
             path = util.default_output_dir()
         env_dirs = EnvConfigGenerator.get_env_dirs(path)
@@ -307,6 +380,12 @@ class EnvConfigGenerator:
 
     @staticmethod
     def get_all_envs_flags_config(path: str = None) -> List[FlagsConfig]:
+        """
+        Utility function for getting the configuration of all flags in the emulation environment
+
+        :param path: the path where the configuration should be stored
+        :return: A list with the flag configurations
+        """
         if path == None:
             path = util.default_output_dir()
         env_dirs = EnvConfigGenerator.get_env_dirs(path)
@@ -316,7 +395,13 @@ class EnvConfigGenerator:
         return flags_config
 
     @staticmethod
-    def config_exists(path: str = None):
+    def config_exists(path: str = None) -> bool:
+        """
+        Checks whether a complete environment configuration exists in a given path or not
+
+        :param path: the path to check
+        :return: True if it exists, otherwise False
+        """
         if not os.path.exists(util.default_users_path(out_dir=path)):
             return False
         if not os.path.exists(util.default_topology_path(out_dir=path)):
@@ -331,11 +416,21 @@ class EnvConfigGenerator:
             return False
         if not os.path.exists(util.default_makefile_path(out_dir=path)):
             return False
+        if not os.path.exists(util.default_traffic_path(out_dir=path)):
+            return False
 
         return True
 
     @staticmethod
-    def compute_approx_pi_star(env, ids_enabled, num_flags) -> float:
+    def compute_approx_pi_star(env, ids_enabled: bool, num_flags: int) -> float:
+        """
+        Utility function for computing the approximate optimal pi* reward for the attacker in a given environment
+
+        :param env: the environment
+        :param ids_enabled: whether IDS is enabled
+        :param num_flags: the number of flags in the environment
+        :return: the approximate optimal reward
+        """
         action_costs = env.env_config.action_costs
         action_alerts = env.env_config.action_alerts
         pi_star = 0
@@ -348,24 +443,4 @@ class EnvConfigGenerator:
         else:
             pi_star = (-env.env_config.base_step_reward) * num_flags  # dont' know optimal cost, this is upper bound on optimality
         return pi_star
-
-
-if __name__ == '__main__':
-    container_pool = [("ftp1", "0.0.1"), ("ftp2", "0.0.1"), ("honeypot1", "0.0.1"),
-                      ("honeypot2", "0.0.1"),
-                      ("ssh1", "0.0.1"), ("ssh2", "0.0.1"),
-                      ("ssh3", "0.0.1"), ("telnet1", "0.0.1"), ("telnet2", "0.0.1"), ("telnet3", "0.0.1")]
-    gw_vuln_compatible_containers = [("ssh1", "0.0.1"), ("ssh2", "0.0.1"), ("ssh3", "0.0.1"), ("telnet1", "0.0.1"),
-                                     ("telnet2", "0.0.1"), ("telnet3", "0.0.1")]
-    pw_vuln_compatible_containers = [("ftp1", "0.0.1"), ("ftp2", "0.0.1")]
-    agent_containers = [(("hacker_kali1", "0.0.1"))]
-    router_containers = [("router1", "0.0.1"), ("router2", "0.0.1")]
-    # topology, vulnerabilities, users, flags, containers = EnvConfigGenerator.generate(
-    #     num_nodes = 10, subnet_prefix="172.18.2.", num_flags=3, max_num_users=2, container_pool=container_pool,
-    #     gw_vuln_compatible_containers=gw_vuln_compatible_containers,
-    #     pw_vuln_compatible_containers=pw_vuln_compatible_containers, subnet_id=2, agent_containers=agent_containers,
-    #     router_containers=router_containers)
-    #EnvConfigGenerator.list_docker_networks()
-    containers = EnvConfigGenerator.list_running_containers()
-    EnvConfigGenerator.find_networks_in_use(containers)
     

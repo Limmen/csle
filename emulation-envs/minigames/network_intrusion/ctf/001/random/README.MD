@@ -11,7 +11,7 @@ number of vulnerabilities etc.
 
 ## Architecture
 
-The architecture is generated randomly using the preferental attachment theory. 
+The architecture is generated randomly using the preferential attachment theory. 
 
 ## Useful commands
 

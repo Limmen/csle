@@ -1,8 +1,19 @@
 from typing import List
 from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
 
+
 class Topology:
+    """
+    A DTO representing the topology of an emulation environment
+    """
 
     def __init__(self, node_configs: List[NodeFirewallConfig], subnetwork: str):
         self.node_configs = node_configs
         self.subnetwork = subnetwork
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return "node configs:{}, subnetwork:{}".format(",".join(list(map(lambda x: str(x), self.node_configs))),
+                                                       self.subnetwork)
