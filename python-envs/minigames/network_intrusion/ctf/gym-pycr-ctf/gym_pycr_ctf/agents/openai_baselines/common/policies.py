@@ -406,7 +406,8 @@ class ActorCriticPolicy(BasePolicy):
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
 
     def forward(self, obs: th.Tensor, deterministic: bool = False,
-                m_index : int = None, env = None, infos=None, mask_actions: bool = True, attacker: bool = True) \
+                m_index : int = None, env = None, infos=None, mask_actions: bool = True, attacker: bool = True,
+                return_distribution = False) \
             -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
         Forward pass in all the networks (actor and critic)
@@ -456,9 +457,13 @@ class ActorCriticPolicy(BasePolicy):
                 else:
                     raise ValueError("Unrecognized env")
         distribution = self._get_action_dist_from_latent(latent_pi, non_legal_actions=non_legal_actions_total)
+        #distribution = self._get_action_dist_from_latent(latent_pi, non_legal_actions=[])
         actions = distribution.get_actions(deterministic=deterministic)
         log_prob = distribution.log_prob(actions)
-        return actions, values, log_prob
+        if return_distribution:
+            return actions, values, log_prob, distribution
+        else:
+            return actions, values, log_prob
 
     def _get_latent(self, obs: th.Tensor) -> Tuple[th.Tensor, th.Tensor, th.Tensor]:
         """
@@ -496,7 +501,7 @@ class ActorCriticPolicy(BasePolicy):
                         action_logits[non_legal_actions[i]] = self.agent_config.illegal_action_logit
                     elif len(action_logits.shape) == 2:
                         # action_probs_1[:, non_legal_actions] = 0.00000000000001  # Don't set to zero due to invalid distribution errors
-                        action_logits[i][non_legal_actions[i]] = self.agent_config.illegal_action_logit
+                        action_logits[0][non_legal_actions[i]] = self.agent_config.illegal_action_logit
                     else:
                         raise AssertionError("Invalid shape of action probabilties")
         action_logits_1 = action_logits.to(self.device)

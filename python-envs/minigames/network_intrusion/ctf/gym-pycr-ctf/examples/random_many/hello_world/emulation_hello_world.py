@@ -2,6 +2,7 @@ from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+import sys
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
@@ -13,9 +14,11 @@ def test_env(env_name : str, num_steps : int):
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    print(list(map(lambda x: x.agent_ip, containers_configs)))
+    #sys.exit(0)
     # eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(

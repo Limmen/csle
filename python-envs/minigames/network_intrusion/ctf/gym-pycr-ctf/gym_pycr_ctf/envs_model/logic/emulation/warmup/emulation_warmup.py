@@ -24,7 +24,7 @@ class EmulationWarmup:
         obs = None
         for i in range(num_warmup_steps):
             if i % 10 == 0:
-                print("Warmup {}%".format(float(i/num_warmup_steps)*100))
+                print("Env:{}, Warmup {}%".format(env.env_config.router_ip, float(i/num_warmup_steps)*100))
             attacker_action = exp_policy.action(env=env)
             defender_action = None
             action = (attacker_action, defender_action)

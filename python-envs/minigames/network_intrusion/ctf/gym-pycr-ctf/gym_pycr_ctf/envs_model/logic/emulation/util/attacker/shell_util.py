@@ -258,7 +258,7 @@ class ShellUtil:
                     while not command_complete:
                         while not c.interactive_shell.recv_ready():
                             if timeouts > env_config.shell_max_timeouts:
-                                print("max timeouts FTP")
+                                print("max timeouts FTP, env:{}".format(env_config.hacker_ip))
                                 break
                             time.sleep(env_config.shell_read_wait)
                             timeouts += 1

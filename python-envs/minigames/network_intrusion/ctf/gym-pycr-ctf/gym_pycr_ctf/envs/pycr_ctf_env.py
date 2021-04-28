@@ -271,6 +271,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         defender_info["attacker_cost_norm"] = self.env_state.attacker_obs_state.cost_norm
         defender_info["attacker_alerts"] = self.env_state.attacker_obs_state.alerts
         defender_info["attacker_alerts_norm"] = self.env_state.attacker_obs_state.alerts_norm
+        defender_info["flags"] = 0
 
         if not done:
             # Second step attacker
@@ -336,7 +337,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
-            print("[Warning] illegal attack action:{}, idx:{}".format(attacker_action_id, self.idx))
+            print("[Warning] illegal attack action:{}, idx:{}, ip:{}".format(attacker_action_id, self.idx,
+                                                                             self.env_config.router_ip))
             self.attacker_agent_state.time_step += 1
             attacker_reward = self.env_config.attacker_illegal_reward_action
             return attacker_reward, defender_reward, True, info
