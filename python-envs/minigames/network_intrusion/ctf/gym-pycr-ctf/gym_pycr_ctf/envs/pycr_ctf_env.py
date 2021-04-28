@@ -643,15 +643,15 @@ class PyCRCTFEnv(gym.Env, ABC):
                                                                              r_space=self.randomization_space,
                                                                              env_config=self.env_config)
             self.env_config = env_config
-            if self.env_config.compute_pi_star:
-                if not self.env_config.use_upper_bound_pi_star:
+            if self.env_config.compute_pi_star_attacker:
+                if not self.env_config.use_upper_bound_pi_star_attacker:
                     attacker_pi_star_tau, attacker_pi_star_rew = FindPiStar.brute_force(self.env_config, self)
                 else:
                     attacker_pi_star_rew = FindPiStar.upper_bound_pi(self.env_config)
                     attacker_pi_star_tau = None
-                self.env_config.pi_star_tau = attacker_pi_star_tau
-                self.env_config.pi_star_rew = attacker_pi_star_rew
-                self.env_config.pi_star_rew_list.append(attacker_pi_star_rew)
+                self.env_config.pi_star_tau_attacker = attacker_pi_star_tau
+                self.env_config.pi_star_rew_attacker = attacker_pi_star_rew
+                self.env_config.pi_star_rew_list_attacker.append(attacker_pi_star_rew)
 
 
         self.reset_metrics()

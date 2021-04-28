@@ -67,7 +67,7 @@ class SimulationGenerator:
 
             # Step in the environment
             action = (attacker_action, defender_action)
-            print("step, action:{}".format(attacker_action))
+            #print("step, action:{}".format(attacker_action))
             obs, reward, done, info = env.step(action)
             trajectory = SimulationGenerator.update_trajectory(trajectory=trajectory, obs=obs, reward=reward, done=done,
                                                   info=info, action=action)
@@ -147,7 +147,7 @@ class SimulationGenerator:
             num_credentials = sum(list(map(lambda x: len(x.shell_access_credentials), aggregated_observation.machines)))
             print("Exploration completed, found {} machines, {} vulnerabilities, {} credentials".format(
                 num_machines, num_vulnerabilities, num_credentials))
-            print("Defender Dynamics Model:\n{}".format(defender_dynamics_model))
+            # print("Defender Dynamics Model:\n{}".format(defender_dynamics_model))
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
             node_ips = list(map(lambda x: x.ip, env_config.network_conf.nodes))
             for n in nodes:
@@ -199,6 +199,10 @@ class SimulationGenerator:
         attacker_obs, defender_obs = obs
         attacker_reward, defender_reward = reward
         attacker_action, defender_action = action
+        if attacker_action is None:
+            attacker_action = -1
+        if defender_action is None:
+            defender_action = -1
         trajectory.attacker_rewards.append(float(attacker_reward))
         trajectory.defender_rewards.append(float(defender_reward))
         trajectory.attacker_observations.append(attacker_obs.tolist())

@@ -239,8 +239,10 @@ class LogUtil:
                         rewards = train_log_dto.attacker_eval_env_specific_rewards[ip]
                         if len(env_regret[2]) >= len(rewards):
                             pi_star_rews_attacker = env_regret[2][-len(rewards):]
+                            rewards = [np.mean(rewards[i]) for i in range(len(rewards))]
                             r = [LogUtil.compute_regret(opt_r=pi_star_rews_attacker[i], r=rewards[i]) for i in range(len(rewards))]
                         else:
+                            rewards = [np.mean(rewards[i]) for i in range(len(rewards))]
                             r = list(map(lambda x: LogUtil.compute_regret(opt_r=pi_star_rew, r=x), rewards))
                         eval_env_specific_regret[ip] = r
                         eval_regrets = eval_regrets + r

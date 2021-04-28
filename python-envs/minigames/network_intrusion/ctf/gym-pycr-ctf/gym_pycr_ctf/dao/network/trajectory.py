@@ -2,6 +2,7 @@ from typing import List
 import json
 import os
 import gym_pycr_ctf.constants.constants as constants
+from gym_pycr_ctf.util.experiments_util import util
 
 
 class Trajectory:
@@ -86,7 +87,12 @@ class Trajectory:
         if trajectories_file is None:
             trajectories_file =  constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
         trajectories = list(map(lambda x: x.to_dict(), trajectories))
-        with open(trajectories_save_dir + "/" + trajectories_file, 'w') as fp:
+        if trajectories_save_dir is not None:
+            save_dir = trajectories_save_dir + "/" + trajectories_file
+        else:
+            save_dir = util.get_script_path() + "/" + \
+                       trajectories_file
+        with open(save_dir, 'w') as fp:
             json.dump({"trajectories": trajectories}, fp)
 
     @staticmethod

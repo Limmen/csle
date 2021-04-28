@@ -147,18 +147,18 @@ class PyCrCTFRandomV1:
         env_config.num_flags = len(flags_config.flags)
         env_config.blacklist_ips = [containers_config.subnet_prefix + "1"]
 
-        env_config.attacker_shell_access_found_reward_mult = 0
-        env_config.attacker_new_tools_installed_reward_mult = 0
-        env_config.attacker_new_backdoors_installed_reward_mult = 0
-        env_config.attacker_new_login_reward_mult = 0
-        env_config.attacker_machine_found_reward_mult = 0
+        env_config.attacker_shell_access_found_reward_mult = 2
+        env_config.attacker_new_tools_installed_reward_mult = 2
+        env_config.attacker_new_backdoors_installed_reward_mult = 2
+        env_config.attacker_new_login_reward_mult = 2
+        env_config.attacker_machine_found_reward_mult = 0.1
 
         env_config.attacker_final_steps_reward_coefficient = 0
 
         env_config.attacker_flag_found_reward_mult = 10
-        env_config.attacker_all_flags_reward = 0
+        env_config.attacker_all_flags_reward = 100
         env_config.attacker_base_step_reward = -1
-        env_config.attacker_illegal_reward_action = -1
+        env_config.attacker_illegal_reward_action = 0
 
         env_config.attacker_port_found_reward_mult = 0
         env_config.attacker_os_found_reward_mult = 0
@@ -166,7 +166,10 @@ class PyCrCTFRandomV1:
         env_config.attacker_osvdb_vuln_found_reward_mult = 0
         env_config.attacker_root_found_reward_mult = 0
         env_config.attacker_cost_coefficient = 0
+        env_config.attacker_alerts_coefficient = 0
         env_config.attacker_detection_reward = 0
+        env_config.attacker_detection_reward = -100
+        env_config.max_episode_length_reward = -100
 
         env_config.max_episode_length = 10000
         env_config.ids_router = containers_config.ids_enabled

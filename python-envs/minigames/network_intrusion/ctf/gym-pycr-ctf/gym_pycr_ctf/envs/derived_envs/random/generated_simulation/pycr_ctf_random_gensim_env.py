@@ -37,18 +37,25 @@ class PyCRCTFRandomGeneratedSim1Env(PyCRCTFEnv):
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config,
                                                     num_nodes=num_nodes-1)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 0
-            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.save_trajectories = False
+            env_config.simulate_detection = False
+            env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-            env_config.attacker_filter_illegal_actions = False
-            env_config.max_episode_length = 50
             exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
             env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.attacker_exploration_filter_illegal = True
+            env_config.attacker_max_exploration_steps = 500
+            env_config.attacker_max_exploration_trajectories = 10
+            env_config.max_episode_length = 100
+            env_config.attacker_alerts_coefficient = 0
+            env_config.attacker_cost_coefficient = 0
+            env_config.attacker_base_step_reward = -1
+            env_config.use_upper_bound_pi_star_attacker = False
+            env_config.detection_alerts_threshold = -1
+            env_config.emulate_detection = True
+            env_config.detection_prob_factor = 0.05
+            env_config.randomize_attacker_starting_state = False
         super().__init__(env_config=env_config)
 
 # -------- Version 1 Generated Sim With Costs ------------

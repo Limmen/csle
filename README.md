@@ -41,7 +41,11 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
     - [x] Automatic generation of custom emulation environment
     - [x] Monitoring Framework with Webapp, Grafana, Prometheus, C-advisor, Node-exporter
     - [x] Automatic Network Traffic Simulation
-    - [x] 20+ vulnerable containers with exploits 
+    - [x] 20+ vulnerable containers with exploits
+    - [x] CTF challenges
+    - [ ] Malware challenges
+    - [ ] DoS challenges
+    - [ ] Web hacking challenges  
 
 - **Open-AI Gym Environment**
      - [x] GUI rendering
@@ -50,12 +54,12 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
      - [x] Emulation-mode
      - [x] Manual-mode
      - [x] Emulation+Simulation-model (using system identification)
-     - [x] Support for massively parallel training with several emulation/simulation environments
+     - [x] Support for massively parallel training with distributed emulation/simulation environments
      
 - **Learning Process**
      - [x] Attacker training
      - [x] Defender training
-     - [ ] Self-play                    
+     - [x] Self-play                    
    
 - **Reinforcement Learning Algorithms**
      - [x] PPO baseline
@@ -63,10 +67,15 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
      - [x] DDPG baseline
      - [x] REINFORCE baseline
      - [x] TD3 baseline
+     - [ ] MuZero baseline
+     - [ ] Value Prediction Network baseline
+     - [ ] Bayesian REINFORCE
+     - [ ] Monte-Carlo Tree Search                    
 
 - **System Identification**
      - [x] Custom system identifification algorithm to learn model of emulation
-     - [x] Custom domain randomization algorithm          
+     - [x] Custom domain randomization algorithm
+     - [ ] Function approximation
 
 ## Installation
 TODO
@@ -133,6 +142,7 @@ that policy convergence in self-play remains a challenge."
 - [gym-idsgame](https://github.com/Limmen/gym-idsgame)
 
 ## Disclaimer
+
 All code and software in this repository is for Educational purpose ONLY. 
 Do not use it without permission. 
 The usual disclaimer applies, especially the fact that me (Kim Hammar) is not liable for any damages caused by direct or indirect use of the information or functionality provided by these programs. 

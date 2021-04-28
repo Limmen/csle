@@ -17,7 +17,8 @@ class EmulationConfig:
                  server_ip: str = None,
                  server_connection : bool = False,
                  server_private_key_file : str = None, server_username : str = None,
-                 warmup = False, warmup_iterations :int = 500, port_forward_next_port : int = 4000):
+                 warmup = False, warmup_iterations :int = 500, port_forward_next_port : int = 4000,
+                 save_dynamics_model_dir : str = None, skip_exploration : bool = False):
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -36,8 +37,8 @@ class EmulationConfig:
         self.ids_router = False
         self.ids_router_ip = ""
         self.router_conn = None
-        self.skip_exploration = False
-        self.save_dynamics_model_dir = None
+        self.skip_exploration = skip_exploration
+        self.save_dynamics_model_dir = save_dynamics_model_dir
 
     def connect_server(self):
         """

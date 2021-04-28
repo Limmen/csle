@@ -63,5 +63,5 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
     EnvConfigGenerator.generate_envs(num_envs=num_envs, container_env_config = container_env_config,
                                      cleanup_old_envs=True)
 if __name__ == '__main__':
-    generate_envs(2, min_num_users=1, max_num_users=3, min_num_flags=1, max_num_flags=2, min_num_nodes=4,
-                  max_num_nodes=6, subnet_prefix="172.18.")
+    generate_envs(5, min_num_users=5, max_num_users=3, min_num_flags=1, max_num_flags=4, min_num_nodes=6,
+                  max_num_nodes=15, subnet_prefix="172.18.")
