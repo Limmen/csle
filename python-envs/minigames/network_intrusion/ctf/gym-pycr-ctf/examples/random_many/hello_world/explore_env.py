@@ -121,6 +121,6 @@ if __name__ == '__main__':
     #max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     max_num_nodes = max_num_nodes_train
     #max_num_nodes = max_num_nodes_eval
-    start_explore_threads(num_threads=10, env_name="pycr-ctf-random-many-emulation-v1",
+    start_explore_threads(num_threads=20, env_name="pycr-ctf-random-many-emulation-v1",
                           num_steps=100000000, containers_configs=containers_configs,
                           flags_configs=flags_configs, num_nodes=max_num_nodes)

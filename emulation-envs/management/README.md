@@ -6,6 +6,24 @@ emulations as well as the host system.
 The directory also includes a scripts for starting a custom web-app (`pycr_monitor`) 
 for keeping track of the emulation configurations.
 
+## Grafana
+A webapp for monitoring emulation environments created with PyCr
+
+<p align="center">
+<img src="docs/grafana_1.png" width="1200">
+</p>
+
+<p align="center">
+<img src="docs/grafana_2.png" width="1200">
+</p>
+
+## PyCr Monitor
+A webapp for monitoring emulation environments created with PyCr
+
+<p align="center">
+<img src="pycr_monitor/docs/screen.png" width="1200">
+</p>
+
 ## Useful scripts
 ```bash
 ./install.sh   # Installs prometheus, grafana, PyCRMonitor, NodeExporter, Dashboards, C_Advisor etc.
@@ -24,6 +42,15 @@ make rm_images # remove images used by PyCR containers
 make start_stopped # start stopped PyCR containers
 make clean_docker # clean docker (delete unused networks, containers, images, cache, etc.)
 ```
+
+When importing Prometheus as a data source in Grafana, use
+```bash
+http://<ip>:9090
+```
+e.g.
+```bash
+http://172.31.212.92:9090
+``` 
 
 When everything is running, use the following command to setup tunnels:
 ```bash

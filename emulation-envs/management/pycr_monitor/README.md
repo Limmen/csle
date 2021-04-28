@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+# `pycr_monitor`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A webapp for monitoring and managing emulation environments in pycr. 
+
+## GUI
+
+<p align="center">
+<img src="docs/screen.png" width="1200">
+</p>
 
 ## Available Scripts
 
