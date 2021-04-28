@@ -221,10 +221,17 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
     randomize_starting_states = []
     simulate_snort = []
     for i in range(env.num_envs):
-        randomize_starting_states.append(env.envs[i].env_config.randomize_attacker_starting_state)
-        simulate_snort.append(env.envs[i].env_config.snort_baseline_simulate)
-        env.envs[i].env_config.randomize_attacker_starting_state = False
-        env.envs[i].env_config.snort_baseline_simulate = False
+        if isinstance(env, DummyVecEnv):
+            randomize_starting_states.append(env.envs[i].env_config.randomize_attacker_starting_state)
+            simulate_snort.append(env.envs[i].env_config.snort_baseline_simulate)
+            env.envs[i].env_config.randomize_attacker_starting_state = False
+            env.envs[i].env_config.snort_baseline_simulate = False
+        elif isinstance(env, SubprocVecEnv):
+            randomize_starting_states = env.get_randomize_starting_state()
+            simulate_snort = env.get_snort_baseline_simulate()
+            env.set_randomize_starting_state(False)
+            env.set_snort_baseline_simulate(False)
+
 
     train_dto = _quick_eval_helper(
         env=env, attacker_model=attacker_model, defender_model=defender_model,
@@ -233,17 +240,27 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
         train_log_dto=train_dto, eval_2=False)
 
     for i in range(env.num_envs):
-        env.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
-        env.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
+        if isinstance(env, DummyVecEnv):
+            env.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
+            env.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
+        elif isinstance(env, SubprocVecEnv):
+            env.set_randomize_starting_state(randomize_starting_states[0])
+            env.set_snort_baseline_simulate(simulate_snort[0])
 
     if env_2 is not None:
         randomize_starting_states = []
         simulate_snort = []
         for i in range(env_2.num_envs):
-            randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
-            simulate_snort.append(env_2.envs[i].env_config.snort_baseline_simulate)
-            env_2.envs[i].env_config.randomize_attacker_starting_state = False
-            env_2.envs[i].env_config.snort_baseline_simulate = False
+            if isinstance(env, DummyVecEnv):
+                randomize_starting_states.append(env_2.envs[i].env_config.randomize_attacker_starting_state)
+                simulate_snort.append(env_2.envs[i].env_config.snort_baseline_simulate)
+                env_2.envs[i].env_config.randomize_attacker_starting_state = False
+                env_2.envs[i].env_config.snort_baseline_simulate = False
+            elif isinstance(env, SubprocVecEnv):
+                randomize_starting_states = env_2.get_randomize_starting_state()
+                simulate_snort = env_2.get_snort_baseline_simulate()
+                env_2.set_randomize_starting_state(False)
+                env_2.set_snort_baseline_simulate(False)
 
         train_dto = _quick_eval_helper(
             env=env_2, attacker_model=attacker_model, defender_model=defender_model,
@@ -253,8 +270,12 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
             emulation_env=True, eval_2=True, train_log_dto=train_dto
         )
         for i in range(env_2.num_envs):
-            env_2.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
-            env_2.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
+            if isinstance(env, DummyVecEnv):
+                env_2.envs[i].env_config.randomize_attacker_starting_state = randomize_starting_states[i]
+                env_2.envs[i].env_config.snort_baseline_simulate = simulate_snort[i]
+            elif isinstance(env, SubprocVecEnv):
+                env_2.set_randomize_starting_state(randomize_starting_states[0])
+                env_2.set_snort_baseline_simulate(simulate_snort[0])
 
     return train_dto
 
@@ -294,7 +315,10 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 if isinstance(env, DummyVecEnv):
                     env_state = env.envs[i].env_state
                     agent_state = env.envs[i].attacker_agent_state
-                obs_attacker, obs_defender = obs
+                if isinstance(obs, list):
+                    obs_attacker, obs_defender = obs[0]
+                else:
+                    obs_attacker, obs_defender = obs
                 attacker_actions = None
                 defender_actions = [None]
                 if train_mode == train_mode.TRAIN_ATTACKER or train_mode == train_mode.SELF_PLAY:

@@ -197,7 +197,7 @@ class LogUtil:
                   or train_log_dto.attacker_train_episode_env_specific_rewards == {}) and \
                     (train_log_dto.attacker_eval_env_specific_rewards is None
                      or train_log_dto.attacker_eval_env_specific_rewards == {}):
-                env_regret = env.get_pi_star_rew()[0]
+                env_regret = env.get_pi_star_rew_attacker()[0]
                 ip = env_regret[0]
 
                 if len(env_regret[2]) >= len(train_log_dto.attacker_episode_rewards):
@@ -221,7 +221,7 @@ class LogUtil:
             else:
                 regrets = []
                 eval_regrets = []
-                pi_star_rew_per_env = env.get_pi_star_rew()
+                pi_star_rew_per_env = env.get_pi_star_rew_attacker()
                 for env_regret in pi_star_rew_per_env:
                     ip = env_regret[0]
                     pi_star_rew = env_regret[1]
@@ -270,7 +270,7 @@ class LogUtil:
                                                                   opt_r=env_2.envs[0].env_config.pi_star_rew_attacker)
                 else:
                     regrets_2 = []
-                    pi_star_rew_per_env_2 = env_2.get_pi_star_rew()
+                    pi_star_rew_per_env_2 = env_2.get_pi_star_rew_attacker()
                     for env_regret in pi_star_rew_per_env_2:
                         ip = env_regret[0]
                         pi_star_rew = env_regret[1]
@@ -279,6 +279,7 @@ class LogUtil:
                             rewards = train_log_dto.attacker_eval_2_env_specific_rewards[ip]
                             # print("len ip:{} reg:{}, rews:{}".format(ip, env_regret[2], rewards))
                             # pi_star_rews = env_regret[2][-len(rewards):]
+                            rewards = [np.mean(rewards[i]) for i in range(len(rewards))]
                             r = [LogUtil.compute_regret(opt_r=pi_star_rew, r=rewards[i]) for i in range(len(rewards))]
                             # r = list(map(lambda x: pi_star_rew - x, rewards))
                             eval_2_env_specific_regret[ip] = r
@@ -295,6 +296,7 @@ class LogUtil:
                         if train_log_dto.attacker_eval_2_env_specific_rewards is not None \
                                 and train_log_dto.attacker_eval_2_env_specific_rewards != {}:
                             rewards = train_log_dto.attacker_eval_2_env_specific_rewards[ip]
+                            rewards = [np.mean(rewards[i]) for i in range(len(rewards))]
                             # pi_star_rews = env_regret[2][-len(rewards):]
                             of = [LogUtil.compute_opt_frac(r=rewards[i], opt_r=pi_star_rew) for i in range(len(rewards))]
                             # of = list(map(lambda x: x / pi_star_rew, rewards))
@@ -339,7 +341,7 @@ class LogUtil:
                   or train_log_dto.attacker_train_episode_env_specific_rewards == {}) and \
                     (train_log_dto.attacker_eval_env_specific_rewards is None or
                      train_log_dto.attacker_eval_env_specific_rewards == {}):
-                env_regret = env.get_pi_star_rew()[0]
+                env_regret = env.get_pi_star_rew_attacker()[0]
                 ip = env_regret[0]
 
                 if len(env_regret[2]) >= len(train_log_dto.attacker_episode_rewards):
@@ -365,7 +367,7 @@ class LogUtil:
             else:
                 opt_fracs = []
                 eval_opt_fracs = []
-                pi_star_rew_per_env = env.get_pi_star_rew()
+                pi_star_rew_per_env = env.get_pi_star_rew_attacker()
                 for env_pi_star in pi_star_rew_per_env:
                     ip = env_pi_star[0]
                     pi_star_rew = env_pi_star[1]
@@ -732,7 +734,7 @@ class LogUtil:
                     result.eval_2_env_specific_flags_percentage[key] = [avg]
         if isinstance(env, SubprocVecEnv):
             if not eval:
-                env.reset_pi_star_rew()
+                env.reset_pi_star_rew_attacker()
         else:
             if not eval:
                 env.envs[0].env_config.pi_star_rew_list_attacker = [
@@ -741,7 +743,7 @@ class LogUtil:
         if env_2 is not None:
             if not eval:
                 if isinstance(env_2, SubprocVecEnv):
-                    env_2.reset_pi_star_rew()
+                    env_2.reset_pi_star_rew_attacker()
                 else:
                     env_2.envs[0].env_config.pi_star_rew_list_attacker = [
                         env_2.envs[0].env_config.pi_star_rew_attacker]

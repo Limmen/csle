@@ -356,7 +356,7 @@ class EvalCallback(EventCallback):
                 render=self.render,
                 deterministic=self.deterministic,
                 return_episode_rewards=True,
-                agent_config=self.attacker_agent_config,
+                attacker_agent_config=self.attacker_agent_config,
                 env_config=self.attacker_agent_config.env_config,
                 env_configs=self.attacker_agent_config.env_configs
             )

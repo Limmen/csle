@@ -55,19 +55,19 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(env.defender_initial_illegal_actions)
             elif cmd == "network_conf":
                 remote.send(env.env_config.network_conf)
-            elif cmd == "pi_star_rew":
+            elif cmd == "pi_star_rew_attacker":
                 id = env.idx
                 if env.env_config.emulation_config is not None:
                     id = env.env_config.emulation_config.agent_ip
                 # elif env.env_config.network_conf.hacker is not None:
                 #     id = env.env_config.network_conf.hacker.ip
-                remote.send((id, env.env_config.pi_star_rew, env.env_config.pi_star_rew_list))
+                remote.send((id, env.env_config.pi_star_rew_attacker, env.env_config.pi_star_rew_list_attacker))
                 #env.env.env_config.pi_star_rew_list = [env.env.env_config.pi_star_rew]
             elif cmd == "set_randomization_space":
                 env.randomization_space = data
                 env.env.randomization_space = data
-            elif cmd == "reset_pi_star_rew":
-                env.env.env_config.pi_star_rew_list = [env.env.env_config.pi_star_rew]
+            elif cmd == "reset_pi_star_rew_attacker":
+                env.env.env_config.pi_star_rew_list_attacker = [env.env.env_config.pi_star_rew_attacker]
             elif cmd == "set_domain_randomization_eval_env":
                 env.env.env_config.domain_randomization = data
             elif cmd == "env_method":
@@ -77,6 +77,14 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(getattr(env, data))
             elif cmd == "set_attr":
                 remote.send(setattr(env, data[0], data[1]))
+            elif cmd == "set_randomize_starting_state":
+                env.env.env_config.randomize_attacker_starting_state = data
+            elif cmd == "set_snort_baseline_simulate":
+                env.env.env_config.snort_baseline_simulate = data
+            elif cmd == "get_randomize_starting_state":
+                remote.send(env.env.env_config.randomize_attacker_starting_state)
+            elif cmd == "get_snort_baseline_simulate":
+                remote.send(env.env.env_config.snort_baseline_simulate)
             else:
                 raise NotImplementedError(f"`{cmd}` is not implemented in the worker")
         except EOFError:
@@ -162,7 +170,7 @@ class SubprocVecEnv(VecEnv):
         results = [remote.recv() for remote in self.remotes]
         self.waiting = False
         obs, rews, dones, infos = zip(*results)
-        if len(obs) > 2:
+        if isinstance(obs, tuple) and isinstance(obs[0], tuple):
             attacker_obs = []
             defender_obs = []
             for i in range(len(obs)):
@@ -201,23 +209,49 @@ class SubprocVecEnv(VecEnv):
         self.network_confs = network_confs
         return self.network_confs
 
-    def get_pi_star_rew(self):
-        pi_star_rews = []
+    def get_pi_star_rew_attacker(self):
+        pi_star_rews_attacker = []
         for remote in self.remotes:
-            remote.send(("pi_star_rew", None))
+            remote.send(("pi_star_rew_attacker", None))
         for remote in self.remotes:
-            pi_star_rews.append(remote.recv())
-        self.pi_star_rews = pi_star_rews
-        return self.pi_star_rews
+            pi_star_rews_attacker.append(remote.recv())
+        self.pi_star_rews_attacker = pi_star_rews_attacker
+        return self.pi_star_rews_attacker
 
+    def get_randomize_starting_state(self):
+        randomize_starting_states = []
+        for remote in self.remotes:
+            remote.send(("get_randomize_starting_state", None))
+        for remote in self.remotes:
+            randomize_starting_states.append(remote.recv())
+        self.randomize_starting_states = randomize_starting_states
+        return self.randomize_starting_states
+
+    def get_snort_baseline_simulate(self):
+        snort_baseline_simulates = []
+        for remote in self.remotes:
+            remote.send(("get_snort_baseline_simulate", None))
+        for remote in self.remotes:
+            snort_baseline_simulates.append(remote.recv())
+        self.snort_baseline_simulates = snort_baseline_simulates
+        return self.snort_baseline_simulates
 
     def set_randomization_space(self, randomization_space):
         for remote in self.remotes:
             remote.send(("set_randomization_space", randomization_space))
 
-    def reset_pi_star_rew(self):
+
+    def set_randomize_starting_state(self, randomize_starting_state):
         for remote in self.remotes:
-            remote.send(("reset_pi_star_rew", None))
+            remote.send(("set_randomize_starting_state", randomize_starting_state))
+
+    def set_snort_baseline_simulate(self, snort_baseline_simulate):
+        for remote in self.remotes:
+            remote.send(("set_snort_baseline_simulate", snort_baseline_simulate))
+
+    def reset_pi_star_rew_attacker(self):
+        for remote in self.remotes:
+            remote.send(("reset_pi_star_rew_attacker", None))
 
     def set_domain_randomization(self, domain_randomization):
         for remote in self.remotes:

@@ -285,7 +285,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                 infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
                             ) # TODO this does not work with DR
                         else:
-                            print("env config None?:{}".format(self.attacker_agent_config.env_config))
+                            #print("env config None?:{}".format(self.attacker_agent_config.env_config))
                             rollout_data_dto.episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
 

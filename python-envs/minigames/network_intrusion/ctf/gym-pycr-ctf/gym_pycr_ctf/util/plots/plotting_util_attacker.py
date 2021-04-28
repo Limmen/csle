@@ -551,7 +551,7 @@ def plot_flags_int_r_steps_costs_alerts(
     # Plot flags
 
     ax[0][0].plot(np.array(list(range(len(avg_train_flags_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-            avg_train_flags_means_v1[::sample_step]*100, label=r"$\pi_{\theta}$ simulation",
+            avg_train_flags_means_v1[::sample_step]*100, label=r"Attacker $\pi_{\theta^A}$ simulation",
             marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][0].fill_between(
         np.array(list(range(len(avg_train_flags_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -560,7 +560,7 @@ def plot_flags_int_r_steps_costs_alerts(
         alpha=0.35, color="r", lw=lw)
 
     ax[0][0].plot(np.array(list(range(len(avg_eval_2_flags_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-            avg_eval_2_flags_means_v1[::sample_step]*100, label=r"$\pi_{\theta}$ emulation",
+            avg_eval_2_flags_means_v1[::sample_step]*100, label=r"Attacker $\pi_{\theta^A}$ emulation",
             marker="p", ls='-', color="#599ad3",
             markevery=markevery, markersize=markersize, lw=lw)
     ax[0][0].fill_between(
@@ -592,8 +592,8 @@ def plot_flags_int_r_steps_costs_alerts(
 
     ax[0][1].plot(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
-        avg_eval_2_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
-        marker="*", ls='-', color="#599ad3",
+        avg_eval_2_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi^A_{\theta}$ emulation",
+        marker="p", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(
         np.array(list(range(len(avg_eval_2_caught_frac_means_v1[::sample_step])))) * sample_step * iterations_per_step,
@@ -602,7 +602,7 @@ def plot_flags_int_r_steps_costs_alerts(
         alpha=0.35, color="#599ad3")
 
     ax[0][1].plot(np.array(list(range(len(avg_train_caught_frac_means_v1[::sample_step]))))*sample_step* iterations_per_step,
-            avg_train_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ simulation",
+            avg_train_caught_frac_means_v1[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi^A_{\theta}$ simulation",
             marker="s", ls='-', color="r",
             markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(np.array(list(range(len(avg_train_caught_frac_means_v1[::sample_step]))))*sample_step* iterations_per_step,

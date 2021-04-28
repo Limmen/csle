@@ -16,30 +16,21 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many/")
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2")
-    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
-    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
-
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
@@ -47,13 +38,13 @@ def default_config() -> ClientConfig:
     num_nodes = max_num_nodes-1
     n_envs = 1
     agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
-                               min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
+                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
                                num_iterations=400,
                                eval_render=False, gifs=True,
                                gif_dir=util.default_output_dir() + "/results/gifs",
-                               eval_frequency=100, video_frequency=10,
+                               eval_frequency=900000000000000000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=50,
                                input_dim=((num_nodes * 20) + 1),
