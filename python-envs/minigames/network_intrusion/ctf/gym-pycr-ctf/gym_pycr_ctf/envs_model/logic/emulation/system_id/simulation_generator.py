@@ -44,6 +44,7 @@ class SimulationGenerator:
             env_config.simulate_detection = False
             env_config.emulate_detection = False
             env_config.max_episode_length = env_config.attacker_max_exploration_steps
+            env.env_config = env_config
         else:
             # Setup config
             old_env_config = env_config.copy()
