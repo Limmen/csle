@@ -32,6 +32,7 @@ def manual_control():
                                                     "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     emulation_config.skip_exploration = True
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
+    #env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
     env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
     env.env_config.randomize_attacker_starting_state = False
     ManualAttackerAgent(env=env, env_config=env.env_config, render=False)

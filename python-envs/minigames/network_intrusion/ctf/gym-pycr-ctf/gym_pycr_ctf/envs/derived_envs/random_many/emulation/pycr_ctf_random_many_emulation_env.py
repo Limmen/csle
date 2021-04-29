@@ -38,8 +38,6 @@ class PyCRCTFRandomManyEmulation1Env(PyCRCTFEnv):
                                                     defender_action_conf=defender_action_conf,
                                                     emulation_config=emulation_config, render_conf=render_config,
                                                     num_nodes=num_nodes-1)
-            env_config.attacker_alerts_coefficient = 1
-            env_config.attacker_cost_coefficient = 1
             env_config.env_mode = EnvMode.EMULATION
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
@@ -48,13 +46,15 @@ class PyCRCTFRandomManyEmulation1Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
-            env_config.max_episode_length = 100
+            env_config.max_episode_length = 60
             env_config.attacker_alerts_coefficient = 0
             env_config.attacker_cost_coefficient = 0
             env_config.attacker_base_step_reward = -1
+            env_config.idx = idx
             env_config.use_upper_bound_pi_star_attacker = False
             env_config.detection_alerts_threshold = -1
             env_config.emulate_detection = True
+            #env_config.detection_prob_factor = 0.05
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
         super().__init__(env_config=env_config)

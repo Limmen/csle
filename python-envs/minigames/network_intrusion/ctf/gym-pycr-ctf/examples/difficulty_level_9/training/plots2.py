@@ -323,7 +323,7 @@ def plot_train(avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_
         avg_eval_2_steps_data_v1[0:max_iter], avg_eval_2_steps_means_v1[0:max_iter],
         avg_eval_2_steps_stds_v1[0:max_iter],
         fontsize= 6.5, figsize= (7.5, 2.75), title_fontsize=8, lw=0.75, wspace=0.12, hspace=0.4, top=0.0,
-        bottom=0.152, labelsize=6, markevery=10, optimal_reward = 150, sample_step = 2,
+        bottom=0.152, labelsize=6, markevery=10, optimal_reward = 100, sample_step = 2,
         eval_only=False, plot_opt = False, iterations_per_step= 10, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "flags_int_steps_r_costs_alerts_defender", markersize=2.25
     )

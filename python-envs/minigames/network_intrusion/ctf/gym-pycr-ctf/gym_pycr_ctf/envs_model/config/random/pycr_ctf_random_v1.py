@@ -136,7 +136,7 @@ class PyCrCTFRandomV1:
                                env_mode=EnvMode.SIMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=containers_config.agent_ip, state_type=StateType.BASIC,
+                               hacker_ip=containers_config.agent_ip, state_type=StateType.ESSENTIAL,
                                router_ip=containers_config.router_ip)
 
         env_config.ping_scan_miss_p = 0.00

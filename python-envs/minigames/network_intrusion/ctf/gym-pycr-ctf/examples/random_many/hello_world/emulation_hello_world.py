@@ -13,29 +13,34 @@ def test_env(env_name : str, num_steps : int):
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    #print(list(map(lambda x: x.agent_ip, containers_configs)))
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    print(list(map(lambda x: x.agent_ip, containers_configs)))
-    #sys.exit(0)
-    # eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
-    # eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
-    #max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
+    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), containers_configs)))
     #max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
-    max_num_nodes = max_num_nodes_train
+    #max_num_nodes = max_num_nodes_train
+    max_num_nodes = max_num_nodes_eval
 
-    idx = 2
+    idx = 0
     print("ip:{}".format(containers_configs[idx].agent_ip))
-    emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent",
-                                       agent_pw="agent", server_connection=False, port_forward_next_port=9800)
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
-    #                                  agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                  server_username="kim")
+    #sys.exit(0)
+    # emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent",
+    #                                    agent_pw="agent", server_connection=False, port_forward_next_port=9800)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
+                                     agent_username="agent", agent_pw="agent", server_connection=True,
+                                     server_private_key_file="/home/kim/.ssh/id_rsa",
+                                     server_username="kim", port_forward_next_port=1147)
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config,
                    containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
                    num_nodes=max_num_nodes)

@@ -67,6 +67,8 @@ class ManualAttackerAgent:
                     print(history)
                 elif raw_input == "O":
                     print(latest_obs)
+                    print(latest_obs[0].shape)
+                    print(latest_obs[1].shape)
                 elif raw_input == "U":
                     print(latest_rew)
                 elif raw_input == "P":

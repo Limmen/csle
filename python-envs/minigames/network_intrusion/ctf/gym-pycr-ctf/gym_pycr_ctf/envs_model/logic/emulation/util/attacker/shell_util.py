@@ -650,52 +650,57 @@ class ShellUtil:
                 ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
-                    try:
-                        users = EmulationUtil._list_all_users(c, env_config=env_config)
-                        users = sorted(users, key=lambda x: x)
-                        user_exists = False
-                        for user in users:
-                            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
-                                user_exists = True
-                                username = user
+                    #try:
+                    users = EmulationUtil._list_all_users(c, env_config=env_config)
+                    users = sorted(users, key=lambda x: x)
+                    user_exists = False
+                    for user in users:
+                        if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
+                            user_exists = True
+                            username = user
 
-                        if not user_exists:
-                            # Create user
-                            create_user_cmd = a.cmd[1].format(username, pw, username)
-                            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=create_user_cmd, conn=c.conn)
-                            ssh_cost += float(total_time)
+                    if not user_exists:
+                        # Create user
+                        create_user_cmd = a.cmd[1].format(username, pw, username)
+                        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=create_user_cmd, conn=c.conn)
+                        ssh_cost += float(total_time)
 
-                        credential = Credential(username=username, pw=pw, port=22, service="ssh")
+                    credential = Credential(username=username, pw=pw, port=22, service="ssh")
 
-                        # Start SSH Server
-                        ssh_running = EmulationUtil._check_if_ssh_server_is_running(c.conn)
-                        if not ssh_running:
-                            start_ssh_cmd = a.cmd[0]
-                            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=start_ssh_cmd, conn=c.conn)
-                            ssh_cost += float(total_time)
+                    # Start SSH Server
+                    ssh_running = EmulationUtil._check_if_ssh_server_is_running(c.conn)
+                    if not ssh_running:
+                        start_ssh_cmd = a.cmd[0]
+                        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=start_ssh_cmd, conn=c.conn)
+                        ssh_cost += float(total_time)
 
-                        # Create SSH connection
-                        new_m_obs.shell_access_credentials.append(credential)
-                        new_m_obs.backdoor_credentials.append(credential)
-                        a.ip = machine.ip
+                    # Create SSH connection
+                    new_m_obs.shell_access_credentials.append(credential)
+                    new_m_obs.backdoor_credentials.append(credential)
+                    a.ip = machine.ip
+                    for i in range(5):
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
                             a=a, env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         ssh_cost += setup_connection_dto.total_time
+                        if len(setup_connection_dto.target_connections) > 0:
+                            break
+                        else:
+                            time.sleep(5)
 
-                        connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                    username=credential.username,
-                                                                    root=machine.root,
-                                                                    service=constants.SSH.SERVICE_NAME,
-                                                                    port=credential.port,
-                                                                    proxy=setup_connection_dto.proxies[0],
-                                                                    ip=machine.ip)
-                        new_m_obs.ssh_connections.append(connection_dto)
-                        new_m_obs.backdoor_installed = True
-                        new_machines_obs.append(new_m_obs)
-                        backdoor_created = True
-                    except Exception as e:
-                        raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(
-                            str(e), a.ip, c.proxy.ip))
+                    connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
+                                                                username=credential.username,
+                                                                root=machine.root,
+                                                                service=constants.SSH.SERVICE_NAME,
+                                                                port=credential.port,
+                                                                proxy=setup_connection_dto.proxies[0],
+                                                                ip=machine.ip)
+                    new_m_obs.ssh_connections.append(connection_dto)
+                    new_m_obs.backdoor_installed = True
+                    new_machines_obs.append(new_m_obs)
+                    backdoor_created = True
+                    # except Exception as e:
+                    #     raise ValueError("Creating Backdoor Exception: {}, target:{}, proxy:{}".format(
+                    #         str(e), a.ip, c.proxy.ip))
 
                     if backdoor_created:
                         break

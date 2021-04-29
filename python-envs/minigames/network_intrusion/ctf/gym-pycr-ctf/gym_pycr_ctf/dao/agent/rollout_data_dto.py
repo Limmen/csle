@@ -88,27 +88,32 @@ class RolloutDataDTO:
                 agent_ip = agent_config.env_configs[i].idx
             num_flags = agent_config.env_configs[infos[i]["idx"]].num_flags
 
-        if agent_ip not in self.attacker_env_specific_rewards:
-            self.attacker_env_specific_rewards[agent_ip] = [self.attacker_episode_rewards[i]]
-        else:
-            self.attacker_env_specific_rewards[agent_ip].append(self.attacker_episode_rewards[i])
+        if i < len(self.attacker_episode_rewards):
+            if agent_ip not in self.attacker_env_specific_rewards:
+                self.attacker_env_specific_rewards[agent_ip] = [self.attacker_episode_rewards[i]]
+            else:
+                self.attacker_env_specific_rewards[agent_ip].append(self.attacker_episode_rewards[i])
 
-        if agent_ip not in self.defender_env_specific_rewards:
-            self.defender_env_specific_rewards[agent_ip] = [self.defender_episode_rewards[i]]
-        else:
-            self.defender_env_specific_rewards[agent_ip].append(self.defender_episode_rewards[i])
+        if i < len(self.defender_episode_rewards):
+            if agent_ip not in self.defender_env_specific_rewards:
+                self.defender_env_specific_rewards[agent_ip] = [self.defender_episode_rewards[i]]
+            else:
+                self.defender_env_specific_rewards[agent_ip].append(self.defender_episode_rewards[i])
 
-        if agent_ip not in self.env_specific_steps:
-            self.env_specific_steps[agent_ip] = [self.episode_steps[i]]
-        else:
-            self.env_specific_steps[agent_ip].append(self.episode_steps[i])
+        if i < len(self.episode_steps):
+            if agent_ip not in self.env_specific_steps:
+                self.env_specific_steps[agent_ip] = [self.episode_steps[i]]
+            else:
+                self.env_specific_steps[agent_ip].append(self.episode_steps[i])
 
-        if agent_ip not in self.env_specific_flags:
-            self.env_specific_flags[agent_ip] = [infos[i]["flags"]]
-        else:
-            self.env_specific_flags[agent_ip].append(infos[i]["flags"])
+        if i < len(infos):
+            if agent_ip not in self.env_specific_flags:
+                self.env_specific_flags[agent_ip] = [infos[i]["flags"]]
+            else:
+                self.env_specific_flags[agent_ip].append(infos[i]["flags"])
 
-        if agent_ip not in self.env_specific_flags_percentage:
-            self.env_specific_flags_percentage[agent_ip] = [infos[i]["flags"] / num_flags]
-        else:
-            self.env_specific_flags_percentage[agent_ip].append(infos[i]["flags"] / num_flags)
+        if i < len(infos):
+            if agent_ip not in self.env_specific_flags_percentage:
+                self.env_specific_flags_percentage[agent_ip] = [infos[i]["flags"] / num_flags]
+            else:
+                self.env_specific_flags_percentage[agent_ip].append(infos[i]["flags"] / num_flags)

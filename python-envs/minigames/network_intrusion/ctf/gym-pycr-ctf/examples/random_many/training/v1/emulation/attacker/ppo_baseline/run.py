@@ -15,29 +15,29 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
-    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-    #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
     max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     num_nodes = max_num_nodes-1
     n_envs = 1
-    agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -56,7 +56,7 @@ def default_config() -> ClientConfig:
                                vf_hidden_dim=64, vf_hidden_layers=1,
                                shared_hidden_layers=2, shared_hidden_dim=64,
                                # batch_size=util.round_batch_size(int(2000/n_envs)),
-                               batch_size=100,
+                               batch_size=1000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -65,10 +65,10 @@ def default_config() -> ClientConfig:
                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-1000,
-                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=50, eval_deterministic=False,
+                               filter_illegal_actions=True, train_progress_deterministic_eval=False,
+                               n_deterministic_eval_iter=5, eval_deterministic=False,
                                num_nodes=max_num_nodes, domain_randomization=False,
-                               n_quick_eval_iter=50, dr_max_num_nodes=max_num_nodes,
+                               n_quick_eval_iter=5, dr_max_num_nodes=max_num_nodes,
                                dr_min_num_nodes=4, dr_min_num_users=1,
                                dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
                                dr_use_base=True, log_regret=True, running_avg=50
@@ -82,38 +82,38 @@ def default_config() -> ClientConfig:
 
     env_name = "pycr-ctf-random-many-emulation-v1"
     #env_name = "pycr-ctf-random-many-emulation-costs-v1"
-    emulation_configs = [
-        EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                        server_connection=False, port_forward_next_port=4001 + i*150,
-                        warmup=True, warmup_iterations=500)
-        for i in range(len(containers_configs))
-    ]
     # emulation_configs = [
     #     EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-    #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                   server_username="kim", server_ip="172.31.212.92",
-    #                   port_forward_next_port=2001 + i * 150,
-    #                   warmup=True, warmup_iterations=500)
+    #                     server_connection=False, port_forward_next_port=4001 + i*150,
+    #                     warmup=True, warmup_iterations=500)
     #     for i in range(len(containers_configs))
     # ]
+    emulation_configs = [
+        EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                      server_username="kim", server_ip="172.31.212.92",
+                      port_forward_next_port=2001 + i * 20,
+                      warmup=True, warmup_iterations=5)
+        for i in range(len(containers_configs))
+    ]
 
     # eval_emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
     #                                     server_connection=False)
-    eval_env_emulation_configs = [
-        EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-                        server_connection=False, port_forward_next_port=6001 + i * 150,
-                        warmup=True, warmup_iterations=500)
-        for i in range(len(eval_env_containers_configs))
-    ]
-
     # eval_env_emulation_configs = [
     #     EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
-    #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                   server_username="kim", server_ip="172.31.212.92",
-    #                   port_forward_next_port=8001 + i * 150,
-    #                   warmup=True, warmup_iterations=500)
+    #                     server_connection=False, port_forward_next_port=6001 + i * 150,
+    #                     warmup=True, warmup_iterations=500)
     #     for i in range(len(eval_env_containers_configs))
     # ]
+
+    eval_env_emulation_configs = [
+        EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
+                      server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
+                      server_username="kim", server_ip="172.31.212.92",
+                      port_forward_next_port=7001 + i * 20,
+                      warmup=True, warmup_iterations=500)
+        for i in range(len(eval_env_containers_configs))
+    ]
 
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,

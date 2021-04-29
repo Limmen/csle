@@ -1332,9 +1332,9 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     #     alpha=0.35, color="#661D98")
 
 
-    ax[0][2].plot(np.array(list(range(len(avg_train_flags_means_v1)))) * iterations_per_step,
-                  [optimal_reward] * len(avg_train_flags_means_v1), label=r"upper bound",
-                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+    # ax[0][2].plot(np.array(list(range(len(avg_train_flags_means_v1)))) * iterations_per_step,
+    #               [optimal_reward] * len(avg_train_flags_means_v1), label=r"upper bound",
+    #               color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
 
     ax[0][2].grid('on')
     #ax[0][2].set_ylabel(r"Reward", fontsize=labelsize)

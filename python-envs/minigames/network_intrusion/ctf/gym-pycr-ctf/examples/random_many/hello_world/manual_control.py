@@ -25,15 +25,15 @@ def manual_control():
     #max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
     #max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     max_num_nodes = max_num_nodes_train
-    idx = 2
-    emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
-                                   server_connection=False, port_forward_next_port=9800)
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
-    #                                  agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                  server_username="kim")
-    #env_name = "pycr-ctf-random-many-generated-sim-v1"
-    env_name = "pycr-ctf-random-many-emulation-v1"
+    idx = 0
+    # emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+    #                                server_connection=False, port_forward_next_port=9840)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
+                                     agent_username="agent", agent_pw="agent", server_connection=True,
+                                     server_private_key_file="/home/kim/.ssh/id_rsa",
+                                     server_username="kim")
+    env_name = "pycr-ctf-random-many-generated-sim-v1"
+    # env_name = "pycr-ctf-random-many-emulation-v1"
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config,
                    containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
                    num_nodes=max_num_nodes)
@@ -47,7 +47,7 @@ def manual_control():
     #env.env_config = env_config
 
 
-    ManualAttackerAgent(env=env, env_config=env.env_config,render=True)
+    ManualAttackerAgent(env=env, env_config=env.env_config,render=False)
 
 
 

@@ -54,6 +54,8 @@ def _worker(remote, parent_remote, env_fn_wrapper):
             elif cmd == "defender_initial_illegal_actions":
                 remote.send(env.defender_initial_illegal_actions)
             elif cmd == "network_conf":
+                env.env_config.network_conf.defender_dynamics_model = None
+                print("SENDING NETWORK CONF:{}, ip:{}".format(env.env_config.network_conf, env.env_config.router_ip))
                 remote.send(env.env_config.network_conf)
             elif cmd == "pi_star_rew_attacker":
                 id = env.idx
@@ -85,6 +87,10 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(env.env.env_config.randomize_attacker_starting_state)
             elif cmd == "get_snort_baseline_simulate":
                 remote.send(env.env.env_config.snort_baseline_simulate)
+            elif cmd == "get_num_detections":
+                remote.send(env.env.attacker_agent_state.num_detections)
+            elif cmd == "get_all_flags":
+                remote.send(env.env.attacker_agent_state.num_all_flags)
             else:
                 raise NotImplementedError(f"`{cmd}` is not implemented in the worker")
         except EOFError:
@@ -203,7 +209,7 @@ class SubprocVecEnv(VecEnv):
     def get_network_confs(self):
         network_confs = []
         for remote in self.remotes:
-            remote.send(("network_conf", None))
+            remote.send(("network_conf", "test"))
         for remote in self.remotes:
             network_confs.append(remote.recv())
         self.network_confs = network_confs
@@ -235,6 +241,26 @@ class SubprocVecEnv(VecEnv):
             snort_baseline_simulates.append(remote.recv())
         self.snort_baseline_simulates = snort_baseline_simulates
         return self.snort_baseline_simulates
+
+    def get_num_detections(self):
+        num_detections = 0
+        for remote in self.remotes:
+            remote.send(("get_num_detections", None))
+        for remote in self.remotes:
+            num_detections += remote.recv()
+        self.num_detections = num_detections
+        print("num_detections:{}".format(num_detections))
+        return self.num_detections
+
+    def get_num_all_flags(self):
+        num_all_flags = 0
+        for remote in self.remotes:
+            remote.send(("get_all_flags", None))
+        for remote in self.remotes:
+            num_all_flags += remote.recv()
+        self.num_all_flags = num_all_flags
+        print("num_all_flags:{}".format(num_all_flags))
+        return self.num_all_flags
 
     def set_randomization_space(self, randomization_space):
         for remote in self.remotes:

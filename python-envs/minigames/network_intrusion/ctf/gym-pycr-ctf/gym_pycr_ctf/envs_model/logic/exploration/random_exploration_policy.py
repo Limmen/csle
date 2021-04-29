@@ -12,5 +12,7 @@ class RandomExplorationPolicy(ExplorationPolicy):
                                         self.actions))
         else:
             legal_actions = self.actions
+        if len(legal_actions) == 0:
+            print("no legal actions, idx:{}".format(env.idx))
         action = np.random.choice(legal_actions)
         return action

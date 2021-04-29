@@ -344,10 +344,12 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 action = (attacker_action, defender_action)
                 # if emulation_env:
                 #     print("taking eval step in emulation: {}".format(action))
+                # print("taking eval step in emulation: {}, episode:{}/{}".format(action, episode, n_eval_episodes))
                 if isinstance(env, SubprocVecEnv):
                     obs, reward, done, _info = env.eval_step(action, idx=i)
                 elif isinstance(env, DummyVecEnv):
                     obs, reward, done, _info = env.envs[i].step(action)
+                # print("eval step in emulation complete: {}, episode:{}/{}".format(action, episode, n_eval_episodes))
                 # if emulation_env:
                 #     print("eval step in emulation complete")
                 attacker_reward, defender_reward = reward

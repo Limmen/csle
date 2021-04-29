@@ -23,40 +23,49 @@ def default_config() -> ClientConfig:
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    # eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+
     containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
     eval_env_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
 
     max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))
     max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     num_nodes = max_num_nodes-1
     n_envs = 1
-    agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.0001, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=400,
+                               num_iterations=400000,
                                eval_render=False, gifs=True,
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=900000000000000000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=10,
-                               input_dim=((num_nodes * 20) + 1),
+                               input_dim=((num_nodes * 12) + 1),
                                # input_dim=7,
                                # input_dim=11 * 8,
                                # output_dim=9,
                                output_dim=9 + (3 * num_nodes),
                                pi_hidden_dim=64, pi_hidden_layers=1,
                                vf_hidden_dim=64, vf_hidden_layers=1,
-                               shared_hidden_layers=2, shared_hidden_dim=64,
+                               shared_hidden_layers=1, shared_hidden_dim=64,
                                # batch_size=util.round_batch_size(int(2000/n_envs)),
-                               batch_size=2000,
+                               batch_size=1000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -66,9 +75,9 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=50, eval_deterministic=False,
+                               n_deterministic_eval_iter=25, eval_deterministic=False,
                                num_nodes=max_num_nodes, domain_randomization=False,
-                               n_quick_eval_iter=50, dr_max_num_nodes=max_num_nodes,
+                               n_quick_eval_iter=25, dr_max_num_nodes=max_num_nodes,
                                dr_min_num_nodes=4, dr_min_num_users=1,
                                dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
                                dr_use_base=True, log_regret=True, running_avg=50
@@ -80,25 +89,30 @@ def default_config() -> ClientConfig:
     #eval_env_name = "pycr-ctf-random-many-generated-sim-v1"
     eval_env_name = "pycr-ctf-random-many-emulation-v1"
     eval_n_envs = 1
-
     env_name = "pycr-ctf-random-many-generated-sim-v1"
+
+    # containers_configs = containers_configs[0:2]
+    # flags_configs = flags_configs[0:2]
+    # eval_env_containers_configs = eval_env_containers_configs
+    # eval_env_flags_configs = eval_env_flags_configs
+
     #env_name = "pycr-ctf-random-many-emulation-costs-v1"
     emulation_configs = [
         EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         server_connection=False, port_forward_next_port=4001 + i*150,
                         warmup=True, warmup_iterations=500,
-                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                                "gym-pycr-ctf/examples/random_many/hello_world/",
                         skip_exploration=False
                         )
         for i in range(len(containers_configs))
     ]
+    #save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+                                                #"gym-pycr-ctf/examples/random_many/hello_world/",
     # emulation_configs = [
     #     EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
     #                   port_forward_next_port=2001 + i * 150,
-    #                   warmup=True, warmup_iterations=500)
+    #                   warmup=True, warmup_iterations=500, skip_exploration=False)
     #     for i in range(len(containers_configs))
     # ]
 
@@ -108,19 +122,20 @@ def default_config() -> ClientConfig:
         EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         server_connection=False, port_forward_next_port=6001 + i * 150,
                         warmup=True, warmup_iterations=500,
-                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                                "gym-pycr-ctf/examples/random_many/hello_world/",
                         skip_exploration=False
                         )
         for i in range(len(eval_env_containers_configs))
     ]
+
+    # save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                           "gym-pycr-ctf/examples/random_many/hello_world/",
 
     # eval_env_emulation_configs = [
     #     EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                   server_connection=True, server_private_key_file="/home/kim/.ssh/id_rsa",
     #                   server_username="kim", server_ip="172.31.212.92",
     #                   port_forward_next_port=8001 + i * 150,
-    #                   warmup=True, warmup_iterations=500)
+    #                   warmup=True, warmup_iterations=500, skip_exploration=False)
     #     for i in range(len(eval_env_containers_configs))
     # ]
 

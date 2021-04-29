@@ -232,6 +232,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         # Initialization
         attack_action_id, defense_action_id = action_id
         if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent is not None:
+            print("attack action is None")
             attack_action_id = self.env_config.attacker_static_opponent.action(
                 env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
 
@@ -275,7 +276,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         if not done:
             # Second step attacker
-            attacker_reward, defender_reward_2, done, info = self.step_attacker(attacker_action_id=attack_action_id)
+            attacker_reward, defender_reward_2, done, info = self.step_attacker(attacker_action_id=attack_action_id,
+                                                                                defender_action=defense_action_id)
             defender_reward = defender_reward + defender_reward_2
 
         # Merge infos
@@ -324,7 +326,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
-    def step_attacker(self, attacker_action_id) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_attacker(self, attacker_action_id, defender_action) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment as the attacker by executing the given action
 
@@ -337,8 +339,14 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
-            print("[Warning] illegal attack action:{}, idx:{}, ip:{}".format(attacker_action_id, self.idx,
-                                                                             self.env_config.router_ip))
+            actions = list(range(len(self.env_config.attacker_action_conf.actions)))
+            print("[Warning] illegal attack action:{}, idx:{}, ip:{},\nillegal actions:{},\nlegal_actions:{}".format(
+                attacker_action_id, self.idx, self.env_config.router_ip,
+                list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(action, env_config=self.env_config,
+                                                                                 env_state=self.env_state), actions)),
+                list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
+                    action, env_config=self.env_config, env_state=self.env_state), actions))
+            ))
             self.attacker_agent_state.time_step += 1
             attacker_reward = self.env_config.attacker_illegal_reward_action
             return attacker_reward, defender_reward, True, info
@@ -386,6 +394,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
             info["caught_attacker"] = True
+            # if defender_action is None:
+            #     self.attacker_agent_state.num_detections += 1
         info["flags"] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.attacker_trajectories.append(self.attacker_trajectory)

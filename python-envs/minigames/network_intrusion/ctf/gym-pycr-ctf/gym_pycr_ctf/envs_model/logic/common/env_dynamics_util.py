@@ -527,11 +527,11 @@ class EnvDynamicsUtil:
                     net_outcome.total_new_logged_in, net_outcome.total_new_tools_installed,
                     net_outcome.total_new_tools_installed]
 
-        cost = EnvDynamicsUtil.normalize_action_costs(action=action, env_config=env_config)
+        cost = EnvDynamicsUtil.normalize_action_costs(action=action, env_config=env_config)*env_config.attacker_cost_coefficient
 
         alerts_pts = 0
         if env_config.ids_router and action.alerts is not None:
-            alerts_pts = EnvDynamicsUtil.normalize_action_alerts(action=action, env_config=env_config)
+            alerts_pts = EnvDynamicsUtil.normalize_action_alerts(action=action, env_config=env_config)*env_config.attacker_alerts_coefficient
 
         reward = float(reward) + float(env_config.attacker_base_step_reward) - float(cost) - float(alerts_pts)
         return reward
@@ -557,6 +557,8 @@ class EnvDynamicsUtil:
             if num_alerts > env_config.detection_alerts_threshold:
                 det_p = (num_alerts / env_config.attacker_max_alerts) * env_config.detection_prob_factor
                 detected = np.random.rand() < det_p
+                # print("detection prob:{}, detected:{}, max_alets:{}, num_alerts:{}".format(
+                #     det_p, detected, env_config.attacker_max_alerts, num_alerts))
 
             r = env_config.attacker_detection_reward
 

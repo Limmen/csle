@@ -445,7 +445,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 env2 = None
 
             if self.iteration % self.attacker_agent_config.train_log_frequency == 0 or self.iteration == 1:
-
+                print("STARTING EVALUATION")
                 if self.attacker_agent_config.train_progress_deterministic_eval:
                     eval_conf = self.attacker_agent_config.env_config
                     env_configs = self.attacker_agent_config.env_configs
@@ -463,6 +463,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                 eval_conf = self.eval_env.env_config(0)
                     if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
                         env2 = None
+                    print("STARTING EVALUATION, num_deterministic_eval:{}, nquick_eval:{}".format(
+                        self.attacker_agent_config.n_deterministic_eval_iter,
+                        self.attacker_agent_config.n_quick_eval_iter))
                     train_log_dto = quick_evaluate_policy(attacker_model=self.attacker_policy,
                                               defender_model=self.defender_policy,
                                               env=self.env,
@@ -521,6 +524,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags
                     n_d = self.env.envs[0].attacker_agent_state.num_detections
+                elif isinstance(self.env, SubprocVecEnv):
+                    n_af = self.env.get_num_all_flags()
+                    n_d = self.env.get_num_detections()
                 train_log_dto.n_af = n_af
                 train_log_dto.n_d = n_d
                 if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:

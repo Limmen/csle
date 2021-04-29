@@ -40,7 +40,10 @@ class SimulationGenerator:
         trajectory = SimulationGenerator.reset_trajectory(obs)
         if not env_config.explore_defense_states:
             defender_action = None
-            old_env_config = env_config
+            old_env_config = env_config.copy()
+            env_config.simulate_detection = False
+            env_config.emulate_detection = False
+            env_config.max_episode_length = env_config.attacker_max_exploration_steps
         else:
             # Setup config
             old_env_config = env_config.copy()
@@ -145,8 +148,9 @@ class SimulationGenerator:
             num_vulnerabilities = sum(
                 list(map(lambda x: len(x.cve_vulns) + len(x.osvdb_vulns), aggregated_observation.machines)))
             num_credentials = sum(list(map(lambda x: len(x.shell_access_credentials), aggregated_observation.machines)))
-            print("Exploration completed, found {} machines, {} vulnerabilities, {} credentials".format(
-                num_machines, num_vulnerabilities, num_credentials))
+            num_flags = aggregated_observation.num_flags
+            print("Exploration completed, found {} machines, {} vulnerabilities, {} credentials, {} flags".format(
+                num_machines, num_vulnerabilities, num_credentials, num_flags))
             # print("Defender Dynamics Model:\n{}".format(defender_dynamics_model))
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
             node_ips = list(map(lambda x: x.ip, env_config.network_conf.nodes))

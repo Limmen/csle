@@ -1,0 +1,1478 @@
+{
+    "agent_type": 1,
+    "attacker_agent_config": {
+        "alpha": 0.0005,
+        "ar_policy": false,
+        "ar_policy2": false,
+        "attacker_opponent_baseline_type": 6,
+        "batch_size": 2000,
+        "buffer_size": 1000000,
+        "checkpoint_freq": 10,
+        "clip_gradient": false,
+        "critic_loss_fn": "MSE",
+        "defender_opponent_baseline_type": 7,
+        "domain_randomization": false,
+        "dr_max_num_flags": 3,
+        "dr_max_num_nodes": 15,
+        "dr_max_num_users": 5,
+        "dr_min_num_flags": 1,
+        "dr_min_num_nodes": 4,
+        "dr_min_num_users": 1,
+        "dr_use_base": true,
+        "ent_coef": 0.0005,
+        "env_config": null,
+        "env_configs": null,
+        "eps_clip": 0.2,
+        "epsilon": 1,
+        "epsilon_decay": 0.9999,
+        "eval_deterministic": false,
+        "eval_env_config": null,
+        "eval_env_configs": null,
+        "eval_episodes": 0,
+        "eval_epsilon": 0.0,
+        "eval_frequency": 900000000000000000,
+        "eval_log_frequency": 1,
+        "eval_render": false,
+        "eval_sleep": 0.0,
+        "exploration_final_eps": 0.05,
+        "exploration_fraction": 0.1,
+        "exploration_initial_eps": 1.0,
+        "features_dim": 512,
+        "filter_illegal_actions": true,
+        "gae_lambda": 0.95,
+        "gamma": 1,
+        "gif_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/attacker/test/ppo2/results/gifs",
+        "gifs": true,
+        "gpu": false,
+        "gpu_id": 0,
+        "gradient_steps": 1,
+        "hidden_activation": "ReLU",
+        "illegal_action_logit": -1000,
+        "input_dim": 169,
+        "input_dim_2": 30,
+        "learning_starts": 50000,
+        "load_path": null,
+        "log_regret": true,
+        "logger": null,
+        "lr_decay_rate": 0.999,
+        "lr_exp_decay": false,
+        "lr_progress_decay": false,
+        "lr_progress_power_decay": 4,
+        "max_gradient_norm": 0.5,
+        "min_epsilon": 0.01,
+        "mini_batch_size": 64,
+        "multi_input_channel": false,
+        "n_deterministic_eval_iter": 5,
+        "n_quick_eval_iter": 5,
+        "num_episodes": 5000,
+        "num_iterations": 400,
+        "num_nodes": 15,
+        "optimization_iterations": 10,
+        "optimizer": "Adam",
+        "output_dim": 51,
+        "output_dim_2": 30,
+        "performance_analysis": false,
+        "pi_hidden_dim": 64,
+        "pi_hidden_dim_2": 64,
+        "pi_hidden_layers": 1,
+        "pi_hidden_layers_2": 2,
+        "policy_delay": 2,
+        "py/object": "gym_pycr_ctf.agents.config.agent_config.AgentConfig",
+        "quick_eval_freq": 1,
+        "random_seed": 0,
+        "render": false,
+        "render_steps": 100,
+        "running_avg": 50,
+        "save_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/attacker/test/ppo2/results/data",
+        "sde_sample_freq": 4,
+        "shared_hidden_dim": 64,
+        "shared_layers": 1,
+        "snort_baseline_simulate": false,
+        "state_length": 1,
+        "static_eval_defender": false,
+        "target_noise_clip": 0.5,
+        "target_policy_noise": 0.2,
+        "target_update_interval": 10000,
+        "tau": 1.0,
+        "tensorboard": true,
+        "tensorboard_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/attacker/test/ppo2/results/tensorboard",
+        "train_freq": 4,
+        "train_log_frequency": 1,
+        "train_progress_deterministic_eval": true,
+        "use_sde": false,
+        "vf_coef": 0.5,
+        "vf_hidden_dim": 64,
+        "vf_hidden_dim_2": 64,
+        "vf_hidden_layers": 1,
+        "vf_hidden_layers_2": 2,
+        "video": false,
+        "video_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/attacker/test/ppo2/results/videos",
+        "video_fps": 5,
+        "video_frequency": 10
+    },
+    "containers_config": null,
+    "containers_configs": [
+        {
+            "agent_ip": "172.18.12.188",
+            "containers": [
+                {
+                    "ip": "172.18.12.188",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.83",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.113",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.176",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.223",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.196",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.24",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.35",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ftp1",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.149",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "ftp2",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.12.120",
+                    "level": "random_n10_f3_rid_28045",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_12",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_12",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.12.120",
+            "subnet_mask": "172.18.12.0/24",
+            "subnet_prefix": "172.18.12.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.12.83",
+                    "172.18.12.176",
+                    "172.18.12.223",
+                    "172.18.12.196",
+                    "172.18.12.113"
+                ]
+            }
+        },
+        {
+            "agent_ip": "172.18.15.44",
+            "containers": [
+                {
+                    "ip": "172.18.15.44",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.33",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.104",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.204",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.86",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.235",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.230",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "honeypot1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.85",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.28",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "honeypot1",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.15.128",
+                    "level": "random_n10_f4_rid_91916",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_15",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_15",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.15.128",
+            "subnet_mask": "172.18.15.0/24",
+            "subnet_prefix": "172.18.15.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.15.86",
+                    "172.18.15.204",
+                    "172.18.15.104",
+                    "172.18.15.33"
+                ]
+            }
+        },
+        {
+            "agent_ip": "172.18.31.208",
+            "containers": [
+                {
+                    "ip": "172.18.31.208",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.215",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.254",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.154",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "telnet2",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.151",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.146",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.199",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "honeypot2",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.31.95",
+                    "level": "random_n8_f3_rid_40020",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_31",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_31",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.31.95",
+            "subnet_mask": "172.18.31.0/24",
+            "subnet_prefix": "172.18.31.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.31.254",
+                    "172.18.31.154",
+                    "172.18.31.215"
+                ]
+            }
+        },
+        {
+            "agent_ip": "172.18.26.109",
+            "containers": [
+                {
+                    "ip": "172.18.26.109",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.249",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.163",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.103",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.76",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "ftp1",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.18",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.224",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.26.192",
+                    "level": "random_n8_f2_rid_40156",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_26",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_26",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.26.192",
+            "subnet_mask": "172.18.26.0/24",
+            "subnet_prefix": "172.18.26.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.26.103",
+                    "172.18.26.163",
+                    "172.18.26.76",
+                    "172.18.26.249",
+                    "172.18.26.224"
+                ]
+            }
+        },
+        {
+            "agent_ip": "172.18.5.31",
+            "containers": [
+                {
+                    "ip": "172.18.5.31",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.190",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.179",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "telnet2",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.38",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.155",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.195",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "honeypot1",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.92",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "honeypot1",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.90",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.5.4",
+                    "level": "random_n9_f2_rid_83322",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_5",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_5",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.5.4",
+            "subnet_mask": "172.18.5.0/24",
+            "subnet_prefix": "172.18.5.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.5.38",
+                    "172.18.5.90",
+                    "172.18.5.155",
+                    "172.18.5.179",
+                    "172.18.5.190"
+                ]
+            }
+        }
+    ],
+    "defender_agent_config": null,
+    "dummy_vec_env": false,
+    "emulation_config": null,
+    "emulation_configs": [
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.12.188",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 1500,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        },
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.15.44",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 1520,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        },
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.31.208",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 1540,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        },
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.26.109",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 1560,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        },
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.5.31",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 1580,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        }
+    ],
+    "env_checkpoint_dir": null,
+    "env_config": null,
+    "env_name": "pycr-ctf-random-many-emulation-v1",
+    "eval_dummy_vec_env": false,
+    "eval_emulation_config": null,
+    "eval_env": true,
+    "eval_env_containers_config": null,
+    "eval_env_containers_configs": [
+        {
+            "agent_ip": "172.18.27.193",
+            "containers": [
+                {
+                    "ip": "172.18.27.193",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.200",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.161",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "telnet1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.228",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.251",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.83",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.163",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "honeypot1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.232",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "ftp1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.47",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.173",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "telnet3",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.27.186",
+                    "level": "random_n11_f3_rid_28211",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_27",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_27",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.27.186",
+            "subnet_mask": "172.18.27.0/24",
+            "subnet_prefix": "172.18.27.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.27.173",
+                    "172.18.27.83",
+                    "172.18.27.161",
+                    "172.18.27.251",
+                    "172.18.27.228",
+                    "172.18.27.200"
+                ]
+            }
+        },
+        {
+            "agent_ip": "172.18.28.87",
+            "containers": [
+                {
+                    "ip": "172.18.28.87",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "hacker_kali1",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.83",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.231",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ftp2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.34",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.133",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "telnet2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.166",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.115",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh1",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.97",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.41",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.77",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ftp1",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.214",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ssh3",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.71",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ftp2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.11",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "ftp2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                },
+                {
+                    "ip": "172.18.28.14",
+                    "level": "random_n14_f4_rid_31639",
+                    "minigame": "ctf",
+                    "name": "router2",
+                    "network": "pycr_net_28",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_container_config.NodeContainerConfig",
+                    "version": "0.0.1"
+                }
+            ],
+            "ids_enabled": true,
+            "network": "pycr_net_28",
+            "py/object": "gym_pycr_ctf.dao.container_config.containers_config.ContainersConfig",
+            "router_ip": "172.18.28.14",
+            "subnet_mask": "172.18.28.0/24",
+            "subnet_prefix": "172.18.28.",
+            "vulnerable_nodes": {
+                "py/set": [
+                    "172.18.28.166",
+                    "172.18.28.214",
+                    "172.18.28.115",
+                    "172.18.28.41",
+                    "172.18.28.83",
+                    "172.18.28.133"
+                ]
+            }
+        }
+    ],
+    "eval_env_emulation_configs": [
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.27.193",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 4100,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        },
+        {
+            "agent_conn": null,
+            "agent_ip": "172.18.28.87",
+            "agent_pw": "agent",
+            "agent_username": "agent",
+            "emulation_cves": [],
+            "emulation_services": [],
+            "ids_router": false,
+            "ids_router_ip": "",
+            "port_forward_next_port": 4120,
+            "py/object": "gym_pycr_ctf.dao.network.emulation_config.EmulationConfig",
+            "relay_channel": null,
+            "router_conn": null,
+            "save_dynamics_model_dir": null,
+            "server_conn": null,
+            "server_connection": true,
+            "server_ip": "172.31.212.92",
+            "server_private_key_file": "/home/kim/.ssh/id_rsa",
+            "server_username": "kim",
+            "skip_exploration": false,
+            "warmup": true,
+            "warmup_iterations": 10
+        }
+    ],
+    "eval_env_flags_config": null,
+    "eval_env_flags_configs": [
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/test/flag0.txt",
+                                "flag0",
+                                "/home/test/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.27.200",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag1.txt",
+                                "flag1",
+                                "/tmp/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.27.173",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag2.txt",
+                                "flag2",
+                                "/tmp/",
+                                2,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.27.251",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag0.txt",
+                                "flag0",
+                                "/tmp/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.28.83",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag1.txt",
+                                "flag1",
+                                "/tmp/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.28.41",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/test/flag2.txt",
+                                "flag2",
+                                "/home/test/",
+                                2,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.28.166",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag3.txt",
+                                "flag3",
+                                "/tmp/",
+                                3,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.28.115",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        }
+    ],
+    "eval_env_name": "pycr-ctf-random-many-emulation-v1",
+    "eval_env_num_nodes": 15,
+    "eval_multi_env": true,
+    "eval_multi_sim": false,
+    "eval_n_envs": 1,
+    "eval_randomized_env": false,
+    "eval_sub_proc_env": true,
+    "flags_config": null,
+    "flags_configs": [
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/user/flag0.txt",
+                                "flag0",
+                                "/home/user/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.12.223",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/oracle/flag1.txt",
+                                "flag1",
+                                "/home/oracle/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.12.113",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag2.txt",
+                                "flag2",
+                                "/tmp/",
+                                2,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.12.196",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/oracle/flag0.txt",
+                                "flag0",
+                                "/home/oracle/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.15.204",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag1.txt",
+                                "flag1",
+                                "/tmp/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.15.104",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/puppet/flag2.txt",
+                                "flag2",
+                                "/home/puppet/",
+                                2,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.15.33",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/administrator/flag3.txt",
+                                "flag3",
+                                "/home/administrator/",
+                                3,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.15.86",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/vagrant/flag0.txt",
+                                "flag0",
+                                "/home/vagrant/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.31.215",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/home/donald/flag1.txt",
+                                "flag1",
+                                "/home/donald/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.31.254",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag2.txt",
+                                "flag2",
+                                "/tmp/",
+                                2,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.31.154",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag0.txt",
+                                "flag0",
+                                "/tmp/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.26.76",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag1.txt",
+                                "flag1",
+                                "/tmp/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.26.163",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        },
+        {
+            "flags": [
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag0.txt",
+                                "flag0",
+                                "/tmp/",
+                                0,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.5.179",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                },
+                {
+                    "flags": [
+                        {
+                            "py/tuple": [
+                                "/tmp/flag1.txt",
+                                "flag1",
+                                "/tmp/",
+                                1,
+                                true,
+                                1
+                            ]
+                        }
+                    ],
+                    "ip": "172.18.5.90",
+                    "py/object": "gym_pycr_ctf.dao.container_config.node_flags_config.NodeFlagsConfig"
+                }
+            ],
+            "py/object": "gym_pycr_ctf.dao.container_config.flags_config.FlagsConfig"
+        }
+    ],
+    "logger": null,
+    "mode": 0,
+    "multi_env": true,
+    "n_envs": 1,
+    "num_sims": 1,
+    "num_sims_eval": 1,
+    "output_dir": "/media/kim/HDD/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/attacker/test/ppo2",
+    "py/object": "gym_pycr_ctf.dao.experiment.client_config.ClientConfig",
+    "random_seed": 399,
+    "random_seeds": [
+        0,
+        999,
+        299
+    ],
+    "randomized_env": false,
+    "run_many": true,
+    "simulation_config": null,
+    "sub_proc_env": true,
+    "title": "PPO-Baseline random many v1",
+    "train_mode": {
+        "py/reduce": [
+            {
+                "py/type": "gym_pycr_ctf.dao.agent.train_mode.TrainMode"
+            },
+            {
+                "py/tuple": [
+                    0
+                ]
+            }
+        ]
+    },
+    "train_multi_sim": false
+}

@@ -33,10 +33,93 @@ def model_test():
     # emulation_config.skip_exploration = True
     # env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
     env = None
-    load_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results/data/888/1618647459.4010603_888_600_policy_network.zip"
+    #load_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results/data/888/1618647459.4010603_888_600_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/888/1618550590.298014_888_225_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/888/1618556447.9984174_888_250_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/888/1618544521.276592_888_200_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/235/1618650142.70875_235_250_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/210/1618555562.3001144_210_250_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/210/1618550587.747856_210_225_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/210/1618545468.4964974_210_200_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/52112/1618629744.766635_52112_250_policy_network.zip"
+    load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/52112/1618642987.5118797_52112_275_policy_network.zip"
+    #load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results/data/52112/1618616492.3097079_52112_225_policy_network.zip"
     model = initialize_model(env, load_path, "cpu:0", None)
     print("model loaded")
-    plot_initial_state_dist(model)
+    plot_value_fun(model)
+    #plot_initial_state_dist(model)
+
+def plot_value_fun(model):
+    print("test")
+    states = load_states()
+
+    x = []
+    y = []
+    for i in range(len(states)):
+        latent_pi, latent_vf = model.attacker_policy._get_latent(torch.tensor(np.array([states[i]])))
+        values = model.attacker_policy.value_net(latent_vf)
+        print(values)
+        x.append(i)
+        y.append(values.item())
+    print(y)
+
+    cm = plt.cm.get_cmap('RdYlBu_r')
+    num_colors = 5
+    fontsize = 6.5
+    file_name = "value_fun_attacker"
+    labelsize = 6
+    colors = plt.cm.GnBu(np.linspace(0.3, 1, num_colors))[-num_colors:]
+    colors = plt.cm.viridis(np.linspace(0.3, 1, num_colors))[-num_colors:]
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['axes.titlepad'] = 0.02
+    # plt.rcParams['xtick.major.pad'] = 0.5
+    plt.rcParams['ytick.major.pad'] = 0.05
+    plt.rcParams['axes.labelpad'] = 0.8
+    plt.rcParams['axes.linewidth'] = 0.1
+    plt.rcParams.update({'font.size': fontsize})
+
+    colors = plt.cm.viridis(np.linspace(0.3, 1, 4))[-4:]
+    # plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(3.75,1.3))
+
+    ax.plot(x, y, label=r"$V^{\pi_{\theta^A}}$",
+                  marker="s", ls='-', color=colors[2],
+                  markevery=5, markersize=2, lw=0.5)
+    #ax[0][2].grid('on')
+    ax.set_xlabel(r"Time-step $t$", fontsize=labelsize)
+    xlab = ax.xaxis.get_label()
+    ylab = ax.yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax.tick_params(axis='both', which='major', labelsize=labelsize -1.5, length=2.2, width=0.6)
+    ax.tick_params(axis='both', which='minor', labelsize=labelsize -1.5, length=2.2, width=0.6)
+    #ax.set_ylim(-150, 110)
+    ax.set_xlim(0, len(states))
+    ax.set_title(r"$V^{\pi_{\theta^A}}(s_t)$", fontsize=fontsize)
+    # fig.patch.set_visible(False)
+    # ax.axis('off')
+    # Hide the right and top spines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    fig.tight_layout()
+    #fig.subplots_adjust(wspace=0.18, hspace=0.22)
+    # hspace=hspace, top=top
+    #plt.show()
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+
+    # ax[0][2].fill_between(
+    #     np.array(
+    #         list(range(len(attacker_avg_train_rewards_means_v1[::sample_step])))) * sample_step * iterations_per_step,
+    #     attacker_avg_train_rewards_means_v1[::sample_step] - attacker_avg_train_rewards_stds_v1[::sample_step],
+    #     attacker_avg_train_rewards_means_v1[::sample_step] + attacker_avg_train_rewards_stds_v1[::sample_step],
+    #     alpha=0.35, color="r")
+
+
+
 
 def plot_initial_state_dist(model):
     #state = initial_state()
@@ -312,10 +395,12 @@ def state_38():
     return state
 
 def load_states():
-    save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
-    trajectories = Trajectory.load_trajectories(save_dynamics_model_dir, trajectories_file="taus.json")
-    trajectory = trajectories[1]
+    save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    #"/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    trajectories = Trajectory.load_trajectories(save_dynamics_model_dir, trajectories_file="taus3.json")
+    trajectory = trajectories[10]
     observations = trajectory.attacker_observations
+    print("actions:{}".format(trajectory.attacker_actions))
     observations = np.array(observations)
     return observations
 
