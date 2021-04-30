@@ -114,13 +114,19 @@ class SimulationGenerator:
         defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
         trajectories = []
         if env_config.emulation_config.save_dynamics_model_dir is not None:
-            defender_dynamics_model.read_model(env.env_config.emulation_config.save_dynamics_model_dir)
-            trajectories = Trajectory.load_trajectories(env_config.emulation_config.save_dynamics_model_dir)
-            load_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
-                       + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
-            if os.path.exists(load_dir):
-                env_config.network_conf = \
-                    env_config.network_conf.load(load_dir)
+            defender_dynamics_model.read_model(
+                dir_path=env.env_config.emulation_config.save_dynamics_model_dir,
+                model_name=env.env_config.emulation_config.save_dynamics_model_file
+            )
+            # trajectories = Trajectory.load_trajectories(env_config.emulation_config.save_dynamics_model_dir,
+            #                                             trajectories_file=env_config.emulation_config.save_trajectories_file)
+
+            loaded_netconf = env_config.network_conf.load(
+                dir_path=env_config.emulation_config.save_dynamics_model_dir,
+                file_name=env_config.emulation_config.save_netconf_file
+            )
+            if loaded_netconf is not None:
+                env_config.network_conf = loaded_netconf
 
         for i in range(env_config.attacker_max_exploration_trajectories):
 
@@ -154,25 +160,29 @@ class SimulationGenerator:
                 num_machines, num_vulnerabilities, num_credentials, num_flags))
             # print("Defender Dynamics Model:\n{}".format(defender_dynamics_model))
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
-            node_ips = list(map(lambda x: x.ip, env_config.network_conf.nodes))
-            for n in nodes:
-                if n.ip not in node_ips:
-                    env_config.network_conf.nodes.append(n)
+            env_config.network_conf.nodes = nodes
+            #node_ips = list(map(lambda x: x.ip, env_config.network_conf.nodes))
+            # for n in nodes:
+            #     if n.ip not in node_ips:
+            #         env_config.network_conf.nodes.append(n)
+            for n2 in env_config.network_conf.nodes:
+                print("node:{}, flags:{}".format(n2.ip, list(map(lambda x: str(x), n2.flags))))
             #env_config.network_conf.nodes = nodes
             env_config.network_conf.defender_dynamics_model = defender_dynamics_model
             env_config.network_conf.agent_reachable = aggregated_observation.agent_reachable
 
             # Save Models
             print("Checkpointing models")
-            defender_dynamics_model.save_model(env_config)
-            Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories)
-            if env_config.emulation_config.save_dynamics_model_dir is not None:
-                save_path = env_config.emulation_config.save_dynamics_model_dir + "/" \
-                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
-            else:
-                save_path = util.get_script_path() + "/" \
-                            + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
-            env_config.network_conf.save(save_path)
+            defender_dynamics_model.save_model(
+                dir_path=env_config.emulation_config.save_dynamics_model_dir,
+                model_name=env_config.emulation_config.save_dynamics_model_file)
+            # Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories,
+            #                              trajectories_file=env_config.emulation_config.save_trajectories_file)
+
+            env_config.network_conf.save(
+                dir_path=env_config.emulation_config.save_dynamics_model_dir,
+                file_name=env_config.emulation_config.save_netconf_file
+            )
 
         env.cleanup()
         return env_config.network_conf, aggregated_observation

@@ -13,29 +13,39 @@ def manual_control():
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
-    flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
-        "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    # flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+    #     "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_train/")
+    eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
+    eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
+        "/home/kim/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_eval/")
     # eval_containers_configs = EnvConfigGenerator.get_all_envs_containers_config(
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # eval_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
     #     "/home/kim/storage/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
-    max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
-    #max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
+    max_num_nodes_train = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
+    max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_containers_configs)))
     #max_num_nodes = max(max_num_nodes_train, max_num_nodes_eval)
     max_num_nodes = max_num_nodes_train
-    idx = 0
-    # emulation_config = EmulationConfig(agent_ip=containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
-    #                                server_connection=False, port_forward_next_port=9840)
-    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
-                                     agent_username="agent", agent_pw="agent", server_connection=True,
-                                     server_private_key_file="/home/kim/.ssh/id_rsa",
-                                     server_username="kim")
+    idx = 2
+    emulation_config = EmulationConfig(agent_ip=eval_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
+                                   server_connection=False, port_forward_next_port=9840,
+                                       skip_exploration=False,
+                                       save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                                       save_dynamics_model_file="defender_dynamics_model_" + str(idx) + "_eval.json",
+                                       save_netconf_file="network_conf_" + str(idx) + "_eval.pickle",
+                                       save_trajectories_file="taus_" + str(idx) + "_eval.json"
+                                       )
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=containers_configs[idx].agent_ip,
+     #                                  agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                  server_username="kim")
     env_name = "pycr-ctf-random-many-generated-sim-v1"
     # env_name = "pycr-ctf-random-many-emulation-v1"
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config,
-                   containers_configs=containers_configs, flags_configs=flags_configs, idx=idx,
+                   containers_configs=eval_containers_configs, flags_configs=eval_flags_configs, idx=idx,
                    num_nodes=max_num_nodes)
 
     env.reset()

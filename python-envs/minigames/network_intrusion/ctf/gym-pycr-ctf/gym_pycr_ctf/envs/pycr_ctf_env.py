@@ -172,12 +172,16 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
             if self.env_config.emulation_config.save_dynamics_model_dir is not None:
                 print('Loading Dynamics Model..')
-                defender_dynamics_model.read_model(self.env_config.emulation_config.save_dynamics_model_dir)
-                load_dir = self.env_config.emulation_config.save_dynamics_model_dir + "/" \
-                           + constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
-                if os.path.exists(load_dir):
-                    self.env_config.network_conf = \
-                        self.env_config.network_conf.load(load_dir)
+                defender_dynamics_model.read_model(
+                    dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
+                    model_name=self.env_config.emulation_config.save_dynamics_model_file
+                )
+                loaded_netconf = self.env_config.network_conf.load(
+                    dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
+                    file_name=self.env_config.emulation_config.save_netconf_file
+                )
+                if loaded_netconf is not None:
+                    self.env_config.network_conf = loaded_netconf
                 self.env_config.network_conf.defender_dynamics_model = defender_dynamics_model
                 self.env_config.network_conf.defender_dynamics_model.normalize()
                 print('Dynamics Model Loaded Successfully')

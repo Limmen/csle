@@ -55,7 +55,6 @@ def _worker(remote, parent_remote, env_fn_wrapper):
                 remote.send(env.defender_initial_illegal_actions)
             elif cmd == "network_conf":
                 env.env_config.network_conf.defender_dynamics_model = None
-                print("SENDING NETWORK CONF:{}, ip:{}".format(env.env_config.network_conf, env.env_config.router_ip))
                 remote.send(env.env_config.network_conf)
             elif cmd == "pi_star_rew_attacker":
                 id = env.idx
@@ -249,7 +248,6 @@ class SubprocVecEnv(VecEnv):
         for remote in self.remotes:
             num_detections += remote.recv()
         self.num_detections = num_detections
-        print("num_detections:{}".format(num_detections))
         return self.num_detections
 
     def get_num_all_flags(self):
@@ -259,7 +257,6 @@ class SubprocVecEnv(VecEnv):
         for remote in self.remotes:
             num_all_flags += remote.recv()
         self.num_all_flags = num_all_flags
-        print("num_all_flags:{}".format(num_all_flags))
         return self.num_all_flags
 
     def set_randomization_space(self, randomization_space):

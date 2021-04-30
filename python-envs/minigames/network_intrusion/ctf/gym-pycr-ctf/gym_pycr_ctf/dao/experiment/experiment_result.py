@@ -536,6 +536,7 @@ class ExperimentResult:
             if len(metrics[i]) > 0:
                 filtered_metrics.append(metrics[i])
                 filtered_metric_labels.append(metric_labels[i])
+
         for key in self.attacker_train_env_specific_rewards.keys():
             if len(self.attacker_train_env_specific_rewards[key]) > 0:
                 filtered_metrics.append(self.attacker_train_env_specific_rewards[key])
@@ -644,6 +645,9 @@ class ExperimentResult:
             if len(self.eval_2_env_specific_flags_percentage[key]) > 0:
                 filtered_metrics.append(self.eval_2_env_specific_flags_percentage[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_flags_percentage")
+
+        for i in range(len(filtered_metrics)):
+            print("metric:{}, len:{}".format(len(filtered_metrics[i]), filtered_metric_labels[i]))
 
 
         # for i in range(len(filtered_metrics)):

@@ -18,7 +18,9 @@ class EmulationConfig:
                  server_connection : bool = False,
                  server_private_key_file : str = None, server_username : str = None,
                  warmup = False, warmup_iterations :int = 500, port_forward_next_port : int = 4000,
-                 save_dynamics_model_dir : str = None, skip_exploration : bool = False):
+                 save_dynamics_model_dir : str = None, skip_exploration : bool = False,
+                 save_dynamics_model_file: str = None, save_netconf_file: str = None,
+                 save_trajectories_file : str = None):
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -39,6 +41,9 @@ class EmulationConfig:
         self.router_conn = None
         self.skip_exploration = skip_exploration
         self.save_dynamics_model_dir = save_dynamics_model_dir
+        self.save_dynamics_model_file = save_dynamics_model_file
+        self.save_netconf_file = save_netconf_file
+        self.save_trajectories_file = save_trajectories_file
 
     def connect_server(self):
         """
@@ -454,4 +459,7 @@ class EmulationConfig:
                             warmup_iterations=self.warmup_iterations,
                             port_forward_next_port=self.port_forward_next_port)
         c.save_dynamics_model_dir = self.save_dynamics_model_dir
+        c.save_dynamics_model_file = self.save_dynamics_model_file
+        c.save_netconf_file = self.save_netconf_file
+        c.save_trajectories_file = self.save_trajectories_file
         return c

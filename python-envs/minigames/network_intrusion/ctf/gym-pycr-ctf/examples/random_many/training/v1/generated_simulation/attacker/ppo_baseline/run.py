@@ -75,9 +75,9 @@ def default_config() -> ClientConfig:
                                eps_clip=0.2, optimization_iterations=10,
                                render_steps=100, illegal_action_logit=-1000,
                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=25, eval_deterministic=False,
+                               n_deterministic_eval_iter=10, eval_deterministic=False,
                                num_nodes=max_num_nodes, domain_randomization=False,
-                               n_quick_eval_iter=25, dr_max_num_nodes=max_num_nodes,
+                               n_quick_eval_iter=10, dr_max_num_nodes=max_num_nodes,
                                dr_min_num_nodes=4, dr_min_num_users=1,
                                dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
                                dr_use_base=True, log_regret=True, running_avg=50
@@ -100,8 +100,12 @@ def default_config() -> ClientConfig:
     emulation_configs = [
         EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         server_connection=False, port_forward_next_port=4001 + i*150,
-                        warmup=True, warmup_iterations=500,
-                        skip_exploration=False
+                        warmup=True, warmup_iterations=200,
+                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                        save_dynamics_model_file="defender_dynamics_model_" + str(i) + ".json",
+                        save_netconf_file="network_conf_" + str(i) + ".pickle",
+                        save_trajectories_file="taus_" + str(i) + ".json",
+                        skip_exploration=True
                         )
         for i in range(len(containers_configs))
     ]
@@ -121,8 +125,12 @@ def default_config() -> ClientConfig:
     eval_env_emulation_configs = [
         EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         server_connection=False, port_forward_next_port=6001 + i * 150,
-                        warmup=True, warmup_iterations=500,
-                        skip_exploration=False
+                        warmup=True, warmup_iterations=200,
+                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                        save_dynamics_model_file="defender_dynamics_model_" + str(i) + "_eval.json",
+                        save_netconf_file="network_conf_" + str(i) + "_eval.pickle",
+                        save_trajectories_file="taus_" + str(i) + "_eval.json",
+                        skip_exploration=True
                         )
         for i in range(len(eval_env_containers_configs))
     ]

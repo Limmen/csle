@@ -375,20 +375,23 @@ class DefenderDynamicsModel:
             m_dynamics_model_new[k]= m
         self.machines_dynamics_model = m_dynamics_model_new
 
-    def save_model(self, env_config) -> None:
+    def save_model(self, dir_path : str, model_name: str) -> None:
         """
         Saves the model to disk as a json file
 
-        :param env_config: the environment config
+        :param dir_path: the path to the dir where to save the model
+        :param model_name: the name of the model file
         :return: None
         """
+        if model_name is None:
+            model_name = constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         save_dir = None
-        if env_config.emulation_config.save_dynamics_model_dir is not None:
-            save_dir = env_config.emulation_config.save_dynamics_model_dir + "/" \
-                       + constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
+        if dir_path is not None:
+            save_dir = dir_path + "/" \
+                       + model_name
         else:
             save_dir = util.get_script_path() + "/" + \
-                       constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
+                       model_name
         d = self.to_dict()
         with open(save_dir, 'w') as fp:
             json.dump(d, fp)
@@ -405,7 +408,7 @@ class DefenderDynamicsModel:
             model_name = constants.SYSTEM_IDENTIFICATION.DEFENDER_DYNAMICS_MODEL_FILE
         load_dir = None
         if dir_path is not None:
-            load_dir = dir_path + model_name
+            load_dir = dir_path + "/" + model_name
         else:
             load_dir = util.get_script_path() + "/" + model_name
         if os.path.exists(load_dir):

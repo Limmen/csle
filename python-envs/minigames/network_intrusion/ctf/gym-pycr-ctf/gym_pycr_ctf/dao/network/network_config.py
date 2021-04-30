@@ -3,8 +3,10 @@ import pickle
 from gym_pycr_ctf.dao.network.node import Node
 from gym_pycr_ctf.dao.network.node_type import NodeType
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
+import gym_pycr_ctf.constants.constants as constants
+from gym_pycr_ctf.util.experiments_util import util
 import numpy as np
-
+import os
 
 class NetworkConfig:
     """
@@ -109,26 +111,42 @@ class NetworkConfig:
                     paths = paths + self._find_nodes(l_reachable, l_path, l_flags)
         return paths
 
-    def save(self, path: str) -> None:
+    def save(self, dir_path: str, file_name: str) -> None:
         """
         Utility function for saving the network config to disk
 
-        :param path: the path to save it to
+        :param dir_path: the path to save it to
+        :param file_name: the name o the file to save to
         :return: None
         """
-        with open(path, 'wb') as file:
+        if file_name is None:
+            file_name = constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
+        if dir_path is not None:
+            load_dir = dir_path + "/" + file_name
+        else:
+            load_dir = util.get_script_path() + "/" + file_name
+        with open(load_dir, 'wb') as file:
             pickle.dump(self, file)
 
     @staticmethod
-    def load(path) -> "NetworkConfig":
+    def load(dir_path: str, file_name: str) -> "NetworkConfig":
         """
         Utility function for loading the network config from a pickled file on disk
 
-        :param path: the path to load it from
+        :param dir_path: the path to load it from
+        :param file_name: the filename
         :return: the loaded network config
         """
-        with open(path, 'rb') as file:
-            obj = pickle.load(file)
-            return obj
+        if file_name is None:
+            file_name = constants.SYSTEM_IDENTIFICATION.NETWORK_CONF_FILE
+        load_dir = None
+        if dir_path is not None:
+            load_dir = dir_path + "/" + file_name
+        else:
+            load_dir = util.get_script_path() + "/" + file_name
+        if os.path.exists(load_dir):
+            with open(load_dir, 'rb') as file:
+                obj = pickle.load(file)
+                return obj
 
 

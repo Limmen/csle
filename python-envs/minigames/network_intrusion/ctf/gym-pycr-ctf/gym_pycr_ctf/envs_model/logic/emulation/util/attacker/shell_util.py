@@ -687,6 +687,9 @@ class ShellUtil:
                         else:
                             time.sleep(5)
 
+                    if len(setup_connection_dto.target_connections) == 0:
+                        print("cannot install backdoor, machine:{}, credentials:{}".format(machine.ip, credential))
+
                     connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                 username=credential.username,
                                                                 root=machine.root,

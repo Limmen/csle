@@ -652,7 +652,7 @@ class SUB_PROC_ENV:
     """
     Constants related to creation of Sub-proc-env environments
     """
-    SLEEP_TIME_STARTUP = 1
+    SLEEP_TIME_STARTUP = 5
 
 
 class DUMMY_VEC_ENV:
