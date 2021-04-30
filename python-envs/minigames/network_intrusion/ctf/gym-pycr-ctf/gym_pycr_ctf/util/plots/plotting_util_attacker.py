@@ -660,7 +660,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][2].set_ylim(-300, 170)
+    ax[0][2].set_ylim(20, 120)
     ax[0][2].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][2].set_title(r"Reward per episode", fontsize=fontsize)
 

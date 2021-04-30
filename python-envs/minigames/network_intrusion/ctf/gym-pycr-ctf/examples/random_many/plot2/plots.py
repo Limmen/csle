@@ -6,6 +6,7 @@ from gym_pycr_ctf.util.plots import plotting_util_attacker
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from gym_pycr_ctf.util.plots import plotting_util_mult_envs
 
 def parse_data(base_path: str, suffix: str,
                train_containers_configs: List[ContainersConfig], eval_containers_configs: List[ContainersConfig],
@@ -488,7 +489,7 @@ def plot_train(avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_
 
     print("plot")
     suffix = "gensim"
-    ylim_rew = (-300, 170)
+    ylim_rew = (10, 100)
     max_iter = 270
 
     plotting_util_attacker.plot_flags_int_r_steps_costs_alerts(
@@ -521,10 +522,72 @@ def plot_train(avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_
         avg_eval_2_steps_data_v1[0:max_iter], avg_eval_2_steps_means_v1[0:max_iter],
         avg_eval_2_steps_stds_v1[0:max_iter],
         fontsize= 6.5, figsize= (7.5, 2.75), title_fontsize=8, lw=0.75, wspace=0.12, hspace=0.4, top=0.0,
-        bottom=0.152, labelsize=6, markevery=10, optimal_reward = 150, sample_step = 2,
+        bottom=0.152, labelsize=6, markevery=10, optimal_reward = 150, sample_step =1,
         eval_only=False, plot_opt = False, iterations_per_step= 10, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "flags_int_steps_r_costs_alerts_attacker", markersize=2.25
     )
+
+    plotting_util_mult_envs.plot_mega_2(
+        avg_train_rewards_data_v1, avg_train_rewards_means_v1, avg_train_rewards_stds_v1,
+        avg_eval_rewards_data_v1, avg_eval_rewards_means_v1, avg_eval_rewards_stds_v1,
+        train_containers_rewards_data_v1, train_containers_rewards_means_v1,
+        train_containers_rewards_stds_v1, eval_containers_rewards_data_v1,
+        eval_containers_rewards_means_v1, eval_containers_rewards_stds_v1,
+
+        avg_train_regret_data_v1, avg_train_regret_means_v1, avg_train_regret_stds_v1,
+        avg_eval_regret_data_v1, avg_eval_regret_means_v1, avg_eval_regret_stds_v1,
+        train_containers_regret_data_v1, train_containers_regret_means_v1,
+        train_containers_regret_stds_v1, eval_containers_regret_data_v1,
+        eval_containers_regret_means_v1, eval_containers_regret_stds_v1,
+
+        avg_train_steps_data_v1, avg_train_steps_means_v1, avg_train_steps_stds_v1,
+        avg_eval_steps_data_v1, avg_eval_steps_means_v1, avg_eval_steps_stds_v1,
+        train_containers_steps_data_v1, train_containers_steps_means_v1,
+        train_containers_steps_stds_v1, eval_containers_steps_data_v1,
+        eval_containers_steps_means_v1, eval_containers_steps_stds_v1,
+
+        avg_eval_rewards_data_v1, avg_eval_rewards_means_v1, avg_eval_rewards_stds_v1,
+        avg_eval_rewards_data_v1, avg_eval_rewards_means_v1, avg_eval_rewards_stds_v1,
+        eval_containers_rewards_data_v1, eval_containers_rewards_means_v1,
+        eval_containers_rewards_stds_v1, eval_containers_rewards_data_v1,
+        eval_containers_rewards_means_v1, eval_containers_rewards_stds_v1,
+
+        avg_eval_regret_data_v1, avg_eval_regret_means_v1, avg_eval_regret_stds_v1,
+        avg_eval_regret_data_v1, avg_eval_regret_means_v1, avg_eval_regret_stds_v1,
+        eval_containers_regret_data_v1, eval_containers_regret_means_v1,
+        eval_containers_regret_stds_v1, eval_containers_regret_data_v1,
+        eval_containers_regret_means_v1, eval_containers_regret_stds_v1,
+
+        avg_eval_steps_data_v1, avg_eval_steps_means_v1, avg_eval_steps_stds_v1,
+        avg_eval_steps_data_v1, avg_eval_steps_means_v1, avg_eval_steps_stds_v1,
+        eval_containers_steps_data_v1, eval_containers_steps_means_v1,
+        eval_containers_steps_stds_v1, eval_containers_steps_data_v1,
+        eval_containers_steps_means_v1, eval_containers_steps_stds_v1,
+
+
+        avg_eval_2_rewards_data_v1, avg_eval_2_rewards_means_v1,
+        avg_eval_2_rewards_stds_v1,
+        avg_eval_rewards_data_v1, avg_eval_rewards_means_v1,
+        avg_eval_rewards_stds_v1,
+        eval_2_containers_rewards_data_v1, eval_2_containers_rewards_means_v1,
+        eval_2_containers_rewards_stds_v1, eval_containers_rewards_data_v1,
+        eval_containers_rewards_means_v1, eval_containers_rewards_stds_v1,
+
+        avg_eval_2_regret_data_v1, avg_eval_2_regret_means_v1, avg_eval_2_regret_stds_v1,
+        avg_eval_regret_data_v1, avg_eval_regret_means_v1, avg_eval_regret_stds_v1,
+        eval_2_containers_regret_data_v1, eval_2_containers_regret_means_v1,
+        eval_2_containers_regret_stds_v1, eval_containers_regret_data_v1,
+        eval_containers_regret_means_v1, eval_containers_regret_stds_v1,
+
+        avg_eval_2_steps_data_v1, avg_eval_2_steps_means_v1, avg_eval_2_steps_stds_v1,
+        avg_eval_steps_data_v1, avg_eval_steps_means_v1, avg_eval_steps_stds_v1,
+        eval_2_containers_steps_data_v1, eval_2_containers_steps_means_v1,
+        eval_2_containers_steps_stds_v1, eval_containers_steps_data_v1,
+        eval_containers_steps_means_v1, eval_containers_steps_stds_v1,
+
+        ylim_rew=(10, 100), file_name="mega_2_test", markevery=100000, optimal_steps = 10, optimal_reward = 1,
+        sample_step = 1,
+        plot_opt=True, ylim_reg=(-2.5,36.5), ylim_step=(1, 20), linewidth=0.7)
 
     # plotting_util_attacker.plot_rewards_attacker(
     #     avg_eval_rewards_data_v1[0:max_iter], avg_eval_rewards_means_v1[0:max_iter],

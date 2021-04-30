@@ -646,10 +646,6 @@ class ExperimentResult:
                 filtered_metrics.append(self.eval_2_env_specific_flags_percentage[key])
                 filtered_metric_labels.append(str(key) + "_" + "eval_2_avg_episode_flags_percentage")
 
-        for i in range(len(filtered_metrics)):
-            print("metric:{}, len:{}".format(len(filtered_metrics[i]), filtered_metric_labels[i]))
-
-
         # for i in range(len(filtered_metrics)):
         #     print("filtered metric: {}, len:{}".format(filtered_metric_labels[i], len(filtered_metrics[i])))
 
