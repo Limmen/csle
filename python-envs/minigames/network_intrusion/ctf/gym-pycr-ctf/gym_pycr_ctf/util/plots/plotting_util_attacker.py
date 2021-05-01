@@ -583,7 +583,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][0].set_ylim(0, 105)
+    ax[0][0].set_ylim(40, 105)
     ax[0][0].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][0].set_title(r"\% Flags captured per episode", fontsize=fontsize)
 
@@ -624,7 +624,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][1].set_ylim(0, 1.1)
+    ax[0][1].set_ylim(0, 0.5)
     ax[0][1].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
 
@@ -660,7 +660,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[0][2].set_ylim(20, 120)
+    ax[0][2].set_ylim(20, 160)
     ax[0][2].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[0][2].set_title(r"Reward per episode", fontsize=fontsize)
 
@@ -691,7 +691,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[1][0].set_ylim(0, 110)
+    ax[1][0].set_ylim(0, 70)
     ax[1][0].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[1][0].set_title(r"Episode length (steps)", fontsize=fontsize)
 
@@ -722,7 +722,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[1][1].set_ylim(400, 8000)
+    ax[1][1].set_ylim(200, 2000)
     ax[1][1].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[1][1].set_title(r"Episode length (seconds)", fontsize=fontsize)
 
@@ -753,7 +753,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ylab.set_size(fontsize)
     ax[1][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[1][2].set_ylim(0, 1700)
+    ax[1][2].set_ylim(0, 1500)
     ax[1][2].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
     ax[1][2].set_title(r"\# IDS Alerts per episode", fontsize=fontsize)
 

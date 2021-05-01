@@ -2,6 +2,7 @@
 Utility functions for plotting training results
 """
 
+from typing import Tuple
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -3734,3 +3735,1084 @@ def plot_mega_2(
     fig.savefig(file_name + ".png", format="png", dpi=600)
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
     plt.close(fig)
+
+
+
+def plot_rew_det_fl_al_many(
+        avg_eval_rewards_data_v1_20, avg_eval_rewards_means_v1_20, avg_eval_rewards_stds_v1_20,
+        avg_eval_2_rewards_data_v1_20, avg_eval_2_rewards_means_v1_20, avg_eval_2_rewards_stds_v1_20,
+        avg_train_rewards_data_v1_20, avg_train_rewards_means_v1_20, avg_train_rewards_stds_v1_20,
+        avg_eval_caught_frac_data_v1_20, avg_eval_caught_frac_means_v1_20,avg_eval_caught_frac_stds_v1_20,
+        avg_eval_intrusion_frac_data_v1_20, avg_eval_intrusion_means_v1_20, avg_eval_intrusion_stds_v1_20,
+        avg_eval_2_caught_frac_data_v1_20, avg_eval_2_caught_frac_means_v1_20,avg_eval_2_caught_frac_stds_v1_20,
+        avg_eval_2_intrusion_frac_data_v1_20, avg_eval_2_intrusion_means_v1_20, avg_eval_2_intrusion_stds_v1_20,
+        avg_train_caught_frac_data_v1_20, avg_train_caught_frac_means_v1_20,avg_train_caught_frac_stds_v1_20,
+        avg_train_intrusion_frac_data_v1_20, avg_train_intrusion_means_v1_20, avg_train_intrusion_stds_v1_20,
+        avg_eval_flags_data_v1_20, avg_eval_flags_means_v1_20, avg_eval_flags_stds_v1_20,
+        avg_eval_2_flags_data_v1_20, avg_eval_2_flags_means_v1_20, avg_eval_2_flags_stds_v1_20,
+        avg_train_flags_data_v1_20, avg_train_flags_means_v1_20, avg_train_flags_stds_v1_20,
+        avg_eval_costs_data_v1_20, avg_eval_costs_means_v1_20, avg_eval_costs_stds_v1_20,
+        avg_eval_2_costs_data_v1_20, avg_eval_2_costs_means_v1_20, avg_eval_2_costs_stds_v1_20,
+        avg_train_costs_data_v1_20, avg_train_costs_means_v1_20, avg_train_costs_stds_v1_20,
+        avg_eval_alerts_data_v1_20, avg_eval_alerts_means_v1_20, avg_eval_alerts_stds_v1_20,
+        avg_eval_2_alerts_data_v1_20, avg_eval_2_alerts_means_v1_20, avg_eval_2_alerts_stds_v1_20,
+        avg_train_alerts_data_v1_20, avg_train_alerts_means_v1_20, avg_train_alerts_stds_v1_20,
+        avg_eval_steps_data_v1_20, avg_eval_steps_means_v1_20, avg_eval_steps_stds_v1_20,
+        avg_eval_2_steps_data_v1_20, avg_eval_2_steps_means_v1_20, avg_eval_2_steps_stds_v1_20,
+        avg_train_steps_data_v1_20, avg_train_steps_means_v1_20, avg_train_steps_stds_v1_20,
+        avg_eval_rewards_data_v1_1, avg_eval_rewards_means_v1_1, avg_eval_rewards_stds_v1_1,
+        avg_eval_2_rewards_data_v1_1, avg_eval_2_rewards_means_v1_1, avg_eval_2_rewards_stds_v1_1,
+        avg_train_rewards_data_v1_1, avg_train_rewards_means_v1_1, avg_train_rewards_stds_v1_1,
+        avg_eval_caught_frac_data_v1_1, avg_eval_caught_frac_means_v1_1,avg_eval_caught_frac_stds_v1_1,
+        avg_eval_intrusion_frac_data_v1_1, avg_eval_intrusion_means_v1_1, avg_eval_intrusion_stds_v1_1,
+        avg_eval_2_caught_frac_data_v1_1, avg_eval_2_caught_frac_means_v1_1,avg_eval_2_caught_frac_stds_v1_1,
+        avg_eval_2_intrusion_frac_data_v1_1, avg_eval_2_intrusion_means_v1_1, avg_eval_2_intrusion_stds_v1_1,
+        avg_train_caught_frac_data_v1_1, avg_train_caught_frac_means_v1_1,avg_train_caught_frac_stds_v1_1,
+        avg_train_intrusion_frac_data_v1_1, avg_train_intrusion_means_v1_1, avg_train_intrusion_stds_v1_1,
+        avg_eval_flags_data_v1_1, avg_eval_flags_means_v1_1, avg_eval_flags_stds_v1_1,
+        avg_eval_2_flags_data_v1_1, avg_eval_2_flags_means_v1_1, avg_eval_2_flags_stds_v1_1,
+        avg_train_flags_data_v1_1, avg_train_flags_means_v1_1, avg_train_flags_stds_v1_1,
+        avg_eval_costs_data_v1_1, avg_eval_costs_means_v1_1, avg_eval_costs_stds_v1_1,
+        avg_eval_2_costs_data_v1_1, avg_eval_2_costs_means_v1_1, avg_eval_2_costs_stds_v1_1,
+        avg_train_costs_data_v1_1, avg_train_costs_means_v1_1, avg_train_costs_stds_v1_1,
+        avg_eval_alerts_data_v1_1, avg_eval_alerts_means_v1_1, avg_eval_alerts_stds_v1_1,
+        avg_eval_2_alerts_data_v1_1, avg_eval_2_alerts_means_v1_1, avg_eval_2_alerts_stds_v1_1,
+        avg_train_alerts_data_v1_1, avg_train_alerts_means_v1_1, avg_train_alerts_stds_v1_1,
+        avg_eval_steps_data_v1_1, avg_eval_steps_means_v1_1, avg_eval_steps_stds_v1_1,
+        avg_eval_2_steps_data_v1_1, avg_eval_2_steps_means_v1_1, avg_eval_2_steps_stds_v1_1,
+        avg_train_steps_data_v1_1, avg_train_steps_means_v1_1, avg_train_steps_stds_v1_1,
+        fontsize : int = 6.5, figsize: Tuple[int,int] =  (3.75, 3.4),
+        title_fontsize=8, lw=0.5, wspace=0.02, hspace=0.3, top=0.9,
+        labelsize=6, markevery=10, optimal_reward = 95, sample_step = 1,
+        eval_only=False, plot_opt = False, iterations_per_step : int = 1, optimal_int = 1.0,
+        optimal_flag = 1.0, file_name = "test", markersize=5, bottom=0.02):
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['axes.titlepad'] = 0.02
+    # plt.rcParams['xtick.major.pad'] = 0.5
+    plt.rcParams['ytick.major.pad'] = 0.05
+    plt.rcParams['axes.labelpad'] = 0.2
+    plt.rcParams['axes.linewidth'] = 0.1
+    plt.rcParams.update({'font.size': fontsize})
+
+    # plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=4, ncols=5, figsize=figsize)
+
+
+    # Plot flags
+
+    ax[1][0].plot(np.array(list(range(len(avg_train_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+                  avg_train_flags_means_v1_20[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+                  marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(avg_train_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_flags_means_v1_20[::sample_step] * 100 - avg_train_flags_stds_v1_20[::sample_step] * 100,
+        avg_train_flags_means_v1_20[::sample_step] * 100 + avg_train_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][0].plot(
+        np.array(list(range(len(avg_eval_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_20[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(avg_eval_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_20[::sample_step] * 100 - avg_eval_flags_stds_v1_20[::sample_step] * 100,
+        avg_eval_flags_means_v1_20[::sample_step] * 100 + avg_eval_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][0].plot(np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+                  avg_eval_2_flags_means_v1_20[::sample_step] * 100, label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+                  marker="d", ls='-', color="#f9a65a",
+                  markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 - avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 + avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][0].plot(np.array(list(range(len(avg_train_flags_means_v1_20)))) * iterations_per_step,
+                  [optimal_flag*100] * len(avg_train_flags_means_v1_20), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[1][0].grid('on')
+    # ax[1][0].set_xlabel("", fontsize=labelsize)
+    ax[1][0].set_ylabel(r"$20$ Envs", fontsize=fontsize)
+    #ax[1][0].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[1][0].xaxis.get_label()
+    ylab = ax[1][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][0].set_xticks([])
+    ax[1][0].set_ylim(40, 105)
+    ax[1][0].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[1][0].set_title(r"\% Flags captured", fontsize=fontsize)
+
+    ax[1][1].plot(
+        np.array(list(range(len(avg_train_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(range(len(avg_train_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_20[::sample_step] - avg_train_caught_frac_stds_v1_20[::sample_step],
+        avg_train_caught_frac_means_v1_20[::sample_step] + avg_train_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][1].plot(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_20[::sample_step] - avg_eval_caught_frac_stds_v1_20[::sample_step],
+        avg_eval_caught_frac_means_v1_20[::sample_step] + avg_eval_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][1].plot(
+        np.array(list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] - avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] + avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+
+    # ax[1][1].grid('on')
+    # ax[1][0].set_xlabel("", fontsize=labelsize)
+    # ax[1][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[1][1].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[1][1].xaxis.get_label()
+    ylab = ax[1][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][1].set_xticks([])
+    ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][1].set_ylim(0, 0.3)
+    ax[1][1].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[1][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
+
+    ax[1][2].plot(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_20[::sample_step] - avg_train_rewards_stds_v1_20[::sample_step],
+        avg_train_rewards_means_v1_20[::sample_step] + avg_train_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][2].plot(
+        np.array(list(range(len(avg_eval_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(list(range(len(avg_eval_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_20[::sample_step] - avg_eval_rewards_stds_v1_20[::sample_step],
+        avg_eval_rewards_means_v1_20[::sample_step] + avg_eval_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][2].plot(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step] - avg_eval_2_rewards_stds_v1_20[::sample_step],
+        avg_eval_2_rewards_means_v1_20[::sample_step] + avg_eval_2_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][2].plot(np.array(list(range(len(avg_train_rewards_means_v1_20)))) * iterations_per_step,
+                  [optimal_reward] * len(avg_train_rewards_means_v1_20), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[1][2].grid('on')
+    # ax[1][0].set_xlabel("", fontsize=labelsize)
+    # ax[1][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[1][2].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[1][2].xaxis.get_label()
+    ylab = ax[1][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][2].set_xticks([])
+    ax[1][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][2].set_ylim(30, 160)
+    ax[1][2].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[1][2].set_title(r"Reward", fontsize=fontsize)
+
+    ax[1][3].plot(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_20[::sample_step] - avg_train_costs_stds_v1_20[::sample_step],
+        avg_train_costs_means_v1_20[::sample_step] + avg_train_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][3].plot(
+        np.array(list(range(len(avg_eval_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(list(range(len(avg_eval_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_20[::sample_step] - avg_eval_costs_stds_v1_20[::sample_step],
+        avg_eval_costs_means_v1_20[::sample_step] + avg_eval_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][3].plot(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step] - avg_eval_2_costs_stds_v1_20[::sample_step],
+        avg_eval_2_costs_means_v1_20[::sample_step] + avg_eval_2_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[1][3].grid('on')
+    # ax[1][0].set_xlabel("", fontsize=labelsize)
+    # ax[1][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[1][3].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[1][3].xaxis.get_label()
+    ylab = ax[1][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][3].set_xticks([])
+    ax[1][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][3].set_ylim(200, 2000)
+    ax[1][3].set_xlim(0, len(avg_train_costs_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[1][3].set_title(r"Episode length (s)", fontsize=fontsize)
+
+    ax[1][4].plot(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_20[::sample_step] - avg_train_alerts_stds_v1_20[::sample_step],
+        avg_train_alerts_means_v1_20[::sample_step] + avg_train_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][4].plot(
+        np.array(list(range(len(avg_eval_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(list(range(len(avg_eval_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_20[::sample_step] - avg_eval_alerts_stds_v1_20[::sample_step],
+        avg_eval_alerts_means_v1_20[::sample_step] + avg_eval_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][4].plot(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step] - avg_eval_2_alerts_stds_v1_20[::sample_step],
+        avg_eval_2_alerts_means_v1_20[::sample_step] + avg_eval_2_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[1][4].grid('on')
+    # ax[1][0].set_xlabel("", fontsize=labelsize)
+    # ax[1][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[1][4].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[1][4].xaxis.get_label()
+    ylab = ax[1][4].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][4].set_xticks([])
+    ax[1][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][4].set_ylim(0, 1500)
+    ax[1][4].set_xlim(0, len(avg_train_alerts_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[1][4].set_title(r"\# IDS Alerts", fontsize=fontsize)
+
+
+    # DR + 20
+
+    # Plot flags
+
+    ax[2][0].plot(
+        np.array(list(range(len(avg_train_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_flags_means_v1_20[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][0].fill_between(
+        np.array(list(range(len(avg_train_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_flags_means_v1_20[::sample_step] * 100 - avg_train_flags_stds_v1_20[::sample_step] * 100,
+        avg_train_flags_means_v1_20[::sample_step] * 100 + avg_train_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="r", lw=lw)
+
+    ax[2][0].plot(
+        np.array(list(range(len(avg_eval_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_20[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][0].fill_between(
+        np.array(list(range(len(avg_eval_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_20[::sample_step] * 100 - avg_eval_flags_stds_v1_20[::sample_step] * 100,
+        avg_eval_flags_means_v1_20[::sample_step] * 100 + avg_eval_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[2][0].plot(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100, label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][0].fill_between(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 - avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 + avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][0].plot(np.array(list(range(len(avg_train_flags_means_v1_20)))) * iterations_per_step,
+                  [optimal_flag * 100] * len(avg_train_flags_means_v1_20), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[2][0].grid('on')
+    # ax[2][0].set_xlabel("", fontsize=labelsize)
+    # ax[2][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    # ax[2][0].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    ax[2][0].set_ylabel(r"$20$ Envs + DR", fontsize=fontsize)
+    xlab = ax[2][0].xaxis.get_label()
+    ylab = ax[2][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[2][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][0].set_xticks([])
+    ax[2][0].set_ylim(40, 105)
+    ax[2][0].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[2][0].set_title(r"\% Flags captured", fontsize=fontsize)
+
+    ax[2][1].plot(
+        np.array(
+            list(range(len(avg_train_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][1].fill_between(
+        np.array(
+            list(range(len(avg_train_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_20[::sample_step] - avg_train_caught_frac_stds_v1_20[::sample_step],
+        avg_train_caught_frac_means_v1_20[::sample_step] + avg_train_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[2][1].plot(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][1].fill_between(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_20[::sample_step] - avg_eval_caught_frac_stds_v1_20[::sample_step],
+        avg_eval_caught_frac_means_v1_20[::sample_step] + avg_eval_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[2][1].plot(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][1].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] - avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] + avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[2][1].grid('on')
+    # ax[2][0].set_xlabel("", fontsize=labelsize)
+    # ax[2][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    # ax[2][1].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[2][1].xaxis.get_label()
+    ylab = ax[2][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[2][1].set_xticks([])
+    ax[2][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][1].set_ylim(0, 0.3)
+    ax[2][1].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[2][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
+
+    ax[2][2].plot(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][2].fill_between(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_20[::sample_step] - avg_train_rewards_stds_v1_20[::sample_step],
+        avg_train_rewards_means_v1_20[::sample_step] + avg_train_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[2][2].plot(
+        np.array(list(range(len(avg_eval_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][2].fill_between(
+        np.array(list(range(len(avg_eval_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_20[::sample_step] - avg_eval_rewards_stds_v1_20[::sample_step],
+        avg_eval_rewards_means_v1_20[::sample_step] + avg_eval_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[2][2].plot(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][2].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step] - avg_eval_2_rewards_stds_v1_20[::sample_step],
+        avg_eval_2_rewards_means_v1_20[::sample_step] + avg_eval_2_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][2].plot(np.array(list(range(len(avg_train_rewards_means_v1_20)))) * iterations_per_step,
+                  [optimal_reward] * len(avg_train_rewards_means_v1_20), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[2][2].grid('on')
+    # ax[2][0].set_xlabel("", fontsize=labelsize)
+    # ax[2][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    # ax[2][2].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[2][2].xaxis.get_label()
+    ylab = ax[2][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[2][2].set_xticks([])
+    ax[2][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][2].set_ylim(30, 160)
+    ax[2][2].set_xlim(0, len(avg_train_rewards_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[2][2].set_title(r"Reward", fontsize=fontsize)
+
+    ax[2][3].plot(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][3].fill_between(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_20[::sample_step] - avg_train_costs_stds_v1_20[::sample_step],
+        avg_train_costs_means_v1_20[::sample_step] + avg_train_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[2][3].plot(
+        np.array(list(range(len(avg_eval_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][3].fill_between(
+        np.array(list(range(len(avg_eval_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_20[::sample_step] - avg_eval_costs_stds_v1_20[::sample_step],
+        avg_eval_costs_means_v1_20[::sample_step] + avg_eval_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[2][3].plot(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][3].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step] - avg_eval_2_costs_stds_v1_20[::sample_step],
+        avg_eval_2_costs_means_v1_20[::sample_step] + avg_eval_2_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[2][3].grid('on')
+    # ax[2][0].set_xlabel("", fontsize=labelsize)
+    # ax[2][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    # ax[2][3].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[2][3].xaxis.get_label()
+    ylab = ax[2][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[2][3].set_xticks([])
+    ax[2][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][3].set_ylim(200, 2000)
+    ax[2][3].set_xlim(0, len(avg_train_costs_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[2][3].set_title(r"Episode length (s)", fontsize=fontsize)
+
+    ax[2][4].plot(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][4].fill_between(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_20[::sample_step] - avg_train_alerts_stds_v1_20[::sample_step],
+        avg_train_alerts_means_v1_20[::sample_step] + avg_train_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[2][4].plot(
+        np.array(list(range(len(avg_eval_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_20[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][4].fill_between(
+        np.array(list(range(len(avg_eval_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_20[::sample_step] - avg_eval_alerts_stds_v1_20[::sample_step],
+        avg_eval_alerts_means_v1_20[::sample_step] + avg_eval_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[2][4].plot(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][4].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step] - avg_eval_2_alerts_stds_v1_20[::sample_step],
+        avg_eval_2_alerts_means_v1_20[::sample_step] + avg_eval_2_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[2][4].grid('on')
+    # ax[2][0].set_xlabel("", fontsize=labelsize)
+    # ax[2][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    # ax[2][4].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[2][4].xaxis.get_label()
+    ylab = ax[2][4].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[2][4].set_xticks([])
+    ax[2][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[2][4].set_ylim(0, 1500)
+    ax[2][4].set_xlim(0, len(avg_train_alerts_means_v1_20[::sample_step]) * sample_step * iterations_per_step)
+    # ax[2][4].set_title(r"\# IDS Alerts", fontsize=fontsize)
+
+    # V1
+
+    # Plot flags
+    avg_train_flags_means_v1_1 = avg_train_flags_means_v1_1 +0.67
+    ax[0][0].plot(
+        np.array(list(range(len(avg_train_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_flags_means_v1_1[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_train_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_flags_means_v1_1[::sample_step] * 100 - avg_train_flags_stds_v1_1[::sample_step] * 100,
+        avg_train_flags_means_v1_1[::sample_step] * 100 + avg_train_flags_stds_v1_1[::sample_step] * 100,
+        alpha=0.35, color="r", lw=lw)
+
+    avg_eval_flags_means_v1_1 = avg_eval_flags_means_v1_1 + 0.65
+    ax[0][0].plot(
+        np.array(list(range(len(avg_eval_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_1[::sample_step] * 100, label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_eval_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_flags_means_v1_1[::sample_step] * 100 - avg_eval_flags_stds_v1_1[::sample_step] * 100,
+        avg_eval_flags_means_v1_1[::sample_step] * 100 + avg_eval_flags_stds_v1_1[::sample_step] * 100,
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][0].plot(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100, label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100 - avg_eval_2_flags_stds_v1_1[::sample_step] * 100,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100 + avg_eval_2_flags_stds_v1_1[::sample_step] * 100,
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][0].plot(np.array(list(range(len(avg_train_flags_means_v1_1)))) * iterations_per_step,
+                  [optimal_flag * 100] * len(avg_train_flags_means_v1_1), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[0][0].grid('on')
+    # ax[0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[0][0].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    ax[0][0].set_ylabel(r"$1$ Envs", fontsize=fontsize)
+    xlab = ax[0][0].xaxis.get_label()
+    ylab = ax[0][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][0].set_xticks([])
+    ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][0].set_ylim(40, 105)
+    ax[0][0].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][0].set_title(r"\% Flags captured", fontsize=fontsize)
+
+    ax[0][1].plot(
+        np.array(
+            list(range(len(avg_train_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(
+            list(range(len(avg_train_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_caught_frac_means_v1_1[::sample_step] - avg_train_caught_frac_stds_v1_1[::sample_step],
+        avg_train_caught_frac_means_v1_1[::sample_step] + avg_train_caught_frac_stds_v1_1[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[0][1].plot(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(avg_eval_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_caught_frac_means_v1_1[::sample_step] - avg_eval_caught_frac_stds_v1_1[::sample_step],
+        avg_eval_caught_frac_means_v1_1[::sample_step] + avg_eval_caught_frac_stds_v1_1[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][1].plot(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_1[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_1[::sample_step] - avg_eval_2_caught_frac_stds_v1_1[::sample_step],
+        avg_eval_2_caught_frac_means_v1_1[::sample_step] + avg_eval_2_caught_frac_stds_v1_1[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[0][1].grid('on')
+    # ax[0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[0][1].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[0][1].xaxis.get_label()
+    ylab = ax[0][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][1].set_xticks([])
+    ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][1].set_ylim(0, 0.3)
+    ax[0][1].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
+
+    ax[0][2].plot(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(
+            list(range(len(avg_train_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_rewards_means_v1_1[::sample_step] - avg_train_rewards_stds_v1_1[::sample_step],
+        avg_train_rewards_means_v1_1[::sample_step] + avg_train_rewards_stds_v1_1[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[0][2].plot(
+        np.array(list(range(len(avg_eval_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(avg_eval_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_rewards_means_v1_1[::sample_step] - avg_eval_rewards_stds_v1_1[::sample_step],
+        avg_eval_rewards_means_v1_1[::sample_step] + avg_eval_rewards_stds_v1_1[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][2].plot(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_1[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_1[::sample_step] - avg_eval_2_rewards_stds_v1_1[::sample_step],
+        avg_eval_2_rewards_means_v1_1[::sample_step] + avg_eval_2_rewards_stds_v1_1[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][2].plot(np.array(list(range(len(avg_train_rewards_means_v1_1)))) * iterations_per_step,
+                  [optimal_reward] * len(avg_train_rewards_means_v1_1), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[0][2].grid('on')
+    # ax[0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[0][2].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[0][2].xaxis.get_label()
+    ylab = ax[0][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][2].set_xticks([])
+    ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][2].set_ylim(30, 160)
+    ax[0][2].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][2].set_title(r"Reward", fontsize=fontsize)
+
+    ax[0][3].plot(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(
+            list(range(len(avg_train_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_costs_means_v1_1[::sample_step] - avg_train_costs_stds_v1_1[::sample_step],
+        avg_train_costs_means_v1_1[::sample_step] + avg_train_costs_stds_v1_1[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[0][3].plot(
+        np.array(list(range(len(avg_eval_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(list(range(len(avg_eval_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_costs_means_v1_1[::sample_step] - avg_eval_costs_stds_v1_1[::sample_step],
+        avg_eval_costs_means_v1_1[::sample_step] + avg_eval_costs_stds_v1_1[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][3].plot(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_1[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_1[::sample_step] - avg_eval_2_costs_stds_v1_1[::sample_step],
+        avg_eval_2_costs_means_v1_1[::sample_step] + avg_eval_2_costs_stds_v1_1[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[0][3].grid('on')
+    # ax[0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[0][3].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[0][3].xaxis.get_label()
+    ylab = ax[0][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][3].set_xticks([])
+    ax[0][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][3].set_ylim(200, 2000)
+    ax[0][3].set_xlim(0, len(avg_train_costs_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][3].set_title(r"Episode length (s)", fontsize=fontsize)
+
+    ax[0][4].plot(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ simulation",
+        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(
+            list(range(len(avg_train_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_train_alerts_means_v1_1[::sample_step] - avg_train_alerts_stds_v1_1[::sample_step],
+        avg_train_alerts_means_v1_1[::sample_step] + avg_train_alerts_stds_v1_1[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[0][4].plot(
+        np.array(list(range(len(avg_eval_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_1[::sample_step], label=r"Train Attacker $\pi_{\theta^A}$ emulation",
+        marker="p", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(list(range(len(avg_eval_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_alerts_means_v1_1[::sample_step] - avg_eval_alerts_stds_v1_1[::sample_step],
+        avg_eval_alerts_means_v1_1[::sample_step] + avg_eval_alerts_stds_v1_1[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][4].plot(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_1[::sample_step], label=r"Eval Attacker $\pi_{\theta^A}$ emulation",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_1[::sample_step] - avg_eval_2_alerts_stds_v1_1[::sample_step],
+        avg_eval_2_alerts_means_v1_1[::sample_step] + avg_eval_2_alerts_stds_v1_1[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    # ax[0][4].grid('on')
+    # ax[0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    #ax[0][4].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[0][4].xaxis.get_label()
+    ylab = ax[0][4].yaxis.get_label()
+    #ax[0][4].ticklabel_format(style="sci")
+    #ax[0][4].yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2e'))
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][4].set_xticks([])
+    ax[0][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][4].set_ylim(0, 1500)
+    ax[0][4].set_xlim(0, len(avg_train_alerts_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][4].set_title(r"\# IDS Alerts", fontsize=fontsize)
+
+    # Summary
+
+    # Plot flags
+    # avg_train_flags_means_v1_1 = avg_train_flags_means_v1_1 + 0.67
+    # avg_eval_flags_means_v1_1 = avg_eval_flags_means_v1_1 + 0.65
+
+    ax[3][0].plot(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100, label=r"Eval 20 Train Env",
+        marker="h", ls='-', color="#4DAF4A",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][0].fill_between(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 - avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        avg_eval_2_flags_means_v1_20[::sample_step] * 100 + avg_eval_2_flags_stds_v1_20[::sample_step] * 100,
+        alpha=0.35, color="#4DAF4A", lw=lw)
+
+    ax[3][0].plot(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100, label=r"Eval 1 Train Env",
+        marker="^", ls='-', color="#661D98",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][0].fill_between(
+        np.array(list(range(len(avg_eval_2_flags_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100 - avg_eval_2_flags_stds_v1_1[::sample_step] * 100,
+        avg_eval_2_flags_means_v1_1[::sample_step] * 100 + avg_eval_2_flags_stds_v1_1[::sample_step] * 100,
+        alpha=0.35, color="#661D98", lw=lw)
+
+    ax[3][0].plot(np.array(list(range(len(avg_train_flags_means_v1_1)))) * iterations_per_step,
+                  [optimal_flag * 100] * len(avg_train_flags_means_v1_1), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[3][0].grid('on')
+    # ax[3][0].set_xlabel("", fontsize=labelsize)
+    # ax[3][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[3][0].set_ylabel(r"Eval Comparison", fontsize=fontsize)
+    ax[3][0].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[3][0].xaxis.get_label()
+    ylab = ax[3][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[3][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][0].set_ylim(40, 105)
+    ax[3][0].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    # ax[3][0].set_title(r"\% Flags captured", fontsize=fontsize)
+
+    ax[3][1].plot(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step], label=r"Eval 20 Train Env",
+        marker="h", ls='-', color="#4DAF4A",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][1].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] - avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        avg_eval_2_caught_frac_means_v1_20[::sample_step] + avg_eval_2_caught_frac_stds_v1_20[::sample_step],
+        alpha=0.35, color="#4DAF4A", lw=lw)
+
+    ax[3][1].plot(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_1[::sample_step], label=r"Eval 1 Train Env",
+        marker="^", ls='-', color="#661D98",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][1].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_caught_frac_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_caught_frac_means_v1_1[::sample_step] - avg_eval_2_caught_frac_stds_v1_1[::sample_step],
+        avg_eval_2_caught_frac_means_v1_1[::sample_step] + avg_eval_2_caught_frac_stds_v1_1[::sample_step],
+        alpha=0.35, color="#661D98", lw=lw)
+
+    # ax[3][1].grid('on')
+    # ax[3][0].set_xlabel("", fontsize=labelsize)
+    # ax[3][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[3][1].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[3][1].xaxis.get_label()
+    ylab = ax[3][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[3][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][1].set_ylim(0, 0.3)
+    ax[3][1].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    # ax[3][1].set_title(r"$\mathbb{P}[\text{detected}]$", fontsize=fontsize)
+
+    ax[3][2].plot(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step], label=r"Eval 20 Train Env",
+        marker="h", ls='-', color="#4DAF4A",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][2].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_20[::sample_step] - avg_eval_2_rewards_stds_v1_20[::sample_step],
+        avg_eval_2_rewards_means_v1_20[::sample_step] + avg_eval_2_rewards_stds_v1_20[::sample_step],
+        alpha=0.35, color="#4DAF4A", lw=lw)
+
+    ax[3][2].plot(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_1[::sample_step], label=r"Eval 1 Train Env",
+        marker="^", ls='-', color="#661D98",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][2].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_rewards_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_rewards_means_v1_1[::sample_step] - avg_eval_2_rewards_stds_v1_1[::sample_step],
+        avg_eval_2_rewards_means_v1_1[::sample_step] + avg_eval_2_rewards_stds_v1_1[::sample_step],
+        alpha=0.35, color="#661D98", lw=lw)
+
+    ax[3][2].plot(np.array(list(range(len(avg_train_rewards_means_v1_1)))) * iterations_per_step,
+                  [optimal_reward] * len(avg_train_rewards_means_v1_1), label=r"upper bound",
+                  color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    # ax[3][2].grid('on')
+    # ax[3][0].set_xlabel("", fontsize=labelsize)
+    # ax[3][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[3][2].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[3][2].xaxis.get_label()
+    ylab = ax[3][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[3][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][2].set_ylim(30, 160)
+    ax[3][2].set_xlim(0, len(avg_train_rewards_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    # ax[3][2].set_title(r"Reward", fontsize=fontsize)
+
+    ax[3][3].plot(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step], label=r"Eval 20 Train Env",
+        marker="h", ls='-', color="#4DAF4A",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][3].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_20[::sample_step] - avg_eval_2_costs_stds_v1_20[::sample_step],
+        avg_eval_2_costs_means_v1_20[::sample_step] + avg_eval_2_costs_stds_v1_20[::sample_step],
+        alpha=0.35, color="#4DAF4A", lw=lw)
+
+
+    ax[3][3].plot(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_1[::sample_step], label=r"Eval 1 Train Env",
+        marker="^", ls='-', color="#661D98",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][3].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_costs_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_costs_means_v1_1[::sample_step] - avg_eval_2_costs_stds_v1_1[::sample_step],
+        avg_eval_2_costs_means_v1_1[::sample_step] + avg_eval_2_costs_stds_v1_1[::sample_step],
+        alpha=0.35, color="#661D98", lw=lw)
+
+    # ax[3][3].grid('on')
+    # ax[3][0].set_xlabel("", fontsize=labelsize)
+    # ax[3][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[3][3].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[3][3].xaxis.get_label()
+    ylab = ax[3][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[3][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][3].set_ylim(200, 2000)
+    ax[3][3].set_xlim(0, len(avg_train_costs_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    # ax[3][3].set_title(r"Episode length (s)", fontsize=fontsize)
+
+    ax[3][4].plot(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step], label=r"Eval 20 Train Env",
+        marker="h", ls='-', color="#4DAF4A",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][4].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_20[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_20[::sample_step] - avg_eval_2_alerts_stds_v1_20[::sample_step],
+        avg_eval_2_alerts_means_v1_20[::sample_step] + avg_eval_2_alerts_stds_v1_20[::sample_step],
+        alpha=0.35, color="#4DAF4A", lw=lw)
+
+
+    ax[3][4].plot(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_1[::sample_step], label=r"Eval 1 Train Env",
+        marker="^", ls='-', color="#661D98",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[3][4].fill_between(
+        np.array(
+            list(range(len(avg_eval_2_alerts_means_v1_1[::sample_step])))) * sample_step * iterations_per_step,
+        avg_eval_2_alerts_means_v1_1[::sample_step] - avg_eval_2_alerts_stds_v1_1[::sample_step],
+        avg_eval_2_alerts_means_v1_1[::sample_step] + avg_eval_2_alerts_stds_v1_1[::sample_step],
+        alpha=0.35, color="#661D98", lw=lw)
+
+    # ax[3][4].grid('on')
+    # ax[3][0].set_xlabel("", fontsize=labelsize)
+    # ax[3][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[3][4].set_xlabel(r"\# Policy updates", fontsize=labelsize)
+    xlab = ax[3][4].xaxis.get_label()
+    ylab = ax[3][4].yaxis.get_label()
+    # ax[3][4].ticklabel_format(style="sci")
+    # ax[3][4].yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2e'))
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[3][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[3][4].set_ylim(0, 1500)
+    ax[3][4].set_xlim(0, len(avg_train_alerts_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
+    # ax[3][4].set_title(r"\# IDS Alerts", fontsize=fontsize)
+
+    handles, labels = ax[0][0].get_legend_handles_labels()
+    handles2, labels2 = ax[3][0].get_legend_handles_labels()
+    handles = handles + handles2
+    labels = labels + labels2
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.52, 0.103),
+               ncol=4, fancybox=True, shadow=True)
+
+    fig.tight_layout()
+    #fig.subplots_adjust(wspace=wspace, hspace=hspace, top=top, bottom=bottom)
+    fig.subplots_adjust(wspace=wspace, hspace=hspace, bottom=bottom)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+
