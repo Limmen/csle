@@ -46,7 +46,7 @@ class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
             env_config.attacker_exploration_policy = exp_policy
-            env_config.domain_randomization = False
+            env_config.domain_randomization = True
             env_config.attacker_max_exploration_steps = 5000000
             env_config.attacker_max_exploration_trajectories = 10
             env_config.max_episode_length = 60
