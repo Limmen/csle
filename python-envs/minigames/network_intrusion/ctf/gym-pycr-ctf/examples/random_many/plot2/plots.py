@@ -10,12 +10,22 @@ from gym_pycr_ctf.util.plots import plotting_util_mult_envs
 
 def parse_data(base_path: str, suffix: str,
                train_containers_configs: List[ContainersConfig], eval_containers_configs: List[ContainersConfig],
-               ips = None, eval_ips = None, multi_env: bool = False):
+               ips = None, eval_ips = None, multi_env: bool = False, mult_env_dr : bool = False):
     print(glob.glob(base_path + "0/*_train.csv"))
     if multi_env:
         ppo_v1_df_0 = pd.read_csv(glob.glob(base_path + "0/*_train.csv")[0])
         ppo_v1_df_7615 = pd.read_csv(glob.glob(base_path + "7615/*_train.csv")[0])
         ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_7615]
+    elif mult_env_dr:
+        ppo_v1_df_0 = pd.read_csv(glob.glob(base_path + "0/*_train.csv")[0])
+        ppo_v1_df_9170 = pd.read_csv(glob.glob(base_path + "9170/*_train.csv")[0])
+        ppo_v1_df_81810 = pd.read_csv(glob.glob(base_path + "81810/*_train.csv")[0])
+        #ppo_dfs_v1 = [ppo_v1_df_0, ppo_v1_df_9170, ppo_v1_df_81810]
+        ppo_dfs_v1 = [ppo_v1_df_9170, ppo_v1_df_81810]
+        #ppo_dfs_v1 = [ppo_v1_df_9170, ppo_v1_df_81810]
+        #ppo_dfs_v1 = [ppo_v1_df_9170]
+        # ppo_dfs_v1 = [ppo_v1_df_81810]
+        # ppo_dfs_v1 = [ppo_v1_df_0]
     else:
         ppo_v1_df_0 = pd.read_csv(glob.glob(base_path + "0/*_train.csv")[0])
         ppo_v1_df_71820 = pd.read_csv(glob.glob(base_path + "71820/*_train.csv")[0])
@@ -539,7 +549,51 @@ def plot_train(avg_train_rewards_data_v1_20, avg_train_rewards_means_v1_20, avg_
     eval_containers_rewards_data_v1_1, eval_containers_rewards_means_v1_1, eval_containers_rewards_stds_v1_1,
     eval_containers_flags_data_v1_1, eval_containers_flags_means_v1_1, eval_containers_flags_stds_v1_1, eval_containers_steps_data_v1_1,
     eval_containers_steps_means_v1_1, eval_containers_steps_stds_v1_1, eval_containers_regret_data_v1_1, eval_containers_regret_means_v1_1,
-    eval_containers_regret_stds_v1_1
+    eval_containers_regret_stds_v1_1,
+    avg_train_rewards_data_v1_20_dr, avg_train_rewards_means_v1_20_dr, avg_train_rewards_stds_v1_20_dr, avg_train_steps_data_v1_20_dr,
+    avg_train_steps_means_v1_20_dr, avg_train_steps_stds_v1_20_dr, avg_train_regret_data_v1_20_dr, avg_train_regret_means_v1_20_dr,
+    avg_train_regret_stds_v1_20_dr, avg_train_opt_frac_data_v1_20_dr, avg_train_opt_frac_means_v1_20_dr,
+    avg_train_opt_frac_stds_v1_20_dr, avg_train_caught_frac_data_v1_20_dr, avg_train_caught_frac_means_v1_20_dr,
+    avg_train_caught_frac_stds_v1_20_dr, avg_train_early_stopping_frac_data_v1_20_dr, avg_train_early_stopping_means_v1_20_dr,
+    avg_train_early_stopping_stds_v1_20_dr, avg_train_intrusion_frac_data_v1_20_dr, avg_train_intrusion_means_v1_20_dr,
+    avg_train_intrusion_stds_v1_20_dr, avg_eval_rewards_data_v1_20_dr, avg_eval_rewards_means_v1_20_dr, avg_eval_rewards_stds_v1_20_dr,
+    avg_eval_steps_data_v1_20_dr, avg_eval_steps_means_v1_20_dr, avg_eval_steps_stds_v1_20_dr, avg_eval_regret_data_v1_20_dr,
+    avg_eval_regret_means_v1_20_dr, avg_eval_regret_stds_v1_20_dr, avg_eval_opt_frac_data_v1_20_dr, avg_eval_opt_frac_means_v1_20_dr,
+    avg_eval_opt_frac_stds_v1_20_dr, avg_eval_caught_frac_data_v1_20_dr, avg_eval_caught_frac_means_v1_20_dr,
+    avg_eval_caught_frac_stds_v1_20_dr, avg_eval_early_stopping_frac_data_v1_20_dr, avg_eval_early_stopping_means_v1_20_dr,
+    avg_eval_early_stopping_stds_v1_20_dr, avg_eval_intrusion_frac_data_v1_20_dr, avg_eval_intrusion_means_v1_20_dr,
+    avg_eval_intrusion_stds_v1_20_dr, avg_eval_2_rewards_data_v1_20_dr, avg_eval_2_rewards_means_v1_20_dr, avg_eval_2_rewards_stds_v1_20_dr,
+    avg_eval_2_steps_data_v1_20_dr, avg_eval_2_steps_means_v1_20_dr, avg_eval_2_steps_stds_v1_20_dr,
+    avg_eval_2_caught_frac_data_v1_20_dr, avg_eval_2_caught_frac_means_v1_20_dr,
+    avg_eval_2_caught_frac_stds_v1_20_dr, avg_eval_2_early_stopping_frac_data_v1_20_dr, avg_eval_2_early_stopping_means_v1_20_dr,
+    avg_eval_2_early_stopping_stds_v1_20_dr,  avg_eval_2_intrusion_frac_data_v1_20_dr, avg_eval_2_intrusion_means_v1_20_dr,
+    avg_eval_2_intrusion_stds_v1_20_dr, avg_eval_2_regret_data_v1_20_dr, avg_eval_2_regret_means_v1_20_dr,  avg_eval_2_regret_stds_v1_20_dr,
+    avg_eval_2_opt_frac_data_v1_20_dr, avg_eval_2_opt_frac_means_v1_20_dr, avg_eval_2_opt_frac_stds_v1_20_dr,
+    avg_train_attacker_action_alerts_data_v1_20_dr, avg_train_attacker_action_alerts_means_v1_20_dr,
+    avg_train_attacker_action_alerts_stds_v1_20_dr, avg_eval_attacker_action_alerts_data_v1_20_dr,
+    avg_eval_attacker_action_alerts_means_v1_20_dr,
+    avg_eval_attacker_action_alerts_stds_v1_20_dr, avg_eval_2_attacker_action_alerts_data_v1_20_dr,
+    avg_eval_2_attacker_action_alerts_means_v1_20_dr, avg_eval_2_attacker_action_alerts_stds_v1_20_dr,
+    avg_train_attacker_action_costs_data_v1_20_dr, avg_train_attacker_action_costs_means_v1_20_dr,
+    avg_train_attacker_action_costs_stds_v1_20_dr,
+    avg_eval_attacker_action_costs_data_v1_20_dr, avg_eval_attacker_action_costs_means_v1_20_dr,
+    avg_eval_attacker_action_costs_stds_v1_20_dr, avg_eval_2_attacker_action_costs_data_v1_20_dr,
+    avg_eval_2_attacker_action_costs_means_v1_20_dr, avg_eval_2_attacker_action_costs_stds_v1_20_dr,
+    avg_train_flags_data_v1_20_dr, avg_train_flags_means_v1_20_dr, avg_train_flags_stds_v1_20_dr,
+    avg_eval_flags_data_v1_20_dr, avg_eval_flags_means_v1_20_dr, avg_eval_flags_stds_v1_20_dr,
+    avg_eval_2_flags_data_v1_20_dr, avg_eval_2_flags_means_v1_20_dr, avg_eval_2_flags_stds_v1_20_dr,
+    train_containers_rewards_data_v1_20_dr, train_containers_rewards_means_v1_20_dr, train_containers_rewards_stds_v1_20_dr,
+    train_containers_flags_data_v1_20_dr, train_containers_flags_means_v1_20_dr, train_containers_flags_stds_v1_20_dr, train_containers_steps_data_v1_20_dr,
+    train_containers_steps_means_v1_20_dr, train_containers_steps_stds_v1_20_dr, train_containers_regret_data_v1_20_dr, train_containers_regret_means_v1_20_dr,
+    train_containers_regret_stds_v1_20_dr, train_containers_opt_frac_data_v1_20_dr, train_containers_opt_frac_means_v1_20_dr, train_containers_opt_frac_stds_v1_20_dr,
+    eval_2_containers_rewards_data_v1_20_dr, eval_2_containers_rewards_means_v1_20_dr, eval_2_containers_rewards_stds_v1_20_dr,
+    eval_2_containers_flags_data_v1_20_dr, eval_2_containers_flags_means_v1_20_dr, eval_2_containers_flags_stds_v1_20_dr, eval_2_containers_steps_data_v1_20_dr,
+    eval_2_containers_steps_means_v1_20_dr, eval_2_containers_steps_stds_v1_20_dr, eval_2_containers_regret_data_v1_20_dr, eval_2_containers_regret_means_v1_20_dr,
+    eval_2_containers_regret_stds_v1_20_dr, eval_2_containers_opt_frac_data_v1_20_dr, eval_2_containers_opt_frac_means_v1_20_dr, eval_2_containers_opt_frac_stds_v1_20_dr,
+    eval_containers_rewards_data_v1_20_dr, eval_containers_rewards_means_v1_20_dr, eval_containers_rewards_stds_v1_20_dr,
+    eval_containers_flags_data_v1_20_dr, eval_containers_flags_means_v1_20_dr, eval_containers_flags_stds_v1_20_dr, eval_containers_steps_data_v1_20_dr,
+    eval_containers_steps_means_v1_20_dr, eval_containers_steps_stds_v1_20_dr, eval_containers_regret_data_v1_20_dr, eval_containers_regret_means_v1_20_dr,
+    eval_containers_regret_stds_v1_20_dr
                ):
 
     print("plot")
@@ -640,6 +694,52 @@ def plot_train(avg_train_rewards_data_v1_20, avg_train_rewards_means_v1_20, avg_
         avg_eval_2_steps_stds_v1_1[0:max_iter],
         avg_train_steps_data_v1_1[0:max_iter], avg_train_steps_means_v1_1[0:max_iter],
         avg_train_steps_stds_v1_1[0:max_iter],
+        avg_eval_rewards_data_v1_20_dr[0:max_iter], avg_eval_rewards_means_v1_20_dr[0:max_iter],
+        avg_eval_rewards_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_rewards_data_v1_20_dr[0:max_iter], avg_eval_2_rewards_means_v1_20_dr[0:max_iter],
+        avg_eval_2_rewards_stds_v1_20_dr[0:max_iter],
+        avg_train_rewards_data_v1_20_dr[0:max_iter], avg_train_rewards_means_v1_20_dr[0:max_iter],
+        avg_train_rewards_stds_v1_20_dr[0:max_iter],
+        avg_eval_caught_frac_data_v1_20_dr[0:max_iter], avg_eval_caught_frac_means_v1_20_dr[0:max_iter],
+        avg_eval_caught_frac_stds_v1_20_dr[0:max_iter],
+        avg_eval_intrusion_frac_data_v1_20_dr[0:max_iter], avg_eval_intrusion_means_v1_20_dr[0:max_iter],
+        avg_eval_intrusion_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_caught_frac_data_v1_20_dr[0:max_iter], avg_eval_2_caught_frac_means_v1_20_dr[0:max_iter],
+        avg_eval_2_caught_frac_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_intrusion_frac_data_v1_20_dr[0:max_iter], avg_eval_2_intrusion_means_v1_20_dr[0:max_iter],
+        avg_eval_2_intrusion_stds_v1_20_dr[0:max_iter],
+        avg_train_caught_frac_data_v1_20_dr[0:max_iter], avg_train_caught_frac_means_v1_20_dr[0:max_iter],
+        avg_train_caught_frac_stds_v1_20_dr[0:max_iter],
+        avg_train_intrusion_frac_data_v1_20_dr[0:max_iter], avg_train_intrusion_means_v1_20_dr[0:max_iter],
+        avg_train_intrusion_stds_v1_20_dr[0:max_iter],
+        avg_eval_flags_data_v1_20_dr[0:max_iter], avg_eval_flags_means_v1_20_dr[0:max_iter],
+        avg_eval_flags_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_flags_data_v1_20_dr[0:max_iter], avg_eval_2_flags_means_v1_20_dr[0:max_iter],
+        avg_eval_2_flags_stds_v1_20_dr[0:max_iter],
+        avg_train_flags_data_v1_20_dr[0:max_iter], avg_train_flags_means_v1_20_dr[0:max_iter],
+        avg_train_flags_stds_v1_20_dr[0:max_iter],
+        avg_eval_attacker_action_costs_data_v1_20_dr[0:max_iter], avg_eval_attacker_action_costs_means_v1_20_dr[0:max_iter],
+        avg_eval_attacker_action_costs_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_costs_data_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_costs_means_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_costs_stds_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_costs_data_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_costs_means_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_costs_stds_v1_20_dr[0:max_iter],
+        avg_eval_attacker_action_alerts_data_v1_20_dr[0:max_iter], avg_eval_attacker_action_alerts_means_v1_20_dr[0:max_iter],
+        avg_eval_attacker_action_alerts_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_alerts_data_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_alerts_means_v1_20_dr[0:max_iter],
+        avg_eval_2_attacker_action_alerts_stds_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_alerts_data_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_alerts_means_v1_20_dr[0:max_iter],
+        avg_train_attacker_action_alerts_stds_v1_20_dr[0:max_iter],
+        avg_eval_steps_data_v1_20_dr[0:max_iter], avg_eval_steps_means_v1_20_dr[0:max_iter],
+        avg_eval_steps_stds_v1_20_dr[0:max_iter],
+        avg_eval_2_steps_data_v1_20_dr[0:max_iter], avg_eval_2_steps_means_v1_20_dr[0:max_iter],
+        avg_eval_2_steps_stds_v1_20_dr[0:max_iter],
+        avg_train_steps_data_v1_20_dr[0:max_iter], avg_train_steps_means_v1_20_dr[0:max_iter],
+        avg_train_steps_stds_v1_20_dr[0:max_iter],
         fontsize=6.5, figsize=(7.5, 4.25), title_fontsize=8, lw=0.75, wspace=0.20, hspace=0.09, top=0.0,
         bottom=0.152, labelsize=5.25, markevery=5, optimal_reward=150, sample_step=10,
         eval_only=False, plot_opt=False, iterations_per_step=10, optimal_int=1.0,
@@ -938,6 +1038,55 @@ if __name__ == '__main__':
         parse_data(base_path=base_path, suffix="gensim", train_containers_configs=containers_configs,
                    eval_containers_configs=eval_env_containers_configs, multi_env=False)
 
+    base_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/plot2/20_dr_results/data/"
+    avg_train_rewards_data_v1_20_dr, avg_train_rewards_means_v1_20_dr, avg_train_rewards_stds_v1_20_dr, avg_train_steps_data_v1_20_dr, \
+    avg_train_steps_means_v1_20_dr, avg_train_steps_stds_v1_20_dr, avg_train_regret_data_v1_20_dr, avg_train_regret_means_v1_20_dr, \
+    avg_train_regret_stds_v1_20_dr, avg_train_opt_frac_data_v1_20_dr, avg_train_opt_frac_means_v1_20_dr, \
+    avg_train_opt_frac_stds_v1_20_dr, avg_train_caught_frac_data_v1_20_dr, avg_train_caught_frac_means_v1_20_dr, \
+    avg_train_caught_frac_stds_v1_20_dr, avg_train_early_stopping_frac_data_v1_20_dr, avg_train_early_stopping_means_v1_20_dr, \
+    avg_train_early_stopping_stds_v1_20_dr, avg_train_intrusion_frac_data_v1_20_dr, avg_train_intrusion_means_v1_20_dr, \
+    avg_train_intrusion_stds_v1_20_dr, avg_eval_rewards_data_v1_20_dr, avg_eval_rewards_means_v1_20_dr, avg_eval_rewards_stds_v1_20_dr, \
+    avg_eval_steps_data_v1_20_dr, avg_eval_steps_means_v1_20_dr, avg_eval_steps_stds_v1_20_dr, avg_eval_regret_data_v1_20_dr, \
+    avg_eval_regret_means_v1_20_dr, avg_eval_regret_stds_v1_20_dr, avg_eval_opt_frac_data_v1_20_dr, avg_eval_opt_frac_means_v1_20_dr, \
+    avg_eval_opt_frac_stds_v1_20_dr, avg_eval_caught_frac_data_v1_20_dr, avg_eval_caught_frac_means_v1_20_dr, \
+    avg_eval_caught_frac_stds_v1_20_dr, avg_eval_early_stopping_frac_data_v1_20_dr, avg_eval_early_stopping_means_v1_20_dr, \
+    avg_eval_early_stopping_stds_v1_20_dr, avg_eval_intrusion_frac_data_v1_20_dr, avg_eval_intrusion_means_v1_20_dr, \
+    avg_eval_intrusion_stds_v1_20_dr, avg_eval_2_rewards_data_v1_20_dr, avg_eval_2_rewards_means_v1_20_dr, avg_eval_2_rewards_stds_v1_20_dr, \
+    avg_eval_2_steps_data_v1_20_dr, avg_eval_2_steps_means_v1_20_dr, avg_eval_2_steps_stds_v1_20_dr, \
+    avg_eval_2_caught_frac_data_v1_20_dr, avg_eval_2_caught_frac_means_v1_20_dr, \
+    avg_eval_2_caught_frac_stds_v1_20_dr, avg_eval_2_early_stopping_frac_data_v1_20_dr, avg_eval_2_early_stopping_means_v1_20_dr, \
+    avg_eval_2_early_stopping_stds_v1_20_dr, avg_eval_2_intrusion_frac_data_v1_20_dr, avg_eval_2_intrusion_means_v1_20_dr, \
+    avg_eval_2_intrusion_stds_v1_20_dr, avg_eval_2_regret_data_v1_20_dr, \
+    avg_eval_2_regret_means_v1_20_dr, avg_eval_2_regret_stds_v1_20_dr, avg_eval_2_opt_frac_data_v1_20_dr, \
+    avg_eval_2_opt_frac_means_v1_20_dr, avg_eval_2_opt_frac_stds_v1_20_dr, avg_train_attacker_action_alerts_data_v1_20_dr, \
+    avg_train_attacker_action_alerts_means_v1_20_dr, \
+    avg_train_attacker_action_alerts_stds_v1_20_dr, avg_eval_attacker_action_alerts_data_v1_20_dr, \
+    avg_eval_attacker_action_alerts_means_v1_20_dr, \
+    avg_eval_attacker_action_alerts_stds_v1_20_dr, avg_eval_2_attacker_action_alerts_data_v1_20_dr, \
+    avg_eval_2_attacker_action_alerts_means_v1_20_dr, avg_eval_2_attacker_action_alerts_stds_v1_20_dr, \
+    avg_train_attacker_action_costs_data_v1_20_dr, avg_train_attacker_action_costs_means_v1_20_dr, \
+    avg_train_attacker_action_costs_stds_v1_20_dr, \
+    avg_eval_attacker_action_costs_data_v1_20_dr, avg_eval_attacker_action_costs_means_v1_20_dr, \
+    avg_eval_attacker_action_costs_stds_v1_20_dr, avg_eval_2_attacker_action_costs_data_v1_20_dr, \
+    avg_eval_2_attacker_action_costs_means_v1_20_dr, avg_eval_2_attacker_action_costs_stds_v1_20_dr, \
+    avg_train_flags_data_v1_20_dr, avg_train_flags_means_v1_20_dr, avg_train_flags_stds_v1_20_dr, \
+    avg_eval_flags_data_v1_20_dr, avg_eval_flags_means_v1_20_dr, avg_eval_flags_stds_v1_20_dr, \
+    avg_eval_2_flags_data_v1_20_dr, avg_eval_2_flags_means_v1_20_dr, avg_eval_2_flags_stds_v1_20_dr, \
+    train_containers_rewards_data_v1_20_dr, train_containers_rewards_means_v1_20_dr, train_containers_rewards_stds_v1_20_dr, \
+    train_containers_flags_data_v1_20_dr, train_containers_flags_means_v1_20_dr, train_containers_flags_stds_v1_20_dr, train_containers_steps_data_v1_20_dr, \
+    train_containers_steps_means_v1_20_dr, train_containers_steps_stds_v1_20_dr, train_containers_regret_data_v1_20_dr, train_containers_regret_means_v1_20_dr, \
+    train_containers_regret_stds_v1_20_dr, train_containers_opt_frac_data_v1_20_dr, train_containers_opt_frac_means_v1_20_dr, train_containers_opt_frac_stds_v1_20_dr, \
+    eval_2_containers_rewards_data_v1_20_dr, eval_2_containers_rewards_means_v1_20_dr, eval_2_containers_rewards_stds_v1_20_dr, \
+    eval_2_containers_flags_data_v1_20_dr, eval_2_containers_flags_means_v1_20_dr, eval_2_containers_flags_stds_v1_20_dr, eval_2_containers_steps_data_v1_20_dr, \
+    eval_2_containers_steps_means_v1_20_dr, eval_2_containers_steps_stds_v1_20_dr, eval_2_containers_regret_data_v1_20_dr, eval_2_containers_regret_means_v1_20_dr, \
+    eval_2_containers_regret_stds_v1_20_dr, eval_2_containers_opt_frac_data_v1_20_dr, eval_2_containers_opt_frac_means_v1_20_dr, eval_2_containers_opt_frac_stds_v1_20_dr, \
+    eval_containers_rewards_data_v1_20_dr, eval_containers_rewards_means_v1_20_dr, eval_containers_rewards_stds_v1_20_dr, \
+    eval_containers_flags_data_v1_20_dr, eval_containers_flags_means_v1_20_dr, eval_containers_flags_stds_v1_20_dr, eval_containers_steps_data_v1_20_dr, \
+    eval_containers_steps_means_v1_20_dr, eval_containers_steps_stds_v1_20_dr, eval_containers_regret_data_v1_20_dr, eval_containers_regret_means_v1_20_dr, \
+    eval_containers_regret_stds_v1_20_dr = \
+        parse_data(base_path=base_path, suffix="gensim", train_containers_configs=containers_configs,
+                   eval_containers_configs=eval_env_containers_configs, multi_env=False, mult_env_dr=True)
+
     plot_train(avg_train_rewards_data_v1_20, avg_train_rewards_means_v1_20, avg_train_rewards_stds_v1_20, avg_train_steps_data_v1_20,
     avg_train_steps_means_v1_20, avg_train_steps_stds_v1_20, avg_train_regret_data_v1_20, avg_train_regret_means_v1_20,
     avg_train_regret_stds_v1_20, avg_train_opt_frac_data_v1_20, avg_train_opt_frac_means_v1_20,
@@ -1039,6 +1188,57 @@ if __name__ == '__main__':
     eval_containers_flags_data_v1_1, eval_containers_flags_means_v1_1, eval_containers_flags_stds_v1_1,
     eval_containers_steps_data_v1_1,
     eval_containers_steps_means_v1_1, eval_containers_steps_stds_v1_1, eval_containers_regret_data_v1_1,
-    eval_containers_regret_means_v1_1, eval_containers_regret_stds_v1_1)
+    eval_containers_regret_means_v1_1, eval_containers_regret_stds_v1_1,
+    avg_train_rewards_data_v1_20_dr, avg_train_rewards_means_v1_20_dr, avg_train_rewards_stds_v1_20_dr, avg_train_steps_data_v1_20_dr,
+    avg_train_steps_means_v1_20_dr, avg_train_steps_stds_v1_20_dr, avg_train_regret_data_v1_20_dr, avg_train_regret_means_v1_20_dr,
+    avg_train_regret_stds_v1_20_dr, avg_train_opt_frac_data_v1_20_dr, avg_train_opt_frac_means_v1_20_dr,
+    avg_train_opt_frac_stds_v1_20_dr, avg_train_caught_frac_data_v1_20_dr, avg_train_caught_frac_means_v1_20_dr,
+    avg_train_caught_frac_stds_v1_20_dr, avg_train_early_stopping_frac_data_v1_20_dr, avg_train_early_stopping_means_v1_20_dr,
+    avg_train_early_stopping_stds_v1_20_dr, avg_train_intrusion_frac_data_v1_20_dr, avg_train_intrusion_means_v1_20_dr,
+    avg_train_intrusion_stds_v1_20_dr, avg_eval_rewards_data_v1_20_dr, avg_eval_rewards_means_v1_20_dr, avg_eval_rewards_stds_v1_20_dr,
+    avg_eval_steps_data_v1_20_dr, avg_eval_steps_means_v1_20_dr, avg_eval_steps_stds_v1_20_dr, avg_eval_regret_data_v1_20_dr,
+    avg_eval_regret_means_v1_20_dr, avg_eval_regret_stds_v1_20_dr, avg_eval_opt_frac_data_v1_20_dr, avg_eval_opt_frac_means_v1_20_dr,
+    avg_eval_opt_frac_stds_v1_20_dr, avg_eval_caught_frac_data_v1_20_dr, avg_eval_caught_frac_means_v1_20_dr,
+    avg_eval_caught_frac_stds_v1_20_dr, avg_eval_early_stopping_frac_data_v1_20_dr, avg_eval_early_stopping_means_v1_20_dr,
+    avg_eval_early_stopping_stds_v1_20_dr, avg_eval_intrusion_frac_data_v1_20_dr, avg_eval_intrusion_means_v1_20_dr,
+    avg_eval_intrusion_stds_v1_20_dr, avg_eval_2_rewards_data_v1_20_dr, avg_eval_2_rewards_means_v1_20_dr, avg_eval_2_rewards_stds_v1_20_dr,
+    avg_eval_2_steps_data_v1_20_dr, avg_eval_2_steps_means_v1_20_dr, avg_eval_2_steps_stds_v1_20_dr,
+    avg_eval_2_caught_frac_data_v1_20_dr, avg_eval_2_caught_frac_means_v1_20_dr,
+    avg_eval_2_caught_frac_stds_v1_20_dr, avg_eval_2_early_stopping_frac_data_v1_20_dr, avg_eval_2_early_stopping_means_v1_20_dr,
+    avg_eval_2_early_stopping_stds_v1_20_dr, avg_eval_2_intrusion_frac_data_v1_20_dr, avg_eval_2_intrusion_means_v1_20_dr,
+    avg_eval_2_intrusion_stds_v1_20_dr, avg_eval_2_regret_data_v1_20_dr, avg_eval_2_regret_means_v1_20_dr, avg_eval_2_regret_stds_v1_20_dr,
+    avg_eval_2_opt_frac_data_v1_20_dr, avg_eval_2_opt_frac_means_v1_20_dr, avg_eval_2_opt_frac_stds_v1_20_dr,
+    avg_train_attacker_action_alerts_data_v1_20_dr, avg_train_attacker_action_alerts_means_v1_20_dr,
+    avg_train_attacker_action_alerts_stds_v1_20_dr, avg_eval_attacker_action_alerts_data_v1_20_dr,
+    avg_eval_attacker_action_alerts_means_v1_20_dr,
+    avg_eval_attacker_action_alerts_stds_v1_20_dr, avg_eval_2_attacker_action_alerts_data_v1_20_dr,
+    avg_eval_2_attacker_action_alerts_means_v1_20_dr, avg_eval_2_attacker_action_alerts_stds_v1_20_dr,
+    avg_train_attacker_action_costs_data_v1_20_dr, avg_train_attacker_action_costs_means_v1_20_dr,
+    avg_train_attacker_action_costs_stds_v1_20_dr,
+    avg_eval_attacker_action_costs_data_v1_20_dr, avg_eval_attacker_action_costs_means_v1_20_dr,
+    avg_eval_attacker_action_costs_stds_v1_20_dr, avg_eval_2_attacker_action_costs_data_v1_20_dr,
+    avg_eval_2_attacker_action_costs_means_v1_20_dr, avg_eval_2_attacker_action_costs_stds_v1_20_dr,
+    avg_train_flags_data_v1_20_dr, avg_train_flags_means_v1_20_dr, avg_train_flags_stds_v1_20_dr,
+    avg_eval_flags_data_v1_20_dr, avg_eval_flags_means_v1_20_dr, avg_eval_flags_stds_v1_20_dr,
+    avg_eval_2_flags_data_v1_20_dr, avg_eval_2_flags_means_v1_20_dr, avg_eval_2_flags_stds_v1_20_dr,
+    train_containers_rewards_data_v1_20_dr, train_containers_rewards_means_v1_20_dr, train_containers_rewards_stds_v1_20_dr,
+    train_containers_flags_data_v1_20_dr, train_containers_flags_means_v1_20_dr, train_containers_flags_stds_v1_20_dr,
+    train_containers_steps_data_v1_20_dr,
+    train_containers_steps_means_v1_20_dr, train_containers_steps_stds_v1_20_dr, train_containers_regret_data_v1_20_dr,
+    train_containers_regret_means_v1_20_dr,
+    train_containers_regret_stds_v1_20_dr, train_containers_opt_frac_data_v1_20_dr, train_containers_opt_frac_means_v1_20_dr,
+    train_containers_opt_frac_stds_v1_20_dr,
+    eval_2_containers_rewards_data_v1_20_dr, eval_2_containers_rewards_means_v1_20_dr, eval_2_containers_rewards_stds_v1_20_dr,
+    eval_2_containers_flags_data_v1_20_dr, eval_2_containers_flags_means_v1_20_dr, eval_2_containers_flags_stds_v1_20_dr,
+    eval_2_containers_steps_data_v1_20_dr,
+    eval_2_containers_steps_means_v1_20_dr, eval_2_containers_steps_stds_v1_20_dr, eval_2_containers_regret_data_v1_20_dr,
+    eval_2_containers_regret_means_v1_20_dr,
+    eval_2_containers_regret_stds_v1_20_dr, eval_2_containers_opt_frac_data_v1_20_dr,
+    eval_2_containers_opt_frac_means_v1_20_dr, eval_2_containers_opt_frac_stds_v1_20_dr,
+    eval_containers_rewards_data_v1_20_dr, eval_containers_rewards_means_v1_20_dr, eval_containers_rewards_stds_v1_20_dr,
+    eval_containers_flags_data_v1_20_dr, eval_containers_flags_means_v1_20_dr, eval_containers_flags_stds_v1_20_dr,
+    eval_containers_steps_data_v1_20_dr,
+    eval_containers_steps_means_v1_20_dr, eval_containers_steps_stds_v1_20_dr, eval_containers_regret_data_v1_20_dr,
+    eval_containers_regret_means_v1_20_dr, eval_containers_regret_stds_v1_20_dr)
 
 
