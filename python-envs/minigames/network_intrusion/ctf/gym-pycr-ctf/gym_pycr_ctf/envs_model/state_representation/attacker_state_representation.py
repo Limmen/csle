@@ -3,6 +3,7 @@ import numpy as np
 import gym
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 
+
 class AttackerStateRepresentation:
     """
     Utility class for configuring state and observation representations for the pycr-ctf env

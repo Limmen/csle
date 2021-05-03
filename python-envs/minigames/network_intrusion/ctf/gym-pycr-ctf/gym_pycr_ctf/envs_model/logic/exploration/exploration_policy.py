@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
+
 class ExplorationPolicy(ABC):
     """
     Abstract exploration policy to explor an environment
