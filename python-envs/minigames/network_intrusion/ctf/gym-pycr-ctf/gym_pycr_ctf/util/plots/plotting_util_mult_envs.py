@@ -4899,9 +4899,14 @@ def plot_rew_det_fl_al_many(
 
     handles, labels = ax[0][0].get_legend_handles_labels()
     handles2, labels2 = ax[3][0].get_legend_handles_labels()
-    handles = handles + handles2
-    labels = labels + labels2
-    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.52, 0.103),
+    # handles = handles + handles2
+    print(labels2)
+    for i in range(len(labels2)):
+        if labels2[i] != "upper bound":
+            handles.append(handles2[i])
+            labels.append(labels[i])
+    # labels = labels + labels2
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.505, 0.103),
                ncol=4, fancybox=True, shadow=True)
 
     fig.tight_layout()
