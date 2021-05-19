@@ -140,6 +140,7 @@ that policy convergence in self-play remains a challenge."
 ## See also
 
 - [gym-idsgame](https://github.com/Limmen/gym-idsgame)
+- [gym-optimal-intrusion-response](https://github.com/Limmen/gym-optimal-intrusion-response)
 
 ## Disclaimer
 
