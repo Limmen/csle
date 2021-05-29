@@ -44,8 +44,7 @@ def action_pred_core_state_severe_warning(severe_alerts, warning_alerts, model):
             # state = np.array([warning_alerts[i][j]+severe_alerts[i][j],warning_alerts[i][j],severe_alerts[i][j],
             #                   2*severe_alerts[i][j] + warning_alerts[i][j],
             #                  warning_alerts[i][j]+severe_alerts[i][j],2*severe_alerts[i][j] + warning_alerts[i][j],severe_alerts[i][j],warning_alerts[i][j],0])
-            state = np.array([0, 0, severe_alerts[i][j], warning_alerts[i][j],
-                              0, 0, 0, 0, 0])
+            state = np.array([severe_alerts[i][j], 0, warning_alerts[i][j], 0, 0, 0, 0, 0, 0])
             #severe_alerts[i][j]+warning_alerts[i][j]
             #l_list = np.zeros(agent_config.num_nodes-1)
             #nodes_list = list(range(agent_config.num_nodes-1))
@@ -97,12 +96,14 @@ def plot():
     load_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/generated_simulation/defender/results_backup/data/1619281840.2562084_0_50_policy_network.zip"
     model = initialize_model(env, load_path, "cpu:0", None)
     # plot_value_logged_in(model, env)
-    plot_stopping_num_alerts(model)
+    # plot_stopping_num_alerts(model)
     plot_3d(model)
 
 def plot_3d(model):
-    num_severe_alerts_recent = np.arange(0, 200, 1)
+    # num_severe_alerts_recent = np.arange(0, 200, 1)
+    num_severe_alerts_recent = np.arange(200, 0, -1)
     num_severe_alerts_total = np.arange(0, 200, 1)
+    # num_severe_alerts_total = np.arange(200, 0, -1)
     sev, warn = np.meshgrid(num_severe_alerts_recent, num_severe_alerts_total)
     action_val = action_pred_core_state_severe_warning(sev, warn, model)
 
@@ -123,7 +124,7 @@ def plot_3d(model):
     #fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(8, 5))
     fig, ax = plt.subplots(nrows=1, ncols=1, subplot_kw={'projection': '3d'}, figsize=(4.5,3))
 
-    ax.plot_surface(num_severe_alerts_recent, num_severe_alerts_total, action_val, rstride=12, cstride=12,
+    ax.plot_surface(sev, warn, action_val, rstride=12, cstride=12,
                     cmap='cividis')
 
     ax.set_title(r"$\pi_{\theta^D}(\text{stop} | w_a, s_a)$", fontsize=12.5)
@@ -139,6 +140,8 @@ def plot_3d(model):
     ylab.set_size(11.5)
     ax.tick_params(axis='both', which='major', labelsize=10, length=2.2, width=0.6)
     ax.tick_params(axis='both', which='minor', labelsize=10, length=2.2, width=0.6)
+    # ax.set_ylim(200, 0)
+    ax.set_xlim(200, 0)
     #plt.subplots_adjust(wspace=150, hspace=150, top=200, bottom=0.0)
     fig.tight_layout()
     #plt.subplots_adjust(wspace=150, hspace=150, top=200, bottom=0.0)

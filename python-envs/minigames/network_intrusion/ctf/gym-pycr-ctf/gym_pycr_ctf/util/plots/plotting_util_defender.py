@@ -899,7 +899,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].set_ylim(0, 50)
     ax[0][0].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][0].set_title(r"\% Flags captured per episode", fontsize=fontsize)
+    ax[0][0].set_title(r"\% Flags captured per game", fontsize=fontsize)
 
 
     # % intrusions
@@ -999,7 +999,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].set_ylim(-100, 110)
     ax[0][2].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][2].set_title(r"Reward per episode", fontsize=fontsize)
+    ax[0][2].set_title(r"Reward per game", fontsize=fontsize)
 
     ax[1][0].plot(np.array(list(range(len(avg_train_steps_means_v1[::sample_step])))) * sample_step * iterations_per_step,
             avg_train_steps_means_v1[::sample_step], label=r"$\pi_{\theta}$ simulation",
@@ -1031,7 +1031,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].set_ylim(0, 25)
     ax[1][0].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[1][0].set_title(r"Episode length (steps)", fontsize=fontsize)
+    ax[1][0].set_title(r"Game length (steps)", fontsize=fontsize)
 
     # % intrusions
     ax[1][1].plot(
@@ -1134,7 +1134,7 @@ def plot_flags_int_r_steps_costs_alerts(
     ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].set_ylim(0, 300)
     ax[1][2].set_xlim(0, len(avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[1][2].set_title(r"\# IDS Alerts per episode", fontsize=fontsize)
+    ax[1][2].set_title(r"\# IDS Alerts per game", fontsize=fontsize)
 
     handles, labels = ax[0][2].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.52, 0.09),
@@ -1224,7 +1224,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].set_ylim(0, 80)
     ax[0][0].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][0].set_title(r"\% Flags captured per episode", fontsize=fontsize)
+    ax[0][0].set_title(r"\% Flags captured per game", fontsize=fontsize)
 
 
     # % intrusions
@@ -1347,7 +1347,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].set_ylim(-150, 110)
     ax[0][2].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][2].set_title(r"Reward per episode", fontsize=fontsize)
+    ax[0][2].set_title(r"Reward per game", fontsize=fontsize)
 
     ax[1][0].plot(np.array(list(range(len(avg_train_steps_means_v1[::sample_step])))) * sample_step * iterations_per_step,
             avg_train_steps_means_v1[::sample_step], label=r"$\pi_{\theta}$ simulation",
@@ -1379,7 +1379,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].set_ylim(0, 150)
     ax[1][0].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[1][0].set_title(r"Episode length (steps)", fontsize=fontsize)
+    ax[1][0].set_title(r"Game length (steps)", fontsize=fontsize)
 
     # % intrusions
     ax[1][1].plot(
@@ -1482,7 +1482,7 @@ def plot_flags_int_r_steps_costs_alerts_self_play(
     ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].set_ylim(0, 300)
     ax[1][2].set_xlim(0, len(defender_avg_train_rewards_means_v1[::sample_step]) * sample_step * iterations_per_step)
-    ax[1][2].set_title(r"\# IDS Alerts per episode", fontsize=fontsize)
+    ax[1][2].set_title(r"\# IDS Alerts per game", fontsize=fontsize)
 
     handles, labels = ax[0][2].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.51, 0.09),

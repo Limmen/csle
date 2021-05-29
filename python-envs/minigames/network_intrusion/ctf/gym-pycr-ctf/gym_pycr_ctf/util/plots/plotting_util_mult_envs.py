@@ -82,9 +82,9 @@ def plot_rewards_train_emulation(train_avg_rewards_data_1, train_avg_rewards_mea
                 color="black",
                 linestyle="dashed")
 
-    ax.set_title(r"Episodic Rewards")
+    ax.set_title(r"Game Rewards")
     ax.set_xlabel("\# Iteration", fontsize=20)
-    ax.set_ylabel("Avg Episode Reward", fontsize=20)
+    ax.set_ylabel("Avg Game Reward", fontsize=20)
     ax.set_xlim(0, len(train_avg_rewards_means_1[::sample_step])*sample_step)
     ax.set_ylim(ylim_rew[0], ylim_rew[1])
     #ax.set_ylim(ylim_rew)
@@ -4564,7 +4564,7 @@ def plot_rew_det_fl_al_many(
     ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].set_ylim(200, 2000)
     ax[0][3].set_xlim(0, len(avg_train_costs_means_v1_1[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][3].set_title(r"Episode length (s)", fontsize=fontsize)
+    ax[0][3].set_title(r"Game length (s)", fontsize=fontsize)
 
     ax[0][4].plot(
         np.array(
