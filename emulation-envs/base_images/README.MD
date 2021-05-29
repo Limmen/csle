@@ -37,7 +37,7 @@ more specific Docker images.
      - OS: Ubuntu:14.
 - `ubuntu_20_base` ([ubuntu_20_base](./ubuntu_20_base)): a base image for PyCr emulations with Ubuntu 20. 
      - OS: Ubuntu:20.
-- `blank_ubuntu_20` ([blank_ubuntu_20](./ubuntu_20_base)): a plain base image with Ubuntu 20. 
+- `blank_ubuntu_20` ([blank_ubuntu_20](./blank_ubuntu_20)): a plain base image with Ubuntu 20. 
      - OS: Ubuntu:20. 
 
 ## Useful commands
