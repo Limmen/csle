@@ -1,6 +1,6 @@
 PROJECT=pycr
 NETWORK=pycr_net_1
-MINIGAME=ctf
+MINIGAME=blank_container_test
 CONTAINER=blank1
 VERSION=0.0.1
 LEVEL=1
