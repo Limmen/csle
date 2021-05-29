@@ -7,7 +7,8 @@ This directory contains scripts, configurations, and tools related to emulation 
 - **Networks** ([networks](./networks)): this directory contains scripts for creating virtual subnetworks of Linux containers.
 - **Management** ([management](./management)): this directory contains scripts and tools for managing emulated infrastructures (e.g. monitoring, starting, stopping, listing, etc.)
 - **Minigames** ([minigames](./minigames)): this directory contains scripts and tools for starting/stopping specific emulation configurations (so called mini-games)
-- **Supergames** ([supergames](./supergames)): this directory contains scripts and tools for starting/stopping combinations of different emulation configurations (so called mini-games)    
+- **Supergames** ([supergames](./supergames)): this directory contains scripts and tools for starting/stopping combinations of different emulation configurations (so called mini-games)
+- **Tests** ([tests](./tests)): this directory contains scripts and tools for starting/stopping test emulations
 
 <p align="center">
 <img src="docs/config_space.png" width="600">
