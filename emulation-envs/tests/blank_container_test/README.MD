@@ -1,7 +1,7 @@
 # Blank Container Test
 
-This folder contains a emulated environment with a plain container that can be used for testing, 
-the container is not preconfigured with any software except the OS. 
+This folder contains a emulated environment with some plain containers that can be used for testing, 
+the containers are not preconfigured with any software except the OS. 
                                
 ## Author & Maintainer
 
