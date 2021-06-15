@@ -188,6 +188,10 @@ RUN chmod 777 /cve_2015_5602_exploit.sh
 ADD docker/irc_login_test.sh /irc_login_test.sh
 RUN chmod 777 /irc_login_test.sh
 
+# Pengine Exploit
+ADD docker/pengine_exploit.sh /pengine_exploit.sh
+RUN chmod 777 /pengine_exploit.sh
+
 # Add Tini
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
