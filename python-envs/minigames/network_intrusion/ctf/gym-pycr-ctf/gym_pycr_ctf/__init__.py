@@ -1100,3 +1100,69 @@ register(
     entry_point='gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env:PyCRCTFLevel9GeneratedSim5Env',
     kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
 )
+
+
+## Level 10
+
+# -------- Difficulty Level: Level10, Mode: emulation, Version: Base ------------
+register(
+    id='pycr-ctf-level-10-emulation-base-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10EmulationBaseEnv',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Version: 1 ------------
+register(
+    id='pycr-ctf-level-10-emulation-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10Emulation1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Costs, Version: 1 ------------
+register(
+    id='pycr-ctf-level-10-emulation-costs-v1',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10EmulationWithCosts1Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Version: 2 ------------
+register(
+    id='pycr-ctf-level-10-emulation-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10Emulation2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Costs, Version: 2 ------------
+register(
+    id='pycr-ctf-level-10-emulation-costs-v2',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10EmulationWithCosts2Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Version: 3 ------------
+register(
+    id='pycr-ctf-level-10-emulation-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10Emulation3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Costs, Version: 3 ------------
+register(
+    id='pycr-ctf-level-10-emulation-costs-v3',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10EmulationWithCosts3Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Version: 4 ------------
+register(
+    id='pycr-ctf-level-10-emulation-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10Emulation4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)
+
+# -------- Difficulty Level: Level10, Mode: emulation, Costs, Version: 4 ------------
+register(
+    id='pycr-ctf-level-10-emulation-costs-v4',
+    entry_point='gym_pycr_ctf.envs.derived_envs.level10.emulation.pycr_ctf_level10_emulation_env:PyCRCTFLevel10EmulationWithCosts4Env',
+    kwargs={'env_config': None, 'emulation_config': None, "checkpoint_dir": None}
+)

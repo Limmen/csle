@@ -520,6 +520,17 @@ class DVWA_SQL_INJECTION:
     VULNERABILITY_NAME="dvwa_sql_injection"
 
 
+class PENGINE_EXPLOIT:
+    """
+    Constants related to Pengine Exploit
+    """
+    SERVICE_NAME = "http"
+    PORT=4000
+    VULNERABILITY_NAME="pengine-exploit"
+    BACKDOOR_USER = "ssh_backdoor_pengine_exploitpwn"
+    BACKDOOR_PW = "ssh_backdoor_pengine_exploitpwnpw"
+
+
 class COMMON:
     """
     Common constants
@@ -629,6 +640,7 @@ class EXPLOIT_VULNERABILITES:
     CVE_2016_10033 = "cve-2016-10033"
     CVE_2010_0426 = "cve-2010-0426"
     CVE_2015_5602 = "cve-2015-5602"
+    PENGINE_EXPLOIT = "pengine-exploit"
     CVE_VULNS = [SAMBACRY_EXPLOIT, SHELLSHOCK_EXPLOIT, CVE_2015_3306, CVE_2015_1427, CVE_2016_10033, CVE_2010_0426,
                  CVE_2015_5602]
     UNKNOWN = "unknown"
