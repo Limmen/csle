@@ -730,7 +730,12 @@ class TRAFFIC_COMMANDS:
         "client1_host": [
             "ping {} > /dev/null 2>&1",
             "traceroute {} > /dev/null 2>&1"
-        ]
+        ],
+        "pengine_exploit1": ["timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "timeout 5 curl {}:4000 > /dev/null 2>&1",
+                             "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                  --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' {}"
+                             ]
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"

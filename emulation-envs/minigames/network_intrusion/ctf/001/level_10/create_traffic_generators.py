@@ -48,6 +48,10 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create",
                               "timeout 15 ping 172.18.10.2 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.10.3 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.10.21 > /dev/null 2>&1",
@@ -61,6 +65,7 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 15 ping 172.18.10.75 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.10.71 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.10.104 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.10.2 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.10.3 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.10.21 > /dev/null 2>&1",
@@ -73,20 +78,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 25 traceroute 172.18.10.82 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.10.75 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.10.71 > /dev/null 2>&1",
-                              "timeout 25 traceroute 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 25 traceroute 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.10.104 > /dev/null 2>&1"
                           ],
                           jumphosts=[],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21",
                               "172.18.10.79", "172.18.10.10", "172.18.10.19", "172.18.10.31", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.191", commands=[],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21",
                               "172.18.10.79", "172.18.10.10", "172.18.10.19",
                               "172.18.10.31", "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75",
-                              "172.18.10.71", "172.18.10.11"
+                              "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[]),
         NodeTrafficConfig(ip="172.18.10.10", commands=[
@@ -119,17 +125,21 @@ def default_traffic_generators() -> TrafficConfig:
             "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
             "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
             "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-            "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+            "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+            "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+            "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+            "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                              --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
         ], jumphosts=[
             "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
             "172.18.10.191", "172.18.10.19", "172.18.10.31",
             "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-            "172.18.10.11"
+            "172.18.10.11", "172.18.10.104"
         ], target_hosts=[
             "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
             "172.18.10.19", "172.18.10.31",
             "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-            "172.18.10.11"]),
+            "172.18.10.11", "172.18.10.104"]),
         NodeTrafficConfig(ip="172.18.10.2",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.3 > /dev/null 2>&1",
@@ -159,19 +169,23 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.19", "172.18.10.31", "172.18.10.42",
                               "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                              "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.19", "172.18.10.31", "172.18.10.42",
                               "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.3",
                           commands=[
@@ -201,19 +215,23 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               ["172.18.10.2", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                                "172.18.10.10", "172.18.10.19", "172.18.10.31", "172.18.10.42",
                                "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                               "172.18.10.11"]
+                               "172.18.10.11", "172.18.10.104"]
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.21", "172.18.10.79",
                               "172.18.10.19", "172.18.10.31", "172.18.10.42",
                               "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.21",
                           commands=[
@@ -242,19 +260,24 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.19", "172.18.10.31", "172.18.10.42",
-                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11",
+                              "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.21",
                               "172.18.10.79",
                               "172.18.10.19", "172.18.10.31", "172.18.10.42",
                               "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.79",
                           commands=[
@@ -285,18 +308,22 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.191",
                               "172.18.10.10", "172.18.10.19", "172.18.10.31",
                               "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21",
                               "172.18.10.19", "172.18.10.31",
                               "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.19",
                           commands=[
@@ -328,18 +355,22 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.31",
                               "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.31",
                               "172.18.10.42", "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71",
-                              "172.18.10.11"
+                              "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.31",
                           commands=[
@@ -369,17 +400,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.42",
                           commands=[
@@ -409,17 +444,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.37", "172.18.10.82",
-                              "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.37", "172.18.10.82",
-                              "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.37",
                           commands=[
@@ -449,17 +488,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.82",
-                              "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42", "172.18.10.82",
-                              "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.82",
                           commands=[
@@ -490,17 +533,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42",
-                              "172.18.10.37", "172.18.10.75", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.37", "172.18.10.75", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.75",
                           commands=[
@@ -531,17 +578,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "snmpwalk -v2c 172.18.10.82 -c pycr_ctf1234",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.82", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42",
-                              "172.18.10.37", "172.18.10.82", "172.18.10.71", "172.18.10.11"
+                              "172.18.10.37", "172.18.10.82", "172.18.10.71", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.71",
                           commands=[
@@ -572,17 +623,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "snmpwalk -v2c 172.18.10.82 -c pycr_ctf1234",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1"
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.11 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.75", "172.18.10.11"
+                              "172.18.10.82", "172.18.10.75", "172.18.10.11", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42",
-                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.11"
+                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.11", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.11",
                           commands=[
@@ -614,17 +669,21 @@ def default_traffic_generators() -> TrafficConfig:
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 curl 172.18.10.75 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.71 > /dev/null 2>&1",
-                              "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1"
+                              "timeout 5 curl 172.18.10.71:8080 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.10.104 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.10.104:4000 > /dev/null 2>&1",
+                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                                                                --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' 172.18.10.104:4000/pengine/create"
                           ],
                           jumphosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79", "172.18.10.191",
                               "172.18.10.10", "172.18.10.79", "172.18.10.42", "172.18.10.37",
-                              "172.18.10.82", "172.18.10.75", "172.18.10.71"
+                              "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.104"
                           ],
                           target_hosts=[
                               "172.18.10.2", "172.18.10.3", "172.18.10.21", "172.18.10.79",
                               "172.18.10.79", "172.18.10.42",
-                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71"
+                              "172.18.10.37", "172.18.10.82", "172.18.10.75", "172.18.10.71", "172.18.10.104"
                           ]),
         NodeTrafficConfig(ip="172.18.10.104",
                           commands=[
