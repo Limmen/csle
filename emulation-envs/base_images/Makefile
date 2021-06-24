@@ -42,6 +42,9 @@ cve_2015_5602_base:
 blank_ubuntu_20:
 	cd blank_ubuntu_20/ && $(MAKE) build
 
+pengine_exploit_base:
+	cd pengine_exploit_base/ && $(MAKE) build
+
 build:
 	cd kali_base/ && $(MAKE) build
 	cd ubuntu_20_base/ && $(MAKE) build
@@ -57,6 +60,7 @@ build:
 	cd cve_2010_0426_base/ && $(MAKE) build
 	cd cve_2015_5602_base/ && $(MAKE) build
 	cd blank_ubuntu_20/ && $(MAKE) build
+	cd pengine_exploit_base/ && $(MAKE) build
 
 rm-image:
 	cd kali_base/ && $(MAKE) rm-image
@@ -73,3 +77,4 @@ rm-image:
 	cd cve_2010_0426_base/ && $(MAKE) rm-image
 	cd cve_2015_5602_base/ && $(MAKE) rm-image
 	cd blank_ubuntu_20/ && $(MAKE) rm-image
+	cd pengine_exploit_base/ && $(MAKE) rm-image

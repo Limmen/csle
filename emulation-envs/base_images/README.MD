@@ -38,7 +38,9 @@ more specific Docker images.
 - `ubuntu_20_base` ([ubuntu_20_base](./ubuntu_20_base)): a base image for PyCr emulations with Ubuntu 20. 
      - OS: Ubuntu:20.
 - `blank_ubuntu_20` ([blank_ubuntu_20](./blank_ubuntu_20)): a plain base image with Ubuntu 20. 
-     - OS: Ubuntu:20. 
+     - OS: Ubuntu:20.
+- `pengine_exploit_base` ([pengine_exploit_base](./pengine_exploit_base)): a base image with a vulnerable prolog SLD pengine server 
+     - OS: Ubuntu:20.      
 
 ## Useful commands
 
@@ -60,6 +62,8 @@ make cve_2015_1427_base # Build cve_2015_1427_base
 make cve_2016_10033_base # Build cve_2016_10033_base
 make cve_2010_0426_base # Build cve_2010_0426_base
 make cve_2015_5602_base # Build cve_2010_0426_base
+make blank_ubuntu_20 # Build blank_ubuntu_20
+make pengine_exploit_base # Build pengine_exploit_base
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

@@ -91,10 +91,18 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Snort
-- `client1` ([router1](./router1)): an image without any particular services that can be used to generate containers acting as clients. 
+- `client1` ([client1](./client1)): an image without any particular services that can be used to generate containers acting as clients. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
-     - Services: ssh     
+     - Services: ssh
+ - `blank1` ([blank1](./blank1)): a blank image for testing purposes 
+     - OS: Ubuntu:20. 
+     - Inherits from `blank_ubuntu_20`.
+     - Services: None
+- `pengine_exploit1` ([pengine_exploit1](./pengine_exploit1)): an image with a vulnerable Prolog SLD Pengine Server 
+     - OS: Ubuntu:20. 
+     - Inherits from `pengine_exploit_base`.
+     - Services: Pengine server, SSH
 
 ## Useful commands
 
@@ -126,6 +134,8 @@ make telnet1 # Build telnet1
 make telnet2 # Build telnet2
 make telnet3 # Build telnet3
 make client1 # Build client1
+make blank1 # Build blank1
+make pengine_exploit1 # Build pengine_exploit1
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images
