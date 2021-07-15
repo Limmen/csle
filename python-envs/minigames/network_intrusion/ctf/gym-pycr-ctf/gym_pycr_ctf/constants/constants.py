@@ -1,8 +1,10 @@
-import re
-
 """
 Constants for the pycr-ctf environment
 """
+
+import re
+
+
 class RENDERING:
     """
     Rendering constants
@@ -550,7 +552,14 @@ class COMMANDS:
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "
     SUDO = "sudo"
-
+    CHMOD_777 = "chmod 777"
+    SLASH_DELIM = "/"
+    TOUCH = "touch"
+    NOHUP = "nohup"
+    AMP = "&"
+    PKILL = "pkill -f"
+    RM_F = "rm -f"
+    SPACE_DELIM = " "
 
 class FILE_PATTERNS:
     """

@@ -62,27 +62,37 @@ class TrafficGenerator:
 
 
     @staticmethod
-    def create_traffic_scripts(traffic_config: TrafficConfig, emulation_config: EmulationConfig, sleep_time : int = 2):
+    def create_traffic_scripts(traffic_config: TrafficConfig, emulation_config: EmulationConfig, sleep_time : int = 2,
+                               only_clients : bool = False) \
+            -> None:
         """
         Installs the traffic generation scripts at each node
 
         :param traffic_config: the traffic configuration
         :param emulation_config: the emulation configuration
         :param the time to sleep between commands
+        :param only_clients: whether to start only client traffic or also start internal traffic
         :return: None
         """
         for node in traffic_config.node_traffic_configs:
+            if only_clients and not node.client:
+                continue
+
             print("creating traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
 
             # Stop old background job if running
-            cmd = "sudo pkill -f " + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM  + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             
             # Remove old file if exists
-            cmd = "sudo rm -f /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.RM_F + \
+                  constants.COMMANDS.SPACE_DELIM + \
+                  constants.COMMANDS.SLASH_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # File contents
@@ -96,18 +106,22 @@ class TrafficGenerator:
                 script_file = script_file + "    sleep {}\n".format(sleep_time)
             script_file = script_file + "done\n"
 
-
             # Create file
             sftp_client = emulation_config.agent_conn.open_sftp()
-            cmd = "sudo touch /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM \
+                  + constants.COMMANDS.TOUCH + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SLASH_DELIM \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Make executable
-            cmd = "sudo chmod 777 /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.CHMOD_777 + \
+                  constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SLASH_DELIM \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Write traffic generation script file
-            remote_file = sftp_client.open("/" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME, mode="w")
+            remote_file = sftp_client.open(constants.COMMANDS.SLASH_DELIM
+                                           + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME, mode="w")
             try:
                 remote_file.write(script_file)
             except Exception as e:
@@ -116,14 +130,17 @@ class TrafficGenerator:
                 remote_file.close()
 
             # Start background job
-            cmd = "sudo nohup /" + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME + " &"
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM \
+                  + constants.COMMANDS.NOHUP + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SLASH_DELIM \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME + constants.COMMANDS.SPACE_DELIM \
+                  + constants.COMMANDS.AMP
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Disconnect
             GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 
     @staticmethod
-    def stop_traffic_generators(traffic_config: TrafficConfig, emulation_config: EmulationConfig):
+    def stop_traffic_generators(traffic_config: TrafficConfig, emulation_config: EmulationConfig) -> None:
         """
         Stops running traffic generators at each node
 
@@ -137,7 +154,8 @@ class TrafficGenerator:
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
 
             # Stop old background job if running
-            cmd = "sudo pkill -f " + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
+            cmd = constants.COMMANDS.SUDO + " " + constants.COMMANDS.PKILL + " " \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Disconnect
@@ -171,3 +189,4 @@ class TrafficGenerator:
             if ip in node.output_accept and ip in node.input_accept:
                 jumphosts.append(node.ip)
         return jumphosts
+

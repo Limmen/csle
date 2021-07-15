@@ -26,33 +26,50 @@ def default_traffic_generators() -> TrafficConfig:
                               "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet 172.18.9.3 > /dev/null 2>&1",
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.21 > /dev/null 2>&1",
                               "timeout 5 snmpwalk -v2c 172.18.9.21 -c pycr_ctf1234 > /dev/null 2>&1",
-                              "timeout 10 /irc_login_test.sh 172.18.9.21 > /dev/null 2>&1",
-                              "timeout 5 psql -h 172.18.9.21 -p 5432 > /dev/null 2>&1",
-                              "timeout 5 ftp 172.18.9.79 > /dev/null 2>&1",
-                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.79 > /dev/null 2>&1",
-                              "timeout 5 curl 172.18.9.79:8080 > /dev/null 2>&1",
-                              "timeout 15 ping 172.18.9.2 > /dev/null 2>&1",
-                              "timeout 15 ping 172.18.9.3 > /dev/null 2>&1",
-                              "timeout 15 ping 172.18.9.21 > /dev/null 2>&1",
-                              "timeout 15 ping 172.18.9.79 > /dev/null 2>&1",
                               "timeout 15 ping 172.18.9.10 > /dev/null 2>&1",
-                              "timeout 25 traceroute 172.18.9.2 > /dev/null 2>&1",
-                              "timeout 25 traceroute 172.18.9.3 > /dev/null 2>&1",
-                              "timeout 25 traceroute 172.18.9.21 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.9.79 > /dev/null 2>&1",
                               "timeout 25 traceroute 172.18.9.10 > /dev/null 2>&1"
                           ],
                           jumphosts=[],
                           target_hosts=[
-                              "172.18.9.2", "172.18.9.3", "172.18.9.21",
-                              "172.18.9.79", "172.18.9.10"
-                          ]),
+                              "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79", "172.18.9.10"
+                          ], client=True
+                          ),
+        NodeTrafficConfig(ip="172.18.9.253",
+                          commands=[
+                              "timeout 10 /irc_login_test.sh 172.18.9.21 > /dev/null 2>&1",
+                              "timeout 5 snmpwalk -v2c 172.18.9.21 -c pycr_ctf1234 > /dev/null 2>&1"
+                              "timeout 5 psql -h 172.18.9.21 -p 5432 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.9.21 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.9.79 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.9.21 > /dev/null 2>&1"
+                          ],
+                          jumphosts=[],
+                          target_hosts=[
+                              "172.18.9.21", "172.18.9.79", "172.18.9.10"
+                          ], client=True
+                          ),
+        NodeTrafficConfig(ip="172.18.9.252",
+                          commands=[
+                              "timeout 5 ftp 172.18.9.79 > /dev/null 2>&1",
+                              "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.79 > /dev/null 2>&1",
+                              "timeout 5 curl 172.18.9.79:8080 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.9.2 > /dev/null 2>&1",
+                              "timeout 15 ping 172.18.9.3 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.9.2 > /dev/null 2>&1",
+                              "timeout 25 traceroute 172.18.9.3 > /dev/null 2>&1"
+                          ],
+                          jumphosts=[],
+                          target_hosts=[
+                              "172.18.9.2", "172.18.9.3", "172.18.9.79", "172.18.9.10"
+                          ], client=True
+                          ),
         NodeTrafficConfig(ip="172.18.9.191",
                           commands=[],
                           jumphosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79", "172.18.9.10"
                           ],
-                          target_hosts=[]),
+                          target_hosts=[], client=False),
         NodeTrafficConfig(ip="172.18.9.10",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -102,7 +119,7 @@ def default_traffic_generators() -> TrafficConfig:
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                               "172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8",
                               "172.18.9.9", "172.18.9.178"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.2",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.3 > /dev/null 2>&1",
@@ -125,7 +142,7 @@ def default_traffic_generators() -> TrafficConfig:
                           target_hosts=[
                               "172.18.9.3", "172.18.9.21", "172.18.9.79"
                               "172.18.9.54"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.3",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -147,7 +164,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.2", "172.18.9.21", "172.18.9.79", "172.18.9.74", "172.18.9.61"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.21",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -182,7 +199,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.54",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -221,7 +238,7 @@ def default_traffic_generators() -> TrafficConfig:
                           target_hosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                               "172.18.9.11", "172.18.9.12", "172.18.9.13", "172.18.9.14"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.74",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -250,7 +267,7 @@ def default_traffic_generators() -> TrafficConfig:
                           target_hosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                               "172.18.9.61", "172.18.9.101", "172.18.9.62"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.61",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -307,7 +324,7 @@ def default_traffic_generators() -> TrafficConfig:
                               "172.18.9.74",
                               "172.18.9.19", "172.18.9.20", "172.18.9.21", "172.18.9.22",
                               "172.18.9.23", "172.18.9.24", "172.18.9.25", "172.18.9.28"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.62",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -358,7 +375,7 @@ def default_traffic_generators() -> TrafficConfig:
                               "172.18.9.61", "172.18.9.74",
                               "172.18.9.101", "172.18.9.7",
                               "172.18.9.15", "172.18.9.16", "172.18.9.17", "172.18.9.18"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.101",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -388,7 +405,7 @@ def default_traffic_generators() -> TrafficConfig:
                           target_hosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                               "172.18.9.61", "172.18.9.74", "172.18.9.62"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.7",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.2 > /dev/null 2>&1",
@@ -418,7 +435,7 @@ def default_traffic_generators() -> TrafficConfig:
                           target_hosts=[
                               "172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                               "172.18.9.61", "172.18.9.74", "172.18.9.101", "172.18.9.62"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.4",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.5 > /dev/null 2>&1",
@@ -447,7 +464,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.9", "172.18.9.178"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.5",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.4 > /dev/null 2>&1",
@@ -476,7 +493,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.4", "172.18.9.6", "172.18.9.8", "172.18.9.9", "172.18.9.178"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.6",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.4 > /dev/null 2>&1",
@@ -506,7 +523,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.9", "172.18.9.178"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.8",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.4 > /dev/null 2>&1",
@@ -533,7 +550,8 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                             "172.18.9.10", "172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.9", "172.18.9.178"
                           ],
-                          target_hosts=["172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.9", "172.18.9.178"]),
+                          target_hosts=["172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.9", "172.18.9.178"],
+                          client=False),
         NodeTrafficConfig(ip="172.18.9.9",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.4 > /dev/null 2>&1",
@@ -562,7 +580,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.178"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.178",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.4 > /dev/null 2>&1",
@@ -589,7 +607,8 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                               "172.18.9.10", "172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.9"
                           ],
-                          target_hosts=["172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.9"]),
+                          target_hosts=["172.18.9.4", "172.18.9.5", "172.18.9.6", "172.18.9.8", "172.18.9.9"],
+                          client=False),
         NodeTrafficConfig(ip="172.18.9.11",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.54 > /dev/null 2>&1",
@@ -612,7 +631,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.54", "172.18.9.12", "172.18.9.13", "172.18.9.14"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.12",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.54 > /dev/null 2>&1",
@@ -635,7 +654,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.54", "172.18.9.11", "172.18.9.13", "172.18.9.14"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.13",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.54 > /dev/null 2>&1",
@@ -658,7 +677,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.54", "172.18.9.12", "172.18.9.11", "172.18.9.14"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.14",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.54 > /dev/null 2>&1",
@@ -681,7 +700,7 @@ def default_traffic_generators() -> TrafficConfig:
                           ],
                           target_hosts=[
                               "172.18.9.54", "172.18.9.12", "172.18.9.13", "172.18.9.11"
-                          ]),
+                          ], client=False),
         NodeTrafficConfig(ip="172.18.9.15",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.62 > /dev/null 2>&1",
@@ -703,7 +722,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                               "172.18.9.62", "172.18.9.16", "172.18.9.17", "172.18.9.18"
                           ],
-                          target_hosts=["172.18.9.62", "172.18.9.16", "172.18.9.17", "172.18.9.18"]),
+                          target_hosts=["172.18.9.62", "172.18.9.16", "172.18.9.17", "172.18.9.18"], client=False),
         NodeTrafficConfig(ip="172.18.9.16",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.62 > /dev/null 2>&1",
@@ -725,7 +744,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                               "172.18.9.62", "172.18.9.15", "172.18.9.17", "172.18.9.18"
                           ],
-                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.17", "172.18.9.18"]),
+                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.17", "172.18.9.18"], client=False),
         NodeTrafficConfig(ip="172.18.9.17",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.62 > /dev/null 2>&1",
@@ -747,7 +766,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                               "172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.18"
                           ],
-                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.18"]),
+                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.18"], client=False),
         NodeTrafficConfig(ip="172.18.9.18",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.62 > /dev/null 2>&1",
@@ -769,7 +788,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=[
                               "172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.17"
                           ],
-                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.17"]),
+                          target_hosts=["172.18.9.62", "172.18.9.15", "172.18.9.16", "172.18.9.17"], client=False),
         NodeTrafficConfig(ip="172.18.9.19",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.61 > /dev/null 2>&1",
@@ -803,7 +822,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
                                         "172.18.9.25", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
-                                        "172.18.9.25", "172.18.9.28"]),
+                                        "172.18.9.25", "172.18.9.28"], client=False),
         NodeTrafficConfig(ip="172.18.9.20",
                           commands=[
                               "timeout 5 sshpass -p 'testpycruser' ssh -oStrictHostKeyChecking=no 172.18.9.61 > /dev/null 2>&1",
@@ -837,7 +856,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.19", "172.18.9.22", "172.18.9.23", "172.18.9.24",
                                         "172.18.9.25", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.19", "172.18.9.22", "172.18.9.23", "172.18.9.24",
-                                        "172.18.9.25", "172.18.9.28"]
+                                        "172.18.9.25", "172.18.9.28"], client=False
                           ),
         NodeTrafficConfig(ip="172.18.9.22",
                           commands=[
@@ -868,7 +887,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.19", "172.18.9.23", "172.18.9.24",
                                         "172.18.9.25", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.19", "172.18.9.23", "172.18.9.24",
-                                        "172.18.9.25", "172.18.9.28"]
+                                        "172.18.9.25", "172.18.9.28"], client=False
                           ),
         NodeTrafficConfig(ip="172.18.9.23",
                           commands=[
@@ -903,7 +922,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.19", "172.18.9.24",
                                         "172.18.9.25", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.19", "172.18.9.24",
-                                        "172.18.9.25", "172.18.9.28"]
+                                        "172.18.9.25", "172.18.9.28"], client=False
                           ),
         NodeTrafficConfig(ip="172.18.9.24",
                           commands=[
@@ -938,7 +957,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.19",
                                         "172.18.9.25", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.19",
-                                        "172.18.9.25", "172.18.9.28"]
+                                        "172.18.9.25", "172.18.9.28"], client=False
                           ),
         NodeTrafficConfig(ip="172.18.9.25",
                           commands=[
@@ -973,7 +992,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
                                         "172.18.9.19", "172.18.9.28"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
-                                        "172.18.9.19", "172.18.9.28"]
+                                        "172.18.9.19", "172.18.9.28"], client=False
                           ),
         NodeTrafficConfig(ip="172.18.9.28",
                           commands=[
@@ -1008,7 +1027,7 @@ def default_traffic_generators() -> TrafficConfig:
                           jumphosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
                                         "172.18.9.25", "172.18.9.19"],
                           target_hosts=["172.18.9.61", "172.18.9.20", "172.18.9.22", "172.18.9.23", "172.18.9.24",
-                                        "172.18.9.25", "172.18.9.19"]
+                                        "172.18.9.25", "172.18.9.19"], client=False
                           )
     ]
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators)
@@ -1022,4 +1041,4 @@ if __name__ == '__main__':
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="pycr_admin",
                                      agent_pw="pycr@admin-pw_191", server_connection=False)
     TrafficGenerator.create_traffic_scripts(traffic_config=traffic_config, emulation_config=emulation_config,
-                                            sleep_time=1)
+                                            sleep_time=1, only_clients=True)
