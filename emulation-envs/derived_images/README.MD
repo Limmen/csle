@@ -35,6 +35,10 @@ generate containers for emulating various network infrastructures.
      - OS: Debian:Jessie. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba
+- `samba2` ([samba1](./samba1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server. 
+     - OS: Debian:Jessie. 
+     - Inherits from `samba_base`.
+     - Services: ssh, NTP, samba, telnet     
 - `shellshock1` ([shellshock1](./shellshock1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy. 
      - OS: Debian:Wheezy. 
      - Inherits from `shellshock_base`.
