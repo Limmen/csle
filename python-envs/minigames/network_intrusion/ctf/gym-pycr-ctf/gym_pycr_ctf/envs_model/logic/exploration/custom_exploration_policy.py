@@ -7,22 +7,23 @@ class CustomExplorationPolicy(ExplorationPolicy):
         super(CustomExplorationPolicy, self).__init__(num_actions)
         self.strategy = strategy
 
-    def action(self, env, filter_illegal: bool = True) -> int:
-        step = env.env_state.attacker_obs_state.step
-        if step < 2:
-            if np.random.rand() < 0.75:
-                action = 372
-            else:
-                action = self.strategy[step]
-        else:
-            action = self.strategy[step]
-        # if step < len(self.strategy):
-        #     action = self.strategy[step]
-        # else:
-        #     if filter_illegal:
-        #         legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state),
-        #                                     self.actions))
+    def action(self, env, filter_illegal: bool = True, step= None) -> int:
+        if step is None:
+            step = env.env_state.attacker_obs_state.step
+        # if step < 2:
+        #     if np.random.rand() < 0.75:
+        #         action = 372
         #     else:
-        #         legal_actions = self.action
-        #     action = np.random.choice(legal_actions)
+        #         action = self.strategy[step]
+        # else:
+        #     action = self.strategy[step]
+        if step < len(self.strategy):
+            action = self.strategy[step]
+        else:
+            if filter_illegal:
+                legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state),
+                                            self.actions))
+            else:
+                legal_actions = self.action
+            action = np.random.choice(legal_actions)
         return action

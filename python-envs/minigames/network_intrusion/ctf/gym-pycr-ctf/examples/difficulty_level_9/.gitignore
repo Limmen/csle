@@ -17,3 +17,5 @@ results
 results_backup
 *.png
 *.pdf
+*.pickle
+*.zip

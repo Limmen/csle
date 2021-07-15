@@ -43,8 +43,8 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             exp_policy = RandomExplorationPolicy(num_actions=env_config.attacker_action_conf.num_actions)
             env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
-            env_config.attacker_max_exploration_steps = 500
-            env_config.attacker_max_exploration_trajectories = 10
+            env_config.attacker_max_exploration_steps = 5000
+            env_config.attacker_max_exploration_trajectories = 1000
             env_config.max_episode_length = 100
             env_config.attacker_alerts_coefficient = 0
             env_config.attacker_cost_coefficient = 0
@@ -54,7 +54,7 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
 
-            env_config.randomize_attacker_starting_state = True
+            env_config.randomize_attacker_starting_state = False
             env_config.randomize_starting_state_policy = CustomExplorationPolicy(
                 num_actions=env_config.attacker_action_conf.num_actions,
                 strategy=[100,33,104,105,106,1,104,105,106,70,104,105,107,100,165,104,105,106,200,104,105,106,58,104,

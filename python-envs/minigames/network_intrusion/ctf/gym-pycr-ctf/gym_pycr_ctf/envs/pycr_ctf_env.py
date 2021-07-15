@@ -132,71 +132,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.defender_time_step = 0
         self.env_config.pi_star_rew_defender = self.env_config.defender_caught_attacker_reward
 
-        # Warmup in the emulation
-        if self.env_config.emulation_config is not None and self.env_config.emulation_config.warmup \
-                and (self.env_config.env_mode == EnvMode.GENERATED_SIMULATION
-                     or self.env_config.env_mode == EnvMode.EMULATION):
-            EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(
-                num_actions=self.env_config.attacker_action_conf.num_actions),
-                num_warmup_steps=self.env_config.emulation_config.warmup_iterations,
-                env=self, render = False)
-            print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
-                  "cache_misses:{}".format(
-                len(self.env_config.attacker_nmap_scan_cache.cache),
-                len(self.env_config.attacker_filesystem_scan_cache.cache),
-                len(self.env_config.attacker_user_command_cache.cache),
-                len(self.env_config.attacker_nikto_scan_cache.cache),
-                self.env_config.cache_misses))
-
-        # System Identification and Build Model
-        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
-                and not self.env_config.emulation_config.skip_exploration:
-            self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
-                exp_policy=self.env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
-            self.env_state.attacker_obs_state = obs_state
-            self.env_config.env_mode = EnvMode.SIMULATION
-            self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
-            self.env_config.emulation_config.connect_agent()
-
-            if self.env_config.defender_update_state:
-                # Initialize Defender's state
-                defender_init_action = self.env_config.defender_action_conf.state_init_action
-                s_prime, _, _ = TransitionOperator.defender_transition(
-                    s=self.env_state, defender_action=defender_init_action, env_config=self.env_config)
-                self.env_state = s_prime
-                self.env_config.network_conf.defender_dynamics_model.normalize()
-            self.reset()
-
-        elif self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
-                and self.env_config.emulation_config.skip_exploration:
-            defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
-            if self.env_config.emulation_config.save_dynamics_model_dir is not None:
-                print('Loading Dynamics Model..')
-                defender_dynamics_model.read_model(
-                    dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
-                    model_name=self.env_config.emulation_config.save_dynamics_model_file
-                )
-                loaded_netconf = self.env_config.network_conf.load(
-                    dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
-                    file_name=self.env_config.emulation_config.save_netconf_file
-                )
-                if loaded_netconf is not None:
-                    self.env_config.network_conf = loaded_netconf
-                self.env_config.network_conf.defender_dynamics_model = defender_dynamics_model
-                self.env_config.network_conf.defender_dynamics_model.normalize()
-                print('Dynamics Model Loaded Successfully')
-
-            self.env_config.env_mode = EnvMode.SIMULATION
-
-            if self.env_config.defender_update_state:
-                # Initialize Defender's state
-                defender_init_action = env_config.defender_action_conf.state_init_action
-                s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_init_action,
-                                                       env_config=env_config)
-                self.env_state = s_prime
-                self.env_config.network_conf.defender_dynamics_model.normalize()
-
-
         # Reset and setup action spaces
         self.reset()
         attacker_actions = list(range(self.attacker_num_actions))
@@ -1125,3 +1060,70 @@ class PyCRCTFEnv(gym.Env, ABC):
         s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_reset_action,
                                                env_config=self.env_config)
         self.env_state = s_prime
+
+
+    def warmup(self) -> None:
+        """
+        Warmup in the emulation
+
+        :return: None
+        """
+        EmulationWarmup.warmup(exp_policy=RandomExplorationPolicy(
+            num_actions=self.env_config.attacker_action_conf.num_actions),
+            num_warmup_steps=self.env_config.emulation_config.warmup_iterations,
+            env=self, render = False)
+        print("[Warmup complete], nmap_cache_size:{}, fs_cache_size:{}, user_command_cache:{}, nikto_scan_cache:{},"
+              "cache_misses:{}".format(
+            len(self.env_config.attacker_nmap_scan_cache.cache),
+            len(self.env_config.attacker_filesystem_scan_cache.cache),
+            len(self.env_config.attacker_user_command_cache.cache),
+            len(self.env_config.attacker_nikto_scan_cache.cache),
+            self.env_config.cache_misses))
+
+
+    def system_identification(self) -> None:
+        """
+        Performs system identification to estimate a dynamics model
+
+        :return: None
+        """
+        self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
+            exp_policy=self.env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
+        self.env_state.attacker_obs_state = obs_state
+        self.env_config.env_mode = EnvMode.SIMULATION
+        self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
+        self.env_config.emulation_config.connect_agent()
+
+        if self.env_config.defender_update_state:
+            # Initialize Defender's state
+            defender_init_action = self.env_config.defender_action_conf.state_init_action
+            s_prime, _, _ = TransitionOperator.defender_transition(
+                s=self.env_state, defender_action=defender_init_action, env_config=self.env_config)
+            self.env_state = s_prime
+            self.env_config.network_conf.defender_dynamics_model.normalize()
+        self.reset()
+
+    def load_dynamics_model(self) -> None:
+        """
+        Loads a pre-defined dynamics model
+
+        :return: None
+        """
+        defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
+        if self.env_config.emulation_config.save_dynamics_model_dir is not None:
+            print('Loading Dynamics Model..')
+            defender_dynamics_model.read_model(
+                dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
+                model_name=self.env_config.emulation_config.save_dynamics_model_file
+            )
+            loaded_netconf = self.env_config.network_conf.load(
+                dir_path=self.env_config.emulation_config.save_dynamics_model_dir,
+                file_name=self.env_config.emulation_config.save_netconf_file
+            )
+            if loaded_netconf is not None:
+                self.env_config.network_conf = loaded_netconf
+            self.env_config.network_conf.defender_dynamics_model = defender_dynamics_model
+            self.env_config.network_conf.defender_dynamics_model.normalize()
+            print('Dynamics Model Loaded Successfully')
+
+        self.env_config.env_mode = EnvMode.SIMULATION

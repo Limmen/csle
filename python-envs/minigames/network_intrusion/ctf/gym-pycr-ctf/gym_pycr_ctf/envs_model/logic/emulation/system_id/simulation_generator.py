@@ -1,15 +1,12 @@
 from typing import Tuple
 import numpy as np
-import os
 import sys
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
-from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
-import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.trajectory import Trajectory
 
 
@@ -57,21 +54,16 @@ class SimulationGenerator:
             defender_dynamics_model.update_init_state_distribution(init_state=init_state)
 
         while not done and step < env_config.attacker_max_exploration_steps:
-
             # Save previous state
             s = env.env_state.copy()
 
-            if step == 0 and env_config.explore_defense_states:
-                # Start with sleep action to observe background noise
-                attacker_action = env_config.attacker_action_conf.get_continue_action_idx()
-            else:
-                # Sample action
-                attacker_action = attacker_exp_policy.action(
-                    env=env, filter_illegal=env_config.attacker_exploration_filter_illegal)
+            # Sample action
+            attacker_action = attacker_exp_policy.action(
+                env=env, filter_illegal=env_config.attacker_exploration_filter_illegal, step=step)
 
             # Step in the environment
             action = (attacker_action, defender_action)
-            #print("step, action:{}".format(attacker_action))
+            print("a:{}".format(action))
             obs, reward, done, info = env.step(action)
             trajectory = SimulationGenerator.update_trajectory(trajectory=trajectory, obs=obs, reward=reward, done=done,
                                                   info=info, action=action)
@@ -118,8 +110,9 @@ class SimulationGenerator:
                 dir_path=env.env_config.emulation_config.save_dynamics_model_dir,
                 model_name=env.env_config.emulation_config.save_dynamics_model_file
             )
-            # trajectories = Trajectory.load_trajectories(env_config.emulation_config.save_dynamics_model_dir,
-            #                                             trajectories_file=env_config.emulation_config.save_trajectories_file)
+            trajectories = Trajectory.load_trajectories(
+                env_config.emulation_config.save_dynamics_model_dir,
+                trajectories_file=env_config.emulation_config.save_trajectories_file)
 
             loaded_netconf = env_config.network_conf.load(
                 dir_path=env_config.emulation_config.save_dynamics_model_dir,
@@ -158,16 +151,11 @@ class SimulationGenerator:
             num_flags = aggregated_observation.num_flags
             print("Exploration completed, found {} machines, {} vulnerabilities, {} credentials, {} flags".format(
                 num_machines, num_vulnerabilities, num_credentials, num_flags))
-            # print("Defender Dynamics Model:\n{}".format(defender_dynamics_model))
+
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
             env_config.network_conf.nodes = nodes
-            #node_ips = list(map(lambda x: x.ip, env_config.network_conf.nodes))
-            # for n in nodes:
-            #     if n.ip not in node_ips:
-            #         env_config.network_conf.nodes.append(n)
             for n2 in env_config.network_conf.nodes:
                 print("node:{}, flags:{}".format(n2.ip, list(map(lambda x: str(x), n2.flags))))
-            #env_config.network_conf.nodes = nodes
             env_config.network_conf.defender_dynamics_model = defender_dynamics_model
             env_config.network_conf.agent_reachable = aggregated_observation.agent_reachable
 
@@ -176,8 +164,8 @@ class SimulationGenerator:
             defender_dynamics_model.save_model(
                 dir_path=env_config.emulation_config.save_dynamics_model_dir,
                 model_name=env_config.emulation_config.save_dynamics_model_file)
-            # Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories,
-            #                              trajectories_file=env_config.emulation_config.save_trajectories_file)
+            Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories,
+                                         trajectories_file=env_config.emulation_config.save_trajectories_file)
 
             env_config.network_conf.save(
                 dir_path=env_config.emulation_config.save_dynamics_model_dir,
