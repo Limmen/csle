@@ -5,7 +5,7 @@ run: gen_containers_config
 	cd containers/ssh1/ && $(MAKE) run
 	cd containers/shellshock1_1/ && $(MAKE) run
 	cd containers/sql_injection1_1/ && $(MAKE) run
-	cd containers/samba1_2/ && $(MAKE) run
+	cd containers/samba2_1/ && $(MAKE) run
 	cd containers/cve_2010_0426_1_1/ && $(MAKE) run
 	cd containers/cve_2015_1427_1_1/ && $(MAKE) run
 	cd containers/honeypot1_1/ && $(MAKE) run
@@ -43,7 +43,7 @@ stop:
 	cd containers/ssh1/ && $(MAKE) stop
 	cd containers/shellshock1_1/ && $(MAKE) stop
 	cd containers/sql_injection1_1/ && $(MAKE) stop
-	cd containers/samba1_2/ && $(MAKE) stop
+	cd containers/samba2_1/ && $(MAKE) stop
 	cd containers/cve_2010_0426_1_1/ && $(MAKE) stop
 	cd containers/cve_2015_1427_1_1/ && $(MAKE) stop
 	cd containers/honeypot1_1/ && $(MAKE) stop
@@ -81,7 +81,7 @@ start:
 	cd containers/ssh1/ && $(MAKE) start
 	cd containers/shellshock1_1/ && $(MAKE) start
 	cd containers/sql_injection1_1/ && $(MAKE) start
-	cd containers/samba1_2/ && $(MAKE) start
+	cd containers/samba2_1/ && $(MAKE) start
 	cd containers/cve_2010_0426_1_1/ && $(MAKE) start
 	cd containers/cve_2015_1427_1_1/ && $(MAKE) start
 	cd containers/honeypot1_1/ && $(MAKE) start
@@ -120,7 +120,7 @@ clean: stop
 	cd containers/ssh1/ && $(MAKE) clean
 	cd containers/shellshock1_1/ && $(MAKE) clean
 	cd containers/sql_injection1_1/ && $(MAKE) clean
-	cd containers/samba1_2 && $(MAKE) clean
+	cd containers/samba2_1 && $(MAKE) clean
 	cd containers/cve_2010_0426_1_1/ && $(MAKE) clean
 	cd containers/cve_2015_1427_1_1/ && $(MAKE) clean
 	cd containers/honeypot1_1/ && $(MAKE) clean

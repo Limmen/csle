@@ -22,7 +22,7 @@ def default_containers_config():
                             ip="172.18.9.10"),
         NodeContainerConfig(name="ssh1", network="pycr_net_9", minigame="ctf", version="0.0.1", level="9",
                             ip="172.18.9.2"),
-        NodeContainerConfig(name="samba1", network="pycr_net_9", minigame="ctf", version="0.0.1", level="9",
+        NodeContainerConfig(name="samba2", network="pycr_net_9", minigame="ctf", version="0.0.1", level="9",
                             ip="172.18.9.3"),
         NodeContainerConfig(name="samba1", network="pycr_net_9", minigame="ctf", version="0.0.1", level="9",
                             ip="172.18.9.7"),

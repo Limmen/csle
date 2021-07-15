@@ -1,11 +1,11 @@
 PROJECT=pycr
 NETWORK=pycr_net_9
 MINIGAME=ctf
-CONTAINER=samba1
+CONTAINER=samba2
 VERSION=0.0.1
 LEVEL=9
 IP=172.18.9.3
-SUFFIX=_2
+SUFFIX=_1
 DIR=$(CURDIR)/../../
 CFG=$(CURDIR)/../../containers.json
 FLAGSCFG=$(CURDIR)/../../flags.json

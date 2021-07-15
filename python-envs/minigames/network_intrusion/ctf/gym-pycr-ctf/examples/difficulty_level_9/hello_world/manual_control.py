@@ -34,8 +34,23 @@ def manual_control():
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
     env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
+
+    env.env_config.attacker_use_nmap_cache = False
+    env.env_config.attacker_nmap_scan_cache = False
+    env.env_config.attacker_use_nikto_cache = False
+    env.env_config.attacker_use_file_system_cache = False
+    env.env_config.attacker_use_user_command_cache = False
     env.env_config.randomize_attacker_starting_state = False
-    ManualAttackerAgent(env=env, env_config=env.env_config, render=False)
+    env.env_config.attacker_max_exploration_steps = 5000
+    env.env_config.attacker_max_exploration_trajectories = 1000
+    env.env_config.domain_randomization = False
+    env.env_config.emulate_detection = False
+    env.env_config.explore_defense_states = True
+    env.env_config.use_attacker_action_stats_to_update_defender_state = False
+    env.env_config.defender_sleep_before_state_update = 15
+    env.env_config.randomize_attacker_starting_state = False
+
+    ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
 
 
 if __name__ == '__main__':

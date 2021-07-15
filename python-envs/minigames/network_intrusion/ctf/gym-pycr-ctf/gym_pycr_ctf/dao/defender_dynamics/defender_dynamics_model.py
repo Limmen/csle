@@ -5,6 +5,7 @@ import numpy as np
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionId
 from gym_pycr_ctf.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
+from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_tensorboard_dto import DefenderDynamicsTensorboardDTO
 import gym_pycr_ctf.constants.constants as constants
 
 
@@ -206,7 +207,8 @@ class DefenderDynamicsModel:
                 self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_warning_alerts)] = 1
 
-    def update_model(self, s, s_prime, attacker_action_id: AttackerActionId, logged_in_ips: str) -> None:
+    def update_model(self, s, s_prime, attacker_action_id: AttackerActionId, logged_in_ips: str, t: int=0,
+                     idx: int = 0, attacker_action_name = "", attacker_action_idx : int = 0) -> DefenderDynamicsTensorboardDTO:
         """
         Updates the dynamics model after observing a (s,a)->s' transition.
 
@@ -214,7 +216,9 @@ class DefenderDynamicsModel:
         :param s_prime: the new state
         :param attacker_action_id: the attacker action that triggered the transition
         :param logged_in_ips: the attacker state
-        :return: None
+        :param t: the current time step
+        :param idx: trajectory index
+        :return: A Tensorboard DTO of the update
         """
 
         # Update IDS Dynamics
@@ -231,6 +235,13 @@ class DefenderDynamicsModel:
         self.add_new_warning_alert_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                              num_new_warning_alerts=num_new_warning_alerts)
 
+        num_new_open_connections_total = 0
+        num_new_failed_login_attempts_total = 0
+        num_new_users_total = 0
+        num_new_logged_in_users_total = 0
+        num_new_login_events_total = 0
+        num_new_processes_total = 0
+
         # Update dynamics of all nodes
         for i in range(len(s_prime.defender_obs_state.machines)):
             if s_prime.defender_obs_state.machines[i].ip not in self.machines_dynamics_model or \
@@ -242,31 +253,47 @@ class DefenderDynamicsModel:
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_open_connection_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_open_connections=num_new_open_connections)
+            num_new_open_connections_total += num_new_open_connections
 
             num_new_failed_login_attempts = s_prime.defender_obs_state.machines[i].num_failed_login_attempts_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_failed_login_attempt_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_failed_login_attempts=num_new_failed_login_attempts)
+            num_new_failed_login_attempts_total += num_new_failed_login_attempts
 
             num_new_users = s_prime.defender_obs_state.machines[i].num_users_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_users=num_new_users)
+            num_new_users_total += num_new_users
 
             num_new_logged_in_users = s_prime.defender_obs_state.machines[i].num_logged_in_users_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_logged_in_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_logged_in_users=num_new_logged_in_users)
+            num_new_logged_in_users_total += num_new_logged_in_users
 
             num_new_login_events = s_prime.defender_obs_state.machines[i].num_login_events_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_login_event_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_login_events=num_new_login_events)
+            num_new_login_events_total += num_new_login_events
 
             num_new_processes = s_prime.defender_obs_state.machines[i].num_processes_recent
             self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_processes_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_processes=num_new_processes)
+            num_new_processes_total += num_new_processes
+
+        tb_dto = DefenderDynamicsTensorboardDTO(
+            t=t, num_new_alerts = num_new_alerts, num_new_priority=num_new_priority, 
+            num_new_severe_alerts=num_new_severe_alerts, num_new_warning_alerts=num_new_warning_alerts,
+            num_new_open_connections=num_new_open_connections_total,
+            num_new_failed_login_attempts=num_new_failed_login_attempts_total,
+            num_new_login_events=num_new_login_events_total,
+            num_new_processes=num_new_processes_total, index=idx, attacker_action_id=attacker_action_id.value,
+            attacker_action_idx=attacker_action_idx, attacker_action_name=attacker_action_name)
+        return tb_dto
 
     def update_init_state_distribution(self, init_state) -> None:
         """

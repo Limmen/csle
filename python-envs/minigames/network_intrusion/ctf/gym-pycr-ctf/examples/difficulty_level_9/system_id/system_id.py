@@ -63,9 +63,10 @@ def system_id():
         num_actions=env.env_config.attacker_action_conf.num_actions,
 
         # TCP/UDP Scan, Continue, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
-        # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24), Login, Install Tools, Backdoor, Continue, SSH brute (25), Login,
+        # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
+        # Continue, SSH brute (25), Login,
         # CVE-2010-0426 (25), Continue, TCP/UDP Scan
-        strategy=[372, 99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 107, 58, 104, 331, 99]
+        strategy=[372, 99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
     )
     env.env_config.attacker_max_exploration_steps = len(env.env_config.attacker_exploration_policy.strategy)
 

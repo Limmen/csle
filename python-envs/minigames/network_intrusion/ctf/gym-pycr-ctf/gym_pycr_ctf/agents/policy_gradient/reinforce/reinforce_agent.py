@@ -70,7 +70,7 @@ class ReinforceAgent(TrainAgent):
 
     def training_step(self, saved_rewards : List[List[float]], saved_log_probs : List[List[torch.Tensor]]) -> torch.Tensor:
         """
-        Performs a training step of the Deep-Q-learning algorithm (implemented in PyTorch)
+        Performs a training step of the REINFORCE algorithm
 
         :param saved_rewards list of rewards encountered in the latest episode trajectory
         :param saved_log_probs list of log-action probabilities (log p(a|s)) encountered in the latest episode trajectory
@@ -119,7 +119,6 @@ class ReinforceAgent(TrainAgent):
         self.optimizer.step()
 
         return policy_loss
-
 
     def train(self) -> ExperimentResult:
         """

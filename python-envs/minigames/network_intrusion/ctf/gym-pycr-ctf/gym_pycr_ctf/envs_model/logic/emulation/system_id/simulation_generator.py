@@ -1,6 +1,9 @@
-from typing import Tuple
+from typing import Tuple, List
 import numpy as np
 import sys
+import os
+import csv
+from torch.utils.tensorboard import SummaryWriter
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
@@ -8,18 +11,22 @@ from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUt
 from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.network.trajectory import Trajectory
+from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_tensorboard_dto import DefenderDynamicsTensorboardDTO
+import gym_pycr_ctf.constants.constants as constants
+
 
 
 class SimulationGenerator:
     """
-    Class for with functions for running an exploration policy in an environment to build a model
+    Class with functions for running an exploration policy in an environment to build a model
     that later can be used for simulations
     """
 
     @staticmethod
     def explore(attacker_exp_policy: ExplorationPolicy, env_config: EnvConfig, env,
-                render: bool = False, defender_dynamics_model: DefenderDynamicsModel = None
-                ) -> np.ndarray:
+                render: bool = False, defender_dynamics_model: DefenderDynamicsModel = None,
+                tensorboard_writer : SummaryWriter = None, tau_index :int = 0
+                ) -> Tuple[np.ndarray, Trajectory, List[DefenderDynamicsTensorboardDTO]]:
         """
         Explores the environment to generate trajectories that can be used to learn a dynamics model
 
@@ -28,12 +35,13 @@ class SimulationGenerator:
         :param env: the env to explore
         :param render: whether to render the env or not
         :param explore_defense_states: boolean flag whether to explore defensive states or not
-        :return: The final observation
+        :return: The final observation, the collected trajectory, the log
         """
         obs = env.reset()
         init_state = env.env_state.copy()
         done = False
         step = 0
+        log = []
         trajectory = SimulationGenerator.reset_trajectory(obs)
         if not env_config.explore_defense_states:
             defender_action = None
@@ -63,7 +71,6 @@ class SimulationGenerator:
 
             # Step in the environment
             action = (attacker_action, defender_action)
-            print("a:{}".format(action))
             obs, reward, done, info = env.step(action)
             trajectory = SimulationGenerator.update_trajectory(trajectory=trajectory, obs=obs, reward=reward, done=done,
                                                   info=info, action=action)
@@ -75,9 +82,15 @@ class SimulationGenerator:
                 attack_action_dto = env_config.attacker_action_conf.actions[attacker_action]
                 logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attack_action_dto,
                                                                       s=env.env_state)
-                defender_dynamics_model.update_model(s=s, s_prime=s_prime,
+                tb_dto = defender_dynamics_model.update_model(s=s, s_prime=s_prime,
                                                      attacker_action_id=attack_action_dto.id,
-                                                     logged_in_ips=logged_in_ips_str)
+                                                     attacker_action_name= attack_action_dto.name,
+                                                     attacker_action_idx = action[0],
+                                                     logged_in_ips=logged_in_ips_str, t=step, idx=tau_index)
+                tb_dto.log_tensorboard(tensorboard_writer=tensorboard_writer)
+                log.append(tb_dto)
+                print(str(tb_dto))
+
 
             step +=1
             if render:
@@ -85,7 +98,7 @@ class SimulationGenerator:
         if step >= env_config.attacker_max_exploration_steps:
             print("maximum exploration steps reached")
         env.env_config = old_env_config
-        return defender_dynamics_model, trajectory
+        return defender_dynamics_model, trajectory, log
 
     @staticmethod
     def build_model(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, render: bool = False) \
@@ -101,10 +114,14 @@ class SimulationGenerator:
         """
         print("Starting System Identification Process to Estimate Model")
 
+        # Setup TensorBoard
+        tensorboard_writer = SummaryWriter(env.env_config.emulation_config.save_dynamics_model_dir + "/tensorboard")
+
         # Initialize model
         aggregated_observation = env.env_state.attacker_obs_state.copy()
         defender_dynamics_model = SimulationGenerator.initialize_defender_dynamics_model()
         trajectories = []
+        logs = []
         if env_config.emulation_config.save_dynamics_model_dir is not None:
             defender_dynamics_model.read_model(
                 dir_path=env.env_config.emulation_config.save_dynamics_model_dir,
@@ -132,10 +149,12 @@ class SimulationGenerator:
                                                        env_config=env_config)
 
             # Collect trajectory
-            defender_dynamics_model, trajectory = \
+            defender_dynamics_model, trajectory, log = \
                 SimulationGenerator.explore(attacker_exp_policy= exp_policy, env_config=env_config,
-                                            env=env, render=render, defender_dynamics_model=defender_dynamics_model)
+                                            env=env, render=render, defender_dynamics_model=defender_dynamics_model,
+                                            tensorboard_writer=tensorboard_writer, tau_index=i)
             trajectories.append(trajectory)
+            logs = logs + log
 
             # Aggregate attacker's state
             observation = env.env_state.attacker_obs_state
@@ -166,6 +185,8 @@ class SimulationGenerator:
                 model_name=env_config.emulation_config.save_dynamics_model_file)
             Trajectory.save_trajectories(env_config.emulation_config.save_dynamics_model_dir, trajectories,
                                          trajectories_file=env_config.emulation_config.save_trajectories_file)
+            SimulationGenerator.save_logs_to_csv(logs, dir=env_config.emulation_config.save_dynamics_model_dir,
+                                                 filename=env_config.emulation_config.save_system_id_logs_file)
 
             env_config.network_conf.save(
                 dir_path=env_config.emulation_config.save_dynamics_model_dir,
@@ -235,3 +256,32 @@ class SimulationGenerator:
         trajectory.attacker_actions.append(-1)
         trajectory.defender_actions.append(-1)
         return trajectory
+
+    @staticmethod
+    def save_logs_to_csv(logs: List[DefenderDynamicsTensorboardDTO], dir: str, filename: str):
+        if dir is None or dir == "":
+            dir = os.getcwd()
+        if filename is None or filename == "":
+            filename = constants.SYSTEM_IDENTIFICATION.SYSTEM_ID_LOGS_FILE
+
+        metrics = [
+            list(map(lambda x: x.t, logs)), list(map(lambda x: x.num_new_alerts, logs)),
+            list(map(lambda x: x.num_new_priority, logs)), list(map(lambda x: x.num_new_severe_alerts, logs)),
+            list(map(lambda x: x.num_new_warning_alerts, logs)), list(map(lambda x: x.num_new_open_connections, logs)),
+            list(map(lambda x: x.num_new_failed_login_attempts, logs)),
+            list(map(lambda x: x.num_new_login_events, logs)), list(map(lambda x: x.num_new_processes, logs)),
+            list(map(lambda x: x.index, logs)), list(map(lambda x: x.attacker_action_id, logs)),
+            list(map(lambda x: x.attacker_action_idx, logs)), list(map(lambda x: x.attacker_action_name, logs))
+        ]
+        labels = [
+            "t", "num_new_alerts", "num_new_priority", "num_new_severe_alerts", "num_new_warning_alerts",
+            "num_new_open_connections", "num_new_failed_login_attempts", "num_new_login_events", "num_new_processes",
+            "index", "attacker_action_id", "attacker_action_idx", "attacker_action_name"
+        ]
+
+        rows = zip(*metrics)
+        with open(dir + "/" + filename, "w") as f:
+            writer = csv.writer(f)
+            writer.writerow(labels)
+            for row in rows:
+                writer.writerow(row)
