@@ -13,3 +13,4 @@ gifs
 plots
 tensorboard
 models
+*.json

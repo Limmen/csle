@@ -12,6 +12,7 @@ hyperparameters
 gifs
 plots
 tensorboard
+*.json
 results_backup
 results
 results_backup

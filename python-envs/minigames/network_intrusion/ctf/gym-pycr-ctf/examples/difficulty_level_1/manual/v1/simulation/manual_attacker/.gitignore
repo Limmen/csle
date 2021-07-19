@@ -12,4 +12,6 @@ hyperparameters
 gifs
 plots
 tensorboard
+*.json
 models
+*.json
