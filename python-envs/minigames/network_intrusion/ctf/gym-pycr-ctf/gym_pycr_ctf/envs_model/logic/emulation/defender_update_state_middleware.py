@@ -1,4 +1,5 @@
 from typing import Tuple
+import datetime
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
@@ -38,7 +39,6 @@ class DefenderUpdateStateMiddleware:
                 num_new_severe_alerts = num_new_alerts / 2
                 num_new_warning_alerts = num_new_alerts / 2
             else:
-
                 num_new_alerts, num_new_severe_alerts, num_new_warning_alerts, num_new_priority = \
                     ReadLogsUtil.read_ids_data(env_config=env_config,
                                                episode_last_alert_ts=s_prime.defender_obs_state.last_alert_ts)
@@ -57,7 +57,6 @@ class DefenderUpdateStateMiddleware:
             s_prime.defender_obs_state.num_warning_alerts_recent = num_new_warning_alerts
             s_prime.defender_obs_state.sum_priority_alerts_recent = num_new_priority
 
-            s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
         if s_prime.state_type == StateType.BASE or s_prime.state_type == StateType.ESSENTIAL \
                 or s_prime.state_type == StateType.COMPACT:
@@ -104,6 +103,8 @@ class DefenderUpdateStateMiddleware:
                 m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
 
         s_prime.defender_obs_state.step = s_prime.defender_obs_state.step + 1
+
+        s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
         return s_prime, 0, False
 
@@ -174,7 +175,6 @@ class DefenderUpdateStateMiddleware:
         # Measure IDS (This has to be after the setup of machine-connections to make sure the time-stamp is correct.
         if env_config.ids_router:
             s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-            print("setting initial ts")
 
             s_prime.defender_obs_state.num_alerts_recent = 0
             s_prime.defender_obs_state.num_severe_alerts_recent = 0

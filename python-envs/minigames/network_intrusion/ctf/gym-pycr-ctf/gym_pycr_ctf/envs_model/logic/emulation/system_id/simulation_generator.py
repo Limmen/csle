@@ -173,8 +173,8 @@ class SimulationGenerator:
 
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
             env_config.network_conf.nodes = nodes
-            for n2 in env_config.network_conf.nodes:
-                print("node:{}, flags:{}".format(n2.ip, list(map(lambda x: str(x), n2.flags))))
+            # for n2 in env_config.network_conf.nodes:
+            #     print("node:{}, flags:{}".format(n2.ip, list(map(lambda x: str(x), n2.flags))))
             env_config.network_conf.defender_dynamics_model = defender_dynamics_model
             env_config.network_conf.agent_reachable = aggregated_observation.agent_reachable
 

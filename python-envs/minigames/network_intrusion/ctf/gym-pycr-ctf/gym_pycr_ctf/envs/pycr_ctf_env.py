@@ -190,7 +190,6 @@ class PyCRCTFEnv(gym.Env, ABC):
             if (self.env_config.env_mode == EnvMode.EMULATION
                     or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
                     and not self.env_config.use_attacker_action_stats_to_update_defender_state:
-                print("sleep:{}".format(self.env_config.defender_sleep_before_state_update))
                 time.sleep(self.env_config.defender_sleep_before_state_update)
             defender_reward, attacker_reward, done, defender_info = \
                 self.step_defender(defender_action_id=defense_action_id,

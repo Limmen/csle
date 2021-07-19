@@ -34,7 +34,6 @@ class AttackerStoppingMiddleware:
         :return: s_prime, reward, done
         """
         if not env_config.use_attacker_action_stats_to_update_defender_state:
-            print("attacker continue sleep:{}".format(env_config.attacker_continue_action_sleep))
             time.sleep(env_config.attacker_continue_action_sleep)
         return s, 0, False
 
