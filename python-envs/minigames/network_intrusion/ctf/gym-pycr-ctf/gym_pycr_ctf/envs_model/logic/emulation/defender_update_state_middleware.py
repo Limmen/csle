@@ -123,20 +123,6 @@ class DefenderUpdateStateMiddleware:
 
         s_prime.defender_obs_state.adj_matrix = env_config.network_conf.adj_matrix
 
-        # Measure IDS
-        if env_config.ids_router:
-            s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-
-            s_prime.defender_obs_state.num_alerts_recent = 0
-            s_prime.defender_obs_state.num_severe_alerts_recent = 0
-            s_prime.defender_obs_state.num_warning_alerts_recent = 0
-            s_prime.defender_obs_state.sum_priority_alerts_recent = 0
-
-            s_prime.defender_obs_state.num_alerts_total = 0
-            s_prime.defender_obs_state.sum_priority_alerts_total = 0
-            s_prime.defender_obs_state.num_severe_alerts_total = 0
-            s_prime.defender_obs_state.num_warning_alerts_total = 0
-
         # Measure Node specific features
         for node in env_config.network_conf.nodes:
             if node.ip == env_config.emulation_config.agent_ip:
@@ -183,6 +169,23 @@ class DefenderUpdateStateMiddleware:
             d_obs.num_processes_recent = 0
 
             s_prime.defender_obs_state.machines.append(d_obs)
+
+
+        # Measure IDS (This has to be after the setup of machine-connections to make sure the time-stamp is correct.
+        if env_config.ids_router:
+            s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+            print("setting initial ts")
+
+            s_prime.defender_obs_state.num_alerts_recent = 0
+            s_prime.defender_obs_state.num_severe_alerts_recent = 0
+            s_prime.defender_obs_state.num_warning_alerts_recent = 0
+            s_prime.defender_obs_state.sum_priority_alerts_recent = 0
+
+            s_prime.defender_obs_state.num_alerts_total = 0
+            s_prime.defender_obs_state.sum_priority_alerts_total = 0
+            s_prime.defender_obs_state.num_severe_alerts_total = 0
+            s_prime.defender_obs_state.num_warning_alerts_total = 0
+
 
         s_prime.defender_obs_state.step = 0
         s_prime.defender_obs_state.snort_warning_baseline_reward = 0

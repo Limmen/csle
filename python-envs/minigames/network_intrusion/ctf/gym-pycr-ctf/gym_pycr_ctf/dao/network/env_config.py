@@ -184,7 +184,7 @@ class EnvConfig:
         self.attacker_cve_2016_10033_sleep_retry = 4
         self.attacker_cve_2010_0426_sleep_retry = 4
         self.attacker_cve_2015_5602_sleep_retry = 4
-        self.attacker_continue_action_sleep = 30
+        self.attacker_continue_action_sleep = 0.001
 
         self.defender_update_state = False
         self.defender_ids_severity_threshold=3

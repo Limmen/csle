@@ -56,7 +56,8 @@ def system_id():
     env.env_config.emulate_detection = False
     env.env_config.explore_defense_states = True
     env.env_config.use_attacker_action_stats_to_update_defender_state = False
-    env.env_config.defender_sleep_before_state_update = 15
+    env.env_config.defender_sleep_before_state_update = 10
+    env.env_config.attacker_continue_action_sleep = 0.001
 
     # Novice Attacker
     env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
