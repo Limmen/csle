@@ -118,6 +118,16 @@ ManualAttackerAgent(env=env, env_config=env.env_config)
 <img src="docs/gui_1.png" width="1200">
 </p>
 
+## System Identification and Collection of Traces
+
+<p align="center">
+<img src="docs/system_id_1.png" width="1200">
+</p>
+
+<p align="center">
+<img src="docs/system_id_2.png" width="1200">
+</p>
+
 ## Author & Maintainer
 
 Kim Hammar <kimham@kth.se>
