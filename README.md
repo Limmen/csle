@@ -37,7 +37,7 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
 ## Features
 
 - **Emulations**
-    - [x] 50+ pre-defined emulation environments
+    - [x] 50+ pre-defined versions of emulation environments
     - [x] Automatic generation of custom emulation environment
     - [x] Monitoring Framework with Webapp, Grafana, Prometheus, C-advisor, Node-exporter
     - [x] Automatic Network Traffic Simulation
@@ -49,7 +49,7 @@ The environment exposes a Markov-game or Markov Decision Process API for OpenAI 
 
 - **Open-AI Gym Environment**
      - [x] GUI rendering
-     - [x] 50+ gym environments
+     - [x] 50+ versions of gym environments
      - [x] Simulation-mode
      - [x] Emulation-mode
      - [x] Manual-mode
@@ -85,12 +85,18 @@ TODO
 
 ## Documentation
 
-For documentation, see the README.md files inside each sub-directory,
+For basic documentation, see the README.md files inside each sub-directory,
 
 - **Emulation Environments** ([emulation-envs](./emulation-envs)).
 - **Python Environments** ([python-envs](./python-envs)).
 - **Notebooks** ([notebooks](./notebooks)).
 - **Documentation** ([docs](./docs)).
+
+For API documentation see: TODO
+
+For technical documentation see: TODO
+
+## Video tutorial
 
 ## Author & Maintainer
 
