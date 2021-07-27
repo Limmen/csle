@@ -28,8 +28,10 @@ def manual_control():
 
     # emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
     #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
-    emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion" \
-                                                    "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion" \
+    #                                                 "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion" \
+                                               "/ctf/gym-pycr-ctf/examples/difficulty_level_9/system_id/"
     emulation_config.skip_exploration = True
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
@@ -50,7 +52,7 @@ def manual_control():
     env.env_config.defender_sleep_before_state_update = 15
     env.env_config.randomize_attacker_starting_state = False
 
-    ManualAttackerAgent(env=env, env_config=env.env_config, render=True)
+    ManualAttackerAgent(env=env, env_config=env.env_config, render=False)
 
 
 if __name__ == '__main__':
