@@ -25,7 +25,10 @@ class EmulationUtil:
         :return: outdata, errdata, total_time
         """
         transport_conn = conn.get_transport()
-        session = transport_conn.open_session()
+        try:
+            session = transport_conn.open_session(timeout=60)
+        except Exception:
+            raise IOError("Connection timed out")
         start = time.time()
         session.exec_command(cmd)
         outdata, errdata = b'', b''
@@ -528,7 +531,8 @@ class EmulationUtil:
         if not env_config.ids_router:
             raise AssertionError("Can only read alert files if IDS router is enabled")
         cmd = constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE
-        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.emulation_config.router_conn)
+        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                                     conn=env_config.emulation_config.router_conn)
         alerts = []
         year = datetime.datetime.now().year
         for line in outdata.decode().split("\n"):
