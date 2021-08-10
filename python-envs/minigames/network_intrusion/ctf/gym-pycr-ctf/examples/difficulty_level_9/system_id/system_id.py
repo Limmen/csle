@@ -69,16 +69,27 @@ def system_id():
     #     strategy=[372, 99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
     # )
 
-    # Experienced Attacker
+    # # Experienced Attacker
+    # env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
+    #     num_actions=env.env_config.attacker_action_conf.num_actions,
+    #
+    #     # Continue, Ping Scan, SambaCry Exploit(1) with backdoor,
+    #     # Shellshock (CVE-2014-6271) (24) with backdoor, login, SSH brute (25), Login, CVE-2010-0426 (25),
+    #     # Ping scan, SQL injection (26), Login, Install tools,
+    #     # Ping scan, CVE-2015-1427 (26), Login, Install Tools,
+    #     strategy=[372, 100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100,
+    #               266, 104, 106]
+    # )
+
+    # Expert Attacker
     env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
         num_actions=env.env_config.attacker_action_conf.num_actions,
 
-        # Continue, Ping Scan, SambaCry Exploit(1), Login, Install tools, Backdoor, Ping Scan
-        # Shellshock (CVE-2014-6271) (24) with backdoor, login, SSH brute (25), Login, CVE-2010-0426 (25),
-        # Ping scan, SQL injection (26), Login, Install tools,
-        # Ping scan, CVE-2015-1427 (26), Login, Install Tools,
-        strategy=[372, 100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100,
-                  266, 104, 106]
+        # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
+        # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
+        # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
+        # SambaCry Exploit(5) with backdoor, Login
+        strategy=[372, 100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104]
     )
 
 

@@ -19,12 +19,12 @@ def manual_control():
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim", server_ip="172.31.212.92"
     #                                )
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-    #                                  agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                  server_username="kim", port_forward_next_port=3600)
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                   server_connection=False, port_forward_next_port=3600)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+                                     agent_username="agent", agent_pw="agent", server_connection=True,
+                                     server_private_key_file="/home/kim/.ssh/id_rsa",
+                                     server_username="kim", port_forward_next_port=3600)
+    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    #                                server_connection=False, port_forward_next_port=3600)
 
     # emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
     #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
@@ -35,7 +35,7 @@ def manual_control():
     emulation_config.skip_exploration = True
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
-    env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
+    env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
 
     env.env_config.attacker_use_nmap_cache = False
     env.env_config.attacker_nmap_scan_cache = False
