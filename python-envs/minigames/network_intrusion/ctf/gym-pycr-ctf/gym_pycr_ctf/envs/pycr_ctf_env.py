@@ -114,7 +114,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                 action_lookup_d_val=self.env_config.attacker_action_conf.action_lookup_d_val,
                 shell_ids=self.env_config.attacker_action_conf.shell_action_ids)
 
-        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION \
+                and self.env_config.emulation_config.skip_exploration:
             self.load_dynamics_model()
 
         self.env_config.scale_rewards_prep_attacker()
