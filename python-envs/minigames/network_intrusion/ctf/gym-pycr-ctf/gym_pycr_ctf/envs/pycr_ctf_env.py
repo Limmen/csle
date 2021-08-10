@@ -78,6 +78,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         }
         self.step_outcome = None
 
+
+
         # System Identification
         if self.env_config.env_mode == EnvMode.EMULATION or self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
 
@@ -111,6 +113,9 @@ class PyCRCTFEnv(gym.Env, ABC):
                 action_ids=self.env_config.attacker_action_conf.action_ids,
                 action_lookup_d_val=self.env_config.attacker_action_conf.action_lookup_d_val,
                 shell_ids=self.env_config.attacker_action_conf.shell_action_ids)
+
+        if self.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+            self.load_dynamics_model()
 
         self.env_config.scale_rewards_prep_attacker()
         self.env_config.scale_rewards_prep_defender()
@@ -170,10 +175,12 @@ class PyCRCTFEnv(gym.Env, ABC):
                   "(attacker_action, defender_action)")
         # Initialization
         attack_action_id, defense_action_id = action_id
+        static_attack_started = False
         if (attack_action_id == -1 or attack_action_id is None) and self.env_config.attacker_static_opponent is not None:
-            print("attack action is None")
-            attack_action_id = self.env_config.attacker_static_opponent.action(
+            attack_action_id, attacker_done = self.env_config.attacker_static_opponent.action(
                 env=self, filter_illegal=self.env_config.attacker_filter_illegal_actions)
+            if self.env_config.attacker_static_opponent.started:
+                static_attack_started = True
 
         if attack_action_id is not None:
             attack_action_id = int(attack_action_id)
@@ -214,9 +221,13 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         if not done:
             # Second step attacker
-            attacker_reward, defender_reward_2, done, info = self.step_attacker(attacker_action_id=attack_action_id,
+            attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id,
                                                                                 defender_action=defense_action_id)
-            defender_reward = defender_reward + defender_reward_2
+            done = done or attacker_done
+            self.env_state.attacker_obs_state.intrusion_started = self.env_state.attacker_obs_state.intrusion_started \
+                                                                  or static_attack_started
+            if done:
+                self.env_state.attacker_obs_state.intrusion_completed = True
 
         # Merge infos
         if info is None:
@@ -264,7 +275,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         return (attacker_m_obs, defender_obs), (attacker_reward, defender_reward), done, info
 
-    def step_attacker(self, attacker_action_id, defender_action) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_attacker(self, attacker_action_id, defender_action) -> Tuple[int, bool, dict]:
         """
         Takes a step in the environment as the attacker by executing the given action
 
@@ -273,7 +284,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         """
         info = {"idx": self.idx}
         info["successful_intrusion"] = False
-        defender_reward = 0
 
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
@@ -287,7 +297,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             ))
             self.attacker_agent_state.time_step += 1
             attacker_reward = self.env_config.attacker_illegal_reward_action
-            return attacker_reward, defender_reward, True, info
+            return attacker_reward, True, info
 
         if attacker_action_id > len(self.env_config.attacker_action_conf.actions) - 1:
             raise ValueError("Action ID: {} not recognized".format(attacker_action_id))
@@ -317,8 +327,6 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
             info["caught_attacker"] = True
-            if not s_prime.attacker_obs_state.all_flags and s_prime.attacker_obs_state.ongoing_intrusion():
-                defender_reward = self.env_config.defender_intrusion_reward
 
 
         if s_prime.attacker_obs_state.all_flags:
@@ -327,7 +335,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         if s_prime.attacker_obs_state.all_flags:
             attacker_reward = attacker_reward - self.env_state.attacker_obs_state.cost_norm \
                               - self.env_state.attacker_obs_state.alerts_norm
-            defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
@@ -341,7 +348,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.__update_log(attack_action)
 
         self.env_state.attacker_obs_state.last_attacker_action = attack_action
-        return attacker_reward, defender_reward, done, info
+        return attacker_reward, done, info
 
     def step_defender(self, defender_action_id, attacker_action: AttackerAction,
                       attacker_opponent = None) -> Tuple[np.ndarray, int, bool, dict]:
@@ -387,7 +394,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                         float(self.env_config.defender_caught_attacker_reward) / max(
                             1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                 else:
-                    s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping
+                    s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping_reward
             if done:
                 s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
 
@@ -400,7 +407,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                         float(self.env_config.defender_caught_attacker_reward) / max(
                             1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                 else:
-                    s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping
+                    s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping_reward
             else:
                 if done:
                     s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
@@ -413,7 +420,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                         float(self.env_config.defender_caught_attacker_reward) / max(
                             1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                 else:
-                    s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping
+                    s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping_reward
             else:
                 if done:
                     s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_intrusion_reward
@@ -428,7 +435,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                         float(self.env_config.defender_caught_attacker_reward) / max(
                             1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                 else:
-                    s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping
+                    s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping_reward
             else:
                 if done:
                     s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_intrusion_reward
@@ -438,25 +445,19 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         if self.defender_time_step > self.env_config.max_episode_length:
             done = True
-            if not s_prime.attacker_obs_state.all_flags and s_prime.attacker_obs_state.ongoing_intrusion():
-                defender_reward = self.env_config.defender_intrusion_reward
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
         self.env_state = s_prime
 
         if self.env_state.defender_obs_state.caught_attacker:
-            defender_reward = defender_reward + float(self.env_config.defender_caught_attacker_reward) / max(
-                1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
             attacker_reward = self.env_config.attacker_detection_reward
             self.attacker_agent_state.num_detections += 1
         elif self.env_state.defender_obs_state.stopped:
-            defender_reward = defender_reward + self.env_config.defender_early_stopping
             attacker_reward = self.env_config.attacker_early_stopping_reward
 
         if self.env_config.stop_after_failed_detection and not done and \
                 self.env_state.attacker_obs_state.ongoing_intrusion():
             done = True
-            defender_reward = defender_reward + self.env_config.defender_intrusion_reward
 
         if self.env_config.snort_baseline_simulate and \
                 attacker_opponent is not None and \
@@ -525,7 +526,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                             float(self.env_config.defender_caught_attacker_reward) / max(
                                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                     else:
-                        s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping
+                        s_prime.defender_obs_state.snort_severe_baseline_reward = self.env_config.defender_early_stopping_reward
                 if done:
                     s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
 
@@ -537,7 +538,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                             float(self.env_config.defender_caught_attacker_reward) / max(
                                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                     else:
-                        s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping
+                        s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_early_stopping_reward
                 else:
                     if done:
                         s_prime.defender_obs_state.snort_warning_baseline_reward = self.env_config.defender_intrusion_reward
@@ -550,7 +551,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                             float(self.env_config.defender_caught_attacker_reward) / max(
                                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                     else:
-                        s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping
+                        s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_early_stopping_reward
                 else:
                     if done:
                         s_prime.defender_obs_state.snort_critical_baseline_reward = self.env_config.defender_intrusion_reward
@@ -565,7 +566,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                             float(self.env_config.defender_caught_attacker_reward) / max(
                                 1, self.env_state.attacker_obs_state.undetected_intrusions_steps)
                     else:
-                        s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping
+                        s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_early_stopping_reward
                 else:
                     if done:
                         s_prime.defender_obs_state.var_log_baseline_reward = self.env_config.defender_intrusion_reward
@@ -583,6 +584,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         :return: initial observation
         """
+        if self.env_config.attacker_static_opponent is not None:
+            self.env_config.attacker_static_opponent.reset()
 
         if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
                 and self.env_config.domain_randomization and self.randomization_space is not None:

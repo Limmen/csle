@@ -24,6 +24,6 @@ class CustomExplorationPolicy(ExplorationPolicy):
                 legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state),
                                             self.actions))
             else:
-                legal_actions = self.action
+                legal_actions = self.actions
             action = np.random.choice(legal_actions)
         return action

@@ -45,7 +45,6 @@ def system_id():
 
     # Configure Env for System ID
     env.env_config.attacker_use_nmap_cache = False
-    env.env_config.attacker_nmap_scan_cache = False
     env.env_config.attacker_use_nikto_cache = False
     env.env_config.attacker_use_file_system_cache = False
     env.env_config.attacker_use_user_command_cache = False

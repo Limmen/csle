@@ -57,12 +57,16 @@ class DefenderBeliefStateSimulator:
                 num_new_severe_alerts = \
                     env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[
                         (attacker_action.id.value, logged_in_ips_str)].rvs()
+            else:
+                print("miss 1: {}, action:{}".format((attacker_action.id.value, logged_in_ips_str), attacker_action))
 
             if (attacker_action.id.value, logged_in_ips_str) in \
                     env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
                 num_new_warning_alerts = \
                     env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[
                         (attacker_action.id.value, logged_in_ips_str)].rvs()
+            else:
+                print("miss 2: {}, action:{}".format((attacker_action.id.value, logged_in_ips_str), attacker_action))
 
             num_new_alerts = num_new_severe_alerts + num_new_warning_alerts
             num_new_priority = num_new_severe_alerts*3 + num_new_warning_alerts*1

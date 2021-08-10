@@ -344,3 +344,10 @@ class EnvState:
         copy.attacker_obs_state = self.attacker_obs_state.copy()
         copy.defender_obs_state = self.defender_obs_state.copy()
         return copy
+
+    def __str__(self):
+        """
+        :return: a string representation of the object
+        """
+        return f"Attacker observation state: {self.attacker_obs_state}" \
+               f"Defender observation state: {self.defender_obs_state}"

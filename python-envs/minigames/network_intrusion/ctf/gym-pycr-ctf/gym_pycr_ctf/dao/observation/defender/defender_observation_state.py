@@ -116,5 +116,6 @@ class DefenderObservationState:
             self.caught_attacker, self.stopped, self.step, self.snort_severe_baseline_reward,
             self.snort_warning_baseline_reward, self.snort_severe_baseline_stopped,
             self.snort_warning_baseline_stopped, self.snort_critical_baseline_reward,
-            self.snort_critical_baseline_stopped, self.last_alert_ts) + "\n" + \
-                "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+            self.snort_critical_baseline_stopped, self.var_log_baseline_reward, self.var_log_baseline_stopped,
+            self.last_alert_ts) + "\n" + "\n".join([str(i) + ":"
+                                                    + str(self.machines[i]) for i in range(len(self.machines))])

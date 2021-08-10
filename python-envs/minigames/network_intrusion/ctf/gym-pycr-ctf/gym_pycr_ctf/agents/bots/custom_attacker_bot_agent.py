@@ -1,13 +1,9 @@
 """
 A bot attack agent for the pycr-ctf environment that acts according to a custom pre-defined policy
 """
-import time
+from typing import List, Tuple
 import numpy as np
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-#from gym_pycr_ctf.envs.derived_envs.level4.generated_simulation.pycr_ctf_level4_gensim_env import PyCRCTFLevel4GeneratedSim5Env
-#from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCRCTFLevel4Emulation5Env
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
 
 
 class CustomAttackerBotAgent:
@@ -15,33 +11,69 @@ class CustomAttackerBotAgent:
     Class implementing an attack policy that acts according to a custom pre-defined policy
     """
 
-    def __init__(self, env_config: EnvConfig, env, strategy):
+    def __init__(self, env_config: EnvConfig, env, strategy: List[int], random_start : bool = False,
+                 start_p : float = 0.2, continue_action : int = 372):
         """
         Constructor, initializes the policy
 
         :param env_config: the environment configuration
         :param env: the environment
         :param strategy: the strategy
+        :param random_start: boolean flag whether to randomize start or not
+        :param start_p: Bernoulli probability of starting an intrusion at any time-step t
         """
         self.env_config = env_config
         self.env = env
         self.num_actions = env.env_config.attacker_action_conf.num_actions
         self.actions = np.array(list(range(self.num_actions)))
         self.strategy = strategy
-        self.strategy = [18, 18, 15, 18, 18, 18, 5, 18, 18, 1, 18, 18, 14, 16, 15, 18, 18, 18, 17]
+        self.random_start = random_start
+        if self.random_start:
+            self.started = False
+        else:
+            self.started = True
+        self.start_p = start_p
+        self.continue_action = continue_action
 
-    def action(self, s: EnvState, agent_state) -> int:
+    def action(self, env, filter_illegal: bool = True, step= None) -> Tuple[int, bool]:
         """
         Samples an action from the policy.
 
-        :param s: the environment state
-        :param agent_state: the agent state
-        :return: action_id
+        :param env: the environment
+        :param filter_illegal: whether to filter illegal actions
+        :param step: the current time-step
+        :return: action_id, done
         """
-        legal_actions = list(filter(lambda x: self.env.is_attack_action_legal(x, self.env_config, s), self.actions))
-        if self.strategy[agent_state.time_step] in legal_actions:
-            action = self.strategy[agent_state.time_step]
+        done = False
+        if step is None:
+            step = env.env_state.attacker_obs_state.step
+
+        if not self.started:
+            if np.random.rand() < self.start_p:
+                self.started = True
+
+        if self.started:
+
+            if step < len(self.strategy):
+                done = step == (len(self.strategy)-1)
+                action = self.strategy[step]
+            else:
+                if filter_illegal:
+                    legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state),
+                                                self.actions))
+                else:
+                    legal_actions = self.actions
+                action = np.random.choice(legal_actions)
+
         else:
-            print("action illegal")
-            action = np.random.choice(legal_actions)
-        return action
+            action = self.continue_action
+
+
+        return action, done
+
+
+    def reset(self):
+        if self.random_start:
+            self.started = False
+        else:
+            self.started = True

@@ -366,7 +366,7 @@ class PyCRCTFLevel9Emulation5Env(PyCRCTFEnv):
             env_config.attacker_illegal_reward_action = -100
 
             env_config.defender_caught_attacker_reward = 100
-            env_config.defender_early_stopping = -100
+            env_config.defender_early_stopping_reward = -100
             env_config.defender_intrusion_reward = -100
             env_config.attacker_early_stopping_reward = -100
 

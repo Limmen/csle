@@ -258,8 +258,7 @@ class Simulator:
 
     @staticmethod
     def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
-                                     attacker_action: AttackerAction) -> Tuple[
-        EnvState, int, bool]:
+                                     attacker_action: AttackerAction) -> Tuple[EnvState, int, bool]:
         """
         Implements transition of state update for the defender
 

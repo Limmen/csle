@@ -10,6 +10,7 @@ from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v4 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v5 import PyCrCTFLevel9V5
 from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from gym_pycr_ctf.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
+from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 
 
 # -------- Version 1 ------------
@@ -404,20 +405,31 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             #               106, 372, 70, 372, 104, 105, 107, 372, 99, 372, 165, 372, 104, 372, 105, 372, 106, 372,
             #               200, 372, 372, 104, 372, 105, 372, 106, 372, 372, 58, 372, 104, 372, 105, 372, 331, 372,
             #               105, 99, 266, 372, 104, 105, 106, 99, 372, 113, 104, 372, 105])
-            env_config.attacker_static_opponent = CustomExplorationPolicy(
-                num_actions=env_config.attacker_action_conf.num_actions,
-                strategy=[99, 33, 104, 105, 106, 1, 104, 105,
-                          106,70,104, 105, 107, 99, 165,104, 105, 106,
-                          200, 104, 105, 106, 58, 104, 105, 331,
-                          105, 99, 266, 104, 105, 106, 99,  113, 104,105])
+            # env_config.attacker_static_opponent = CustomExplorationPolicy(
+            #     num_actions=env_config.attacker_action_conf.num_actions,
+            #     strategy=[99, 33, 104, 105, 106, 1, 104, 105,
+            #               106,70,104, 105, 107, 99, 165,104, 105, 106,
+            #               200, 104, 105, 106, 58, 104, 105, 331,
+            #               105, 99, 266, 104, 105, 106, 99,  113, 104,105])
 
             env_config.defender_caught_attacker_reward = 100
-            env_config.defender_early_stopping = -100
+            env_config.defender_early_stopping_reward = -100
             env_config.defender_intrusion_reward = -100
+            env_config.defender_service_reward = 10
             env_config.snort_critical_baseline_threshold = 400
             env_config.emulate_detection = False
             env_config.simulate_detection = False
-            env_config.attacker_early_stopping_reward = -100
-            env_config.use_attacker_action_stats_to_update_defender_state = True
+            env_config.attacker_early_stopping_reward = 10
+            env_config.use_attacker_action_stats_to_update_defender_state = False
 
         super().__init__(env_config=env_config)
+        # Novice Attacker
+        attacker_opponent = CustomAttackerBotAgent(
+            env_config=self.env_config, env=self,
+            # TCP/UDP Scan, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
+            # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
+            # Continue, SSH brute (25), Login,
+            # CVE-2010-0426 (25), Continue, TCP/UDP Scan
+            strategy=[99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99],
+            random_start=True, start_p=0.2, continue_action=372)
+        self.env_config.attacker_static_opponent = attacker_opponent

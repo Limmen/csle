@@ -90,9 +90,10 @@ class ManualDefenderAgent:
                                                                          )
                                 history.append(a)
                                 if done:
-                                    print("done:{}, attacker_caught:{}, stopped:{}".format(
+                                    print("done:{}, attacker_caught:{}, stopped:{}, intrusion_completed:{}".format(
                                         done, env.env_state.defender_obs_state.caught_attacker,
-                                        env.env_state.defender_obs_state.stopped
+                                        env.env_state.defender_obs_state.stopped,
+                                        env.env_state.attacker_obs_state.intrusion_completed
                                     ))
                             else:
                                 print("action:{} is illegal".format(a))

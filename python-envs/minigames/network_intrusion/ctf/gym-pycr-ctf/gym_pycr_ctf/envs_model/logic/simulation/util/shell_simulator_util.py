@@ -49,7 +49,7 @@ class ShellSimulatorUtil:
                 if new_m_obs.logged_in:
                     for cr in credentials:
                         cr_user = cr.username
-                        if cr_user in node.root_usernames:
+                        if cr_user in node.root_usernames and service_name != "ftp":
                             new_m_obs.root = True
             new_m_obs.untried_credentials = False
             new_obs_machines.append(new_m_obs)

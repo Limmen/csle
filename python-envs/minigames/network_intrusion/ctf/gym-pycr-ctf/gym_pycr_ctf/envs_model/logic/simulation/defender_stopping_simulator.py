@@ -23,13 +23,15 @@ class DefenderStoppingSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
-
+        reward = 0
         if s_prime.attacker_obs_state.ongoing_intrusion():
             s_prime.attacker_obs_state.undetected_intrusions_steps += 1
             s_prime.defender_obs_state.caught_attacker = True
+            reward = env_config.defender_caught_attacker_reward
         else:
             s_prime.defender_obs_state.stopped = True
-        return s_prime, 0, True
+            reward = env_config.defender_early_stopping_reward
+        return s_prime, reward, True
 
 
     @staticmethod
@@ -45,7 +47,9 @@ class DefenderStoppingSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
+        reward = env_config.defender_service_reward
         if s_prime.attacker_obs_state.ongoing_intrusion():
             s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-        return s, 0, False
+            reward = reward + env_config.defender_intrusion_reward
+        return s, reward, False
 

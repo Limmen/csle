@@ -365,7 +365,7 @@ class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
             # env_config.defender_sleep_before_state_update = 0.0001
             env_config.max_episode_length = 500
             env_config.defender_caught_attacker_reward = 10
-            env_config.defender_early_stopping = -1
+            env_config.defender_early_stopping_reward = -1
             env_config.defender_intrusion_reward = -1
             env_config.stop_after_failed_detection = False
         super().__init__(env_config=env_config)

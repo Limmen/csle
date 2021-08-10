@@ -847,11 +847,12 @@ def plot(dist, xk, k, action_dto: AttackerAction, logged_in_ips, subtitle : str,
     fig.tight_layout()
     plt.show()
 
-def plot_ids_infra_and_one_machine(defender_dynamics_model):
-    action_cfg = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=10, subnet_mask="test", hacker_ip="test")
+def plot_ids_infra_and_one_machine(defender_dynamics_model, actions_conf = None):
+    if actions_conf is None:
+        actions_conf = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=10, subnet_mask="test", hacker_ip="test")
     machine_row_dists, machine_row_xks, machine_row_a_ids, machine_row_b_ids, machine_row_short_titles, \
     machine_row_x_labels, machine_row_y_labels, machine_row_labels = plot_machines_dynamics(
-        defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
+        defender_dynamics_model=defender_dynamics_model, action_cfg=actions_conf)
     machine_row_dists = machine_row_dists[0:1][0]
     machine_row_xks = machine_row_xks[0:1][0]
     machine_row_a_ids = machine_row_a_ids[0:1]
@@ -867,7 +868,7 @@ def plot_ids_infra_and_one_machine(defender_dynamics_model):
     print(machine_row_labels)
 
     ids_row_dists, ids_row_xks, ids_row_a_ids, ids_row_b_ids, ids_row_subtitles, ids_row_x_labels, ids_row_y_labels = \
-        plot_ids_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=action_cfg)
+        plot_ids_dynamics(defender_dynamics_model=defender_dynamics_model, action_cfg=actions_conf)
 
     ids_row_dists = ids_row_dists[0:2]
     ids_row_xks = ids_row_xks[0:2]

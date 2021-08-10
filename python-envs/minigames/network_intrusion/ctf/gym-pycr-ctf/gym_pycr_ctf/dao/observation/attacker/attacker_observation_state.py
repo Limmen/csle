@@ -31,6 +31,8 @@ class AttackerObservationState:
         self.cost_norm=0.0
         self.alerts=0.0
         self.alerts_norm = 0.0
+        self.intrusion_completed = False
+        self.intrusion_started = False
 
     def ongoing_intrusion(self) -> bool:
         """
@@ -42,7 +44,7 @@ class AttackerObservationState:
         # if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
         #     return True
 
-        if self.catched_flags > 0:
+        if self.catched_flags > 0 or self.intrusion_started:
             return True
 
         # for m in self.machines:
@@ -208,6 +210,7 @@ class AttackerObservationState:
         """
         :return: a string representation of the state
         """
-        return  "Found flags:{}, step:{},costs:{},costs_norm:{},alerts:{},alerts_norm:{}".format(
-            self.catched_flags, self.step, self.cost, self.cost_norm, self.alerts, self.alerts_norm) + "\n" + \
-                "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+        return  "Found flags:{}, step:{},costs:{},costs_norm:{},alerts:{},alerts_norm:{},intrusion_completed:{}".format(
+            self.catched_flags, self.step, self.cost, self.cost_norm, self.alerts, self.alerts_norm,
+            self.intrusion_completed) + \
+                "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

@@ -114,7 +114,7 @@ class EnvConfig:
         self.attacker_new_backdoors_installed_reward_mult = 1
         self.attacker_cost_coefficient = 1
         self.attacker_alerts_coefficient = 1
-        self.attacker_detection_reward = -50
+        self.attacker_detection_reward = -100
         self.attacker_all_flags_reward = 500
         self.attacker_sum_costs = 1
         self.attacker_max_costs = 1
@@ -126,8 +126,9 @@ class EnvConfig:
         self.attacker_final_steps_reward_coefficient = 1
 
         self.defender_final_steps_reward_coefficient = 0
-        self.defender_caught_attacker_reward = 50
-        self.defender_early_stopping = -50
+        self.defender_caught_attacker_reward = 100
+        self.defender_early_stopping_reward = -100
+        self.defender_service_reward = 10
         self.defender_intrusion_reward = -100
 
         self.defender_sum_costs = 1
@@ -205,7 +206,7 @@ class EnvConfig:
         self.randomize_state_max_steps = 20
         self.randomize_starting_state_policy = None
         self.randomize_state_steps_list = [0, 8, 16, 23]
-        self.attacker_static_opponent = None
+        self.attacker_static_opponent : "CustomAttackerBotAgent" = None
         self.snort_baseline_simulate = False
         self.attacker_early_stopping_reward = 10
         self.use_attacker_action_stats_to_update_defender_state = False
