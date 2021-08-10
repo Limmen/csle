@@ -21,12 +21,12 @@ def default_config() -> ClientConfig:
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=10, input_dim=(9),
+                               checkpoint_freq=10, input_dim=(4),
                                output_dim=2,
-                               pi_hidden_dim=32, pi_hidden_layers=1,
-                               vf_hidden_dim=32, vf_hidden_layers=1,
+                               pi_hidden_dim=128, pi_hidden_layers=2,
+                               vf_hidden_dim=128, vf_hidden_layers=2,
                                shared_hidden_layers=2, shared_hidden_dim=128,
-                               batch_size=8000,
+                               batch_size=12000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -71,7 +71,7 @@ def default_config() -> ClientConfig:
                                   server_private_key_file="/home/kim/.ssh/id_rsa",
                                   server_username="kim", port_forward_next_port=5000)
 
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
                                                    "network_intrusion/ctf/gym-pycr-ctf/" \
                                                   "examples/difficulty_level_9/hello_world/"
 
@@ -79,7 +79,17 @@ def default_config() -> ClientConfig:
     #                                                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
 
     eval_emulation_config.skip_exploration = True
+    eval_emulation_config.skip_exploration = True
+    eval_emulation_config.domain_randomization = False
+    eval_emulation_config.emulate_detection = False
+    eval_emulation_config.explore_defense_states = False
+    eval_emulation_config.use_attacker_action_stats_to_update_defender_state = False
+
     emulation_config.skip_exploration = True
+    emulation_config.domain_randomization = False
+    emulation_config.emulate_detection = False
+    emulation_config.explore_defense_states = False
+    emulation_config.use_attacker_action_stats_to_update_defender_state = False
     emulation_config.save_dynamics_model_dir = eval_emulation_config.save_dynamics_model_dir
     client_config = ClientConfig(env_name=env_name, defender_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,

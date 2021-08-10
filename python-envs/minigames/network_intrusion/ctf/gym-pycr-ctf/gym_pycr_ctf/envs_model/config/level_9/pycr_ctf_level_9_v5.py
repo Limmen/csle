@@ -140,7 +140,7 @@ class PyCrCTFLevel9V5:
                                render_config=render_conf, env_mode=EnvMode.EMULATION,
                                emulation_config=emulation_config,
                                simulate_detection=False, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.BASIC,
+                               hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.SIMPLE,
                                router_ip=PyCrCTFLevel9Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00

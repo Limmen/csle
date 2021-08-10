@@ -279,10 +279,11 @@ class DefenderStateRepresentation:
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_recent
-            network_obs[1] = obs_state.sum_priority_alerts_recent
-            network_obs[2] = obs_state.num_severe_alerts_recent
-            network_obs[3] = obs_state.num_warning_alerts_recent
+            network_obs[0] = obs_state.num_severe_alerts_total
+            network_obs[1] = obs_state.num_warning_alerts_total
+            num_login_attempts = sum(list(map(lambda x: x.num_failed_login_attempts, obs_state.machines)))
+            network_obs[2] = num_login_attempts
+            network_obs[3] = obs_state.step
         else:
             network_obs = np.zeros(num_network_features)
 

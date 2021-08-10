@@ -48,7 +48,10 @@ class TrainAgent(ABC):
         np.random.seed(self.attacker_config.random_seed)
         torch.manual_seed(self.attacker_config.random_seed)
         env.seed(self.attacker_config.random_seed)
-        env.action_space.seed(self.attacker_config.random_seed)
+        if env.attacker_action_space is not None:
+            env.attacker_action_space.seed(self.attacker_config.random_seed)
+        if env.defender_action_space is not None:
+            env.defender_action_space.seed(self.attacker_config.random_seed)
 
         if self.defender_config.attacker_opponent_baseline_type is not None and self.train_mode != TrainMode.SELF_PLAY:
             self.attacker_opponent_type = AgentType(self.defender_config.attacker_opponent_baseline_type)
