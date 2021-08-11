@@ -96,11 +96,19 @@ class DefenderObservationState:
         c.snort_warning_baseline_reward = self.snort_warning_baseline_reward
         c.snort_severe_baseline_reward = self.snort_severe_baseline_reward
         c.snort_warning_baseline_stopped = self.snort_warning_baseline_stopped
+        c.snort_warning_baseline_step = self.snort_warning_baseline_step
         c.snort_severe_baseline_stopped = self.snort_severe_baseline_stopped
+        c.snort_severe_baseline_step = self.snort_severe_baseline_step
         c.snort_critical_baseline_reward = self.snort_critical_baseline_reward
         c.snort_critical_baseline_stopped = self.snort_critical_baseline_stopped
+        c.snort_critical_baseline_step = self.snort_critical_baseline_step
         c.var_log_baseline_reward = self.var_log_baseline_reward
         c.var_log_baseline_stopped = self.var_log_baseline_stopped
+        c.var_log_baseline_step = self.var_log_baseline_step
+
+        c.step_baseline_stopped = self.step_baseline_stopped
+        c.step_baseline_reward = self.step_baseline_reward
+        c.step_baseline_step = self.step_baseline_step
         c.last_alert_ts = self.last_alert_ts
         for m in self.machines:
             c.machines.append(m.copy())

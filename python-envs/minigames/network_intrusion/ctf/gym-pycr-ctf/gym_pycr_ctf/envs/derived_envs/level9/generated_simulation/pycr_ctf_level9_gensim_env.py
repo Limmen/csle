@@ -417,6 +417,10 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.defender_intrusion_reward = -100
             env_config.defender_service_reward = 10
             env_config.snort_critical_baseline_threshold = 400
+            env_config.snort_warning_baseline_threshold = 1
+            env_config.snort_severe_baseline_threshold = 1
+            env_config.var_log_baseline_threshold = 1
+            env_config.step_baseline_threshold = 6
             env_config.emulate_detection = False
             env_config.simulate_detection = False
             env_config.attacker_early_stopping_reward = 10

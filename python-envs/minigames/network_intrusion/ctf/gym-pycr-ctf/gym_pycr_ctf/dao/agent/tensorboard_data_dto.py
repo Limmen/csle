@@ -341,7 +341,7 @@ class TensorboardDataDTO:
                       "S_sev_avg_t_T:{:.2f},S_warn_avg_t_T:{:.2f}," \
                       "S_crit_avg_t_T:{:.2f},V_log_avg_t_T:{:.2f}, step_avg_t_T:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
+                      "c:{:.2f},s:{:.2f},s_i:{:.2f},avg_I_t:{:.2f}".format(
                 self.iteration, self.avg_episode_rewards, self.rolling_avg_rewards,
                 self.avg_episode_snort_severe_baseline_rewards,
                 self.avg_episode_snort_warning_baseline_rewards,
@@ -355,7 +355,8 @@ class TensorboardDataDTO:
                 self.avg_episode_step_baseline_steps,
                 self.avg_episode_steps, self.rolling_avg_steps,
                 self.lr, self.episode_caught_frac,
-                self.episode_early_stopped_frac, self.episode_successful_intrusion_frac)
+                self.episode_early_stopped_frac, self.episode_successful_intrusion_frac,
+                self.avg_episode_intrusion_steps)
         else:
             log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
                       "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
@@ -382,7 +383,8 @@ class TensorboardDataDTO:
                       "avg_F_E:{:.2f},avg_F_E%:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f}," \
                       "costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
                       "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
-                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}".format(
+                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
+                      "avg_I_t:{:.2f},E_avg_I_t:{:.2f},E2_avg_I_t:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards,
                 self.rolling_avg_rewards,
                 self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
@@ -426,8 +428,9 @@ class TensorboardDataDTO:
                 self.avg_episode_alerts_norm,
                 self.eval_avg_episode_costs, self.eval_avg_episode_costs_norm, self.eval_avg_episode_alerts,
                 self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
-                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm
-            )
+                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm,
+                self.avg_episode_intrusion_steps, self.eval_avg_episode_intrusion_steps,
+                self.eval_2_avg_episode_intrusion_steps)
         return log_str
     
 

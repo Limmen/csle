@@ -15,6 +15,8 @@ class StoppingBaselinesUtil:
         StoppingBaselinesUtil.snort_warning_baseline(s=s, s_prime=s_prime, env_config=env_config)
         StoppingBaselinesUtil.snort_critical_baseline(s=s, s_prime=s_prime, env_config=env_config)
         StoppingBaselinesUtil.var_log_baseline(s=s, s_prime=s_prime, env_config=env_config)
+        StoppingBaselinesUtil.step_baseline(s=s, s_prime=s_prime, env_config=env_config)
+
 
     @staticmethod
     def snort_severe_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
@@ -23,14 +25,13 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_severe_baseline_stopped = True
                 s_prime.defender_obs_state.snort_severe_baseline_step = s_prime.defender_obs_state.step
                 if s.attacker_obs_state.ongoing_intrusion():
-                    s_prime.defender_obs_state.snort_severe_baseline_reward = env_config.defender_caught_attacker_reward
+                    s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_caught_attacker_reward
                 else:
-                    s_prime.defender_obs_state.snort_severe_baseline_reward = env_config.defender_early_stopping_reward
-        else:
-            s_prime.defender_obs_state.snort_severe_baseline_reward = env_config.defender_service_reward
-            if s.attacker_obs_state.ongoing_intrusion():
-                s_prime.defender_obs_state.snort_severe_baseline_reward = \
-                    s_prime.defender_obs_state.snort_severe_baseline_reward + env_config.defender_intrusion_reward
+                    s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_early_stopping_reward
+            else:
+                s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_service_reward
+                if s.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
     def snort_warning_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
@@ -39,14 +40,13 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_warning_baseline_stopped = True
                 s_prime.defender_obs_state.snort_warning_baseline_step = s_prime.defender_obs_state.step
                 if s.attacker_obs_state.ongoing_intrusion():
-                    s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_caught_attacker_reward
+                    s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_caught_attacker_reward
                 else:
-                    s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_early_stopping_reward
-        else:
-            s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_service_reward
-            if s.attacker_obs_state.ongoing_intrusion():
-                s_prime.defender_obs_state.snort_warning_baseline_reward = \
-                    s_prime.defender_obs_state.snort_warning_baseline_reward + env_config.defender_intrusion_reward
+                    s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_early_stopping_reward
+            else:
+                s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_service_reward
+                if s.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
     def snort_critical_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
@@ -55,14 +55,13 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_critical_baseline_stopped = True
                 s_prime.defender_obs_state.snort_critical_baseline_step = s_prime.defender_obs_state.step
                 if s.attacker_obs_state.ongoing_intrusion():
-                    s_prime.defender_obs_state.snort_critical_baseline_reward = env_config.defender_caught_attacker_reward
+                    s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_caught_attacker_reward
                 else:
-                    s_prime.defender_obs_state.snort_critical_baseline_reward = env_config.defender_early_stopping_reward
-        else:
-            s_prime.defender_obs_state.snort_critical_baseline_reward = env_config.defender_service_reward
-            if s.attacker_obs_state.ongoing_intrusion():
-                s_prime.defender_obs_state.snort_critical_baseline_reward = \
-                    s_prime.defender_obs_state.snort_critical_baseline_reward + env_config.defender_intrusion_reward
+                    s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_early_stopping_reward
+            else:
+                s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_service_reward
+                if s.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
     def var_log_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
@@ -73,14 +72,13 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.var_log_baseline_stopped = True
                 s_prime.defender_obs_state.var_log_baseline_step = s_prime.defender_obs_state.step
                 if s.attacker_obs_state.ongoing_intrusion():
-                    s_prime.defender_obs_state.var_log_baseline_reward = env_config.defender_caught_attacker_reward
+                    s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_caught_attacker_reward
                 else:
-                    s_prime.defender_obs_state.var_log_baseline_reward = env_config.defender_early_stopping_reward
-        else:
-            s_prime.defender_obs_state.var_log_baseline_reward = env_config.defender_service_reward
-            if s.attacker_obs_state.ongoing_intrusion():
-                s_prime.defender_obs_state.var_log_baseline_reward = \
-                    s_prime.defender_obs_state.var_log_baseline_reward + env_config.defender_intrusion_reward
+                    s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_early_stopping_reward
+            else:
+                s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_service_reward
+                if s.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
     def step_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
@@ -89,14 +87,13 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.step_baseline_stopped = True
                 s_prime.defender_obs_state.step_baseline_step = env_config.step_baseline_threshold
                 if s.attacker_obs_state.ongoing_intrusion():
-                    s_prime.defender_obs_state.step_baseline_reward = env_config.defender_caught_attacker_reward
+                    s_prime.defender_obs_state.step_baseline_reward += env_config.defender_caught_attacker_reward
                 else:
-                    s_prime.defender_obs_state.step_baseline_reward = env_config.defender_early_stopping_reward
-        else:
-            s_prime.defender_obs_state.step_baseline_reward = env_config.defender_service_reward
-            if s.attacker_obs_state.ongoing_intrusion():
-                s_prime.defender_obs_state.step_baseline_reward = \
-                    s_prime.defender_obs_state.step_baseline_reward + env_config.defender_intrusion_reward
+                    s_prime.defender_obs_state.step_baseline_reward += env_config.defender_early_stopping_reward
+            else:
+                s_prime.defender_obs_state.step_baseline_reward += env_config.defender_service_reward
+                if s.attacker_obs_state.ongoing_intrusion():
+                    s_prime.defender_obs_state.step_baseline_reward += env_config.defender_intrusion_reward
 
 
     @staticmethod
