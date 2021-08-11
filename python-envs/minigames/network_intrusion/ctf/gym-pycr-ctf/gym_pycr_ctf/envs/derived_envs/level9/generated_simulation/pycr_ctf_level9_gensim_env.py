@@ -425,6 +425,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.simulate_detection = False
             env_config.attacker_early_stopping_reward = 10
             env_config.use_attacker_action_stats_to_update_defender_state = False
+            env_config.snort_baseline_simulate = False
 
         super().__init__(env_config=env_config)
         # Novice Attacker

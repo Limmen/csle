@@ -245,7 +245,7 @@ class EnvState:
         self.attacker_obs_state.undetected_intrusions_steps = 0
         self.attacker_obs_state.all_flags = False
         self.attacker_obs_state.catched_flags = 0
-        self.attacker_obs_state.step = 0
+        self.attacker_obs_state.step = 1
         self.attacker_obs_state.cost = 0
         self.attacker_obs_state.cost_norm = 0
         self.attacker_obs_state.alerts = 0

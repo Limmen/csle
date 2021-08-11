@@ -137,7 +137,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.defender_last_obs = self.env_state.get_attacker_observation()
         self.defender_trajectory = []
         self.defender_trajectories = []
-        self.defender_time_step = 0
+        self.defender_time_step = 1
         self.env_config.pi_star_rew_defender = self.env_config.defender_caught_attacker_reward
 
         # Reset and setup action spaces
@@ -205,11 +205,11 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_info["snort_critical_baseline_reward"] = 0
             defender_info["var_log_baseline_reward"] = 0
             defender_info["step_baseline_reward"] = 0
-            defender_info["snort_severe_baseline_step"] = 0
-            defender_info["snort_warning_baseline_step"] = 0
-            defender_info["snort_critical_baseline_step"] = 0
-            defender_info["var_log_baseline_step"] = 0
-            defender_info["step_baseline_step"] = 0
+            defender_info["snort_severe_baseline_step"] = 1
+            defender_info["snort_warning_baseline_step"] = 1
+            defender_info["snort_critical_baseline_step"] = 1
+            defender_info["var_log_baseline_step"] = 1
+            defender_info["step_baseline_step"] = 1
 
         defender_info["successful_intrusion"] = False
         defender_info["attacker_cost"] = self.env_state.attacker_obs_state.cost
@@ -286,7 +286,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         """
         info = {"idx": self.idx}
         info["successful_intrusion"] = False
-
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
             actions = list(range(len(self.env_config.attacker_action_conf.actions)))
@@ -409,6 +408,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.env_config.stop_after_failed_detection and not done and \
                 self.env_state.attacker_obs_state.ongoing_intrusion():
             done = True
+
+        StoppingBaselinesUtil.simulate_end_of_episode_performance(
+            s_prime=s_prime, env_config=self.env_config, done=done, env=self, s=self.env_state,
+            attacker_opponent=self.env_config.attacker_static_opponent)
 
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped

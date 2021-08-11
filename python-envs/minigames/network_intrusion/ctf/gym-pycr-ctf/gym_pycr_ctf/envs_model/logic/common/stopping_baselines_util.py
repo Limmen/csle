@@ -105,7 +105,9 @@ class StoppingBaselinesUtil:
                 (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
                            not s_prime.defender_obs_state.snort_warning_baseline_stopped
                            or not s_prime.defender_obs_state.snort_critical_baseline_stopped
-                           or not s_prime.defender_obs_state.var_log_baseline_stopped)):
+                           or not s_prime.defender_obs_state.var_log_baseline_stopped
+                           or not s_prime.defender_obs_state.step_baseline_stopped
+                )):
             StoppingBaselinesUtil.simulate_baselines_vs_opponent(
                 attacker_opponent=attacker_opponent, env_config=env_config, env=env, s=s)
 
@@ -118,7 +120,7 @@ class StoppingBaselinesUtil:
         i = 0
         while not done:
             i += 1
-            attacker_action_id = attacker_opponent.action(
+            attacker_action_id, attacker_done = attacker_opponent.action(
                 env=env, filter_illegal=env_config.attacker_filter_illegal_actions)
             if i > 100:
                 print("infinite loop..")
@@ -130,6 +132,7 @@ class StoppingBaselinesUtil:
             # Step in the environment
             s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
                 s=s, attacker_action=attack_action, env_config=env_config)
+            done = done or attacker_done
             s = s_prime
             s.attacker_obs_state.last_attacker_action = attack_action
 
@@ -153,63 +156,12 @@ class StoppingBaselinesUtil:
             if attacker_action_id != 372:
                 s.attacker_obs_state.step += 1
 
-            # Snort baselines
-            if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
-                if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_severe_baseline_threshold:
-                    s_prime.defender_obs_state.snort_severe_baseline_stopped = True
-                    if s.attacker_obs_state.ongoing_intrusion():
-                        s_prime.defender_obs_state.snort_severe_baseline_reward = \
-                            float(env_config.defender_caught_attacker_reward) / max(
-                                1, s.attacker_obs_state.undetected_intrusions_steps)
-                    else:
-                        s_prime.defender_obs_state.snort_severe_baseline_reward = env_config.defender_early_stopping_reward
-                if done:
-                    s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_intrusion_reward
-
-            if not s_prime.defender_obs_state.snort_warning_baseline_stopped:
-                if s_prime.defender_obs_state.num_warning_alerts_recent > env_config.snort_warning_baseline_threshold:
-                    s_prime.defender_obs_state.snort_warning_baseline_stopped = True
-                    if s.attacker_obs_state.ongoing_intrusion():
-                        s_prime.defender_obs_state.snort_warning_baseline_reward = \
-                            float(env_config.defender_caught_attacker_reward) / max(
-                                1, s.attacker_obs_state.undetected_intrusions_steps)
-                    else:
-                        s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_early_stopping_reward
-                else:
-                    if done:
-                        s_prime.defender_obs_state.snort_warning_baseline_reward = env_config.defender_intrusion_reward
-
-            if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
-                if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_critical_baseline_threshold:
-                    s_prime.defender_obs_state.snort_critical_baseline_stopped = True
-                    if s.attacker_obs_state.ongoing_intrusion():
-                        s_prime.defender_obs_state.snort_critical_baseline_reward = \
-                            float(env_config.defender_caught_attacker_reward) / max(
-                                1, s.attacker_obs_state.undetected_intrusions_steps)
-                    else:
-                        s_prime.defender_obs_state.snort_critical_baseline_reward = env_config.defender_early_stopping_reward
-                else:
-                    if done:
-                        s_prime.defender_obs_state.snort_critical_baseline_reward = env_config.defender_intrusion_reward
-
-            if not s_prime.defender_obs_state.var_log_baseline_stopped:
-                sum_failed_logins = sum(list(map(lambda x: x.num_failed_login_attempts_recent,
-                                                 s_prime.defender_obs_state.machines)))
-                if sum_failed_logins > env_config.var_log_baseline_threshold:
-                    s_prime.defender_obs_state.var_log_baseline_stopped = True
-                    if s.attacker_obs_state.ongoing_intrusion():
-                        s_prime.defender_obs_state.var_log_baseline_reward = \
-                            float(env_config.defender_caught_attacker_reward) / max(
-                                1, s.attacker_obs_state.undetected_intrusions_steps)
-                    else:
-                        s_prime.defender_obs_state.var_log_baseline_reward = env_config.defender_early_stopping_reward
-                else:
-                    if done:
-                        s_prime.defender_obs_state.var_log_baseline_reward = env_config.defender_intrusion_reward
+            StoppingBaselinesUtil.compute_baseline_metrics(s=s, s_prime=s_prime, env_config=env_config)
 
             if s_prime.defender_obs_state.snort_severe_baseline_stopped and \
                     s_prime.defender_obs_state.snort_warning_baseline_stopped \
                     and s_prime.defender_obs_state.snort_critical_baseline_stopped \
-                    and s_prime.defender_obs_state.var_log_baseline_stopped:
+                    and s_prime.defender_obs_state.var_log_baseline_stopped \
+                    and s_prime.defender_obs_state.step_baseline_stopped:
                 done = True
             s = s_prime

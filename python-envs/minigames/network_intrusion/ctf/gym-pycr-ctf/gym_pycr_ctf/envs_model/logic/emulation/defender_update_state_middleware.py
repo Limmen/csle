@@ -187,7 +187,7 @@ class DefenderUpdateStateMiddleware:
             s_prime.defender_obs_state.num_warning_alerts_total = 0
 
 
-        s_prime.defender_obs_state.step = 0
+        s_prime.defender_obs_state.step = 1
         s_prime.defender_obs_state.snort_warning_baseline_reward = 0
         s_prime.defender_obs_state.snort_severe_baseline_reward = 0
         s_prime.defender_obs_state.snort_critical_baseline_reward = 0
@@ -259,7 +259,7 @@ class DefenderUpdateStateMiddleware:
             m.num_login_events_recent = 0
             m.num_processes_recent = 0
 
-        s_prime.defender_obs_state.step = 0
+        s_prime.defender_obs_state.step = 1
         s_prime.defender_obs_state.snort_warning_baseline_reward = 0
         s_prime.defender_obs_state.snort_severe_baseline_reward = 0
         s_prime.defender_obs_state.snort_critical_baseline_reward = 0
