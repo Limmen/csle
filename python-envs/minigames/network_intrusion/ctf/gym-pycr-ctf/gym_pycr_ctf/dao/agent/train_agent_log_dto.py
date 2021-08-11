@@ -62,6 +62,24 @@ class TrainAgentLogDTO:
                  eval_episode_var_log_baseline_rewards: List[int] = None,
                  eval_2_episode_snort_critical_baseline_rewards: List[int] = None,
                  eval_2_episode_var_log_baseline_rewards: List[int] = None,
+                 episode_snort_severe_baseline_steps: List[int] = None,
+                 episode_snort_warning_baseline_steps: List[int] = None,
+                 eval_episode_snort_severe_baseline_steps: List[int] = None,
+                 eval_episode_snort_warning_baseline_steps: List[int] = None,
+                 eval_2_episode_snort_severe_baseline_steps: List[int] = None,
+                 eval_2_episode_snort_warning_baseline_steps: List[int] = None,
+                 episode_snort_critical_baseline_steps: List[int] = None,
+                 episode_var_log_baseline_steps: List[int] = None,
+                 eval_episode_snort_critical_baseline_steps: List[int] = None,
+                 eval_episode_var_log_baseline_steps: List[int] = None,
+                 eval_2_episode_snort_critical_baseline_steps: List[int] = None,
+                 eval_2_episode_var_log_baseline_steps: List[int] = None,
+                 episode_step_baseline_rewards : List[int] = None,
+                 episode_step_baseline_steps: List[int] = None,
+                 eval_episode_step_baseline_rewards: List[int] = None,
+                 eval_episode_step_baseline_steps: List[int] = None,
+                 eval_2_episode_step_baseline_rewards: List[int] = None,
+                 eval_2_episode_step_baseline_steps: List[int] = None,
                  attacker_action_costs :List[float] = None,
                  attacker_action_costs_norm :List[float] = None,
                  attacker_action_alerts :List[float] = None,
@@ -74,7 +92,10 @@ class TrainAgentLogDTO:
                  eval_2_attacker_action_costs_norm: List[float] = None,
                  eval_2_attacker_action_alerts: List[float] = None,
                  eval_2_attacker_action_alerts_norm: List[float] = None,
-                 start_time: float = 0.0
+                 start_time: float = 0.0,
+                 episode_intrusion_steps: List[int] = None,
+                 eval_episode_intrusion_steps: List[int] = None,
+                 eval_2_episode_intrusion_steps: List[int] = None
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -144,6 +165,18 @@ class TrainAgentLogDTO:
         self.eval_episode_var_log_baseline_rewards = eval_episode_var_log_baseline_rewards
         self.eval_2_episode_var_log_baseline_rewards = eval_2_episode_var_log_baseline_rewards
         self.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
+        self.episode_snort_severe_baseline_steps = episode_snort_severe_baseline_steps
+        self.episode_snort_warning_baseline_steps = episode_snort_warning_baseline_steps
+        self.eval_episode_snort_severe_baseline_steps = eval_episode_snort_severe_baseline_steps
+        self.eval_episode_snort_warning_baseline_steps = eval_episode_snort_warning_baseline_steps
+        self.eval_2_episode_snort_severe_baseline_steps = eval_2_episode_snort_severe_baseline_steps
+        self.eval_2_episode_snort_warning_baseline_steps = eval_2_episode_snort_warning_baseline_steps
+        self.episode_snort_critical_baseline_steps = episode_snort_critical_baseline_steps
+        self.episode_var_log_baseline_steps = episode_var_log_baseline_steps
+        self.eval_episode_snort_critical_baseline_steps = eval_episode_snort_critical_baseline_steps
+        self.eval_episode_var_log_baseline_steps = eval_episode_var_log_baseline_steps
+        self.eval_2_episode_var_log_baseline_steps = eval_2_episode_var_log_baseline_steps
+        self.eval_2_episode_snort_critical_baseline_steps = eval_2_episode_snort_critical_baseline_steps
         self.attacker_action_costs = attacker_action_costs
         self.attacker_action_costs_norm = attacker_action_costs_norm
         self.attacker_action_alerts = attacker_action_alerts
@@ -157,6 +190,15 @@ class TrainAgentLogDTO:
         self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
         self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
         self.start_time = start_time
+        self.episode_step_baseline_rewards = episode_step_baseline_rewards
+        self.episode_step_baseline_steps = episode_step_baseline_steps
+        self.eval_episode_step_baseline_rewards = eval_episode_step_baseline_rewards
+        self.eval_episode_step_baseline_steps = eval_episode_step_baseline_steps
+        self.eval_2_episode_step_baseline_rewards = eval_2_episode_step_baseline_rewards
+        self.eval_2_episode_step_baseline_steps = eval_2_episode_step_baseline_steps
+        self.episode_intrusion_steps = episode_intrusion_steps
+        self.eval_episode_intrusion_steps = eval_episode_intrusion_steps
+        self.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
 
 
     def initialize(self):
@@ -233,6 +275,22 @@ class TrainAgentLogDTO:
         self.episode_snort_severe_baseline_rewards = []
         self.eval_episode_snort_severe_baseline_rewards = []
         self.eval_episode_snort_warning_baseline_rewards = []
+        self.snort_severe_baseline_steps = []
+        self.snort_warning_baseline_steps = []
+        self.eval_snort_severe_baseline_steps = []
+        self.eval_snort_warning_baseline_steps = []
+        self.eval_2_episode_snort_severe_baseline_steps = []
+        self.eval_2_episode_snort_warning_baseline_steps = []
+        self.episode_snort_critical_baseline_steps = []
+        self.episode_var_log_baseline_steps = []
+        self.eval_episode_snort_critical_baseline_steps = []
+        self.eval_episode_var_log_baseline_steps = []
+        self.eval_2_episode_snort_critical_baseline_steps = []
+        self.eval_2_episode_var_log_baseline_steps = []
+        self.episode_snort_warning_baseline_steps = []
+        self.episode_snort_severe_baseline_steps = []
+        self.eval_episode_snort_severe_baseline_steps = []
+        self.eval_episode_snort_warning_baseline_steps = []
         self.attacker_action_costs = []
         self.attacker_action_costs_norm = []
         self.attacker_action_alerts = []
@@ -245,6 +303,15 @@ class TrainAgentLogDTO:
         self.eval_2_attacker_action_costs_norm = []
         self.eval_2_attacker_action_alerts = []
         self.eval_2_attacker_action_alerts_norm = []
+        self.episode_step_baseline_rewards = []
+        self.episode_step_baseline_steps = []
+        self.eval_episode_step_baseline_rewards = []
+        self.eval_episode_step_baseline_steps = []
+        self.eval_2_episode_step_baseline_rewards = []
+        self.eval_2_episode_step_baseline_steps = []
+        self.episode_intrusion_steps = []
+        self.eval_episode_intrusion_steps = []
+        self.eval_2_episode_intrusion_steps = []
 
     def copy(self):
         c = TrainAgentLogDTO()
@@ -316,6 +383,18 @@ class TrainAgentLogDTO:
         c.eval_episode_var_log_baseline_rewards = self.eval_episode_var_log_baseline_rewards
         c.eval_2_episode_var_log_baseline_rewards = self.eval_2_episode_var_log_baseline_rewards
         c.eval_2_episode_snort_critical_baseline_rewards = self.eval_2_episode_snort_critical_baseline_rewards
+        c.episode_snort_severe_baseline_steps = self.episode_snort_severe_baseline_steps
+        c.episode_snort_warning_baseline_steps = self.episode_snort_warning_baseline_steps
+        c.eval_episode_snort_severe_baseline_steps = self.eval_episode_snort_severe_baseline_steps
+        c.eval_episode_snort_warning_baseline_steps = self.eval_episode_snort_warning_baseline_steps
+        c.eval_2_episode_snort_severe_baseline_steps = self.eval_2_episode_snort_severe_baseline_steps
+        c.eval_2_episode_snort_warning_baseline_steps = self.eval_2_episode_snort_warning_baseline_steps
+        c.episode_snort_critical_baseline_steps = self.episode_snort_critical_baseline_steps
+        c.episode_var_log_baseline_steps = self.episode_var_log_baseline_steps
+        c.eval_episode_snort_critical_baseline_steps = self.eval_episode_snort_critical_baseline_steps
+        c.eval_episode_var_log_baseline_steps = self.eval_episode_var_log_baseline_steps
+        c.eval_2_episode_var_log_baseline_steps = self.eval_2_episode_var_log_baseline_steps
+        c.eval_2_episode_snort_critical_baseline_steps = self.eval_2_episode_snort_critical_baseline_steps
         c.attacker_action_costs = self.attacker_action_costs
         c.attacker_action_costs_norm = self.attacker_action_costs_norm
         c.attacker_action_alerts = self.attacker_action_alerts
@@ -329,6 +408,15 @@ class TrainAgentLogDTO:
         c.eval_2_attacker_action_alerts = self.eval_2_attacker_action_alerts
         c.eval_2_attacker_action_alerts_norm = self.eval_2_attacker_action_alerts_norm
         c.start_time = self.start_time
+        c.episode_step_baseline_rewards = self.episode_step_baseline_rewards
+        c.episode_step_baseline_steps = self.episode_step_baseline_steps
+        c.eval_episode_step_baseline_rewards = self.eval_episode_step_baseline_rewards
+        c.eval_episode_step_baseline_steps = self.eval_episode_step_baseline_steps
+        c.eval_2_episode_step_baseline_rewards = self.eval_2_episode_step_baseline_rewards
+        c.eval_2_episode_step_baseline_steps = self.eval_2_episode_step_baseline_steps
+        c.episode_intrusion_steps = self.episode_intrusion_steps
+        c.eval_episode_intrusion_steps = self.eval_episode_intrusion_steps
+        c.eval_2_episode_intrusion_steps = self.eval_2_episode_intrusion_steps
 
     def copy_saved_env_2(self, saved_log_dto):
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards
@@ -343,8 +431,14 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_warning_baseline_rewards = saved_log_dto.eval_2_episode_snort_warning_baseline_rewards
         self.eval_2_episode_snort_critical_baseline_rewards = saved_log_dto.eval_2_episode_snort_critical_baseline_rewards
         self.eval_2_episode_var_log_baseline_rewards = saved_log_dto.eval_2_episode_var_log_baseline_rewards
+        self.eval_2_episode_step_baseline_rewards = saved_log_dto.eval_2_episode_step_baseline_rewards
         self.attacker_eval_2_env_specific_rewards = saved_log_dto.attacker_eval_2_env_specific_rewards
         self.defender_eval_2_env_specific_rewards = saved_log_dto.defender_eval_2_env_specific_rewards
+        self.eval_2_episode_snort_severe_baseline_steps = saved_log_dto.eval_2_episode_snort_severe_baseline_steps
+        self.eval_2_episode_snort_warning_baseline_steps = saved_log_dto.eval_2_episode_snort_warning_baseline_steps
+        self.eval_2_episode_snort_critical_baseline_steps = saved_log_dto.eval_2_episode_snort_critical_baseline_steps
+        self.eval_2_episode_var_log_baseline_steps = saved_log_dto.eval_2_episode_var_log_baseline_steps
+        self.eval_2_episode_step_baseline_steps = saved_log_dto.eval_2_episode_step_baseline_steps
         self.eval_2_env_specific_steps = saved_log_dto.eval_2_env_specific_steps
         self.eval_2_env_specific_flags = saved_log_dto.eval_2_env_specific_flags
         self.eval_2_env_specific_flags_percentage = saved_log_dto.eval_2_env_specific_flags_percentage
@@ -352,6 +446,7 @@ class TrainAgentLogDTO:
         self.eval_2_attacker_action_costs_norm = saved_log_dto.eval_2_attacker_action_costs_norm
         self.eval_2_attacker_action_alerts = saved_log_dto.eval_2_attacker_action_alerts
         self.eval_2_attacker_action_alerts_norm = saved_log_dto.eval_2_attacker_action_alerts_norm
+        self.eval_2_episode_intrusion_steps = saved_log_dto.eval_2_episode_intrusion_steps
 
     def eval_update_env_specific_metrics(self, env_config, infos, i):
         if env_config.emulation_config is not None:

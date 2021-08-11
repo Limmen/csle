@@ -276,10 +276,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.episode_snort_warning_baseline_rewards.append(infos[i]["snort_warning_baseline_reward"])
                         rollout_data_dto.episode_snort_critical_baseline_rewards.append(infos[i]["snort_critical_baseline_reward"])
                         rollout_data_dto.episode_var_log_baseline_rewards.append(infos[i]["var_log_baseline_reward"])
+                        rollout_data_dto.episode_step_baseline_rewards.append(infos[i]["step_baseline_reward"])
+                        rollout_data_dto.episode_snort_severe_baseline_steps.append(infos[i]["snort_severe_baseline_step"])
+                        rollout_data_dto.episode_snort_warning_baseline_steps.append(infos[i]["snort_warning_baseline_step"])
+                        rollout_data_dto.episode_snort_critical_baseline_steps.append(infos[i]["snort_critical_baseline_step"])
+                        rollout_data_dto.episode_var_log_baseline_steps.append(infos[i]["var_log_baseline_step"])
+                        rollout_data_dto.episode_step_baseline_steps.append(infos[i]["step_baseline_step"])
                         rollout_data_dto.attacker_action_costs.append(infos[i]["attacker_cost"])
                         rollout_data_dto.attacker_action_costs_norm.append(infos[i]["attacker_cost_norm"])
                         rollout_data_dto.attacker_action_alerts.append(infos[i]["attacker_alerts"])
                         rollout_data_dto.attacker_action_alerts_norm.append(infos[i]["attacker_alerts_norm"])
+                        rollout_data_dto.episode_intrusion_steps.append(infos[i]["intrusion_step"])
                         if self.attacker_agent_config.env_config is not None:
                             rollout_data_dto.episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
@@ -400,10 +407,17 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             train_log_dto.episode_snort_warning_baseline_rewards.extend(rollout_data_dto.episode_snort_warning_baseline_rewards)
             train_log_dto.episode_snort_critical_baseline_rewards.extend(rollout_data_dto.episode_snort_critical_baseline_rewards)
             train_log_dto.episode_var_log_baseline_rewards.extend(rollout_data_dto.episode_var_log_baseline_rewards)
+            train_log_dto.episode_step_baseline_rewards.extend(rollout_data_dto.episode_step_baseline_rewards)
+            train_log_dto.episode_snort_severe_baseline_steps.extend(rollout_data_dto.episode_snort_severe_baseline_steps)
+            train_log_dto.episode_snort_warning_baseline_steps.extend(rollout_data_dto.episode_snort_warning_baseline_steps)
+            train_log_dto.episode_snort_critical_baseline_steps.extend(rollout_data_dto.episode_snort_critical_baseline_steps)
+            train_log_dto.episode_var_log_baseline_steps.extend(rollout_data_dto.episode_var_log_baseline_steps)
+            train_log_dto.episode_step_baseline_steps.extend(rollout_data_dto.episode_step_baseline_steps)
             train_log_dto.attacker_action_costs.extend(rollout_data_dto.attacker_action_costs)
             train_log_dto.attacker_action_costs_norm.extend(rollout_data_dto.attacker_action_costs_norm)
             train_log_dto.attacker_action_alerts.extend(rollout_data_dto.attacker_action_alerts)
             train_log_dto.attacker_action_alerts_norm.extend(rollout_data_dto.attacker_action_alerts_norm)
+            train_log_dto.episode_intrusion_steps.extend(rollout_data_dto.episode_intrusion_steps)
 
             for key in rollout_data_dto.attacker_env_specific_rewards.keys():
                 if key in train_log_dto.attacker_train_episode_env_specific_rewards:
@@ -486,11 +500,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         eval_2_defender_episode_rewards, eval_2_episode_steps, \
                         eval_2_episode_snort_severe_baseline_rewards, eval_2_episode_snort_warning_baseline_rewards, \
                         eval_2_episode_snort_critical_baseline_rewards, \
-                        eval_2_episode_var_log_baseline_rewards, eval_2_flags_list, eval_2_flags_percentage_list, \
+                        eval_2_episode_var_log_baseline_rewards, eval_2_episode_step_baseline_rewards, \
+                        eval_2_episode_snort_severe_baseline_steps, eval_2_episode_snort_warning_baseline_steps, \
+                        eval_2_episode_snort_critical_baseline_steps, \
+                        eval_2_episode_var_log_baseline_steps, eval_2_episode_step_baseline_steps, \
+                        eval_2_flags_list, eval_2_flags_percentage_list, \
                         eval_2_episode_caught_list, eval_2_episode_early_stopped_list, \
                         eval_2_episode_successful_intrusion_list, eval_2_attacker_cost_list, \
                         eval_2_attacker_cost_norm_list, \
-                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list = \
+                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list, eval_2_episode_intrusion_steps = \
                             EvalUtil.eval_defender(self.env.envs[0], self,
                                                    deterministic=self.attacker_agent_config.eval_deterministic)
 
@@ -500,6 +518,12 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.eval_2_episode_snort_warning_baseline_rewards = eval_2_episode_snort_warning_baseline_rewards
                         train_log_dto.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
                         train_log_dto.eval_2_episode_var_log_baseline_rewards= eval_2_episode_var_log_baseline_rewards
+                        train_log_dto.eval_2_episode_step_baseline_rewards = eval_2_episode_step_baseline_rewards
+                        train_log_dto.eval_2_episode_snort_severe_baseline_steps = eval_2_episode_snort_severe_baseline_steps
+                        train_log_dto.eval_2_episode_snort_warning_baseline_steps = eval_2_episode_snort_warning_baseline_steps
+                        train_log_dto.eval_2_episode_snort_critical_baseline_steps = eval_2_episode_snort_critical_baseline_steps
+                        train_log_dto.eval_2_episode_var_log_baseline_steps = eval_2_episode_var_log_baseline_steps
+                        train_log_dto.eval_2_episode_step_baseline_steps = eval_2_episode_step_baseline_steps
                         train_log_dto.eval_2_episode_flags = eval_2_flags_list
                         train_log_dto.eval_2_episode_flags_percentage = eval_2_flags_percentage_list
                         train_log_dto.eval_2_episode_caught = eval_2_episode_caught_list
@@ -509,6 +533,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.eval_2_attacker_action_costs_norm = eval_2_attacker_cost_norm_list
                         train_log_dto.eval_2_attacker_action_alerts = eval_2_attacker_alerts_list
                         train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
+                        train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

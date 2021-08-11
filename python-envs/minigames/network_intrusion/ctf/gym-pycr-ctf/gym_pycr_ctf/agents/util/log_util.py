@@ -795,6 +795,13 @@ class LogUtil:
         avg_episode_snort_warning_baseline_rewards = np.mean(train_log_dto.episode_snort_warning_baseline_rewards)
         avg_episode_snort_critical_baseline_rewards = np.mean(train_log_dto.episode_snort_critical_baseline_rewards)
         avg_episode_var_log_baseline_rewards = np.mean(train_log_dto.episode_var_log_baseline_rewards)
+        avg_episode_step_baseline_rewards = np.mean(train_log_dto.episode_step_baseline_rewards)
+        avg_episode_snort_severe_baseline_steps = np.mean(train_log_dto.episode_snort_severe_baseline_steps)
+        avg_episode_snort_warning_baseline_steps = np.mean(train_log_dto.episode_snort_warning_baseline_steps)
+        avg_episode_snort_critical_baseline_steps = np.mean(train_log_dto.episode_snort_critical_baseline_steps)
+        avg_episode_var_log_baseline_steps = np.mean(train_log_dto.episode_var_log_baseline_steps)
+        avg_episode_step_baseline_steps = np.mean(train_log_dto.episode_step_baseline_steps)
+        avg_episode_intrusion_steps = np.mean(train_log_dto.episode_intrusion_steps)
         avg_episode_costs = np.mean(train_log_dto.attacker_action_costs)
         avg_episode_costs_norm = np.mean(train_log_dto.attacker_action_costs_norm)
         avg_episode_alerts = np.mean(train_log_dto.attacker_action_alerts)
@@ -954,6 +961,44 @@ class LogUtil:
         else:
             eval_2_avg_episode_var_log_baseline_rewards = 0.0
 
+        if not eval and train_log_dto.eval_2_episode_step_baseline_rewards is not None:
+            eval_2_avg_episode_step_baseline_rewards = np.mean(train_log_dto.eval_2_episode_step_baseline_rewards)
+        else:
+            eval_2_avg_episode_step_baseline_rewards = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_snort_severe_baseline_steps is not None:
+            eval_2_avg_episode_snort_severe_baseline_steps = np.mean(
+                train_log_dto.eval_2_episode_snort_severe_baseline_steps)
+        else:
+            eval_2_avg_episode_snort_severe_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_snort_warning_baseline_steps is not None:
+            eval_2_avg_episode_snort_warning_baseline_steps = np.mean(
+                train_log_dto.eval_2_episode_snort_warning_baseline_steps)
+        else:
+            eval_2_avg_episode_snort_warning_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_snort_critical_baseline_steps is not None:
+            eval_2_avg_episode_snort_critical_baseline_steps = np.mean(
+                train_log_dto.eval_2_episode_snort_critical_baseline_steps)
+        else:
+            eval_2_avg_episode_snort_critical_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_var_log_baseline_steps is not None:
+            eval_2_avg_episode_var_log_baseline_steps = np.mean(train_log_dto.eval_2_episode_var_log_baseline_steps)
+        else:
+            eval_2_avg_episode_var_log_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_step_baseline_steps is not None:
+            eval_2_avg_episode_step_baseline_steps = np.mean(train_log_dto.eval_2_episode_step_baseline_steps)
+        else:
+            eval_2_avg_episode_step_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_episode_intrusion_steps is not None:
+            eval_2_avg_episode_intrusion_steps = np.mean(train_log_dto.eval_2_episode_intrusion_steps)
+        else:
+            eval_2_avg_episode_intrusion_steps = 0.0
+
         if not eval and train_log_dto.eval_2_episode_steps is not None:
             eval_2_avg_episode_steps = np.mean(train_log_dto.eval_2_episode_steps)
         else:
@@ -1062,6 +1107,48 @@ class LogUtil:
         else:
             eval_avg_episode_var_log_baseline_rewards = 0.0
 
+        if not eval and train_log_dto.eval_episode_step_baseline_rewards is not None:
+            eval_avg_episode_step_baseline_rewards = np.mean(
+                train_log_dto.eval_episode_step_baseline_rewards)
+        else:
+            eval_avg_episode_step_baseline_rewards = 0.0
+
+        if not eval and train_log_dto.eval_episode_snort_severe_baseline_steps is not None:
+            eval_avg_episode_snort_severe_baseline_steps = np.mean(
+                train_log_dto.eval_episode_snort_severe_baseline_steps)
+        else:
+            eval_avg_episode_snort_severe_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_episode_snort_warning_baseline_steps is not None:
+            eval_avg_episode_snort_warning_baseline_steps = np.mean(
+                train_log_dto.eval_episode_snort_warning_baseline_steps)
+        else:
+            eval_avg_episode_snort_warning_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_episode_snort_critical_baseline_steps is not None:
+            eval_avg_episode_snort_critical_baseline_steps = np.mean(
+                train_log_dto.eval_episode_snort_critical_baseline_steps)
+        else:
+            eval_avg_episode_snort_critical_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_episode_var_log_baseline_steps is not None:
+            eval_avg_episode_var_log_baseline_steps = np.mean(
+                train_log_dto.eval_episode_var_log_baseline_steps)
+        else:
+            eval_avg_episode_var_log_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_episode_step_baseline_steps is not None:
+            eval_avg_episode_step_baseline_steps = np.mean(
+                train_log_dto.eval_episode_step_baseline_steps)
+        else:
+            eval_avg_episode_step_baseline_steps = 0.0
+
+        if not eval and train_log_dto.eval_episode_intrusion_steps is not None:
+            eval_avg_episode_intrusion_steps = np.mean(
+                train_log_dto.eval_episode_intrusion_steps)
+        else:
+            eval_avg_episode_intrusion_steps = 0.0
+
         # Regret & Pi* Metrics
         if defender_agent_config.log_regret:
 
@@ -1147,15 +1234,36 @@ class LogUtil:
             eval_avg_2_episode_snort_warning_baseline_rewards=eval_2_avg_episode_snort_warning_baseline_rewards,
             avg_episode_snort_critical_baseline_rewards=avg_episode_snort_critical_baseline_rewards,
             avg_episode_var_log_baseline_rewards=avg_episode_var_log_baseline_rewards,
+            avg_episode_step_baseline_rewards=avg_episode_step_baseline_rewards,
             eval_avg_episode_snort_critical_baseline_rewards=eval_avg_episode_snort_critical_baseline_rewards,
             eval_avg_episode_var_log_baseline_rewards=eval_avg_episode_var_log_baseline_rewards,
+            eval_avg_episode_step_baseline_rewards=eval_avg_episode_step_baseline_rewards,
             eval_avg_2_episode_snort_critical_baseline_rewards=eval_2_avg_episode_snort_critical_baseline_rewards,
             eval_avg_2_episode_var_log_baseline_rewards=eval_2_avg_episode_var_log_baseline_rewards,
+            eval_avg_2_episode_step_baseline_rewards=eval_2_avg_episode_step_baseline_rewards,
+            avg_episode_snort_severe_baseline_steps=avg_episode_snort_severe_baseline_steps,
+            avg_episode_snort_warning_baseline_steps=avg_episode_snort_warning_baseline_steps,
+            eval_avg_episode_snort_severe_baseline_steps=eval_avg_episode_snort_severe_baseline_steps,
+            eval_avg_episode_snort_warning_baseline_steps=eval_avg_episode_snort_warning_baseline_steps,
+            eval_avg_2_episode_snort_severe_baseline_steps=eval_2_avg_episode_snort_severe_baseline_steps,
+            eval_avg_2_episode_snort_warning_baseline_steps=eval_2_avg_episode_snort_warning_baseline_steps,
+            avg_episode_snort_critical_baseline_steps=avg_episode_snort_critical_baseline_steps,
+            avg_episode_var_log_baseline_steps=avg_episode_var_log_baseline_steps,
+            avg_episode_step_baseline_steps=avg_episode_step_baseline_steps,
+            eval_avg_episode_snort_critical_baseline_steps=eval_avg_episode_snort_critical_baseline_steps,
+            eval_avg_episode_var_log_baseline_steps=eval_avg_episode_var_log_baseline_steps,
+            eval_avg_episode_step_baseline_steps=eval_avg_episode_step_baseline_steps,
+            eval_avg_2_episode_snort_critical_baseline_steps=eval_2_avg_episode_snort_critical_baseline_steps,
+            eval_avg_2_episode_var_log_baseline_steps=eval_2_avg_episode_var_log_baseline_steps,
+            eval_avg_2_episode_step_baseline_steps=eval_2_avg_episode_step_baseline_steps,
             avg_flags_catched=avg_episode_flags, avg_episode_flags_percentage=avg_episode_flags_percentage,
             eval_avg_episode_flags=eval_avg_episode_flags,
             eval_avg_episode_flags_percentage=eval_avg_episode_flags_percentage,
             eval_2_avg_episode_flags=eval_2_avg_episode_flags,
-            eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage
+            eval_2_avg_episode_flags_percentage=eval_2_avg_episode_flags_percentage,
+            avg_episode_intrusion_steps=avg_episode_intrusion_steps,
+            eval_avg_episode_intrusion_steps=eval_avg_episode_intrusion_steps,
+            eval_2_avg_episode_intrusion_steps=eval_2_avg_episode_intrusion_steps,
         )
         log_str = tensorboard_data_dto.log_str_defender()
         defender_agent_config.logger.info(log_str)

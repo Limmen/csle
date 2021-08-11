@@ -38,10 +38,31 @@ class TensorboardDataDTO:
                  eval_avg_2_episode_snort_warning_baseline_rewards: float = 0.0,
                  avg_episode_snort_critical_baseline_rewards: float = 0.0,
                  avg_episode_var_log_baseline_rewards: float = 0.0,
+                 avg_episode_step_baseline_rewards: float = 0.0,
                  eval_avg_episode_snort_critical_baseline_rewards: float = 0.0,
                  eval_avg_episode_var_log_baseline_rewards: float = 0.0,
+                 eval_avg_episode_step_baseline_rewards: float = 0.0,
                  eval_avg_2_episode_snort_critical_baseline_rewards: float = 0.0,
-                 eval_avg_2_episode_var_log_baseline_rewards: float = 0.0
+                 eval_avg_2_episode_var_log_baseline_rewards: float = 0.0,
+                 eval_avg_2_episode_step_baseline_rewards: float = 0.0,
+                 avg_episode_snort_severe_baseline_steps: float = 0.0,
+                 avg_episode_snort_warning_baseline_steps: float = 0.0,
+                 eval_avg_episode_snort_severe_baseline_steps: float = 0.0,
+                 eval_avg_episode_snort_warning_baseline_steps: float = 0.0,
+                 eval_avg_2_episode_snort_severe_baseline_steps: float = 0.0,
+                 eval_avg_2_episode_snort_warning_baseline_steps: float = 0.0,
+                 avg_episode_snort_critical_baseline_steps: float = 0.0,
+                 avg_episode_var_log_baseline_steps: float = 0.0,
+                 avg_episode_step_baseline_steps: float = 0.0,
+                 eval_avg_episode_snort_critical_baseline_steps: float = 0.0,
+                 eval_avg_episode_var_log_baseline_steps: float = 0.0,
+                 eval_avg_episode_step_baseline_steps: float = 0.0,
+                 eval_avg_2_episode_snort_critical_baseline_steps: float = 0.0,
+                 eval_avg_2_episode_var_log_baseline_steps: float = 0.0,
+                 eval_avg_2_episode_step_baseline_steps: float = 0.0,
+                 avg_episode_intrusion_steps : float = 0.0,
+                 eval_avg_episode_intrusion_steps: float = 0.0,
+                 eval_2_avg_episode_intrusion_steps: float = 0.0,
                  ):
         self.iteration = iteration
         self.avg_episode_rewards = avg_episode_rewards
@@ -106,10 +127,31 @@ class TensorboardDataDTO:
         self.eval_avg_2_episode_snort_warning_baseline_rewards = eval_avg_2_episode_snort_warning_baseline_rewards
         self.avg_episode_snort_critical_baseline_rewards = avg_episode_snort_critical_baseline_rewards
         self.avg_episode_var_log_baseline_rewards = avg_episode_var_log_baseline_rewards
+        self.avg_episode_step_baseline_rewards = avg_episode_step_baseline_rewards
         self.eval_avg_episode_snort_critical_baseline_rewards = eval_avg_episode_snort_critical_baseline_rewards
         self.eval_avg_episode_var_log_baseline_rewards = eval_avg_episode_var_log_baseline_rewards
+        self.eval_avg_episode_step_baseline_rewards = eval_avg_episode_step_baseline_rewards
         self.eval_avg_2_episode_snort_critical_baseline_rewards = eval_avg_2_episode_snort_critical_baseline_rewards
         self.eval_avg_2_episode_var_log_baseline_rewards = eval_avg_2_episode_var_log_baseline_rewards
+        self.eval_avg_2_episode_step_baseline_rewards = eval_avg_2_episode_step_baseline_rewards
+        self.avg_episode_snort_severe_baseline_steps = avg_episode_snort_severe_baseline_steps
+        self.avg_episode_snort_warning_baseline_steps = avg_episode_snort_warning_baseline_steps
+        self.eval_avg_episode_snort_severe_baseline_steps = eval_avg_episode_snort_severe_baseline_steps
+        self.eval_avg_episode_snort_warning_baseline_steps = eval_avg_episode_snort_warning_baseline_steps
+        self.eval_avg_2_episode_snort_severe_baseline_steps = eval_avg_2_episode_snort_severe_baseline_steps
+        self.eval_avg_2_episode_snort_warning_baseline_steps = eval_avg_2_episode_snort_warning_baseline_steps
+        self.avg_episode_snort_critical_baseline_steps = avg_episode_snort_critical_baseline_steps
+        self.avg_episode_var_log_baseline_steps = avg_episode_var_log_baseline_steps
+        self.avg_episode_step_baseline_steps = avg_episode_step_baseline_steps
+        self.eval_avg_episode_snort_critical_baseline_steps = eval_avg_episode_snort_critical_baseline_steps
+        self.eval_avg_episode_var_log_baseline_steps = eval_avg_episode_var_log_baseline_steps
+        self.eval_avg_episode_step_baseline_steps = eval_avg_episode_step_baseline_steps
+        self.eval_avg_2_episode_snort_critical_baseline_steps = eval_avg_2_episode_snort_critical_baseline_steps
+        self.eval_avg_2_episode_var_log_baseline_steps = eval_avg_2_episode_var_log_baseline_steps
+        self.eval_avg_2_episode_step_baseline_steps = eval_avg_2_episode_step_baseline_steps
+        self.avg_episode_intrusion_steps = avg_episode_intrusion_steps
+        self.eval_avg_episode_intrusion_steps = eval_avg_episode_intrusion_steps
+        self.eval_2_avg_episode_intrusion_steps = eval_2_avg_episode_intrusion_steps
 
     def log_tensorboard_defender(self) -> None:
         """
@@ -172,15 +214,59 @@ class TensorboardDataDTO:
                                       self.avg_episode_snort_critical_baseline_rewards, self.iteration)
         self.tensorboard_writer.add_scalar('defender/avg_episode_var_log_baseline_rewards/' + train_or_eval,
                                       self.avg_episode_var_log_baseline_rewards, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_step_baseline_rewards/' + train_or_eval,
+                                           self.avg_episode_step_baseline_rewards, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_critical_baseline_rewards/' + train_or_eval,
                                       self.eval_avg_episode_snort_critical_baseline_rewards, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_avg_episode_var_log_baseline_rewards/' + train_or_eval,
                                       self.eval_avg_episode_var_log_baseline_rewards, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_step_baseline_rewards/' + train_or_eval,
+                                           self.eval_avg_episode_step_baseline_rewards, self.iteration)
         self.tensorboard_writer.add_scalar(
             'defender/eval_avg_2_episode_snort_critical_baseline_rewards/' + train_or_eval,
             self.eval_avg_2_episode_snort_critical_baseline_rewards, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_var_log_baseline_rewards/' + train_or_eval,
                                       self.eval_avg_2_episode_var_log_baseline_rewards, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_step_baseline_rewards/' + train_or_eval,
+                                           self.eval_avg_2_episode_step_baseline_rewards, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_severe_baseline_steps/' + train_or_eval,
+                                           self.avg_episode_snort_severe_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_warning_baseline_steps/' + train_or_eval,
+                                           self.avg_episode_snort_warning_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_severe_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_episode_snort_severe_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_warning_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_episode_snort_warning_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_snort_severe_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_2_episode_snort_severe_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar(
+            'defender/eval_avg_2_episode_snort_warning_baseline_steps/' + train_or_eval,
+            self.eval_avg_2_episode_snort_warning_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_snort_critical_baseline_steps/' + train_or_eval,
+                                           self.avg_episode_snort_critical_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_var_log_baseline_steps/' + train_or_eval,
+                                           self.avg_episode_var_log_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_step_baseline_steps/' + train_or_eval,
+                                           self.avg_episode_step_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_snort_critical_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_episode_snort_critical_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_var_log_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_episode_var_log_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_step_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_episode_step_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar(
+            'defender/eval_avg_2_episode_snort_critical_baseline_steps/' + train_or_eval,
+            self.eval_avg_2_episode_snort_critical_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_var_log_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_2_episode_var_log_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_step_baseline_steps/' + train_or_eval,
+                                           self.eval_avg_2_episode_step_baseline_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_episode_intrusion_steps/' + train_or_eval,
+                                           self.avg_episode_intrusion_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_episode_intrusion_steps/' + train_or_eval,
+                                           self.eval_avg_episode_intrusion_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_episode_intrusion_steps/' + train_or_eval,
+                                           self.eval_2_avg_episode_intrusion_steps, self.iteration)
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', self.lr, self.iteration)
 
@@ -251,7 +337,9 @@ class TensorboardDataDTO:
         if self.eval:
             log_str = "[Eval D] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
                       "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f}," \
-                      "S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
+                      "S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}, step_avg_R_T:{:.2f}," \
+                      "S_sev_avg_t_T:{:.2f},S_warn_avg_t_T:{:.2f}," \
+                      "S_crit_avg_t_T:{:.2f},V_log_avg_t_T:{:.2f}, step_avg_t_T:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},".format(
                 self.iteration, self.avg_episode_rewards, self.rolling_avg_rewards,
@@ -259,6 +347,12 @@ class TensorboardDataDTO:
                 self.avg_episode_snort_warning_baseline_rewards,
                 self.avg_episode_snort_critical_baseline_rewards,
                 self.avg_episode_var_log_baseline_rewards,
+                self.avg_episode_step_baseline_rewards,
+                self.avg_episode_snort_severe_baseline_steps,
+                self.avg_episode_snort_warning_baseline_steps,
+                self.avg_episode_snort_critical_baseline_steps,
+                self.avg_episode_var_log_baseline_steps,
+                self.avg_episode_step_baseline_steps,
                 self.avg_episode_steps, self.rolling_avg_steps,
                 self.lr, self.episode_caught_frac,
                 self.episode_early_stopped_frac, self.episode_successful_intrusion_frac)
@@ -266,14 +360,20 @@ class TensorboardDataDTO:
             log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
                       "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
                       "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
+                      "step_avg_R_T:{:.2f}, S_sev_avg_t_T:{:.2f},S_warn_avg_t_T:{:.2f}, " \
+                      "S_crit_avg_t_T:{:.2f},V_log_avg_t_T:{:.2f}, step_avg_t_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
                       "avg_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
-                      "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}," \
+                      "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}, step_avg_R_E:{:.2f}," \
+                      "S_sev_avg_t_E:{:.2f},S_warn_avg_t_E:{:.2f}, " \
+                      "S_crit_avg_t_E:{:.2f},V_log_avg_t_E:{:.2f}, step_avg_t_E:{:.2f}," \
                       "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
                       "avg_t_E:{:.2f}," \
                       "avg_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
-                      "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f}," \
+                      "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f},step_avg_R_E2:{:.2f}," \
+                      "S_sev_avg_t_E2:{:.2f},S_warn_avg_t_E2:{:.2f}," \
+                      "S_crit_avg_t_E2:{:.2f},V_log_avg_t_E2:{:.2f},step_avg_t_E2:{:.2f}," \
                       "avg_t_E2:{:.2f}," \
                       "epsilon:{:.2f}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
@@ -287,17 +387,31 @@ class TensorboardDataDTO:
                 self.rolling_avg_rewards,
                 self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
                 self.avg_episode_snort_critical_baseline_rewards, self.avg_episode_var_log_baseline_rewards,
+                self.avg_episode_step_baseline_rewards,
+                self.avg_episode_snort_severe_baseline_steps, self.avg_episode_snort_warning_baseline_steps,
+                self.avg_episode_snort_critical_baseline_steps, self.avg_episode_var_log_baseline_steps,
+                self.avg_episode_step_baseline_steps,
                 self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
                 self.lr, self.total_num_episodes, self.eps,
                 self.eval_avg_episode_rewards, self.eval_avg_episode_snort_severe_baseline_rewards,
                 self.eval_avg_episode_snort_warning_baseline_rewards,
                 self.eval_avg_episode_snort_critical_baseline_rewards,
-                self.eval_avg_episode_var_log_baseline_rewards,
+                self.eval_avg_episode_var_log_baseline_rewards, self.eval_avg_episode_step_baseline_rewards,
+                self.eval_avg_episode_snort_severe_baseline_steps,
+                self.eval_avg_episode_snort_warning_baseline_steps,
+                self.eval_avg_episode_snort_critical_baseline_steps,
+                self.eval_avg_episode_var_log_baseline_steps, self.eval_avg_episode_step_baseline_steps,
                 self.avg_eval_regret, self.eval_avg_opt_frac, self.eval_avg_episode_steps,
                 self.eval_2_avg_episode_rewards, self.eval_avg_2_episode_snort_severe_baseline_rewards,
                 self.eval_avg_2_episode_snort_warning_baseline_rewards,
                 self.eval_avg_2_episode_snort_critical_baseline_rewards,
                 self.eval_avg_2_episode_var_log_baseline_rewards,
+                self.eval_avg_2_episode_step_baseline_rewards,
+                self.eval_avg_2_episode_snort_severe_baseline_steps,
+                self.eval_avg_2_episode_snort_warning_baseline_steps,
+                self.eval_avg_2_episode_snort_critical_baseline_steps,
+                self.eval_avg_2_episode_var_log_baseline_steps,
+                self.eval_avg_2_episode_step_baseline_steps,
                 self.eval_2_avg_episode_steps, self.epsilon,
                 self.episode_caught_frac, self.episode_early_stopped_frac,
                 self.episode_successful_intrusion_frac,

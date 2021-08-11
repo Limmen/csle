@@ -167,6 +167,11 @@ class EnvConfig:
         self.pi_star_rew_attacker = -1
         self.pi_star_rew_list_attacker = []
 
+        self.use_upper_bound_pi_star_defender = False
+        self.pi_star_tau_defender = None
+        self.pi_star_rew_defender = -100
+        self.pi_star_rew_list_defender = []
+
         self.attacker_install_tools_sleep_seconds = 3
         self.attacker_retry_check_root = 3
         self.attacker_retry_sambacry = 4
@@ -197,6 +202,7 @@ class EnvConfig:
         self.snort_severe_baseline_threshold = 0
         self.snort_warning_baseline_threshold = 0
         self.var_log_baseline_threshold = 0
+        self.step_baseline_threshold = 6
 
         self.normalize_alerts_max = 5
         self.normalize_costs_max = 5

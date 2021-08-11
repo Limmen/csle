@@ -6,10 +6,17 @@ class RolloutDataDTO:
     """
     def __init__(self, attacker_episode_rewards = None, defender_episode_rewards = None, episode_steps = None,
                  episode_flags = None, episode_caught = None, episode_early_stopped = None,
-                 episode_successful_intrusion = None, episode_snort_severe_baseline_rewards = None,
+                 episode_successful_intrusion = None,
+                 episode_snort_severe_baseline_rewards = None,
                  episode_snort_warning_baseline_rewards = None,
                  episode_snort_critical_baseline_rewards = None,
                  episode_var_log_baseline_rewards = None,
+                 episode_step_baseline_rewards=None,
+                 episode_snort_severe_baseline_steps=None,
+                 episode_snort_warning_baseline_steps=None,
+                 episode_snort_critical_baseline_steps=None,
+                 episode_var_log_baseline_steps=None,
+                 episode_step_baseline_steps=None,
                  episode_flags_percentage = None,
                  attacker_env_specific_rewards = None,
                  defender_env_specific_rewards = None,
@@ -21,7 +28,8 @@ class RolloutDataDTO:
                  attacker_action_costs = None,
                  attacker_action_costs_norm=None,
                  attacker_action_alerts=None,
-                 attacker_action_alerts_norm=None
+                 attacker_action_alerts_norm=None,
+                 episode_intrusion_steps = None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -34,6 +42,12 @@ class RolloutDataDTO:
         self.episode_snort_warning_baseline_rewards = episode_snort_warning_baseline_rewards
         self.episode_snort_critical_baseline_rewards = episode_snort_critical_baseline_rewards
         self.episode_var_log_baseline_rewards = episode_var_log_baseline_rewards
+        self.episode_step_baseline_rewards = episode_step_baseline_rewards
+        self.episode_snort_severe_baseline_steps = episode_snort_severe_baseline_steps
+        self.episode_snort_warning_baseline_steps = episode_snort_warning_baseline_steps
+        self.episode_snort_critical_baseline_steps = episode_snort_critical_baseline_steps
+        self.episode_var_log_baseline_steps = episode_var_log_baseline_steps
+        self.episode_step_baseline_steps = episode_step_baseline_steps
         self.episode_flags_percentage = episode_flags_percentage
         self.attacker_env_specific_rewards = attacker_env_specific_rewards
         self.defender_env_specific_rewards = defender_env_specific_rewards
@@ -46,6 +60,7 @@ class RolloutDataDTO:
         self.attacker_action_costs_norm = attacker_action_costs_norm
         self.attacker_action_alerts = attacker_action_alerts
         self.attacker_action_alerts_norm = attacker_action_alerts_norm
+        self.episode_intrusion_steps = episode_intrusion_steps
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -60,6 +75,12 @@ class RolloutDataDTO:
         self.episode_snort_warning_baseline_rewards = []
         self.episode_snort_critical_baseline_rewards = []
         self.episode_var_log_baseline_rewards = []
+        self.episode_step_baseline_rewards = []
+        self.episode_snort_severe_baseline_steps = []
+        self.episode_snort_warning_baseline_steps = []
+        self.episode_snort_critical_baseline_steps = []
+        self.episode_var_log_baseline_steps = []
+        self.episode_step_baseline_steps = []
         self.episode_flags_percentage = []
         self.attacker_env_specific_rewards = {}
         self.defender_env_specific_rewards = {}
@@ -72,6 +93,7 @@ class RolloutDataDTO:
         self.attacker_action_costs_norm = []
         self.attacker_action_alerts = []
         self.attacker_action_alerts_norm = []
+        self.episode_intrusion_steps = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 

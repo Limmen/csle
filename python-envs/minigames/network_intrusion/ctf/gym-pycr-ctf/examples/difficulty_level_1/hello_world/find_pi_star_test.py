@@ -1,5 +1,5 @@
 from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star import FindPiStar
+from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_attacker import FindPiStarAttacker
 import gym
 
 
@@ -12,7 +12,7 @@ def test_env(env_name : str, num_steps : int):
     env.env_config.manual_play = True
 
     env.reset()
-    FindPiStar.brute_force(env.env_config, env)
+    FindPiStarAttacker.brute_force(env.env_config, env)
 
     # num_actions = env.env_config.attacker_action_conf.num_actions
     # actions = np.array(list(range(num_actions)))

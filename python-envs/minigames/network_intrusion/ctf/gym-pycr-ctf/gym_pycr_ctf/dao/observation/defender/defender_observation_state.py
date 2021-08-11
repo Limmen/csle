@@ -31,10 +31,17 @@ class DefenderObservationState:
         self.snort_severe_baseline_reward = 0
         self.snort_critical_baseline_reward = 0
         self.var_log_baseline_reward = 0
+        self.step_baseline_reward = 0
+        self.snort_warning_baseline_step = 0
+        self.snort_severe_baseline_step = 0
+        self.snort_critical_baseline_step = 0
+        self.var_log_baseline_step = 0
+        self.step_baseline_step = 0
         self.snort_severe_baseline_stopped = False
         self.snort_warning_baseline_stopped = False
         self.snort_critical_baseline_stopped = False
         self.var_log_baseline_stopped = False
+        self.step_baseline_stopped = False
 
     def sort_machines(self) -> None:
         """
@@ -106,10 +113,12 @@ class DefenderObservationState:
         return  "# alerts recent:{}, # severe alerts recent: {}, # warning alerts recent: {}, " \
                 "sum priority recent:{}, # alerts total:{} # severe alerts total: {}, " \
                 "# warning alerts total: {}, sum priority total: {}, caught_attacker:{}," \
-                " stopped:{}, step:{}, snort_severe_baseline_reward:{}, snort_warning_baseline_reward:{}," \
+                "stopped:{}, step:{}, snort_severe_baseline_reward:{}, snort_warning_baseline_reward:{}," \
                 "snort_severe_baseline_stopped:{}, snort_warning_baseline_stopped:{}," \
                 "snort_critical_baseline_reward:{}, snort_critical_baseline_stopped:{}," \
-                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}, last_alert_ts:{}".format(
+                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}, last_alert_ts:{}," \
+                "snort_severe_baseline_step:{}, snort_warning_baseline_step:{}, snort_critical_baseline_step:{}," \
+                "var_log_baseline_step:{}, step_baseline_reward:{}, step_baseline_step:{}, step_baseline_stopped:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
@@ -117,5 +126,7 @@ class DefenderObservationState:
             self.snort_warning_baseline_reward, self.snort_severe_baseline_stopped,
             self.snort_warning_baseline_stopped, self.snort_critical_baseline_reward,
             self.snort_critical_baseline_stopped, self.var_log_baseline_reward, self.var_log_baseline_stopped,
-            self.last_alert_ts) + "\n" + "\n".join([str(i) + ":"
+            self.last_alert_ts, self.snort_severe_baseline_step, self.snort_warning_baseline_step,
+            self.snort_critical_baseline_step, self.var_log_baseline_step, self.step_baseline_reward,
+            self.step_baseline_step, self.step_baseline_stopped) + "\n" + "\n".join([str(i) + ":"
                                                     + str(self.machines[i]) for i in range(len(self.machines))])

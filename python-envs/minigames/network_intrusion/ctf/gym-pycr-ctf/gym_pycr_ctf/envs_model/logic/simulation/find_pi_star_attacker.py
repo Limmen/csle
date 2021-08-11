@@ -2,8 +2,9 @@ from typing import Tuple
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from gym_pycr_ctf.dao.network.env_mode import EnvMode
 
-class FindPiStar:
+class FindPiStarAttacker:
     """
     Class with utility methods for finding pi-star for simple environments, can be used to
     evaluate learning performance
@@ -23,7 +24,7 @@ class FindPiStar:
             return [], -1
         p = shortest_paths[0]
         paths = []
-        pivot_actions = FindPiStar.pivot_actions(env_config=env_config)
+        pivot_actions = FindPiStarAttacker.pivot_actions(env_config=env_config)
         env.reset(soft=True)
         p = p[0]
         for n in p:
@@ -35,9 +36,9 @@ class FindPiStar:
                     r_nodes = p.copy()
                     r_nodes.remove(n)
                     next_node = n
-                    paths = paths + FindPiStar._breach_node(path=[a], current_node=next_node, remaining_nodes=r_nodes,
-                                                            rew=reward, env=env, env_config=env_config,
-                                                            pivot_actions=pivot_actions)
+                    paths = paths + FindPiStarAttacker._breach_node(path=[a], current_node=next_node, remaining_nodes=r_nodes,
+                                                                    rew=reward, env=env, env_config=env_config,
+                                                                    pivot_actions=pivot_actions)
                     env.reset(soft=True)
         sorted_paths = sorted(paths, key=lambda x: x[1])
         pi_star =sorted_paths[-1]
@@ -108,19 +109,19 @@ class FindPiStar:
                                                 r_nodes = remaining_nodes.copy()
                                                 r_nodes.remove(n)
                                                 next_node = n
-                                                paths = paths + FindPiStar._breach_node(path=r_path, current_node=next_node,
-                                                                                        remaining_nodes=r_nodes,
-                                                                                        rew=a_rew2, env=env,
-                                                                                        env_config=env_config,
-                                                                                        pivot_actions=pivot_actions)
+                                                paths = paths + FindPiStarAttacker._breach_node(path=r_path, current_node=next_node,
+                                                                                                remaining_nodes=r_nodes,
+                                                                                                rew=a_rew2, env=env,
+                                                                                                env_config=env_config,
+                                                                                                pivot_actions=pivot_actions)
                                     else:
                                         r_nodes = remaining_nodes.copy()
                                         r_nodes.remove(n)
                                         next_node = n
-                                        paths = paths + FindPiStar._breach_node(path=k_path, current_node=next_node,
-                                                                              remaining_nodes=r_nodes,
-                                                                              rew=a_rew2, env=env, env_config=env_config,
-                                                                              pivot_actions=pivot_actions)
+                                        paths = paths + FindPiStarAttacker._breach_node(path=k_path, current_node=next_node,
+                                                                                        remaining_nodes=r_nodes,
+                                                                                        rew=a_rew2, env=env, env_config=env_config,
+                                                                                        pivot_actions=pivot_actions)
         else:
             a_rew = rew
             for a in pivot_actions:
@@ -154,19 +155,19 @@ class FindPiStar:
                                 r_nodes = remaining_nodes.copy()
                                 r_nodes.remove(n)
                                 next_node = n
-                                paths = paths + FindPiStar._breach_node(path=r_path, current_node=next_node,
-                                                                        remaining_nodes=r_nodes,
-                                                                        rew=a_rew2, env=env,
-                                                                        env_config=env_config,
-                                                                        pivot_actions=pivot_actions)
+                                paths = paths + FindPiStarAttacker._breach_node(path=r_path, current_node=next_node,
+                                                                                remaining_nodes=r_nodes,
+                                                                                rew=a_rew2, env=env,
+                                                                                env_config=env_config,
+                                                                                pivot_actions=pivot_actions)
                     else:
                         r_nodes = remaining_nodes.copy()
                         r_nodes.remove(n)
                         next_node = n
-                        paths = paths + FindPiStar._breach_node(path=path, current_node=next_node,
-                                                                remaining_nodes=r_nodes,
-                                                                rew=a_rew2, env=env, env_config=env_config,
-                                                                pivot_actions=pivot_actions)
+                        paths = paths + FindPiStarAttacker._breach_node(path=path, current_node=next_node,
+                                                                        remaining_nodes=r_nodes,
+                                                                        rew=a_rew2, env=env, env_config=env_config,
+                                                                        pivot_actions=pivot_actions)
         return paths
 
     @staticmethod
@@ -210,3 +211,29 @@ class FindPiStar:
         reward = reward + env_config.attacker_all_flags_reward
         return reward
 
+
+    @staticmethod
+    def update_pi_star(env_config: EnvConfig, env: "PyCRCTFEnv") -> EnvConfig:
+        """
+        Update information about the attacker's optimal policy
+
+        :param env_config: the environment configuration
+        :param env: the environment
+        :return: the updated environment configuration
+        """
+        if (env_config.env_mode == EnvMode.SIMULATION
+            or env_config.env_mode == EnvMode.GENERATED_SIMULATION) \
+                and env_config.compute_pi_star_attacker:
+
+            if not env_config.use_upper_bound_pi_star_attacker:
+                pi_star_tau_attacker, pi_star_rew_attacker = FindPiStarAttacker.brute_force(env_config, env)
+                env_config.pi_star_tau_attacker = pi_star_tau_attacker
+                env_config.pi_star_rew_attacker = pi_star_rew_attacker
+                env_config.pi_star_rew_list_attacker.append(pi_star_rew_attacker)
+
+        if env_config.use_upper_bound_pi_star_attacker:
+            env_config.pi_star_rew_attacker = FindPiStarAttacker.upper_bound_pi(env_config)
+            env_config.pi_star_tau_attacker = None
+            env_config.pi_star_rew_list_attacker.append(env_config.pi_star_rew_attacker)
+
+        return env_config
