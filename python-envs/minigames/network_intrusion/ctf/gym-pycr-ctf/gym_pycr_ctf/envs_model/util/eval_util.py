@@ -42,10 +42,13 @@ class EvalUtil:
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
         intrusion_steps = []
-        optimal_stopping_idx = 4
-
+        print("num trajectories:{}".format(len(trajectories)))
         for tau in trajectories:
-            obs_tensor = torch.as_tensor(np.array(tau.defender_observations))
+            optimal_stopping_idx = np.random.geometric(p=0.2, size=1)[0]
+            no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
+                env=env, optimal_stopping_idx=optimal_stopping_idx)
+            obs = EvalUtil.merge_observations(no_intrusion_obs, tau)
+            obs_tensor = torch.as_tensor(obs)
             actions, values = EvalUtil.predict(model, obs_tensor, env, deterministic=deterministic)
             reward, early_stopping, succ_intrusion, caught = EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
@@ -100,6 +103,59 @@ class EvalUtil:
                flags_list, flags_percentage_list, episode_caught_list, episode_early_stopped_list, \
                episode_successful_intrusion_list, attacker_cost_list, attacker_cost_norm_list, attacker_alerts_list, \
                attacker_alerts_norm_list, intrusion_steps
+
+
+    @staticmethod
+    def get_observations_prior_to_intrusion(env : "PyCRCTFEnv", optimal_stopping_idx : int):
+        """
+        Get list of observations for the defender before the intrusion has started
+
+        :param env: the environment
+        :param optimal_stopping_idx: the intrusion start time
+        :return: the list of observations
+        """
+        defender_dynamics_model = env.env_config.network_conf.defender_dynamics_model
+        fx = defender_dynamics_model.norm_num_new_severe_alerts[(85, '172.18.9.191')]
+        fy = defender_dynamics_model.norm_num_new_warning_alerts[(85, '172.18.9.191')]
+        x,y,z = 0,0,0
+        t = 1
+        obs_l = [[0, 0, 0, t]]
+        for i in range(0, optimal_stopping_idx):
+            t +=1
+            x_delta = fx.rvs(size=1)[0]
+            y_delta = fy.rvs(size=1)[0]
+            x += x_delta
+            y += y_delta
+            obs_l.append([x, y, z, t])
+
+        return obs_l
+
+    @staticmethod
+    def merge_observations(obs_prior_to_intrusion, tau: Trajectory):
+        obs_intrusion = []
+        for i in range(len(tau.defender_observations)):
+            if not (tau.attacker_actions[i] == -1 or tau.attacker_actions[i] == 372):
+                obs_intrusion.append(tau.defender_observations[i])
+
+        prior_intrusion_len = len(obs_prior_to_intrusion)
+        obs = obs_prior_to_intrusion
+        x = obs_prior_to_intrusion[-1][0]
+        y = obs_prior_to_intrusion[-1][1]
+        z = obs_prior_to_intrusion[-1][2]
+        for i in range(len(obs_intrusion)):
+            if len(obs_intrusion[i]) == 9:
+                x += obs_intrusion[i][2]
+                y += obs_intrusion[i][3]
+                z = z
+            elif len(obs_intrusion[i]) == 4:
+                x += obs_intrusion[i][0]
+                y += obs_intrusion[i][1]
+                z += obs_intrusion[i][2]
+            else:
+                raise ValueError("Observation dimension does not match")
+            t = prior_intrusion_len + i + 1
+            obs.append([x,y,z,t])
+        return obs
 
 
     @staticmethod
@@ -210,7 +266,7 @@ class EvalUtil:
         stopping_thresh = env_config.snort_warning_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][3] > stopping_thresh:
+            if tau[i][1] > stopping_thresh:
                 stopping_idx = i
                 break
 
@@ -231,7 +287,7 @@ class EvalUtil:
         stopping_thresh = env_config.snort_severe_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][6] > stopping_thresh:
+            if tau[i][0] > stopping_thresh:
                 stopping_idx = i
                 break
 
@@ -252,7 +308,7 @@ class EvalUtil:
         stopping_thresh = env_config.snort_critical_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][6] > stopping_thresh:
+            if tau[i][0] > stopping_thresh:
                 stopping_idx = i
                 break
 
@@ -273,7 +329,7 @@ class EvalUtil:
         stopping_thresh = env_config.var_log_baseline_threshold
         stopping_idx = -1
         for i in range(len(tau)):
-            if tau[i][7] > stopping_thresh:
+            if tau[i][2] > stopping_thresh:
                 stopping_idx = i
                 break
 

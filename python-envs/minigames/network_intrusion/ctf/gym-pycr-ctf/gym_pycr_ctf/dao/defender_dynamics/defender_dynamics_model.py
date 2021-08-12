@@ -20,12 +20,20 @@ class DefenderDynamicsModel:
         self.num_new_priority = {}
         self.num_new_severe_alerts = {}
         self.num_new_warning_alerts = {}
+        self.num_new_failed_login_attempts = {}
+        self.num_new_open_connections = {}
+        self.num_new_login_events = {}
+        self.num_new_processes = {}
         self.machines_dynamics_model = {}
 
         self.norm_num_new_alerts = {}
         self.norm_num_new_priority = {}
         self.norm_num_new_severe_alerts = {}
         self.norm_num_new_warning_alerts = {}
+        self.norm_num_new_failed_login_attempts = {}
+        self.norm_num_new_open_connections = {}
+        self.norm_num_new_login_events = {}
+        self.norm_num_new_processes = {}
         self.norm_machines_dynamics_model = {}
 
     def normalize(self) -> None:
@@ -83,8 +91,8 @@ class DefenderDynamicsModel:
             for logged_in_ips, v2 in v1.items():
                 samples = []
                 counts = []
-                for num_warning_str, count in v2.items():
-                    samples.append(int(num_warning_str))
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
                     counts.append(count)
                 counts = np.array(counts)
                 samples = np.array(samples)
@@ -93,6 +101,67 @@ class DefenderDynamicsModel:
                                          values=(samples, empirical_probabilities))
                 self.norm_num_new_warning_alerts[(int(attack_id_str), logged_in_ips)] = dist
 
+        # Normalize num_new_failed_login_attempts
+        for attack_id_str, v1 in self.num_new_failed_login_attempts.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='num_new_login_attempts_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_num_new_failed_login_attempts[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize num_new_open_connections
+        for attack_id_str, v1 in self.num_new_open_connections.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='num_new_open_connections_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_num_new_open_connections[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize num_new_login_events
+        for attack_id_str, v1 in self.num_new_login_events.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='num_new_login_events_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_num_new_login_events[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize num_new_processes
+        for attack_id_str, v1 in self.num_new_processes.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='num_new_processes_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_num_new_processes[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize machine specific distributions
         for machine_ip, v in self.machines_dynamics_model.items():
             v.normalize()
 
@@ -207,6 +276,130 @@ class DefenderDynamicsModel:
                 self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_warning_alerts)] = 1
 
+    def add_new_failed_login_attempt_transition(self, attacker_action_id: AttackerActionId, logged_in_ips: str,
+                                                num_new_login_attempts: int) -> None:
+        """
+        Adds a new transition for intrusion prevention login attempts
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_login_attempts: observed new login attempts
+        :return: None
+        """
+        if str(attacker_action_id.value) not in self.num_new_failed_login_attempts:
+            self.num_new_failed_login_attempts[str(attacker_action_id.value)] = {}
+            self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips] = {}
+            self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
+                str(num_new_login_attempts)] = 1
+        else:
+            if logged_in_ips in self.num_new_failed_login_attempts[str(attacker_action_id.value)]:
+                if str(num_new_login_attempts) in self.num_new_failed_login_attempts[
+                    str(attacker_action_id.value)][logged_in_ips]:
+                    self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_login_attempts)] \
+                        = self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_login_attempts)] + 1
+                else:
+                    self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_login_attempts)] = 1
+            else:
+                self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips] = {}
+                self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_login_attempts)] = 1
+
+    def add_new_connections_transition(self, attacker_action_id: AttackerActionId, logged_in_ips: str,
+                                       num_new_connections: int) -> None:
+        """
+        Adds a new transition for intrusion prevention new connections
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_connections: observed new connections
+        :return: None
+        """
+        if str(attacker_action_id.value) not in self.num_new_open_connections:
+            self.num_new_open_connections[str(attacker_action_id.value)] = {}
+            self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips] = {}
+            self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
+                str(num_new_connections)] = 1
+        else:
+            if logged_in_ips in self.num_new_open_connections[str(attacker_action_id.value)]:
+                if str(num_new_connections) in self.num_new_open_connections[
+                    str(attacker_action_id.value)][logged_in_ips]:
+                    self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_connections)] \
+                        = self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_connections)] + 1
+                else:
+                    self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_connections)] = 1
+            else:
+                self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips] = {}
+                self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_connections)] = 1
+
+    def add_new_login_events_transition(self, attacker_action_id: AttackerActionId, logged_in_ips: str,
+                                        num_new_login_events: int) -> None:
+        """
+        Adds a new transition for intrusion prevention new login events
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_login_events: observed new login events
+        :return: None
+        """
+        if str(attacker_action_id.value) not in self.num_new_login_events:
+            self.num_new_login_events[str(attacker_action_id.value)] = {}
+            self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips] = {}
+            self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
+                str(num_new_login_events)] = 1
+        else:
+            if logged_in_ips in self.num_new_login_events[str(attacker_action_id.value)]:
+                if str(num_new_login_events) in self.num_new_login_events[
+                    str(attacker_action_id.value)][logged_in_ips]:
+                    self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_login_events)] \
+                        = self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_login_events)] + 1
+                else:
+                    self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_login_events)] = 1
+            else:
+                self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips] = {}
+                self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_login_events)] = 1
+
+    def add_new_processes_transition(self, attacker_action_id: AttackerActionId, logged_in_ips: str,
+                                     num_new_processes: int) -> None:
+        """
+        Adds a new transition for intrusion prevention new processes
+
+        :param attacker_action_id: the attacker action that triggered the transition
+        :param logged_in_ips: the attacker state
+        :param num_new_processes: observed new processes
+        :return: None
+        """
+        if str(attacker_action_id.value) not in self.num_new_processes:
+            self.num_new_processes[str(attacker_action_id.value)] = {}
+            self.num_new_processes[str(attacker_action_id.value)][logged_in_ips] = {}
+            self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
+                str(num_new_processes)] = 1
+        else:
+            if logged_in_ips in self.num_new_processes[str(attacker_action_id.value)]:
+                if str(num_new_processes) in self.num_new_processes[
+                    str(attacker_action_id.value)][logged_in_ips]:
+                    self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_processes)] \
+                        = self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
+                              str(num_new_processes)] + 1
+                else:
+                    self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
+                        str(num_new_processes)] = 1
+            else:
+                self.num_new_processes[str(attacker_action_id.value)][logged_in_ips] = {}
+                self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
+                    str(num_new_processes)] = 1
+
     def update_model(self, s, s_prime, attacker_action_id: AttackerActionId, logged_in_ips: str, t: int=0,
                      idx: int = 0, attacker_action_name = "", attacker_action_idx : int = 0) -> DefenderDynamicsTensorboardDTO:
         """
@@ -285,6 +478,15 @@ class DefenderDynamicsModel:
                 num_new_processes=num_new_processes)
             num_new_processes_total += num_new_processes
 
+        self.add_new_failed_login_attempt_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
+                                                     num_new_login_attempts=num_new_failed_login_attempts_total)
+        self.add_new_connections_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
+                                                     num_new_connections=num_new_open_connections_total)
+        self.add_new_login_events_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
+                                            num_new_login_events=num_new_login_events_total)
+        self.add_new_processes_transition(attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
+                                             num_new_processes=num_new_processes_total)
+
         tb_dto = DefenderDynamicsTensorboardDTO(
             t=t, num_new_alerts = num_new_alerts, num_new_priority=num_new_priority, 
             num_new_severe_alerts=num_new_severe_alerts, num_new_warning_alerts=num_new_warning_alerts,
@@ -346,14 +548,21 @@ class DefenderDynamicsModel:
     def __str__(self):
         try:
             return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
-                   "warning_alerts_dynamics:{},\n norm_alerts_dynamics:{},\n norm_priority_dynamics:{},\n" \
+                   "warning_alerts_dynamics:{},\n failed_login_attempts_dynamics:{}\n," \
+                   "connections_dynamics:{},\n login_events_dynamics:{},\n processes_dynamics:{},\n" \
+                   "norm_alerts_dynamics:{},\n norm_priority_dynamics:{},\n" \
                    "norm_severe_alerts_dynamics:{},\n norm_warning_alerts_dynamics:{},\n" \
-                   "machines_dynamics_model: {}\n".format(
+                   "norm_failed_login_attempts_dynamics:{},\n norm_connections_dynamics:{},\n " \
+                   "norm_login_events_dynamics:{},\n norm_processes_dynamics:{},\n " \
+                   "norm_machines_dynamics_model: {}\n".format(
                 self.num_new_alerts, self.num_new_priority, self.num_new_severe_alerts, self.num_new_warning_alerts,
+                self.num_new_failed_login_attempts, self.num_new_open_connections, self.num_new_login_events,
+                self.num_new_processes,
                 self.norm_num_new_alerts.values(), self.norm_num_new_priority.values(),
                 self.norm_num_new_severe_alerts.values(),
-                self.norm_num_new_severe_alerts.values(),
-                str(self.machines_dynamics_model)
+                self.norm_num_new_severe_alerts.values(), self.norm_num_new_failed_login_attempts.values(),
+                self.norm_num_new_open_connections.values(), self.norm_num_new_login_events.values(),
+                self.norm_num_new_processes.values(), str(self.machines_dynamics_model)
             )
         except:
             return "alerts_dynamics:{},\n priority_dynamics:{},\n severe_alerts_dynamics:{},\n " \
@@ -378,6 +587,10 @@ class DefenderDynamicsModel:
         d["num_new_priority"] = self.num_new_priority
         d["num_new_severe_alerts"] = self.num_new_severe_alerts
         d["num_new_warning_alerts"] = self.num_new_warning_alerts
+        d["num_new_failed_login_attempts"] = self.num_new_failed_login_attempts
+        d["num_new_open_connections"] = self.num_new_open_connections
+        d["num_new_login_events"] = self.num_new_login_events
+        d["num_new_processes"] = self.num_new_processes
         m_dynamics_model_new = {}
         for k,v in self.machines_dynamics_model.items():
             m_dynamics_model_new[k]=v.to_dict()
@@ -395,6 +608,14 @@ class DefenderDynamicsModel:
         self.num_new_priority = d["num_new_priority"].copy()
         self.num_new_severe_alerts = d["num_new_severe_alerts"].copy()
         self.num_new_warning_alerts = d["num_new_warning_alerts"].copy()
+        if "num_new_failed_login_attempts" in d:
+            self.num_new_failed_login_attempts = d["num_new_failed_login_attempts"].copy()
+        if "num_new_open_connections" in d:
+            self.num_new_open_connections = d["num_new_open_connections"].copy()
+        if "num_new_login_events" in d:
+            self.num_new_login_events = d["num_new_login_events"].copy()
+        if "num_new_processes" in d:
+            self.num_new_processes = d["num_new_processes"].copy()
         m_dynamics_model_new = {}
         for k, v in d["machines_dynamics_model"].items():
             m = DefenderMachineDynamicsModel()

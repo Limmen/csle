@@ -39,7 +39,7 @@ def default_config() -> ClientConfig:
                                n_deterministic_eval_iter=100, attacker_opponent_baseline_type = 8,
                                running_avg=50, n_quick_eval_iter=100,
                                log_regret=True, snort_baseline_simulate=True, quick_eval_freq=1,
-                               eval_deterministic = False, static_eval_defender=False
+                               eval_deterministic = False, static_eval_defender=True
                                )
     env_name = "pycr-ctf-level-9-generated-sim-v5"
     #eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
