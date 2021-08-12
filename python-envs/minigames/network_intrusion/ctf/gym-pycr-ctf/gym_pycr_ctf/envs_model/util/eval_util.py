@@ -42,7 +42,6 @@ class EvalUtil:
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
         intrusion_steps = []
-        print("num trajectories:{}".format(len(trajectories)))
         for tau in trajectories:
             optimal_stopping_idx = np.random.geometric(p=0.2, size=1)[0]
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
@@ -365,14 +364,21 @@ class EvalUtil:
         :param deterministic: whether to do deterministic predictions or not
         :return: the predicted action and values
         """
-        actions, values = model.predict(observation=obs_tensor, deterministic=deterministic,
-                                        state=obs_tensor, attacker=False,
-                                        infos={},
-                                        env_config=env.env_config,
-                                        env_configs=None, env=env,
-                                        env_idx=0,
-                                        env_state=env.env_state
-                                        )
+        # actions, values = model.predict(observation=obs_tensor, deterministic=deterministic,
+        #                                 state=obs_tensor, attacker=False,
+        #                                 infos={},
+        #                                 env_config=env.env_config,
+        #                                 env_configs=None, env=env,
+        #                                 env_idx=0,
+        #                                 env_state=env.env_state
+        #                                 )
+        actions = np.array([0]*len(obs_tensor))
+        values = actions
+        # defender_policy.predict(observation, state, mask, deterministic,
+        #                         env_config=env_config,
+        #                         env_state=env_state, env_configs=env_configs,
+        #                         env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions,
+        #                         attacker=attacker)
         return actions, values
 
 
