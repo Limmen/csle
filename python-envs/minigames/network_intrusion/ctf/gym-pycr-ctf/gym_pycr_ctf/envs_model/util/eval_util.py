@@ -42,13 +42,16 @@ class EvalUtil:
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
         intrusion_steps = []
+        policy = model.defender_policy.copy()
         for tau in trajectories:
+            if not EvalUtil.is_correct_attacker(tau):
+                continue
             optimal_stopping_idx = np.random.geometric(p=0.2, size=1)[0]
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
                 env=env, optimal_stopping_idx=optimal_stopping_idx)
             obs = EvalUtil.merge_observations(no_intrusion_obs, tau)
             obs_tensor = torch.as_tensor(obs)
-            actions, values = EvalUtil.predict(model, obs_tensor, env, deterministic=deterministic)
+            actions, values = EvalUtil.predict(policy, obs_tensor, env, deterministic=deterministic)
             reward, early_stopping, succ_intrusion, caught = EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations))
@@ -128,6 +131,12 @@ class EvalUtil:
             obs_l.append([x, y, z, t])
 
         return obs_l
+
+    @staticmethod
+    def is_correct_attacker(tau):
+        if tau.attacker_actions[0] == -1 and tau.attacker_actions[1] == 372 and tau.attacker_actions[2] == 99:
+            return True
+        return False
 
     @staticmethod
     def merge_observations(obs_prior_to_intrusion, tau: Trajectory):
@@ -354,11 +363,11 @@ class EvalUtil:
 
 
     @staticmethod
-    def predict(model, obs_tensor, env, deterministic: bool = False) -> Tuple[List[int], List[float]]:
+    def predict(policy, obs_tensor, env, deterministic: bool = False) -> Tuple[List[int], List[float]]:
         """
         Utility function for predicting the next action given a model, an environment, and a observation
 
-        :param model: the model
+        :param policy: the policy
         :param obs_tensor: the observation from the environment
         :param env: the environment
         :param deterministic: whether to do deterministic predictions or not
@@ -374,11 +383,11 @@ class EvalUtil:
         #                                 )
         actions = np.array([0]*len(obs_tensor))
         values = actions
-        # defender_policy.predict(observation, state, mask, deterministic,
-        #                         env_config=env_config,
-        #                         env_state=env_state, env_configs=env_configs,
-        #                         env=env, infos=infos, env_idx=env_idx, mask_actions=mask_actions,
-        #                         attacker=attacker)
+        actions, values = policy.predict(obs_tensor, None, None, deterministic=deterministic,
+                                                         env_config=env.env_config,
+                                                         env_state=env.env_state, env_configs=None,
+                                                         env=env, infos={}, env_idx=0, mask_actions=None,
+                                                         attacker=False)
         return actions, values
 
 

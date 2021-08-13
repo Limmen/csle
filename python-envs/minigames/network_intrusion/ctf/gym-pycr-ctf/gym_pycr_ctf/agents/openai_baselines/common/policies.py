@@ -9,6 +9,7 @@ import gym
 import numpy as np
 import torch as th
 from torch import nn as nn
+import copy
 
 from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
 from stable_baselines3.common.utils import get_device
@@ -347,7 +348,31 @@ class ActorCriticPolicy(BasePolicy):
         # Action distribution
         self.action_dist = make_proba_distribution(action_space, dist_kwargs=dist_kwargs)
 
+        self.lr_schedule = lr_schedule
+
         self._build(lr_schedule)
+
+    def copy(self):
+        c = ActorCriticPolicy(
+            observation_space=self.observation_space,
+            action_space=self.action_space,
+            lr_schedule=self.lr_schedule,
+            net_arch=self.net_arch,
+            activation_fn = self.activation_fn,
+            ortho_init=self.ortho_init,
+            log_std_init=self.log_std_init,
+            squash_output=self.squash_output,
+            features_extractor_class=self.features_extractor_class,
+            features_extractor_kwargs=self.features_extractor_kwargs,
+            agent_config=self.agent_config,
+            m_selection=self.m_selection,
+            m_action=self.m_action
+        )
+        c.mlp_extractor = copy.deepcopy(self.mlp_extractor)
+        c.action_net = copy.deepcopy(self.action_net)
+        c.value_net = copy.deepcopy(self.value_net)
+        c.optimizer = copy.deepcopy(self.optimizer)
+        return c
 
     def _get_data(self) -> Dict[str, Any]:
         data = super()._get_data()
