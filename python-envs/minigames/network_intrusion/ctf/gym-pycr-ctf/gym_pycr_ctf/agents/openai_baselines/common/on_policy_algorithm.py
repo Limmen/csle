@@ -534,7 +534,6 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.eval_2_attacker_action_alerts = eval_2_attacker_alerts_list
                         train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
                         train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
-                        print("avg R:{}, avg R eval 2:{}".format(np.mean(train_log_dto.defender_episode_rewards), np.mean(train_log_dto.defender_eval_2_episode_rewards)))
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

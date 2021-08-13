@@ -42,6 +42,13 @@ class EvalUtil:
         attacker_alerts_list = []
         attacker_alerts_norm_list = []
         intrusion_steps = []
+        optimal_stopping_times = []
+        model_stopping_times = []
+        intrusion_start_obs_1=[]
+        intrusion_start_obs_2 = []
+        intrusion_start_obs_3 = []
+        intrusion_start_obs_4 = []
+        stopping_obs_l = []
         policy = model.defender_policy.copy()
         for tau in trajectories:
             if not EvalUtil.is_correct_attacker(tau):
@@ -49,13 +56,15 @@ class EvalUtil:
             optimal_stopping_idx = np.random.geometric(p=0.2, size=1)[0]
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
                 env=env, optimal_stopping_idx=optimal_stopping_idx)
-            obs = EvalUtil.merge_observations(no_intrusion_obs, tau)
+            optimal_stopping_idx +=1
+            obs, obs_intrusion = EvalUtil.merge_observations(no_intrusion_obs, tau)
             obs_tensor = torch.as_tensor(obs)
             actions, values = EvalUtil.predict(policy, obs_tensor, env, deterministic=deterministic)
-            reward, early_stopping, succ_intrusion, caught = EvalUtil.compute_reward(
+            reward, early_stopping, succ_intrusion, caught, stopping_time = EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations))
             )
+            stopping_obs = obs[stopping_time]
             flags, flags_percentage, attacker_cost, attacker_cost_norm, attacker_alerts, \
             attacker_alerts_norm = EvalUtil.compute_info_metrics(
                 actions=actions, trajectory=tau, env_config=env.env_config)
@@ -97,7 +106,23 @@ class EvalUtil:
             step_r.append(step_baseline_r)
             step_s.append(step_baseline_s)
             steps.append(steps_l)
+            optimal_stopping_times.append(optimal_stopping_idx)
+            model_stopping_times.append(stopping_time)
+            intrusion_start_obs_1.append(obs[optimal_stopping_idx])
+            intrusion_start_obs_2.append(obs_intrusion[0])
+            intrusion_start_obs_3.append(obs[optimal_stopping_idx+1])
+            intrusion_start_obs_4.append(obs[optimal_stopping_idx + 2])
+            stopping_obs_l.append(stopping_obs)
             intrusion_steps.append(optimal_stopping_idx)
+
+        print("E2_rewards:{}".format(rewards))
+        print("E2_optimal_stopping_times:{}".format(optimal_stopping_times))
+        print("E2_model_stopping_times:{}".format(model_stopping_times))
+        print("intrusion start obs 1:{}".format(intrusion_start_obs_1))
+        print("intrusion start obs 2:{}".format(intrusion_start_obs_2))
+        print("intrusion start obs 3:{}".format(intrusion_start_obs_3))
+        print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
+        print("stopping obs:{}".format(stopping_obs_l))
 
         return rewards, steps, snort_severe_r, snort_warning_r, snort_critical_r, \
                var_log_r, step_r, snort_severe_s, snort_warning_s, \
@@ -163,7 +188,7 @@ class EvalUtil:
                 raise ValueError("Observation dimension does not match")
             t = prior_intrusion_len + i + 1
             obs.append([x,y,z,t])
-        return obs
+        return obs, obs_intrusion
 
 
     @staticmethod
@@ -192,7 +217,8 @@ class EvalUtil:
         return trajectories
 
     @staticmethod
-    def compute_reward(actions, env_config, optimal_stopping_idx : int = 6, steps: int = 100) -> float:
+    def compute_reward(actions, env_config, optimal_stopping_idx : int = 6, steps: int = 100) \
+            -> Tuple[int, bool, bool, int]:
         """
         Utility function for computing the reward of a sequence of actions of the defender
 
@@ -210,13 +236,13 @@ class EvalUtil:
             env_config=env_config)
 
         if stopping_idx < optimal_stopping_idx:
-            return r, True, False, False
+            return r, True, False, False, stopping_idx
 
         if stopping_idx == -1:
-            return r, False, True, False
+            return r, False, True, False, stopping_idx
 
         if stopping_idx >= optimal_stopping_idx:
-            return r,  False, False, True
+            return r,  False, False, True, stopping_idx
 
     @staticmethod
     def compute_steps(actions) -> int:
