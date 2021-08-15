@@ -37,11 +37,30 @@ class DefenderObservationState:
         self.snort_critical_baseline_step = 1
         self.var_log_baseline_step = 1
         self.step_baseline_step = 1
+
         self.snort_severe_baseline_stopped = False
         self.snort_warning_baseline_stopped = False
         self.snort_critical_baseline_stopped = False
         self.var_log_baseline_stopped = False
         self.step_baseline_stopped = False
+
+        self.snort_severe_baseline_caught_attacker = False
+        self.snort_warning_baseline_caught_attacker = False
+        self.snort_critical_baseline_caught_attacker = False
+        self.var_log_baseline_caught_attacker = False
+        self.step_baseline_caught_attacker = False
+
+        self.snort_severe_baseline_early_stopping = False
+        self.snort_warning_baseline_early_stopping = False
+        self.snort_critical_baseline_early_stopping = False
+        self.var_log_baseline_early_stopping = False
+        self.step_baseline_early_stopping = False
+
+        self.snort_severe_baseline_uncaught_intrusion_steps = 0
+        self.snort_warning_baseline_uncaught_intrusion_steps = 0
+        self.snort_critical_baseline_uncaught_intrusion_steps = 0
+        self.var_log_baseline_uncaught_intrusion_steps = 0
+        self.step_baseline_uncaught_intrusion_steps = 0
 
     def sort_machines(self) -> None:
         """

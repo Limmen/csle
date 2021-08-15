@@ -72,6 +72,22 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     train_step_baseline_rewards_stds_novice_attacker = np.std(
         tuple(train_step_baseline_rewards_data_novice_attacker), axis=0, ddof=1)
 
+    train_snort_severe_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["snort_severe_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_steps_means_novice_attacker = np.mean(
+        tuple(train_snort_severe_baseline_steps_data_novice_attacker), axis=0)
+    train_snort_severe_baseline_steps_stds_novice_attacker = np.std(
+        tuple(train_snort_severe_baseline_steps_data_novice_attacker), axis=0, ddof=1)
+
+    train_step_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["step_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    train_step_baseline_steps_means_novice_attacker = np.mean(
+        tuple(train_step_baseline_steps_data_novice_attacker), axis=0)
+    train_step_baseline_steps_stds_novice_attacker = np.std(
+        tuple(train_step_baseline_steps_data_novice_attacker), axis=0, ddof=1)
+
     # Eval Avg Novice Attacker
 
     avg_eval_rewards_data_novice_attacker = list(
@@ -141,6 +157,22 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
         tuple(eval_step_baseline_rewards_data_novice_attacker), axis=0)
     eval_step_baseline_rewards_stds_novice_attacker = np.std(
         tuple(eval_step_baseline_rewards_data_novice_attacker), axis=0, ddof=1)
+
+    eval_snort_severe_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["eval_snort_severe_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    eval_snort_severe_baseline_steps_means_novice_attacker = np.mean(
+        tuple(eval_snort_severe_baseline_steps_data_novice_attacker), axis=0)
+    eval_snort_severe_baseline_steps_stds_novice_attacker = np.std(
+        tuple(eval_snort_severe_baseline_steps_data_novice_attacker), axis=0, ddof=1)
+
+    eval_step_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["eval_step_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    eval_step_baseline_steps_means_novice_attacker = np.mean(
+        tuple(eval_step_baseline_steps_data_novice_attacker), axis=0)
+    eval_step_baseline_steps_stds_novice_attacker = np.std(
+        tuple(eval_step_baseline_steps_data_novice_attacker), axis=0, ddof=1)
 
 
     # Eval 2 Avg Novice Attacker
@@ -214,6 +246,22 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     eval_2_step_baseline_rewards_stds_novice_attacker = np.std(
         tuple(eval_2_step_baseline_rewards_data_novice_attacker), axis=0, ddof=1)
 
+    eval_2_snort_severe_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["eval_2_snort_severe_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    eval_2_snort_severe_baseline_steps_means_novice_attacker = np.mean(
+        tuple(eval_2_snort_severe_baseline_steps_data_novice_attacker), axis=0)
+    eval_2_snort_severe_baseline_steps_stds_novice_attacker = np.std(
+        tuple(eval_2_snort_severe_baseline_steps_data_novice_attacker), axis=0, ddof=1)
+
+    eval_2_step_baseline_steps_data_novice_attacker = list(
+        map(lambda df: util.running_average_list(df["eval_2_step_baseline_steps"].values[0:max_len], running_avg),
+            ppo_dfs_novice_attacker))
+    eval_2_step_baseline_steps_means_novice_attacker = np.mean(
+        tuple(eval_2_step_baseline_steps_data_novice_attacker), axis=0)
+    eval_2_step_baseline_steps_stds_novice_attacker = np.std(
+        tuple(eval_2_step_baseline_steps_data_novice_attacker), axis=0, ddof=1)
+
 
     return avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
            avg_train_rewards_stds_novice_attacker, \
@@ -230,6 +278,11 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
            train_snort_severe_baseline_rewards_data_novice_attacker, train_snort_severe_baseline_rewards_means_novice_attacker, \
            train_snort_severe_baseline_rewards_stds_novice_attacker, train_step_baseline_rewards_data_novice_attacker, \
            train_step_baseline_rewards_means_novice_attacker, train_step_baseline_rewards_stds_novice_attacker, \
+           train_snort_severe_baseline_steps_data_novice_attacker, \
+           train_snort_severe_baseline_steps_means_novice_attacker, \
+           train_snort_severe_baseline_steps_stds_novice_attacker, \
+           train_step_baseline_steps_data_novice_attacker, train_step_baseline_steps_means_novice_attacker, \
+           train_step_baseline_steps_stds_novice_attacker, \
            avg_eval_rewards_data_novice_attacker, avg_eval_rewards_means_novice_attacker, \
            avg_eval_rewards_stds_novice_attacker, \
            avg_eval_steps_data_novice_attacker, avg_eval_steps_means_novice_attacker, \
@@ -246,6 +299,11 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
            eval_snort_severe_baseline_rewards_stds_novice_attacker, \
            eval_step_baseline_rewards_data_novice_attacker, eval_step_baseline_rewards_means_novice_attacker, \
            eval_step_baseline_rewards_stds_novice_attacker, \
+           eval_snort_severe_baseline_steps_data_novice_attacker, \
+           eval_snort_severe_baseline_steps_means_novice_attacker, \
+           eval_snort_severe_baseline_steps_stds_novice_attacker, \
+           eval_step_baseline_steps_data_novice_attacker, eval_step_baseline_steps_means_novice_attacker, \
+           eval_step_baseline_steps_stds_novice_attacker, \
            avg_eval_2_rewards_data_novice_attacker, avg_eval_2_rewards_means_novice_attacker, \
            avg_eval_2_rewards_stds_novice_attacker, \
            avg_eval_2_steps_data_novice_attacker, avg_eval_2_steps_means_novice_attacker, \
@@ -261,11 +319,16 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
            eval_2_snort_severe_baseline_rewards_means_novice_attacker, \
            eval_2_snort_severe_baseline_rewards_stds_novice_attacker, \
            eval_2_step_baseline_rewards_data_novice_attacker, \
-           eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker
+           eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker, \
+           eval_2_snort_severe_baseline_steps_data_novice_attacker, \
+           eval_2_snort_severe_baseline_steps_means_novice_attacker, \
+           eval_2_snort_severe_baseline_steps_stds_novice_attacker, \
+           eval_2_step_baseline_steps_data_novice_attacker, eval_2_step_baseline_steps_means_novice_attacker, \
+           eval_2_step_baseline_steps_stds_novice_attacker
 
 
 def plot_train(
-        avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker,
+avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker,
         avg_train_rewards_stds_novice_attacker,
         avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker,
         avg_train_steps_stds_novice_attacker,
@@ -281,6 +344,11 @@ def plot_train(
         train_snort_severe_baseline_rewards_means_novice_attacker,
         train_snort_severe_baseline_rewards_stds_novice_attacker, train_step_baseline_rewards_data_novice_attacker,
         train_step_baseline_rewards_means_novice_attacker, train_step_baseline_rewards_stds_novice_attacker,
+        train_snort_severe_baseline_steps_data_novice_attacker,
+        train_snort_severe_baseline_steps_means_novice_attacker,
+        train_snort_severe_baseline_steps_stds_novice_attacker,
+        train_step_baseline_steps_data_novice_attacker, train_step_baseline_steps_means_novice_attacker,
+        train_step_baseline_steps_stds_novice_attacker,
         avg_eval_rewards_data_novice_attacker, avg_eval_rewards_means_novice_attacker,
         avg_eval_rewards_stds_novice_attacker,
         avg_eval_steps_data_novice_attacker, avg_eval_steps_means_novice_attacker,
@@ -297,6 +365,11 @@ def plot_train(
         eval_snort_severe_baseline_rewards_stds_novice_attacker,
         eval_step_baseline_rewards_data_novice_attacker, eval_step_baseline_rewards_means_novice_attacker,
         eval_step_baseline_rewards_stds_novice_attacker,
+        eval_snort_severe_baseline_steps_data_novice_attacker,
+        eval_snort_severe_baseline_steps_means_novice_attacker,
+        eval_snort_severe_baseline_steps_stds_novice_attacker,
+        eval_step_baseline_steps_data_novice_attacker, eval_step_baseline_steps_means_novice_attacker,
+        eval_step_baseline_steps_stds_novice_attacker,
         avg_eval_2_rewards_data_novice_attacker, avg_eval_2_rewards_means_novice_attacker,
         avg_eval_2_rewards_stds_novice_attacker,
         avg_eval_2_steps_data_novice_attacker, avg_eval_2_steps_means_novice_attacker,
@@ -312,7 +385,12 @@ def plot_train(
         eval_2_snort_severe_baseline_rewards_means_novice_attacker,
         eval_2_snort_severe_baseline_rewards_stds_novice_attacker,
         eval_2_step_baseline_rewards_data_novice_attacker,
-        eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker
+        eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker,
+        eval_2_snort_severe_baseline_steps_data_novice_attacker,
+        eval_2_snort_severe_baseline_steps_means_novice_attacker,
+        eval_2_snort_severe_baseline_steps_stds_novice_attacker,
+        eval_2_step_baseline_steps_data_novice_attacker, eval_2_step_baseline_steps_means_novice_attacker,
+        eval_2_step_baseline_steps_stds_novice_attacker
                ):
     print("plot")
 
@@ -373,9 +451,9 @@ def plot_train(
         steps_baseline_rewards_data = eval_2_step_baseline_rewards_data_novice_attacker,
         steps_baseline_rewards_means=eval_2_step_baseline_rewards_means_novice_attacker,
         steps_baseline_rewards_stds = eval_2_step_baseline_rewards_stds_novice_attacker,
-        steps_baseline_steps_data=avg_eval_2_steps_data_novice_attacker,
-        steps_baseline_steps_means=avg_eval_2_steps_means_novice_attacker,
-        steps_baseline_steps_stds=avg_eval_2_steps_stds_novice_attacker,
+        steps_baseline_steps_data=eval_2_step_baseline_steps_data_novice_attacker,
+        steps_baseline_steps_means=eval_2_step_baseline_steps_means_novice_attacker,
+        steps_baseline_steps_stds=eval_2_step_baseline_steps_stds_novice_attacker,
         steps_baseline_early_stopping_data = avg_eval_2_early_stopping_frac_data_novice_attacker,
         steps_baseline_early_stopping_means=avg_eval_2_early_stopping_means_novice_attacker,
         steps_baseline_early_stopping_stds=avg_eval_2_early_stopping_stds_novice_attacker,
@@ -389,9 +467,9 @@ def plot_train(
         snort_severe_baseline_rewards_data=eval_2_snort_severe_baseline_rewards_data_novice_attacker,
         snort_severe_baseline_rewards_means=eval_2_snort_severe_baseline_rewards_means_novice_attacker,
         snort_severe_baseline_rewards_stds=eval_2_snort_severe_baseline_rewards_stds_novice_attacker,
-        snort_severe_baseline_steps_data=avg_eval_2_steps_data_novice_attacker,
-        snort_severe_baseline_steps_means=avg_eval_2_steps_means_novice_attacker,
-        snort_severe_baseline_steps_stds=avg_eval_2_steps_stds_novice_attacker,
+        snort_severe_baseline_steps_data=eval_2_snort_severe_baseline_steps_data_novice_attacker,
+        snort_severe_baseline_steps_means=eval_2_snort_severe_baseline_steps_means_novice_attacker,
+        snort_severe_baseline_steps_stds=eval_2_snort_severe_baseline_steps_stds_novice_attacker,
         snort_severe_baseline_early_stopping_data=avg_eval_2_early_stopping_frac_data_novice_attacker,
         snort_severe_baseline_early_stopping_means=avg_eval_2_early_stopping_means_novice_attacker,
         snort_severe_baseline_early_stopping_stds=avg_eval_2_early_stopping_stds_novice_attacker,
@@ -426,6 +504,11 @@ if __name__ == '__main__':
     train_snort_severe_baseline_rewards_data_novice_attacker, train_snort_severe_baseline_rewards_means_novice_attacker, \
     train_snort_severe_baseline_rewards_stds_novice_attacker, train_step_baseline_rewards_data_novice_attacker, \
     train_step_baseline_rewards_means_novice_attacker, train_step_baseline_rewards_stds_novice_attacker, \
+    train_snort_severe_baseline_steps_data_novice_attacker, \
+    train_snort_severe_baseline_steps_means_novice_attacker, \
+    train_snort_severe_baseline_steps_stds_novice_attacker, \
+    train_step_baseline_steps_data_novice_attacker, train_step_baseline_steps_means_novice_attacker, \
+    train_step_baseline_steps_stds_novice_attacker, \
     avg_eval_rewards_data_novice_attacker, avg_eval_rewards_means_novice_attacker, \
     avg_eval_rewards_stds_novice_attacker, \
     avg_eval_steps_data_novice_attacker, avg_eval_steps_means_novice_attacker, \
@@ -442,6 +525,11 @@ if __name__ == '__main__':
     eval_snort_severe_baseline_rewards_stds_novice_attacker, \
     eval_step_baseline_rewards_data_novice_attacker, eval_step_baseline_rewards_means_novice_attacker, \
     eval_step_baseline_rewards_stds_novice_attacker, \
+    eval_snort_severe_baseline_steps_data_novice_attacker, \
+    eval_snort_severe_baseline_steps_means_novice_attacker, \
+    eval_snort_severe_baseline_steps_stds_novice_attacker, \
+    eval_step_baseline_steps_data_novice_attacker, eval_step_baseline_steps_means_novice_attacker, \
+    eval_step_baseline_steps_stds_novice_attacker, \
     avg_eval_2_rewards_data_novice_attacker, avg_eval_2_rewards_means_novice_attacker, \
     avg_eval_2_rewards_stds_novice_attacker, \
     avg_eval_2_steps_data_novice_attacker, avg_eval_2_steps_means_novice_attacker, \
@@ -457,7 +545,12 @@ if __name__ == '__main__':
     eval_2_snort_severe_baseline_rewards_means_novice_attacker, \
     eval_2_snort_severe_baseline_rewards_stds_novice_attacker, \
     eval_2_step_baseline_rewards_data_novice_attacker, \
-    eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker\
+    eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker, \
+    eval_2_snort_severe_baseline_steps_data_novice_attacker, \
+    eval_2_snort_severe_baseline_steps_means_novice_attacker, \
+    eval_2_snort_severe_baseline_steps_stds_novice_attacker, \
+    eval_2_step_baseline_steps_data_novice_attacker, eval_2_step_baseline_steps_means_novice_attacker, \
+    eval_2_step_baseline_steps_stds_novice_attacker \
         = parse_data(novice_attacker_base_path=base_path_1, suffix="gensim")
 
     plot_train(
@@ -477,6 +570,11 @@ if __name__ == '__main__':
         train_snort_severe_baseline_rewards_means_novice_attacker,
         train_snort_severe_baseline_rewards_stds_novice_attacker, train_step_baseline_rewards_data_novice_attacker,
         train_step_baseline_rewards_means_novice_attacker, train_step_baseline_rewards_stds_novice_attacker,
+        train_snort_severe_baseline_steps_data_novice_attacker,
+        train_snort_severe_baseline_steps_means_novice_attacker,
+        train_snort_severe_baseline_steps_stds_novice_attacker,
+        train_step_baseline_steps_data_novice_attacker, train_step_baseline_steps_means_novice_attacker,
+        train_step_baseline_steps_stds_novice_attacker,
         avg_eval_rewards_data_novice_attacker, avg_eval_rewards_means_novice_attacker,
         avg_eval_rewards_stds_novice_attacker,
         avg_eval_steps_data_novice_attacker, avg_eval_steps_means_novice_attacker,
@@ -493,6 +591,11 @@ if __name__ == '__main__':
         eval_snort_severe_baseline_rewards_stds_novice_attacker,
         eval_step_baseline_rewards_data_novice_attacker, eval_step_baseline_rewards_means_novice_attacker,
         eval_step_baseline_rewards_stds_novice_attacker,
+        eval_snort_severe_baseline_steps_data_novice_attacker,
+        eval_snort_severe_baseline_steps_means_novice_attacker,
+        eval_snort_severe_baseline_steps_stds_novice_attacker,
+        eval_step_baseline_steps_data_novice_attacker, eval_step_baseline_steps_means_novice_attacker,
+        eval_step_baseline_steps_stds_novice_attacker,
         avg_eval_2_rewards_data_novice_attacker, avg_eval_2_rewards_means_novice_attacker,
         avg_eval_2_rewards_stds_novice_attacker,
         avg_eval_2_steps_data_novice_attacker, avg_eval_2_steps_means_novice_attacker,
@@ -508,5 +611,10 @@ if __name__ == '__main__':
         eval_2_snort_severe_baseline_rewards_means_novice_attacker,
         eval_2_snort_severe_baseline_rewards_stds_novice_attacker,
         eval_2_step_baseline_rewards_data_novice_attacker,
-        eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker
+        eval_2_step_baseline_rewards_means_novice_attacker, eval_2_step_baseline_rewards_stds_novice_attacker,
+        eval_2_snort_severe_baseline_steps_data_novice_attacker,
+        eval_2_snort_severe_baseline_steps_means_novice_attacker,
+        eval_2_snort_severe_baseline_steps_stds_novice_attacker,
+        eval_2_step_baseline_steps_data_novice_attacker, eval_2_step_baseline_steps_means_novice_attacker,
+        eval_2_step_baseline_steps_stds_novice_attacker
     )

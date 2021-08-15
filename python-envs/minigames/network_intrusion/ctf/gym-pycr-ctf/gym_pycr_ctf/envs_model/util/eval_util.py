@@ -32,6 +32,21 @@ class EvalUtil:
         snort_critical_s = []
         var_log_s = []
         step_s = []
+        snort_severe_ca = []
+        snort_warning_ca = []
+        snort_critical_ca = []
+        var_log_ca = []
+        step_ca = []
+        snort_severe_es = []
+        snort_warning_es = []
+        snort_critical_es = []
+        var_log_es = []
+        step_es = []
+        snort_severe_uit = []
+        snort_warning_uit = []
+        snort_critical_uit = []
+        var_log_uit = []
+        step_uit = []
         flags_list = []
         flags_percentage_list = []
         episode_caught_list = []
@@ -60,7 +75,8 @@ class EvalUtil:
             obs, obs_intrusion = EvalUtil.merge_observations(no_intrusion_obs, tau)
             obs_tensor = torch.as_tensor(obs)
             actions, values = EvalUtil.predict(policy, obs_tensor, env, deterministic=deterministic)
-            reward, early_stopping, succ_intrusion, caught, stopping_time = EvalUtil.compute_reward(
+            reward, early_stopping, succ_intrusion, caught, uncaught_intrusion_steps, stopping_time = \
+                EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations))
             )
@@ -77,34 +93,57 @@ class EvalUtil:
             attacker_cost_norm_list.append(attacker_cost_norm)
             attacker_alerts_list.append(attacker_alerts)
             attacker_alerts_norm_list.append(attacker_alerts_norm)
-            snort_warning_baseline_r, snort_warning_baseline_s = EvalUtil.compute_snort_warning_baseline(
+            snort_warning_baseline_r, snort_warning_baseline_ca, snort_warning_baseline_es, \
+            snort_warning_baseline_uit, snort_warning_baseline_s = EvalUtil.compute_snort_warning_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations)))
-            snort_severe_baseline_r, snort_severe_baseline_s = EvalUtil.compute_snort_severe_baseline(
+            snort_severe_baseline_r, snort_severe_baseline_ca, snort_severe_baseline_es, \
+            snort_severe_baseline_uit, snort_severe_baseline_s \
+                = EvalUtil.compute_snort_severe_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations))
             )
-            snort_critical_baseline_r, snort_critical_baseline_s = EvalUtil.compute_snort_critical_baseline(
+            snort_critical_baseline_r, snort_critical_baseline_ca, snort_critical_baseline_es, \
+            snort_critical_baseline_uit, snort_critical_baseline_s \
+                = EvalUtil.compute_snort_critical_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations)))
-            var_log_baseline_r, var_log_baseline_s = EvalUtil.compute_var_log_baseline(
+            var_log_baseline_r, var_log_baseline_ca, var_log_baseline_es, \
+            var_log_baseline_uit, var_log_baseline_s = EvalUtil.compute_var_log_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations)))
-            step_baseline_r, step_baseline_s = EvalUtil.compute_step_baseline(
+            step_baseline_r, step_baseline_ca, step_baseline_es, \
+            step_baseline_uit, step_baseline_s \
+                = EvalUtil.compute_step_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_idx=optimal_stopping_idx,
                 steps=len(np.array(tau.defender_observations)))
             steps_l = EvalUtil.compute_steps(actions)
             rewards.append(reward)
             snort_severe_r.append(snort_severe_baseline_r)
             snort_severe_s.append(snort_severe_baseline_s)
+            snort_severe_ca.append(snort_severe_baseline_ca)
+            snort_severe_es.append(snort_severe_baseline_es)
+            snort_severe_uit.append(snort_severe_baseline_uit)
             snort_warning_r.append(snort_warning_baseline_r)
             snort_warning_s.append(snort_warning_baseline_s)
+            snort_warning_ca.append(snort_warning_baseline_ca)
+            snort_warning_es.append(snort_warning_baseline_es)
+            snort_warning_uit.append(snort_warning_baseline_uit)
             snort_critical_r.append(snort_critical_baseline_r)
             snort_critical_s.append(snort_critical_baseline_s)
+            snort_critical_ca.append(snort_critical_baseline_ca)
+            snort_critical_es.append(snort_critical_baseline_es)
+            snort_critical_uit.append(snort_critical_baseline_uit)
             var_log_r.append(var_log_baseline_r)
             var_log_s.append(var_log_baseline_s)
+            var_log_ca.append(var_log_baseline_ca)
+            var_log_es.append(var_log_baseline_es)
+            var_log_uit.append(var_log_baseline_uit)
             step_r.append(step_baseline_r)
             step_s.append(step_baseline_s)
+            step_ca.append(step_baseline_ca)
+            step_es.append(step_baseline_es)
+            step_uit.append(step_baseline_uit)
             steps.append(steps_l)
             optimal_stopping_times.append(optimal_stopping_idx)
             model_stopping_times.append(stopping_time)
@@ -127,6 +166,9 @@ class EvalUtil:
         return rewards, steps, snort_severe_r, snort_warning_r, snort_critical_r, \
                var_log_r, step_r, snort_severe_s, snort_warning_s, \
                snort_critical_s, var_log_s, step_s, \
+               snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \
+               snort_severe_es, snort_warning_es, snort_critical_es, var_log_es, step_es, \
+               snort_severe_uit, snort_warning_uit, snort_critical_uit, var_log_uit, step_uit, \
                flags_list, flags_percentage_list, episode_caught_list, episode_early_stopped_list, \
                episode_successful_intrusion_list, attacker_cost_list, attacker_cost_norm_list, attacker_alerts_list, \
                attacker_alerts_norm_list, intrusion_steps
@@ -218,7 +260,7 @@ class EvalUtil:
 
     @staticmethod
     def compute_reward(actions, env_config, optimal_stopping_idx : int = 6, steps: int = 100) \
-            -> Tuple[int, bool, bool, int]:
+            -> Tuple[int, bool, bool, bool, int, int]:
         """
         Utility function for computing the reward of a sequence of actions of the defender
 
@@ -230,19 +272,14 @@ class EvalUtil:
         """
         stopping_idx = EvalUtil.find_stopping_idx(actions)
 
-        r = EvalUtil.stopping_reward(
+        r, caught_attacker, early_stopping, uncaught_intrusion_steps, stopping_idx = EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps,
             optimal_stopping_idx=optimal_stopping_idx,
             env_config=env_config)
 
-        if stopping_idx < optimal_stopping_idx:
-            return r, True, False, False, stopping_idx
+        succ_intrusion = (stopping_idx == -1)
 
-        if stopping_idx == -1:
-            return r, False, True, False, stopping_idx
-
-        if stopping_idx >= optimal_stopping_idx:
-            return r,  False, False, True, stopping_idx
+        return r, early_stopping, succ_intrusion, caught_attacker, uncaught_intrusion_steps, stopping_idx
 
     @staticmethod
     def compute_steps(actions) -> int:
@@ -288,7 +325,8 @@ class EvalUtil:
         return flags, flags_percentage, attacker_cost, attacker_cost_norm, attacker_alerts, attacker_alerts_norm
 
     @staticmethod
-    def compute_snort_warning_baseline(tau, env_config, optimal_stopping_idx: int, steps : int = 100) -> Tuple[int, int]:
+    def compute_snort_warning_baseline(tau, env_config, optimal_stopping_idx: int, steps : int = 100) \
+            -> Tuple[int, bool, bool, int, int]:
         """
         Utility function for computing the reward of the snort warning baseline
 
@@ -306,10 +344,11 @@ class EvalUtil:
 
         return EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps, optimal_stopping_idx=optimal_stopping_idx,
-            env_config=env_config), stopping_idx
+            env_config=env_config)
 
     @staticmethod
-    def compute_snort_severe_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps : int = 100) -> Tuple[int, int]:
+    def compute_snort_severe_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps : int = 100) \
+            -> Tuple[int, bool, bool, int, int]:
         """
         Utility function for computing the reward of the snort severe baseline
 
@@ -327,10 +366,11 @@ class EvalUtil:
 
         return EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps, optimal_stopping_idx=optimal_stopping_idx,
-            env_config=env_config), stopping_idx
+            env_config=env_config)
 
     @staticmethod
-    def compute_snort_critical_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps : int = 100)-> Tuple[int, int]:
+    def compute_snort_critical_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps : int = 100)\
+            -> Tuple[int, bool, bool, int, int]:
         """
         Utility function for computing the reward of the snort critical baseline
 
@@ -348,10 +388,11 @@ class EvalUtil:
 
         return EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps, optimal_stopping_idx=optimal_stopping_idx,
-            env_config=env_config), stopping_idx
+            env_config=env_config)
 
     @staticmethod
-    def compute_var_log_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps: int = 100)-> Tuple[int, int]:
+    def compute_var_log_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps: int = 100) \
+            -> Tuple[int, bool, bool, int, int]:
         """
         Utility function for computing the reward of the var_log baseline
 
@@ -369,10 +410,11 @@ class EvalUtil:
 
         return EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps, optimal_stopping_idx=optimal_stopping_idx,
-            env_config=env_config), stopping_idx
+            env_config=env_config)
 
     @staticmethod
-    def compute_step_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps: int = 100)-> Tuple[int, int]:
+    def compute_step_baseline(tau, env_config, optimal_stopping_idx: int = 6, steps: int = 100) \
+            -> Tuple[int, bool, bool, int, int]:
         """
         Utility function for computing the reward of the step baseline
 
@@ -385,7 +427,7 @@ class EvalUtil:
 
         return EvalUtil.stopping_reward(
             stopping_idx=stopping_idx, episode_length=steps, optimal_stopping_idx=optimal_stopping_idx,
-            env_config=env_config), stopping_idx
+            env_config=env_config)
 
 
     @staticmethod
@@ -418,7 +460,8 @@ class EvalUtil:
 
 
     @staticmethod
-    def stopping_reward(stopping_idx, episode_length, optimal_stopping_idx, env_config) -> int:
+    def stopping_reward(stopping_idx, episode_length, optimal_stopping_idx, env_config) \
+            -> Tuple[int, bool, bool, int, int]:
         """
         Computes the reward of stopping at stopping_idx
 
@@ -426,18 +469,28 @@ class EvalUtil:
         :param episode_length: the episode length
         :param optimal_stopping_idx: the optimal stopping time
         :param env_config: the environment configuration
-        :return: the defender reward
+        :return: the defender reward, caught_attacker, early_stopping, uncaught_intrusion_steps, stopping_idx
         """
+        caught_attacker = False
+        early_stopping = False
+        uncaught_intrusion_steps = 0
+        if stopping_idx >= optimal_stopping_idx:
+            caught_attacker = True
+            uncaught_intrusion_steps = optimal_stopping_idx - stopping_idx
+        else:
+            early_stopping = True
+
         if stopping_idx < optimal_stopping_idx:
             r = env_config.defender_service_reward * (stopping_idx - 1)
             r = r + env_config.defender_early_stopping_reward
-            return r
+
         if stopping_idx == -1:
             r = env_config.defender_service_reward * (optimal_stopping_idx - 1)
             r = r + env_config.defender_intrusion_reward * (episode_length - optimal_stopping_idx)
-            return r
+
         if stopping_idx >= optimal_stopping_idx:
             r = env_config.defender_service_reward * (optimal_stopping_idx - 1)
             r = r + env_config.defender_intrusion_reward * (stopping_idx - optimal_stopping_idx)
             r = r + env_config.defender_caught_attacker_reward
-            return r
+
+        return r, caught_attacker, early_stopping, uncaught_intrusion_steps, stopping_idx

@@ -102,7 +102,50 @@ class ExperimentResult:
                  eval_2_step_baseline_steps: List = None,
                  intrusion_steps: List[int] = None,
                  eval_intrusion_steps: List[int] = None,
-                 eval_2_intrusion_steps: List[int] = None
+                 eval_2_intrusion_steps: List[int] = None,
+                 snort_severe_baseline_caught_attacker: List = None,
+                 snort_warning_baseline_caught_attacker: List = None,
+                 eval_snort_severe_baseline_caught_attacker: List = None,
+                 eval_snort_warning_baseline_caught_attacker: List = None,
+                 eval_2_snort_severe_baseline_caught_attacker: List = None,
+                 eval_2_snort_warning_baseline_caught_attacker: List = None,
+                 snort_critical_baseline_caught_attacker: List = None,
+                 var_log_baseline_caught_attacker: List = None,
+                 eval_snort_critical_baseline_caught_attacker: List = None,
+                 eval_var_log_baseline_caught_attacker: List = None,
+                 eval_2_snort_critical_baseline_caught_attacker: List = None,
+                 eval_2_var_log_baseline_caught_attacker: List = None,
+                 step_baseline_caught_attacker: List = None,
+                 eval_step_baseline_caught_attacker: List = None,
+                 eval_2_step_baseline_caught_attacker: List = None,
+                 snort_severe_baseline_early_stopping: List = None,
+                 snort_warning_baseline_early_stopping: List = None,
+                 eval_snort_severe_baseline_early_stopping: List = None,
+                 eval_snort_warning_baseline_early_stopping: List = None,
+                 eval_2_snort_severe_baseline_early_stopping: List = None,
+                 eval_2_snort_warning_baseline_early_stopping: List = None,
+                 snort_critical_baseline_early_stopping: List = None, var_log_baseline_early_stopping: List = None,
+                 eval_snort_critical_baseline_early_stopping: List = None,
+                 eval_var_log_baseline_early_stopping: List = None,
+                 eval_2_snort_critical_baseline_early_stopping: List = None,
+                 eval_2_var_log_baseline_early_stopping: List = None,
+                 step_baseline_early_stopping: List = None,
+                 eval_step_baseline_early_stopping: List = None,
+                 eval_2_step_baseline_early_stopping: List = None,
+                 snort_severe_baseline_uncaught_intrusion_steps: List = None,
+                 snort_warning_baseline_uncaught_intrusion_steps: List = None,
+                 eval_snort_severe_baseline_uncaught_intrusion_steps: List = None,
+                 eval_snort_warning_baseline_uncaught_intrusion_steps: List = None,
+                 eval_2_snort_severe_baseline_uncaught_intrusion_steps: List = None,
+                 eval_2_snort_warning_baseline_uncaught_intrusion_steps: List = None,
+                 snort_critical_baseline_uncaught_intrusion_steps: List = None, var_log_baseline_uncaught_intrusion_steps: List = None,
+                 eval_snort_critical_baseline_uncaught_intrusion_steps: List = None,
+                 eval_var_log_baseline_uncaught_intrusion_steps: List = None,
+                 eval_2_snort_critical_baseline_uncaught_intrusion_steps: List = None,
+                 eval_2_var_log_baseline_uncaught_intrusion_steps: List = None,
+                 step_baseline_uncaught_intrusion_steps: List = None,
+                 eval_step_baseline_uncaught_intrusion_steps: List = None,
+                 eval_2_step_baseline_uncaught_intrusion_steps: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -186,6 +229,51 @@ class ExperimentResult:
         :param intrusion_steps: intrusion start times
         :param eval_intrusion_steps: eval intrusion start times
         :param eval_2_intrusion_steps: eval 2 intrusion start times
+        :param snort_severe_baseline_caught_attacker: caught_attacker of the snort severe baseline
+        :param snort_warning_baseline_caught_attacker: caught_attacker of the snort warning baseline
+        :param eval_snort_severe_baseline_caught_attacker: eval caught_attacker of the snort severe baseline
+        :param eval_snort_warning_baseline_caught_attacker: eval caught_attacker of the snort warning baseline
+        :param eval_2_snort_severe_baseline_caught_attacker: eval 2 caught_attacker of the snort severe baseline
+        :param eval_2_snort_warning_baseline_caught_attacker: eval 2 caught_attacker of the snort warning baseline
+        :param snort_critical_baseline_caught_attacker: caught_attacker of the snort critical baseline
+        :param var_log_baseline_caught_attacker: caught_attacker of the var_log  baseline
+        :param eval_snort_critical_baseline_caught_attacker: eval caught_attacker of the snort critical baseline
+        :param eval_var_log_baseline_caught_attacker: eval caught_attacker of the var_log  baseline
+        :param eval_2_snort_critical_baseline_caught_attacker: eval 2 caught_attacker of the snort critical baseline
+        :param eval_2_var_log_baseline_caught_attacker: eval 2 caught_attacker of the var_log  baseline
+        :param step_baseline_caught_attacker: caught_attacker of the step baseline
+        :param eval_step_baseline_caught_attacker: eval caught_attacker of the step baseline
+        :param eval_2_step_baseline_caught_attacker: eval 2 caught_attacker of the step baseline
+        :param snort_severe_baseline_early_stopping: early_stopping of the snort severe baseline
+        :param snort_warning_baseline_early_stopping: early_stopping of the snort warning baseline
+        :param eval_snort_severe_baseline_early_stopping: eval early_stopping of the snort severe baseline
+        :param eval_snort_warning_baseline_early_stopping: eval early_stopping of the snort warning baseline
+        :param eval_2_snort_severe_baseline_early_stopping: eval 2 early_stopping of the snort severe baseline
+        :param eval_2_snort_warning_baseline_early_stopping: eval 2 early_stopping of the snort warning baseline
+        :param snort_critical_baseline_early_stopping: early_stopping of the snort critical baseline
+        :param var_log_baseline_early_stopping: early_stopping of the var_log  baseline
+        :param eval_snort_critical_baseline_early_stopping: eval early_stopping of the snort critical baseline
+        :param eval_var_log_baseline_early_stopping: eval early_stopping of the var_log  baseline
+        :param eval_2_snort_critical_baseline_early_stopping: eval 2 early_stopping of the snort critical baseline
+        :param eval_2_var_log_baseline_early_stopping: eval 2 early_stopping of the var_log  baseline
+        :param step_baseline_early_stopping: early_stopping of the step baseline
+        :param eval_step_baseline_early_stopping: eval early_stopping of the step baseline
+        :param eval_2_step_baseline_early_stopping: eval 2 early_stopping of the step baseline
+        :param snort_severe_baseline_uncaught_intrusion_steps: uncaught_intrusion_steps of the snort severe baseline
+        :param snort_warning_baseline_uncaught_intrusion_steps: uncaught_intrusion_steps of the snort warning baseline
+        :param eval_snort_severe_baseline_uncaught_intrusion_steps: eval uncaught_intrusion_steps of the snort severe baseline
+        :param eval_snort_warning_baseline_uncaught_intrusion_steps: eval uncaught_intrusion_steps of the snort warning baseline
+        :param eval_2_snort_severe_baseline_uncaught_intrusion_steps: eval 2 uncaught_intrusion_steps of the snort severe baseline
+        :param eval_2_snort_warning_baseline_uncaught_intrusion_steps: eval 2 uncaught_intrusion_steps of the snort warning baseline
+        :param snort_critical_baseline_uncaught_intrusion_steps: uncaught_intrusion_steps of the snort critical baseline
+        :param var_log_baseline_uncaught_intrusion_steps: uncaught_intrusion_steps of the var_log  baseline
+        :param eval_snort_critical_baseline_uncaught_intrusion_steps: eval uncaught_intrusion_steps of the snort critical baseline
+        :param eval_var_log_baseline_uncaught_intrusion_steps: eval uncaught_intrusion_steps of the var_log  baseline
+        :param eval_2_snort_critical_baseline_uncaught_intrusion_steps: eval 2 uncaught_intrusion_steps of the snort critical baseline
+        :param eval_2_var_log_baseline_uncaught_intrusion_steps: eval 2 uncaught_intrusion_steps of the var_log  baseline
+        :param step_baseline_uncaught_intrusion_steps: uncaught_intrusion_steps of the step baseline
+        :param eval_step_baseline_uncaught_intrusion_steps: eval uncaught_intrusion_steps of the step baseline
+        :param eval_2_step_baseline_uncaught_intrusion_steps: eval 2 uncaught_intrusion_steps of the step baseline
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -307,6 +395,51 @@ class ExperimentResult:
         self.intrusion_steps = intrusion_steps
         self.eval_intrusion_steps = eval_intrusion_steps
         self.eval_2_intrusion_steps = eval_intrusion_steps
+        self.snort_severe_baseline_caught_attacker = snort_severe_baseline_caught_attacker
+        self.snort_warning_baseline_caught_attacker = snort_warning_baseline_caught_attacker
+        self.eval_snort_severe_baseline_caught_attacker = eval_snort_severe_baseline_caught_attacker
+        self.eval_snort_warning_baseline_caught_attacker = eval_snort_warning_baseline_caught_attacker
+        self.eval_2_snort_severe_baseline_caught_attacker = eval_2_snort_severe_baseline_caught_attacker
+        self.eval_2_snort_warning_baseline_caught_attacker = eval_2_snort_warning_baseline_caught_attacker
+        self.snort_critical_baseline_caught_attacker = snort_critical_baseline_caught_attacker
+        self.var_log_baseline_caught_attacker = var_log_baseline_caught_attacker
+        self.eval_snort_critical_baseline_caught_attacker = eval_snort_critical_baseline_caught_attacker
+        self.eval_var_log_baseline_caught_attacker = eval_var_log_baseline_caught_attacker
+        self.eval_2_snort_critical_baseline_caught_attacker = eval_2_snort_critical_baseline_caught_attacker
+        self.eval_2_var_log_baseline_caught_attacker = eval_2_var_log_baseline_caught_attacker
+        self.step_baseline_caught_attacker = step_baseline_caught_attacker
+        self.eval_step_baseline_caught_attacker = eval_step_baseline_caught_attacker
+        self.eval_2_step_baseline_caught_attacker = eval_2_step_baseline_caught_attacker
+        self.snort_severe_baseline_early_stopping = snort_severe_baseline_early_stopping
+        self.snort_warning_baseline_early_stopping = snort_warning_baseline_early_stopping
+        self.eval_snort_severe_baseline_early_stopping = eval_snort_severe_baseline_early_stopping
+        self.eval_snort_warning_baseline_early_stopping = eval_snort_warning_baseline_early_stopping
+        self.eval_2_snort_severe_baseline_early_stopping = eval_2_snort_severe_baseline_early_stopping
+        self.eval_2_snort_warning_baseline_early_stopping = eval_2_snort_warning_baseline_early_stopping
+        self.snort_critical_baseline_early_stopping = snort_critical_baseline_early_stopping
+        self.var_log_baseline_early_stopping = var_log_baseline_early_stopping
+        self.eval_snort_critical_baseline_early_stopping = eval_snort_critical_baseline_early_stopping
+        self.eval_var_log_baseline_early_stopping = eval_var_log_baseline_early_stopping
+        self.eval_2_snort_critical_baseline_early_stopping = eval_2_snort_critical_baseline_early_stopping
+        self.eval_2_var_log_baseline_early_stopping = eval_2_var_log_baseline_early_stopping
+        self.step_baseline_early_stopping = step_baseline_early_stopping
+        self.eval_step_baseline_early_stopping = eval_step_baseline_early_stopping
+        self.eval_2_step_baseline_early_stopping = eval_2_step_baseline_early_stopping
+        self.snort_severe_baseline_uncaught_intrusion_steps = snort_severe_baseline_uncaught_intrusion_steps
+        self.snort_warning_baseline_uncaught_intrusion_steps = snort_warning_baseline_uncaught_intrusion_steps
+        self.eval_snort_severe_baseline_uncaught_intrusion_steps = eval_snort_severe_baseline_uncaught_intrusion_steps
+        self.eval_snort_warning_baseline_uncaught_intrusion_steps = eval_snort_warning_baseline_uncaught_intrusion_steps
+        self.eval_2_snort_severe_baseline_uncaught_intrusion_steps = eval_2_snort_severe_baseline_uncaught_intrusion_steps
+        self.eval_2_snort_warning_baseline_uncaught_intrusion_steps = eval_2_snort_warning_baseline_uncaught_intrusion_steps
+        self.snort_critical_baseline_uncaught_intrusion_steps = snort_critical_baseline_uncaught_intrusion_steps
+        self.var_log_baseline_uncaught_intrusion_steps = var_log_baseline_uncaught_intrusion_steps
+        self.eval_snort_critical_baseline_uncaught_intrusion_steps = eval_snort_critical_baseline_uncaught_intrusion_steps
+        self.eval_var_log_baseline_uncaught_intrusion_steps = eval_var_log_baseline_uncaught_intrusion_steps
+        self.eval_2_snort_critical_baseline_uncaught_intrusion_steps = eval_2_snort_critical_baseline_uncaught_intrusion_steps
+        self.eval_2_var_log_baseline_uncaught_intrusion_steps = eval_2_var_log_baseline_uncaught_intrusion_steps
+        self.step_baseline_uncaught_intrusion_steps = step_baseline_uncaught_intrusion_steps
+        self.eval_step_baseline_uncaught_intrusion_steps = eval_step_baseline_uncaught_intrusion_steps
+        self.eval_2_step_baseline_uncaught_intrusion_steps = eval_2_step_baseline_uncaught_intrusion_steps
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -548,6 +681,96 @@ class ExperimentResult:
             self.eval_intrusion_steps = []
         if eval_2_intrusion_steps is None:
             self.eval_2_intrusion_steps = []
+        if snort_severe_baseline_caught_attacker is None:
+            self.snort_severe_baseline_caught_attacker = []
+        if snort_warning_baseline_caught_attacker is None:
+            self.snort_warning_baseline_caught_attacker = []
+        if eval_snort_severe_baseline_caught_attacker is None:
+            self.eval_snort_severe_baseline_caught_attacker = []
+        if eval_snort_warning_baseline_caught_attacker is None:
+            self.eval_snort_warning_baseline_caught_attacker = []
+        if eval_2_snort_severe_baseline_caught_attacker is None:
+            self.eval_2_snort_severe_baseline_caught_attacker = []
+        if eval_2_snort_warning_baseline_caught_attacker is None:
+            self.eval_2_snort_warning_baseline_caught_attacker = []
+        if snort_critical_baseline_caught_attacker is None:
+            self.snort_critical_baseline_caught_attacker = []
+        if var_log_baseline_caught_attacker is None:
+            self.var_log_baseline_caught_attacker = []
+        if eval_snort_critical_baseline_caught_attacker is None:
+            self.eval_snort_critical_baseline_caught_attacker = []
+        if eval_var_log_baseline_caught_attacker is None:
+            self.eval_var_log_baseline_caught_attacker = []
+        if eval_2_snort_critical_baseline_caught_attacker is None:
+            self.eval_2_snort_critical_baseline_caught_attacker = []
+        if eval_2_var_log_baseline_caught_attacker is None:
+            self.eval_2_var_log_baseline_caught_attacker = []
+        if step_baseline_caught_attacker is None:
+            self.step_baseline_caught_attacker = []
+        if eval_step_baseline_caught_attacker is None:
+            self.eval_step_baseline_caught_attacker = []
+        if eval_2_step_baseline_caught_attacker is None:
+            self.eval_2_step_baseline_caught_attacker = []
+        if snort_severe_baseline_early_stopping is None:
+            self.snort_severe_baseline_early_stopping = []
+        if snort_warning_baseline_early_stopping is None:
+            self.snort_warning_baseline_early_stopping = []
+        if eval_snort_severe_baseline_early_stopping is None:
+            self.eval_snort_severe_baseline_early_stopping = []
+        if eval_snort_warning_baseline_early_stopping is None:
+            self.eval_snort_warning_baseline_early_stopping = []
+        if eval_2_snort_severe_baseline_early_stopping is None:
+            self.eval_2_snort_severe_baseline_early_stopping = []
+        if eval_2_snort_warning_baseline_early_stopping is None:
+            self.eval_2_snort_warning_baseline_early_stopping = []
+        if snort_critical_baseline_early_stopping is None:
+            self.snort_critical_baseline_early_stopping = []
+        if var_log_baseline_early_stopping is None:
+            self.var_log_baseline_early_stopping = []
+        if eval_snort_critical_baseline_early_stopping is None:
+            self.eval_snort_critical_baseline_early_stopping = []
+        if eval_var_log_baseline_early_stopping is None:
+            self.eval_var_log_baseline_early_stopping = []
+        if eval_2_snort_critical_baseline_early_stopping is None:
+            self.eval_2_snort_critical_baseline_early_stopping = []
+        if eval_2_var_log_baseline_early_stopping is None:
+            self.eval_2_var_log_baseline_early_stopping = []
+        if step_baseline_early_stopping is None:
+            self.step_baseline_early_stopping = []
+        if eval_step_baseline_early_stopping is None:
+            self.eval_step_baseline_early_stopping = []
+        if eval_2_step_baseline_early_stopping is None:
+            self.eval_2_step_baseline_early_stopping = []
+        if snort_severe_baseline_uncaught_intrusion_steps is None:
+            self.snort_severe_baseline_uncaught_intrusion_steps = []
+        if snort_warning_baseline_uncaught_intrusion_steps is None:
+            self.snort_warning_baseline_uncaught_intrusion_steps = []
+        if eval_snort_severe_baseline_uncaught_intrusion_steps is None:
+            self.eval_snort_severe_baseline_uncaught_intrusion_steps = []
+        if eval_snort_warning_baseline_uncaught_intrusion_steps is None:
+            self.eval_snort_warning_baseline_uncaught_intrusion_steps = []
+        if eval_2_snort_severe_baseline_uncaught_intrusion_steps is None:
+            self.eval_2_snort_severe_baseline_uncaught_intrusion_steps = []
+        if eval_2_snort_warning_baseline_uncaught_intrusion_steps is None:
+            self.eval_2_snort_warning_baseline_uncaught_intrusion_steps = []
+        if snort_critical_baseline_uncaught_intrusion_steps is None:
+            self.snort_critical_baseline_uncaught_intrusion_steps = []
+        if var_log_baseline_uncaught_intrusion_steps is None:
+            self.var_log_baseline_uncaught_intrusion_steps = []
+        if eval_snort_critical_baseline_uncaught_intrusion_steps is None:
+            self.eval_snort_critical_baseline_uncaught_intrusion_steps = []
+        if eval_var_log_baseline_uncaught_intrusion_steps is None:
+            self.eval_var_log_baseline_uncaught_intrusion_steps = []
+        if eval_2_snort_critical_baseline_uncaught_intrusion_steps is None:
+            self.eval_2_snort_critical_baseline_uncaught_intrusion_steps = []
+        if eval_2_var_log_baseline_uncaught_intrusion_steps is None:
+            self.eval_2_var_log_baseline_uncaught_intrusion_steps = []
+        if step_baseline_uncaught_intrusion_steps is None:
+            self.step_baseline_uncaught_intrusion_steps = []
+        if eval_step_baseline_uncaught_intrusion_steps is None:
+            self.eval_step_baseline_uncaught_intrusion_steps = []
+        if eval_2_step_baseline_uncaught_intrusion_steps is None:
+            self.eval_2_step_baseline_uncaught_intrusion_steps = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -600,7 +823,38 @@ class ExperimentResult:
                    self.eval_2_snort_critical_baseline_steps, self.eval_2_var_log_baseline_steps,
                    self.step_baseline_rewards, self.eval_step_baseline_rewards, self.eval_2_step_baseline_rewards,
                    self.step_baseline_steps, self.eval_step_baseline_steps, self.eval_2_step_baseline_steps,
-                   self.intrusion_steps, self.eval_intrusion_steps, self.eval_2_intrusion_steps
+                   self.intrusion_steps, self.eval_intrusion_steps, self.eval_2_intrusion_steps,
+                   self.snort_severe_baseline_caught_attacker, self.snort_warning_baseline_caught_attacker,
+                   self.eval_snort_severe_baseline_caught_attacker, self.eval_snort_warning_baseline_caught_attacker,
+                   self.eval_2_snort_severe_baseline_caught_attacker, self.eval_2_snort_warning_baseline_caught_attacker,
+                   self.snort_critical_baseline_caught_attacker, self.var_log_baseline_caught_attacker,
+                   self.eval_snort_critical_baseline_caught_attacker, self.eval_var_log_baseline_caught_attacker,
+                   self.eval_2_snort_critical_baseline_caught_attacker, self.eval_2_var_log_baseline_caught_attacker,
+                   self.step_baseline_caught_attacker, self.eval_step_baseline_caught_attacker,
+                   self.eval_2_step_baseline_caught_attacker,
+                   self.snort_severe_baseline_early_stopping, self.snort_warning_baseline_early_stopping,
+                   self.eval_snort_severe_baseline_early_stopping, self.eval_snort_warning_baseline_early_stopping,
+                   self.eval_2_snort_severe_baseline_early_stopping,
+                   self.eval_2_snort_warning_baseline_early_stopping,
+                   self.snort_critical_baseline_early_stopping, self.var_log_baseline_early_stopping,
+                   self.eval_snort_critical_baseline_early_stopping, self.eval_var_log_baseline_early_stopping,
+                   self.eval_2_snort_critical_baseline_early_stopping, self.eval_2_var_log_baseline_early_stopping,
+                   self.step_baseline_early_stopping, self.eval_step_baseline_early_stopping,
+                   self.eval_2_step_baseline_early_stopping,
+                   self.snort_severe_baseline_uncaught_intrusion_steps,
+                   self.snort_warning_baseline_uncaught_intrusion_steps,
+                   self.eval_snort_severe_baseline_uncaught_intrusion_steps,
+                   self.eval_snort_warning_baseline_uncaught_intrusion_steps,
+                   self.eval_2_snort_severe_baseline_uncaught_intrusion_steps,
+                   self.eval_2_snort_warning_baseline_uncaught_intrusion_steps,
+                   self.snort_critical_baseline_uncaught_intrusion_steps,
+                   self.var_log_baseline_uncaught_intrusion_steps,
+                   self.eval_snort_critical_baseline_uncaught_intrusion_steps,
+                   self.eval_var_log_baseline_uncaught_intrusion_steps,
+                   self.eval_2_snort_critical_baseline_uncaught_intrusion_steps,
+                   self.eval_2_var_log_baseline_uncaught_intrusion_steps,
+                   self.step_baseline_uncaught_intrusion_steps, self.eval_step_baseline_uncaught_intrusion_steps,
+                   self.eval_2_step_baseline_uncaught_intrusion_steps
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -643,7 +897,38 @@ class ExperimentResult:
                          "eval_2_snort_critical_baseline_steps", "eval_2_var_log_baseline_steps",
                          "step_baseline_rewards", "eval_step_baseline_rewards", "eval_2_step_baseline_rewards",
                          "step_baseline_steps", "eval_step_baseline_steps", "eval_2_step_baseline_steps",
-                         "intrusion_steps", "eval_intrusion_steps", "eval_2_intrusion_steps"
+                         "intrusion_steps", "eval_intrusion_steps", "eval_2_intrusion_steps",
+                         "snort_severe_baseline_caught_attacker", "snort_warning_baseline_caught_attacker",
+                         "eval_snort_severe_baseline_caught_attacker", "eval_snort_warning_baseline_caught_attacker",
+                         "eval_2_snort_severe_baseline_caught_attacker",
+                         "eval_2_snort_warning_baseline_caught_attacker",
+                         "snort_critical_baseline_caught_attacker", "var_log_baseline_caught_attacker",
+                         "eval_snort_critical_baseline_caught_attacker", "eval_var_log_baseline_caught_attacker",
+                         "eval_2_snort_critical_baseline_caught_attacker", "eval_2_var_log_baseline_caught_attacker",
+                         "step_baseline_caught_attacker", "eval_step_baseline_caught_attacker",
+                         "eval_2_step_baseline_caught_attacker",
+                         "snort_severe_baseline_early_stopping", "snort_warning_baseline_early_stopping",
+                         "eval_snort_severe_baseline_early_stopping", "eval_snort_warning_baseline_early_stopping",
+                         "eval_2_snort_severe_baseline_early_stopping", "eval_2_snort_warning_baseline_early_stopping",
+                         "snort_critical_baseline_early_stopping", "var_log_baseline_early_stopping",
+                         "eval_snort_critical_baseline_early_stopping", "eval_var_log_baseline_early_stopping",
+                         "eval_2_snort_critical_baseline_early_stopping", "eval_2_var_log_baseline_early_stopping",
+                         "step_baseline_early_stopping", "eval_step_baseline_early_stopping",
+                         "eval_2_step_baseline_early_stopping",
+                         "snort_severe_baseline_uncaught_intrusion_steps",
+                         "snort_warning_baseline_uncaught_intrusion_steps",
+                         "eval_snort_severe_baseline_uncaught_intrusion_steps",
+                         "eval_snort_warning_baseline_uncaught_intrusion_steps",
+                         "eval_2_snort_severe_baseline_uncaught_intrusion_steps",
+                         "eval_2_snort_warning_baseline_uncaught_intrusion_steps",
+                         "snort_critical_baseline_uncaught_intrusion_steps",
+                         "var_log_baseline_uncaught_intrusion_steps",
+                         "eval_snort_critical_baseline_uncaught_intrusion_steps",
+                         "eval_var_log_baseline_uncaught_intrusion_steps",
+                         "eval_2_snort_critical_baseline_uncaught_intrusion_steps",
+                         "eval_2_var_log_baseline_uncaught_intrusion_steps",
+                         "step_baseline_uncaught_intrusion_steps", "eval_step_baseline_uncaught_intrusion_steps",
+                         "eval_2_step_baseline_uncaught_intrusion_steps"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
