@@ -44,7 +44,8 @@ class RolloutDataDTO:
                  attacker_action_costs_norm=None,
                  attacker_action_alerts=None,
                  attacker_action_alerts_norm=None,
-                 episode_intrusion_steps = None
+                 episode_intrusion_steps = None,
+                 uncaught_intrusion_steps=None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -63,7 +64,6 @@ class RolloutDataDTO:
         self.episode_snort_critical_baseline_steps = episode_snort_critical_baseline_steps
         self.episode_var_log_baseline_steps = episode_var_log_baseline_steps
         self.episode_step_baseline_steps = episode_step_baseline_steps
-
         self.episode_snort_severe_baseline_caught_attacker = episode_snort_severe_baseline_caught_attacker
         self.episode_snort_warning_baseline_caught_attacker = episode_snort_warning_baseline_caught_attacker
         self.episode_snort_critical_baseline_caught_attacker = episode_snort_critical_baseline_caught_attacker
@@ -92,6 +92,7 @@ class RolloutDataDTO:
         self.attacker_action_alerts = attacker_action_alerts
         self.attacker_action_alerts_norm = attacker_action_alerts_norm
         self.episode_intrusion_steps = episode_intrusion_steps
+        self.uncaught_intrusion_steps = uncaught_intrusion_steps
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -112,13 +113,11 @@ class RolloutDataDTO:
         self.episode_snort_critical_baseline_steps = []
         self.episode_var_log_baseline_steps = []
         self.episode_step_baseline_steps = []
-
         self.episode_snort_severe_baseline_caught_attacker = []
         self.episode_snort_warning_baseline_caught_attacker = []
         self.episode_snort_critical_baseline_caught_attacker = []
         self.episode_var_log_baseline_caught_attacker = []
         self.episode_step_baseline_caught_attacker = []
-
         self.episode_snort_severe_baseline_early_stopping = []
         self.episode_snort_warning_baseline_early_stopping = []
         self.episode_snort_critical_baseline_early_stopping = []
@@ -142,6 +141,7 @@ class RolloutDataDTO:
         self.attacker_action_alerts = []
         self.attacker_action_alerts_norm = []
         self.episode_intrusion_steps = []
+        self.uncaught_intrusion_steps = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 

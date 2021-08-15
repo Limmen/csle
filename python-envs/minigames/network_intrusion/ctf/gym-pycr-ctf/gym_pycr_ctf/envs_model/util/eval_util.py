@@ -22,6 +22,7 @@ class EvalUtil:
         trajectories = EvalUtil.eval_taus(env.env_config.emulation_config.save_dynamics_model_dir)
         rewards = []
         steps = []
+        uncaught_intrusion_steps_l = []
         snort_severe_r = []
         snort_warning_r = []
         snort_critical_r = []
@@ -88,6 +89,7 @@ class EvalUtil:
             flags_percentage_list.append(flags_percentage)
             episode_caught_list.append(caught)
             episode_early_stopped_list.append(early_stopping)
+            uncaught_intrusion_steps_l.append(uncaught_intrusion_steps)
             episode_successful_intrusion_list.append(succ_intrusion)
             attacker_cost_list.append(attacker_cost)
             attacker_cost_norm_list.append(attacker_cost_norm)
@@ -163,7 +165,7 @@ class EvalUtil:
         print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
         print("stopping obs:{}".format(stopping_obs_l))
 
-        return rewards, steps, snort_severe_r, snort_warning_r, snort_critical_r, \
+        return rewards, steps, uncaught_intrusion_steps_l, snort_severe_r, snort_warning_r, snort_critical_r, \
                var_log_r, step_r, snort_severe_s, snort_warning_s, \
                snort_critical_s, var_log_s, step_s, \
                snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \

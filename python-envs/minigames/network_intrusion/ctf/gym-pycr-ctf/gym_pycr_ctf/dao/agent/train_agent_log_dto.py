@@ -96,7 +96,6 @@ class TrainAgentLogDTO:
                  episode_intrusion_steps: List[int] = None,
                  eval_episode_intrusion_steps: List[int] = None,
                  eval_2_episode_intrusion_steps: List[int] = None,
-
                  episode_snort_severe_baseline_caught_attacker: List[int] = None,
                  episode_snort_warning_baseline_caught_attacker: List[int] = None,
                  eval_episode_snort_severe_baseline_caught_attacker: List[int] = None,
@@ -141,7 +140,10 @@ class TrainAgentLogDTO:
                  eval_2_episode_var_log_baseline_uncaught_intrusion_steps: List[int] = None,
                  episode_step_baseline_uncaught_intrusion_steps: List[int] = None,
                  eval_episode_step_baseline_uncaught_intrusion_steps: List[int] = None,
-                 eval_2_episode_step_baseline_uncaught_intrusion_steps: List[int] = None
+                 eval_2_episode_step_baseline_uncaught_intrusion_steps: List[int] = None,
+                 uncaught_intrusion_steps : List[int] = None,
+                 eval_uncaught_intrusion_steps: List[int] = None,
+                 eval_2_uncaught_intrusion_steps: List[int] = None
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -290,6 +292,9 @@ class TrainAgentLogDTO:
         self.episode_step_baseline_uncaught_intrusion_steps = episode_step_baseline_uncaught_intrusion_steps
         self.eval_episode_step_baseline_uncaught_intrusion_steps = eval_episode_step_baseline_uncaught_intrusion_steps
         self.eval_2_episode_step_baseline_uncaught_intrusion_steps = eval_2_episode_step_baseline_uncaught_intrusion_steps
+        self.uncaught_intrusion_steps = uncaught_intrusion_steps
+        self.eval_uncaught_intrusion_steps = eval_uncaught_intrusion_steps
+        self.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
 
 
     def initialize(self):
@@ -460,6 +465,9 @@ class TrainAgentLogDTO:
         self.episode_step_baseline_uncaught_intrusion_steps = []
         self.eval_episode_step_baseline_uncaught_intrusion_steps = []
         self.eval_2_episode_step_baseline_uncaught_intrusion_steps = []
+        self.uncaught_intrusion_steps = []
+        self.eval_uncaught_intrusion_steps = []
+        self.eval_2_uncaught_intrusion_steps = []
 
     def copy(self):
         c = TrainAgentLogDTO()
@@ -565,7 +573,6 @@ class TrainAgentLogDTO:
         c.episode_intrusion_steps = self.episode_intrusion_steps
         c.eval_episode_intrusion_steps = self.eval_episode_intrusion_steps
         c.eval_2_episode_intrusion_steps = self.eval_2_episode_intrusion_steps
-
         c.episode_snort_severe_baseline_caught_attacker = self.episode_snort_severe_baseline_caught_attacker
         c.episode_snort_warning_baseline_caught_attacker = self.episode_snort_warning_baseline_caught_attacker
         c.eval_episode_snort_severe_baseline_caught_attacker = self.eval_episode_snort_severe_baseline_caught_attacker
@@ -611,6 +618,9 @@ class TrainAgentLogDTO:
         c.episode_step_baseline_uncaught_intrusion_steps = self.episode_step_baseline_uncaught_intrusion_steps
         c.eval_episode_step_baseline_uncaught_intrusion_steps = self.eval_episode_step_baseline_uncaught_intrusion_steps
         c.eval_2_episode_step_baseline_uncaught_intrusion_steps = self.eval_2_episode_step_baseline_uncaught_intrusion_steps
+        c.uncaught_intrusion_steps = self.uncaught_intrusion_steps
+        c.eval_uncaught_intrusion_steps = self.eval_uncaught_intrusion_steps
+        c.eval_2_uncaught_intrusion_steps = self.eval_2_uncaught_intrusion_steps
 
     def copy_saved_env_2(self, saved_log_dto):
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards
@@ -656,6 +666,7 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps
         self.eval_2_episode_var_log_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps
         self.eval_2_episode_step_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps
+        self.eval_2_uncaught_intrusion_steps = saved_log_dto.eval_2_uncaught_intrusion_steps
 
     def eval_update_env_specific_metrics(self, env_config, infos, i):
         if env_config.emulation_config is not None:

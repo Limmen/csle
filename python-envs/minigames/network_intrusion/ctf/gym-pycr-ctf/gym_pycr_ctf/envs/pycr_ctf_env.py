@@ -200,6 +200,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_info = {}
             defender_info["caught_attacker"] = 0
             defender_info["early_stopped"] = 0
+            defender_info["uncaught_intrusion_steps"] = 0
             defender_info["snort_severe_baseline_reward"] = 0
             defender_info["snort_warning_baseline_reward"] = 0
             defender_info["snort_critical_baseline_reward"] = 0
@@ -412,6 +413,8 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
+        uncaught_intrusion_steps = self.env_state.defender_obs_state.step - self.env_state.attacker_obs_state.intrusion_step
+
         self.env_state = s_prime
 
         if self.env_state.defender_obs_state.caught_attacker:
@@ -430,6 +433,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped
+        info["uncaught_intrusion_steps"] = uncaught_intrusion_steps
         info["snort_severe_baseline_reward"] = self.env_state.defender_obs_state.snort_severe_baseline_reward
         info["snort_warning_baseline_reward"] = self.env_state.defender_obs_state.snort_warning_baseline_reward
         info["snort_critical_baseline_reward"] = self.env_state.defender_obs_state.snort_critical_baseline_reward
