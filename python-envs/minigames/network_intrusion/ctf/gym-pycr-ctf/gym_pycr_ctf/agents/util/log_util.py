@@ -1295,6 +1295,24 @@ class LogUtil:
         result.eval_2_var_log_baseline_rewards.append(eval_2_avg_episode_var_log_baseline_rewards)
         result.defender_eval_2_avg_regret.append(avg_eval_2_regret)
         result.defender_eval_2_avg_opt_frac.append(eval_2_avg_opt_frac)
+        result.snort_severe_baseline_steps.append(avg_episode_snort_severe_baseline_steps)
+        result.snort_warning_baseline_steps.append(avg_episode_snort_warning_baseline_steps)
+        result.eval_snort_severe_baseline_steps.append(eval_avg_episode_snort_severe_baseline_steps)
+        result.eval_snort_warning_baseline_steps.append(eval_avg_episode_snort_warning_baseline_steps)
+        result.eval_2_snort_severe_baseline_steps.append(eval_2_avg_episode_snort_severe_baseline_steps)
+        result.eval_2_snort_warning_baseline_steps.append(eval_2_avg_episode_snort_warning_baseline_steps)
+        result.snort_critical_baseline_steps.append(avg_episode_snort_critical_baseline_steps)
+        result.var_log_baseline_steps.append(avg_episode_var_log_baseline_steps)
+        result.eval_snort_critical_baseline_steps.append(eval_avg_episode_snort_critical_baseline_steps)
+        result.eval_var_log_baseline_steps.append(eval_avg_episode_var_log_baseline_steps)
+        result.eval_2_snort_critical_baseline_steps.append(eval_2_avg_episode_snort_critical_baseline_steps)
+        result.eval_2_var_log_baseline_steps.append(eval_2_avg_episode_var_log_baseline_steps)
+        result.step_baseline_rewards.append(avg_episode_step_baseline_rewards)
+        result.eval_step_baseline_rewards.append(eval_avg_episode_step_baseline_rewards)
+        result.eval_2_step_baseline_rewards.append(eval_2_avg_episode_step_baseline_rewards)
+        result.step_baseline_steps.append(avg_episode_step_baseline_steps)
+        result.eval_step_baseline_steps.append(eval_avg_episode_step_baseline_steps)
+        result.eval_2_step_baseline_steps.append(eval_2_avg_episode_step_baseline_steps)
 
         if train_log_dto.defender_train_episode_env_specific_rewards is not None:
             for key in train_log_dto.defender_train_episode_env_specific_rewards.keys():
@@ -1359,6 +1377,9 @@ class LogUtil:
             result.eval_avg_episode_flags_percentage.append(eval_avg_episode_flags_percentage)
             result.eval_2_avg_episode_flags.append(eval_2_avg_episode_flags)
             result.eval_2_avg_episode_flags_percentage.append(eval_2_avg_episode_flags_percentage)
+            result.intrusion_steps.append(avg_episode_intrusion_steps)
+            result.eval_intrusion_steps.append(eval_avg_episode_intrusion_steps)
+            result.eval_2_intrusion_steps.append(eval_2_avg_episode_intrusion_steps)
 
 
             if train_log_dto.train_env_specific_steps is not None:

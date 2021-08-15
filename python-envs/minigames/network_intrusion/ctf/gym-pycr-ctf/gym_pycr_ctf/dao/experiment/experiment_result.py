@@ -89,7 +89,20 @@ class ExperimentResult:
                  eval_2_attacker_action_costs_norm: List[float] = None,
                  eval_2_attacker_action_alerts: List[float] = None,
                  eval_2_attacker_action_alerts_norm: List[float] = None,
-                 time_elapsed : List[float] = None
+                 time_elapsed : List[float] = None,
+                 snort_severe_baseline_steps: List = None, snort_warning_baseline_steps: List = None,
+                 eval_snort_severe_baseline_steps: List = None, eval_snort_warning_baseline_steps: List = None,
+                 eval_2_snort_severe_baseline_steps: List = None, eval_2_snort_warning_baseline_steps: List = None,
+                 snort_critical_baseline_steps: List = None, var_log_baseline_steps: List = None,
+                 eval_snort_critical_baseline_steps: List = None, eval_var_log_baseline_steps: List = None,
+                 eval_2_snort_critical_baseline_steps: List = None, eval_2_var_log_baseline_steps: List = None,
+                 step_baseline_rewards: List = None, eval_step_baseline_rewards: List = None,
+                 eval_2_step_baseline_rewards: List = None, step_baseline_steps: List = None,
+                 eval_step_baseline_steps: List = None,
+                 eval_2_step_baseline_steps: List = None,
+                 intrusion_steps: List[int] = None,
+                 eval_intrusion_steps: List[int] = None,
+                 eval_2_intrusion_steps: List[int] = None
                  ):
         """
         Constructor, initializes the DTO
@@ -152,6 +165,27 @@ class ExperimentResult:
         :param eval_2_snort_critical_baseline_rewards: eval 2 rewards of the snort critical baseline
         :param eval_2_var_log_baseline_rewards: eval 2 rewards of the var_log  baseline
         :param time_elapsed: the time elapsed from start of training
+        :param snort_severe_baseline_steps: steps of the snort severe baseline
+        :param snort_warning_baseline_steps: steps of the snort warning baseline
+        :param eval_snort_severe_baseline_steps: eval steps of the snort severe baseline
+        :param eval_snort_warning_baseline_steps: eval steps of the snort warning baseline
+        :param eval_2_snort_severe_baseline_steps: eval 2 steps of the snort severe baseline
+        :param eval_2_snort_warning_baseline_steps: eval 2 steps of the snort warning baseline
+        :param snort_critical_baseline_steps: steps of the snort critical baseline
+        :param var_log_baseline_steps: steps of the var_log  baseline
+        :param eval_snort_critical_baseline_steps: eval steps of the snort critical baseline
+        :param eval_var_log_baseline_steps: eval steps of the var_log  baseline
+        :param eval_2_snort_critical_baseline_steps: eval 2 steps of the snort critical baseline
+        :param eval_2_var_log_baseline_steps: eval 2 steps of the var_log  baseline
+        :param step_baseline_rewards: rewards of the step baseline
+        :param eval_step_baseline_rewards: eval rewards of the step baseline
+        :param eval_2_step_baseline_rewards: eval 2 rewards of the step baseline
+        :param step_baseline_steps: steps of the step baseline
+        :param eval_step_baseline_steps: eval steps of the step baseline
+        :param eval_2_step_baseline_steps: eval 2 steps of the step baseline
+        :param intrusion_steps: intrusion start times
+        :param eval_intrusion_steps: eval intrusion start times
+        :param eval_2_intrusion_steps: eval 2 intrusion start times
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -252,6 +286,27 @@ class ExperimentResult:
         self.eval_2_attacker_action_alerts = eval_2_attacker_action_alerts
         self.eval_2_attacker_action_alerts_norm = eval_2_attacker_action_alerts_norm
         self.time_elapsed = time_elapsed
+        self.snort_severe_baseline_steps = snort_severe_baseline_steps
+        self.snort_warning_baseline_steps = snort_warning_baseline_steps
+        self.eval_snort_severe_baseline_steps = eval_snort_severe_baseline_steps
+        self.eval_snort_warning_baseline_steps = eval_snort_warning_baseline_steps
+        self.eval_2_snort_severe_baseline_steps = eval_2_snort_severe_baseline_steps
+        self.eval_2_snort_warning_baseline_steps = eval_2_snort_warning_baseline_steps
+        self.snort_critical_baseline_steps = snort_critical_baseline_steps
+        self.var_log_baseline_steps = var_log_baseline_steps
+        self.eval_snort_critical_baseline_steps = eval_snort_critical_baseline_steps
+        self.eval_var_log_baseline_steps = eval_var_log_baseline_steps
+        self.eval_2_snort_critical_baseline_steps = eval_2_snort_critical_baseline_steps
+        self.eval_2_var_log_baseline_steps = eval_2_var_log_baseline_steps
+        self.step_baseline_rewards = step_baseline_rewards
+        self.eval_step_baseline_rewards = eval_step_baseline_rewards
+        self.eval_2_step_baseline_rewards = eval_2_step_baseline_rewards
+        self.step_baseline_steps = step_baseline_steps
+        self.eval_step_baseline_steps = eval_step_baseline_steps
+        self.eval_2_step_baseline_steps = eval_2_step_baseline_steps
+        self.intrusion_steps = intrusion_steps
+        self.eval_intrusion_steps = eval_intrusion_steps
+        self.eval_2_intrusion_steps = eval_intrusion_steps
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -451,6 +506,48 @@ class ExperimentResult:
             self.eval_2_attacker_action_alerts_norm = []
         if time_elapsed is None:
             self.time_elapsed = []
+        if snort_severe_baseline_steps is None:
+            self.snort_severe_baseline_steps = []
+        if snort_warning_baseline_steps is None:
+            self.snort_warning_baseline_steps = []
+        if eval_snort_severe_baseline_steps is None:
+            self.eval_snort_severe_baseline_steps = []
+        if eval_snort_warning_baseline_steps is None:
+            self.eval_snort_warning_baseline_steps = []
+        if eval_2_snort_severe_baseline_steps is None:
+            self.eval_2_snort_severe_baseline_steps = []
+        if eval_2_snort_warning_baseline_steps is None:
+            self.eval_2_snort_warning_baseline_steps = []
+        if snort_critical_baseline_steps is None:
+            self.snort_critical_baseline_steps = []
+        if var_log_baseline_steps is None:
+            self.var_log_baseline_steps = []
+        if eval_snort_critical_baseline_steps is None:
+            self.eval_snort_critical_baseline_steps = []
+        if eval_var_log_baseline_steps is None:
+            self.eval_var_log_baseline_steps = []
+        if eval_2_snort_critical_baseline_steps is None:
+            self.eval_2_snort_critical_baseline_steps = []
+        if eval_2_var_log_baseline_steps is None:
+            self.eval_2_var_log_baseline_steps = []
+        if step_baseline_rewards is None:
+            self.step_baseline_rewards = []
+        if eval_step_baseline_rewards is None:
+            self.eval_step_baseline_rewards = []
+        if eval_2_step_baseline_rewards is None:
+            self.eval_2_step_baseline_rewards = []
+        if step_baseline_steps is None:
+            self.step_baseline_steps = []
+        if eval_step_baseline_steps is None:
+            self.eval_step_baseline_steps = []
+        if eval_2_step_baseline_steps is None:
+            self.eval_2_step_baseline_steps = []
+        if intrusion_steps is None:
+            self.intrusion_steps = []
+        if eval_intrusion_steps is None:
+            self.eval_intrusion_steps = []
+        if eval_2_intrusion_steps is None:
+            self.eval_2_intrusion_steps = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -494,7 +591,16 @@ class ExperimentResult:
                    self.eval_attacker_action_alerts, self.eval_attacker_action_alerts_norm,
                    self.eval_2_attacker_action_costs, self.eval_2_attacker_action_costs_norm,
                    self.eval_2_attacker_action_alerts, self.eval_2_attacker_action_alerts_norm,
-                   self.time_elapsed
+                   self.time_elapsed,
+                   self.snort_severe_baseline_steps, self.snort_warning_baseline_steps,
+                   self.eval_snort_severe_baseline_steps, self.eval_snort_warning_baseline_steps,
+                   self.eval_2_snort_severe_baseline_steps, self.eval_2_snort_warning_baseline_steps,
+                   self.snort_critical_baseline_steps, self.var_log_baseline_steps,
+                   self.eval_snort_critical_baseline_steps, self.eval_var_log_baseline_steps,
+                   self.eval_2_snort_critical_baseline_steps, self.eval_2_var_log_baseline_steps,
+                   self.step_baseline_rewards, self.eval_step_baseline_rewards, self.eval_2_step_baseline_rewards,
+                   self.step_baseline_steps, self.eval_step_baseline_steps, self.eval_2_step_baseline_steps,
+                   self.intrusion_steps, self.eval_intrusion_steps, self.eval_2_intrusion_steps
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -528,7 +634,16 @@ class ExperimentResult:
                          "eval_attacker_action_alerts", "eval_attacker_action_alerts_norm",
                          "eval_2_attacker_action_costs", "eval_2_attacker_action_costs_norm",
                          "eval_2_attacker_action_alerts", "eval_2_attacker_action_alerts_norm",
-                         "time_elapsed"
+                         "time_elapsed",
+                         "snort_severe_baseline_steps", "snort_warning_baseline_steps",
+                         "eval_snort_severe_baseline_steps", "eval_snort_warning_baseline_steps",
+                         "eval_2_snort_severe_baseline_steps", "eval_2_snort_warning_baseline_steps",
+                         "snort_critical_baseline_steps", "var_log_baseline_steps",
+                         "eval_snort_critical_baseline_steps", "eval_var_log_baseline_steps",
+                         "eval_2_snort_critical_baseline_steps", "eval_2_var_log_baseline_steps",
+                         "step_baseline_rewards", "eval_step_baseline_rewards", "eval_2_step_baseline_rewards",
+                         "step_baseline_steps", "eval_step_baseline_steps", "eval_2_step_baseline_steps",
+                         "intrusion_steps", "eval_intrusion_steps", "eval_2_intrusion_steps"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []
