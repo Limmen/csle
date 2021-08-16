@@ -1561,28 +1561,28 @@ def plot_defender_simulation_emulation_tnsm_21(
     # plt.rcParams['font.serif'] = ['Times New Roman']
     fig, ax = plt.subplots(nrows=1, ncols=5, figsize=figsize)
 
-
-    # Plot flags
+    # color="r"
+    # color="#599ad3"
 
     ax[0].plot(
         np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_rewards_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
-        marker="s", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
     ax[0].fill_between(
         np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_rewards_means_emulation[::sample_step] - avg_rewards_stds_emulation[::sample_step],
         avg_rewards_means_emulation[::sample_step] + avg_rewards_stds_emulation[::sample_step],
-        alpha=0.35, color="r", lw=lw)
+        alpha=0.35, color="#599ad3", lw=lw)
 
     ax[0].plot(
         np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_rewards_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
-        marker="o", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
     ax[0].fill_between(
         np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_rewards_means_simulation[::sample_step] - avg_rewards_stds_simulation[::sample_step],
         avg_rewards_means_simulation[::sample_step] + avg_rewards_stds_simulation[::sample_step],
-        alpha=0.35, color="#599ad3", lw=lw)
+        alpha=0.35, color="r", lw=lw)
 
     ax[0].plot(
         np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -1628,26 +1628,25 @@ def plot_defender_simulation_emulation_tnsm_21(
     ax[0].set_ylim(-130, 200)
     ax[0].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
     ax[0].set_title(r"Reward per episode", fontsize=fontsize)
-
     ax[1].plot(np.array(list(range(len(avg_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
                avg_steps_means_emulation[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
-               marker="s", ls='-', color="r",
+               marker="s", ls='-', color="#599ad3",
                markevery=markevery, markersize=markersize, lw=lw)
     ax[1].fill_between(
         np.array(list(range(len(avg_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_steps_means_emulation[::sample_step] - avg_steps_stds_emulation[::sample_step],
         avg_steps_means_emulation[::sample_step] + avg_steps_stds_emulation[::sample_step],
-        alpha=0.35, color="r")
+        alpha=0.35, color="#599ad3")
 
     ax[1].plot(np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
                avg_steps_means_simulation[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ simulation",
-               marker="o", ls='-', color="#599ad3",
+               marker="o", ls='-', color="r",
                markevery=markevery, markersize=markersize, lw=lw)
     ax[1].fill_between(
         np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_steps_means_simulation[::sample_step] - avg_steps_stds_simulation[::sample_step],
         avg_steps_means_simulation[::sample_step] + avg_steps_stds_simulation[::sample_step],
-        alpha=0.35, color="#599ad3")
+        alpha=0.35, color="r")
 
     ax[1].plot(
         np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -1673,7 +1672,7 @@ def plot_defender_simulation_emulation_tnsm_21(
     ax[1].plot(
         np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         optimal_steps_means_emulation[::sample_step], label=r"Optimal $\pi^{*}$",
-        color="black", linestyle="dashed", markersize=markersize, dashes=(0.5, 0.5), lw=lw, markevery=100)
+        color="black", linestyle="dashed", markersize=markersize, lw=lw, markevery=markevery, dashes=(4, 2))
     ax[1].fill_between(
         np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         optimal_steps_means_emulation[::sample_step] - optimal_steps_stds_emulation[::sample_step],
@@ -1696,24 +1695,24 @@ def plot_defender_simulation_emulation_tnsm_21(
     ax[2].plot(
         np.array(list(range(len(avg_caught_frac_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_caught_frac_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
-        marker="s", ls='-', color="r",
+        marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[2].fill_between(
         np.array(list(range(len(avg_caught_frac_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_caught_frac_means_emulation[::sample_step] - avg_caught_frac_stds_emulation[::sample_step],
         avg_caught_frac_means_emulation[::sample_step] + avg_caught_frac_stds_emulation[::sample_step],
-        alpha=0.35, color="r")
+        alpha=0.35, color="#599ad3")
 
     ax[2].plot(
         np.array(list(range(len(avg_caught_frac_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_caught_frac_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
-        marker="o", ls='-', color="#599ad3",
+        marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[2].fill_between(
         np.array(list(range(len(avg_caught_frac_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_caught_frac_means_simulation[::sample_step] - avg_caught_frac_stds_simulation[::sample_step],
         avg_caught_frac_means_simulation[::sample_step] + avg_caught_frac_stds_simulation[::sample_step],
-        alpha=0.35, color="#599ad3")
+        alpha=0.35, color="r")
 
     ax[2].plot(
         np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -1757,27 +1756,27 @@ def plot_defender_simulation_emulation_tnsm_21(
         np.array(
             list(range(len(avg_early_stopping_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_early_stopping_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
-        marker="s", ls='-', color="r",
+        marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[3].fill_between(
         np.array(
             list(range(len(avg_early_stopping_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_early_stopping_means_emulation[::sample_step] - avg_early_stopping_stds_emulation[::sample_step],
         avg_early_stopping_means_emulation[::sample_step] + avg_early_stopping_stds_emulation[::sample_step],
-        alpha=0.35, color="r")
+        alpha=0.35, color="#599ad3")
 
     ax[3].plot(
         np.array(
             list(range(len(avg_early_stopping_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_early_stopping_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
-        marker="o", ls='-', color="#599ad3",
+        marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[3].fill_between(
         np.array(
             list(range(len(avg_early_stopping_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_early_stopping_means_simulation[::sample_step] - avg_early_stopping_stds_simulation[::sample_step],
         avg_early_stopping_means_simulation[::sample_step] + avg_early_stopping_stds_simulation[::sample_step],
-        alpha=0.35, color="#599ad3")
+        alpha=0.35, color="r")
 
     ax[3].plot(
         np.array(list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -1820,28 +1819,27 @@ def plot_defender_simulation_emulation_tnsm_21(
         np.array(
             list(range(len(avg_i_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_i_steps_means_emulation[::sample_step]+1, label=r"$\pi_{\theta}$ emulation",
-        marker="s", ls='-', color="r",
+        marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[4].fill_between(
         np.array(
             list(range(len(avg_i_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_i_steps_means_emulation[::sample_step]+ 1 - avg_early_stopping_stds_emulation[::sample_step],
         avg_i_steps_means_emulation[::sample_step] +1  + avg_i_steps_stds_emulation[::sample_step],
-        alpha=0.35, color="r")
+        alpha=0.35, color="#599ad3")
 
     ax[4].plot(
         np.array(
             list(range(len(avg_i_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_i_steps_means_simulation[::sample_step] + 1, label=r"$\pi_{\theta}$ simulation",
-        marker="o", ls='-', color="#599ad3",
+        marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[4].fill_between(
         np.array(
             list(range(len(avg_i_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
         avg_i_steps_means_simulation[::sample_step] +1  - avg_i_steps_stds_simulation[::sample_step],
         avg_i_steps_means_simulation[::sample_step] + 1 + avg_i_steps_stds_simulation[::sample_step],
-        alpha=0.35, color="#599ad3")
-    print("steps:{}".format(steps_baseline_i_steps_means))
+        alpha=0.35, color="r")
     ax[4].plot(
         np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
         steps_baseline_i_steps_means[::sample_step] + 1, label=r"$t=6$ baseline",
@@ -1876,7 +1874,7 @@ def plot_defender_simulation_emulation_tnsm_21(
     ax[4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     # ax[2].set_ylim(-100, 110)
-    ax[4].set_ylim(0, 20)
+    ax[4].set_ylim(0, 10)
     ax[4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
     ax[4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
 

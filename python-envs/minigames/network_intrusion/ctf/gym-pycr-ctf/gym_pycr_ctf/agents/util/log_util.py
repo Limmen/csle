@@ -812,18 +812,18 @@ class LogUtil:
         avg_episode_snort_critical_baseline_early_stopping = np.mean(train_log_dto.episode_snort_critical_baseline_early_stopping)
         avg_episode_var_log_baseline_early_stopping = np.mean(train_log_dto.episode_var_log_baseline_early_stopping)
         avg_episode_step_baseline_early_stopping = np.mean(train_log_dto.episode_step_baseline_early_stopping)
-        avg_episode_snort_severe_baseline_uncaught_intrusion_steps = np.mean(train_log_dto.episode_snort_severe_baseline_uncaught_intrusion_steps)
-        avg_episode_snort_warning_baseline_uncaught_intrusion_steps = np.mean(train_log_dto.episode_snort_warning_baseline_uncaught_intrusion_steps)
-        avg_episode_snort_critical_baseline_uncaught_intrusion_steps = np.mean(train_log_dto.episode_snort_critical_baseline_uncaught_intrusion_steps)
-        avg_episode_var_log_baseline_uncaught_intrusion_steps = np.mean(train_log_dto.episode_var_log_baseline_uncaught_intrusion_steps)
-        avg_episode_step_baseline_uncaught_intrusion_steps = np.mean(train_log_dto.episode_step_baseline_uncaught_intrusion_steps)
+        avg_episode_snort_severe_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.episode_snort_severe_baseline_uncaught_intrusion_steps)
+        avg_episode_snort_warning_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.episode_snort_warning_baseline_uncaught_intrusion_steps)
+        avg_episode_snort_critical_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.episode_snort_critical_baseline_uncaught_intrusion_steps)
+        avg_episode_var_log_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.episode_var_log_baseline_uncaught_intrusion_steps)
+        avg_episode_step_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.episode_step_baseline_uncaught_intrusion_steps)
         avg_episode_costs = np.mean(train_log_dto.attacker_action_costs)
         avg_episode_costs_norm = np.mean(train_log_dto.attacker_action_costs_norm)
         avg_episode_alerts = np.mean(train_log_dto.attacker_action_alerts)
         avg_episode_alerts_norm = np.mean(train_log_dto.attacker_action_alerts_norm)
         avg_episode_flags = np.mean(train_log_dto.episode_flags)
         avg_episode_flags_percentage = np.mean(train_log_dto.episode_flags_percentage)
-        avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.uncaught_intrusion_steps)
+        avg_episode_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.uncaught_intrusion_steps)
         avg_episode_optimal_defender_reward = np.mean(train_log_dto.optimal_defender_reward)
 
         if train_log_dto.episode_caught is not None and train_log_dto.episode_early_stopped is not None \
@@ -955,7 +955,7 @@ class LogUtil:
             eval_2_avg_episode_rewards = 0.0
 
         if not eval and train_log_dto.eval_2_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.eval_2_uncaught_intrusion_steps)
+            eval_2_avg_episode_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.eval_2_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_uncaught_intrusion_steps = 0.0
 
@@ -1049,31 +1049,31 @@ class LogUtil:
         else:
             eval_2_avg_episode_step_baseline_early_stopping = 0.0
         if not eval and train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = np.mean(
+            eval_2_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = np.mean(
+            eval_2_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = np.mean(
+            eval_2_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_var_log_baseline_uncaught_intrusion_steps = np.mean(
+            eval_2_avg_episode_var_log_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_var_log_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps is not None:
-            eval_2_avg_episode_step_baseline_uncaught_intrusion_steps = np.mean(
+            eval_2_avg_episode_step_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_step_baseline_uncaught_intrusion_steps = 0.0
@@ -1195,7 +1195,7 @@ class LogUtil:
             eval_avg_episode_rewards = 0.0
 
         if not eval and train_log_dto.eval_uncaught_intrusion_steps is not None:
-            eval_avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.eval_uncaught_intrusion_steps)
+            eval_avg_episode_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(train_log_dto.eval_uncaught_intrusion_steps)
         else:
             eval_avg_episode_uncaught_intrusion_steps = 0.0
 
@@ -1322,31 +1322,31 @@ class LogUtil:
         else:
             eval_avg_episode_step_baseline_early_stopping = 0.0
         if not eval and train_log_dto.eval_episode_snort_severe_baseline_uncaught_intrusion_steps is not None:
-            eval_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = np.mean(
+            eval_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_episode_snort_severe_baseline_uncaught_intrusion_steps)
         else:
             eval_avg_episode_snort_severe_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_episode_snort_warning_baseline_uncaught_intrusion_steps is not None:
-            eval_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = np.mean(
+            eval_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_episode_snort_warning_baseline_uncaught_intrusion_steps)
         else:
             eval_avg_episode_snort_warning_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_episode_snort_critical_baseline_uncaught_intrusion_steps is not None:
-            eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = np.mean(
+            eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_episode_snort_critical_baseline_uncaught_intrusion_steps)
         else:
             eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_episode_var_log_baseline_uncaught_intrusion_steps is not None:
-            eval_avg_episode_var_log_baseline_uncaught_intrusion_steps = np.mean(
+            eval_avg_episode_var_log_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_episode_var_log_baseline_uncaught_intrusion_steps)
         else:
             eval_avg_episode_var_log_baseline_uncaught_intrusion_steps = 0.0
 
         if not eval and train_log_dto.eval_episode_step_baseline_uncaught_intrusion_steps is not None:
-            eval_avg_episode_step_baseline_uncaught_intrusion_steps = np.mean(
+            eval_avg_episode_step_baseline_uncaught_intrusion_steps = LogUtil.compute_avg_uncaught_intrusion_steps(
                 train_log_dto.eval_episode_step_baseline_uncaught_intrusion_steps)
         else:
             eval_avg_episode_step_baseline_uncaught_intrusion_steps = 0.0
@@ -1746,3 +1746,12 @@ class LogUtil:
         :return: the regret
         """
         return abs(opt_r - r)
+
+
+    @staticmethod
+    def compute_avg_uncaught_intrusion_steps(steps):
+        filtered_steps = np.array(list(filter(lambda x: x > 0, steps)))
+        if len(filtered_steps) > 0:
+            return np.mean(filtered_steps)
+        else:
+            return 0.0

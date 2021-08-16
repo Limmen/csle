@@ -480,15 +480,12 @@ class EvalUtil:
         caught_attacker = False
         early_stopping = False
         uncaught_intrusion_steps = 0
-        if stopping_idx >= optimal_stopping_idx:
-            caught_attacker = True
-            uncaught_intrusion_steps = optimal_stopping_idx - stopping_idx
-        else:
-            early_stopping = True
+        r = 0
 
         if stopping_idx < optimal_stopping_idx:
             r = env_config.defender_service_reward * (stopping_idx - 1)
             r = r + env_config.defender_early_stopping_reward
+            early_stopping = True
 
         if stopping_idx == -1:
             r = env_config.defender_service_reward * (optimal_stopping_idx - 1)
@@ -498,5 +495,7 @@ class EvalUtil:
             r = env_config.defender_service_reward * (optimal_stopping_idx - 1)
             r = r + env_config.defender_intrusion_reward * (stopping_idx - optimal_stopping_idx)
             r = r + env_config.defender_caught_attacker_reward
+            caught_attacker = True
+            uncaught_intrusion_steps = max(0, stopping_idx - optimal_stopping_idx)
 
         return r, caught_attacker, early_stopping, uncaught_intrusion_steps, stopping_idx

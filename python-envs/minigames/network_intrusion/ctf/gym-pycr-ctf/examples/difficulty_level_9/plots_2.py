@@ -433,6 +433,9 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     eval_2_step_baseline_uncaught_intrusion_steps_stds_novice_attacker = np.std(
         tuple(eval_2_step_baseline_uncaught_intrusion_steps_data_novice_attacker), axis=0, ddof=1)
 
+    print(avg_eval_2_uncaught_intrusion_steps_means_novice_attacker)
+    print(avg_train_uncaught_intrusion_steps_means_novice_attacker)
+
 
     return avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
            avg_train_rewards_stds_novice_attacker, \
@@ -449,6 +452,9 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
            avg_train_uncaught_intrusion_steps_data_novice_attacker, \
            avg_train_uncaught_intrusion_steps_means_novice_attacker, \
            avg_train_uncaught_intrusion_steps_stds_novice_attacker, \
+           avg_train_optimal_defender_rewards_novice_attacker_data, \
+           avg_train_optimal_defender_rewards_novice_attacker_means, \
+           avg_train_optimal_defender_rewards_novice_attacker_stds, \
            train_snort_severe_baseline_rewards_data_novice_attacker, train_snort_severe_baseline_rewards_means_novice_attacker, \
            train_snort_severe_baseline_rewards_stds_novice_attacker, train_step_baseline_rewards_data_novice_attacker, \
            train_step_baseline_rewards_means_novice_attacker, train_step_baseline_rewards_stds_novice_attacker, \
@@ -475,9 +481,6 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
            train_step_baseline_uncaught_intrusion_steps_data_novice_attacker, \
            train_step_baseline_uncaught_intrusion_steps_means_novice_attacker, \
            train_step_baseline_uncaught_intrusion_steps_stds_novice_attacker, \
-           avg_train_optimal_defender_rewards_novice_attacker_data, \
-           avg_train_optimal_defender_rewards_novice_attacker_means, \
-           avg_train_optimal_defender_rewards_novice_attacker_stds, \
            avg_eval_rewards_data_novice_attacker, avg_eval_rewards_means_novice_attacker, \
            avg_eval_rewards_stds_novice_attacker, \
            avg_eval_steps_data_novice_attacker, avg_eval_steps_means_novice_attacker, \
@@ -716,91 +719,90 @@ def plot_train(
     suffix = "gensim"
     ylim_rew = (-300, 170)
     max_iter = 400
-    #avg_train_rewards_data_v3[0:max_iter]
     plotting_util_defender.plot_defender_simulation_emulation_tnsm_21(
-        avg_rewards_data_simulation= avg_train_rewards_data_novice_attacker,
-        avg_rewards_means_simulation= avg_train_rewards_means_novice_attacker,
-        avg_rewards_stds_simulation= avg_train_rewards_stds_novice_attacker,
-        avg_steps_data_simulation= avg_train_steps_data_novice_attacker,
-        avg_steps_means_simulation=avg_train_steps_means_novice_attacker,
-        avg_steps_stds_simulation= avg_train_steps_stds_novice_attacker,
-        avg_caught_frac_data_simulation= avg_train_caught_frac_data_novice_attacker,
-        avg_caught_frac_means_simulation= avg_train_caught_frac_means_novice_attacker,
-        avg_caught_frac_stds_simulation= avg_train_caught_frac_stds_novice_attacker,
-        avg_early_stopping_frac_data_simulation= avg_train_early_stopping_frac_data_novice_attacker,
-        avg_early_stopping_means_simulation= avg_train_early_stopping_means_novice_attacker,
-        avg_early_stopping_stds_simulation= avg_train_early_stopping_stds_novice_attacker,
-        avg_intrusion_frac_data_simulation= avg_train_intrusion_frac_data_novice_attacker,
-        avg_intrusion_means_simulation= avg_train_intrusion_means_novice_attacker,
-        avg_intrusion_stds_simulation= avg_train_intrusion_stds_novice_attacker,
-        avg_i_steps_data_simulation= avg_train_uncaught_intrusion_steps_data_novice_attacker,
-        avg_i_steps_means_simulation= avg_train_uncaught_intrusion_steps_means_novice_attacker,
-        avg_i_steps_stds_simulation= avg_train_uncaught_intrusion_steps_stds_novice_attacker,
-        optimal_rewards_data_simulation = avg_train_optimal_defender_rewards_novice_attacker_data,
-        optimal_rewards_means_simulation=avg_train_optimal_defender_rewards_novice_attacker_means,
-        optimal_rewards_stds_simulation = avg_train_optimal_defender_rewards_novice_attacker_stds,
-        optimal_steps_data_simulation = avg_train_i_steps_data_novice_attacker,
-        optimal_steps_means_simulation = avg_train_i_steps_means_novice_attacker,
-        optimal_steps_stds_simulation = avg_train_i_steps_stds_novice_attacker,
-        avg_rewards_data_emulation=avg_eval_2_rewards_data_novice_attacker,
-        avg_rewards_means_emulation=avg_eval_2_rewards_means_novice_attacker,
-        avg_rewards_stds_emulation=avg_eval_2_rewards_stds_novice_attacker,
-        avg_steps_data_emulation=avg_eval_2_steps_data_novice_attacker,
-        avg_steps_means_emulation=avg_eval_2_steps_means_novice_attacker,
-        avg_steps_stds_emulation=avg_eval_2_steps_stds_novice_attacker,
-        avg_caught_frac_data_emulation=avg_eval_2_caught_frac_data_novice_attacker,
-        avg_caught_frac_means_emulation=avg_eval_2_caught_frac_means_novice_attacker,
-        avg_caught_frac_stds_emulation=avg_eval_2_caught_frac_stds_novice_attacker,
-        avg_early_stopping_frac_data_emulation=avg_eval_2_early_stopping_frac_data_novice_attacker,
-        avg_early_stopping_means_emulation=avg_eval_2_early_stopping_means_novice_attacker,
-        avg_early_stopping_stds_emulation=avg_eval_2_early_stopping_stds_novice_attacker,
-        avg_intrusion_frac_data_emulation=avg_eval_2_intrusion_frac_data_novice_attacker,
-        avg_intrusion_means_emulation=avg_eval_2_intrusion_means_novice_attacker,
-        avg_intrusion_stds_emulation=avg_eval_2_intrusion_stds_novice_attacker,
-        avg_i_steps_data_emulation=avg_eval_2_uncaught_intrusion_steps_data_novice_attacker,
-        avg_i_steps_means_emulation=avg_eval_2_uncaught_intrusion_steps_means_novice_attacker,
-        avg_i_steps_stds_emulation=avg_eval_2_uncaught_intrusion_steps_stds_novice_attacker,
-        optimal_rewards_data_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_data,
-        optimal_rewards_means_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_means,
-        optimal_rewards_stds_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_stds,
-        optimal_steps_data_emulation=avg_eval_2_i_steps_data_novice_attacker,
-        optimal_steps_means_emulation=avg_eval_2_i_steps_means_novice_attacker,
-        optimal_steps_stds_emulation=avg_eval_2_i_steps_stds_novice_attacker,
+        avg_rewards_data_simulation=avg_train_rewards_data_novice_attacker[0:max_iter],
+        avg_rewards_means_simulation= avg_train_rewards_means_novice_attacker[0:max_iter],
+        avg_rewards_stds_simulation= avg_train_rewards_stds_novice_attacker[0:max_iter],
+        avg_steps_data_simulation= avg_train_steps_data_novice_attacker[0:max_iter],
+        avg_steps_means_simulation=avg_train_steps_means_novice_attacker[0:max_iter],
+        avg_steps_stds_simulation= avg_train_steps_stds_novice_attacker[0:max_iter],
+        avg_caught_frac_data_simulation= avg_train_caught_frac_data_novice_attacker[0:max_iter],
+        avg_caught_frac_means_simulation= avg_train_caught_frac_means_novice_attacker[0:max_iter],
+        avg_caught_frac_stds_simulation= avg_train_caught_frac_stds_novice_attacker[0:max_iter],
+        avg_early_stopping_frac_data_simulation= avg_train_early_stopping_frac_data_novice_attacker[0:max_iter],
+        avg_early_stopping_means_simulation= avg_train_early_stopping_means_novice_attacker[0:max_iter],
+        avg_early_stopping_stds_simulation= avg_train_early_stopping_stds_novice_attacker[0:max_iter],
+        avg_intrusion_frac_data_simulation= avg_train_intrusion_frac_data_novice_attacker[0:max_iter],
+        avg_intrusion_means_simulation= avg_train_intrusion_means_novice_attacker[0:max_iter],
+        avg_intrusion_stds_simulation= avg_train_intrusion_stds_novice_attacker[0:max_iter],
+        avg_i_steps_data_simulation= avg_train_uncaught_intrusion_steps_data_novice_attacker[0:max_iter],
+        avg_i_steps_means_simulation= avg_train_uncaught_intrusion_steps_means_novice_attacker[0:max_iter],
+        avg_i_steps_stds_simulation= avg_train_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
+        optimal_rewards_data_simulation = avg_train_optimal_defender_rewards_novice_attacker_data[0:max_iter],
+        optimal_rewards_means_simulation=avg_train_optimal_defender_rewards_novice_attacker_means[0:max_iter],
+        optimal_rewards_stds_simulation = avg_train_optimal_defender_rewards_novice_attacker_stds[0:max_iter],
+        optimal_steps_data_simulation = avg_train_i_steps_data_novice_attacker[0:max_iter],
+        optimal_steps_means_simulation = avg_train_i_steps_means_novice_attacker[0:max_iter],
+        optimal_steps_stds_simulation = avg_train_i_steps_stds_novice_attacker[0:max_iter],
+        avg_rewards_data_emulation=avg_eval_2_rewards_data_novice_attacker[0:max_iter],
+        avg_rewards_means_emulation=avg_eval_2_rewards_means_novice_attacker[0:max_iter],
+        avg_rewards_stds_emulation=avg_eval_2_rewards_stds_novice_attacker[0:max_iter],
+        avg_steps_data_emulation=avg_eval_2_steps_data_novice_attacker[0:max_iter],
+        avg_steps_means_emulation=avg_eval_2_steps_means_novice_attacker[0:max_iter],
+        avg_steps_stds_emulation=avg_eval_2_steps_stds_novice_attacker[0:max_iter],
+        avg_caught_frac_data_emulation=avg_eval_2_caught_frac_data_novice_attacker[0:max_iter],
+        avg_caught_frac_means_emulation=avg_eval_2_caught_frac_means_novice_attacker[0:max_iter],
+        avg_caught_frac_stds_emulation=avg_eval_2_caught_frac_stds_novice_attacker[0:max_iter],
+        avg_early_stopping_frac_data_emulation=avg_eval_2_early_stopping_frac_data_novice_attacker[0:max_iter],
+        avg_early_stopping_means_emulation=avg_eval_2_early_stopping_means_novice_attacker[0:max_iter],
+        avg_early_stopping_stds_emulation=avg_eval_2_early_stopping_stds_novice_attacker[0:max_iter],
+        avg_intrusion_frac_data_emulation=avg_eval_2_intrusion_frac_data_novice_attacker[0:max_iter],
+        avg_intrusion_means_emulation=avg_eval_2_intrusion_means_novice_attacker[0:max_iter],
+        avg_intrusion_stds_emulation=avg_eval_2_intrusion_stds_novice_attacker[0:max_iter],
+        avg_i_steps_data_emulation=avg_eval_2_uncaught_intrusion_steps_data_novice_attacker[0:max_iter],
+        avg_i_steps_means_emulation=avg_eval_2_uncaught_intrusion_steps_means_novice_attacker[0:max_iter],
+        avg_i_steps_stds_emulation=avg_eval_2_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
+        optimal_rewards_data_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_data[0:max_iter],
+        optimal_rewards_means_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_means[0:max_iter],
+        optimal_rewards_stds_emulation=avg_eval_2_optimal_defender_rewards_novice_attacker_stds[0:max_iter],
+        optimal_steps_data_emulation=avg_eval_2_i_steps_data_novice_attacker[0:max_iter],
+        optimal_steps_means_emulation=avg_eval_2_i_steps_means_novice_attacker[0:max_iter],
+        optimal_steps_stds_emulation=avg_eval_2_i_steps_stds_novice_attacker[0:max_iter],
 
-        steps_baseline_rewards_data = eval_2_step_baseline_rewards_data_novice_attacker,
-        steps_baseline_rewards_means=eval_2_step_baseline_rewards_means_novice_attacker,
-        steps_baseline_rewards_stds = eval_2_step_baseline_rewards_stds_novice_attacker,
-        steps_baseline_steps_data=eval_2_step_baseline_steps_data_novice_attacker,
-        steps_baseline_steps_means=eval_2_step_baseline_steps_means_novice_attacker,
-        steps_baseline_steps_stds=eval_2_step_baseline_steps_stds_novice_attacker,
-        steps_baseline_early_stopping_data = eval_2_step_baseline_early_stopping_data_novice_attacker,
-        steps_baseline_early_stopping_means=eval_2_step_baseline_early_stopping_means_novice_attacker,
-        steps_baseline_early_stopping_stds=eval_2_step_baseline_early_stopping_stds_novice_attacker,
-        steps_baseline_caught_data = eval_2_step_baseline_caught_attacker_data_novice_attacker,
-        steps_baseline_caught_means=eval_2_step_baseline_caught_attacker_means_novice_attacker,
-        steps_baseline_caught_stds = eval_2_step_baseline_caught_attacker_stds_novice_attacker,
-        steps_baseline_i_steps_data = eval_2_step_baseline_uncaught_intrusion_steps_data_novice_attacker,
-        steps_baseline_i_steps_means = eval_2_step_baseline_uncaught_intrusion_steps_means_novice_attacker,
-        steps_baseline_i_steps_stds = eval_2_step_baseline_uncaught_intrusion_steps_stds_novice_attacker,
+        steps_baseline_rewards_data = eval_2_step_baseline_rewards_data_novice_attacker[0:max_iter],
+        steps_baseline_rewards_means=eval_2_step_baseline_rewards_means_novice_attacker[0:max_iter],
+        steps_baseline_rewards_stds = eval_2_step_baseline_rewards_stds_novice_attacker[0:max_iter],
+        steps_baseline_steps_data=eval_2_step_baseline_steps_data_novice_attacker[0:max_iter],
+        steps_baseline_steps_means=eval_2_step_baseline_steps_means_novice_attacker[0:max_iter],
+        steps_baseline_steps_stds=eval_2_step_baseline_steps_stds_novice_attacker[0:max_iter],
+        steps_baseline_early_stopping_data = eval_2_step_baseline_early_stopping_data_novice_attacker[0:max_iter],
+        steps_baseline_early_stopping_means=eval_2_step_baseline_early_stopping_means_novice_attacker[0:max_iter],
+        steps_baseline_early_stopping_stds=eval_2_step_baseline_early_stopping_stds_novice_attacker[0:max_iter],
+        steps_baseline_caught_data = eval_2_step_baseline_caught_attacker_data_novice_attacker[0:max_iter],
+        steps_baseline_caught_means=eval_2_step_baseline_caught_attacker_means_novice_attacker[0:max_iter],
+        steps_baseline_caught_stds = eval_2_step_baseline_caught_attacker_stds_novice_attacker[0:max_iter],
+        steps_baseline_i_steps_data = eval_2_step_baseline_uncaught_intrusion_steps_data_novice_attacker[0:max_iter],
+        steps_baseline_i_steps_means = eval_2_step_baseline_uncaught_intrusion_steps_means_novice_attacker[0:max_iter],
+        steps_baseline_i_steps_stds = eval_2_step_baseline_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
 
-        snort_severe_baseline_rewards_data=eval_2_snort_severe_baseline_rewards_data_novice_attacker,
-        snort_severe_baseline_rewards_means=eval_2_snort_severe_baseline_rewards_means_novice_attacker,
-        snort_severe_baseline_rewards_stds=eval_2_snort_severe_baseline_rewards_stds_novice_attacker,
-        snort_severe_baseline_steps_data=eval_2_snort_severe_baseline_steps_data_novice_attacker,
-        snort_severe_baseline_steps_means=eval_2_snort_severe_baseline_steps_means_novice_attacker,
-        snort_severe_baseline_steps_stds=eval_2_snort_severe_baseline_steps_stds_novice_attacker,
-        snort_severe_baseline_early_stopping_data=eval_2_snort_severe_baseline_early_stopping_data_novice_attacker,
-        snort_severe_baseline_early_stopping_means=eval_2_snort_severe_baseline_early_stopping_means_novice_attacker,
-        snort_severe_baseline_early_stopping_stds=eval_2_snort_severe_baseline_early_stopping_stds_novice_attacker,
-        snort_severe_baseline_caught_data=eval_2_snort_severe_baseline_caught_attacker_data_novice_attacker,
-        snort_severe_baseline_caught_means=eval_2_snort_severe_baseline_caught_attacker_means_novice_attacker,
-        snort_severe_baseline_caught_stds=eval_2_snort_severe_baseline_caught_attacker_stds_novice_attacker,
-        snort_severe_baseline_i_steps_data=eval_2_snort_severe_baseline_uncaught_intrusion_steps_data_novice_attacker,
-        snort_severe_baseline_i_steps_means=eval_2_snort_severe_baseline_uncaught_intrusion_steps_means_novice_attacker,
-        snort_severe_baseline_i_steps_stds=eval_2_snort_severe_baseline_uncaught_intrusion_steps_stds_novice_attacker,
+        snort_severe_baseline_rewards_data=eval_2_snort_severe_baseline_rewards_data_novice_attacker[0:max_iter],
+        snort_severe_baseline_rewards_means=eval_2_snort_severe_baseline_rewards_means_novice_attacker[0:max_iter],
+        snort_severe_baseline_rewards_stds=eval_2_snort_severe_baseline_rewards_stds_novice_attacker[0:max_iter],
+        snort_severe_baseline_steps_data=eval_2_snort_severe_baseline_steps_data_novice_attacker[0:max_iter],
+        snort_severe_baseline_steps_means=eval_2_snort_severe_baseline_steps_means_novice_attacker[0:max_iter],
+        snort_severe_baseline_steps_stds=eval_2_snort_severe_baseline_steps_stds_novice_attacker[0:max_iter],
+        snort_severe_baseline_early_stopping_data=eval_2_snort_severe_baseline_early_stopping_data_novice_attacker[0:max_iter],
+        snort_severe_baseline_early_stopping_means=eval_2_snort_severe_baseline_early_stopping_means_novice_attacker[0:max_iter],
+        snort_severe_baseline_early_stopping_stds=eval_2_snort_severe_baseline_early_stopping_stds_novice_attacker[0:max_iter],
+        snort_severe_baseline_caught_data=eval_2_snort_severe_baseline_caught_attacker_data_novice_attacker[0:max_iter],
+        snort_severe_baseline_caught_means=eval_2_snort_severe_baseline_caught_attacker_means_novice_attacker[0:max_iter],
+        snort_severe_baseline_caught_stds=eval_2_snort_severe_baseline_caught_attacker_stds_novice_attacker[0:max_iter],
+        snort_severe_baseline_i_steps_data=eval_2_snort_severe_baseline_uncaught_intrusion_steps_data_novice_attacker[0:max_iter],
+        snort_severe_baseline_i_steps_means=eval_2_snort_severe_baseline_uncaught_intrusion_steps_means_novice_attacker[0:max_iter],
+        snort_severe_baseline_i_steps_stds=eval_2_snort_severe_baseline_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
 
         fontsize= 6.5, figsize= (7.5, 1.5), title_fontsize=8, lw=0.75, wspace=0.17, hspace=0.4, top=0.0,
-        bottom=0.28, labelsize=6, markevery=25, optimal_reward = 100, sample_step = 2,
+        bottom=0.28, labelsize=6, markevery=5, optimal_reward = 100, sample_step = 2,
         eval_only=False, plot_opt = False, iterations_per_step= 10, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "defender_simulation_emulation_novice_attacker_tnsm_21", markersize=2.25
     )
