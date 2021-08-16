@@ -148,7 +148,10 @@ class ExperimentResult:
                  eval_2_step_baseline_uncaught_intrusion_steps: List = None,
                  avg_uncaught_intrusion_steps : List = None,
                  eval_avg_uncaught_intrusion_steps: List = None,
-                 eval_2_avg_uncaught_intrusion_steps: List = None
+                 eval_2_avg_uncaught_intrusion_steps: List = None,
+                 avg_optimal_defender_reward: List = None,
+                 eval_avg_optimal_defender_reward: List = None,
+                 eval_2_avg_optimal_defender_reward: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -280,6 +283,9 @@ class ExperimentResult:
         :param avg_uncaught_intrusion_steps: avg uncaught intrusion steps
         :param eval_avg_uncaught_intrusion_steps: eval avg uncaught intrusion steps
         :param eval_2_avg_uncaught_intrusion_steps: eval 2 avg uncaught intrusion steps
+        :param avg_optimal_defender_reward: avg optimal defender reward
+        :param eval_avg_optimal_defender_reward: eval avg optimal defender reward
+        :param eval_2_avg_optimal_defender_reward: eval 2 avg optimal defender reward
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -449,6 +455,9 @@ class ExperimentResult:
         self.avg_uncaught_intrusion_steps = avg_uncaught_intrusion_steps
         self.eval_avg_uncaught_intrusion_steps = eval_avg_uncaught_intrusion_steps
         self.eval_2_avg_uncaught_intrusion_steps = eval_2_avg_uncaught_intrusion_steps
+        self.avg_optimal_defender_reward = avg_optimal_defender_reward
+        self.eval_avg_optimal_defender_reward = eval_avg_optimal_defender_reward
+        self.eval_2_avg_optimal_defender_reward = eval_2_avg_optimal_defender_reward
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -786,6 +795,12 @@ class ExperimentResult:
             self.eval_avg_uncaught_intrusion_steps = []
         if eval_2_avg_uncaught_intrusion_steps is None:
             self.eval_2_avg_uncaught_intrusion_steps = []
+        if avg_optimal_defender_reward is None:
+            self.avg_optimal_defender_reward = []
+        if eval_avg_optimal_defender_reward is None:
+            self.eval_avg_optimal_defender_reward = []
+        if eval_2_avg_optimal_defender_reward is None:
+            self.eval_2_avg_optimal_defender_reward = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -871,7 +886,8 @@ class ExperimentResult:
                    self.step_baseline_uncaught_intrusion_steps, self.eval_step_baseline_uncaught_intrusion_steps,
                    self.eval_2_step_baseline_uncaught_intrusion_steps,
                    self.avg_uncaught_intrusion_steps, self.eval_avg_uncaught_intrusion_steps,
-                   self.eval_2_avg_uncaught_intrusion_steps
+                   self.eval_2_avg_uncaught_intrusion_steps, self.avg_optimal_defender_reward,
+                   self.eval_avg_optimal_defender_reward, self.eval_2_avg_optimal_defender_reward
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -946,7 +962,9 @@ class ExperimentResult:
                          "eval_2_var_log_baseline_uncaught_intrusion_steps",
                          "step_baseline_uncaught_intrusion_steps", "eval_step_baseline_uncaught_intrusion_steps",
                          "eval_2_step_baseline_uncaught_intrusion_steps", "avg_uncaught_intrusion_steps",
-                         "eval_avg_uncaught_intrusion_steps", "eval_2_avg_uncaught_intrusion_steps"
+                         "eval_avg_uncaught_intrusion_steps", "eval_2_avg_uncaught_intrusion_steps",
+                         "avg_optimal_defender_reward", "eval_avg_optimal_defender_reward",
+                         "eval_2_avg_optimal_defender_reward"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

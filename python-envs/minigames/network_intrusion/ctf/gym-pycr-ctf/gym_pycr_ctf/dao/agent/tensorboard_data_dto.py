@@ -110,7 +110,10 @@ class TensorboardDataDTO:
                  eval_2_avg_episode_intrusion_steps: float = 0.0,
                  avg_uncaught_intrusion_steps : float = 0.0,
                  eval_avg_uncaught_intrusion_steps: float = 0.0,
-                 eval_2_avg_uncaught_intrusion_steps: float = 0.0
+                 eval_2_avg_uncaught_intrusion_steps: float = 0.0,
+                 avg_optimal_defender_reward: float = 0.0,
+                 eval_avg_optimal_defender_reward: float = 0.0,
+                 eval_2_avg_optimal_defender_reward: float = 0.0,
                  ):
         self.iteration = iteration
         self.avg_episode_rewards = avg_episode_rewards
@@ -248,6 +251,9 @@ class TensorboardDataDTO:
         self.avg_uncaught_intrusion_steps = avg_uncaught_intrusion_steps
         self.eval_avg_uncaught_intrusion_steps = eval_avg_uncaught_intrusion_steps
         self.eval_2_avg_uncaught_intrusion_steps = eval_2_avg_uncaught_intrusion_steps
+        self.avg_optimal_defender_reward = avg_optimal_defender_reward
+        self.eval_avg_optimal_defender_reward = eval_avg_optimal_defender_reward
+        self.eval_2_avg_optimal_defender_reward = eval_2_avg_optimal_defender_reward
 
     def log_tensorboard_defender(self) -> None:
         """
@@ -468,6 +474,12 @@ class TensorboardDataDTO:
                                            self.eval_avg_uncaught_intrusion_steps, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_2_avg_uncaught_intrusion_steps/' + train_or_eval,
                                            self.eval_2_avg_uncaught_intrusion_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_defender_reward/' + train_or_eval,
+                                           self.avg_optimal_defender_reward, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_defender_reward/' + train_or_eval,
+                                           self.eval_avg_optimal_defender_reward, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_defender_reward/' + train_or_eval,
+                                           self.eval_2_avg_optimal_defender_reward, self.iteration)
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', self.lr, self.iteration)
 
@@ -536,7 +548,7 @@ class TensorboardDataDTO:
         :return: a string representation of the DTO for the attacker
         """
         if self.eval:
-            log_str = "[Eval D] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f},avg_uit:{:.2f}" \
+            log_str = "[Eval D] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f},avg_uit:{:.2f},avg_opt_R_T:{:.2f}," \
                       "S_sev_avg_R:{:.2f},S_warn_avg_R:{:.2f}," \
                       "S_crit_avg_R:{:.2f},V_log_avg_R:{:.2f}, step_avg_R:{:.2f}," \
                       "S_sev_avg_t:{:.2f},S_warn_avg_t:{:.2f}," \
@@ -550,6 +562,7 @@ class TensorboardDataDTO:
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
                       "c:{:.2f},s:{:.2f},s_i:{:.2f},avg_I_t:{:.2f}".format(
                 self.iteration, self.avg_episode_rewards, self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps,
+                self.avg_optimal_defender_reward,
                 self.avg_episode_snort_severe_baseline_rewards,
                 self.avg_episode_snort_warning_baseline_rewards,
                 self.avg_episode_snort_critical_baseline_rewards,
@@ -581,7 +594,7 @@ class TensorboardDataDTO:
                 self.avg_episode_intrusion_steps)
         else:
             log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
-                      "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f},avg_uit_T:{:.2f}" \
+                      "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f},avg_uit_T:{:.2f},avg_opt_R_T:{:.2f}," \
                       "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
                       "step_avg_R_T:{:.2f}, " \
                       "S_sev_avg_t_T:{:.2f},S_warn_avg_t_T:{:.2f}, " \
@@ -594,7 +607,7 @@ class TensorboardDataDTO:
                       "S_crit_avg_uit_T:{:.2f},V_log_avg_uit_T:{:.2f}, step_avg_uit_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
                       "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
-                      "avg_R_E:{:.2f},avg_uit_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
+                      "avg_R_E:{:.2f},avg_uit_E:{:.2f},opt_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
                       "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}, step_avg_R_E:{:.2f}," \
                       "S_sev_avg_t_E:{:.2f},S_warn_avg_t_E:{:.2f}, " \
                       "S_crit_avg_t_E:{:.2f},V_log_avg_t_E:{:.2f}, step_avg_t_E:{:.2f}," \
@@ -606,7 +619,7 @@ class TensorboardDataDTO:
                       "S_crit_avg_uit_E:{:.2f},V_log_avg_uit_E:{:.2f}, step_avg_uit_E:{:.2f}," \
                       "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
                       "avg_t_E:{:.2f}," \
-                      "avg_R_E2:{:.2f},avg_uit_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
+                      "avg_R_E2:{:.2f},avg_uit_E2:{:.2f},opt_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
                       "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f},step_avg_R_E2:{:.2f}," \
                       "S_sev_avg_t_E2:{:.2f},S_warn_avg_t_E2:{:.2f}," \
                       "S_crit_avg_t_E2:{:.2f},V_log_avg_t_E2:{:.2f},step_avg_t_E2:{:.2f}," \
@@ -627,7 +640,7 @@ class TensorboardDataDTO:
                       "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
                       "avg_I_t:{:.2f},E_avg_I_t:{:.2f},E2_avg_I_t:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards,
-                self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps,
+                self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps, self.avg_optimal_defender_reward,
                 self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
                 self.avg_episode_snort_critical_baseline_rewards, self.avg_episode_var_log_baseline_rewards,
                 self.avg_episode_step_baseline_rewards,
@@ -646,6 +659,7 @@ class TensorboardDataDTO:
                 self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
                 self.lr, self.total_num_episodes, self.eps,
                 self.eval_avg_episode_rewards, self.eval_avg_uncaught_intrusion_steps,
+                self.eval_avg_optimal_defender_reward,
                 self.eval_avg_episode_snort_severe_baseline_rewards,
                 self.eval_avg_episode_snort_warning_baseline_rewards,
                 self.eval_avg_episode_snort_critical_baseline_rewards,
@@ -668,6 +682,7 @@ class TensorboardDataDTO:
                 self.eval_avg_episode_var_log_baseline_uncaught_intrusion_steps, self.eval_avg_episode_step_baseline_uncaught_intrusion_steps,
                 self.avg_eval_regret, self.eval_avg_opt_frac, self.eval_avg_episode_steps,
                 self.eval_2_avg_episode_rewards, self.eval_2_avg_uncaught_intrusion_steps,
+                self.eval_2_avg_optimal_defender_reward,
                 self.eval_avg_2_episode_snort_severe_baseline_rewards,
                 self.eval_avg_2_episode_snort_warning_baseline_rewards,
                 self.eval_avg_2_episode_snort_critical_baseline_rewards,

@@ -143,7 +143,10 @@ class TrainAgentLogDTO:
                  eval_2_episode_step_baseline_uncaught_intrusion_steps: List[int] = None,
                  uncaught_intrusion_steps : List[int] = None,
                  eval_uncaught_intrusion_steps: List[int] = None,
-                 eval_2_uncaught_intrusion_steps: List[int] = None
+                 eval_2_uncaught_intrusion_steps: List[int] = None,
+                 optimal_defender_reward: List[int] = None,
+                 eval_optimal_defender_reward: List[int] = None,
+                 eval_2_optimal_defender_reward: List[int] = None,
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -295,6 +298,9 @@ class TrainAgentLogDTO:
         self.uncaught_intrusion_steps = uncaught_intrusion_steps
         self.eval_uncaught_intrusion_steps = eval_uncaught_intrusion_steps
         self.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
+        self.optimal_defender_reward = optimal_defender_reward
+        self.eval_optimal_defender_reward = eval_optimal_defender_reward
+        self.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
 
 
     def initialize(self):
@@ -468,6 +474,9 @@ class TrainAgentLogDTO:
         self.uncaught_intrusion_steps = []
         self.eval_uncaught_intrusion_steps = []
         self.eval_2_uncaught_intrusion_steps = []
+        self.optimal_defender_reward = []
+        self.eval_optimal_defender_reward = []
+        self.eval_2_optimal_defender_reward = []
 
     def copy(self):
         c = TrainAgentLogDTO()
@@ -621,6 +630,9 @@ class TrainAgentLogDTO:
         c.uncaught_intrusion_steps = self.uncaught_intrusion_steps
         c.eval_uncaught_intrusion_steps = self.eval_uncaught_intrusion_steps
         c.eval_2_uncaught_intrusion_steps = self.eval_2_uncaught_intrusion_steps
+        c.optimal_defender_reward = self.optimal_defender_reward
+        c.eval_optimal_defender_reward = self.eval_optimal_defender_reward
+        c.eval_2_optimal_defender_reward = self.eval_2_optimal_defender_reward
 
     def copy_saved_env_2(self, saved_log_dto):
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards
@@ -667,6 +679,7 @@ class TrainAgentLogDTO:
         self.eval_2_episode_var_log_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps
         self.eval_2_episode_step_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps
         self.eval_2_uncaught_intrusion_steps = saved_log_dto.eval_2_uncaught_intrusion_steps
+        self.eval_2_optimal_defender_reward = saved_log_dto.eval_2_optimal_defender_reward
 
     def eval_update_env_specific_metrics(self, env_config, infos, i):
         if env_config.emulation_config is not None:

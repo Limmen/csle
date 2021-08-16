@@ -226,9 +226,31 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.snort_severe_baseline_reward = 0
         s_prime.defender_obs_state.snort_critical_baseline_reward = 0
         s_prime.defender_obs_state.var_log_baseline_reward = 0
+        s_prime.defender_obs_state.step_baseline_reward = 0
+        s_prime.defender_obs_state.snort_warning_baseline_step = 1
+        s_prime.defender_obs_state.snort_severe_baseline_step = 1
+        s_prime.defender_obs_state.snort_critical_baseline_step = 1
+        s_prime.defender_obs_state.var_log_baseline_step = 1
+        s_prime.defender_obs_state.step_baseline_step = 1
         s_prime.defender_obs_state.snort_warning_baseline_stopped = False
         s_prime.defender_obs_state.snort_severe_baseline_stopped = False
         s_prime.defender_obs_state.snort_critical_baseline_stopped = False
         s_prime.defender_obs_state.var_log_baseline_stopped = False
+        s_prime.defender_obs_state.step_baseline_stopped = False
+        s_prime.defender_obs_state.snort_severe_baseline_caught_attacker = False
+        s_prime.defender_obs_state.snort_warning_baseline_caught_attacker = False
+        s_prime.defender_obs_state.snort_critical_baseline_caught_attacker = False
+        s_prime.defender_obs_state.var_log_baseline_caught_attacker = False
+        s_prime.defender_obs_state.step_baseline_caught_attacker = False
+        s_prime.defender_obs_state.snort_severe_baseline_early_stopping = False
+        s_prime.defender_obs_state.snort_warning_baseline_early_stopping = False
+        s_prime.defender_obs_state.snort_critical_baseline_early_stopping = False
+        s_prime.defender_obs_state.var_log_baseline_early_stopping = False
+        s_prime.defender_obs_state.step_baseline_early_stopping = False
+        s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
 
         return s_prime, 0, False

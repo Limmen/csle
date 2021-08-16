@@ -399,6 +399,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.eval_attacker_action_alerts_norm.append(_info["attacker_alerts_norm"])
                 train_log_dto.eval_episode_intrusion_steps.append(_info["intrusion_step"])
                 train_log_dto.eval_uncaught_intrusion_steps.append(_info["uncaught_intrusion_steps"])
+                train_log_dto.eval_optimal_defender_reward.append(_info["optimal_defender_reward"])
                 train_log_dto.eval_update_env_specific_metrics(env_conf, _info, i)
             else:
                 train_log_dto.attacker_eval_2_episode_rewards.append(attacker_episode_reward)
@@ -440,6 +441,7 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.eval_2_attacker_action_alerts_norm.append(_info["attacker_alerts_norm"])
                 train_log_dto.eval_2_episode_intrusion_steps.append(_info["intrusion_step"])
                 train_log_dto.eval_2_uncaught_intrusion_steps.append(_info["uncaught_intrusion_steps"])
+                train_log_dto.eval_2_optimal_defender_reward.append(_info["optimal_defender_reward"])
                 train_log_dto.eval_2_update_env_specific_metrics(env_conf, _info, i)
             if isinstance(env, SubprocVecEnv):
                 obs = env.eval_reset(idx=i)

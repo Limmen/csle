@@ -23,6 +23,7 @@ class EvalUtil:
         rewards = []
         steps = []
         uncaught_intrusion_steps_l = []
+        opt_r_l = []
         snort_severe_r = []
         snort_warning_r = []
         snort_critical_r = []
@@ -73,6 +74,8 @@ class EvalUtil:
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
                 env=env, optimal_stopping_idx=optimal_stopping_idx)
             optimal_stopping_idx +=1
+            opt_r_l.append(optimal_stopping_idx*env.env_config.defender_service_reward
+                           + env.env_config.defender_caught_attacker_reward)
             obs, obs_intrusion = EvalUtil.merge_observations(no_intrusion_obs, tau)
             obs_tensor = torch.as_tensor(obs)
             actions, values = EvalUtil.predict(policy, obs_tensor, env, deterministic=deterministic)
@@ -156,16 +159,17 @@ class EvalUtil:
             stopping_obs_l.append(stopping_obs)
             intrusion_steps.append(optimal_stopping_idx)
 
-        print("E2_rewards:{}".format(rewards))
-        print("E2_optimal_stopping_times:{}".format(optimal_stopping_times))
-        print("E2_model_stopping_times:{}".format(model_stopping_times))
-        print("intrusion start obs 1:{}".format(intrusion_start_obs_1))
-        print("intrusion start obs 2:{}".format(intrusion_start_obs_2))
-        print("intrusion start obs 3:{}".format(intrusion_start_obs_3))
-        print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
-        print("stopping obs:{}".format(stopping_obs_l))
+        # print("E2_rewards:{}".format(rewards))
+        # print("E2_optimal_stopping_times:{}".format(optimal_stopping_times))
+        # print("E2_model_stopping_times:{}".format(model_stopping_times))
+        # print("intrusion start obs 1:{}".format(intrusion_start_obs_1))
+        # print("intrusion start obs 2:{}".format(intrusion_start_obs_2))
+        # print("intrusion start obs 3:{}".format(intrusion_start_obs_3))
+        # print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
+        # print("stopping obs:{}".format(stopping_obs_l))
 
-        return rewards, steps, uncaught_intrusion_steps_l, snort_severe_r, snort_warning_r, snort_critical_r, \
+        return rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
+               snort_severe_r, snort_warning_r, snort_critical_r, \
                var_log_r, step_r, snort_severe_s, snort_warning_s, \
                snort_critical_s, var_log_s, step_s, \
                snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \

@@ -28,10 +28,11 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_caught_attacker_reward
                     s_prime.defender_obs_state.snort_severe_baseline_caught_attacker = True
                     s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = \
-                        s.defender_obs_state.step - s.attacker_obs_state.intrusion_step
+                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
                 else:
                     s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_early_stopping_reward
                     s_prime.defender_obs_state.snort_severe_baseline_early_stopping = True
+                    s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = 0
             else:
                 s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_service_reward
                 if s.attacker_obs_state.ongoing_intrusion():
@@ -47,10 +48,11 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_caught_attacker_reward
                     s_prime.defender_obs_state.snort_warning_baseline_caught_attacker = True
                     s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = \
-                        s.defender_obs_state.step - s.attacker_obs_state.intrusion_step
+                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
                 else:
                     s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_early_stopping_reward
                     s_prime.defender_obs_state.snort_warning_baseline_early_stopping = True
+                    s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = 0
             else:
                 s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_service_reward
                 if s.attacker_obs_state.ongoing_intrusion():
@@ -66,10 +68,11 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_caught_attacker_reward
                     s_prime.defender_obs_state.snort_critical_baseline_caught_attacker = True
                     s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = \
-                        s.defender_obs_state.step - s.attacker_obs_state.intrusion_step
+                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
                 else:
                     s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_early_stopping_reward
                     s_prime.defender_obs_state.snort_critical_baseline_early_stopping = True
+                    s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
             else:
                 s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_service_reward
                 if s.attacker_obs_state.ongoing_intrusion():
@@ -87,10 +90,11 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_caught_attacker_reward
                     s_prime.defender_obs_state.var_log_baseline_caught_attacker = True
                     s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = \
-                        s.defender_obs_state.step - (s.attacker_obs_state.intrusion_step+1)
+                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
                 else:
                     s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_early_stopping_reward
                     s_prime.defender_obs_state.var_log_baseline_early_stopping = True
+                    s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
             else:
                 s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_service_reward
                 if s.attacker_obs_state.ongoing_intrusion():
@@ -106,10 +110,11 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.step_baseline_reward += env_config.defender_caught_attacker_reward
                     s_prime.defender_obs_state.step_baseline_caught_attacker = True
                     s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = \
-                        s.defender_obs_state.step - s.attacker_obs_state.intrusion_step
+                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
                 else:
                     s_prime.defender_obs_state.step_baseline_reward += env_config.defender_early_stopping_reward
                     s_prime.defender_obs_state.step_baseline_early_stopping = True
+                    s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
             else:
                 s_prime.defender_obs_state.step_baseline_reward += env_config.defender_service_reward
                 if s.attacker_obs_state.ongoing_intrusion():
@@ -119,7 +124,8 @@ class StoppingBaselinesUtil:
     @staticmethod
     def simulate_end_of_episode_performance(s_prime: EnvState, env_config: EnvConfig, done: bool,
                                             attacker_opponent: CustomAttackerBotAgent, env : "PyCRCTFEnv",
-                                            s: EnvState):
+                                            s: EnvState) -> int:
+        optimal_defender_reward = 0
         if env_config.snort_baseline_simulate and \
                 attacker_opponent is not None and \
                 (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
@@ -128,20 +134,27 @@ class StoppingBaselinesUtil:
                            or not s_prime.defender_obs_state.var_log_baseline_stopped
                            or not s_prime.defender_obs_state.step_baseline_stopped
                 )):
-            StoppingBaselinesUtil.simulate_baselines_vs_opponent(
+            s = StoppingBaselinesUtil.simulate_baselines_vs_opponent(
                 attacker_opponent=attacker_opponent, env_config=env_config, env=env, s=s)
+            optimal_defender_reward = \
+                env_config.defender_service_reward * s.attacker_obs_state.intrusion_step \
+                + env_config.defender_caught_attacker_reward
+        return optimal_defender_reward
 
 
     @staticmethod
     def simulate_baselines_vs_opponent(attacker_opponent : CustomAttackerBotAgent, env_config: EnvConfig,
-                                       env : "PyCRCTFEnv", s: EnvState):
+                                       env : "PyCRCTFEnv", s: EnvState) -> EnvState:
         defender_action = env_config.defender_action_conf.get_continue_action_idx()
         done = False
+        static_attack_started = False
         i = 0
         while not done:
             i += 1
             attacker_action_id, attacker_done = attacker_opponent.action(
                 env=env, filter_illegal=env_config.attacker_filter_illegal_actions)
+            if attacker_opponent.started:
+                static_attack_started = True
             if i > 100:
                 print("infinite loop..")
 
@@ -153,8 +166,11 @@ class StoppingBaselinesUtil:
             s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
                 s=s, attacker_action=attack_action, env_config=env_config)
             done = done or attacker_done
-            s = s_prime
-            s.attacker_obs_state.last_attacker_action = attack_action
+            s_prime.attacker_obs_state.intrusion_started = s_prime.attacker_obs_state.intrusion_started \
+                                                                  or static_attack_started
+            if done:
+                s_prime.attacker_obs_state.intrusion_completed = True
+            s_prime.attacker_obs_state.last_attacker_action = attack_action
 
             # Update state
             if env_config.defender_update_state and not done:
@@ -162,11 +178,10 @@ class StoppingBaselinesUtil:
                 s_prime, _, _ = TransitionOperator.defender_transition(
                     s=s, defender_action=env_config.defender_action_conf.state_update_action,
                     env_config=env_config, attacker_action=s.attacker_obs_state.last_attacker_action)
-                s = s_prime
 
             # Extract observations
-            defender_m_obs, defender_network_obs = s.get_defender_observation()
-            attacker_m_obs, attacker_p_obs = s.get_attacker_observation()
+            defender_m_obs, defender_network_obs = s_prime.get_defender_observation()
+            attacker_m_obs, attacker_p_obs = s_prime.get_attacker_observation()
             attacker_m_obs = np.append(np.array([env.attacker_agent_state.time_step]), attacker_m_obs.flatten())
             defender_obs = np.append(defender_network_obs, defender_m_obs.flatten())
             env.defender_last_obs = defender_obs
@@ -174,8 +189,9 @@ class StoppingBaselinesUtil:
             env.defender_time_step += 1
             env.attacker_agent_state.time_step += 1
             if attacker_action_id != 372:
-                s.attacker_obs_state.step += 1
-
+                s_prime.attacker_obs_state.step += 1
+                if s_prime.attacker_obs_state.intrusion_step == -1:
+                    s_prime.attacker_obs_state.intrusion_step = s_prime.defender_obs_state.step
             StoppingBaselinesUtil.compute_baseline_metrics(s=s, s_prime=s_prime, env_config=env_config)
 
             if s_prime.defender_obs_state.snort_severe_baseline_stopped and \
@@ -185,3 +201,5 @@ class StoppingBaselinesUtil:
                     and s_prime.defender_obs_state.step_baseline_stopped:
                 done = True
             s = s_prime
+
+        return s

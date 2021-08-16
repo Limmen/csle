@@ -167,7 +167,7 @@ class EnvConfig:
         self.pi_star_rew_attacker = -1
         self.pi_star_rew_list_attacker = []
 
-        self.use_upper_bound_pi_star_defender = False
+        self.use_upper_bound_pi_star_defender = True
         self.pi_star_tau_defender = None
         self.pi_star_rew_defender = -100
         self.pi_star_rew_list_defender = []

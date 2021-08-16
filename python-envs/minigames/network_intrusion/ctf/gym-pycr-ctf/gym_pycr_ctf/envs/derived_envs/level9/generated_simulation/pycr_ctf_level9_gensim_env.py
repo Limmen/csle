@@ -11,6 +11,7 @@ from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v5 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from gym_pycr_ctf.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
+from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_defender import FindPiStarDefender
 
 
 # -------- Version 1 ------------
@@ -425,7 +426,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             env_config.simulate_detection = False
             env_config.attacker_early_stopping_reward = 10
             env_config.use_attacker_action_stats_to_update_defender_state = False
-            env_config.snort_baseline_simulate = False
+            env_config.snort_baseline_simulate = True
 
         super().__init__(env_config=env_config)
         # Novice Attacker
@@ -438,3 +439,4 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             strategy=[99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99],
             random_start=True, start_p=0.2, continue_action=372)
         self.env_config.attacker_static_opponent = attacker_opponent
+        self.env_config = FindPiStarDefender.update_pi_star(self.env_config)

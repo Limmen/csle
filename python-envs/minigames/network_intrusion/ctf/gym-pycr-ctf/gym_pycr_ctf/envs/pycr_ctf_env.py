@@ -138,7 +138,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.defender_trajectory = []
         self.defender_trajectories = []
         self.defender_time_step = 1
-        self.env_config.pi_star_rew_defender = self.env_config.defender_caught_attacker_reward
 
         # Reset and setup action spaces
         self.reset()
@@ -151,7 +150,6 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Fix upper bounds for evaluation
         self.env_config = FindPiStarAttacker.update_pi_star(self.env_config, self)
-        self.env_config = FindPiStarDefender.update_pi_star(self.env_config)
 
     # -------- API ------------
     def step(self, action_id : Tuple[int, int]) -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
@@ -200,6 +198,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             defender_info = {}
             defender_info["caught_attacker"] = 0
             defender_info["early_stopped"] = 0
+            defender_info["optimal_defender_reward"] = 0
             defender_info["uncaught_intrusion_steps"] = 0
             defender_info["snort_severe_baseline_reward"] = 0
             defender_info["snort_warning_baseline_reward"] = 0
@@ -413,7 +412,13 @@ class PyCRCTFEnv(gym.Env, ABC):
             done = True
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
 
-        uncaught_intrusion_steps = self.env_state.defender_obs_state.step - self.env_state.attacker_obs_state.intrusion_step
+        uncaught_intrusion_steps = max(0, self.env_state.defender_obs_state.step
+                                       - self.env_state.attacker_obs_state.intrusion_step)
+        optimal_defender_reward = 0
+        if self.env_state.defender_obs_state.stopped or self.env_state.defender_obs_state.caught_attacker:
+            optimal_defender_reward = \
+                self.env_config.defender_service_reward*self.env_state.attacker_obs_state.intrusion_step \
+                + self.env_config.defender_caught_attacker_reward
 
         self.env_state = s_prime
 
@@ -427,12 +432,15 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_state.attacker_obs_state.ongoing_intrusion():
             done = True
 
-        StoppingBaselinesUtil.simulate_end_of_episode_performance(
+        opt_r = StoppingBaselinesUtil.simulate_end_of_episode_performance(
             s_prime=s_prime, env_config=self.env_config, done=done, env=self, s=self.env_state,
             attacker_opponent=self.env_config.attacker_static_opponent)
 
+        optimal_defender_reward = max(opt_r, optimal_defender_reward)
+
         info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
         info["early_stopped"] = self.env_state.defender_obs_state.stopped
+        info["optimal_defender_reward"] = optimal_defender_reward
         info["uncaught_intrusion_steps"] = uncaught_intrusion_steps
         info["snort_severe_baseline_reward"] = self.env_state.defender_obs_state.snort_severe_baseline_reward
         info["snort_warning_baseline_reward"] = self.env_state.defender_obs_state.snort_warning_baseline_reward
@@ -488,6 +496,8 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_config.pi_star_tau_attacker = attacker_pi_star_tau
                 self.env_config.pi_star_rew_attacker = attacker_pi_star_rew
                 self.env_config.pi_star_rew_list_attacker.append(attacker_pi_star_rew)
+
+            self.env_config = FindPiStarDefender.update_pi_star(self.env_config)
 
 
         self.reset_metrics()

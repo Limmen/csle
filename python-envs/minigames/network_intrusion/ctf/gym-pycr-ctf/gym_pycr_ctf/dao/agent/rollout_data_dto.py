@@ -45,7 +45,8 @@ class RolloutDataDTO:
                  attacker_action_alerts=None,
                  attacker_action_alerts_norm=None,
                  episode_intrusion_steps = None,
-                 uncaught_intrusion_steps=None
+                 uncaught_intrusion_steps=None,
+                 optimal_defender_reward=None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -93,6 +94,7 @@ class RolloutDataDTO:
         self.attacker_action_alerts_norm = attacker_action_alerts_norm
         self.episode_intrusion_steps = episode_intrusion_steps
         self.uncaught_intrusion_steps = uncaught_intrusion_steps
+        self.optimal_defender_reward = optimal_defender_reward
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -142,6 +144,7 @@ class RolloutDataDTO:
         self.attacker_action_alerts_norm = []
         self.episode_intrusion_steps = []
         self.uncaught_intrusion_steps = []
+        self.optimal_defender_reward = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 

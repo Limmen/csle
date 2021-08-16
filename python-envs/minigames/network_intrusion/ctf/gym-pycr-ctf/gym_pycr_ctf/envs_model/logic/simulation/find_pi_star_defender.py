@@ -16,7 +16,7 @@ class FindPiStarDefender:
         :return: the upper bound reward
         """
         mean_intrusion_time = 1/env_config.attacker_static_opponent.start_p
-        reward = env_config.defender_service_reward* (mean_intrusion_time-1)
+        reward = env_config.defender_service_reward* (mean_intrusion_time)
         reward = reward + env_config.defender_caught_attacker_reward
         return reward
 

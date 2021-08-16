@@ -303,6 +303,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.attacker_action_alerts_norm.append(infos[i]["attacker_alerts_norm"])
                         rollout_data_dto.episode_intrusion_steps.append(infos[i]["intrusion_step"])
                         rollout_data_dto.uncaught_intrusion_steps.append(infos[i]["uncaught_intrusion_steps"])
+                        rollout_data_dto.optimal_defender_reward.append(infos[i]["optimal_defender_reward"])
                         if self.attacker_agent_config.env_config is not None:
                             rollout_data_dto.episode_flags_percentage.append(
                                 infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
@@ -450,6 +451,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             train_log_dto.episode_var_log_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_var_log_baseline_uncaught_intrusion_steps)
             train_log_dto.episode_step_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps)
             train_log_dto.uncaught_intrusion_steps.extend(rollout_data_dto.uncaught_intrusion_steps)
+            train_log_dto.optimal_defender_reward.extend(rollout_data_dto.optimal_defender_reward)
 
             for key in rollout_data_dto.attacker_env_specific_rewards.keys():
                 if key in train_log_dto.attacker_train_episode_env_specific_rewards:
@@ -530,6 +532,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
                     if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
                         eval_2_defender_episode_rewards, eval_2_episode_steps, eval_2_uncaught_intrusion_steps, \
+                        eval_2_optimal_defender_reward, \
                         eval_2_episode_snort_severe_baseline_rewards, eval_2_episode_snort_warning_baseline_rewards, \
                         eval_2_episode_snort_critical_baseline_rewards, \
                         eval_2_episode_var_log_baseline_rewards, eval_2_episode_step_baseline_rewards, \
@@ -596,6 +599,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
                         train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
                         train_log_dto.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
+                        train_log_dto.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

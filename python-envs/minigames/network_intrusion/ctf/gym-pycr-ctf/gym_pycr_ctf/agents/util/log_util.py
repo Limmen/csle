@@ -824,6 +824,7 @@ class LogUtil:
         avg_episode_flags = np.mean(train_log_dto.episode_flags)
         avg_episode_flags_percentage = np.mean(train_log_dto.episode_flags_percentage)
         avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.uncaught_intrusion_steps)
+        avg_episode_optimal_defender_reward = np.mean(train_log_dto.optimal_defender_reward)
 
         if train_log_dto.episode_caught is not None and train_log_dto.episode_early_stopped is not None \
                 and train_log_dto.episode_successful_intrusion is not None:
@@ -957,6 +958,11 @@ class LogUtil:
             eval_2_avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.eval_2_uncaught_intrusion_steps)
         else:
             eval_2_avg_episode_uncaught_intrusion_steps = 0.0
+
+        if not eval and train_log_dto.eval_2_optimal_defender_reward is not None:
+            eval_2_avg_episode_optimal_defender_reward = np.mean(train_log_dto.eval_2_optimal_defender_reward)
+        else:
+            eval_2_avg_episode_optimal_defender_reward = 0.0
 
         if not eval and train_log_dto.eval_2_episode_snort_severe_baseline_rewards is not None:
             eval_2_avg_episode_snort_severe_baseline_rewards = np.mean(
@@ -1192,6 +1198,11 @@ class LogUtil:
             eval_avg_episode_uncaught_intrusion_steps = np.mean(train_log_dto.eval_uncaught_intrusion_steps)
         else:
             eval_avg_episode_uncaught_intrusion_steps = 0.0
+
+        if not eval and train_log_dto.eval_optimal_defender_reward is not None:
+            eval_avg_episode_optimal_defender_reward = np.mean(train_log_dto.eval_optimal_defender_reward)
+        else:
+            eval_avg_episode_optimal_defender_reward = 0.0
 
         if not eval and train_log_dto.eval_episode_snort_severe_baseline_rewards is not None:
             eval_avg_episode_snort_severe_baseline_rewards = np.mean(
@@ -1508,7 +1519,10 @@ class LogUtil:
             eval_2_avg_episode_intrusion_steps=eval_2_avg_episode_intrusion_steps,
             avg_uncaught_intrusion_steps=avg_episode_uncaught_intrusion_steps,
             eval_avg_uncaught_intrusion_steps=eval_avg_episode_uncaught_intrusion_steps,
-            eval_2_avg_uncaught_intrusion_steps=eval_2_avg_episode_uncaught_intrusion_steps
+            eval_2_avg_uncaught_intrusion_steps=eval_2_avg_episode_uncaught_intrusion_steps,
+            avg_optimal_defender_reward=avg_episode_optimal_defender_reward,
+            eval_avg_optimal_defender_reward=eval_avg_episode_optimal_defender_reward,
+            eval_2_avg_optimal_defender_reward=eval_2_avg_episode_optimal_defender_reward
         )
         log_str = tensorboard_data_dto.log_str_defender()
         defender_agent_config.logger.info(log_str)
@@ -1552,6 +1566,9 @@ class LogUtil:
         result.eval_var_log_baseline_steps.append(eval_avg_episode_var_log_baseline_steps)
         result.eval_2_snort_critical_baseline_steps.append(eval_2_avg_episode_snort_critical_baseline_steps)
         result.eval_2_var_log_baseline_steps.append(eval_2_avg_episode_var_log_baseline_steps)
+        result.step_baseline_steps.append(avg_episode_step_baseline_steps)
+        result.eval_step_baseline_steps.append(eval_avg_episode_step_baseline_steps)
+        result.eval_2_step_baseline_steps.append(eval_2_avg_episode_step_baseline_steps)
         result.step_baseline_rewards.append(avg_episode_step_baseline_rewards)
         result.eval_step_baseline_rewards.append(eval_avg_episode_step_baseline_rewards)
         result.eval_2_step_baseline_rewards.append(eval_2_avg_episode_step_baseline_rewards)
@@ -1603,6 +1620,9 @@ class LogUtil:
         result.avg_uncaught_intrusion_steps.append(avg_episode_uncaught_intrusion_steps)
         result.eval_avg_uncaught_intrusion_steps.append(eval_avg_episode_uncaught_intrusion_steps)
         result.eval_2_avg_uncaught_intrusion_steps.append(eval_2_avg_episode_uncaught_intrusion_steps)
+        result.avg_optimal_defender_reward.append(avg_episode_optimal_defender_reward)
+        result.eval_avg_optimal_defender_reward.append(eval_avg_episode_optimal_defender_reward)
+        result.eval_2_avg_optimal_defender_reward.append(eval_2_avg_episode_optimal_defender_reward)
 
         if train_log_dto.defender_train_episode_env_specific_rewards is not None:
             for key in train_log_dto.defender_train_episode_env_specific_rewards.keys():
