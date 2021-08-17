@@ -1,5 +1,6 @@
 from typing import List
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
+from gym_pycr_ctf.dao.network.env_config import EnvConfig
 
 class TrainAgentLogDTO:
     """
@@ -303,7 +304,10 @@ class TrainAgentLogDTO:
         self.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
 
 
-    def initialize(self):
+    def initialize(self) -> None:
+        """
+        :return: Initialize log variables
+        """
         self.start_time = 0.0
         self.iteration = 0
         self.train_result = ExperimentResult()
@@ -478,7 +482,10 @@ class TrainAgentLogDTO:
         self.eval_optimal_defender_reward = []
         self.eval_2_optimal_defender_reward = []
 
-    def copy(self):
+    def copy(self) -> "TrainAgentLogDTO":
+        """        
+        :return: a copy of the object  
+        """
         c = TrainAgentLogDTO()
         c.iteration = self.iteration
         c.train_result = self.train_result
@@ -634,7 +641,13 @@ class TrainAgentLogDTO:
         c.eval_optimal_defender_reward = self.eval_optimal_defender_reward
         c.eval_2_optimal_defender_reward = self.eval_2_optimal_defender_reward
 
-    def copy_saved_env_2(self, saved_log_dto):
+    def copy_saved_env_2(self, saved_log_dto : "TrainAgentLogDTO") -> None:
+        """
+        Copies the eval_2 variables from a different object
+
+        :param saved_log_dto: the object to copy from
+        :return: None
+        """
         self.attacker_eval_2_episode_rewards = saved_log_dto.attacker_eval_2_episode_rewards
         self.defender_eval_2_episode_rewards = saved_log_dto.defender_eval_2_episode_rewards
         self.eval_2_episode_steps = saved_log_dto.eval_2_episode_steps
@@ -681,7 +694,15 @@ class TrainAgentLogDTO:
         self.eval_2_uncaught_intrusion_steps = saved_log_dto.eval_2_uncaught_intrusion_steps
         self.eval_2_optimal_defender_reward = saved_log_dto.eval_2_optimal_defender_reward
 
-    def eval_update_env_specific_metrics(self, env_config, infos, i):
+    def eval_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i: int) -> int:
+        """
+        Utility function for updating env-specific eval metrics
+
+        :param env_config: the environment configuration
+        :param infos: info dicts
+        :param i: the iteration
+        :return: None
+        """
         if env_config.emulation_config is not None:
             agent_ip = env_config.emulation_config.agent_ip
         else:
@@ -713,7 +734,15 @@ class TrainAgentLogDTO:
         else:
             self.eval_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
 
-    def eval_2_update_env_specific_metrics(self, env_config, infos, i):
+    def eval_2_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i : int) -> None:
+        """
+        Updates env-specific eval 2 metrics
+
+        :param env_config: the environment configuration
+        :param infos: info dicts
+        :param i: the iteration
+        :return: None
+        """
 
         if env_config.emulation_config is not None:
             agent_ip = env_config.emulation_config.agent_ip
@@ -745,6 +774,7 @@ class TrainAgentLogDTO:
             self.eval_2_env_specific_flags_percentage[agent_ip] = [infos["flags"] / num_flags]
         else:
             self.eval_2_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
+
 
 
 

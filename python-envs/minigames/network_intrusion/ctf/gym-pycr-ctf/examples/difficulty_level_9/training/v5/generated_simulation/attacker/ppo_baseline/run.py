@@ -47,29 +47,32 @@ def default_config() -> ClientConfig:
     #eval_env_name = "pycr-ctf-level-9-emulation-v1"
     eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
 
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                       server_connection=False, port_forward_next_port=2500)
+    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    #                                          server_connection=False, port_forward_next_port=4000)
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-    #                                         agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                         server_username="kim", port_forward_next_port=4000)
-    eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-                                            server_connection=False, port_forward_next_port=2700,
-                                            warmup=False, warmup_iterations = 100)
-    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-    #                                agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                server_username="kim", port_forward_next_port=5000,
+    #                                        agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                        server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                        server_username="kim", port_forward_next_port=4000)
+    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+                                       agent_username="agent", agent_pw="agent", server_connection=True,
+                                       server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                       server_username="kim", port_forward_next_port=4000)
+    # eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    #                                        server_connection=False, port_forward_next_port=5000)
+    eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+                                            agent_username="agent", agent_pw="agent", server_connection=True,
+                                            server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+                                            server_username="kim", port_forward_next_port=5000)
     #                                warmup=True, warmup_iterations = 100)
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
     #                                                 "examples/difficulty_level_4/hello_world/"
-    # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
-    #                                                 "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/" \
-    #                                                 "hello_world/defender_dynamics_model.json"
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-                                                    "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
+                                                    "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/" \
+                                                    "hello_world"
+    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #                                                 "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion" \
     #                                                 "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
 

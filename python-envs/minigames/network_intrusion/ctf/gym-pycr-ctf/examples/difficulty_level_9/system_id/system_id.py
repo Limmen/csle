@@ -18,6 +18,7 @@ def initialize_models(self) -> None:
                           agent_config=self.agent_config)
     return model
 
+
 def system_id():
     # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
