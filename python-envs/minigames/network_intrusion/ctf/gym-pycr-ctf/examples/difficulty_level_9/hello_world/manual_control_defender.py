@@ -62,13 +62,24 @@ def manual_control():
     #attacker_opponent = RandomAttackerBotAgent(env_config = env.env_config, env=env)
 
     # Novice Attacker
+    # attacker_opponent = CustomAttackerBotAgent(
+    #     env_config=env.env_config, env=env,
+    #     # TCP/UDP Scan, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
+    #     # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
+    #     # Continue, SSH brute (25), Login,
+    #     # CVE-2010-0426 (25), Continue, TCP/UDP Scan
+    #     strategy=[99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99],
+    #     random_start=True, start_p=0.2, continue_action=372)
+
+    # Experienced Attacker
     attacker_opponent = CustomAttackerBotAgent(
         env_config=env.env_config, env=env,
-        # TCP/UDP Scan, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
-        # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
-        # Continue, SSH brute (25), Login,
-        # CVE-2010-0426 (25), Continue, TCP/UDP Scan
-        strategy=[99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99],
+        # Continue, Ping Scan, SambaCry Exploit(1) with backdoor,
+        # Shellshock (CVE-2014-6271) (24) with backdoor, login, SSH brute (25), Login, CVE-2010-0426 (25),
+        # Ping scan, SQL injection (26), Login, Install tools,
+        # Ping scan, CVE-2015-1427 (26), Login, Install Tools,
+        strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104, 106, 100,
+                  266, 104, 106],
         random_start=True, start_p=0.2, continue_action=372)
 
     env.env_config.attacker_static_opponent = attacker_opponent

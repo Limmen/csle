@@ -155,7 +155,7 @@ class StoppingBaselinesUtil:
                 env=env, filter_illegal=env_config.attacker_filter_illegal_actions)
             if attacker_opponent.started:
                 static_attack_started = True
-            if i > 100:
+            if i > 200:
                 print("infinite loop..")
 
             # Prepare action for execution
