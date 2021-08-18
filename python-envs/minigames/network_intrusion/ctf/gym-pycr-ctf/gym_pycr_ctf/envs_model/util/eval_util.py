@@ -2,6 +2,7 @@ from typing import Tuple, List
 import torch
 import numpy as np
 from gym_pycr_ctf.dao.network.trajectory import Trajectory
+import gym_pycr_ctf.constants.constants as constants
 
 
 class EvalUtil:
@@ -321,10 +322,10 @@ class EvalUtil:
                     #episode_caught = trajectory.infos[i]["caught_attacker"]
                     #episode_early_stopped = trajectory.infos[i]["episode_early_stopped"]
                     #episode_successful_intrusion = trajectory.infos[i]["successful_intrusion"]
-                    attacker_cost = trajectory.infos[i]["attacker_cost"]
-                    attacker_cost_norm = trajectory.infos[i]["attacker_cost_norm"]
-                    attacker_alerts = trajectory.infos[i]["attacker_alerts"]
-                    attacker_alerts_norm = trajectory.infos[i]["attacker_alerts_norm"]
+                    attacker_cost = trajectory.infos[i][constants.INFO_DICT.ATTACKER_COST]
+                    attacker_cost_norm = trajectory.infos[i][constants.INFO_DICT.ATTACKER_COST_NORM]
+                    attacker_alerts = trajectory.infos[i][constants.INFO_DICT.ATTACKER_ALERTS]
+                    attacker_alerts_norm = trajectory.infos[i][constants.INFO_DICT.ATTACKER_ALERTS_NORM]
                     break
                 else:
                     break

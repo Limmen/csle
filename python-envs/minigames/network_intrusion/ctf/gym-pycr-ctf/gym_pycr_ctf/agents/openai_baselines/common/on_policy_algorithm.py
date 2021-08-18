@@ -5,6 +5,7 @@ import gym
 import numpy as np
 import torch as th
 
+import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.agents.openai_baselines.common.buffers import RolloutBuffer, RolloutBufferAR
 from gym_pycr_ctf.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env import VecEnv
@@ -268,50 +269,50 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.attacker_episode_rewards.append(episode_reward_attacker[i])
                         rollout_data_dto.defender_episode_rewards.append(episode_reward_defender[i])
                         rollout_data_dto.episode_steps.append(episode_step[i])
-                        rollout_data_dto.episode_flags.append(infos[i]["flags"])
-                        rollout_data_dto.episode_caught.append(infos[i]["caught_attacker"])
-                        rollout_data_dto.episode_early_stopped.append(infos[i]["early_stopped"])
-                        rollout_data_dto.episode_successful_intrusion.append(infos[i]["successful_intrusion"])
-                        rollout_data_dto.episode_snort_severe_baseline_rewards.append(infos[i]["snort_severe_baseline_reward"])
-                        rollout_data_dto.episode_snort_warning_baseline_rewards.append(infos[i]["snort_warning_baseline_reward"])
-                        rollout_data_dto.episode_snort_critical_baseline_rewards.append(infos[i]["snort_critical_baseline_reward"])
-                        rollout_data_dto.episode_var_log_baseline_rewards.append(infos[i]["var_log_baseline_reward"])
-                        rollout_data_dto.episode_step_baseline_rewards.append(infos[i]["step_baseline_reward"])
-                        rollout_data_dto.episode_snort_severe_baseline_steps.append(infos[i]["snort_severe_baseline_step"])
-                        rollout_data_dto.episode_snort_warning_baseline_steps.append(infos[i]["snort_warning_baseline_step"])
-                        rollout_data_dto.episode_snort_critical_baseline_steps.append(infos[i]["snort_critical_baseline_step"])
-                        rollout_data_dto.episode_var_log_baseline_steps.append(infos[i]["var_log_baseline_step"])
-                        rollout_data_dto.episode_step_baseline_steps.append(infos[i]["step_baseline_step"])
-                        rollout_data_dto.episode_snort_severe_baseline_caught_attacker.append(infos[i]["snort_severe_baseline_caught_attacker"])
-                        rollout_data_dto.episode_snort_warning_baseline_caught_attacker.append(infos[i]["snort_warning_baseline_caught_attacker"])
-                        rollout_data_dto.episode_snort_critical_baseline_caught_attacker.append(infos[i]["snort_critical_baseline_caught_attacker"])
-                        rollout_data_dto.episode_var_log_baseline_caught_attacker.append(infos[i]["var_log_baseline_caught_attacker"])
-                        rollout_data_dto.episode_step_baseline_caught_attacker.append(infos[i]["step_baseline_caught_attacker"])
-                        rollout_data_dto.episode_snort_severe_baseline_early_stopping.append(infos[i]["snort_severe_baseline_early_stopping"])
-                        rollout_data_dto.episode_snort_warning_baseline_early_stopping.append(infos[i]["snort_warning_baseline_early_stopping"])
-                        rollout_data_dto.episode_snort_critical_baseline_early_stopping.append(infos[i]["snort_critical_baseline_early_stopping"])
-                        rollout_data_dto.episode_var_log_baseline_early_stopping.append(infos[i]["var_log_baseline_early_stopping"])
-                        rollout_data_dto.episode_step_baseline_early_stopping.append(infos[i]["step_baseline_early_stopping"])
-                        rollout_data_dto.episode_snort_severe_baseline_uncaught_intrusion_steps.append(infos[i]["snort_severe_baseline_uncaught_intrusion_steps"])
-                        rollout_data_dto.episode_snort_warning_baseline_uncaught_intrusion_steps.append(infos[i]["snort_warning_baseline_uncaught_intrusion_steps"])
-                        rollout_data_dto.episode_snort_critical_baseline_uncaught_intrusion_steps.append(infos[i]["snort_critical_baseline_uncaught_intrusion_steps"])
-                        rollout_data_dto.episode_var_log_baseline_uncaught_intrusion_steps.append(infos[i]["var_log_baseline_uncaught_intrusion_steps"])
-                        rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps.append(infos[i]["step_baseline_uncaught_intrusion_steps"])
-                        rollout_data_dto.attacker_action_costs.append(infos[i]["attacker_cost"])
-                        rollout_data_dto.attacker_action_costs_norm.append(infos[i]["attacker_cost_norm"])
-                        rollout_data_dto.attacker_action_alerts.append(infos[i]["attacker_alerts"])
-                        rollout_data_dto.attacker_action_alerts_norm.append(infos[i]["attacker_alerts_norm"])
-                        rollout_data_dto.episode_intrusion_steps.append(infos[i]["intrusion_step"])
-                        rollout_data_dto.uncaught_intrusion_steps.append(infos[i]["uncaught_intrusion_steps"])
-                        rollout_data_dto.optimal_defender_reward.append(infos[i]["optimal_defender_reward"])
+                        rollout_data_dto.episode_flags.append(infos[i][constants.INFO_DICT.FLAGS])
+                        rollout_data_dto.episode_caught.append(infos[i][constants.INFO_DICT.CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_early_stopped.append(infos[i][constants.INFO_DICT.EARLY_STOPPED])
+                        rollout_data_dto.episode_successful_intrusion.append(infos[i][constants.INFO_DICT.SUCCESSFUL_INTRUSION])
+                        rollout_data_dto.episode_snort_severe_baseline_rewards.append(infos[i][constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
+                        rollout_data_dto.episode_snort_warning_baseline_rewards.append(infos[i][constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
+                        rollout_data_dto.episode_snort_critical_baseline_rewards.append(infos[i][constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
+                        rollout_data_dto.episode_var_log_baseline_rewards.append(infos[i][constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
+                        rollout_data_dto.episode_step_baseline_rewards.append(infos[i][constants.INFO_DICT.STEP_BASELINE_REWARD])
+                        rollout_data_dto.episode_snort_severe_baseline_steps.append(infos[i][constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
+                        rollout_data_dto.episode_snort_warning_baseline_steps.append(infos[i][constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP])
+                        rollout_data_dto.episode_snort_critical_baseline_steps.append(infos[i][constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
+                        rollout_data_dto.episode_var_log_baseline_steps.append(infos[i][constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
+                        rollout_data_dto.episode_step_baseline_steps.append(infos[i][constants.INFO_DICT.STEP_BASELINE_STEP])
+                        rollout_data_dto.episode_snort_severe_baseline_caught_attacker.append(infos[i][constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_snort_warning_baseline_caught_attacker.append(infos[i][constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_snort_critical_baseline_caught_attacker.append(infos[i][constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_var_log_baseline_caught_attacker.append(infos[i][constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_step_baseline_caught_attacker.append(infos[i][constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
+                        rollout_data_dto.episode_snort_severe_baseline_early_stopping.append(infos[i][constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
+                        rollout_data_dto.episode_snort_warning_baseline_early_stopping.append(infos[i][constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
+                        rollout_data_dto.episode_snort_critical_baseline_early_stopping.append(infos[i][constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
+                        rollout_data_dto.episode_var_log_baseline_early_stopping.append(infos[i][constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
+                        rollout_data_dto.episode_step_baseline_early_stopping.append(infos[i][constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
+                        rollout_data_dto.episode_snort_severe_baseline_uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.episode_snort_warning_baseline_uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.episode_snort_critical_baseline_uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.episode_var_log_baseline_uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.attacker_action_costs.append(infos[i][constants.INFO_DICT.ATTACKER_COST])
+                        rollout_data_dto.attacker_action_costs_norm.append(infos[i][constants.INFO_DICT.ATTACKER_COST_NORM])
+                        rollout_data_dto.attacker_action_alerts.append(infos[i][constants.INFO_DICT.ATTACKER_ALERTS])
+                        rollout_data_dto.attacker_action_alerts_norm.append(infos[i][constants.INFO_DICT.ATTACKER_ALERTS_NORM])
+                        rollout_data_dto.episode_intrusion_steps.append(infos[i][constants.INFO_DICT.INTRUSION_STEP])
+                        rollout_data_dto.uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
+                        rollout_data_dto.optimal_defender_reward.append(infos[i][constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
                         if self.attacker_agent_config.env_config is not None:
                             rollout_data_dto.episode_flags_percentage.append(
-                                infos[i]["flags"] / self.attacker_agent_config.env_config.num_flags
+                                infos[i][constants.INFO_DICT.FLAGS] / self.attacker_agent_config.env_config.num_flags
                             ) # TODO this does not work with DR
                         else:
                             #print("env config None?:{}".format(self.attacker_agent_config.env_config))
                             rollout_data_dto.episode_flags_percentage.append(
-                                infos[i]["flags"] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
+                                infos[i][constants.INFO_DICT.FLAGS] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
 
                         if self.attacker_agent_config.performance_analysis:
                             rollout_data_dto.env_response_times.append(env_response_time)
@@ -605,8 +606,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                     if isinstance(self.env, SubprocVecEnv):
                         for i in range(self.env.num_envs):
                             self.env.eval_reset(i)
-                            self._last_infos[i]["attacker_non_legal_actions"] = self.env.attacker_initial_illegal_actions
-                            self._last_infos[i]["defender_non_legal_actions"] = self.env.defender_initial_illegal_actions
+                            self._last_infos[i][constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS] = self.env.attacker_initial_illegal_actions
+                            self._last_infos[i][constants.INFO_DICT.DEFENDER_NON_LEGAL_ACTIONS] = self.env.defender_initial_illegal_actions
                 n_af, n_d = 0,0
                 if isinstance(self.env, DummyVecEnv):
                     n_af = self.env.envs[0].attacker_agent_state.num_all_flags

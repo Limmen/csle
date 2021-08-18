@@ -195,43 +195,14 @@ class PyCRCTFEnv(gym.Env, ABC):
                                    attacker_opponent=self.env_config.attacker_static_opponent)
             attacker_reward = attacker_reward
         else:
-            defender_info = {}
-            defender_info["caught_attacker"] = 0
-            defender_info["early_stopped"] = 0
-            defender_info["optimal_defender_reward"] = 0
-            defender_info["uncaught_intrusion_steps"] = 0
-            defender_info["snort_severe_baseline_reward"] = 0
-            defender_info["snort_warning_baseline_reward"] = 0
-            defender_info["snort_critical_baseline_reward"] = 0
-            defender_info["var_log_baseline_reward"] = 0
-            defender_info["step_baseline_reward"] = 0
-            defender_info["snort_severe_baseline_step"] = 1
-            defender_info["snort_warning_baseline_step"] = 1
-            defender_info["snort_critical_baseline_step"] = 1
-            defender_info["var_log_baseline_step"] = 1
-            defender_info["step_baseline_step"] = 1
-            defender_info["snort_severe_baseline_caught_attacker"] = False
-            defender_info["snort_warning_baseline_caught_attacker"] = False
-            defender_info["snort_critical_baseline_caught_attacker"] = False
-            defender_info["var_log_baseline_caught_attacker"] = False
-            defender_info["step_baseline_caught_attacker"] = False
-            defender_info["snort_severe_baseline_early_stopping"] = False
-            defender_info["snort_warning_baseline_early_stopping"] = False
-            defender_info["snort_critical_baseline_early_stopping"] = False
-            defender_info["var_log_baseline_early_stopping"] = False
-            defender_info["step_baseline_early_stopping"] = False
-            defender_info["snort_severe_baseline_uncaught_intrusion_steps"] = 0
-            defender_info["snort_warning_baseline_uncaught_intrusion_steps"] = 0
-            defender_info["snort_critical_baseline_uncaught_intrusion_steps"] = 0
-            defender_info["var_log_baseline_uncaught_intrusion_steps"] = 0
-            defender_info["step_baseline_uncaught_intrusion_steps"] = 0
+            defender_info = PyCRCTFEnv.initialize_info_dict()
 
-        defender_info["successful_intrusion"] = False
-        defender_info["attacker_cost"] = self.env_state.attacker_obs_state.cost
-        defender_info["attacker_cost_norm"] = self.env_state.attacker_obs_state.cost_norm
-        defender_info["attacker_alerts"] = self.env_state.attacker_obs_state.alerts
-        defender_info["attacker_alerts_norm"] = self.env_state.attacker_obs_state.alerts_norm
-        defender_info["flags"] = 0
+        defender_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = False
+        defender_info[constants.INFO_DICT.ATTACKER_COST] = self.env_state.attacker_obs_state.cost
+        defender_info[constants.INFO_DICT.ATTACKER_COST_NORM] = self.env_state.attacker_obs_state.cost_norm
+        defender_info[constants.INFO_DICT.ATTACKER_ALERTS] = self.env_state.attacker_obs_state.alerts
+        defender_info[constants.INFO_DICT.ATTACKER_ALERTS_NORM] = self.env_state.attacker_obs_state.alerts_norm
+        defender_info[constants.INFO_DICT.FLAGS] = 0
 
         if not done:
             # Second step attacker
@@ -327,10 +298,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state.attacker_obs_state.alerts += attack_action.alerts[0]
         self.env_state.attacker_obs_state.alerts_norm += EnvDynamicsUtil.normalize_action_alerts(
             action=attack_action, env_config=self.env_config)
-        info["attacker_cost"] = self.env_state.attacker_obs_state.cost
-        info["attacker_cost_norm"] = self.env_state.attacker_obs_state.cost_norm
-        info["attacker_alerts"] = self.env_state.attacker_obs_state.alerts
-        info["attacker_alerts_norm"] = self.env_state.attacker_obs_state.alerts_norm
+        info[constants.INFO_DICT.ATTACKER_COST] = self.env_state.attacker_obs_state.cost
+        info[constants.INFO_DICT.ATTACKER_COST_NORM] = self.env_state.attacker_obs_state.cost_norm
+        info[constants.INFO_DICT.ATTACKER_ALERTS] = self.env_state.attacker_obs_state.alerts
+        info[constants.INFO_DICT.ATTACKER_ALERTS_NORM] = self.env_state.attacker_obs_state.alerts_norm
         # Step in the environment
         s_prime, attacker_reward, done = TransitionOperator.attacker_transition(
             s=self.env_state, attacker_action=attack_action, env_config=self.env_config)
@@ -342,11 +313,11 @@ class PyCRCTFEnv(gym.Env, ABC):
         if self.attacker_agent_state.time_step > self.env_config.max_episode_length:
             done = True
             attacker_reward = attacker_reward + self.env_config.max_episode_length_reward
-            info["caught_attacker"] = True
+            info[constants.INFO_DICT.CAUGHT_ATTACKER] = True
 
 
         if s_prime.attacker_obs_state.all_flags:
-            info["successful_intrusion"] = True
+            info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = True
 
         if s_prime.attacker_obs_state.all_flags:
             attacker_reward = attacker_reward - self.env_state.attacker_obs_state.cost_norm \
@@ -354,10 +325,10 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
-            info["caught_attacker"] = True
+            info[constants.INFO_DICT.CAUGHT_ATTACKER] = True
             # if defender_action is None:
             #     self.attacker_agent_state.num_detections += 1
-        info["flags"] = self.env_state.attacker_obs_state.catched_flags
+        info[constants.INFO_DICT.FLAGS] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.attacker_trajectories.append(self.attacker_trajectory)
 
@@ -375,8 +346,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param done_attacker: whether the environment completed after attacker action
         :return: (obs, reward, done, info)
         """
-        info = {"idx": self.idx}
-        info["flags"] = self.env_state.attacker_obs_state.catched_flags
+        info = {constants.INFO_DICT.IDX: self.idx}
+        info[constants.INFO_DICT.FLAGS] = self.env_state.attacker_obs_state.catched_flags
 
         # Update trajectory
         self.defender_trajectory = []
@@ -414,6 +385,8 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         uncaught_intrusion_steps = max(0, self.env_state.defender_obs_state.step
                                        - self.env_state.attacker_obs_state.intrusion_step)
+        info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS] = uncaught_intrusion_steps
+
         optimal_defender_reward = 0
         if self.env_state.defender_obs_state.stopped or self.env_state.defender_obs_state.caught_attacker:
             optimal_defender_reward = \
@@ -437,36 +410,9 @@ class PyCRCTFEnv(gym.Env, ABC):
             attacker_opponent=self.env_config.attacker_static_opponent)
 
         optimal_defender_reward = max(opt_r, optimal_defender_reward)
+        info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD] = optimal_defender_reward
 
-        info["caught_attacker"] = self.env_state.defender_obs_state.caught_attacker
-        info["early_stopped"] = self.env_state.defender_obs_state.stopped
-        info["optimal_defender_reward"] = optimal_defender_reward
-        info["uncaught_intrusion_steps"] = uncaught_intrusion_steps
-        info["snort_severe_baseline_reward"] = self.env_state.defender_obs_state.snort_severe_baseline_reward
-        info["snort_warning_baseline_reward"] = self.env_state.defender_obs_state.snort_warning_baseline_reward
-        info["snort_critical_baseline_reward"] = self.env_state.defender_obs_state.snort_critical_baseline_reward
-        info["var_log_baseline_reward"] = self.env_state.defender_obs_state.var_log_baseline_reward
-        info["step_baseline_reward"] = self.env_state.defender_obs_state.step_baseline_reward
-        info["snort_severe_baseline_step"] = self.env_state.defender_obs_state.snort_severe_baseline_step
-        info["snort_warning_baseline_step"] = self.env_state.defender_obs_state.snort_warning_baseline_step
-        info["snort_critical_baseline_step"] = self.env_state.defender_obs_state.snort_critical_baseline_step
-        info["var_log_baseline_step"] = self.env_state.defender_obs_state.var_log_baseline_step
-        info["step_baseline_step"] = self.env_state.defender_obs_state.step_baseline_step
-        info["snort_severe_baseline_caught_attacker"] = self.env_state.defender_obs_state.snort_severe_baseline_caught_attacker
-        info["snort_warning_baseline_caught_attacker"] = self.env_state.defender_obs_state.snort_warning_baseline_caught_attacker
-        info["snort_critical_baseline_caught_attacker"] = self.env_state.defender_obs_state.snort_critical_baseline_caught_attacker
-        info["var_log_baseline_caught_attacker"] = self.env_state.defender_obs_state.var_log_baseline_caught_attacker
-        info["step_baseline_caught_attacker"] = self.env_state.defender_obs_state.step_baseline_caught_attacker
-        info["snort_severe_baseline_early_stopping"] = self.env_state.defender_obs_state.snort_severe_baseline_early_stopping
-        info["snort_warning_baseline_early_stopping"] = self.env_state.defender_obs_state.snort_warning_baseline_early_stopping
-        info["snort_critical_baseline_early_stopping"] = self.env_state.defender_obs_state.snort_critical_baseline_early_stopping
-        info["var_log_baseline_early_stopping"] = self.env_state.defender_obs_state.var_log_baseline_early_stopping
-        info["step_baseline_early_stopping"] = self.env_state.defender_obs_state.step_baseline_early_stopping
-        info["snort_severe_baseline_uncaught_intrusion_steps"] = self.env_state.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps
-        info["snort_warning_baseline_uncaught_intrusion_steps"] = self.env_state.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps
-        info["snort_critical_baseline_uncaught_intrusion_steps"] = self.env_state.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps
-        info["var_log_baseline_uncaught_intrusion_steps"] = self.env_state.defender_obs_state.var_log_baseline_uncaught_intrusion_steps
-        info["step_baseline_uncaught_intrusion_steps"] = self.env_state.defender_obs_state.step_baseline_uncaught_intrusion_steps
+        info = self.env_state.defender_obs_state.update_info_dict(info)
 
         return defender_reward, attacker_reward, done, info
 
@@ -1029,3 +975,43 @@ class PyCRCTFEnv(gym.Env, ABC):
             print('Dynamics Model Loaded Successfully')
 
         self.env_config.env_mode = EnvMode.SIMULATION
+
+
+    @staticmethod
+    def initialize_info_dict() -> dict:
+        """
+        Initialize the info dict
+
+        :return: the dict with the initialized values
+        """
+        info = {}
+        info[constants.INFO_DICT.CAUGHT_ATTACKER] = 0
+        info[constants.INFO_DICT.EARLY_STOPPED] = 0
+        info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD] = 0
+        info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD] = 0
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD] = 0
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD] = 0
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD] = 0
+        info[constants.INFO_DICT.STEP_BASELINE_REWARD] = 0
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP] = 1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP] = 1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP] = 1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP] = 1
+        info[constants.INFO_DICT.STEP_BASELINE_STEP] = 1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER] = False
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER] = False
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER] = False
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER] = False
+        info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER] = False
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING] = False
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING] = False
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING] = False
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING] = False
+        info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING] = False
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        return info

@@ -9,6 +9,7 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 
 if typing.TYPE_CHECKING:
     from gym_pycr_ctf.agents.openai_baselines.common.base_class import BaseAlgorithm
+import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
@@ -68,7 +69,9 @@ def evaluate_policy(model: "BaseAlgorithm", env: Union[gym.Env, VecEnv], env_2: 
 
 
 def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes, deterministic,
-                 callback, train_episode, env_config, env_configs):
+                 callback, train_episode, env_config, env_configs,
+                 train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+                 train_dto : TrainAgentLogDTO = None):
     attacker_agent_config.logger.info("Starting Evaluation")
 
     model.num_eval_episodes = 0
@@ -95,7 +98,7 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
 
 
     for episode in range(n_eval_episodes):
-        infos = np.array([{"non_legal_actions": env.initial_illegal_actions} for i in range(env.num_envs)])
+        infos = np.array([{constants.INFO_DICT.NON_LEGAL_ACTIONS: env.initial_illegal_actions} for i in range(env.num_envs)])
 
         for i in range(env.num_envs):
             if env_configs is not None:
@@ -143,11 +146,11 @@ def _eval_helper(env, attacker_agent_config: AgentConfig, model, n_eval_episodes
             # Record episode metrics
             episode_rewards.append(episode_reward)
             episode_steps.append(episode_length)
-            episode_flags.append(_info["flags"])
-            episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
+            episode_flags.append(_info[constants.INFO_DICT.FLAGS])
+            episode_flags_percentage.append(_info[constants.INFO_DICT.FLAGS] / env_conf.num_flags)
             eval_episode_rewards_env_specific, eval_episode_steps_env_specific, \
             eval_episode_flags_env_specific, eval_episode_flags_percentage_env_specific = \
-                eval_update_env_specific_metrics(env_conf, eval_episode_rewards_env_specific,
+                train_dto.eval_update_env_specific_metrics(env_conf, eval_episode_rewards_env_specific,
                                                  eval_episode_steps_env_specific, eval_episode_flags_env_specific,
                                                  eval_episode_flags_percentage_env_specific, episode_reward, episode_length,
                                                  _info, i)
@@ -287,12 +290,12 @@ def _quick_eval_helper(env, attacker_model, defender_model,
 
     for episode in range(n_eval_episodes):
         if isinstance(env, SubprocVecEnv):
-            infos = np.array([{"attacker_non_legal_actions": env.attacker_initial_illegal_actions,
-                               "defender_non_legal_actions": env.defender_initial_illegal_actions
+            infos = np.array([{constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS: env.attacker_initial_illegal_actions,
+                               constants.INFO_DICT.DEFENDER_NON_LEGAL_ACTIONS: env.defender_initial_illegal_actions
                                } for i in range(env.num_envs)])
         elif isinstance(env, DummyVecEnv):
-            infos = np.array([{"attacker_non_legal_actions": env.envs[i].attacker_initial_illegal_actions,
-                               "defender_non_legal_actions": env.envs[i].defender_initial_illegal_actions
+            infos = np.array([{constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS: env.envs[i].attacker_initial_illegal_actions,
+                               constants.INFO_DICT.DEFENDER_NON_LEGAL_ACTIONS: env.envs[i].defender_initial_illegal_actions
                                } for i in range(env.num_envs)])
         for i in range(env.num_envs):
             if env_configs is not None:
@@ -363,85 +366,85 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.attacker_eval_episode_rewards.append(attacker_episode_reward)
                 train_log_dto.defender_eval_episode_rewards.append(defender_episode_reward)
                 train_log_dto.eval_episode_steps.append(episode_length)
-                train_log_dto.eval_episode_flags.append(_info["flags"])
-                train_log_dto.eval_episode_caught.append(_info["caught_attacker"])
-                train_log_dto.eval_episode_early_stopped.append(_info["early_stopped"])
-                train_log_dto.eval_episode_successful_intrusion.append(_info["successful_intrusion"])
-                train_log_dto.eval_episode_snort_severe_baseline_rewards.append(_info["snort_severe_baseline_reward"])
-                train_log_dto.eval_episode_snort_warning_baseline_rewards.append(_info["snort_warning_baseline_reward"])
-                train_log_dto.eval_episode_snort_critical_baseline_rewards.append(_info["snort_critical_baseline_reward"])
-                train_log_dto.eval_episode_var_log_baseline_rewards.append(_info["var_log_baseline_reward"])
-                train_log_dto.eval_episode_step_baseline_rewards.append(_info["step_baseline_reward"])
-                train_log_dto.eval_episode_snort_severe_baseline_steps.append(_info["snort_severe_baseline_step"])
-                train_log_dto.eval_episode_snort_warning_baseline_steps.append(_info["snort_warning_baseline_step"])
-                train_log_dto.eval_episode_snort_critical_baseline_steps.append(_info["snort_critical_baseline_step"])
-                train_log_dto.eval_episode_var_log_baseline_steps.append(_info["var_log_baseline_step"])
-                train_log_dto.eval_episode_step_baseline_steps.append(_info["step_baseline_step"])
-                train_log_dto.eval_episode_snort_severe_baseline_caught_attacker.append(_info["snort_severe_baseline_caught_attacker"])
-                train_log_dto.eval_episode_snort_warning_baseline_caught_attacker.append(_info["snort_warning_baseline_caught_attacker"])
-                train_log_dto.eval_episode_snort_critical_baseline_caught_attacker.append(_info["snort_critical_baseline_caught_attacker"])
-                train_log_dto.eval_episode_var_log_baseline_caught_attacker.append(_info["var_log_baseline_caught_attacker"])
-                train_log_dto.eval_episode_step_baseline_caught_attacker.append(_info["step_baseline_caught_attacker"])
-                train_log_dto.eval_episode_snort_severe_baseline_early_stopping.append(_info["snort_severe_baseline_early_stopping"])
-                train_log_dto.eval_episode_snort_warning_baseline_early_stopping.append(_info["snort_warning_baseline_early_stopping"])
-                train_log_dto.eval_episode_snort_critical_baseline_early_stopping.append(_info["snort_critical_baseline_early_stopping"])
-                train_log_dto.eval_episode_var_log_baseline_early_stopping.append(_info["var_log_baseline_early_stopping"])
-                train_log_dto.eval_episode_step_baseline_early_stopping.append(_info["step_baseline_early_stopping"])
-                train_log_dto.eval_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info["snort_severe_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info["snort_warning_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info["snort_critical_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_episode_var_log_baseline_uncaught_intrusion_steps.append(_info["var_log_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_episode_step_baseline_uncaught_intrusion_steps.append(_info["step_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
-                train_log_dto.eval_attacker_action_costs.append(_info["attacker_cost"])
-                train_log_dto.eval_attacker_action_costs_norm.append(_info["attacker_cost_norm"])
-                train_log_dto.eval_attacker_action_alerts.append(_info["attacker_alerts"])
-                train_log_dto.eval_attacker_action_alerts_norm.append(_info["attacker_alerts_norm"])
-                train_log_dto.eval_episode_intrusion_steps.append(_info["intrusion_step"])
-                train_log_dto.eval_uncaught_intrusion_steps.append(_info["uncaught_intrusion_steps"])
-                train_log_dto.eval_optimal_defender_reward.append(_info["optimal_defender_reward"])
+                train_log_dto.eval_episode_flags.append(_info[constants.INFO_DICT.FLAGS])
+                train_log_dto.eval_episode_caught.append(_info[constants.INFO_DICT.CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_early_stopped.append(_info[constants.INFO_DICT.EARLY_STOPPED])
+                train_log_dto.eval_episode_successful_intrusion.append(_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION])
+                train_log_dto.eval_episode_snort_severe_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
+                train_log_dto.eval_episode_snort_warning_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
+                train_log_dto.eval_episode_snort_critical_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
+                train_log_dto.eval_episode_var_log_baseline_rewards.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
+                train_log_dto.eval_episode_step_baseline_rewards.append(_info[constants.INFO_DICT.STEP_BASELINE_REWARD])
+                train_log_dto.eval_episode_snort_severe_baseline_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
+                train_log_dto.eval_episode_snort_warning_baseline_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP])
+                train_log_dto.eval_episode_snort_critical_baseline_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
+                train_log_dto.eval_episode_var_log_baseline_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
+                train_log_dto.eval_episode_step_baseline_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_STEP])
+                train_log_dto.eval_episode_snort_severe_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_snort_warning_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_snort_critical_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_var_log_baseline_caught_attacker.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_step_baseline_caught_attacker.append(_info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_episode_snort_severe_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_episode_snort_warning_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_episode_snort_critical_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_episode_var_log_baseline_early_stopping.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_episode_step_baseline_early_stopping.append(_info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_episode_step_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_episode_flags_percentage.append(_info[constants.INFO_DICT.FLAGS] / env_conf.num_flags)
+                train_log_dto.eval_attacker_action_costs.append(_info[constants.INFO_DICT.ATTACKER_COST])
+                train_log_dto.eval_attacker_action_costs_norm.append(_info[constants.INFO_DICT.ATTACKER_COST_NORM])
+                train_log_dto.eval_attacker_action_alerts.append(_info[constants.INFO_DICT.ATTACKER_ALERTS])
+                train_log_dto.eval_attacker_action_alerts_norm.append(_info[constants.INFO_DICT.ATTACKER_ALERTS_NORM])
+                train_log_dto.eval_episode_intrusion_steps.append(_info[constants.INFO_DICT.INTRUSION_STEP])
+                train_log_dto.eval_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_optimal_defender_reward.append(_info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
                 train_log_dto.eval_update_env_specific_metrics(env_conf, _info, i)
             else:
                 train_log_dto.attacker_eval_2_episode_rewards.append(attacker_episode_reward)
                 train_log_dto.defender_eval_2_episode_rewards.append(defender_episode_reward)
                 train_log_dto.eval_2_episode_steps.append(episode_length)
-                train_log_dto.eval_2_episode_flags.append(_info["flags"])
-                train_log_dto.eval_2_episode_caught.append(_info["caught_attacker"])
-                train_log_dto.eval_2_episode_early_stopped.append(_info["early_stopped"])
-                train_log_dto.eval_2_episode_successful_intrusion.append(_info["successful_intrusion"])
-                train_log_dto.eval_2_episode_snort_severe_baseline_rewards.append(_info["snort_severe_baseline_reward"])
-                train_log_dto.eval_2_episode_snort_warning_baseline_rewards.append(_info["snort_warning_baseline_reward"])
-                train_log_dto.eval_2_episode_snort_critical_baseline_rewards.append(_info["snort_critical_baseline_reward"])
-                train_log_dto.eval_2_episode_step_baseline_rewards.append(_info["step_baseline_reward"])
-                train_log_dto.eval_2_episode_snort_severe_baseline_steps.append(_info["snort_severe_baseline_step"])
-                train_log_dto.eval_2_episode_snort_warning_baseline_steps.append(_info["snort_warning_baseline_step"])
-                train_log_dto.eval_2_episode_snort_critical_baseline_steps.append(_info["snort_critical_baseline_step"])
-                train_log_dto.eval_2_episode_var_log_baseline_steps.append(_info["var_log_baseline_step"])
-                train_log_dto.eval_2_episode_step_baseline_steps.append(_info["step_baseline_step"])
-                train_log_dto.eval_2_episode_snort_severe_baseline_caught_attacker.append(_info["snort_severe_baseline_caught_attacker"])
-                train_log_dto.eval_2_episode_snort_warning_baseline_caught_attacker.append(_info["snort_warning_baseline_caught_attacker"])
-                train_log_dto.eval_2_episode_snort_critical_baseline_caught_attacker.append(_info["snort_critical_baseline_caught_attacker"])
-                train_log_dto.eval_2_episode_var_log_baseline_caught_attacker.append(_info["var_log_baseline_caught_attacker"])
-                train_log_dto.eval_2_episode_step_baseline_caught_attacker.append(_info["step_baseline_caught_attacker"])
-                train_log_dto.eval_2_episode_snort_severe_baseline_early_stopping.append(_info["snort_severe_baseline_early_stopping"])
-                train_log_dto.eval_2_episode_snort_warning_baseline_early_stopping.append(_info["snort_warning_baseline_early_stopping"])
-                train_log_dto.eval_2_episode_snort_critical_baseline_early_stopping.append(_info["snort_critical_baseline_early_stopping"])
-                train_log_dto.eval_2_episode_var_log_baseline_early_stopping.append(_info["var_log_baseline_early_stopping"])
-                train_log_dto.eval_2_episode_step_baseline_early_stopping.append(_info["step_baseline_early_stopping"])
-                train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info["snort_severe_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info["snort_warning_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info["snort_critical_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps.append(_info["var_log_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps.append(_info["step_baseline_uncaught_intrusion_steps"])
-                train_log_dto.eval_2_episode_var_log_baseline_rewards.append(_info["var_log_baseline_reward"])
-                train_log_dto.eval_2_episode_flags_percentage.append(_info["flags"] / env_conf.num_flags)
-                train_log_dto.eval_2_attacker_action_costs.append(_info["attacker_cost"])
-                train_log_dto.eval_2_attacker_action_costs_norm.append(_info["attacker_cost_norm"])
-                train_log_dto.eval_2_attacker_action_alerts.append(_info["attacker_alerts"])
-                train_log_dto.eval_2_attacker_action_alerts_norm.append(_info["attacker_alerts_norm"])
-                train_log_dto.eval_2_episode_intrusion_steps.append(_info["intrusion_step"])
-                train_log_dto.eval_2_uncaught_intrusion_steps.append(_info["uncaught_intrusion_steps"])
-                train_log_dto.eval_2_optimal_defender_reward.append(_info["optimal_defender_reward"])
+                train_log_dto.eval_2_episode_flags.append(_info[constants.INFO_DICT.FLAGS])
+                train_log_dto.eval_2_episode_caught.append(_info[constants.INFO_DICT.CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_early_stopped.append(_info[constants.INFO_DICT.EARLY_STOPPED])
+                train_log_dto.eval_2_episode_successful_intrusion.append(_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION])
+                train_log_dto.eval_2_episode_snort_severe_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
+                train_log_dto.eval_2_episode_snort_warning_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
+                train_log_dto.eval_2_episode_snort_critical_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
+                train_log_dto.eval_2_episode_step_baseline_rewards.append(_info[constants.INFO_DICT.STEP_BASELINE_REWARD])
+                train_log_dto.eval_2_episode_snort_severe_baseline_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
+                train_log_dto.eval_2_episode_snort_warning_baseline_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP])
+                train_log_dto.eval_2_episode_snort_critical_baseline_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
+                train_log_dto.eval_2_episode_var_log_baseline_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
+                train_log_dto.eval_2_episode_step_baseline_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_STEP])
+                train_log_dto.eval_2_episode_snort_severe_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_snort_warning_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_snort_critical_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_var_log_baseline_caught_attacker.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_step_baseline_caught_attacker.append(_info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
+                train_log_dto.eval_2_episode_snort_severe_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_2_episode_snort_warning_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_2_episode_snort_critical_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_2_episode_var_log_baseline_early_stopping.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_2_episode_step_baseline_early_stopping.append(_info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
+                train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_episode_var_log_baseline_rewards.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
+                train_log_dto.eval_2_episode_flags_percentage.append(_info[constants.INFO_DICT.FLAGS] / env_conf.num_flags)
+                train_log_dto.eval_2_attacker_action_costs.append(_info[constants.INFO_DICT.ATTACKER_COST])
+                train_log_dto.eval_2_attacker_action_costs_norm.append(_info[constants.INFO_DICT.ATTACKER_COST_NORM])
+                train_log_dto.eval_2_attacker_action_alerts.append(_info[constants.INFO_DICT.ATTACKER_ALERTS])
+                train_log_dto.eval_2_attacker_action_alerts_norm.append(_info[constants.INFO_DICT.ATTACKER_ALERTS_NORM])
+                train_log_dto.eval_2_episode_intrusion_steps.append(_info[constants.INFO_DICT.INTRUSION_STEP])
+                train_log_dto.eval_2_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
+                train_log_dto.eval_2_optimal_defender_reward.append(_info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
                 train_log_dto.eval_2_update_env_specific_metrics(env_conf, _info, i)
             if isinstance(env, SubprocVecEnv):
                 obs = env.eval_reset(idx=i)

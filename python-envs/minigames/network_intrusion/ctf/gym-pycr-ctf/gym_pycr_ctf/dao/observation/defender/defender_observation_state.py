@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 
@@ -132,6 +133,42 @@ class DefenderObservationState:
         for m in self.machines:
             c.machines.append(m.copy())
         return c
+
+    def update_info_dict(self, info: dict) -> dict:
+        """
+        Update the info dict with information from the defender's observation state
+
+        :param info: the info dict
+        :return: the updated dict
+        """
+        info[constants.INFO_DICT.CAUGHT_ATTACKER] = self.caught_attacker
+        info[constants.INFO_DICT.EARLY_STOPPED] = self.stopped
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD] = self.snort_severe_baseline_reward
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD] = self.snort_warning_baseline_reward
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD] = self.snort_critical_baseline_reward
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD] = self.var_log_baseline_reward
+        info[constants.INFO_DICT.STEP_BASELINE_REWARD] = self.step_baseline_reward
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP] = self.snort_severe_baseline_step
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP] = self.snort_warning_baseline_step
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP] = self.snort_critical_baseline_step
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP] = self.var_log_baseline_step
+        info[constants.INFO_DICT.STEP_BASELINE_STEP] = self.step_baseline_step
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER] = self.snort_severe_baseline_caught_attacker
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER] = self.snort_warning_baseline_caught_attacker
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER] = self.snort_critical_baseline_caught_attacker
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER] = self.var_log_baseline_caught_attacker
+        info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER] = self.step_baseline_caught_attacker
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING] = self.snort_severe_baseline_early_stopping
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING] = self.snort_warning_baseline_early_stopping
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING] = self.snort_critical_baseline_early_stopping
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING] = self.var_log_baseline_early_stopping
+        info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING] = self.step_baseline_early_stopping
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.snort_severe_baseline_uncaught_intrusion_steps
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.snort_warning_baseline_uncaught_intrusion_steps
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.snort_critical_baseline_uncaught_intrusion_steps
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.var_log_baseline_uncaught_intrusion_steps
+        info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.step_baseline_uncaught_intrusion_steps
+        return info
 
     def __str__(self) -> str:
         """
