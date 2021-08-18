@@ -21,7 +21,7 @@ def default_config() -> ClientConfig:
                                gif_dir=util.default_output_dir() + "/results/gifs",
                                eval_frequency=500000, video_frequency=10,
                                save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=10, input_dim=(4),
+                               checkpoint_freq=100, input_dim=(4),
                                output_dim=2,
                                pi_hidden_dim=128, pi_hidden_layers=2,
                                vf_hidden_dim=128, vf_hidden_layers=2,
@@ -47,28 +47,32 @@ def default_config() -> ClientConfig:
 
     # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
     #                                          server_connection=False, port_forward_next_port=4000)
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-    #                                        agent_username="agent", agent_pw="agent", server_connection=True,
-    #                                        server_private_key_file="/home/kim/.ssh/id_rsa",
-    #                                        server_username="kim", port_forward_next_port=4000)
     emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-                                       agent_username="agent", agent_pw="agent", server_connection=True,
-                                       server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                       server_username="kim", port_forward_next_port=4000)
+                                           agent_username="agent", agent_pw="agent", server_connection=True,
+                                           server_private_key_file="/home/kim/.ssh/id_rsa",
+                                           server_username="kim", port_forward_next_port=4000)
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    #                                    agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                    server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                                    server_username="kim", port_forward_next_port=4000)
     # eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
     #                                        server_connection=False, port_forward_next_port=5000)
+    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    #                               agent_username="agent", agent_pw="agent", server_connection=True,
+    #                               server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
+    #                               server_username="kim", port_forward_next_port=5000)
     eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-                                  agent_username="agent", agent_pw="agent", server_connection=True,
-                                  server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
-                                  server_username="kim", port_forward_next_port=5000)
+                                            agent_username="agent", agent_pw="agent", server_connection=True,
+                                            server_private_key_file="/home/kim/.ssh/id_rsa",
+                                            server_username="kim", port_forward_next_port=5000)
 
-    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
-    #                                                "network_intrusion/ctf/gym-pycr-ctf/" \
-    #                                               "examples/difficulty_level_9/hello_world/"
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
+                                                   "network_intrusion/ctf/gym-pycr-ctf/" \
+                                                  "examples/difficulty_level_9/hello_world/"
 
-    eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
-                                                    "network_intrusion/ctf/gym-pycr-ctf/" \
-                                                    "examples/difficulty_level_9/hello_world/"
+    # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
+    #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
+    #                                                 "examples/difficulty_level_9/hello_world/"
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
     #                                                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"

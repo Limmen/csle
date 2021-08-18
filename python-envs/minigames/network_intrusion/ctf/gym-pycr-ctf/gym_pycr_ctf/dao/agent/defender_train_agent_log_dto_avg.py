@@ -913,7 +913,8 @@ class DefenderTrainAgentLogDTOAvg:
         :param steps: the list of uncaught intrusion steps
         :return: the average number of uncaught intrusion steps
         """
-        filtered_steps = np.array(list(filter(lambda x: x > 0, steps)))
+        # filtered_steps = np.array(list(filter(lambda x: x > 0, steps)))
+        filtered_steps = steps
         if len(filtered_steps) > 0:
             return np.mean(filtered_steps)
         else:

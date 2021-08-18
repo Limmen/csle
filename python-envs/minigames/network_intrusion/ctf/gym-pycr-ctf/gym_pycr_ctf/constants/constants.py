@@ -843,3 +843,4 @@ class INFO_DICT:
     DEFENDER_NON_LEGAL_ACTIONS = "defender_non_legal_actions"
     IDX = "idx"
     NON_LEGAL_ACTIONS = "non_legal_actions"
+    ATTACKER_ACTION = "attacker_action"

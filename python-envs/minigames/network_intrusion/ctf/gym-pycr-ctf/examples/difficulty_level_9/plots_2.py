@@ -9,9 +9,10 @@ from gym_pycr_ctf.util.experiments_util import util
 def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips = None):
     ppo_novice_attacker_0 = pd.read_csv(glob.glob(novice_attacker_base_path + "0/*_train.csv")[0])
     ppo_novice_attacker_999 = pd.read_csv(glob.glob(novice_attacker_base_path + "999/*_train.csv")[0])
+    ppo_novice_attacker_399 = pd.read_csv(glob.glob(novice_attacker_base_path + "399/*_train.csv")[0])
+    ppo_novice_attacker_599 = pd.read_csv(glob.glob(novice_attacker_base_path + "599/*_train.csv")[0])
 
-    ppo_dfs_novice_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999]
-    ppo_dfs_experienced_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999]
+    ppo_dfs_novice_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999, ppo_novice_attacker_399]
 
     max_len = min(list(map(lambda x: len(x), ppo_dfs_novice_attacker)))
 
@@ -433,9 +434,6 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     eval_2_step_baseline_uncaught_intrusion_steps_stds_novice_attacker = np.std(
         tuple(eval_2_step_baseline_uncaught_intrusion_steps_data_novice_attacker), axis=0, ddof=1)
 
-    print(avg_eval_2_uncaught_intrusion_steps_means_novice_attacker)
-    print(avg_train_uncaught_intrusion_steps_means_novice_attacker)
-
 
     return avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
            avg_train_rewards_stds_novice_attacker, \
@@ -802,14 +800,14 @@ def plot_train(
         snort_severe_baseline_i_steps_stds=eval_2_snort_severe_baseline_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
 
         fontsize= 6.5, figsize= (7.5, 1.5), title_fontsize=8, lw=0.75, wspace=0.17, hspace=0.4, top=0.0,
-        bottom=0.28, labelsize=6, markevery=5, optimal_reward = 100, sample_step = 2,
+        bottom=0.28, labelsize=6, markevery=10, optimal_reward = 100, sample_step = 5,
         eval_only=False, plot_opt = False, iterations_per_step= 10, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "defender_simulation_emulation_novice_attacker_tnsm_21", markersize=2.25
     )
 
 
 if __name__ == '__main__':
-    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/generated_simulation/defender/ppo_baseline/results/data/"
+    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/results_3/data/"
     avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
     avg_train_rewards_stds_novice_attacker, \
     avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker, \

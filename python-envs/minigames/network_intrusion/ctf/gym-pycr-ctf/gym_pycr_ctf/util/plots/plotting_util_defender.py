@@ -1874,7 +1874,7 @@ def plot_defender_simulation_emulation_tnsm_21(
     ax[4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     # ax[2].set_ylim(-100, 110)
-    ax[4].set_ylim(0, 10)
+    ax[4].set_ylim(0, 20)
     ax[4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
     ax[4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
 

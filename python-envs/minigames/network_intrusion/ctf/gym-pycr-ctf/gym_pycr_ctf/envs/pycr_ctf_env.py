@@ -222,7 +222,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 for k,v in defender_info.items():
                     if k not in info:
                         info[k] = v
-        info["attacker_action"] = attack_action_id
+        info[constants.INFO_DICT.ATTACKER_ACTION] = attack_action_id
 
         # Update state
         if self.env_config.defender_update_state and not done:
@@ -270,8 +270,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action_id: the action to take
         :return: (obs, reward, done, info)
         """
-        info = {"idx": self.idx}
-        info["successful_intrusion"] = False
+        info = {constants.INFO_DICT.IDX: self.idx}
+        info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = False
         # Check if action is illegal
         if not self.is_attack_action_legal(attacker_action_id, env_config=self.env_config, env_state=self.env_state):
             actions = list(range(len(self.env_config.attacker_action_conf.actions)))
