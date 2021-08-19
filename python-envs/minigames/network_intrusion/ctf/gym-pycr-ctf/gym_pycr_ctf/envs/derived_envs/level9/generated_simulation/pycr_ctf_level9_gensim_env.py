@@ -462,4 +462,6 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             random_start=True, start_p=0.2, continue_action=372)
 
         self.env_config.attacker_static_opponent = attacker_opponent
+        if self.env_config.emulation_config.static_attacker_strategy is not None:
+            self.env_config.attacker_static_opponent.strategy = self.env_config.emulation_config.static_attacker_strategy
         self.env_config = FindPiStarDefender.update_pi_star(self.env_config)

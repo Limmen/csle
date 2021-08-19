@@ -39,8 +39,8 @@ def default_config() -> ClientConfig:
                                n_deterministic_eval_iter=100, attacker_opponent_baseline_type = 8,
                                running_avg=50, n_quick_eval_iter=100,
                                log_regret=True, snort_baseline_simulate=True, quick_eval_freq=1,
-                               eval_deterministic = False, static_eval_defender=True
-                               )
+                               eval_deterministic = False, static_eval_defender=True)
+
     env_name = "pycr-ctf-level-9-generated-sim-v5"
     #eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
     eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
@@ -65,6 +65,17 @@ def default_config() -> ClientConfig:
                                             agent_username="agent", agent_pw="agent", server_connection=True,
                                             server_private_key_file="/home/kim/.ssh/id_rsa",
                                             server_username="kim", port_forward_next_port=5000)
+
+    # Novice attacker
+    emulation_config.static_attacker_strategy = [99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
+
+    # # Experienced Attacker
+    # emulation_config.static_attacker_strategy = \
+    #     [100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100, 266, 104, 106]
+    #
+    # # Expert attacker
+    # emulation_config.static_attacker_strategy = [100, 109, 104, 106, 100, 199, 104, 106,100, 265,
+    #                                              104, 106, 100, 113, 104]
 
     eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
                                                    "network_intrusion/ctf/gym-pycr-ctf/" \

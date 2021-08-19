@@ -20,7 +20,8 @@ class EmulationConfig:
                  warmup = False, warmup_iterations :int = 500, port_forward_next_port : int = 4000,
                  save_dynamics_model_dir : str = None, skip_exploration : bool = False,
                  save_dynamics_model_file: str = None, save_netconf_file: str = None,
-                 save_trajectories_file : str = None, save_system_id_logs_file :str = None):
+                 save_trajectories_file : str = None, save_system_id_logs_file :str = None,
+                 static_attacker_strategy : List[int] = None):
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -45,6 +46,7 @@ class EmulationConfig:
         self.save_netconf_file = save_netconf_file
         self.save_trajectories_file = save_trajectories_file
         self.save_system_id_logs_file = save_system_id_logs_file
+        self.static_attacker_strategy = static_attacker_strategy
 
     def connect_server(self):
         """
@@ -464,4 +466,5 @@ class EmulationConfig:
         c.save_netconf_file = self.save_netconf_file
         c.save_trajectories_file = self.save_trajectories_file
         c.save_system_id_logs_file = self.save_system_id_logs_file
+        c.static_attacker_strategy = self.static_attacker_strategy
         return c
