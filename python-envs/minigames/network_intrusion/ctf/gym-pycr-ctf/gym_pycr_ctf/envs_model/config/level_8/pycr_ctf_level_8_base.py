@@ -229,7 +229,8 @@ class PyCrCTFLevel8Base:
                           Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
                                         cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
                                         credentials=[
-                                            Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
+                                            Credential(username=constants.SAMBA.BACKDOOR_USER,
+                                                       pw=constants.SAMBA.BACKDOOR_PW,
                                                        service=constants.SAMBA.SERVICE_NAME)
                                         ],
                                         port=constants.SAMBA.PORT,
@@ -576,7 +577,8 @@ class PyCrCTFLevel8Base:
                           Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
                                         cve=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT, cvss=9.8,
                                         credentials=[
-                                            Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW,
+                                            Credential(username=constants.SAMBA.BACKDOOR_USER,
+                                                       pw=constants.SAMBA.BACKDOOR_PW,
                                                        service=constants.SAMBA.SERVICE_NAME)
                                         ],
                                         port=constants.SAMBA.PORT,

@@ -441,25 +441,25 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
         #     random_start=True, start_p=0.2, continue_action=372)
 
         # Experienced Attacker
-        attacker_opponent = CustomAttackerBotAgent(
-            env_config=self.env_config, env=self,
-            # Continue, Ping Scan, SambaCry Exploit(1) with backdoor,
-            # Shellshock (CVE-2014-6271) (24) with backdoor, login, SSH brute (25), Login, CVE-2010-0426 (25),
-            # Ping scan, SQL injection (26), Login, Install tools,
-            # Ping scan, CVE-2015-1427 (26), Login, Install Tools,
-            strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100,
-                      266, 104, 106],
-            random_start=True, start_p=0.2, continue_action=372)
-
-        # # Expert attacker
         # attacker_opponent = CustomAttackerBotAgent(
         #     env_config=self.env_config, env=self,
-        #     # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
-        #     # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
-        #     # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
-        #     # SambaCry Exploit(5) with backdoor, Login
-        #     strategy=[100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104],
+        #     # Continue, Ping Scan, SambaCry Exploit(1) with backdoor,
+        #     # Shellshock (CVE-2014-6271) (24) with backdoor, login, SSH brute (25), Login, CVE-2010-0426 (25),
+        #     # Ping scan, SQL injection (26), Login, Install tools,
+        #     # Ping scan, CVE-2015-1427 (26), Login, Install Tools,
+        #     strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100,
+        #               266, 104, 106],
         #     random_start=True, start_p=0.2, continue_action=372)
+
+        # # Expert attacker
+        attacker_opponent = CustomAttackerBotAgent(
+            env_config=self.env_config, env=self,
+            # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
+            # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
+            # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
+            # SambaCry Exploit(5) with backdoor, Login
+            strategy=[100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104],
+            random_start=True, start_p=0.2, continue_action=372)
 
         self.env_config.attacker_static_opponent = attacker_opponent
         self.env_config = FindPiStarDefender.update_pi_star(self.env_config)

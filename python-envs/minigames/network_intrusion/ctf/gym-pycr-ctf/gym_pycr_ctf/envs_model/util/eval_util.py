@@ -68,8 +68,9 @@ class EvalUtil:
         intrusion_start_obs_4 = []
         stopping_obs_l = []
         policy = model.defender_policy.copy()
+        merged_taus = []
         for tau in trajectories:
-            if not EvalUtil.is_correct_attacker(tau):
+            if not EvalUtil.is_correct_attacker(tau, env):
                 continue
             optimal_stopping_idx = np.random.geometric(p=0.2, size=1)[0]
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
@@ -159,6 +160,7 @@ class EvalUtil:
             intrusion_start_obs_4.append(obs[optimal_stopping_idx + 2])
             stopping_obs_l.append(stopping_obs)
             intrusion_steps.append(optimal_stopping_idx)
+            merged_taus.append(obs)
 
         # print("E2_rewards:{}".format(rewards))
         # print("E2_optimal_stopping_times:{}".format(optimal_stopping_times))
@@ -168,6 +170,7 @@ class EvalUtil:
         # print("intrusion start obs 3:{}".format(intrusion_start_obs_3))
         # print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
         # print("stopping obs:{}".format(stopping_obs_l))
+        # print("merged tau:{}".format(merged_taus))
 
         return rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
                snort_severe_r, snort_warning_r, snort_critical_r, \
@@ -207,8 +210,14 @@ class EvalUtil:
         return obs_l
 
     @staticmethod
-    def is_correct_attacker(tau):
-        if tau.attacker_actions[0] == -1 and tau.attacker_actions[1] == 372 and tau.attacker_actions[2] == 99:
+    def is_correct_attacker(tau, env):
+        if (tau.attacker_actions[0] == -1
+                and tau.attacker_actions[1] == env.env_config.attacker_static_opponent.continue_action
+                and tau.attacker_actions[2] == env.env_config.attacker_static_opponent.strategy[0]
+                and tau.attacker_actions[3] == env.env_config.attacker_static_opponent.strategy[1]
+                and tau.attacker_actions[4] == env.env_config.attacker_static_opponent.strategy[2]
+                and tau.attacker_actions[5] == env.env_config.attacker_static_opponent.strategy[3]
+        ):
             return True
         return False
 

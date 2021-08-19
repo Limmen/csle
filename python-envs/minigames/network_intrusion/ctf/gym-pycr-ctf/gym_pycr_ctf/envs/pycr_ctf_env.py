@@ -291,6 +291,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Prepare action for execution
         attack_action = self.env_config.attacker_action_conf.actions[attacker_action_id]
+
         attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
         self.env_state.attacker_obs_state.cost += attack_action.cost
         self.env_state.attacker_obs_state.cost_norm += EnvDynamicsUtil.normalize_action_costs(

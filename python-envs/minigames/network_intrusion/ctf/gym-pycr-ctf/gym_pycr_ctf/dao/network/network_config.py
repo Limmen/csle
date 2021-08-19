@@ -149,4 +149,32 @@ class NetworkConfig:
                 obj = pickle.load(file)
                 return obj
 
+    def merge(self, network_conf: "NetworkConfig") -> None:
+        """
+        Merges the network config with another one
+
+        :param network_conf: the network config to merge with
+        :return: None
+        """
+        for node in network_conf.nodes:
+            new_node = True
+            for n in self.nodes:
+                if node.ip == n.ip:
+                    new_node = False
+                    for vuln in node.vulnerabilities:
+                        new_vuln = True
+                        for vuln2 in n.vulnerabilities:
+                            if vuln.name == vuln2.name:
+                                new_vuln = False
+                        if new_vuln:
+                            n.vulnerabilities.append(vuln)
+            if new_node:
+                self.nodes.append(node)
+        self.vulnerable_nodes = self.vulnerable_nodes.union(network_conf.vulnerable_nodes)
+        for node in self.nodes:
+            for vuln in node.vulnerabilities:
+                if vuln.name == constants.SAMBA.VULNERABILITY_NAME:
+                    vuln.credentials[0].username = constants.SAMBA.BACKDOOR_USER
+                    vuln.credentials[0].pw = constants.SAMBA.BACKDOOR_PW
+
 

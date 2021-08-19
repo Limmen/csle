@@ -43,6 +43,7 @@ def manual_control():
     emulation_config.save_dynamics_model_dir = model_path_dir
 
     env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
+    #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     env.env_config.attacker_use_nmap_cache = True
     env.env_config.attacker_use_nikto_cache = True
     env.env_config.attacker_use_file_system_cache = True
@@ -81,6 +82,16 @@ def manual_control():
         strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104, 106, 100,
                   266, 104, 106],
         random_start=True, start_p=0.2, continue_action=372)
+
+    # Expert attacker
+    # attacker_opponent = CustomAttackerBotAgent(
+    #     env_config=env.env_config, env=env,
+    #     # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
+    #     # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
+    #     # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
+    #     # SambaCry Exploit(5) with backdoor, Login
+    #     strategy=[100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104],
+    #     random_start=True, start_p=0.2, continue_action=372)
 
     env.env_config.attacker_static_opponent = attacker_opponent
 
