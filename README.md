@@ -142,7 +142,7 @@ evaluations we show that our method is superior to two baseline methods but
 that policy convergence in self-play remains a challenge."
 }
 ```
-- **Learning Intrusion Prevention Policies through Optimal Stopping**
+- **Learning Intrusion Prevention Policies through Optimal Stopping (https://arxiv.org/abs/2106.07160)**
 ``` bash
 @misc{hammar2021learning,
       title={Learning Intrusion Prevention Policies through Optimal Stopping},
