@@ -2,7 +2,6 @@
 An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
 """
 import time
-import torch
 import math
 
 from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
@@ -13,9 +12,7 @@ from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.dao.agent.train_mode import TrainMode
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
-from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
+from gym_pycr_ctf.agents.util.agent_util import AgentUtil
 
 
 class PPOBaselineAgent(TrainAgent):
@@ -58,7 +55,8 @@ class PPOBaselineAgent(TrainAgent):
             net_dict_attacker = {"pi": attacker_pi_arch, "vf": attacker_vf_arch}
             attacker_net_arch.append(net_dict_attacker)
 
-            policy_kwargs_attacker = dict(activation_fn=self.get_hidden_activation_attacker(), net_arch=attacker_net_arch)
+            policy_kwargs_attacker = dict(activation_fn=AgentUtil.get_hidden_activation(config=self.attacker_config),
+                                          net_arch=attacker_net_arch)
             device_attacker = "cpu" if not self.attacker_config.gpu else "cuda:" + str(self.attacker_config.gpu_id)
             policy_attacker = "MlpPolicy"
 
@@ -83,7 +81,8 @@ class PPOBaselineAgent(TrainAgent):
             net_dict_defender = {"pi": defender_pi_arch, "vf": defender_vf_arch}
             defender_net_arch.append(net_dict_defender)
 
-            policy_kwargs_defender = dict(activation_fn=self.get_hidden_activation_defender(), net_arch=defender_net_arch)
+            policy_kwargs_defender = dict(activation_fn=AgentUtil.get_hidden_activation(config=self.defender_config),
+                                          net_arch=defender_net_arch)
             device_defender = "cpu" if not self.defender_config.gpu else "cuda:" + str(self.defender_config.gpu_id)
             policy_defender = "MlpPolicy"
 
@@ -201,54 +200,6 @@ class PPOBaselineAgent(TrainAgent):
         self.train_result = model.train_result
         self.eval_result = model.eval_result
         return model.train_result
-
-    def get_hidden_activation_attacker(self):
-        """
-        Interprets the hidden activation
-
-        :return: the hidden activation function
-        """
-        return torch.nn.Tanh
-        if self.attacker_config.hidden_activation == "ReLU":
-            return torch.nn.ReLU
-        elif self.attacker_config.hidden_activation == "LeakyReLU":
-            return torch.nn.LeakyReLU
-        elif self.attacker_config.hidden_activation == "LogSigmoid":
-            return torch.nn.LogSigmoid
-        elif self.attacker_config.hidden_activation == "PReLU":
-            return torch.nn.PReLU
-        elif self.attacker_config.hidden_activation == "Sigmoid":
-            return torch.nn.Sigmoid
-        elif self.attacker_config.hidden_activation == "Softplus":
-            return torch.nn.Softplus
-        elif self.attacker_config.hidden_activation == "Tanh":
-            return torch.nn.Tanh
-        else:
-            raise ValueError("Activation type: {} not recognized".format(self.attacker_config.hidden_activation))
-
-    def get_hidden_activation_defender(self):
-        """
-        Interprets the hidden activation
-
-        :return: the hidden activation function
-        """
-        return torch.nn.Tanh
-        if self.defender_config.hidden_activation == "ReLU":
-            return torch.nn.ReLU
-        elif self.defender_config.hidden_activation == "LeakyReLU":
-            return torch.nn.LeakyReLU
-        elif self.defender_config.hidden_activation == "LogSigmoid":
-            return torch.nn.LogSigmoid
-        elif self.defender_config.hidden_activation == "PReLU":
-            return torch.nn.PReLU
-        elif self.defender_config.hidden_activation == "Sigmoid":
-            return torch.nn.Sigmoid
-        elif self.defender_config.hidden_activation == "Softplus":
-            return torch.nn.Softplus
-        elif self.defender_config.hidden_activation == "Tanh":
-            return torch.nn.Tanh
-        else:
-            raise ValueError("Activation type: {} not recognized".format(self.defender_config.hidden_activation))
 
 
     def get_action(self, s, eval=False, attacker=True) -> int:

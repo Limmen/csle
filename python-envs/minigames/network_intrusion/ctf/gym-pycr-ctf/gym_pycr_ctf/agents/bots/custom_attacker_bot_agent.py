@@ -72,7 +72,12 @@ class CustomAttackerBotAgent:
         return action, done
 
 
-    def reset(self):
+    def reset(self) -> None:
+        """
+        Resets the agent state
+
+        :return: None
+        """
         if self.random_start:
             self.started = False
         else:

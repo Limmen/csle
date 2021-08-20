@@ -22,6 +22,28 @@ class EmulationConfig:
                  save_dynamics_model_file: str = None, save_netconf_file: str = None,
                  save_trajectories_file : str = None, save_system_id_logs_file :str = None,
                  static_attacker_strategy : List[int] = None):
+        """
+        Initializes the emulation configuration
+
+        :param agent_ip: the ip of the Kali container of the attacker in the emulation
+        :param agent_username: the username of the login to the Kali container
+        :param agent_pw: the password of the login to the Kali container
+        :param server_ip: the ip of the server where the emulation is running
+        :param server_connection: whether a jumphost needs to be established to server-ip before connecting
+                                  to the emulation
+        :param server_private_key_file: path the private key file to use for establishing the jumphost connection
+        :param server_username: the username for the jumphost connection
+        :param warmup: whether to run a warmup run first to test some actions in the emulation
+        :param warmup_iterations: how many iterations to run for the warmup
+        :param port_forward_next_port: the port to use for port-forwarding when setting up tunnels
+        :param save_dynamics_model_dir: the directory to save/load dynamics models
+        :param skip_exploration: boolean flag whether to skip the exploration phase
+        :param save_dynamics_model_file: name of the file to save the dynamics model
+        :param save_netconf_file: name of the file to save the netconf model
+        :param save_trajectories_file: name of the file to save the stored trajectories from the emulation
+        :param save_system_id_logs_file: name of the file to save the system-id logs
+        :param static_attacker_strategy: if training only the defender, a static attacker strategy
+        """
         self.agent_ip = agent_ip
         self.agent_username = agent_username
         self.agent_pw = agent_pw
@@ -48,11 +70,11 @@ class EmulationConfig:
         self.save_system_id_logs_file = save_system_id_logs_file
         self.static_attacker_strategy = static_attacker_strategy
 
-    def connect_server(self):
+    def connect_server(self) -> None:
         """
         Creates a connection to a server that can work as a jumphost
 
-        :return:
+        :return: None
         """
         if not self.server_connection:
             raise ValueError("Server connection not enabled, cannot connect to server")
@@ -68,7 +90,12 @@ class EmulationConfig:
         server_conn.connect(self.server_ip, username=self.server_username, pkey=key)
         self.server_conn = server_conn
 
-    def connect_router(self):
+    def connect_router(self) -> None:
+        """
+        Connects to the router of the emulation
+
+        :return: None
+        """
         print("Connecting to router host..")
         agent_addr = (self.agent_ip, 22)
         target_addr = (self.ids_router_ip, 22)
@@ -351,6 +378,16 @@ class EmulationConfig:
     def load_action_alerts(self, actions: List[AttackerAction], dir: str, action_ids: List[AttackerActionId],
                            shell_ids: List[AttackerActionId],
                            action_lookup_d_val: dict) -> ActionCosts:
+        """
+        Load stored action-alerts from the Emulation
+
+        :param actions: the list of attacker actions
+        :param dir: the directory to load from
+        :param action_ids: a list of the attacker action ids
+        :param shell_ids: a list of the shell command action ids
+        :param action_lookup_d_val: a dict for looking up action ids and index to find the corresponding id
+        :return: An object with the loaded action costs
+        """
         print("Loading action alerts from emulation..")
         action_alerts = ActionAlerts()
         sftp_client = self.agent_conn.open_sftp()
@@ -468,3 +505,19 @@ class EmulationConfig:
         c.save_system_id_logs_file = self.save_system_id_logs_file
         c.static_attacker_strategy = self.static_attacker_strategy
         return c
+
+
+    def __str__(self):
+        """
+        :return: a string representation of the object.
+        """
+        return f"agent_ip:{self.agent_ip}, agent_username: {self.agent_username}, agent_pw: {self.agent_pw}, " \
+               f"server_ip: {self.server_ip}, sever_connection: {str(self.server_connection)}, " \
+               f"private_key_file: {self.server_private_key_file}, server_username: {self.server_username}, " \
+               f"warmup: {self.warmup}, warmup_iterations: {self.warmup_iterations}, " \
+               f"port_forward_next_port: {self.port_forward_next_port}, " \
+               f"save_dynamics_model_dir: {self.save_dynamics_model_dir}, skip_exploration: {self.skip_exploration}," \
+               f"save_dynamics_model_file: {self.save_dynamics_model_file}, save_netconf_file: {self.save_netconf_file}, " \
+               f"save_trajectories_file: {self.save_trajectories_file}, " \
+               f"save_system_id_logs_file: {self.save_system_id_logs_file}, " \
+               f"static_attacker_strategy: {self.static_attacker_strategy}"
