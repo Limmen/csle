@@ -11,6 +11,17 @@ class AttackerObservationState:
 
     def __init__(self, num_machines : int, num_ports : int, num_vuln : int, num_sh : int,
                  num_flags : int, catched_flags : int, agent_reachable = None):
+        """
+        Initializes the state
+
+        :param num_machines: the number of machines
+        :param num_ports: the number of ports
+        :param num_vuln: the number of vulnerabilities
+        :param num_sh: the number of shell access
+        :param num_flags: the number of flags
+        :param catched_flags: the number of catched flags
+        :param agent_reachable: whether this node is reachable from the agent
+        """
         self.num_machines = num_machines
         self.num_ports = num_ports
         self.num_vuln = num_vuln

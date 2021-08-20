@@ -5,6 +5,16 @@ class NodeContainerConfig:
     """
 
     def __init__(self, name: str, network: str, version: str, level: str, ip: str, minigame: str):
+        """
+        Intializes the DTO
+
+        :param name: the name of the node container
+        :param network: the network name
+        :param version: the version of the container
+        :param level: the level of the container
+        :param ip: the ip
+        :param minigame: the minigame that it belongs to
+        """
         self.name = name
         self.network = network
         self.version = version

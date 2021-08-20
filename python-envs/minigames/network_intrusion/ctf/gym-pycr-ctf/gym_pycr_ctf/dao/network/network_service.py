@@ -10,6 +10,14 @@ class NetworkService:
     """
 
     def __init__(self, protocol: TransportProtocol, port : int, name : str, credentials : List[Credential] = None):
+        """
+        Initializes the DTO
+
+        :param protocol: the protocol of the service
+        :param port: the port of the service
+        :param name: the name of the service
+        :param credentials: the list of credentials of the service
+        """
         self.protocol = protocol
         self.port = port
         self.name = name

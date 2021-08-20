@@ -4,6 +4,7 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionOutcome
 
+
 class AttackerNIKTOActions:
     """
     Class implementing NIKTO scan actions for the attacker

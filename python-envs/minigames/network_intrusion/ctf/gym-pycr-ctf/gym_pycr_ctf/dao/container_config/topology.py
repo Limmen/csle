@@ -8,6 +8,12 @@ class Topology:
     """
 
     def __init__(self, node_configs: List[NodeFirewallConfig], subnetwork: str):
+        """
+        Initializes the DTO
+
+        :param node_configs: the list of node configurations
+        :param subnetwork: the subnetwork
+        """
         self.node_configs = node_configs
         self.subnetwork = subnetwork
 

@@ -14,6 +14,11 @@ class AttackerMachineObservationState:
     """
 
     def __init__(self, ip : str):
+        """
+        Initializes the state
+
+        :param ip: the ip of the machine
+        """
         self.ip = ip
         self.os="unknown"
         self.ports : List[PortObservationState] = []

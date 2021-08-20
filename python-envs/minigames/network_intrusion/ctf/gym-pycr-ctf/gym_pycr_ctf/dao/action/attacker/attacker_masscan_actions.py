@@ -4,6 +4,7 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionOutcome
 
+
 class AttackerMasscanActions:
     """
     Class containing attacker Massscan actions
@@ -11,6 +12,15 @@ class AttackerMasscanActions:
 
     @staticmethod
     def MASSCAN_HOST_SCAN(index: int, subnet=True, ip: str = "", host_ip : str = "") -> AttackerAction:
+        """
+        Action for running a MASSCAN network scan
+
+        :param index: the index of the action
+        :param subnet: if true, apply action to entire subnet
+        :param ip: ip of the machine or subnet to apply the action to
+        :param host_ip: the host ip
+        :return: The created action
+        """
         cost_noise_multiplier = 1
         id = AttackerActionId.MASSCAN_HOST_SCAN
         file_name = str(id.value) + "_" + ip + ".xml "

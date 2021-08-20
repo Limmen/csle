@@ -9,6 +9,18 @@ class ContainersConfig:
 
     def __init__(self, containers : List[NodeContainerConfig], network: str, agent_ip : str, router_ip : str,
                  subnet_mask: str, subnet_prefix: str, ids_enabled :bool, vulnerable_nodes = None):
+        """
+        Initializes the DTO
+
+        :param containers: the list of containers
+        :param network: the network name
+        :param agent_ip: the ip of the agent
+        :param router_ip: the ip of the router
+        :param subnet_mask: the subnet mask
+        :param subnet_prefix: the subnet prefix
+        :param ids_enabled: whether the IDS is enabled or nt
+        :param vulnerable_nodes: the list of vulnerable nodes
+        """
         self.containers = containers
         self.network = network
         self.agent_ip = agent_ip

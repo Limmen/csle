@@ -776,9 +776,3 @@ class TrainAgentLogDTO:
             self.eval_2_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
 
 
-
-
-
-
-
-

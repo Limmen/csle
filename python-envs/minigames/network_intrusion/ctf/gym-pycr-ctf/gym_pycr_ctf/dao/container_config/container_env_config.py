@@ -19,6 +19,30 @@ class ContainerEnvConfig:
                  path : str = "", subnet_id_blacklist : Set = None,
                  subnet_prefix: str = "", subnet_id :int = -1, num_flags :int = -1, num_nodes : int = -1
                  ):
+        """
+        Initializes the object
+
+        :param min_num_users: the minimum number of users
+        :param max_num_users: the maximum number of users
+        :param min_num_flags: the minimum number of flags
+        :param max_num_flags: the maximum number of flags
+        :param min_num_nodes: the minimum number of nodes
+        :param max_num_nodes: the maximum number of nodes
+        :param container_pool: the pool of containers for emulation
+        :param gw_vuln_compatible_containers: the pool of gw-compatible containers
+        :param pw_vuln_compatible_containers: the pool of pw-vuln-compatible containers
+        :param rce_vuln_compatible_containers: the pool of rce-compatible containers
+        :param sql_injection_vuln_compatible_containers: the pool of sql-injection-compatible containers
+        :param priv_esc_vuln_compatible_containers: the pool of priv-esc-compatible containers
+        :param agent_containers: the pool of agent containers
+        :param router_containers: the pool of router containers
+        :param path: the path to the config
+        :param subnet_id_blacklist: the black list of subnet ids
+        :param subnet_prefix: the prefix of the subnet
+        :param subnet_id: the subnet id
+        :param num_flags: the number of flags
+        :param num_nodes: the number of nodes
+        """
         self.min_num_users = min_num_users
         self.max_num_users = max_num_users
         self.min_num_flags = min_num_flags

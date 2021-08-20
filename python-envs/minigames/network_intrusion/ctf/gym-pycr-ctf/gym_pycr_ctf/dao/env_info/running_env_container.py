@@ -1,5 +1,8 @@
 
 class RunningEnvContainer:
+    """
+    DTO Object representing a running Docker container
+    """
 
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
@@ -7,6 +10,35 @@ class RunningEnvContainer:
                  dir: str, containers_config_path : str, users_config_path : str, flags_config_path : str,
                  vulnerabilities_config_path : str, topology_config_path: str,
                  traffic_config_path: str):
+        """
+        Intializes the DTO
+
+        :param name: the name of the container
+        :param status: the status of the container
+        :param short_id: the short id of the container
+        :param image_short_id: the short id of the container's image
+        :param image_tags: the tags of the container's image
+        :param id: the id of the container
+        :param created: the time the container was created
+        :param ip: the ip of the container
+        :param network_id: the network id of the container
+        :param gateway: the gateway of the container
+        :param mac: the mac address of the container
+        :param ip_prefix_len: the ip prefix len of the container
+        :param minigame: the minigame of the container
+        :param name2: the name2 of the container
+        :param level: the level of the container
+        :param hostname: the hostname of the container
+        :param image_name: the image name of the container
+        :param net: the network of the container
+        :param dir: the directory of the container
+        :param containers_config_path: the container configuration ṕath of the container
+        :param users_config_path: the users configuration path of the container
+        :param flags_config_path: the flags configuration path of the container
+        :param vulnerabilities_config_path: the vulnerabilities configuration path of the container
+        :param topology_config_path: the topology configuration path of the container
+        :param traffic_config_path: the traffic configuration path of the container
+        """
         self.name = name
         self.status = status
         self.short_id = short_id
@@ -33,7 +65,10 @@ class RunningEnvContainer:
         self.topology_config_path = topology_config_path
         self.traffic_config_path = traffic_config_path
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
         d = {}
         d["name"] = self.name
         d["status"] = self.status

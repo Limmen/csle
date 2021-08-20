@@ -1,6 +1,4 @@
 import datetime
-import re
-import gym_pycr_ctf.constants.constants as constants
 
 
 class FailedLoginAttempt:
@@ -9,6 +7,9 @@ class FailedLoginAttempt:
     """
 
     def __init__(self):
+        """
+        Initializes the object
+        """
         self.timestamp = None
 
     @staticmethod
@@ -24,5 +25,8 @@ class FailedLoginAttempt:
             datetime.datetime.strptime(login_attempt_str, '%Y %b %d %H:%M:%S').timestamp()
         return failed_login_attempt_dto
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "timestamp:{}".format(self.timestamp)

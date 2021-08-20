@@ -1,5 +1,6 @@
 from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 
+
 class RolloutDataDTO:
     """
     DTO with information from rollout in the env

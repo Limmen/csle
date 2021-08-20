@@ -5,7 +5,7 @@ import time
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action_results.nmap_scan_result import NmapScanResult
-from gym_pycr_ctf.dao.action_results.nmap_host import NmapHostResult
+from gym_pycr_ctf.dao.action_results.nmap_host_result import NmapHostResult
 from gym_pycr_ctf.dao.action_results.nmap_port_status import NmapPortStatus
 from gym_pycr_ctf.dao.action_results.nmap_port import NmapPort
 from gym_pycr_ctf.dao.action_results.nmap_addr_type import NmapAddrType

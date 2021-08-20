@@ -12,6 +12,11 @@ class DefenderMachineObservationState:
     """
 
     def __init__(self, ip : str):
+        """
+        Initializes the DTO
+
+        :param ip: the ip of the machine
+        """
         self.ip = ip
         self.os="unknown"
         self.ports : List[PortObservationState] = []

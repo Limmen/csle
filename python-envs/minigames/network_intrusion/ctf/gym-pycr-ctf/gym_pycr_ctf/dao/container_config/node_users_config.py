@@ -7,6 +7,12 @@ class NodeUsersConfig:
     """
 
     def __init__(self, ip: str, users: List[Tuple[str, str, bool]]):
+        """
+        Initializes the DTO
+
+        :param ip: the ip of the node
+        :param users: the list of users
+        """
         self.ip = ip
         self.users = users
 

@@ -9,6 +9,19 @@ class PortObservationState:
 
     def __init__(self, port : int, open : bool, service : int, protocol : TransportProtocol, http_enum: str = "",
                  http_grep: str = "", vulscan: str = "", version : str = "", fingerprint: str = ""):
+        """
+        Initializes the DTO
+
+        :param port: the port
+        :param open: whether the port is open or not (boolean)
+        :param service: the service of the port
+        :param protocol: the protocol of the port
+        :param http_enum: the HTTP enum result on the port
+        :param http_grep: the HTTP grep result on the port
+        :param vulscan: the vulscan result of the port
+        :param version: the version of the port
+        :param fingerprint: the fingerprint output of the port
+        """
         self.port = port
         self.open = open
         self.service = service

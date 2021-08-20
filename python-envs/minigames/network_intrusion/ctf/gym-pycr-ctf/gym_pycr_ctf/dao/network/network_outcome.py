@@ -16,6 +16,25 @@ class NetworkOutcome:
                  total_new_osvdb_vuln_found : int = 0, total_new_logged_in : int = 0,
                  total_new_tools_installed : int = 0, total_new_backdoors_installed : int = 0,
                  cost: float = 0.0, alerts: Tuple = (0,0)):
+        """
+        Initializes the DTO
+
+        :param attacker_machine_observations: the list of attacker machine observations
+        :param attacker_machine_observation: the specific attacker machine observation
+        :param total_new_ports_found: the total number of new ports found
+        :param total_new_os_found: the total number of new operating systems found
+        :param total_new_cve_vuln_found: the total number of new CVE vulnerabilities found
+        :param total_new_machines_found: the total number of new machines found
+        :param total_new_shell_access: the total number of new shell access found
+        :param total_new_flag_pts: the total number of new flag points found
+        :param total_new_root: the total number of new root logins found
+        :param total_new_osvdb_vuln_found: the total number of OSVDB vulnerabilities found
+        :param total_new_logged_in: the total number of new logins found
+        :param total_new_tools_installed: the total number of new tools installed
+        :param total_new_backdoors_installed: the total number of new backdoors installed
+        :param cost: the total cost of the operation
+        :param alerts: the total alerts of the operation
+        """
         if attacker_machine_observations is None:
             self.attacker_machine_observations = []
         else:

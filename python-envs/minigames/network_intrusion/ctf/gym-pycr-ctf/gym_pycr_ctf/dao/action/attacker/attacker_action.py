@@ -4,6 +4,7 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 import gym_pycr_ctf.constants.constants as constants
 
+
 class AttackerAction:
     """
     Class representing an action of the attacker in the environment
@@ -50,6 +51,9 @@ class AttackerAction:
         self.backdoor = backdoor
 
     def __str__(self):
+        """
+        :return: a string representation of the object
+        """
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)
 
     def nmap_cmd(self, machine_ip : str = None):

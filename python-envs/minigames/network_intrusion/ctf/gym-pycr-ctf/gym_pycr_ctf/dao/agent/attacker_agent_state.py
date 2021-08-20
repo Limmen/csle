@@ -1,10 +1,13 @@
+from typing import Union
 import numpy as np
 from gym_pycr_ctf.dao.agent.agent_log import AgentLog
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+
 
 class AttackerAgentState:
     """
-    DTO with agent's state information for rendering
+    DTO with attacker agent's state information for rendering
     """
     def __init__(self, attacker_obs_state : AttackerObservationState, env_log: AgentLog,
                  episode_reward : int = 0,
@@ -12,6 +15,21 @@ class AttackerAgentState:
                  vuln_lookup : dict = None,
                  service_lookup : dict = None, os_lookup : dict = None,
                  num_detections : int = 0, num_all_flags : int = 0):
+        """
+        Initializes the attacker agent's state
+
+        :param attacker_obs_state: the attacker's observation state
+        :param env_log: the log
+        :param episode_reward: the reward
+        :param cumulative_reward: the cumulative reward
+        :param time_step: the time-step
+        :param num_episodes: the number of episodes
+        :param vuln_lookup: the vuln lookup table
+        :param service_lookup: the service lookup table
+        :param os_lookup: the os lookup table
+        :param num_detections: the number of detections
+        :param num_all_flags: the number of flags
+        """
         self.attacker_obs_state = attacker_obs_state
         self.env_log = env_log
         self.episode_reward = episode_reward
@@ -34,14 +52,19 @@ class AttackerAgentState:
         self.initialize_render_state()
         self.manual_action = ""
 
-    def get_machine(self, ip: str):
+    def get_machine(self, ip: str) -> Union[AttackerMachineObservationState, None]:
+        """
+        Gets the machine from the state with a given ip
+
+        :param ip: the ip
+        :return: the machine if it exists or otherwise None
+        """
         for m in self.attacker_obs_state.machines:
             if m.ip == ip:
                 return m
         return None
 
-
-    def initialize_render_state(self):
+    def initialize_render_state(self) -> None:
         """
         Initializes the render state
 

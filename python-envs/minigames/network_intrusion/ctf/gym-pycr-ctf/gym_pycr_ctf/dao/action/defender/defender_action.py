@@ -41,5 +41,8 @@ class DefenderAction:
         self.alt_cmd = alt_cmd
         self.index = index
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "id:{},name:{},ip:{},subnet:{},index:{}".format(self.id, self.name, self.ip, self.subnet,self.index)

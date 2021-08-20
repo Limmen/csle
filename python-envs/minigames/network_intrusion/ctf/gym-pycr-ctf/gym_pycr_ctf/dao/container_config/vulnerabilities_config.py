@@ -8,6 +8,11 @@ class VulnerabilitiesConfig:
     """
 
     def __init__(self, vulnerabilities : List[NodeVulnerabilityConfig]):
+        """
+        Initializes the DTO
+
+        :param vulnerabilities: the list of Node vulnerability configurations
+        """
         self.vulnerabilities = vulnerabilities
 
     def __str__(self) -> str:

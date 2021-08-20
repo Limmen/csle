@@ -6,6 +6,20 @@ class ConnectionObservationState:
 
     def __init__(self, conn, username : str, root: bool, service: str, port: int, tunnel_thread = None,
                  tunnel_port : int = None, interactive_shell = None, proxy = None, ip = None):
+        """
+        Intializes the DTO
+
+        :param conn: the connection object
+        :param username: the username of the connection
+        :param root: whether the connection is root or not
+        :param service: the service of the connection
+        :param port: the port of the connection
+        :param tunnel_thread: the tunnel thread for the connection
+        :param tunnel_port: the tunnel port of the connection
+        :param interactive_shell: an interactive shell of the connection
+        :param proxy: a proxy for the connection
+        :param ip: the ip of the connection
+        """
         self.conn = conn
         self.username = username
         self.root = root

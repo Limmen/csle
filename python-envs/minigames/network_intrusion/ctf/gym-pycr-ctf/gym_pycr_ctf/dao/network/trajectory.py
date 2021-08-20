@@ -11,6 +11,9 @@ class Trajectory:
     """
 
     def __init__(self):
+        """
+        Initializes the DTO
+        """
         self.attacker_rewards = []
         self.defender_rewards = []
         self.attacker_observations = []

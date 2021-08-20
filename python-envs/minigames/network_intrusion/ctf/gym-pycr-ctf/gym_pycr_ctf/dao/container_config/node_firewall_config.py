@@ -11,6 +11,22 @@ class NodeFirewallConfig:
                  forward_drop: Set[str], default_output, default_input, default_forward,
                  routes: Set[str]
                  ):
+        """
+        Intializes the DTO
+
+        :param ip: the ip of the node
+        :param default_gw: the default gw
+        :param output_accept: the list of ips to accept output
+        :param input_accept: the list of ips to accept input
+        :param forward_accept: the list of ips to accept forward
+        :param output_drop: the list of ips to drop output
+        :param input_drop: the list of ips to drop input
+        :param forward_drop: the list of ips to drop forward
+        :param default_output: the default output
+        :param default_input: the default input
+        :param default_forward: the default forward
+        :param routes: the set of custom routes for the routing table
+        """
         self.ip = ip
         self.default_gw = default_gw
         self.output_accept = output_accept

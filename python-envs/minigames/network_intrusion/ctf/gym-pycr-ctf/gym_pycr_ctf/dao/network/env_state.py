@@ -18,6 +18,21 @@ class EnvState:
                  num_flags : int, num_nodes : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None,
                  state_type: StateType = StateType.BASE, ids : bool = False):
+        """
+        Initializes the state
+
+        :param env_config: the environment configuration
+        :param num_ports: the number of ports
+        :param num_vuln: the number of vulnerabilities
+        :param num_sh: the number of shell access
+        :param num_flags: the number of flags
+        :param num_nodes: the number of nodes
+        :param vuln_lookup: the vulnerability lookup dict
+        :param service_lookup: the service lookup dict
+        :param os_lookup: the operating system lookup dict
+        :param state_type: the state type
+        :param ids: whether there is an IDS in the env
+        """
         self.env_config = env_config
         self.state_type = state_type
         self.reward_range = (float(0), float(1))

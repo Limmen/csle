@@ -4,13 +4,22 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 
+
 class StoppingBaselinesUtil:
     """
     Class containing utility functions for computing metrics of baselines for Optimal Stopping
     """
 
     @staticmethod
-    def compute_baseline_metrics(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def compute_baseline_metrics(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Updates metrics of the stopping (defender) baselines
+
+        :param s: the current state
+        :param s_prime: the next state of the transition
+        :param env_config: the environment configuration
+        :return: None
+        """
         StoppingBaselinesUtil.snort_severe_baseline(s=s, s_prime=s_prime, env_config=env_config)
         StoppingBaselinesUtil.snort_warning_baseline(s=s, s_prime=s_prime, env_config=env_config)
         StoppingBaselinesUtil.snort_critical_baseline(s=s, s_prime=s_prime, env_config=env_config)
@@ -19,7 +28,15 @@ class StoppingBaselinesUtil:
 
 
     @staticmethod
-    def snort_severe_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def snort_severe_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Updates metrics of the Snort severe baseline
+
+        :param s: the current state
+        :param s_prime: the next state
+        :param env_config: the environment configuration
+        :return: None
+        """
         if not s_prime.defender_obs_state.snort_severe_baseline_stopped:
             if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_severe_baseline_threshold:
                 s_prime.defender_obs_state.snort_severe_baseline_stopped = True
@@ -39,7 +56,15 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def snort_warning_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def snort_warning_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Updates metrics of the Snort warning baseline
+
+        :param s: the current state
+        :param s_prime: the next state
+        :param env_config: the environment configuration
+        :return: None
+        """
         if not s_prime.defender_obs_state.snort_warning_baseline_stopped:
             if s_prime.defender_obs_state.num_warning_alerts_recent > env_config.snort_warning_baseline_threshold:
                 s_prime.defender_obs_state.snort_warning_baseline_stopped = True
@@ -59,7 +84,15 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def snort_critical_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def snort_critical_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Updates the metrics of the Snort critical baseline
+
+        :param s: the current state
+        :param s_prime: the next state
+        :param env_config: the environment configuration
+        :return: None
+        """
         if not s_prime.defender_obs_state.snort_critical_baseline_stopped:
             if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_critical_baseline_threshold:
                 s_prime.defender_obs_state.snort_critical_baseline_stopped = True
@@ -79,7 +112,15 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def var_log_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def var_log_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Computes metrics of the var_log baseline
+
+        :param s: the current state
+        :param s_prime: the next state of the transition
+        :param env_config: the environment configuration
+        :return: None
+        """
         if not s_prime.defender_obs_state.var_log_baseline_stopped:
             sum_failed_logins = sum(list(map(lambda x: x.num_failed_login_attempts_recent,
                                              s_prime.defender_obs_state.machines)))
@@ -101,7 +142,15 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def step_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig):
+    def step_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+        """
+        Updates metrics of the step_baseline
+
+        :param s: the current state
+        :param s_prime: the updated state
+        :param env_config: the environment configuration
+        :return: None
+        """
         if not s_prime.defender_obs_state.step_baseline_stopped:
             if s_prime.defender_obs_state.step >= env_config.step_baseline_threshold:
                 s_prime.defender_obs_state.step_baseline_stopped = True
@@ -125,6 +174,17 @@ class StoppingBaselinesUtil:
     def simulate_end_of_episode_performance(s_prime: EnvState, env_config: EnvConfig, done: bool,
                                             attacker_opponent: CustomAttackerBotAgent, env : "PyCRCTFEnv",
                                             s: EnvState) -> int:
+        """
+        Simulates the end of an episode using a given attacker policy and the defender baselines
+
+        :param s_prime: the next state
+        :param env_config: the environment configuration
+        :param done: whether the simulation is done or not
+        :param attacker_opponent: the attacker policy
+        :param env: the environment
+        :param s: the current state
+        :return: the optimal reward in the simulation of the defender
+        """
         optimal_defender_reward = 0
         if env_config.snort_baseline_simulate and \
                 attacker_opponent is not None and \
@@ -145,6 +205,15 @@ class StoppingBaselinesUtil:
     @staticmethod
     def simulate_baselines_vs_opponent(attacker_opponent : CustomAttackerBotAgent, env_config: EnvConfig,
                                        env : "PyCRCTFEnv", s: EnvState) -> EnvState:
+        """
+        Simulates the end of the episode using a static attacker policy and the defender baselines
+
+        :param attacker_opponent: the attacker opponent
+        :param env_config: the environment configuraiton
+        :param env: the environment
+        :param s: the current state
+        :return: the final state
+        """
         defender_action = env_config.defender_action_conf.get_continue_action_idx()
         done = False
         static_attack_started = False

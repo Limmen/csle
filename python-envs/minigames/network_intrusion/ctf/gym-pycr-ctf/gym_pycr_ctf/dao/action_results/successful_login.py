@@ -7,6 +7,9 @@ class SuccessfulLogin:
     """
 
     def __init__(self):
+        """
+        Initializes the DTO
+        """
         self.timestamp = None
         self.ip = ""
         self.user = ""
@@ -32,5 +35,8 @@ class SuccessfulLogin:
                 datetime.datetime.strptime(date_str, '%Y %a %b %d %H:%M').timestamp()
         return successful_login_attempt_dto
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
         return "ip:{}, user:{}, timestamp:{}".format(self.ip, self.user, self.timestamp)

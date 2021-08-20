@@ -4,6 +4,15 @@ class Flag:
     """
 
     def __init__(self, name:str, id:int, path:str, requires_root : bool = False, score: int = 1):
+        """
+        Initializes the DTO
+
+        :param name: the name of the flag
+        :param id: the id of the flag
+        :param path: the path of the flag
+        :param requires_root: whether the flag requires root or not
+        :param score: the score of the flag
+        """
         self.name = name
         self.id = id
         self.path = path

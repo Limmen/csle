@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class AttackerActionId(Enum):
     """
     Enum representing the different attacks

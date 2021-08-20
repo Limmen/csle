@@ -21,6 +21,24 @@ class Node:
                  vulnerabilities : List[Vulnerability], services : List[NetworkService], os : str,
                  credentials : List[Credential], root_usernames : List[str], visible : bool = True,
                  reachable_nodes: List = None, firewall: bool =  False):
+        """
+        Initializes the DTO
+
+        :param ip: the ip of the node
+        :param ip_id: the id of the node's ip
+        :param id: the id of the node
+        :param type: the type of the node
+        :param flags: the set of flags in the node
+        :param level: the level of the node
+        :param vulnerabilities: the set of vulnerabilities of the node
+        :param services: the set of services of the node
+        :param os: the operating system of the node
+        :param credentials: the list of credentials of the node
+        :param root_usernames: the list of root usernames at the node
+        :param visible: whether the node is visible or not
+        :param reachable_nodes: the set of nodes reachable from this node
+        :param firewall: whether this node has a firewall or not
+        """
         self.ip = ip
         self.ip_id = ip_id
         self.id = id

@@ -1,10 +1,18 @@
+from typing import Tuple
+
 import datetime
-import re
 import gym_pycr_ctf.constants.constants as constants
 
+
 class IdsAlert:
+    """
+    Object representing an IDS Alert
+    """
 
     def __init__(self):
+        """
+        Initializes the IDS Alert Fields
+        """
         self.timestamp = None
         self.sig_generator = None
         self.sig_id = None
@@ -36,7 +44,14 @@ class IdsAlert:
 
 
     @staticmethod
-    def parse_from_str(csv_str_record : str, year: int):
+    def parse_from_str(csv_str_record : str, year: int) -> "IdsAlert":
+        """
+        Parses the IDS alert from a string
+
+        :param csv_str_record: the string to parse
+        :param year: the year of the entry
+        :return: the parsed IDS Alert
+        """
         if year is None:
             year = datetime.datetime.now().year
         a_fields = csv_str_record.split(",")
@@ -108,11 +123,24 @@ class IdsAlert:
         alert_dao.priority = 1
         return alert_dao
 
-    def set_priority(self, priority):
+    def set_priority(self, priority : int) -> None:
+        """
+        Sets the priority of the alert DTO
+
+        :param priority: the priority to set
+        :return: None
+        """
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str: str, year: int):
+    def fast_log_parse(fast_log_str: str, year: int) -> Tuple[int, datetime]:
+        """
+        Parses the IDS Alert from a given string from the fast-log of Snort
+
+        :param fast_log_str: the fast log string to parse
+        :param year: the year
+        :return: the priority and time-stamp
+        """
         priorities = re.findall(constants.IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
         priority = None
         if len(priorities) > 0:

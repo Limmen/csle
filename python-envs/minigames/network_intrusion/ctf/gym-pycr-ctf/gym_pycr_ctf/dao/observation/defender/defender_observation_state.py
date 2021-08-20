@@ -11,6 +11,12 @@ class DefenderObservationState:
     """
 
     def __init__(self, num_machines : int, ids = False):
+        """
+        Initializes the DTO
+
+        :param num_machines: the numer of machines
+        :param ids: whether there is an IDS or not
+        """
         self.num_machines = num_machines
         self.ids = ids
         self.machines : List[DefenderMachineObservationState] = []

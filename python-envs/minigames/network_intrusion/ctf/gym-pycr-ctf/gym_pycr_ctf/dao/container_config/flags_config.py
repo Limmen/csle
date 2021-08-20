@@ -8,6 +8,11 @@ class FlagsConfig:
     """
 
     def __init__(self, flags : List[NodeFlagsConfig]):
+        """
+        Intializes the DTO
+
+        :param flags: the list of flags
+        """
         self.flags = flags
 
     def __str__(self) -> str:

@@ -15,6 +15,16 @@ class NetworkConfig:
 
     def __init__(self, subnet_mask: str, nodes: List[Node], adj_matrix: np.ndarray, flags_lookup: dict,
                  agent_reachable: set, vulnerable_nodes = None):
+        """
+        Initializes the DTO
+
+        :param subnet_mask: the subnet mask
+        :param nodes: the number of nodes
+        :param adj_matrix: the adjacency matrix
+        :param flags_lookup: the lookup dict for flags
+        :param agent_reachable: the list of reachable nodes for the agent
+        :param vulnerable_nodes: the list of vulnerable nodes
+        """
         self.subnet_mask = subnet_mask
         self.nodes = nodes
         self.adj_matrix = adj_matrix

@@ -4,6 +4,7 @@ from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_update_state_actions import DefenderUpdateStateActions
 
+
 class DefenderActionConfig:
     """
     Configuration of the action space for the defender
@@ -50,8 +51,10 @@ class DefenderActionConfig:
                 tag = "*"
             print(str(i) + ":" + action.name + "[" + tag + "] c:" + str(action.cost))
 
-
-    def get_continue_action_idx(self):
+    def get_continue_action_idx(self) -> int:
+        """
+        :return: the index of the continue action
+        """
         for i in range(len(self.actions)):
             if self.actions[i].id == DefenderActionId.CONTINUE:
                 return i

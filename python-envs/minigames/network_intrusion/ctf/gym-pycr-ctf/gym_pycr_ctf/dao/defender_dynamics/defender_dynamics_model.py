@@ -16,6 +16,9 @@ class DefenderDynamicsModel:
     """
 
     def __init__(self):
+        """
+        Initializes the model
+        """
         self.num_new_alerts = {}
         self.num_new_priority = {}
         self.num_new_severe_alerts = {}

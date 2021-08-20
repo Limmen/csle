@@ -93,6 +93,9 @@ class AttackerActionConfig:
 
     @staticmethod
     def dict_brute_same_user_ids():
+        """
+        :return: list of brute-force attack ids for teh attacker
+        """
         return [
         AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
         AttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
@@ -114,14 +117,23 @@ class AttackerActionConfig:
         AttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
         ]
 
-    def get_continue_action_idx(self):
+    def get_continue_action_idx(self) -> int:
+        """
+        :return: the id of the continue-action
+        """
         for i in range(len(self.actions)):
             if self.actions[i].id == AttackerActionId.CONTINUE:
                 return i
         raise ValueError("No Continue Action in the action space")
 
 
-    def get_action_by_id(self, action_id: AttackerActionId):
+    def get_action_by_id(self, action_id: AttackerActionId) -> AttackerAction:
+        """
+        Gets the action of a given id
+
+        :param action_id: the action id
+        :return: the action of the id
+        """
         for a in self.actions:
             if a.id == action_id:
                 return a

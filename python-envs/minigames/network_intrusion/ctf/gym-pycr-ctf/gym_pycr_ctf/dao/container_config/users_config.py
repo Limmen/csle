@@ -7,6 +7,11 @@ class UsersConfig:
     A DTO object representing the users configuration of an emulation environment
     """
     def __init__(self, users : List[NodeUsersConfig]):
+        """
+        Initializes the DTO
+
+        :param users: the list of node users configuration
+        """
         self.users = users
 
     def __str__(self) -> str:

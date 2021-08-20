@@ -13,6 +13,20 @@ class ConnectionSetupDTO:
                  tunnel_threads : List[ForwardTunnelThread] = None, forward_ports : List[int] = None,
                  ports : List[int] = None, interactive_shells : List = None, total_time : float = 0.0,
                  non_failed_credentials : List[Credential] = None, proxies : List[ConnectionObservationState] = None):
+        """
+        Initializes the DTO
+
+        :param connected: whether the connection is connected or not
+        :param users: the list of users
+        :param target_connections: the list of target connections
+        :param tunnel_threads: the list of tunnel threads
+        :param forward_ports: the list of forward ports
+        :param ports: the list of ports
+        :param interactive_shells: the list of interactive shells
+        :param total_time: the total time of connection
+        :param non_failed_credentials: the non-failed-credentials
+        :param proxies: the list of proxy connections
+        """
         self.connected = connected
         self.total_time = total_time
         self.users = users

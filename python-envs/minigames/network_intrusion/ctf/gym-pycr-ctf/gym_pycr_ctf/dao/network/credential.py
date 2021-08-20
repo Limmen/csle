@@ -8,6 +8,15 @@ class Credential:
 
     def __init__(self, username: str, pw: str, port: int = None, protocol: TransportProtocol = None,
                  service: str = None):
+        """
+        Initializes the DTO
+
+        :param username: the username of the credential
+        :param pw: the password of the credential
+        :param port: the port of the service of the credential
+        :param protocol: the protocol of the service of the credential
+        :param service: the service of the credential
+        """
         self.username = username
         self.pw = pw
         self.port = port

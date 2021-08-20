@@ -7,6 +7,12 @@ class NodeFlagsConfig:
     """
 
     def __init__(self, ip: str, flags: List[Tuple[str, str, str, id, bool, int]]):
+        """
+        Initializes the DTO
+
+        :param ip: the ip of the node
+        :param flags: the list of flags
+        """
         self.ip = ip
         # flags= [(name, path, id, root, score)]
         self.flags = flags

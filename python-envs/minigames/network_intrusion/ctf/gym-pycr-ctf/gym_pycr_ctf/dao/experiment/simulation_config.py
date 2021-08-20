@@ -1,6 +1,9 @@
 import csv
 
 class SimulationConfig:
+    """
+    Object representing the configuration of a simulation
+    """
 
     def __init__(self, num_episodes: int = 10, video_fps=5,
                  video=False, gif_dir=None, video_dir=None, gifs=False, render=False, sleep=0.35,
@@ -10,6 +13,28 @@ class SimulationConfig:
                  dr_min_num_users: int = 1, dr_max_num_users: int = 1,
                  dr_use_base: bool = False
                  ):
+        """
+        Initializes the object
+
+        :param num_episodes: the number of episodes of the simulation
+        :param video_fps: the video fps of the simulation
+        :param video: whether to record video of the simulation
+        :param gif_dir: the gif directory of the simulation
+        :param video_dir: the video directory of the simulation
+        :param gifs: whether to record gifs of the simulation
+        :param render: whether to render the simulation
+        :param sleep: sleeping time of the simulation
+        :param log_frequency: the log frequency of the simulation
+        :param video_frequency: the video frequency of the simulation
+        :param domain_randomization: whether to use domain randomization
+        :param dr_max_num_nodes: the maximum nodes for domain randomization of the simulation
+        :param dr_min_num_nodes: the minimum nodes for domain randomization of the simulation
+        :param dr_min_num_flags: the minimum flags for domain randomization of the simulation
+        :param dr_max_num_flags: the maximum flags for domain randomization of the simulation
+        :param dr_min_num_users: the minimum users for domain randomization of the simulation
+        :param dr_max_num_users: the maximum users for domain randomization of the simulation
+        :param dr_use_base: boolean flag whether to use the base randomization space for domain randomization
+        """
         self.num_episodes = num_episodes
         self.video_fps = video_fps
         self.video = video

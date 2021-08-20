@@ -40,8 +40,13 @@ class DefenderDynamicsTensorboardDTO:
         self.attacker_action_idx = attacker_action_idx
         self.attacker_action_name = attacker_action_name
 
+    def log_tensorboard(self, tensorboard_writer) -> None:
+        """
+        Logs the dynamics to tensorboard
 
-    def log_tensorboard(self, tensorboard_writer):
+        :param tensorboard_writer: the tensorboard writer
+        :return: None
+        """
         tensorboard_writer.add_scalar('system_id/' + "t=" + str(self.t) + "_id=" + str(self.attacker_action_id)
                                       + "_idx=" + str(self.attacker_action_idx) + "_" + self.attacker_action_name
                                       + "/num_new_alerts",

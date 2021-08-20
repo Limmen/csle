@@ -73,7 +73,7 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
 
 def create_artifact_dirs(output_dir: str, random_seed : int) -> None:
     """
-    Creates artefact directories if they do not already exist
+    Creates artifact directories if they do not already exist
 
     :param output_dir: the base directory
     :param random_seed: the random seed of the experiment
@@ -226,6 +226,7 @@ def read_config(config_path) -> ClientConfig:
         json_str = f.read()
     client_config: ClientConfig = jsonpickle.decode(json_str)
     return client_config
+
 
 def read_topology(topology_path) -> Topology:
     """
@@ -470,7 +471,13 @@ def default_makefile_path(out_dir : str = None) -> str:
     return config_path
 
 
-def round_batch_size(x: int):
+def round_batch_size(x: int) -> int:
+    """
+    Round of batch size
+
+    :param x: the batch size
+    :return: the rounded batch size
+    """
     return x if x % 100 == 0 else x + 100 - x%100
 
 
@@ -484,18 +491,6 @@ def running_average(x, N):
     else:
         y = np.zeros_like(x)
     return y
-
-
-# def running_average(x, N):
-#     ''' Function used to compute the running average
-#         of the last N elements of a vector x
-#     '''
-#     if len(x) >= N:
-#         y = np.copy(x)
-#         y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
-#     else:
-#         y = [x[-1]]
-#     return y[-1]
 
 
 def running_average_list(x, N):
