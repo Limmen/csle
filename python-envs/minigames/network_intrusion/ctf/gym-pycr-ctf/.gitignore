@@ -156,3 +156,6 @@ static
 .DS_Store
 
 */videos*/
+
+# Sphinx documentation
+docs/build

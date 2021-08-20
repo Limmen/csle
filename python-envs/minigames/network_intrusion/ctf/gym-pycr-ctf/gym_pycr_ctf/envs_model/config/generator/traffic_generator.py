@@ -63,14 +63,13 @@ class TrafficGenerator:
 
     @staticmethod
     def create_traffic_scripts(traffic_config: TrafficConfig, emulation_config: EmulationConfig, sleep_time : int = 2,
-                               only_clients : bool = False) \
-            -> None:
+                               only_clients : bool = False) -> None:
         """
         Installs the traffic generation scripts at each node
 
         :param traffic_config: the traffic configuration
         :param emulation_config: the emulation configuration
-        :param the time to sleep between commands
+        :param sleep_time: the time to sleep between commands
         :param only_clients: whether to start only client traffic or also start internal traffic
         :return: None
         """

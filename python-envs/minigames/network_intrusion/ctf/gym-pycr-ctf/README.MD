@@ -24,6 +24,9 @@ Moreover, the repository contains code to reproduce baseline results for various
 - Paramiko (for SSH tunnels)
 - Docker (for interacting with the emulations)
 
+## API Documentation 
+
+TODO
 
 ## Installation & Tests
 
@@ -115,18 +118,26 @@ ManualAttackerAgent(env=env, env_config=env.env_config)
 ## GUI
 
 <p align="center">
-<img src="docs/gui_1.png" width="1200">
+<img src="images/gui_1.png" width="1200">
 </p>
 
 ## System Identification and Collection of Traces
 
 <p align="center">
-<img src="docs/system_id_1.png" width="1200">
+<img src="images/system_id_1.png" width="1200">
 </p>
 
 <p align="center">
-<img src="docs/system_id_2.png" width="1200">
+<img src="images/system_id_2.png" width="1200">
 </p>
+
+## Generate API Documentation
+
+```bash
+cd docs
+sphinx-apidoc -f -o source/ ../gym_pycr_ctf/
+make html
+```
 
 ## Author & Maintainer
 

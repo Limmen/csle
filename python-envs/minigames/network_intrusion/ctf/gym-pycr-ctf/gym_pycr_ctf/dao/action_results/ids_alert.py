@@ -133,7 +133,7 @@ class IdsAlert:
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str: str, year: int) -> Tuple[int, datetime]:
+    def fast_log_parse(fast_log_str: str, year: int):
         """
         Parses the IDS Alert from a given string from the fast-log of Snort
 
