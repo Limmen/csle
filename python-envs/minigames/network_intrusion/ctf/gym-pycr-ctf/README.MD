@@ -121,6 +121,16 @@ ManualAttackerAgent(env=env, env_config=env.env_config)
 <img src="images/gui_1.png" width="1200">
 </p>
 
+## Training
+
+<p align="center">
+<img src="images/training_1.png" width="1200">
+</p>
+
+<p align="center">
+<img src="images/training_2.png" width="1200">
+</p>
+
 ## System Identification and Collection of Traces
 
 <p align="center">
