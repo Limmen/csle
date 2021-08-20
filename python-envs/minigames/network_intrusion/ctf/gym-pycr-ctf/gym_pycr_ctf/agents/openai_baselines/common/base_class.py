@@ -36,7 +36,6 @@ from gym_pycr_ctf.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
-import gym_pycr_ctf.envs_model.logic.common.util as pycr_util
 from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 from gym_pycr_ctf.agents.util.log_util import LogUtil
 
@@ -290,9 +289,6 @@ class BaseAlgorithm(ABC):
         :param optimizers: (Union[List[th.optim.Optimizer], th.optim.Optimizer])
             An optimizer or a list of optimizers.
         """
-        # Log the current learning rate
-        logger.record("train/learning_rate", self.attacker_lr_schedule(self._current_progress_remaining))
-
         if not isinstance(optimizers, list):
             optimizers = [optimizers]
         for optimizer in optimizers:

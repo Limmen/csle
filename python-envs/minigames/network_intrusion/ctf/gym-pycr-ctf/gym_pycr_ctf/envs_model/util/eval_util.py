@@ -210,7 +210,14 @@ class EvalUtil:
         return obs_l
 
     @staticmethod
-    def is_correct_attacker(tau, env):
+    def is_correct_attacker(tau, env) -> bool:
+        """
+        Checks if the trajectory was generated using the correct attacker and environment configuration for eval
+
+        :param tau: the trajectory
+        :param env: the environment
+        :return: True if the attacker is correct, false otherwise
+        """
         if (tau.attacker_actions[0] == -1
                 and tau.attacker_actions[1] == env.env_config.attacker_static_opponent.continue_action
                 and tau.attacker_actions[2] == env.env_config.attacker_static_opponent.strategy[0]
@@ -222,7 +229,14 @@ class EvalUtil:
         return False
 
     @staticmethod
-    def merge_observations(obs_prior_to_intrusion, tau: Trajectory):
+    def merge_observations(obs_prior_to_intrusion, tau: Trajectory) -> Tuple[List[int], List[List[int]]]:
+        """
+        Merges observations sampled before the intrusion started with observations sampled afterwards
+
+        :param obs_prior_to_intrusion: the observations sampled before the intrusion
+        :param tau: the trajectory of the observations when the intrusion has started
+        :return: The final observation and the complete list of defender observations
+        """
         obs_intrusion = []
         for i in range(len(tau.defender_observations)):
             if not (tau.attacker_actions[i] == -1 or tau.attacker_actions[i] == 372):
@@ -248,7 +262,6 @@ class EvalUtil:
             obs.append([x,y,z,t])
         return obs, obs_intrusion
 
-
     @staticmethod
     def find_stopping_idx(actions) -> int:
         """
@@ -261,7 +274,6 @@ class EvalUtil:
             if actions[i] == 0:
                 return i
         return -1
-
 
     @staticmethod
     def eval_taus(dir_path) -> List[Trajectory]:
@@ -457,16 +469,6 @@ class EvalUtil:
         :param deterministic: whether to do deterministic predictions or not
         :return: the predicted action and values
         """
-        # actions, values = model.predict(observation=obs_tensor, deterministic=deterministic,
-        #                                 state=obs_tensor, attacker=False,
-        #                                 infos={},
-        #                                 env_config=env.env_config,
-        #                                 env_configs=None, env=env,
-        #                                 env_idx=0,
-        #                                 env_state=env.env_state
-        #                                 )
-        actions = np.array([0]*len(obs_tensor))
-        values = actions
         actions, values = policy.predict(obs_tensor, None, None, deterministic=deterministic,
                                                          env_config=env.env_config,
                                                          env_state=env.env_state, env_configs=None,

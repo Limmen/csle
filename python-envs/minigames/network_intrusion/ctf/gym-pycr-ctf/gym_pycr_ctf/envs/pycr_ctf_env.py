@@ -14,9 +14,6 @@ import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
-from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym_pycr_ctf.envs_model.logic.common.util as util
 from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -27,6 +24,7 @@ from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_attacker import FindP
 from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_defender import FindPiStarDefender
 from gym_pycr_ctf.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 from gym_pycr_ctf.envs_model.logic.common.stopping_baselines_util import StoppingBaselinesUtil
+from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
 
 
 class PyCRCTFEnv(gym.Env, ABC):
@@ -559,19 +557,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action: the id of the previous attack action
         :return: True if legal, else false
         """
-        #return True
-        # defense_action = env_config.defender_action_conf.actions[defense_action_id]
-        # if env_state.attacker_obs_state.last_attacker_action is None and defense_action.id == DefenderActionId.STOP:
-        #     return False
-        # if env_state.attacker_obs_state.last_attacker_action is None and defense_action.id == DefenderActionId.CONTINUE:
-        #     return True
-        # if env_state.last_attacker_action is not None and env_state.last_attacker_action.id == AttackerActionId.CONTINUE \
-        #         and defense_action.id == DefenderActionId.CONTINUE:
-        #     return True
-        # if env_state.last_attacker_action is not None and env_state.last_attacker_action.id != AttackerActionId.CONTINUE \
-        #         and defense_action.id == DefenderActionId.STOP:
-        #     return True
-        return True
+        return EnvUtil.is_defense_action_legal(defense_action_id=defense_action_id, env_config=env_config,
+                                               env_state=env_state)
 
     @staticmethod
     def is_attack_action_legal(attack_action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
@@ -587,155 +574,9 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param m_index: index of machine in case using AR policy
         :return: True if legal, else false
         """
-        # If using AR policy
-        if m_selection:
-            return PyCRCTFEnv._is_attack_action_legal_m_selection(action_id=attack_action_id, env_config=env_config,
-                                                                  env_state=env_state)
-        elif m_action:
-            return PyCRCTFEnv._is_attack_action_legal_m_action(action_id=attack_action_id, env_config=env_config,
-                                                               env_state=env_state, machine_index=m_index)
-
-        if not env_config.attacker_filter_illegal_actions:
-            return True
-        if attack_action_id > len(env_config.attacker_action_conf.actions) - 1:
-            return False
-
-        action = env_config.attacker_action_conf.actions[attack_action_id]
-        ip = env_state.attacker_obs_state.get_action_ip(action)
-
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=action, s=env_state)
-        if (action.id, action.index, logged_in_ips_str) in env_state.attacker_obs_state.actions_tried:
-            return False
-
-        # Recon on subnet is always possible
-        if action.type == AttackerActionType.RECON and action.subnet:
-            return True
-
-        # Recon on set of all found machines is always possible if there exists such machiens
-        if action.type == AttackerActionType.RECON and action.index == -1 and len(env_state.attacker_obs_state.machines) > 0:
-            return True
-
-        # Optimal Stopping actions are always possible
-        if action.type == AttackerActionType.STOP or action.type == AttackerActionType.CONTINUE:
-            return True
-
-        machine_discovered = False
-        target_machine = None
-        target_machines = []
-        logged_in = False
-        unscanned_filesystems = False
-        untried_credentials = False
-        root_login = False
-        machine_root_login = False
-        machine_logged_in = False
-        uninstalled_tools = False
-        machine_w_tools = False
-        uninstalled_backdoor = False
-        target_untried_credentials = False
-
-        for m in env_state.attacker_obs_state.machines:
-            if m_index == -1:
-                target_machines.append(m)
-                machine_discovered = True
-
-            if m.logged_in:
-                logged_in = True
-                if not m.filesystem_searched:
-                    unscanned_filesystems = True
-                if m.root:
-                    root_login = True
-                    if not m.tools_installed and not m.install_tools_tried:
-                        uninstalled_tools = True
-                    else:
-                        machine_w_tools = True
-                    if m.tools_installed and not m.backdoor_installed and not m.backdoor_tried:
-                        uninstalled_backdoor = True
-            if m.ip == ip:
-                machine_discovered = True
-                target_machine = m
-                if m.logged_in:
-                    machine_logged_in = True
-                    if m.root:
-                        machine_root_login = True
-                if m.untried_credentials:
-                    target_untried_credentials = m.untried_credentials
-            # if m.shell_access and not m.logged_in:
-            #     untried_credentials = True
-            if m.untried_credentials:
-                untried_credentials = m.untried_credentials
-
-        if action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
-            machine_discovered = True
-
-        # Privilege escalation only legal if machine discovered and logged in and not root
-        if action.type == AttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
-                                                                       or machine_root_login):
-            return False
-
-        # Exploit only legal if we have not already compromised the node
-        if action.type == AttackerActionType.EXPLOIT and machine_logged_in and root_login:
-            return False
-
-        # Shell-access Exploit only legal if we do not already have untried credentials
-        if action.type == AttackerActionType.EXPLOIT and action.action_outcome == AttackerActionOutcome.SHELL_ACCESS \
-                and target_untried_credentials:
-            return False
-
-        # Priv-Esc Exploit only legal if we are already logged in and do not have root
-        if action.type == AttackerActionType.EXPLOIT \
-                and action.action_outcome == AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT \
-                and (not machine_logged_in or root_login):
-            return False
-
-        # If IP is discovered, then IP specific action without other prerequisites is legal
-        if machine_discovered and (action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT
-                                   or action.type == AttackerActionType.PRIVILEGE_ESCALATION):
-            if action.subnet and target_machine is None:
-                return True
-            if m_index is not None and m_index == -1:
-                exploit_tried = all(list(map(lambda x: env_state.attacker_obs_state.exploit_tried(a=action, m=x), target_machines)))
-            else:
-                exploit_tried = env_state.attacker_obs_state.exploit_tried(a=action, m=target_machine)
-            if exploit_tried:
-                return False
-            return True
-
-        # If nothing new to scan, find-flag is illegal
-        if action.id == AttackerActionId.FIND_FLAG and not unscanned_filesystems:
-            return False
-
-        # If nothing new to backdoor, install backdoor is illegal
-        if action.id == AttackerActionId.SSH_BACKDOOR and not uninstalled_backdoor:
-            return False
-
-        # If no new credentials, login to service is illegal
-        if action.id == AttackerActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
-            return False
-
-        # Pivot recon possible if logged in on pivot machine with tools installed
-        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT and logged_in and machine_w_tools:
-            return True
-
-        # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
-        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT \
-                and ((target_machine is not None and target_machine.shell_access
-                      and len(target_machine.shell_access_credentials) > 0)
-                     or action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN):
-            return True
-
-        # Bash action not tied to specific IP only possible when having shell access and being logged in
-        if action.id == AttackerActionId.FIND_FLAG and logged_in and unscanned_filesystems:
-            return True
-
-        # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == AttackerActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
-            return True
-
-        # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == AttackerActionId.SSH_BACKDOOR and logged_in and root_login and machine_w_tools and uninstalled_backdoor:
-            return True
-
-        return False
+        return EnvUtil.is_attack_action_legal(attack_action_id=attack_action_id, env_config=env_config,
+                                              env_state=env_state, m_selection=m_selection, m_action=m_action,
+                                              m_index=m_index)
 
     def close(self) -> None:
         """
@@ -756,7 +597,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state.cleanup()
         if self.env_config.emulation_config is not None:
             self.env_config.emulation_config.close()
-
 
     def attacker_convert_ar_action(self, machine_idx, action_idx):
         """
@@ -825,91 +665,17 @@ class PyCRCTFEnv(gym.Env, ABC):
                 pickle.dump(self.attacker_trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)
                 self.attacker_trajectories = []
 
-    @staticmethod
-    def _is_attack_action_legal_m_selection(action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
+    def reset_state(self) -> None:
         """
-        Utility method to check if a m_selection action is legal for AR policies
+        Resets the environment state
 
-        :param action_id: the action id of the m_selection to  check
-        :param env_config: the environment config
-        :param env_state: the environment state
-        :return: True if legal else False
+        :return: None
         """
-        # Subnet actions are always legal
-        if action_id == env_config.num_nodes:
-            return True
-
-        # If machine is discovered then it is a legal action
-        if action_id < len(env_state.attacker_obs_state.machines):
-            m = env_state.attacker_obs_state.machines[action_id]
-            if m is not None:
-                return True
-
-        return False
-
-    @staticmethod
-    def _is_attack_action_legal_m_action(action_id: int, env_config: EnvConfig, env_state: EnvState, machine_index : int) \
-            -> bool:
-        """
-        Utility method to check if a machine-specific action is legal or not for AR-policies
-
-        :param action_id: the machine-specific-action-id
-        :param env_config: the environment config
-        :param env_state: the environment state
-        :param machine_index: index of the machine to apply the action to
-        :return: True if legal else False
-        """
-        action_id_id = env_config.attacker_action_conf.action_ids[action_id]
-        key = (action_id_id, machine_index)
-        if key not in env_config.attacker_action_conf.action_lookup_d:
-            return False
-        action = env_config.attacker_action_conf.action_lookup_d[(action_id_id, machine_index)]
-        logged_in = False
-        for m in env_state.attacker_obs_state.machines:
-            if m.logged_in:
-                logged_in = True
-
-        if machine_index == env_config.num_nodes:
-            if action.subnet or action.index == env_config.num_nodes:
-                # Recon an exploits are always legal
-                if action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT:
-                    return True
-                # Bash action not tied to specific IP only possible when having shell access and being logged in
-                if action.id == AttackerActionId.FIND_FLAG and logged_in:
-                    return True
-                return False
-            else:
-                return False
-        else:
-            if action.subnet or action.index == env_config.num_nodes:
-                return False
-            else:
-                # Recon an exploits are always legal
-                if action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT:
-                    return True
-
-                if machine_index < len(env_state.attacker_obs_state.machines):
-                    env_state.attacker_obs_state.sort_machines()
-                    target_machine = env_state.attacker_obs_state.machines[machine_index]
-
-                    # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
-                    if action.type == AttackerActionType.POST_EXPLOIT and target_machine.shell_access \
-                            and len(target_machine.shell_access_credentials) > 0:
-                        return True
-
-                    # Bash action not tied to specific IP only possible when having shell access and being logged in
-                    if action.id == AttackerActionId.FIND_FLAG and logged_in:
-                        return True
-        return False
-
-
-    def reset_state(self):
         self.env_state.reset_state()
         defender_reset_action = self.env_config.defender_action_conf.state_reset_action
         s_prime, _, _ = TransitionOperator.defender_transition(s=self.env_state, defender_action=defender_reset_action,
                                                env_config=self.env_config)
         self.env_state = s_prime
-
 
     def warmup(self) -> None:
         """
