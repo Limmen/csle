@@ -10,7 +10,6 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     ppo_novice_attacker_0 = pd.read_csv(glob.glob(novice_attacker_base_path + "0/*_train.csv")[0])
     ppo_novice_attacker_999 = pd.read_csv(glob.glob(novice_attacker_base_path + "999/*_train.csv")[0])
     ppo_novice_attacker_399 = pd.read_csv(glob.glob(novice_attacker_base_path + "399/*_train.csv")[0])
-    ppo_novice_attacker_599 = pd.read_csv(glob.glob(novice_attacker_base_path + "599/*_train.csv")[0])
 
     ppo_dfs_novice_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999, ppo_novice_attacker_399]
 
@@ -807,7 +806,7 @@ def plot_train(
 
 
 if __name__ == '__main__':
-    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/training/v5/results_3/data/"
+    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/20_aug/results_novice_attacker_128_neurons_2_hidden_layers_12k_batch/data/"
     avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
     avg_train_rewards_stds_novice_attacker, \
     avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker, \

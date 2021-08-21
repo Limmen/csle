@@ -11,6 +11,7 @@ import argparse
 import os
 import sys
 import numpy as np
+import scipy.stats
 from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.dao.container_config.topology import Topology
@@ -503,3 +504,18 @@ def running_average_list(x, N):
     else:
         y = np.zeros_like(x)
     return y
+
+
+def mean_confidence_interval(data, confidence=0.95):
+    """
+    Compute confidence intervals
+
+    :param data: the data
+    :param confidence: the interval confidence
+    :return: the mean, the lower confidence interval, the upper confidence interval
+    """
+    a = 1.0 * np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    return m, h
