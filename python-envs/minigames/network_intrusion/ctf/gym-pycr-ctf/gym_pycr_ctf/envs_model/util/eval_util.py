@@ -253,9 +253,9 @@ class EvalUtil:
                 y += obs_intrusion[i][3]
                 z = z
             elif len(obs_intrusion[i]) == 4:
-                x = obs_intrusion[i][0]
-                y = obs_intrusion[i][1]
-                z = obs_intrusion[i][2]
+                x += obs_intrusion[i][0]
+                y += obs_intrusion[i][1]
+                z += obs_intrusion[i][2]
             else:
                 raise ValueError("Observation dimension does not match")
             t = prior_intrusion_len + i + 1
