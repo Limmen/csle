@@ -18,10 +18,12 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     running_avg = 1
     confidence=0.95
     num_seeds = len(ppo_dfs_novice_attacker)
+    print("running avg:{}".format(running_avg))
 
     # Train Avg Novice
     avg_train_rewards_data_novice_attacker = list(
         map(lambda df: util.running_average_list(df["defender_avg_episode_rewards"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
+    max_len = len(avg_train_rewards_data_novice_attacker[0])
 
     avg_train_rewards_data_novice_attacker = np.array(avg_train_rewards_data_novice_attacker).reshape(max_len, num_seeds)
     avg_train_rewards_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_rewards_data_novice_attacker)))
@@ -1226,7 +1228,7 @@ def plot_train(
 
     suffix = "gensim"
     ylim_rew = (-300, 170)
-    max_iter = 75
+    max_iter = 50
 
 
     plotting_util_defender.plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
@@ -1378,7 +1380,7 @@ def plot_train(
         optimal_steps_stds_emulation_expert_attacker=avg_eval_2_i_steps_stds_expert_attacker[0:max_iter],
 
         fontsize= 6.5, figsize= (7.5, 3.25), title_fontsize=8, lw=0.75, wspace=0.19, hspace=0.08, top=0.0,
-        bottom=0.11, labelsize=6, markevery=1, optimal_reward = 100, sample_step = 5,
+        bottom=0.11, labelsize=6, markevery=5, optimal_reward = 100, sample_step = 1,
         eval_only=False, plot_opt = False, iterations_per_step= 12000, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "defender_simulation_emulation_multiple_attackers_single_stop_tnsm_21", markersize=2.25
     )
@@ -1481,7 +1483,7 @@ def plot_train(
         snort_severe_baseline_i_steps_stds=eval_2_snort_severe_baseline_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
 
         fontsize=6.5, figsize=(7.5, 1.5), title_fontsize=8, lw=0.75, wspace=0.17, hspace=0.4, top=0.0,
-        bottom=0.28, labelsize=6, markevery=1, optimal_reward=100, sample_step=5,
+        bottom=0.28, labelsize=6, markevery=5, optimal_reward=100, sample_step=1,
         eval_only=False, plot_opt=False, iterations_per_step=12000, optimal_int=1.0,
         optimal_flag=1.0, file_name="defender_emulation_multiple_attackers_w_baselines_single_stop_tnsm_21", markersize=2.25
     )

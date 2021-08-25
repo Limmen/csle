@@ -11,6 +11,7 @@ import argparse
 import os
 import sys
 import numpy as np
+import random
 import scipy.stats
 from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
 from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
@@ -504,6 +505,21 @@ def running_average_list(x, N):
     else:
         y = np.zeros_like(x)
     return y
+
+
+def add(x):
+    x_prime = []
+    random_vec = x[0:10]
+    for i in range(len(x)):
+        if i < 30:
+            for j in range(2):
+                idx = random.randint(max(0,i-3),i+1)
+                x_prime.append(x[idx])
+                # else:
+                #     x_prime.append(x[i])
+        else:
+            x_prime.append(x[i])
+    return x_prime
 
 
 def mean_confidence_interval(data, confidence=0.95):
