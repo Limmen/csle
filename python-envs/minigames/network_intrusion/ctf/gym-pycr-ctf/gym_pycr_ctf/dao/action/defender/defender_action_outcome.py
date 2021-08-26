@@ -11,3 +11,4 @@ class DefenderActionOutcome(Enum):
     GAME_END = 0
     CONTINUE = 1
     STATE_UPDATE = 2
+    ADD_DEFENSIVE_MECHANISM = 3

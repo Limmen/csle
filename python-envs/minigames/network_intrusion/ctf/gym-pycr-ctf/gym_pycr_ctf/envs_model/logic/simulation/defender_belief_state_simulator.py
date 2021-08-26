@@ -157,7 +157,7 @@ class DefenderBeliefStateSimulator:
                                                         defender_action=defender_action)
 
     @staticmethod
-    def reset_state(s, attacker_action: AttackerAction, env_config: EnvConfig,
+    def reset_state(s: EnvState, attacker_action: AttackerAction, env_config: EnvConfig,
                    defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
         """
         Resets the belief state of the defender
@@ -252,5 +252,10 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.stops_remaining = s_prime.defender_obs_state.maximum_number_of_stops
+        s_prime.defender_obs_state.first_stop_step = -1
+        s_prime.defender_obs_state.second_stop_step = -1
+        s_prime.defender_obs_state.third_stop_step = -1
+        s_prime.defender_obs_state.fourth_stop_step = -1
 
         return s_prime, 0, False

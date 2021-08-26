@@ -131,6 +131,9 @@ class EnvConfig:
         self.defender_service_reward = 10
         self.defender_intrusion_reward = -100
 
+        self.multistop_costs = [0, -6.25, -12.5, -25, -100]
+
+
         self.defender_sum_costs = 1
         self.defender_max_costs = 1
 
@@ -216,6 +219,13 @@ class EnvConfig:
         self.snort_baseline_simulate = False
         self.attacker_early_stopping_reward = 10
         self.use_attacker_action_stats_to_update_defender_state = False
+
+        self.multiple_stopping_environment = False
+        self.maximum_number_of_defender_stop_actions = 1
+        self.ids_enabled_stops_remaining = 3
+        self.reset_users_stops_remaining = 2
+        self.blacklist_ips_stops_remaining = 1
+        self.attacker_prevented_stops_remaining = 0
 
     def get_port_forward_port(self) -> int:
         """
@@ -399,4 +409,11 @@ class EnvConfig:
         env_config.snort_baseline_simulate = self.snort_baseline_simulate
         env_config.attacker_early_stopping_reward = self.attacker_early_stopping_reward
         env_config.use_attacker_action_stats_to_update_defender_state = self.use_attacker_action_stats_to_update_defender_state
+        env_config.multiple_stopping_environment = self.multiple_stopping_environment
+        env_config.maximum_number_of_defender_stop_actions = self.maximum_number_of_defender_stop_actions
+        env_config.ids_enabled_stops_remaining = self.ids_enabled_stops_remaining
+        env_config.blacklist_ips_stops_remaining = self.blacklist_ips_stops_remaining
+        env_config.reset_users_stops_remaining = self.reset_users_stops_remaining
+        env_config.attacker_prevented_stops_remaining = self.attacker_prevented_stops_remaining
+        env_config.multistop_costs = self.multistop_costs
         return env_config

@@ -151,7 +151,22 @@ class ExperimentResult:
                  eval_2_avg_uncaught_intrusion_steps: List = None,
                  avg_optimal_defender_reward: List = None,
                  eval_avg_optimal_defender_reward: List = None,
-                 eval_2_avg_optimal_defender_reward: List = None
+                 eval_2_avg_optimal_defender_reward: List = None,
+                 avg_defender_stops_remaining: List = None,
+                 eval_avg_defender_stops_remaining: List = None,
+                 eval_2_avg_defender_stops_remaining: List = None,
+                 avg_defender_first_stop_step: List = None,
+                 eval_avg_defender_first_stop_step: List = None,
+                 eval_2_avg_defender_first_stop_step: List = None,
+                 avg_defender_second_stop_step: List = None,
+                 eval_avg_defender_second_stop_step: List = None,
+                 eval_2_avg_defender_second_stop_step: List = None,
+                 avg_defender_third_stop_step: List = None,
+                 eval_avg_defender_third_stop_step: List = None,
+                 eval_2_avg_defender_third_stop_step: List = None,
+                 avg_defender_fourth_stop_step: List = None,
+                 eval_avg_defender_fourth_stop_step: List = None,
+                 eval_2_avg_defender_fourth_stop_step: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -286,6 +301,21 @@ class ExperimentResult:
         :param avg_optimal_defender_reward: avg optimal defender reward
         :param eval_avg_optimal_defender_reward: eval avg optimal defender reward
         :param eval_2_avg_optimal_defender_reward: eval 2 avg optimal defender reward
+        :param avg_defender_stops_remaining: avg number of stops remaining for the defender when episode ends
+        :param eval_avg_defender_stops_remaining: avg number of stops remaining for the defender when episode ends
+        :param eval_2_avg_defender_stops_remaining: avg number of stops remaining for the defender when episode ends
+        :param avg_defender_first_stop_step: avg time-step of defender's first stop
+        :param eval_avg_defender_first_stop_step: eval avg time-step of defender's first stop
+        :param eval_2_avg_defender_first_stop_step: eval 2avg time-step of defender's first stop
+        :param avg_defender_second_stop_step: avg time-step of defender's second stop
+        :param eval_avg_defender_second_stop_step: eval avg time-step of defender's second stop
+        :param eval_2_avg_defender_second_stop_step: eval2 avg time-step of defender's second stop
+        :param avg_defender_third_stop_step: avg time-step of defender's third stop
+        :param eval_avg_defender_third_stop_step: eval avg time-step of defender's third stop
+        :param eval_2_avg_defender_third_stop_step: eval2 avg time-step of defender's third stop
+        :param avg_defender_fourth_stop_step: avg time-step of defender's fourth stop
+        :param eval_avg_defender_fourth_stop_step: eval avg time-step of defender's fourth stop
+        :param eval_2_avg_defender_fourth_stop_step: eval2 avg time-step of defender's fourth stop
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -458,6 +488,21 @@ class ExperimentResult:
         self.avg_optimal_defender_reward = avg_optimal_defender_reward
         self.eval_avg_optimal_defender_reward = eval_avg_optimal_defender_reward
         self.eval_2_avg_optimal_defender_reward = eval_2_avg_optimal_defender_reward
+        self.avg_defender_stops_remaining = avg_defender_stops_remaining
+        self.eval_avg_defender_stops_remaining = eval_avg_defender_stops_remaining
+        self.eval_2_avg_defender_stops_remaining = eval_2_avg_defender_stops_remaining
+        self.avg_defender_first_stop_step = avg_defender_first_stop_step
+        self.eval_avg_defender_first_stop_step = eval_avg_defender_first_stop_step
+        self.eval_2_avg_defender_first_stop_step = eval_2_avg_defender_first_stop_step
+        self.avg_defender_second_stop_step = avg_defender_second_stop_step
+        self.eval_avg_defender_second_stop_step = eval_avg_defender_second_stop_step
+        self.eval_2_avg_defender_second_stop_step = eval_2_avg_defender_second_stop_step
+        self.avg_defender_third_stop_step = avg_defender_third_stop_step
+        self.eval_avg_defender_third_stop_step = eval_avg_defender_third_stop_step
+        self.eval_2_avg_defender_third_stop_step = eval_2_avg_defender_third_stop_step
+        self.avg_defender_fourth_stop_step = avg_defender_fourth_stop_step
+        self.eval_avg_defender_fourth_stop_step = eval_avg_defender_fourth_stop_step
+        self.eval_2_avg_defender_fourth_stop_step = eval_2_avg_defender_fourth_stop_step
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -801,6 +846,42 @@ class ExperimentResult:
             self.eval_avg_optimal_defender_reward = []
         if eval_2_avg_optimal_defender_reward is None:
             self.eval_2_avg_optimal_defender_reward = []
+        if avg_defender_stops_remaining is None:
+            self.avg_defender_stops_remaining = []
+        if eval_avg_defender_stops_remaining is None:
+            self.eval_avg_defender_stops_remaining = []
+        if eval_2_avg_defender_stops_remaining is None:
+            self.eval_2_avg_defender_stops_remaining = []
+        if avg_defender_stops_remaining is None:
+            self.avg_defender_stops_remaining = []
+        if eval_avg_defender_stops_remaining is None:
+            self.eval_avg_defender_stops_remaining = []
+        if eval_2_avg_defender_stops_remaining is None:
+            self.eval_2_avg_defender_stops_remaining = []
+        if avg_defender_first_stop_step is None:
+            self.avg_defender_first_stop_step = []
+        if eval_avg_defender_first_stop_step is None:
+            self.eval_avg_defender_first_stop_step = []
+        if eval_2_avg_defender_first_stop_step is None:
+            self.eval_2_avg_defender_first_stop_step = []
+        if avg_defender_second_stop_step is None:
+            self.avg_defender_second_stop_step = []
+        if eval_avg_defender_second_stop_step is None:
+            self.eval_avg_defender_second_stop_step = []
+        if eval_2_avg_defender_second_stop_step is None:
+            self.eval_2_avg_defender_second_stop_step = []
+        if avg_defender_third_stop_step is None:
+            self.avg_defender_third_stop_step = []
+        if eval_avg_defender_third_stop_step is None:
+            self.eval_avg_defender_third_stop_step = []
+        if eval_2_avg_defender_third_stop_step is None:
+            self.eval_2_avg_defender_third_stop_step = []
+        if avg_defender_fourth_stop_step is None:
+            self.avg_defender_fourth_stop_step = []
+        if eval_avg_defender_fourth_stop_step is None:
+            self.eval_avg_defender_fourth_stop_step = []
+        if eval_2_avg_defender_fourth_stop_step is None:
+            self.eval_2_avg_defender_fourth_stop_step = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -887,7 +968,17 @@ class ExperimentResult:
                    self.eval_2_step_baseline_uncaught_intrusion_steps,
                    self.avg_uncaught_intrusion_steps, self.eval_avg_uncaught_intrusion_steps,
                    self.eval_2_avg_uncaught_intrusion_steps, self.avg_optimal_defender_reward,
-                   self.eval_avg_optimal_defender_reward, self.eval_2_avg_optimal_defender_reward
+                   self.eval_avg_optimal_defender_reward, self.eval_2_avg_optimal_defender_reward,
+                   self.avg_defender_stops_remaining, self.eval_avg_defender_stops_remaining,
+                   self.eval_2_avg_defender_stops_remaining,
+                   self.avg_defender_first_stop_step,
+                   self.eval_avg_defender_first_stop_step, self.eval_2_avg_defender_first_stop_step,
+                   self.avg_defender_second_stop_step,
+                   self.eval_avg_defender_second_stop_step, self.eval_2_avg_defender_second_stop_step,
+                   self.avg_defender_third_stop_step,
+                   self.eval_avg_defender_third_stop_step, self.eval_2_avg_defender_third_stop_step,
+                   self.avg_defender_fourth_stop_step,
+                   self.eval_avg_defender_fourth_stop_step, self.eval_2_avg_defender_fourth_stop_step
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -964,7 +1055,17 @@ class ExperimentResult:
                          "eval_2_step_baseline_uncaught_intrusion_steps", "avg_uncaught_intrusion_steps",
                          "eval_avg_uncaught_intrusion_steps", "eval_2_avg_uncaught_intrusion_steps",
                          "avg_optimal_defender_reward", "eval_avg_optimal_defender_reward",
-                         "eval_2_avg_optimal_defender_reward"
+                         "eval_2_avg_optimal_defender_reward",
+                         "avg_defender_stops_remaining", "eval_avg_defender_stops_remaining",
+                         "eval_2_avg_defender_stops_remaining",
+                         "avg_defender_first_stop_step",
+                         "eval_avg_defender_first_stop_step", "eval_2_avg_defender_first_stop_step",
+                         "avg_defender_second_stop_step",
+                         "eval_avg_defender_second_stop_step", "eval_2_avg_defender_second_stop_step",
+                         "avg_defender_third_stop_step",
+                         "eval_avg_defender_third_stop_step", "eval_2_avg_defender_third_stop_step",
+                         "avg_defender_fourth_stop_step",
+                         "eval_avg_defender_fourth_stop_step", "eval_2_avg_defender_fourth_stop_step"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

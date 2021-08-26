@@ -25,6 +25,7 @@ from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_defender import FindP
 from gym_pycr_ctf.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 from gym_pycr_ctf.envs_model.logic.common.stopping_baselines_util import StoppingBaselinesUtil
 from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
+from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 
 
 class PyCRCTFEnv(gym.Env, ABC):
@@ -201,8 +202,14 @@ class PyCRCTFEnv(gym.Env, ABC):
         defender_info[constants.INFO_DICT.ATTACKER_ALERTS] = self.env_state.attacker_obs_state.alerts
         defender_info[constants.INFO_DICT.ATTACKER_ALERTS_NORM] = self.env_state.attacker_obs_state.alerts_norm
         defender_info[constants.INFO_DICT.FLAGS] = 0
+        defender_info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING] = self.env_config.maximum_number_of_defender_stop_actions
+        defender_info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP] = -1
+        defender_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP] = -1
+        defender_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP] = -1
+        defender_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP] = -1
 
         if not done:
+
             # Second step attacker
             attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
             done = done or attacker_done
@@ -211,6 +218,11 @@ class PyCRCTFEnv(gym.Env, ABC):
 
             if done:
                 self.env_state.attacker_obs_state.intrusion_completed = True
+                if self.env_state.defender_obs_state.caught_attacker:
+                    defense_action = self.env_config.defender_action_conf.actions[defense_action_id]
+                    if defense_action.id == DefenderActionId.CONTINUE:
+                        defender_reward = 0
+                    defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
 
         # Merge infos
         if info is None:
@@ -224,10 +236,15 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         # Update state
         if self.env_config.defender_update_state and not done:
+            if self.env_state.defender_obs_state.caught_attacker:
+                attacker_action_idx = self.env_config.attacker_action_conf.get_continue_action_idx()
+                attacker_action = self.env_config.attacker_action_conf.actions[attacker_action_idx]
+            else:
+                attacker_action = self.env_state.attacker_obs_state.last_attacker_action
             # Update defender's state
             s_prime, _, _ = TransitionOperator.defender_transition(
                 s=self.env_state, defender_action=self.env_config.defender_action_conf.state_update_action,
-                env_config=self.env_config, attacker_action=self.env_state.attacker_obs_state.last_attacker_action)
+                env_config=self.env_config, attacker_action=attacker_action)
             self.env_state = s_prime
 
         # Extract observations
@@ -268,6 +285,7 @@ class PyCRCTFEnv(gym.Env, ABC):
         :param attacker_action_id: the action to take
         :return: (obs, reward, done, info)
         """
+
         info = {constants.INFO_DICT.IDX: self.idx}
         info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = False
         # Check if action is illegal
@@ -780,4 +798,10 @@ class PyCRCTFEnv(gym.Env, ABC):
         info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
         info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
         info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS] = 0
+        info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING] = 1
+        info[constants.INFO_DICT.INTRUSION_STEP] = 1
+        info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP] = -1
         return info

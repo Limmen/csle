@@ -10,13 +10,17 @@ class DefenderActionConfig:
     Configuration of the action space for the defender
     """
     def __init__(self, num_indices : int, actions: List[DefenderAction] = None,
-                 stopping_action_ids : List[int] = None):
+                 stopping_action_ids : List[int] = None, multiple_stop_actions : List[DefenderAction] = None,
+                 multiple_stop_actions_ids : List[int] = None):
         """
         Class constructor
 
         :param num_indices: max num machine indexes allowed
         :param actions: list of actions in the action space
         :param stopping_action_ids: list of ids of the actions that are stopping actions
+        :param multiple_stop_actions: if it is a multiple stopping environment, this defines the list of stop actions
+        :param multiple_stop_actions_ids: if it is a multiple stopping environment, this defines the ids of
+                                          the stop actions
         """
         self.actions = actions
         self.num_actions = len(self.actions)
@@ -30,6 +34,8 @@ class DefenderActionConfig:
 
         self.stopping_action_ids = stopping_action_ids
         self.action_ids = self.stopping_action_ids
+        self.multiple_stop_actions = multiple_stop_actions
+        self.multiple_stop_actions_ids = multiple_stop_actions_ids
         self.num_node_specific_actions = len(self.action_ids)
         self.state_update_action = DefenderUpdateStateActions.UPDATE_STATE(index=-1)
         self.state_init_action = DefenderUpdateStateActions.INITIALIZE_STATE(index=-1)

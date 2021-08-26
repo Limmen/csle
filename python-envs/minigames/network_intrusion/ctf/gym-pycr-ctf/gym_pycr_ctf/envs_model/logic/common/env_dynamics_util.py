@@ -723,9 +723,12 @@ class EnvDynamicsUtil:
         :return: the string id
         """
         hacker_ip = env_config.hacker_ip
+        machines = s.attacker_obs_state.machines
+        if s.defender_obs_state.caught_attacker:
+            machines = []
         logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
-                                 filter(lambda x: x.logged_in, s.attacker_obs_state.machines)))
+                                 filter(lambda x: x.logged_in, machines)))
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)

@@ -10,3 +10,6 @@ class DefenderActionId(Enum):
     UPDATE_STATE = 2
     INITIALIZE_STATE = 3
     RESET_STATE = 4
+    RESET_USERS = 5
+    ENABLE_DPI = 6
+    BLACKLIST_IPS = 7

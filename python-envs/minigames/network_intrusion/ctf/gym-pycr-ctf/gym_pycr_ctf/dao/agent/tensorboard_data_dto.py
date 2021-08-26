@@ -114,6 +114,21 @@ class TensorboardDataDTO:
                  avg_optimal_defender_reward: float = 0.0,
                  eval_avg_optimal_defender_reward: float = 0.0,
                  eval_2_avg_optimal_defender_reward: float = 0.0,
+                 avg_defender_stops_remaining : float = 0.0,
+                 eval_avg_defender_stops_remaining: float = 0.0,
+                 eval_2_avg_defender_stops_remaining: float = 0.0,
+                 avg_defender_first_stop_step: float = 0.0,
+                 eval_avg_defender_first_stop_step: float = 0.0,
+                 eval_2_avg_defender_first_stop_step: float = 0.0,
+                 avg_defender_second_stop_step: float = 0.0,
+                 eval_avg_defender_second_stop_step: float = 0.0,
+                 eval_2_avg_defender_second_stop_step: float = 0.0,
+                 avg_defender_third_stop_step: float = 0.0,
+                 eval_avg_defender_third_stop_step: float = 0.0,
+                 eval_2_avg_defender_third_stop_step: float = 0.0,
+                 avg_defender_fourth_stop_step: float = 0.0,
+                 eval_avg_defender_fourth_stop_step: float = 0.0,
+                 eval_2_avg_defender_fourth_stop_step: float = 0.0
                  ):
         self.iteration = iteration
         self.avg_episode_rewards = avg_episode_rewards
@@ -254,6 +269,21 @@ class TensorboardDataDTO:
         self.avg_optimal_defender_reward = avg_optimal_defender_reward
         self.eval_avg_optimal_defender_reward = eval_avg_optimal_defender_reward
         self.eval_2_avg_optimal_defender_reward = eval_2_avg_optimal_defender_reward
+        self.avg_defender_stops_remaining = avg_defender_stops_remaining
+        self.eval_avg_defender_stops_remaining = eval_avg_defender_stops_remaining
+        self.eval_2_avg_defender_stops_remaining = eval_2_avg_defender_stops_remaining
+        self.avg_defender_first_stop_step = avg_defender_first_stop_step
+        self.eval_avg_defender_first_stop_step = eval_avg_defender_first_stop_step
+        self.eval_2_avg_defender_first_stop_step = eval_2_avg_defender_first_stop_step
+        self.avg_defender_second_stop_step = avg_defender_second_stop_step
+        self.eval_avg_defender_second_stop_step = eval_avg_defender_second_stop_step
+        self.eval_2_avg_defender_second_stop_step = eval_2_avg_defender_second_stop_step
+        self.avg_defender_third_stop_step = avg_defender_third_stop_step
+        self.eval_avg_defender_third_stop_step = eval_avg_defender_third_stop_step
+        self.eval_2_avg_defender_third_stop_step = eval_2_avg_defender_third_stop_step
+        self.avg_defender_fourth_stop_step = avg_defender_third_stop_step
+        self.eval_avg_defender_fourth_stop_step = eval_avg_defender_fourth_stop_step
+        self.eval_2_avg_defender_fourth_stop_step = eval_2_avg_defender_fourth_stop_step
 
     def log_tensorboard_defender(self) -> None:
         """
@@ -363,9 +393,6 @@ class TensorboardDataDTO:
                                            self.eval_avg_2_episode_var_log_baseline_steps, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_avg_2_episode_step_baseline_steps/' + train_or_eval,
                                            self.eval_avg_2_episode_step_baseline_steps, self.iteration)
-
-
-        # S
         self.tensorboard_writer.add_scalar('defender/avg_episode_snort_severe_baseline_caught_attacker/' + train_or_eval,
                                            self.avg_episode_snort_severe_baseline_caught_attacker, self.iteration)
         self.tensorboard_writer.add_scalar('defender/avg_episode_snort_warning_baseline_caught_attacker/' + train_or_eval,
@@ -480,6 +507,36 @@ class TensorboardDataDTO:
                                            self.eval_avg_optimal_defender_reward, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_defender_reward/' + train_or_eval,
                                            self.eval_2_avg_optimal_defender_reward, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_defender_stops_remaining/' + train_or_eval,
+                                           self.avg_defender_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_defender_stops_remaining/' + train_or_eval,
+                                           self.eval_avg_defender_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_stops_remaining/' + train_or_eval,
+                                           self.eval_2_avg_defender_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_defender_first_stop_step/' + train_or_eval,
+                                           self.avg_defender_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_defender_first_stop_step/' + train_or_eval,
+                                           self.eval_avg_defender_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_first_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_defender_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_defender_second_stop_step/' + train_or_eval,
+                                           self.avg_defender_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_defender_second_stop_step/' + train_or_eval,
+                                           self.eval_avg_defender_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_second_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_defender_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_defender_third_stop_step/' + train_or_eval,
+                                           self.avg_defender_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_defender_third_stop_step/' + train_or_eval,
+                                           self.eval_avg_defender_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_third_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_defender_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_defender_fourth_stop_step/' + train_or_eval,
+                                           self.avg_defender_fourth_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_defender_fourth_stop_step/' + train_or_eval,
+                                           self.eval_avg_defender_fourth_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_fourth_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_defender_fourth_stop_step, self.iteration)
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', self.lr, self.iteration)
 
@@ -514,8 +571,7 @@ class TensorboardDataDTO:
                       "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
                       "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
                       "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
-                      "tt_h:{:.2f},avg_F_T_E:{:.2f},avg_F_T_E%:{:.2f}," \
-                      "avg_F_T_E2:{:.2f},avg_F_T_E2%:{:.2f}".format(
+                      "tt_h:{:.2f},avg_F_T_E:{:.2f},avg_F_T_E%:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards, self.rolling_avg_rewards,
                 self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
                 self.lr, self.total_num_episodes, self.avg_episode_flags,
@@ -560,7 +616,9 @@ class TensorboardDataDTO:
                       "S_sev_avg_uit:{:.2f},S_warn_avg_uit:{:.2f}," \
                       "S_crit_avg_uit:{:.2f},V_log_avg_uit:{:.2f}, step_avg_uit:{:.2f}," \
                       "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},avg_I_t:{:.2f}".format(
+                      "c:{:.2f},s:{:.2f},s_i:{:.2f},avg_I_t:{:.2f}, avg_stops_left_T:{:.2f}," \
+                      "avg_first_stop_t_T:{:.2f},avg_second_stop_t_T:{:.2f},avg_third_stop_t_T:{:.2f}," \
+                      "avg_fourth_stop_t_T:{:.2f}".format(
                 self.iteration, self.avg_episode_rewards, self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps,
                 self.avg_optimal_defender_reward,
                 self.avg_episode_snort_severe_baseline_rewards,
@@ -591,7 +649,9 @@ class TensorboardDataDTO:
                 self.avg_episode_steps, self.rolling_avg_steps,
                 self.lr, self.episode_caught_frac,
                 self.episode_early_stopped_frac, self.episode_successful_intrusion_frac,
-                self.avg_episode_intrusion_steps)
+                self.avg_episode_intrusion_steps, self.avg_defender_stops_remaining, self.avg_defender_first_stop_step,
+                self.avg_defender_second_stop_step, self.avg_defender_third_stop_step,
+                self.avg_defender_fourth_stop_step)
         else:
             log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
                       "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f},avg_uit_T:{:.2f},avg_opt_R_T:{:.2f}," \
@@ -606,7 +666,9 @@ class TensorboardDataDTO:
                       "S_sev_avg_uit_T:{:.2f},S_warn_avg_uit_T:{:.2f}, " \
                       "S_crit_avg_uit_T:{:.2f},V_log_avg_uit_T:{:.2f}, step_avg_uit_T:{:.2f}," \
                       "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},eps:{:.2f}," \
+                      "loss:{:.6f},lr:{:.2E},episode:{},avg_stops_left_T:{:.2f}," \
+                      "avg_first_stop_t_T:{:.2f},avg_second_stop_t_T:{:.2f},avg_third_stop_t_T:{:.2f}," \
+                      "avg_fourth_stop_t_T:{:.2f},eps:{:.2f}," \
                       "avg_R_E:{:.2f},avg_uit_E:{:.2f},opt_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
                       "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}, step_avg_R_E:{:.2f}," \
                       "S_sev_avg_t_E:{:.2f},S_warn_avg_t_E:{:.2f}, " \
@@ -618,7 +680,8 @@ class TensorboardDataDTO:
                       "S_sev_avg_uit_E:{:.2f},S_warn_avg_uit_E:{:.2f}, " \
                       "S_crit_avg_uit_E:{:.2f},V_log_avg_uit_E:{:.2f}, step_avg_uit_E:{:.2f}," \
                       "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
-                      "avg_t_E:{:.2f}," \
+                      "avg_t_E:{:.2f},avg_stops_left_E:{:.2f},avg_first_stop_t_E:{:.2f},avg_second_stop_t_E:{:.2f}," \
+                      "avg_third_stop_t_E:{:.2f},avg_fourth_stop_t_E:{:.2f}," \
                       "avg_R_E2:{:.2f},avg_uit_E2:{:.2f},opt_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
                       "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f},step_avg_R_E2:{:.2f}," \
                       "S_sev_avg_t_E2:{:.2f},S_warn_avg_t_E2:{:.2f}," \
@@ -638,7 +701,10 @@ class TensorboardDataDTO:
                       "costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
                       "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
                       "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
-                      "avg_I_t:{:.2f},E_avg_I_t:{:.2f},E2_avg_I_t:{:.2f}".format(
+                      "avg_I_t:{:.2f},E_avg_I_t:{:.2f},E2_avg_I_t:{:.2f}," \
+                      "avg_F_T_E2:{:.2f},avg_F_T_E2%:{:.2f},avg_stops_left_E2:{:.2f}," \
+                      "avg_first_stop_t_E2:{:.2f},avg_second_stop_t_E2:{:.2f}," \
+                      "avg_third_stop_t_E2:{:.2f},avg_fourth_stop_t_E2:{:.2f}".format(
                 self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards,
                 self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps, self.avg_optimal_defender_reward,
                 self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
@@ -657,7 +723,9 @@ class TensorboardDataDTO:
                 self.avg_episode_snort_critical_baseline_uncaught_intrusion_steps, self.avg_episode_var_log_baseline_uncaught_intrusion_steps,
                 self.avg_episode_step_baseline_uncaught_intrusion_steps,
                 self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
-                self.lr, self.total_num_episodes, self.eps,
+                self.lr, self.total_num_episodes, self.avg_defender_stops_remaining, self.avg_defender_first_stop_step,
+                self.avg_defender_second_stop_step, self.avg_defender_third_stop_step,
+                self.avg_defender_fourth_stop_step, self.eps,
                 self.eval_avg_episode_rewards, self.eval_avg_uncaught_intrusion_steps,
                 self.eval_avg_optimal_defender_reward,
                 self.eval_avg_episode_snort_severe_baseline_rewards,
@@ -681,6 +749,9 @@ class TensorboardDataDTO:
                 self.eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps,
                 self.eval_avg_episode_var_log_baseline_uncaught_intrusion_steps, self.eval_avg_episode_step_baseline_uncaught_intrusion_steps,
                 self.avg_eval_regret, self.eval_avg_opt_frac, self.eval_avg_episode_steps,
+                self.eval_avg_defender_stops_remaining, self.eval_avg_defender_first_stop_step,
+                self.eval_avg_defender_second_stop_step, self.eval_avg_defender_third_stop_step,
+                self.eval_avg_defender_fourth_stop_step,
                 self.eval_2_avg_episode_rewards, self.eval_2_avg_uncaught_intrusion_steps,
                 self.eval_2_avg_optimal_defender_reward,
                 self.eval_avg_2_episode_snort_severe_baseline_rewards,
@@ -724,7 +795,10 @@ class TensorboardDataDTO:
                 self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
                 self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm,
                 self.avg_episode_intrusion_steps, self.eval_avg_episode_intrusion_steps,
-                self.eval_2_avg_episode_intrusion_steps)
+                self.eval_2_avg_episode_intrusion_steps, self.eval_2_avg_defender_stops_remaining,
+                self.eval_2_avg_defender_first_stop_step,
+                self.eval_2_avg_defender_second_stop_step, self.eval_2_avg_defender_third_stop_step,
+                self.eval_2_avg_defender_fourth_stop_step)
         return log_str
     
 

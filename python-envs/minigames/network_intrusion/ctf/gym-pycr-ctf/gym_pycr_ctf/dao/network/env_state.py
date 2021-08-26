@@ -78,38 +78,43 @@ class EnvState:
         """
         if self.state_type == StateType.BASE:
             machines_obs, ports_protocols_obs =  \
-                AttackerStateRepresentation.base_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                num_ports = self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state,
-                                                                vuln_lookup=self.vuln_lookup, service_lookup=self.service_lookup,
-                                                                os_lookup=self.os_lookup)
+                AttackerStateRepresentation.base_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports = self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state,
+                    vuln_lookup=self.vuln_lookup, service_lookup=self.service_lookup,
+                    os_lookup=self.os_lookup)
         elif self.state_type == StateType.COMPACT:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.compact_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                   num_ports=self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.compact_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports=self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.ESSENTIAL:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.essential_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                     num_ports=self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.essential_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports=self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.SIMPLE:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.simple_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                  num_ports=self.attacker_obs_state.num_ports,
-                                                                  obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.simple_representation(
+                    num_machines=self.attacker_obs_state.num_machines, num_ports=self.attacker_obs_state.num_ports,
+                    obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.CORE:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.simple_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                  num_ports=self.attacker_obs_state.num_ports,
-                                                                  obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.simple_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports=self.attacker_obs_state.num_ports, obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.TEST:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.test_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                  num_ports=self.attacker_obs_state.num_ports,
-                                                                  obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.test_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports=self.attacker_obs_state.num_ports,
+                    obs_state=self.attacker_obs_state)
         elif self.state_type == StateType.BASIC:
             machines_obs, ports_protocols_obs = \
-                AttackerStateRepresentation.basic_representation(num_machines=self.attacker_obs_state.num_machines,
-                                                                  num_ports=self.attacker_obs_state.num_ports,
-                                                                  obs_state=self.attacker_obs_state)
+                AttackerStateRepresentation.basic_representation(
+                    num_machines=self.attacker_obs_state.num_machines,
+                    num_ports=self.attacker_obs_state.num_ports,
+                    obs_state=self.attacker_obs_state)
             # raise NotImplementedError("Core state type not implemented for the attacker")
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
@@ -123,38 +128,45 @@ class EnvState:
         """
         if self.state_type == StateType.BASE:
             machines_obs, network_obs =  \
-                DefenderStateRepresentation.base_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                obs_state=self.defender_obs_state,
-                                                                os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.base_representation(
+                    num_machines=self.defender_obs_state.num_machines, obs_state=self.defender_obs_state,
+                    os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         elif self.state_type == StateType.COMPACT:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.compact_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                     obs_state=self.defender_obs_state,
-                                                                     os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.compact_representation(
+                    num_machines=self.defender_obs_state.num_machines,
+                    obs_state=self.defender_obs_state,
+                    os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         elif self.state_type == StateType.ESSENTIAL:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.essential_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                obs_state=self.defender_obs_state,
-                                                                os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.essential_representation(
+                    num_machines=self.defender_obs_state.num_machines,
+                    obs_state=self.defender_obs_state, os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         elif self.state_type == StateType.SIMPLE:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.simple_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                     obs_state=self.defender_obs_state,
-                                                                     os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.simple_representation(
+                    num_machines=self.defender_obs_state.num_machines, obs_state=self.defender_obs_state,
+                    os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         elif self.state_type == StateType.CORE:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.core_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                     obs_state=self.defender_obs_state,
-                                                                     os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.core_representation(
+                    num_machines=self.defender_obs_state.num_machines, obs_state=self.defender_obs_state,
+                    os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         elif self.state_type == StateType.TEST:
             machines_obs = np.array([])
             network_obs = np.array([int(self.attacker_obs_state.ongoing_intrusion()), self.defender_obs_state.step])
 
         elif self.state_type == StateType.BASIC:
             machines_obs, network_obs = \
-                DefenderStateRepresentation.core_representation(num_machines=self.defender_obs_state.num_machines,
-                                                                     obs_state=self.defender_obs_state,
-                                                                     os_lookup=self.os_lookup, ids=self.ids)
+                DefenderStateRepresentation.core_representation(
+                    num_machines=self.defender_obs_state.num_machines,
+                    obs_state=self.defender_obs_state, os_lookup=self.os_lookup, ids=self.ids,
+                    multiple_stopping=self.env_config.multiple_stopping_environment, env_config=self.env_config)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
         return machines_obs, network_obs
@@ -210,25 +222,25 @@ class EnvState:
         """
         if self.state_type == StateType.BASE:
             defender_observation_space = DefenderStateRepresentation.base_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.COMPACT:
             defender_observation_space = DefenderStateRepresentation.compact_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.ESSENTIAL:
             defender_observation_space = DefenderStateRepresentation.essential_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.SIMPLE:
             defender_observation_space = DefenderStateRepresentation.simple_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.CORE:
             defender_observation_space = DefenderStateRepresentation.core_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.TEST:
             defender_observation_space = DefenderStateRepresentation.test_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         elif self.state_type == StateType.BASIC:
             defender_observation_space = DefenderStateRepresentation.core_representation_spaces(
-                obs_state=self.defender_obs_state)
+                obs_state=self.defender_obs_state, multiple_stopping=self.env_config.multiple_stopping_environment)
         else:
             raise ValueError("State type:{} not recognized".format(self.state_type))
 
@@ -272,7 +284,9 @@ class EnvState:
                 if len(m.ssh_connections) > 0:
                     self.defender_cached_ssh_connections[m.ip] = (m.ssh_connections, m.emulation_config)
         else:
-            self.defender_obs_state = DefenderObservationState(num_machines=self.num_nodes, ids=self.ids)
+            self.defender_obs_state = DefenderObservationState(
+                num_machines=self.num_nodes, ids=self.ids,
+                maximum_number_of_stops=self.env_config.maximum_number_of_defender_stop_actions)
 
     def merge_services_with_emulation(self, emulation_services : List[str]) -> None:
         """

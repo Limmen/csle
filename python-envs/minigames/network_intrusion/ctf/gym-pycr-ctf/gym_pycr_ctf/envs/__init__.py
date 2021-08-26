@@ -86,13 +86,13 @@ from gym_pycr_ctf.envs.derived_envs.level8.emulation.pycr_ctf_level8_emulation_e
 from gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env import PyCRCTFLevel9EmulationBaseEnv, \
     PyCRCTFLevel9Emulation1Env, PyCRCTFLevel9Emulation2Env, PyCRCTFLevel9Emulation3Env, PyCRCTFLevel9Emulation4Env, \
     PyCRCTFLevel9EmulationWithCosts1Env, PyCRCTFLevel9EmulationWithCosts2Env, PyCRCTFLevel9EmulationWithCosts3Env, \
-    PyCRCTFLevel9EmulationWithCosts4Env, PyCRCTFLevel9Emulation5Env
+    PyCRCTFLevel9EmulationWithCosts4Env, PyCRCTFLevel9Emulation5Env, PyCRCTFLevel9Emulation6Env
 
 from gym_pycr_ctf.envs.derived_envs.level9.generated_simulation.pycr_ctf_level9_gensim_env import \
     PyCRCTFLevel9GeneratedSimWithCosts1Env, PyCRCTFLevel9GeneratedSim2Env, PyCRCTFLevel9GeneratedSim1Env, \
     PyCRCTFLevel9GeneratedSimWithCosts2Env, PyCRCTFLevel9GeneratedSim3Env, \
     PyCRCTFLevel9GeneratedSimWithCosts3Env, PyCRCTFLevel9GeneratedSim4Env, \
-    PyCRCTFLevel9GeneratedSimWithCosts4Env, PyCRCTFLevel9GeneratedSim5Env
+    PyCRCTFLevel9GeneratedSimWithCosts4Env, PyCRCTFLevel9GeneratedSim5Env, PyCRCTFLevel9GeneratedSim6Env
 
 # ------ Level 10 ----- #
 

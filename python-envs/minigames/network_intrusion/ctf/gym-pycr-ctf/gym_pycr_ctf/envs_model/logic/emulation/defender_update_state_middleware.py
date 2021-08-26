@@ -217,6 +217,11 @@ class DefenderUpdateStateMiddleware:
         s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.stops_remaining = s_prime.defender_obs_state.maximum_number_of_stops
+        s_prime.defender_obs_state.first_stop_step = -1
+        s_prime.defender_obs_state.second_stop_step = -1
+        s_prime.defender_obs_state.third_stop_step = -1
+        s_prime.defender_obs_state.fourth_stop_step = -1
 
         return s_prime, 0, False
 
@@ -311,5 +316,10 @@ class DefenderUpdateStateMiddleware:
         s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
         s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
+        s_prime.defender_obs_state.stops_remaining = s_prime.defender_obs_state.maximum_number_of_stops
+        s_prime.defender_obs_state.first_stop_step = -1
+        s_prime.defender_obs_state.second_stop_step = -1
+        s_prime.defender_obs_state.third_stop_step = -1
+        s_prime.defender_obs_state.fourth_stop_step = -1
 
         return s_prime, 0, False

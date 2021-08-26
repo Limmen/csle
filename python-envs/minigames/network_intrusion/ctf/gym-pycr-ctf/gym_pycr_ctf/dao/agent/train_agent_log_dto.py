@@ -148,6 +148,21 @@ class TrainAgentLogDTO:
                  optimal_defender_reward: List[int] = None,
                  eval_optimal_defender_reward: List[int] = None,
                  eval_2_optimal_defender_reward: List[int] = None,
+                 defender_stops_remaining : List[int] = None,
+                 eval_defender_stops_remaining: List[int] = None,
+                 eval_2_defender_stops_remaining: List[int] = None,
+                 defender_first_stop_step: List[int] = None,
+                 eval_defender_first_stop_step: List[int] = None,
+                 eval_2_defender_first_stop_step: List[int] = None,
+                 defender_second_stop_step: List[int] = None,
+                 eval_defender_second_stop_step: List[int] = None,
+                 eval_2_defender_second_stop_step: List[int] = None,
+                 defender_third_stop_step: List[int] = None,
+                 eval_defender_third_stop_step: List[int] = None,
+                 eval_2_defender_third_stop_step: List[int] = None,
+                 defender_fourth_stop_step: List[int] = None,
+                 eval_defender_fourth_stop_step: List[int] = None,
+                 eval_2_defender_fourth_stop_step: List[int] = None
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -302,7 +317,21 @@ class TrainAgentLogDTO:
         self.optimal_defender_reward = optimal_defender_reward
         self.eval_optimal_defender_reward = eval_optimal_defender_reward
         self.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
-
+        self.defender_stops_remaining = defender_stops_remaining
+        self.eval_defender_stops_remaining = eval_defender_stops_remaining
+        self.eval_2_defender_stops_remaining = eval_2_defender_stops_remaining
+        self.defender_first_stop_step = defender_first_stop_step
+        self.eval_defender_first_stop_step = eval_defender_first_stop_step
+        self.eval_2_defender_first_stop_step = eval_2_defender_first_stop_step
+        self.defender_second_stop_step = defender_second_stop_step
+        self.eval_defender_second_stop_step = eval_defender_second_stop_step
+        self.eval_2_defender_second_stop_step = eval_2_defender_second_stop_step
+        self.defender_third_stop_step = defender_third_stop_step
+        self.eval_defender_third_stop_step = eval_defender_third_stop_step
+        self.eval_2_defender_third_stop_step = eval_2_defender_third_stop_step
+        self.defender_fourth_stop_step = defender_fourth_stop_step
+        self.eval_defender_fourth_stop_step = eval_defender_fourth_stop_step
+        self.eval_2_defender_fourth_stop_step = eval_2_defender_fourth_stop_step
 
     def initialize(self) -> None:
         """
@@ -481,6 +510,21 @@ class TrainAgentLogDTO:
         self.optimal_defender_reward = []
         self.eval_optimal_defender_reward = []
         self.eval_2_optimal_defender_reward = []
+        self.defender_stops_remaining = []
+        self.eval_defender_stops_remaining = []
+        self.eval_2_defender_stops_remaining = []
+        self.defender_first_stop_step = []
+        self.eval_defender_first_stop_step = []
+        self.eval_2_defender_first_stop_step = []
+        self.defender_second_stop_step = []
+        self.eval_defender_second_stop_step = []
+        self.eval_2_defender_second_stop_step = []
+        self.defender_third_stop_step = []
+        self.eval_defender_third_stop_step = []
+        self.eval_2_defender_third_stop_step = []
+        self.defender_fourth_stop_step = []
+        self.eval_defender_fourth_stop_step = []
+        self.eval_2_defender_fourth_stop_step = []
 
     def copy(self) -> "TrainAgentLogDTO":
         """        
@@ -640,6 +684,21 @@ class TrainAgentLogDTO:
         c.optimal_defender_reward = self.optimal_defender_reward
         c.eval_optimal_defender_reward = self.eval_optimal_defender_reward
         c.eval_2_optimal_defender_reward = self.eval_2_optimal_defender_reward
+        c.defender_stops_remaining = self.defender_stops_remaining
+        c.eval_defender_stops_remaining = self.eval_defender_stops_remaining
+        c.eval_2_defender_stops_remaining = self.eval_2_defender_stops_remaining
+        c.defender_first_stop_step = self.defender_first_stop_step
+        c.eval_defender_first_stop_step = self.eval_defender_first_stop_step
+        c.eval_2_defender_first_stop_step = self.eval_2_defender_first_stop_step
+        c.defender_second_stop_step = self.defender_second_stop_step
+        c.eval_defender_second_stop_step = self.eval_defender_second_stop_step
+        c.eval_2_defender_second_stop_step = self.eval_2_defender_second_stop_step
+        c.defender_third_stop_step = self.defender_third_stop_step
+        c.eval_defender_third_stop_step = self.eval_defender_third_stop_step
+        c.eval_2_defender_third_stop_step = self.eval_2_defender_third_stop_step
+        c.defender_fourth_stop_step = self.defender_fourth_stop_step
+        c.eval_defender_fourth_stop_step = self.eval_defender_fourth_stop_step
+        c.eval_2_defender_fourth_stop_step = self.eval_2_defender_fourth_stop_step
 
     def copy_saved_env_2(self, saved_log_dto : "TrainAgentLogDTO") -> None:
         """
@@ -693,6 +752,11 @@ class TrainAgentLogDTO:
         self.eval_2_episode_step_baseline_uncaught_intrusion_steps = saved_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps
         self.eval_2_uncaught_intrusion_steps = saved_log_dto.eval_2_uncaught_intrusion_steps
         self.eval_2_optimal_defender_reward = saved_log_dto.eval_2_optimal_defender_reward
+        self.eval_2_defender_stops_remaining = saved_log_dto.defender_stops_remaining
+        self.eval_2_defender_first_stop_step = saved_log_dto.eval_2_defender_first_stop_step
+        self.eval_2_defender_second_stop_step = saved_log_dto.eval_2_defender_second_stop_step
+        self.eval_2_defender_third_stop_step = saved_log_dto.eval_2_defender_third_stop_step
+        self.eval_2_defender_fourth_stop_step = saved_log_dto.eval_2_defender_fourth_stop_step
 
     def eval_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i: int) -> int:
         """

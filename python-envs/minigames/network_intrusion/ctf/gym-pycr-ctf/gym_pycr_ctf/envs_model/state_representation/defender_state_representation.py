@@ -2,6 +2,7 @@ from typing import Tuple
 import numpy as np
 import gym
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
+from gym_pycr_ctf.dao.network.env_config import EnvConfig
 
 class DefenderStateRepresentation:
     """
@@ -9,23 +10,26 @@ class DefenderStateRepresentation:
     """
 
     @staticmethod
-    def base_representation_spaces(obs_state: DefenderObservationState)-> Tuple:
+    def base_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False)-> Tuple:
         """
         Configures observation spaces for the base representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return: the observation space
         """
         num_network_features = 8
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 16
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
 
     @staticmethod
-    def base_representation(num_machines : int, obs_state :DefenderObservationState,
-                            os_lookup: dict,
-                            ids: bool = False) \
+    def base_representation(
+            num_machines : int, obs_state :DefenderObservationState, os_lookup: dict, ids: bool = False,
+            multiple_stopping : bool = False, env_config: EnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Base observation representation, includes all available information for the defender.
@@ -34,22 +38,30 @@ class DefenderStateRepresentation:
         :param obs_state: current observation state to turn into a numeratical representation
         :param os_lookup: lookup dict for converting categorical os into numerical
         :param ids: whether ids is enabled or not
+        :param multiple_stopping: whether it is a multiple stopping environment or not
+        :param env_config: the environment configuration
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
         num_m_features = 16
         num_network_features =8
+        if multiple_stopping:
+            num_network_features += 1
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_total
-            network_obs[1] = obs_state.sum_priority_alerts_total
-            network_obs[2] = obs_state.num_severe_alerts_total
-            network_obs[3] = obs_state.num_warning_alerts_total
-            network_obs[4] = obs_state.num_alerts_total
-            network_obs[5] = obs_state.sum_priority_alerts_total
-            network_obs[6] = obs_state.num_severe_alerts_total
-            network_obs[7] = obs_state.num_warning_alerts_total
+            if not multiple_stopping or multiple_stopping and \
+                    obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
+                network_obs[0] = obs_state.num_alerts_total
+                network_obs[1] = obs_state.sum_priority_alerts_total
+                network_obs[2] = obs_state.num_severe_alerts_total
+                network_obs[3] = obs_state.num_warning_alerts_total
+                network_obs[4] = obs_state.num_alerts_total
+                network_obs[5] = obs_state.sum_priority_alerts_total
+                network_obs[6] = obs_state.num_severe_alerts_total
+                network_obs[7] = obs_state.num_warning_alerts_total
+            if multiple_stopping:
+                network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
             network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
@@ -108,23 +120,26 @@ class DefenderStateRepresentation:
         return machines_obs, network_obs
 
     @staticmethod
-    def essential_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+    def essential_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False) -> Tuple:
         """
         Configures observation spaces for the essential representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return: the observation space
         """
         num_network_features = 9
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 10
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
 
     @staticmethod
-    def essential_representation(num_machines: int, obs_state: DefenderObservationState,
-                            os_lookup: dict,
-                            ids: bool = False) \
+    def essential_representation(
+            num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
+            multiple_stopping : bool = False, env_config: EnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Essential  observation representation, includes only the essential information for the defender
@@ -133,23 +148,31 @@ class DefenderStateRepresentation:
         :param obs_state: current observation state to turn into a numeratical representation
         :param os_lookup: lookup dict for converting categorical os into numerical
         :param ids: whether ids is enabled or not
+        :param multiple_stopping: whether it is a multiple stopping environment or not
+        :param env_config: the environment configuration
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
         num_m_features = 10
         num_network_features = 9
+        if multiple_stopping:
+            num_network_features += 1
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_recent
-            network_obs[1] = obs_state.sum_priority_alerts_recent
-            network_obs[2] = obs_state.num_severe_alerts_recent
-            network_obs[3] = obs_state.num_warning_alerts_recent
-            network_obs[4] = obs_state.num_alerts_total
-            network_obs[5] = obs_state.sum_priority_alerts_total
-            network_obs[6] = obs_state.num_severe_alerts_total
-            network_obs[7] = obs_state.num_warning_alerts_total
+            if not multiple_stopping or multiple_stopping and \
+                    obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
+                network_obs[0] = obs_state.num_alerts_recent
+                network_obs[1] = obs_state.sum_priority_alerts_recent
+                network_obs[2] = obs_state.num_severe_alerts_recent
+                network_obs[3] = obs_state.num_warning_alerts_recent
+                network_obs[4] = obs_state.num_alerts_total
+                network_obs[5] = obs_state.sum_priority_alerts_total
+                network_obs[6] = obs_state.num_severe_alerts_total
+                network_obs[7] = obs_state.num_warning_alerts_total
             network_obs[8] = obs_state.step
+            if multiple_stopping:
+                network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
             network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
@@ -189,23 +212,26 @@ class DefenderStateRepresentation:
         return machines_obs, network_obs
 
     @staticmethod
-    def compact_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+    def compact_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False) -> Tuple:
         """
         Configures observation spaces for the compact representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return: the observation space
         """
         num_network_features = 4
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 4
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
 
     @staticmethod
-    def compact_representation(num_machines: int, obs_state: DefenderObservationState,
-                                 os_lookup: dict,
-                                 ids: bool = False) \
+    def compact_representation(
+            num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
+            multiple_stopping : bool = False, env_config: EnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Compact representation for the defender, includes a small compact set of features.
@@ -214,18 +240,26 @@ class DefenderStateRepresentation:
         :param obs_state: current observation state to turn into a numeratical representation
         :param os_lookup: lookup dict for converting categorical os into numerical
         :param ids: whether ids is enabled or not
+        :param multiple_stopping: whether it is a multiple stopping environment or not
+        :param env_config: the environment configuration
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
         num_m_features = 4
         num_network_features = 4
+        if multiple_stopping:
+            num_network_features += 1
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_recent
-            network_obs[1] = obs_state.sum_priority_alerts_recent
-            network_obs[2] = obs_state.num_severe_alerts_recent
-            network_obs[3] = obs_state.num_warning_alerts_recent
+            if not multiple_stopping or multiple_stopping and \
+                    obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
+                network_obs[0] = obs_state.num_alerts_recent
+                network_obs[1] = obs_state.sum_priority_alerts_recent
+                network_obs[2] = obs_state.num_severe_alerts_recent
+                network_obs[3] = obs_state.num_warning_alerts_recent
+            if multiple_stopping:
+                network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
             network_obs = np.zeros(num_network_features)
         for i in range(num_machines):
@@ -246,23 +280,26 @@ class DefenderStateRepresentation:
         return machines_obs, network_obs
 
     @staticmethod
-    def simple_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+    def simple_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False) -> Tuple:
         """
         Configures observation spaces for the simple representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return the observation space
         """
         num_network_features = 4
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 0
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
 
     @staticmethod
-    def simple_representation(num_machines: int, obs_state: DefenderObservationState,
-                               os_lookup: dict,
-                               ids: bool = False) \
+    def simple_representation(
+            num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
+            multiple_stopping : bool = False, env_config: EnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Simple representation for the defender, includes a small set of features.
@@ -271,42 +308,53 @@ class DefenderStateRepresentation:
         :param obs_state: current observation state to turn into a numeratical representation
         :param os_lookup: lookup dict for converting categorical os into numerical
         :param ids: whether ids is enabled or not
+        :param multiple_stopping: whether it is a multiple stopping environment or not
+        :param env_config: the environment configuration
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
         num_m_features = 0
         num_network_features = 4
+        if multiple_stopping:
+            num_network_features += 1
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_severe_alerts_total
-            network_obs[1] = obs_state.num_warning_alerts_total
-            num_login_attempts = sum(list(map(lambda x: x.num_failed_login_attempts, obs_state.machines)))
-            network_obs[2] = num_login_attempts
+            if not multiple_stopping or multiple_stopping and \
+                    obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
+                network_obs[0] = obs_state.num_severe_alerts_total
+                network_obs[1] = obs_state.num_warning_alerts_total
+                num_login_attempts = sum(list(map(lambda x: x.num_failed_login_attempts, obs_state.machines)))
+                network_obs[2] = num_login_attempts
             network_obs[3] = obs_state.step
+            if multiple_stopping:
+                network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
             network_obs = np.zeros(num_network_features)
 
         return machines_obs, network_obs
 
     @staticmethod
-    def core_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+    def core_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False) -> Tuple:
         """
         Configures observation spaces for the core representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return the observation space
         """
         num_network_features = 9
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 0
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))
         return observation_space
 
     @staticmethod
-    def core_representation(num_machines: int, obs_state: DefenderObservationState,
-                              os_lookup: dict,
-                              ids: bool = False) \
+    def core_representation(
+            num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
+            multiple_stopping : bool = False, env_config: EnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Core representation for the defender, includes only IDS features
@@ -315,38 +363,49 @@ class DefenderStateRepresentation:
         :param obs_state: current observation state to turn into a numeratical representation
         :param os_lookup: lookup dict for converting categorical os into numerical
         :param ids: whether ids is enabled or not
+        :param multiple_stopping: whether it is a multiple stopping environment or not
+        :param env_config: the environment configuration
         :return: machine observations and network observations
         """
         obs_state.sort_machines()
         num_m_features = 0
         num_network_features = 9
+        if multiple_stopping:
+            num_network_features += 1
         machines_obs = np.zeros((num_machines, num_m_features))
         if ids:
             network_obs = np.zeros(num_network_features)
-            network_obs[0] = obs_state.num_alerts_recent
-            network_obs[1] = obs_state.sum_priority_alerts_recent
-            network_obs[2] = obs_state.num_severe_alerts_recent
-            network_obs[3] = obs_state.num_warning_alerts_recent
-            network_obs[4] = obs_state.num_alerts_total
-            network_obs[5] = obs_state.sum_priority_alerts_total
-            network_obs[6] = obs_state.num_severe_alerts_total
-            network_obs[7] = obs_state.num_warning_alerts_total
+            if not multiple_stopping or multiple_stopping and \
+                    obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
+                network_obs[0] = obs_state.num_alerts_recent
+                network_obs[1] = obs_state.sum_priority_alerts_recent
+                network_obs[2] = obs_state.num_severe_alerts_recent
+                network_obs[3] = obs_state.num_warning_alerts_recent
+                network_obs[4] = obs_state.num_alerts_total
+                network_obs[5] = obs_state.sum_priority_alerts_total
+                network_obs[6] = obs_state.num_severe_alerts_total
+                network_obs[7] = obs_state.num_warning_alerts_total
             network_obs[8] = obs_state.step
+            if multiple_stopping:
+                network_obs[num_network_features-1] = obs_state.stops_remaining
         else:
             network_obs = np.zeros(num_network_features)
 
         return machines_obs, network_obs
 
     @staticmethod
-    def test_representation_spaces(obs_state: DefenderObservationState) -> Tuple:
+    def test_representation_spaces(obs_state: DefenderObservationState, multiple_stopping : bool = False) -> Tuple:
         """
         Configures observation spaces for the test representation
 
         :param obs_state: the observation state
+        :param multiple_stopping: whether it is a multiple stopping environment or not
         :return the observation space
         """
         # num_network_features = 9
         num_network_features = 2
+        if multiple_stopping:
+            num_network_features += 1
         num_m_features = 0
         observation_space = gym.spaces.Box(low=0, high=1000, dtype=np.float32, shape=(
             obs_state.num_machines * num_m_features + num_network_features,))

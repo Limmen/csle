@@ -47,7 +47,12 @@ class RolloutDataDTO:
                  attacker_action_alerts_norm=None,
                  episode_intrusion_steps = None,
                  uncaught_intrusion_steps=None,
-                 optimal_defender_reward=None
+                 optimal_defender_reward=None,
+                 defender_stops_remaining = None,
+                 defender_first_stop_step=None,
+                 defender_second_stop_step=None,
+                 defender_third_stop_step=None,
+                 defender_fourth_stop_step=None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -96,6 +101,11 @@ class RolloutDataDTO:
         self.episode_intrusion_steps = episode_intrusion_steps
         self.uncaught_intrusion_steps = uncaught_intrusion_steps
         self.optimal_defender_reward = optimal_defender_reward
+        self.defender_stops_remaining = defender_stops_remaining
+        self.defender_first_stop_step = defender_first_stop_step
+        self.defender_second_stop_step = defender_second_stop_step
+        self.defender_third_stop_step = defender_third_stop_step
+        self.defender_fourth_stop_step = defender_fourth_stop_step
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -146,6 +156,11 @@ class RolloutDataDTO:
         self.episode_intrusion_steps = []
         self.uncaught_intrusion_steps = []
         self.optimal_defender_reward = []
+        self.defender_stops_remaining = []
+        self.defender_first_stop_step = []
+        self.defender_second_stop_step = []
+        self.defender_third_stop_step = []
+        self.defender_fourth_stop_step = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 

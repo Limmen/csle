@@ -186,6 +186,8 @@ class StoppingBaselinesUtil:
         :return: the optimal reward in the simulation of the defender
         """
         optimal_defender_reward = 0
+        old_caught_attacker = s.defender_obs_state.caught_attacker
+        s.defender_obs_state.caught_attacker = False
         if env_config.snort_baseline_simulate and \
                 attacker_opponent is not None and \
                 (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
@@ -199,6 +201,7 @@ class StoppingBaselinesUtil:
             optimal_defender_reward = \
                 env_config.defender_service_reward * s.attacker_obs_state.intrusion_step \
                 + env_config.defender_caught_attacker_reward
+        s.defender_obs_state.caught_attacker = old_caught_attacker
         return optimal_defender_reward
 
 
@@ -245,8 +248,8 @@ class StoppingBaselinesUtil:
             if env_config.defender_update_state and not done:
                 # Update defender's state
                 s_prime, _, _ = TransitionOperator.defender_transition(
-                    s=s, defender_action=env_config.defender_action_conf.state_update_action,
-                    env_config=env_config, attacker_action=s.attacker_obs_state.last_attacker_action)
+                    s=s_prime, defender_action=env_config.defender_action_conf.state_update_action,
+                    env_config=env_config, attacker_action=s_prime.attacker_obs_state.last_attacker_action)
 
             # Extract observations
             defender_m_obs, defender_network_obs = s_prime.get_defender_observation()

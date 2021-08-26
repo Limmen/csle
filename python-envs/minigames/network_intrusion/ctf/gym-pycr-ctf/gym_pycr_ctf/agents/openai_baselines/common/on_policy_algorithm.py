@@ -305,6 +305,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.episode_intrusion_steps.append(infos[i][constants.INFO_DICT.INTRUSION_STEP])
                         rollout_data_dto.uncaught_intrusion_steps.append(infos[i][constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
                         rollout_data_dto.optimal_defender_reward.append(infos[i][constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
+                        rollout_data_dto.defender_stops_remaining.append(infos[i][constants.INFO_DICT.DEFENDER_STOPS_REMAINING])
+                        rollout_data_dto.defender_first_stop_step.append(infos[i][constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP])
+                        rollout_data_dto.defender_second_stop_step.append(infos[i][constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
+                        rollout_data_dto.defender_third_stop_step.append(infos[i][constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
+                        rollout_data_dto.defender_fourth_stop_step.append(infos[i][constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
                         if self.attacker_agent_config.env_config is not None:
                             rollout_data_dto.episode_flags_percentage.append(
                                 infos[i][constants.INFO_DICT.FLAGS] / self.attacker_agent_config.env_config.num_flags
@@ -453,6 +458,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             train_log_dto.episode_step_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps)
             train_log_dto.uncaught_intrusion_steps.extend(rollout_data_dto.uncaught_intrusion_steps)
             train_log_dto.optimal_defender_reward.extend(rollout_data_dto.optimal_defender_reward)
+            train_log_dto.defender_stops_remaining.extend(rollout_data_dto.defender_stops_remaining)
+            train_log_dto.defender_first_stop_step.extend(rollout_data_dto.defender_first_stop_step)
+            train_log_dto.defender_second_stop_step.extend(rollout_data_dto.defender_second_stop_step)
+            train_log_dto.defender_third_stop_step.extend(rollout_data_dto.defender_third_stop_step)
+            train_log_dto.defender_fourth_stop_step.extend(rollout_data_dto.defender_fourth_stop_step)
 
             for key in rollout_data_dto.attacker_env_specific_rewards.keys():
                 if key in train_log_dto.attacker_train_episode_env_specific_rewards:

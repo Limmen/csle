@@ -10,7 +10,7 @@ class DefenderObservationState:
     Represents the defender's agent's current belief state of the environment
     """
 
-    def __init__(self, num_machines : int, ids = False):
+    def __init__(self, num_machines : int, ids = False, maximum_number_of_stops : int = 1):
         """
         Initializes the DTO
 
@@ -34,6 +34,13 @@ class DefenderObservationState:
         self.adj_matrix = np.array(0)
         self.last_alert_ts = None
         self.step = 1
+        self.stops_remaining = maximum_number_of_stops
+        self.maximum_number_of_stops =maximum_number_of_stops
+        self.first_stop_step = -1
+        self.second_stop_step = -1
+        self.third_stop_step = -1
+        self.fourth_stop_step = -1
+
         self.snort_warning_baseline_reward = 0
         self.snort_severe_baseline_reward = 0
         self.snort_critical_baseline_reward = 0
@@ -106,7 +113,8 @@ class DefenderObservationState:
         """
         :return: a copy of the object
         """
-        c = DefenderObservationState(num_machines = self.num_machines, ids=self.ids)
+        c = DefenderObservationState(num_machines = self.num_machines, ids=self.ids,
+                                     maximum_number_of_stops=self.maximum_number_of_stops)
         c.caught_attacker = self.caught_attacker
         c.stopped = self.stopped
         c.defense_actions_tried = self.defense_actions_tried.copy()
@@ -119,23 +127,48 @@ class DefenderObservationState:
         c.num_warning_alerts_total = self.num_warning_alerts_total
         c.sum_priority_alerts_total = self.sum_priority_alerts_total
         c.adj_matrix = self.adj_matrix
+
         c.snort_warning_baseline_reward = self.snort_warning_baseline_reward
         c.snort_severe_baseline_reward = self.snort_severe_baseline_reward
-        c.snort_warning_baseline_stopped = self.snort_warning_baseline_stopped
-        c.snort_warning_baseline_step = self.snort_warning_baseline_step
-        c.snort_severe_baseline_stopped = self.snort_severe_baseline_stopped
-        c.snort_severe_baseline_step = self.snort_severe_baseline_step
         c.snort_critical_baseline_reward = self.snort_critical_baseline_reward
-        c.snort_critical_baseline_stopped = self.snort_critical_baseline_stopped
-        c.snort_critical_baseline_step = self.snort_critical_baseline_step
         c.var_log_baseline_reward = self.var_log_baseline_reward
-        c.var_log_baseline_stopped = self.var_log_baseline_stopped
-        c.var_log_baseline_step = self.var_log_baseline_step
-
-        c.step_baseline_stopped = self.step_baseline_stopped
         c.step_baseline_reward = self.step_baseline_reward
+
+        c.snort_warning_baseline_stopped = self.snort_warning_baseline_stopped
+        c.snort_severe_baseline_stopped = self.snort_severe_baseline_stopped
+        c.snort_critical_baseline_stopped = self.snort_critical_baseline_stopped
+        c.var_log_baseline_stopped = self.var_log_baseline_stopped
+        c.step_baseline_stopped = self.step_baseline_stopped
+
+        c.snort_warning_baseline_step = self.snort_warning_baseline_step
+        c.snort_severe_baseline_step = self.snort_severe_baseline_step
+        c.snort_critical_baseline_step = self.snort_critical_baseline_step
+        c.var_log_baseline_step = self.var_log_baseline_step
         c.step_baseline_step = self.step_baseline_step
+
+        c.snort_warning_baseline_caught_attacker = self.snort_warning_baseline_caught_attacker
+        c.snort_severe_baseline_caught_attacker = self.snort_severe_baseline_caught_attacker
+        c.snort_critical_baseline_caught_attacker = self.snort_critical_baseline_caught_attacker
+        c.var_log_baseline_caught_attacker = self.var_log_baseline_caught_attacker
+        c.step_baseline_caught_attacker = self.step_baseline_caught_attacker
+
+        c.snort_warning_baseline_early_stopping = self.snort_warning_baseline_early_stopping
+        c.snort_severe_baseline_early_stopping = self.snort_severe_baseline_early_stopping
+        c.snort_critical_baseline_early_stopping = self.snort_critical_baseline_early_stopping
+        c.var_log_baseline_early_stopping = self.var_log_baseline_early_stopping
+        c.step_baseline_caught_early_stopping = self.step_baseline_early_stopping
+
+        c.snort_warning_baseline_uncaught_intrusion_steps = self.snort_warning_baseline_uncaught_intrusion_steps
+        c.snort_severe_baseline_uncaught_intrusion_steps = self.snort_severe_baseline_uncaught_intrusion_steps
+        c.snort_critical_baseline_uncaught_intrusion_steps = self.snort_critical_baseline_uncaught_intrusion_steps
+        c.var_log_baseline_uncaught_intrusion_steps = self.var_log_baseline_uncaught_intrusion_steps
+        c.step_baseline_caught_uncaught_intrusion_steps = self.step_baseline_uncaught_intrusion_steps
+
         c.last_alert_ts = self.last_alert_ts
+        c.first_stop_step = self.first_stop_step
+        c.second_stop_step = self.second_stop_step
+        c.third_stop_step = self.third_stop_step
+        c.fourth_stop_step = self.fourth_stop_step
         for m in self.machines:
             c.machines.append(m.copy())
         return c
@@ -148,7 +181,6 @@ class DefenderObservationState:
         :return: the updated dict
         """
         info[constants.INFO_DICT.CAUGHT_ATTACKER] = self.caught_attacker
-        info[constants.INFO_DICT.EARLY_STOPPED] = self.stopped
         info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD] = self.snort_severe_baseline_reward
         info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD] = self.snort_warning_baseline_reward
         info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD] = self.snort_critical_baseline_reward
@@ -174,6 +206,11 @@ class DefenderObservationState:
         info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.snort_critical_baseline_uncaught_intrusion_steps
         info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.var_log_baseline_uncaught_intrusion_steps
         info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS] = self.step_baseline_uncaught_intrusion_steps
+        info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING] = self.stops_remaining
+        info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP] = self.first_stop_step
+        info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP] = self.second_stop_step
+        info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP] = self.third_stop_step
+        info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP] = self.fourth_stop_step
         return info
 
     def __str__(self) -> str:
@@ -188,7 +225,9 @@ class DefenderObservationState:
                 "snort_critical_baseline_reward:{}, snort_critical_baseline_stopped:{}," \
                 "var_log_baseline_reward:{}, var_log_baseline_stopped:{}, last_alert_ts:{}," \
                 "snort_severe_baseline_step:{}, snort_warning_baseline_step:{}, snort_critical_baseline_step:{}," \
-                "var_log_baseline_step:{}, step_baseline_reward:{}, step_baseline_step:{}, step_baseline_stopped:{}".format(
+                "var_log_baseline_step:{}, step_baseline_reward:{}, step_baseline_step:{}, step_baseline_stopped:{}," \
+                "number_of_stops_remaining:{}, first_stop_step:{}, second_stop_step:{}," \
+                "third_stop_step:{}, fourth_stop_step:{}, maximum_number_of:stops:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
@@ -198,5 +237,6 @@ class DefenderObservationState:
             self.snort_critical_baseline_stopped, self.var_log_baseline_reward, self.var_log_baseline_stopped,
             self.last_alert_ts, self.snort_severe_baseline_step, self.snort_warning_baseline_step,
             self.snort_critical_baseline_step, self.var_log_baseline_step, self.step_baseline_reward,
-            self.step_baseline_step, self.step_baseline_stopped) + "\n" + "\n".join([str(i) + ":"
-                                                    + str(self.machines[i]) for i in range(len(self.machines))])
+            self.step_baseline_step, self.step_baseline_stopped, self.stops_remaining, self.first_stop_step,
+            self.second_stop_step, self.third_stop_step, self.fourth_stop_step, self.maximum_number_of_stops) \
+                + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

@@ -42,7 +42,7 @@ def manual_control():
     #                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     emulation_config.save_dynamics_model_dir = model_path_dir
 
-    env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
+    env = gym.make("pycr-ctf-level-9-generated-sim-v6", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     env.env_config.attacker_use_nmap_cache = True
     env.env_config.attacker_use_nikto_cache = True
@@ -71,6 +71,7 @@ def manual_control():
     #     # CVE-2010-0426 (25), Continue, TCP/UDP Scan
     #     strategy=[99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99],
     #     random_start=True, start_p=0.2, continue_action=372)
+    # env.env_config.attacker_prevented_stops_remaining = 2
 
     # Experienced Attacker
     attacker_opponent = CustomAttackerBotAgent(
@@ -82,6 +83,7 @@ def manual_control():
         strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104, 106, 100,
                   266, 104, 106],
         random_start=True, start_p=0.2, continue_action=372)
+    env.env_config.attacker_prevented_stops_remaining = 1
 
     # Expert attacker
     # attacker_opponent = CustomAttackerBotAgent(
@@ -92,6 +94,7 @@ def manual_control():
     #     # SambaCry Exploit(5) with backdoor, Login
     #     strategy=[100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104],
     #     random_start=True, start_p=0.2, continue_action=372)
+    # env.env_config.attacker_prevented_stops_remaining = 0
 
     env.env_config.attacker_static_opponent = attacker_opponent
 
