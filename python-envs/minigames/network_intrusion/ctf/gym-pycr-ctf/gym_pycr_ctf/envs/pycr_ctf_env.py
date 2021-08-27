@@ -182,6 +182,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         done = False
         info = None
 
+        defender_info = PyCRCTFEnv.initialize_info_dict()
+
         # First step defender
         if defense_action_id is not None:
             if (self.env_config.env_mode == EnvMode.EMULATION
@@ -194,7 +196,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                                    attacker_opponent=self.env_config.attacker_static_opponent)
             attacker_reward = attacker_reward
         else:
-            defender_info = PyCRCTFEnv.initialize_info_dict()
+            print("defender action is none")
 
         defender_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = False
         defender_info[constants.INFO_DICT.ATTACKER_COST] = self.env_state.attacker_obs_state.cost
@@ -260,7 +262,7 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state.step += 1
             if self.env_state.attacker_obs_state.intrusion_step == -1:
                 self.env_state.attacker_obs_state.intrusion_step = self.env_state.defender_obs_state.step
-        info["intrusion_step"] = self.env_state.attacker_obs_state.intrusion_step
+        info[constants.INFO_DICT.INTRUSION_STEP] = self.env_state.attacker_obs_state.intrusion_step
 
         # Update trajectories
         if self.env_config.save_trajectories:
@@ -343,8 +345,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         self.env_state = s_prime
         if self.env_state.attacker_obs_state.detected:
             info[constants.INFO_DICT.CAUGHT_ATTACKER] = True
-            # if defender_action is None:
-            #     self.attacker_agent_state.num_detections += 1
         info[constants.INFO_DICT.FLAGS] = self.env_state.attacker_obs_state.catched_flags
         if self.env_config.save_trajectories:
             self.attacker_trajectories.append(self.attacker_trajectory)

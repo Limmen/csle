@@ -85,10 +85,11 @@ class DefenderTrainAgentLogDTOAvg:
         self.avg_episode_uncaught_intrusion_steps = DefenderTrainAgentLogDTOAvg.compute_avg_uncaught_intrusion_steps(
             self.train_log_dto.uncaught_intrusion_steps)
         self.avg_episode_defender_stops_remaining = np.mean(self.train_log_dto.defender_stops_remaining)
-        self.avg_episode_defender_first_stop_step = np.mean(self.train_log_dto.avg_episode_defender_first_stop_step)
-        self.avg_episode_defender_second_stop_step = np.mean(self.train_log_dto.avg_episode_defender_second_stop_step)
-        self.avg_episode_defender_third_stop_step = np.mean(self.train_log_dto.avg_episode_defender_third_stop_step)
-        self.avg_episode_defender_fourth_stop_step = np.mean(self.train_log_dto.avg_episode_defender_fourth_stop_step)
+        self.avg_episode_defender_first_stop_step = np.mean(self.train_log_dto.defender_first_stop_step)
+        self.avg_episode_defender_second_stop_step = np.mean(self.train_log_dto.defender_second_stop_step)
+        self.avg_episode_defender_third_stop_step = np.mean(self.train_log_dto.defender_third_stop_step)
+        self.avg_episode_defender_fourth_stop_step = np.mean(self.train_log_dto.defender_fourth_stop_step)
+        self.avg_episode_optimal_defender_reward = np.mean(self.train_log_dto.optimal_defender_reward)
 
         if self.train_log_dto.episode_caught is not None and self.train_log_dto.episode_early_stopped is not None \
                 and self.train_log_dto.episode_successful_intrusion is not None:
@@ -631,27 +632,27 @@ class DefenderTrainAgentLogDTOAvg:
         else:
             self.eval_avg_episode_defender_stops_remaining = 0.0
 
-        if not eval and self.train_log_dto.eval_avg_episode_defender_first_stop_step is not None:
+        if not eval and self.train_log_dto.eval_defender_first_stop_step is not None:
             self.eval_avg_episode_defender_first_stop_step = np.mean(
-                self.train_log_dto.avg_episode_defender_first_stop_step)
+                self.train_log_dto.eval_defender_first_stop_step)
         else:
             self.eval_avg_episode_defender_first_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_avg_episode_defender_second_stop_step is not None:
+        if not eval and self.train_log_dto.eval_defender_second_stop_step is not None:
             self.eval_avg_episode_defender_second_stop_step = np.mean(
-                self.train_log_dto.eval_avg_episode_defender_second_stop_step)
+                self.train_log_dto.eval_defender_second_stop_step)
         else:
             self.eval_avg_episode_defender_second_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_avg_episode_defender_third_stop_step is not None:
+        if not eval and self.train_log_dto.eval_defender_third_stop_step is not None:
             self.eval_avg_episode_defender_third_stop_step = np.mean(
-                self.train_log_dto.eval_avg_episode_defender_third_stop_step)
+                self.train_log_dto.eval_defender_third_stop_step)
         else:
             self.eval_avg_episode_defender_third_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_avg_episode_defender_fourth_stop_step is not None:
+        if not eval and self.train_log_dto.eval_defender_fourth_stop_step is not None:
             self.eval_avg_episode_defender_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_avg_episode_defender_fourth_stop_step)
+                self.train_log_dto.eval_defender_fourth_stop_step)
         else:
             self.eval_avg_episode_defender_fourth_stop_step = 0.0
 
@@ -660,26 +661,27 @@ class DefenderTrainAgentLogDTOAvg:
         else:
             self.eval_2_avg_episode_defender_stops_remaining = 0.0
 
-        if not eval and self.train_log_dto.eval_2_avg_episode_defender_first_stop_step is not None:
-            self.eval_2_avg_episode_defender_first_stop_step = np.mean(self.train_log_dto.eval_2_avg_episode_defender_first_stop_step)
+        if not eval and self.train_log_dto.eval_2_defender_first_stop_step is not None:
+            self.eval_2_avg_episode_defender_first_stop_step = \
+                np.mean(self.train_log_dto.eval_2_defender_first_stop_step)
         else:
             self.eval_2_avg_episode_defender_first_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_2_avg_episode_defender_second_stop_step is not None:
+        if not eval and self.train_log_dto.eval_2_defender_second_stop_step is not None:
             self.eval_2_avg_episode_defender_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_avg_episode_defender_second_stop_step)
+                self.train_log_dto.eval_2_defender_second_stop_step)
         else:
             self.eval_2_avg_episode_defender_second_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_2_avg_episode_defender_third_stop_step is not None:
+        if not eval and self.train_log_dto.eval_2_defender_third_stop_step is not None:
             self.eval_2_avg_episode_defender_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_avg_episode_defender_third_stop_step)
+                self.train_log_dto.eval_2_defender_third_stop_step)
         else:
             self.eval_2_avg_episode_defender_third_stop_step = 0.0
 
-        if not eval and self.train_log_dto.eval_2_avg_episode_defender_fourth_stop_step is not None:
+        if not eval and self.train_log_dto.eval_2_defender_fourth_stop_step is not None:
             self.eval_2_avg_episode_defender_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_avg_episode_defender_fourth_stop_step)
+                self.train_log_dto.eval_2_defender_fourth_stop_step)
         else:
             self.eval_2_avg_episode_defender_fourth_stop_step = 0.0
 
@@ -689,39 +691,44 @@ class DefenderTrainAgentLogDTOAvg:
 
             # Regret
             if self.env.env_config is not None:
-                self.avg_regret = DefenderTrainAgentLogDTOAvg.compute_regret(opt_r=self.env.envs[0].env_config.pi_star_rew_defender,
-                                                    r=self.avg_episode_rewards)
+                self.avg_regret = DefenderTrainAgentLogDTOAvg.compute_regret(
+                    opt_r=self.env.envs[0].env_config.pi_star_rew_defender, r=self.avg_episode_rewards)
             else:
                 self.avg_regret = 0.0
 
             if self.train_log_dto.defender_eval_episode_rewards is not None \
                     and self.train_log_dto.defender_eval_env_specific_rewards != {}:
-                self.avg_eval_regret = DefenderTrainAgentLogDTOAvg.compute_regret(opt_r=self.env.envs[0].env_config.pi_star_rew_defender,
-                                                         r=self.eval_avg_episode_rewards)
+                self.avg_eval_regret = DefenderTrainAgentLogDTOAvg.compute_regret(
+                    opt_r=self.env.envs[0].env_config.pi_star_rew_defender,
+                    r=self.eval_avg_episode_rewards)
             else:
                 self.avg_eval_regret = 0.0
 
             if self.train_log_dto.defender_eval_2_episode_rewards is not None \
                     and self.train_log_dto.defender_eval_2_env_specific_rewards != {}:
-                self.avg_eval_2_regret = DefenderTrainAgentLogDTOAvg.compute_regret(opt_r=self.env.envs[0].env_config.pi_star_rew_defender,
-                                                           r=self.eval_2_avg_episode_rewards)
+                self.avg_eval_2_regret = DefenderTrainAgentLogDTOAvg.compute_regret(
+                    opt_r=self.env.envs[0].env_config.pi_star_rew_defender,
+                    r=self.eval_2_avg_episode_rewards)
             else:
                 self.avg_eval_2_regret = 0.0
 
             # Opt frac
             if self.env.env_config is not None:
-                self.avg_opt_frac = DefenderTrainAgentLogDTOAvg.compute_opt_frac(r=self.avg_episode_rewards,
-                                                        opt_r=self.env.envs[0].env_config.pi_star_rew_defender)
+                self.avg_opt_frac = DefenderTrainAgentLogDTOAvg.compute_opt_frac(
+                    r=self.avg_episode_rewards,
+                    opt_r=self.env.envs[0].env_config.pi_star_rew_defender)
             else:
                 avg_opt_frac = 0.0
 
             if self.train_log_dto.defender_eval_episode_rewards is not None:
-                self.eval_avg_opt_frac = self.eval_avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew_defender
+                self.eval_avg_opt_frac = self.eval_avg_episode_rewards / \
+                                         self.env.envs[0].env_config.pi_star_rew_defender
             else:
                 self.eval_avg_opt_frac = 0.0
 
             if self.train_log_dto.defender_eval_2_episode_rewards is not None:
-                self.eval_2_avg_opt_frac = self.eval_2_avg_episode_rewards / self.env.envs[0].env_config.pi_star_rew_defender
+                self.eval_2_avg_opt_frac = self.eval_2_avg_episode_rewards / \
+                                           self.env.envs[0].env_config.pi_star_rew_defender
             else:
                 self.eval_2_avg_opt_frac = 0.0
 
@@ -848,18 +855,18 @@ class DefenderTrainAgentLogDTOAvg:
         self.result.avg_defender_stops_remaining.append(self.avg_episode_defender_stops_remaining)
         self.result.eval_avg_defender_stops_remaining.append(self.eval_avg_episode_defender_stops_remaining)
         self.result.eval_2_avg_defender_stops_remaining.append(self.eval_2_avg_episode_defender_stops_remaining)
-        self.result.avg_defender_first_stop_step.append(self.avg_defender_first_stop_step)
-        self.result.eval_avg_defender_first_stop_step.append(self.eval_avg_defender_first_stop_step)
-        self.result.eval_2_avg_defender_first_stop_step.append(self.eval_2_avg_defender_first_stop_step)
-        self.result.avg_defender_second_stop_step.append(self.avg_defender_second_stop_step)
-        self.result.eval_avg_defender_second_stop_step.append(self.eval_avg_defender_second_stop_step)
-        self.result.eval_2_avg_defender_second_stop_step.append(self.eval_2_avg_defender_second_stop_step)
-        self.result.avg_defender_third_stop_step.append(self.avg_defender_third_stop_step)
-        self.result.eval_avg_defender_third_stop_step.append(self.eval_avg_defender_third_stop_step)
-        self.result.eval_2_avg_defender_third_stop_step.append(self.eval_2_avg_defender_third_stop_step)
-        self.result.avg_defender_fourth_stop_step.append(self.avg_defender_fourth_stop_step)
-        self.result.eval_avg_defender_fourth_stop_step.append(self.eval_avg_defender_fourth_stop_step)
-        self.result.eval_2_avg_defender_fourth_stop_step.append(self.eval_2_avg_defender_fourth_stop_step)
+        self.result.avg_defender_first_stop_step.append(self.avg_episode_defender_first_stop_step)
+        self.result.eval_avg_defender_first_stop_step.append(self.eval_avg_episode_defender_first_stop_step)
+        self.result.eval_2_avg_defender_first_stop_step.append(self.eval_2_avg_episode_defender_first_stop_step)
+        self.result.avg_defender_second_stop_step.append(self.avg_episode_defender_second_stop_step)
+        self.result.eval_avg_defender_second_stop_step.append(self.eval_avg_episode_defender_second_stop_step)
+        self.result.eval_2_avg_defender_second_stop_step.append(self.eval_2_avg_episode_defender_second_stop_step)
+        self.result.avg_defender_third_stop_step.append(self.avg_episode_defender_third_stop_step)
+        self.result.eval_avg_defender_third_stop_step.append(self.eval_avg_episode_defender_third_stop_step)
+        self.result.eval_2_avg_defender_third_stop_step.append(self.eval_2_avg_episode_defender_third_stop_step)
+        self.result.avg_defender_fourth_stop_step.append(self.avg_episode_defender_fourth_stop_step)
+        self.result.eval_avg_defender_fourth_stop_step.append(self.eval_avg_episode_defender_fourth_stop_step)
+        self.result.eval_2_avg_defender_fourth_stop_step.append(self.eval_2_avg_episode_defender_fourth_stop_step)
 
         if self.train_log_dto.defender_train_episode_env_specific_rewards is not None:
             for key in self.train_log_dto.defender_train_episode_env_specific_rewards.keys():
@@ -1139,17 +1146,17 @@ class DefenderTrainAgentLogDTOAvg:
             avg_defender_stops_remaining=avg_log_dto.avg_episode_defender_stops_remaining,
             eval_avg_defender_stops_remaining=avg_log_dto.eval_avg_episode_defender_stops_remaining,
             eval_2_avg_defender_stops_remaining=avg_log_dto.eval_2_avg_episode_defender_stops_remaining,
-            avg_defender_first_stop_step=avg_log_dto.avg_defender_first_stop_step,
-            avg_defender_second_stop_step=avg_log_dto.avg_defender_second_stop_step,
-            avg_defender_third_stop_step=avg_log_dto.avg_defender_third_stop_step,
-            avg_defender_fourth_stop_step=avg_log_dto.avg_defender_fourth_stop_step,
-            eval_avg_defender_first_stop_step=avg_log_dto.eval_avg_defender_first_stop_step,
-            eval_avg_defender_second_stop_step=avg_log_dto.eval_avg_defender_second_stop_step,
-            eval_avg_defender_third_stop_step=avg_log_dto.eval_avg_defender_third_stop_step,
-            eval_avg_defender_fourth_stop_step=avg_log_dto.eval_avg_defender_fourth_stop_step,
-            eval_2_avg_defender_first_stop_step=avg_log_dto.eval_2_avg_defender_first_stop_step,
-            eval_2_avg_defender_second_stop_step=avg_log_dto.eval_2_avg_defender_second_stop_step,
-            eval_2_avg_defender_third_stop_step=avg_log_dto.eval_2_avg_defender_third_stop_step,
-            eval_2_avg_defender_fourth_stop_step=avg_log_dto.eval_2_avg_defender_fourth_stop_step
+            avg_defender_first_stop_step=avg_log_dto.avg_episode_defender_first_stop_step,
+            avg_defender_second_stop_step=avg_log_dto.avg_episode_defender_second_stop_step,
+            avg_defender_third_stop_step=avg_log_dto.avg_episode_defender_third_stop_step,
+            avg_defender_fourth_stop_step=avg_log_dto.avg_episode_defender_fourth_stop_step,
+            eval_avg_defender_first_stop_step=avg_log_dto.eval_avg_episode_defender_first_stop_step,
+            eval_avg_defender_second_stop_step=avg_log_dto.eval_avg_episode_defender_second_stop_step,
+            eval_avg_defender_third_stop_step=avg_log_dto.eval_avg_episode_defender_third_stop_step,
+            eval_avg_defender_fourth_stop_step=avg_log_dto.eval_avg_episode_defender_fourth_stop_step,
+            eval_2_avg_defender_first_stop_step=avg_log_dto.eval_2_avg_episode_defender_first_stop_step,
+            eval_2_avg_defender_second_stop_step=avg_log_dto.eval_2_avg_episode_defender_second_stop_step,
+            eval_2_avg_defender_third_stop_step=avg_log_dto.eval_2_avg_episode_defender_third_stop_step,
+            eval_2_avg_defender_fourth_stop_step=avg_log_dto.eval_2_avg_episode_defender_fourth_stop_step
         )
         return tensorboard_data_dto

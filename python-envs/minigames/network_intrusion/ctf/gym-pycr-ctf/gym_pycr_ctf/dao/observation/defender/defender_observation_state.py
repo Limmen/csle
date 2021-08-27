@@ -181,6 +181,7 @@ class DefenderObservationState:
         :return: the updated dict
         """
         info[constants.INFO_DICT.CAUGHT_ATTACKER] = self.caught_attacker
+        info[constants.INFO_DICT.EARLY_STOPPED] = self.stopped
         info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD] = self.snort_severe_baseline_reward
         info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD] = self.snort_warning_baseline_reward
         info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD] = self.snort_critical_baseline_reward

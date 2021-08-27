@@ -21,7 +21,7 @@ def initialize_models(self) -> None:
     return model
 
 def manual_control():
-    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                server_username="kim")
@@ -29,17 +29,19 @@ def manual_control():
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-    #                                  server_connection=False, port_forward_next_port=9600)
-    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-                                            agent_username="agent", agent_pw="agent", server_connection=True,
-                                            server_private_key_file="/home/kim/.ssh/id_rsa",
-                                            server_username="kim", port_forward_next_port=3000)
+    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+                                     server_connection=False, port_forward_next_port=9600)
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    #                                         agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                         server_username="kim", port_forward_next_port=3000)
     emulation_config.skip_exploration = True
-    model_path_dir = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/" \
-                     "difficulty_level_9/hello_world"
-    # model_path_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-    #                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    # model_path_dir = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/" \
+    #                  "difficulty_level_9/hello_world"
+    model_path_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+                     "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    # model_path_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/" \
+    #                  "examples/difficulty_level_9/hello_world/"
     emulation_config.save_dynamics_model_dir = model_path_dir
 
     env = gym.make("pycr-ctf-level-9-generated-sim-v6", env_config=None, emulation_config=emulation_config)

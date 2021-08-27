@@ -546,57 +546,48 @@ class TensorboardDataDTO:
         :return: a string representation of the DTO for the attacker
         """
         if self.eval:
-            log_str = "[Eval A] iter:{},Avg_Reg:{:.2f},Opt_frac:{:.2f},avg_R:{:.2f},rolling_avg_R:{:.2f}," \
-                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E},avg_F:{:.2f},avg_F%:{:.2f}," \
-                      "n_af:{},n_d:{}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
-                      "alerts_N:{:.2f}".format(
-                self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards, self.rolling_avg_rewards,
-                self.avg_episode_steps, self.rolling_avg_steps, self.lr, self.avg_episode_flags,
-                self.avg_episode_flags_percentage, self.n_af, self.n_d,
-                self.episode_caught_frac, self.episode_early_stopped_frac, self.episode_successful_intrusion_frac,
-                self.avg_episode_costs, self.avg_episode_costs_norm, self.avg_episode_alerts,
-                self.avg_episode_alerts_norm
-            )
+            log_str = f"[Eval A] iter:{self.iteration},Avg_Reg:{self.avg_regret:.2f},Opt_frac:{self.avg_opt_frac:.2f}," \
+                      f"avg_R:{self.avg_episode_rewards:.2f},rolling_avg_R:{self.rolling_avg_rewards:.2f}," \
+                      f"avg_t:{self.avg_episode_steps:.2f},rolling_avg_t:{self.rolling_avg_steps:.2f}," \
+                      f"lr:{self.lr:.2E},avg_F:{self.avg_episode_flags:.2f}," \
+                      f"avg_F%:{self.avg_episode_flags_percentage:.2f}," \
+                      f"n_af:{self.n_af},n_d:{self.n_d}," \
+                      f"c:{self.episode_caught_frac:.2f},s:{self.episode_early_stopped_frac:.2f}," \
+                      f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
+                      f"costs:{self.avg_episode_costs:.2f},costs_N:{self.avg_episode_costs_norm:.2f}," \
+                      f"alerts:{self.avg_episode_alerts:.2f}," \
+                      f"alerts_N:{self.avg_episode_alerts_norm:.2f}"
         else:
-            log_str = "[Train A] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f},avg_R_T:{:.2f},rolling_avg_R_T:{:.2f}," \
-                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},avg_F_T:{:.2f},avg_F_T%:{:.2f},eps:{:.2f}," \
-                      "n_af:{},n_d:{},avg_R_E:{:.2f},avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
-                      "avg_t_E:{:.2f},avg_F_E:{:.2f},avg_F_E%:{:.2f}," \
-                      "avg_R_E2:{:.2f},Avg_Reg_E2:{:.2f},Opt_frac_E2:{:.2f},avg_t_E2:{:.2f},avg_F_E2:{:.2f}," \
-                      "avg_F_E2%:{:.2f},epsilon:{:.2f}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f}," \
-                      "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E:{:.2f},costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
-                      "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
-                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
-                      "tt_h:{:.2f},avg_F_T_E:{:.2f},avg_F_T_E%:{:.2f}".format(
-                self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards, self.rolling_avg_rewards,
-                self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
-                self.lr, self.total_num_episodes, self.avg_episode_flags,
-                self.avg_episode_flags_percentage, self.eps,
-                self.n_af, self.n_d,
-                self.eval_avg_episode_rewards, self.avg_eval_regret, self.eval_avg_opt_frac, self.eval_avg_episode_steps,
-                self.eval_avg_episode_flags,
-                self.eval_avg_episode_flags_percentage, self.eval_2_avg_episode_rewards, self.avg_regret_2,
-                self.avg_opt_frac_2,
-                self.eval_2_avg_episode_steps,
-                self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage,
-                self.epsilon,
-                self.episode_caught_frac, self.episode_early_stopped_frac, self.episode_successful_intrusion_frac,
-                self.eval_episode_caught_frac, self.eval_episode_early_stopped_frac,
-                self.eval_episode_successful_intrusion_frac,
-                self.eval_2_episode_caught_frac, self.eval_2_episode_early_stopped_frac,
-                self.eval_2_episode_successful_intrusion_frac,
-                self.avg_episode_costs, self.avg_episode_costs_norm, self.avg_episode_alerts,
-                self.avg_episode_alerts_norm,
-                self.eval_avg_episode_costs, self.eval_avg_episode_costs_norm, self.eval_avg_episode_alerts,
-                self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
-                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm, self.training_time_hours,
-                self.eval_avg_episode_flags, self.eval_avg_episode_flags_percentage,
-                self.eval_2_avg_episode_flags, self.eval_2_avg_episode_flags_percentage
-            )
+            log_str = f"[Train A] iter:{self.iteration:.2f},avg_reg_T:{self.avg_regret:.2f}," \
+                      f"opt_frac_T:{self.avg_opt_frac:.2f},avg_R_T:{self.avg_episode_rewards:.2f}," \
+                      f"rolling_avg_R_T:{self.rolling_avg_rewards:.2f}," \
+                      f"avg_t_T:{self.avg_episode_steps:.2f},rolling_avg_t_T:{self.rolling_avg_steps:.2f}," \
+                      f"loss:{self.avg_episode_loss:.6f},lr:{self.lr:.2E},episode:{self.total_num_episodes}," \
+                      f"avg_F_T:{self.avg_episode_flags:.2f},avg_F_T%:{self.avg_episode_flags_percentage:.2f}," \
+                      f"eps:{self.eps:.2f}," \
+                      f"n_af:{self.n_af},n_d:{self.n_d},avg_R_E:{self.eval_avg_episode_rewards:.2f}," \
+                      f"avg_reg_E:{self.avg_eval_regret:.2f},avg_opt_frac_E:{self.eval_avg_opt_frac:.2f}," \
+                      f"avg_t_E:{self.eval_avg_episode_steps:.2f},avg_F_E:{self.eval_avg_episode_flags:.2f}," \
+                      f"avg_F_E%:{self.eval_avg_episode_flags_percentage:.2f}," \
+                      f"avg_R_E2:{self.eval_2_avg_episode_rewards:.2f},Avg_Reg_E2:{self.avg_regret_2:.2f}," \
+                      f"Opt_frac_E2:{self.avg_opt_frac_2:.2f},avg_t_E2:{self.eval_2_avg_episode_steps:.2f}," \
+                      f"avg_F_E2:{self.eval_2_avg_episode_flags:.2f}," \
+                      f"avg_F_E2%:{self.eval_2_avg_episode_flags_percentage:.2f},epsilon:{self.epsilon:.2f}," \
+                      f"c:{self.episode_caught_frac:.2f},s:{self.episode_early_stopped_frac:.2f}," \
+                      f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
+                      f"c_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
+                      f"s_i_E:{self.eval_episode_successful_intrusion_frac:.2f}," \
+                      f"c_E2:{self.eval_2_episode_caught_frac:.2f},es_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
+                      f"s_i_E:{self.eval_2_episode_successful_intrusion_frac:.2f},costs:{self.avg_episode_costs:.2f}," \
+                      f"costs_N:{self.avg_episode_costs_norm:.2f},alerts:{self.avg_episode_alerts:.2f}," \
+                      f"alerts_N:{self.avg_episode_alerts_norm:.2f},E_costs:{self.eval_avg_episode_costs:.2f}," \
+                      f"E_costs_N:{self.eval_avg_episode_costs_norm:.2f},E_alerts:{self.eval_avg_episode_alerts:.2f}," \
+                      f"E_alerts_N:{self.eval_avg_episode_alerts_norm:.2f}," \
+                      f"E2_costs:{self.eval_2_avg_episode_costs:.2f},E2_costs_N:{self.eval_2_avg_episode_costs_norm:.2f}," \
+                      f"E2_alerts:{self.eval_2_avg_episode_alerts:.2f}," \
+                      f"E2_alerts_N:{self.eval_2_avg_episode_alerts_norm:.2f}," \
+                      f"tt_h:{self.training_time_hours:.2f},avg_F_T_E:{self.eval_2_avg_episode_flags:.2f}," \
+                      f"avg_F_T_E%:{self.eval_2_avg_episode_flags_percentage:.2f}"
         return log_str
 
     def log_str_defender(self) -> str:
@@ -604,201 +595,178 @@ class TensorboardDataDTO:
         :return: a string representation of the DTO for the attacker
         """
         if self.eval:
-            log_str = "[Eval D] iter:{},avg_R:{:.2f},rolling_avg_R:{:.2f},avg_uit:{:.2f},avg_opt_R_T:{:.2f}," \
-                      "S_sev_avg_R:{:.2f},S_warn_avg_R:{:.2f}," \
-                      "S_crit_avg_R:{:.2f},V_log_avg_R:{:.2f}, step_avg_R:{:.2f}," \
-                      "S_sev_avg_t:{:.2f},S_warn_avg_t:{:.2f}," \
-                      "S_crit_avg_t:{:.2f},V_log_avg_t:{:.2f}, step_avg_t:{:.2f}," \
-                      "S_sev_avg_ca:{:.2f},S_warn_avg_ca:{:.2f}," \
-                      "S_crit_avg_ca:{:.2f},V_log_avg_ca:{:.2f}, step_avg_ca:{:.2f}," \
-                      "S_sev_avg_es:{:.2f},S_warn_avg_e:{:.2f}," \
-                      "S_crit_avg_es:{:.2f},V_log_avg_es:{:.2f}, step_avg_es:{:.2f}," \
-                      "S_sev_avg_uit:{:.2f},S_warn_avg_uit:{:.2f}," \
-                      "S_crit_avg_uit:{:.2f},V_log_avg_uit:{:.2f}, step_avg_uit:{:.2f}," \
-                      "avg_t:{:.2f},rolling_avg_t:{:.2f},lr:{:.2E}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},avg_I_t:{:.2f}, avg_stops_left_T:{:.2f}," \
-                      "avg_first_stop_t_T:{:.2f},avg_second_stop_t_T:{:.2f},avg_third_stop_t_T:{:.2f}," \
-                      "avg_fourth_stop_t_T:{:.2f}".format(
-                self.iteration, self.avg_episode_rewards, self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps,
-                self.avg_optimal_defender_reward,
-                self.avg_episode_snort_severe_baseline_rewards,
-                self.avg_episode_snort_warning_baseline_rewards,
-                self.avg_episode_snort_critical_baseline_rewards,
-                self.avg_episode_var_log_baseline_rewards,
-                self.avg_episode_step_baseline_rewards,
-                self.avg_episode_snort_severe_baseline_steps,
-                self.avg_episode_snort_warning_baseline_steps,
-                self.avg_episode_snort_critical_baseline_steps,
-                self.avg_episode_var_log_baseline_steps,
-                self.avg_episode_step_baseline_steps,
-                self.avg_episode_snort_severe_baseline_caught_attacker,
-                self.avg_episode_snort_warning_baseline_caught_attacker,
-                self.avg_episode_snort_critical_baseline_caught_attacker,
-                self.avg_episode_var_log_baseline_caught_attacker,
-                self.avg_episode_step_baseline_caught_attacker,
-                self.avg_episode_snort_severe_baseline_early_stopping,
-                self.avg_episode_snort_warning_baseline_early_stopping,
-                self.avg_episode_snort_critical_baseline_early_stopping,
-                self.avg_episode_var_log_baseline_early_stopping,
-                self.avg_episode_step_baseline_early_stopping,
-                self.avg_episode_snort_severe_baseline_uncaught_intrusion_steps,
-                self.avg_episode_snort_warning_baseline_uncaught_intrusion_steps,
-                self.avg_episode_snort_critical_baseline_uncaught_intrusion_steps,
-                self.avg_episode_var_log_baseline_uncaught_intrusion_steps,
-                self.avg_episode_step_baseline_uncaught_intrusion_steps,
-                self.avg_episode_steps, self.rolling_avg_steps,
-                self.lr, self.episode_caught_frac,
-                self.episode_early_stopped_frac, self.episode_successful_intrusion_frac,
-                self.avg_episode_intrusion_steps, self.avg_defender_stops_remaining, self.avg_defender_first_stop_step,
-                self.avg_defender_second_stop_step, self.avg_defender_third_stop_step,
-                self.avg_defender_fourth_stop_step)
+            log_str = f"[Eval D] iter:{self.iteration},avg_R:{self.avg_episode_rewards:.2f}," \
+                      f"rolling_avg_R:{self.rolling_avg_rewards:.2f}," \
+                      f"avg_uit:{self.avg_uncaught_intrusion_steps:.2f}," \
+                      f"avg_opt_R_T:{self.avg_optimal_defender_reward:.2f}," \
+                      f"S_sev_avg_R:{self.avg_episode_snort_severe_baseline_rewards:.2f}," \
+                      f"S_warn_avg_R:{self.avg_episode_snort_warning_baseline_rewards:.2f}," \
+                      f"S_crit_avg_R:{self.avg_episode_snort_critical_baseline_rewards:.2f}," \
+                      f"V_log_avg_R:{self.avg_episode_snort_critical_baseline_rewards:.2f}, " \
+                      f"step_avg_R:{self.avg_episode_step_baseline_rewards:.2f}," \
+                      f"S_sev_avg_t:{self.avg_episode_snort_severe_baseline_steps:.2f}," \
+                      f"S_warn_avg_t:{self.avg_episode_snort_warning_baseline_steps:.2f}," \
+                      f"S_crit_avg_t:{self.avg_episode_snort_critical_baseline_steps:.2f}," \
+                      f"V_log_avg_t:{self.avg_episode_var_log_baseline_steps:.2f}, " \
+                      f"step_avg_t:{self.avg_episode_step_baseline_steps:.2f}," \
+                      f"S_sev_avg_ca:{self.avg_episode_snort_severe_baseline_caught_attacker:.2f}," \
+                      f"S_warn_avg_ca:{self.avg_episode_snort_warning_baseline_caught_attacker:.2f}," \
+                      f"S_crit_avg_ca:{self.avg_episode_snort_critical_baseline_caught_attacker:.2f}," \
+                      f"V_log_avg_ca:{self.avg_episode_var_log_baseline_caught_attacker:.2f}, " \
+                      f"step_avg_ca:{self.avg_episode_step_baseline_caught_attacker:.2f}," \
+                      f"S_sev_avg_es:{self.avg_episode_snort_severe_baseline_early_stopping:.2f}," \
+                      f"S_warn_avg_e:{self.avg_episode_snort_warning_baseline_early_stopping:.2f}," \
+                      f"S_crit_avg_es:{self.avg_episode_snort_critical_baseline_early_stopping:.2f}," \
+                      f"V_log_avg_es:{self.avg_episode_var_log_baseline_early_stopping:.2f}, " \
+                      f"step_avg_es:{self.avg_episode_step_baseline_early_stopping:.2f}," \
+                      f"S_sev_avg_uit:{self.avg_episode_snort_severe_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"S_warn_avg_uit:{self.avg_episode_snort_warning_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"S_crit_avg_uit:{self.avg_episode_snort_critical_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"V_log_avg_uit:{self.avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"step_avg_uit:{self.avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"avg_t:{self.avg_episode_steps:.2f},rolling_avg_t:{self.rolling_avg_steps:.2f}," \
+                      f"lr:{self.lr:.2E}," \
+                      f"c:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
+                      f"s_i:{self.episode_successful_intrusion_frac:.2f},avg_I_t:{self.avg_episode_intrusion_steps:.2f}, " \
+                      f"avg_stops_left_T:{self.avg_defender_stops_remaining:.2f}," \
+                      f"avg_first_stop_t_T:{self.avg_defender_first_stop_step:.2f}," \
+                      f"avg_second_stop_t_T:{self.avg_defender_second_stop_step:.2f}," \
+                      f"avg_third_stop_t_T:{self.avg_defender_third_stop_step:.2f}," \
+                      f"avg_fourth_stop_t_T:{self.avg_defender_fourth_stop_step:.2f}"
         else:
-            log_str = "[Train D] iter:{:.2f},avg_reg_T:{:.2f},opt_frac_T:{:.2f}," \
-                      "avg_R_T:{:.2f},rolling_avg_R_T:{:.2f},avg_uit_T:{:.2f},avg_opt_R_T:{:.2f}," \
-                      "S_sev_avg_R_T:{:.2f},S_warn_avg_R_T:{:.2f},S_crit_avg_R_T:{:.2f},V_log_avg_R_T:{:.2f}," \
-                      "step_avg_R_T:{:.2f}, " \
-                      "S_sev_avg_t_T:{:.2f},S_warn_avg_t_T:{:.2f}, " \
-                      "S_crit_avg_t_T:{:.2f},V_log_avg_t_T:{:.2f}, step_avg_t_T:{:.2f}," \
-                      "S_sev_avg_ca_T:{:.2f},S_warn_avg_ca_T:{:.2f}, " \
-                      "S_crit_avg_ca_T:{:.2f},V_log_avg_ca_T:{:.2f}, step_avg_ca_T:{:.2f}," \
-                      "S_sev_avg_es_T:{:.2f},S_warn_avg_es_T:{:.2f}, " \
-                      "S_crit_avg_es_T:{:.2f},V_log_avg_es_T:{:.2f}, step_avg_es_T:{:.2f}," \
-                      "S_sev_avg_uit_T:{:.2f},S_warn_avg_uit_T:{:.2f}, " \
-                      "S_crit_avg_uit_T:{:.2f},V_log_avg_uit_T:{:.2f}, step_avg_uit_T:{:.2f}," \
-                      "avg_t_T:{:.2f},rolling_avg_t_T:{:.2f}," \
-                      "loss:{:.6f},lr:{:.2E},episode:{},avg_stops_left_T:{:.2f}," \
-                      "avg_first_stop_t_T:{:.2f},avg_second_stop_t_T:{:.2f},avg_third_stop_t_T:{:.2f}," \
-                      "avg_fourth_stop_t_T:{:.2f},eps:{:.2f}," \
-                      "avg_R_E:{:.2f},avg_uit_E:{:.2f},opt_R_E:{:.2f},S_sev_avg_R_E:{:.2f},S_warn_avg_R_E:{:.2f}," \
-                      "S_crit_avg_R_E:{:.2f},V_log_avg_R_E:{:.2f}, step_avg_R_E:{:.2f}," \
-                      "S_sev_avg_t_E:{:.2f},S_warn_avg_t_E:{:.2f}, " \
-                      "S_crit_avg_t_E:{:.2f},V_log_avg_t_E:{:.2f}, step_avg_t_E:{:.2f}," \
-                      "S_sev_avg_ca_E:{:.2f},S_warn_avg_ca_E:{:.2f}, " \
-                      "S_crit_avg_ca_E:{:.2f},V_log_avg_ca_E:{:.2f}, step_avg_ca_E:{:.2f}," \
-                      "S_sev_avg_es_E:{:.2f},S_warn_avg_es_E:{:.2f}, " \
-                      "S_crit_avg_es_E:{:.2f},V_log_avg_es_E:{:.2f}, step_avg_es_E:{:.2f}," \
-                      "S_sev_avg_uit_E:{:.2f},S_warn_avg_uit_E:{:.2f}, " \
-                      "S_crit_avg_uit_E:{:.2f},V_log_avg_uit_E:{:.2f}, step_avg_uit_E:{:.2f}," \
-                      "avg_reg_E:{:.2f},avg_opt_frac_E:{:.2f}," \
-                      "avg_t_E:{:.2f},avg_stops_left_E:{:.2f},avg_first_stop_t_E:{:.2f},avg_second_stop_t_E:{:.2f}," \
-                      "avg_third_stop_t_E:{:.2f},avg_fourth_stop_t_E:{:.2f}," \
-                      "avg_R_E2:{:.2f},avg_uit_E2:{:.2f},opt_R_E2:{:.2f},S_sev_avg_R_E2:{:.2f},S_warn_avg_R_E2:{:.2f}," \
-                      "S_crit_avg_R_E2:{:.2f},V_log_avg_R_E2:{:.2f},step_avg_R_E2:{:.2f}," \
-                      "S_sev_avg_t_E2:{:.2f},S_warn_avg_t_E2:{:.2f}," \
-                      "S_crit_avg_t_E2:{:.2f},V_log_avg_t_E2:{:.2f},step_avg_t_E2:{:.2f}," \
-                      "S_sev_avg_ca_E2:{:.2f},S_warn_avg_ca_E2:{:.2f}, " \
-                      "S_crit_avg_ca_E2:{:.2f},V_log_avg_ca_E2:{:.2f}, step_avg_ca_E2:{:.2f}," \
-                      "S_sev_avg_es_E2:{:.2f},S_warn_avg_es_E2:{:.2f}, " \
-                      "S_crit_avg_es_E2:{:.2f},V_log_avg_es_E2:{:.2f}, step_avg_es_E2:{:.2f}," \
-                      "S_sev_avg_uit_E2:{:.2f},S_warn_avg_uit_E2:{:.2f}, " \
-                      "S_crit_avg_uit_E2:{:.2f},V_log_avg_uit_E2:{:.2f}, step_avg_uit_E2:{:.2f}," \
-                      "avg_t_E2:{:.2f}," \
-                      "epsilon:{:.2f}," \
-                      "c:{:.2f},s:{:.2f},s_i:{:.2f},n_af:{:.2f}," \
-                      "c_E:{:.2f},s_E:{:.2f},s_i_E:{:.2f}," \
-                      "c_E2:{:.2f},s_E2:{:.2f},s_i_E2:{:.2f},avg_F_T:{:.2f},avg_F_T%:{:.2f}," \
-                      "avg_F_E:{:.2f},avg_F_E%:{:.2f},avg_F_E2:{:.2f},avg_F_E2%:{:.2f}," \
-                      "costs:{:.2f},costs_N:{:.2f},alerts:{:.2f}," \
-                      "alerts_N:{:.2f},E_costs:{:.2f},E_costs_N:{:.2f},E_alerts:{:.2f},E_alerts_N:{:.2f}," \
-                      "E2_costs:{:.2f},E2_costs_N:{:.2f},E2_alerts:{:.2f},E2_alerts_N:{:.2f}," \
-                      "avg_I_t:{:.2f},E_avg_I_t:{:.2f},E2_avg_I_t:{:.2f}," \
-                      "avg_F_T_E2:{:.2f},avg_F_T_E2%:{:.2f},avg_stops_left_E2:{:.2f}," \
-                      "avg_first_stop_t_E2:{:.2f},avg_second_stop_t_E2:{:.2f}," \
-                      "avg_third_stop_t_E2:{:.2f},avg_fourth_stop_t_E2:{:.2f}".format(
-                self.iteration, self.avg_regret, self.avg_opt_frac, self.avg_episode_rewards,
-                self.rolling_avg_rewards, self.avg_uncaught_intrusion_steps, self.avg_optimal_defender_reward,
-                self.avg_episode_snort_severe_baseline_rewards, self.avg_episode_snort_warning_baseline_rewards,
-                self.avg_episode_snort_critical_baseline_rewards, self.avg_episode_var_log_baseline_rewards,
-                self.avg_episode_step_baseline_rewards,
-                self.avg_episode_snort_severe_baseline_steps, self.avg_episode_snort_warning_baseline_steps,
-                self.avg_episode_snort_critical_baseline_steps, self.avg_episode_var_log_baseline_steps,
-                self.avg_episode_step_baseline_steps,
-                self.avg_episode_snort_severe_baseline_caught_attacker, self.avg_episode_snort_warning_baseline_caught_attacker,
-                self.avg_episode_snort_critical_baseline_caught_attacker, self.avg_episode_var_log_baseline_caught_attacker,
-                self.avg_episode_step_baseline_caught_attacker,
-                self.avg_episode_snort_severe_baseline_early_stopping, self.avg_episode_snort_warning_baseline_early_stopping,
-                self.avg_episode_snort_critical_baseline_early_stopping, self.avg_episode_var_log_baseline_early_stopping,
-                self.avg_episode_step_baseline_early_stopping,
-                self.avg_episode_snort_severe_baseline_uncaught_intrusion_steps, self.avg_episode_snort_warning_baseline_uncaught_intrusion_steps,
-                self.avg_episode_snort_critical_baseline_uncaught_intrusion_steps, self.avg_episode_var_log_baseline_uncaught_intrusion_steps,
-                self.avg_episode_step_baseline_uncaught_intrusion_steps,
-                self.avg_episode_steps, self.rolling_avg_steps, self.avg_episode_loss,
-                self.lr, self.total_num_episodes, self.avg_defender_stops_remaining, self.avg_defender_first_stop_step,
-                self.avg_defender_second_stop_step, self.avg_defender_third_stop_step,
-                self.avg_defender_fourth_stop_step, self.eps,
-                self.eval_avg_episode_rewards, self.eval_avg_uncaught_intrusion_steps,
-                self.eval_avg_optimal_defender_reward,
-                self.eval_avg_episode_snort_severe_baseline_rewards,
-                self.eval_avg_episode_snort_warning_baseline_rewards,
-                self.eval_avg_episode_snort_critical_baseline_rewards,
-                self.eval_avg_episode_var_log_baseline_rewards, self.eval_avg_episode_step_baseline_rewards,
-                self.eval_avg_episode_snort_severe_baseline_steps,
-                self.eval_avg_episode_snort_warning_baseline_steps,
-                self.eval_avg_episode_snort_critical_baseline_steps,
-                self.eval_avg_episode_var_log_baseline_steps, self.eval_avg_episode_step_baseline_steps,
-                self.eval_avg_episode_snort_severe_baseline_caught_attacker,
-                self.eval_avg_episode_snort_warning_baseline_caught_attacker,
-                self.eval_avg_episode_snort_critical_baseline_caught_attacker,
-                self.eval_avg_episode_var_log_baseline_caught_attacker, self.eval_avg_episode_step_baseline_caught_attacker,
-                self.eval_avg_episode_snort_severe_baseline_early_stopping,
-                self.eval_avg_episode_snort_warning_baseline_early_stopping,
-                self.eval_avg_episode_snort_critical_baseline_early_stopping,
-                self.eval_avg_episode_var_log_baseline_early_stopping, self.eval_avg_episode_step_baseline_early_stopping,
-                self.eval_avg_episode_snort_severe_baseline_uncaught_intrusion_steps,
-                self.eval_avg_episode_snort_warning_baseline_uncaught_intrusion_steps,
-                self.eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps,
-                self.eval_avg_episode_var_log_baseline_uncaught_intrusion_steps, self.eval_avg_episode_step_baseline_uncaught_intrusion_steps,
-                self.avg_eval_regret, self.eval_avg_opt_frac, self.eval_avg_episode_steps,
-                self.eval_avg_defender_stops_remaining, self.eval_avg_defender_first_stop_step,
-                self.eval_avg_defender_second_stop_step, self.eval_avg_defender_third_stop_step,
-                self.eval_avg_defender_fourth_stop_step,
-                self.eval_2_avg_episode_rewards, self.eval_2_avg_uncaught_intrusion_steps,
-                self.eval_2_avg_optimal_defender_reward,
-                self.eval_avg_2_episode_snort_severe_baseline_rewards,
-                self.eval_avg_2_episode_snort_warning_baseline_rewards,
-                self.eval_avg_2_episode_snort_critical_baseline_rewards,
-                self.eval_avg_2_episode_var_log_baseline_rewards,
-                self.eval_avg_2_episode_step_baseline_rewards,
-                self.eval_avg_2_episode_snort_severe_baseline_steps,
-                self.eval_avg_2_episode_snort_warning_baseline_steps,
-                self.eval_avg_2_episode_snort_critical_baseline_steps,
-                self.eval_avg_2_episode_var_log_baseline_steps,
-                self.eval_avg_2_episode_step_baseline_steps,
-                self.eval_avg_2_episode_snort_severe_baseline_caught_attacker,
-                self.eval_avg_2_episode_snort_warning_baseline_caught_attacker,
-                self.eval_avg_2_episode_snort_critical_baseline_caught_attacker,
-                self.eval_avg_2_episode_var_log_baseline_caught_attacker,
-                self.eval_avg_2_episode_step_baseline_caught_attacker,
-                self.eval_avg_2_episode_snort_severe_baseline_early_stopping,
-                self.eval_avg_2_episode_snort_warning_baseline_early_stopping,
-                self.eval_avg_2_episode_snort_critical_baseline_early_stopping,
-                self.eval_avg_2_episode_var_log_baseline_early_stopping,
-                self.eval_avg_2_episode_step_baseline_early_stopping,
-                self.eval_avg_2_episode_snort_severe_baseline_uncaught_intrusion_steps,
-                self.eval_avg_2_episode_snort_warning_baseline_uncaught_intrusion_steps,
-                self.eval_avg_2_episode_snort_critical_baseline_uncaught_intrusion_steps,
-                self.eval_avg_2_episode_var_log_baseline_uncaught_intrusion_steps,
-                self.eval_avg_2_episode_step_baseline_uncaught_intrusion_steps,
-                self.eval_2_avg_episode_steps, self.epsilon,
-                self.episode_caught_frac, self.episode_early_stopped_frac,
-                self.episode_successful_intrusion_frac,
-                self.n_af, self.eval_episode_caught_frac, self.eval_episode_early_stopped_frac,
-                self.eval_episode_successful_intrusion_frac,
-                self.eval_2_episode_caught_frac,
-                self.eval_2_episode_early_stopped_frac, self.eval_2_episode_successful_intrusion_frac,
-                self.avg_episode_flags, self.avg_episode_flags_percentage, self.eval_avg_episode_flags,
-                self.eval_avg_episode_flags_percentage, self.eval_2_avg_episode_flags,
-                self.eval_2_avg_episode_flags_percentage,
-                self.avg_episode_costs, self.avg_episode_costs_norm, self.avg_episode_alerts,
-                self.avg_episode_alerts_norm,
-                self.eval_avg_episode_costs, self.eval_avg_episode_costs_norm, self.eval_avg_episode_alerts,
-                self.eval_avg_episode_alerts_norm, self.eval_2_avg_episode_costs, self.eval_2_avg_episode_costs_norm,
-                self.eval_2_avg_episode_alerts, self.eval_2_avg_episode_alerts_norm,
-                self.avg_episode_intrusion_steps, self.eval_avg_episode_intrusion_steps,
-                self.eval_2_avg_episode_intrusion_steps, self.eval_2_avg_defender_stops_remaining,
-                self.eval_2_avg_defender_first_stop_step,
-                self.eval_2_avg_defender_second_stop_step, self.eval_2_avg_defender_third_stop_step,
-                self.eval_2_avg_defender_fourth_stop_step)
+            log_str = f"[Train D] iter:{self.iteration},avg_reg_T:{self.avg_regret:.2f},opt_frac_T:{self.avg_opt_frac:.2f}," \
+                      f"avg_R_T:{self.avg_episode_rewards:.2f},rolling_avg_R_T:{self.rolling_avg_rewards:.2f}," \
+                      f"avg_uit_T:{self.avg_uncaught_intrusion_steps:.2f}," \
+                      f"avg_opt_R_T:{self.avg_optimal_defender_reward:.2f}," \
+                      f"S_sev_avg_R_T:{self.avg_episode_snort_severe_baseline_rewards:.2f}," \
+                      f"S_warn_avg_R_T:{self.avg_episode_snort_warning_baseline_rewards:.2f}," \
+                      f"S_crit_avg_R_T:{self.avg_episode_snort_critical_baseline_rewards:.2f}," \
+                      f"V_log_avg_R_T:{self.avg_episode_var_log_baseline_rewards:.2f}," \
+                      f"step_avg_R_T:{self.avg_episode_step_baseline_rewards:.2f}, " \
+                      f"S_sev_avg_t_T:{self.avg_episode_snort_severe_baseline_steps:.2f}," \
+                      f"S_warn_avg_t_T:{self.avg_episode_snort_warning_baseline_steps:.2f}, " \
+                      f"S_crit_avg_t_T:{self.avg_episode_snort_critical_baseline_steps:.2f}," \
+                      f"V_log_avg_t_T:{self.avg_episode_var_log_baseline_steps:.2f}, " \
+                      f"step_avg_t_T:{self.avg_episode_step_baseline_steps:.2f}," \
+                      f"S_sev_avg_ca_T:{self.avg_episode_snort_severe_baseline_caught_attacker:.2f}," \
+                      f"S_warn_avg_ca_T:{ self.avg_episode_snort_warning_baseline_caught_attacker:.2f}, " \
+                      f"S_crit_avg_ca_T:{self.avg_episode_snort_critical_baseline_caught_attacker:.2f}," \
+                      f"V_log_avg_ca_T:{self.avg_episode_var_log_baseline_caught_attacker:.2f}, " \
+                      f"step_avg_ca_T:{self.avg_episode_step_baseline_caught_attacker:.2f}," \
+                      f"S_sev_avg_es_T:{self.avg_episode_snort_severe_baseline_early_stopping:.2f}," \
+                      f"S_warn_avg_es_T:{self.avg_episode_snort_warning_baseline_early_stopping:.2f}, " \
+                      f"S_crit_avg_es_T:{self.avg_episode_snort_critical_baseline_early_stopping:.2f}," \
+                      f"V_log_avg_es_T:{self.avg_episode_var_log_baseline_early_stopping:.2f}, " \
+                      f"step_avg_es_T:{self.avg_episode_step_baseline_early_stopping:.2f}," \
+                      f"S_sev_avg_uit_T:{self.avg_episode_snort_severe_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"S_warn_avg_uit_T:{self.avg_episode_snort_warning_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"S_crit_avg_uit_T:{self.avg_episode_snort_critical_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"V_log_avg_uit_T:{self.avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"step_avg_uit_T:{self.avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"avg_t_T:{self.avg_episode_steps:.2f}," \
+                      f"rolling_avg_t_T:{self.rolling_avg_steps:.2f}," \
+                      f"loss:{self.avg_episode_loss:.6f}," \
+                      f"lr:{self.lr:.2E}," \
+                      f"episode:{self.total_num_episodes}," \
+                      f"avg_stops_left_T:{self.avg_defender_stops_remaining:.2f}," \
+                      f"avg_first_stop_t_T:{self.avg_defender_first_stop_step:.2f}," \
+                      f"avg_second_stop_t_T:{self.avg_defender_second_stop_step:.2f}," \
+                      f"avg_third_stop_t_T:{self.avg_defender_third_stop_step:.2f}," \
+                      f"avg_fourth_stop_t_T:{self.avg_defender_fourth_stop_step:.2f},eps:{self.eps:.2f}," \
+                      f"avg_R_E:{self.eval_avg_episode_rewards:.2f}," \
+                      f"avg_uit_E:{self.eval_avg_uncaught_intrusion_steps:.2f}," \
+                      f"opt_R_E:{self.eval_avg_optimal_defender_reward:.2f}," \
+                      f"S_sev_avg_R_E:{self.eval_avg_episode_snort_severe_baseline_rewards:.2f}," \
+                      f"S_warn_avg_R_E:{self.eval_avg_episode_snort_warning_baseline_rewards:.2f}," \
+                      f"S_crit_avg_R_E:{self.eval_avg_episode_snort_critical_baseline_rewards:.2f}," \
+                      f"V_log_avg_R_E:{self.eval_avg_episode_var_log_baseline_rewards:.2f}, " \
+                      f"step_avg_R_E:{self.eval_avg_episode_step_baseline_rewards:.2f}," \
+                      f"S_sev_avg_t_E:{self.eval_avg_episode_snort_severe_baseline_steps:.2f}," \
+                      f"S_warn_avg_t_E:{self.eval_avg_episode_snort_warning_baseline_steps:.2f}, " \
+                      f"S_crit_avg_t_E:{self.eval_avg_episode_snort_critical_baseline_steps:.2f}," \
+                      f"V_log_avg_t_E:{self.eval_avg_episode_var_log_baseline_steps:.2f}, " \
+                      f"step_avg_t_E:{self.eval_avg_episode_step_baseline_steps:.2f}," \
+                      f"S_sev_avg_ca_E:{self.eval_avg_episode_snort_severe_baseline_caught_attacker:.2f}," \
+                      f"S_warn_avg_ca_E:{self.eval_avg_episode_snort_warning_baseline_caught_attacker:.2f}, " \
+                      f"S_crit_avg_ca_E:{self.eval_avg_episode_snort_critical_baseline_caught_attacker:.2f}," \
+                      f"V_log_avg_ca_E:{self.eval_avg_episode_var_log_baseline_caught_attacker:.2f}, " \
+                      f"step_avg_ca_E:{self.eval_avg_episode_step_baseline_caught_attacker:.2f}," \
+                      f"S_sev_avg_es_E:{self.eval_avg_episode_snort_severe_baseline_early_stopping:.2f}," \
+                      f"S_warn_avg_es_E:{self.eval_avg_episode_snort_warning_baseline_early_stopping:.2f}, " \
+                      f"S_crit_avg_es_E:{self.eval_avg_episode_snort_critical_baseline_early_stopping:.2f}," \
+                      f"V_log_avg_es_E:{self.eval_avg_episode_var_log_baseline_early_stopping:.2f}, " \
+                      f"step_avg_es_E:{self.eval_avg_episode_step_baseline_early_stopping:.2f}," \
+                      f"S_sev_avg_uit_E:{self.eval_avg_episode_snort_severe_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"S_warn_avg_uit_E:{self.eval_avg_episode_snort_warning_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"S_crit_avg_uit_E:{self.eval_avg_episode_snort_critical_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"V_log_avg_uit_E:{self.eval_avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"step_avg_uit_E:{self.eval_avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"avg_reg_E:{self.avg_eval_regret:.2f},avg_opt_frac_E:{self.eval_avg_opt_frac:.2f}," \
+                      f"avg_t_E:{self.eval_avg_episode_steps:.2f}," \
+                      f"avg_stops_left_E:{self.eval_avg_defender_stops_remaining:.2f}," \
+                      f"avg_first_stop_t_E:{self.eval_avg_defender_first_stop_step:.2f}," \
+                      f"avg_second_stop_t_E:{self.eval_avg_defender_second_stop_step:.2f}," \
+                      f"avg_third_stop_t_E:{self.eval_avg_defender_third_stop_step:.2f}," \
+                      f"avg_fourth_stop_t_E:{self.eval_avg_defender_fourth_stop_step:.2f}," \
+                      f"avg_R_E2:{self.eval_2_avg_episode_rewards:.2f}," \
+                      f"avg_uit_E2:{self.eval_2_avg_uncaught_intrusion_steps:.2f}," \
+                      f"opt_R_E2:{self.eval_2_avg_optimal_defender_reward:.2f}," \
+                      f"S_sev_avg_R_E2:{self.eval_avg_2_episode_snort_severe_baseline_rewards:.2f}," \
+                      f"S_warn_avg_R_E2:{self.eval_avg_2_episode_snort_warning_baseline_rewards:.2f}," \
+                      f"S_crit_avg_R_E2:{self.eval_avg_2_episode_snort_critical_baseline_rewards:.2f}," \
+                      f"V_log_avg_R_E2:{self.eval_avg_2_episode_var_log_baseline_rewards:.2f}," \
+                      f"step_avg_R_E2:{self.eval_avg_2_episode_step_baseline_rewards:.2f}," \
+                      f"S_sev_avg_t_E2:{self.eval_avg_2_episode_snort_severe_baseline_steps:.2f}," \
+                      f"S_warn_avg_t_E2:{self.eval_avg_2_episode_snort_warning_baseline_steps:.2f}," \
+                      f"S_crit_avg_t_E2:{self.eval_avg_2_episode_snort_critical_baseline_steps:.2f}," \
+                      f"V_log_avg_t_E2:{self.eval_avg_2_episode_var_log_baseline_steps:.2f}," \
+                      f"step_avg_t_E2:{self.eval_avg_2_episode_step_baseline_steps:.2f}," \
+                      f"S_sev_avg_ca_E2:{self.eval_avg_2_episode_snort_severe_baseline_caught_attacker:.2f}," \
+                      f"S_warn_avg_ca_E2:{self.eval_avg_2_episode_snort_warning_baseline_caught_attacker:.2f}, " \
+                      f"S_crit_avg_ca_E2:{self.eval_avg_2_episode_snort_critical_baseline_caught_attacker:.2f}," \
+                      f"V_log_avg_ca_E2:{self.eval_avg_2_episode_var_log_baseline_caught_attacker:.2f}, " \
+                      f"step_avg_ca_E2:{self.eval_avg_2_episode_step_baseline_caught_attacker:.2f}," \
+                      f"S_sev_avg_es_E2:{self.eval_avg_2_episode_snort_severe_baseline_early_stopping:.2f}," \
+                      f"S_warn_avg_es_E2:{self.eval_avg_2_episode_snort_warning_baseline_early_stopping:.2f}, " \
+                      f"S_crit_avg_es_E2:{self.eval_avg_2_episode_snort_critical_baseline_early_stopping:.2f}," \
+                      f"V_log_avg_es_E2:{self.eval_avg_2_episode_var_log_baseline_early_stopping:.2f}, " \
+                      f"step_avg_es_E2:{self.eval_avg_2_episode_step_baseline_early_stopping:.2f}," \
+                      f"S_sev_avg_uit_E2:{self.eval_avg_2_episode_snort_severe_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"S_warn_avg_uit_E2:{self.eval_avg_2_episode_snort_warning_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"S_crit_avg_uit_E2:{self.eval_avg_2_episode_snort_critical_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"V_log_avg_uit_E2:{self.eval_avg_2_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
+                      f"step_avg_uit_E2:{self.eval_avg_2_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
+                      f"avg_t_E2:{self.eval_2_avg_episode_steps:.2f}," \
+                      f"epsilon:{self.epsilon:.2f}," \
+                      f"c:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
+                      f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
+                      f"n_af:{self.n_af:.2f}," \
+                      f"c_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
+                      f"s_i_E:{self.eval_episode_successful_intrusion_frac:.2f}," \
+                      f"c_E2:{self.eval_2_episode_caught_frac:.2f},ess_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
+                      f"s_i_E2:{self.eval_2_episode_successful_intrusion_frac:.2f},avg_F_T:{self.avg_episode_flags:.2f}," \
+                      f"avg_F_T%:{self.avg_episode_flags_percentage:.2f}," \
+                      f"avg_F_E:{self.eval_avg_episode_flags:.2f},avg_F_E%:{self.eval_avg_episode_flags_percentage:.2f}," \
+                      f"avg_F_E2:{self.eval_2_avg_episode_flags:.2f}," \
+                      f"avg_F_E2%:{self.eval_2_avg_episode_flags_percentage:.2f}," \
+                      f"costs:{self.avg_episode_costs:.2f},costs_N:{self.avg_episode_costs_norm:.2f}," \
+                      f"alerts:{self.avg_episode_alerts:.2f}," \
+                      f"alerts_N:{self.avg_episode_alerts_norm:.2f},E_costs:{self.eval_avg_episode_costs:.2f}," \
+                      f"E_costs_N:{self.eval_avg_episode_costs_norm:.2f},E_alerts:{self.eval_avg_episode_alerts:.2f}," \
+                      f"E_alerts_N:{self.eval_avg_episode_alerts_norm:.2f}," \
+                      f"E2_costs:{self.eval_2_avg_episode_costs:.2f},E2_costs_N:{self.eval_2_avg_episode_costs_norm:.2f}," \
+                      f"E2_alerts:{self.eval_2_avg_episode_alerts:.2f}," \
+                      f"E2_alerts_N:{self.eval_2_avg_episode_alerts_norm:.2f}," \
+                      f"avg_I_t:{self.avg_episode_intrusion_steps:.2f}," \
+                      f"E_avg_I_t:{self.eval_avg_episode_intrusion_steps:.2f}," \
+                      f"E2_avg_I_t:{self.eval_2_avg_defender_stops_remaining:.2f}," \
+                      f"avg_F_T_E2:{self.eval_2_avg_episode_flags:.2f}," \
+                      f"avg_F_T_E2%:{self.eval_2_avg_episode_flags_percentage:.2f}," \
+                      f"avg_stops_left_E2:{self.eval_2_avg_defender_stops_remaining:.2f}," \
+                      f"avg_first_stop_t_E2:{self.eval_2_avg_defender_first_stop_step:.2f}," \
+                      f"avg_second_stop_t_E2:{self.eval_2_avg_defender_second_stop_step:.2f}," \
+                      f"avg_third_stop_t_E2:{self.eval_2_avg_defender_third_stop_step:.2f}," \
+                      f"avg_fourth_stop_t_E2:{self.eval_2_avg_defender_fourth_stop_step:.2f}"
         return log_str
     
 

@@ -14,7 +14,7 @@ import os
 np.random.seed(19780203)
 
 def load_data():
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/20_aug_v2/"
+    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/20_aug_v3/"
     results = os.listdir(base_path_1)
     novice_x = []
     novice_y = []
@@ -81,8 +81,7 @@ def load_data():
             map(lambda df: util.running_average_list(df["defender_avg_episode_rewards"].values[0:max_len], running_avg),
                 dfs))
 
-        rewards_data = np.array(rewards_data).reshape(max_len,
-                                                                                                          num_seeds)
+        rewards_data = np.array(rewards_data).reshape(max_len, num_seeds)
         rewards_stds = np.array(list(
             map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],
                 rewards_data)))
@@ -209,7 +208,6 @@ def reformat_large_tick_values(tick_val, pos):
         if value_after_decimal == "0":
             # remove the 0 after the decimal point since it's not needed
             new_tick_format = new_tick_format[0:index_of_decimal] + new_tick_format[index_of_decimal + 2:]
-
     return new_tick_format
 
 if __name__ == '__main__':
