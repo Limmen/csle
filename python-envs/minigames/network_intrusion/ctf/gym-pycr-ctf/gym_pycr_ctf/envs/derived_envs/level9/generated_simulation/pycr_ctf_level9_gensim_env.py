@@ -414,7 +414,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
             #               200, 104, 105, 106, 58, 104, 105, 331,
             #               105, 99, 266, 104, 105, 106, 99,  113, 104,105])
 
-            env_config.defender_caught_attacker_reward = 100
+            env_config.defender_caught_attacker_reward = 200
             env_config.defender_early_stopping_reward = -100
             env_config.defender_intrusion_reward = -100
             env_config.defender_service_reward = 10
@@ -593,4 +593,5 @@ class PyCRCTFLevel9GeneratedSim6Env(PyCRCTFEnv):
         self.env_config.attacker_static_opponent = attacker_opponent
         if self.env_config.emulation_config.static_attacker_strategy is not None:
             self.env_config.attacker_static_opponent.strategy = self.env_config.emulation_config.static_attacker_strategy
+            self.env_config.attacker_prevented_stops_remaining = self.env_config.emulation_config.static_attacker_stops_prevented
         self.env_config = FindPiStarDefender.update_pi_star(self.env_config)

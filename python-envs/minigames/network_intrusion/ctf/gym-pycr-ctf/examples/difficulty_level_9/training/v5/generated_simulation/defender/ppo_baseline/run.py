@@ -68,14 +68,17 @@ def default_config() -> ClientConfig:
 
     # Novice attacker
     emulation_config.static_attacker_strategy = [99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
+    emulation_config.static_attacker_stops_prevented = 0
 
     # # Experienced Attacker
     # emulation_config.static_attacker_strategy = \
     #     [100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100, 266, 104, 106]
+    # emulation_config.static_attacker_stops_prevented = 0
     #
     # # Expert attacker
     # emulation_config.static_attacker_strategy = [100, 109, 104, 106, 100, 199, 104, 106,100, 265,
     #                                              104, 106, 100, 113, 104]
+    # emulation_config.static_attacker_stops_prevented = 0
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
     #                                                "network_intrusion/ctf/gym-pycr-ctf/" \

@@ -403,6 +403,11 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.eval_episode_intrusion_steps.append(_info[constants.INFO_DICT.INTRUSION_STEP])
                 train_log_dto.eval_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
                 train_log_dto.eval_optimal_defender_reward.append(_info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
+                train_log_dto.eval_defender_stops_remaining.append(_info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING])
+                train_log_dto.eval_defender_first_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP])
+                train_log_dto.eval_defender_second_stop_step.append(_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
+                train_log_dto.eval_defender_third_stop_step.append(_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
+                train_log_dto.eval_defender_fourth_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
                 train_log_dto.eval_update_env_specific_metrics(env_conf, _info, i)
             else:
                 train_log_dto.attacker_eval_2_episode_rewards.append(attacker_episode_reward)
@@ -445,6 +450,11 @@ def _quick_eval_helper(env, attacker_model, defender_model,
                 train_log_dto.eval_2_episode_intrusion_steps.append(_info[constants.INFO_DICT.INTRUSION_STEP])
                 train_log_dto.eval_2_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
                 train_log_dto.eval_2_optimal_defender_reward.append(_info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
+                train_log_dto.eval_2_defender_stops_remaining.append(_info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING])
+                train_log_dto.eval_2_defender_first_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP])
+                train_log_dto.eval_2_defender_second_stop_step.append(_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
+                train_log_dto.eval_2_defender_third_stop_step.append(_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
+                train_log_dto.eval_2_defender_fourth_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
                 train_log_dto.eval_2_update_env_specific_metrics(env_conf, _info, i)
             if isinstance(env, SubprocVecEnv):
                 obs = env.eval_reset(idx=i)

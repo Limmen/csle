@@ -36,6 +36,7 @@ class ManualDefenderAgent:
             latest_obs = None
             latest_rew = None
             latest_obs = env.reset()
+            total_reward = (0,0)
             while True:
                 raw_input = input(">")
                 raw_input = raw_input.strip()
@@ -48,6 +49,7 @@ class ManualDefenderAgent:
                           "press H to print the history of actions")
                 elif raw_input == "R":
                     latest_obs = env.reset()
+                    total_reward = (0, 0)
                 elif raw_input == "S":
                     print(str(env.env_state.defender_obs_state))
                 elif raw_input == "L":
@@ -64,6 +66,8 @@ class ManualDefenderAgent:
                     print(latest_obs[1].tolist())
                 elif raw_input == "U":
                     print(latest_rew)
+                elif raw_input == "Q":
+                    print(total_reward)
                 else:
                     actions_str = raw_input.split(",")
                     digits_only = any(any(char.isdigit() for char in x) for x in actions_str)
@@ -77,6 +81,7 @@ class ManualDefenderAgent:
                                 action = (attacker_action, a)
                                 print("Attacker action: {}".format(attacker_action))
                                 latest_obs, latest_rew, done, _ = self.env.step(action)
+                                total_reward = (total_reward[0] + latest_rew[0], total_reward[1] + latest_rew[1])
                                 if self.model is not None:
                                     attacker_obs, defender_obs = latest_obs
                                     obs_tensor = torch.as_tensor(defender_obs.flatten()).to(self.device)

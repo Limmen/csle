@@ -198,9 +198,24 @@ class StoppingBaselinesUtil:
                 )):
             s = StoppingBaselinesUtil.simulate_baselines_vs_opponent(
                 attacker_opponent=attacker_opponent, env_config=env_config, env=env, s=s)
+            costs = 0
+            for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
+                costs += env_config.multistop_costs[i]
+                if i == env_config.attacker_prevented_stops_remaining:
+                    break
+            optimal_stopping_time = max(s.attacker_obs_state.intrusion_step + 1,
+                                        env_config.maximum_number_of_defender_stop_actions -
+                                        env_config.attacker_prevented_stops_remaining)
+            optimal_intrusion_loss_steps = optimal_stopping_time - (s.attacker_obs_state.intrusion_step + 1)
+            optimal_intrusion_loss_steps = 0
+            if env_config.attacker_prevented_stops_remaining > 0:
+                optimal_service_reward = env_config.defender_service_reward*s.defender_obs_state.step
+            else:
+                optimal_service_reward = env_config.defender_service_reward*optimal_stopping_time
             optimal_defender_reward = \
-                env_config.defender_service_reward * s.attacker_obs_state.intrusion_step \
-                + env_config.defender_caught_attacker_reward
+                optimal_service_reward \
+                + optimal_intrusion_loss_steps * env_config.defender_intrusion_reward \
+                + env_config.defender_caught_attacker_reward + costs
         s.defender_obs_state.caught_attacker = old_caught_attacker
         return optimal_defender_reward
 

@@ -85,7 +85,7 @@ def manual_control():
         strategy=[100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104, 106, 100,
                   266, 104, 106],
         random_start=True, start_p=0.2, continue_action=372)
-    env.env_config.attacker_prevented_stops_remaining = 1
+    env.env_config.attacker_prevented_stops_remaining = 2
 
     # Expert attacker
     # attacker_opponent = CustomAttackerBotAgent(

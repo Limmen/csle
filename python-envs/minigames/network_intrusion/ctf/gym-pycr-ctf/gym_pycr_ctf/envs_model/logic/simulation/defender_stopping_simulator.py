@@ -33,6 +33,8 @@ class DefenderStoppingSimulator:
             s_prime.defender_obs_state.third_stop_step = s_prime.defender_obs_state.step
         elif (s_prime.defender_obs_state.maximum_number_of_stops - s_prime.defender_obs_state.stops_remaining) == 4:
             s_prime.defender_obs_state.fourth_stop_step = s_prime.defender_obs_state.step
+        else:
+            raise ValueError("Stopping step not recognized")
 
         reward = 0
         done = False
@@ -43,10 +45,10 @@ class DefenderStoppingSimulator:
                     s_prime.defender_obs_state.caught_attacker = True
             if s_prime.defender_obs_state.stops_remaining == 0:
                 done = True
-            else:
-                if not s.defender_obs_state.caught_attacker:
-                    reward = reward + env_config.defender_intrusion_reward
-                    s_prime.attacker_obs_state.undetected_intrusions_steps += 1
+            # else:
+            #     if not s_prime.defender_obs_state.caught_attacker:
+            #         reward = reward + env_config.defender_intrusion_reward
+            #         s_prime.attacker_obs_state.undetected_intrusions_steps += 1
         else:
             if s_prime.defender_obs_state.stops_remaining == 0:
                 s_prime.defender_obs_state.stopped = True
@@ -77,7 +79,8 @@ class DefenderStoppingSimulator:
         s_prime = s
         reward = env_config.defender_service_reward
         if s_prime.attacker_obs_state.ongoing_intrusion():
-            if not s.defender_obs_state.caught_attacker:
+            if not s.defender_obs_state.caught_attacker \
+                    and not env_config.attacker_prevented_stops_remaining >= s_prime.defender_obs_state.stops_remaining:
                 reward = reward + env_config.defender_intrusion_reward
                 s_prime.attacker_obs_state.undetected_intrusions_steps += 1
         return s_prime, reward, False

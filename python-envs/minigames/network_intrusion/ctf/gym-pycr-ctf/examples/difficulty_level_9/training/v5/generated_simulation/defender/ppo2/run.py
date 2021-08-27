@@ -45,48 +45,51 @@ def default_config() -> ClientConfig:
     #eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
     eval_env_name = "pycr-ctf-level-9-generated-sim-v5"
 
-    # emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-    #                                          server_connection=False, port_forward_next_port=4000)
-    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-                                           agent_username="agent", agent_pw="agent", server_connection=True,
-                                           server_private_key_file="/home/kim/.ssh/id_rsa",
-                                           server_username="kim", port_forward_next_port=4000)
+    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+                                             server_connection=False, port_forward_next_port=4000)
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    #                                        agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                        server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                        server_username="kim", port_forward_next_port=4000)
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                    agent_username="agent", agent_pw="agent", server_connection=True,
     #                                    server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                                    server_username="kim", port_forward_next_port=4000)
-    # eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
-    #                                        server_connection=False, port_forward_next_port=5000)
+    eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+                                           server_connection=False, port_forward_next_port=5000)
     # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                               agent_username="agent", agent_pw="agent", server_connection=True,
     #                               server_private_key_file="/Users/kimham/.ssh/pycr_id_rsa",
     #                               server_username="kim", port_forward_next_port=5000)
-    eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
-                                            agent_username="agent", agent_pw="agent", server_connection=True,
-                                            server_private_key_file="/home/kim/.ssh/id_rsa",
-                                            server_username="kim", port_forward_next_port=5000)
+    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    #                                         agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                         server_username="kim", port_forward_next_port=5000)
 
     # Novice attacker
-    #emulation_config.static_attacker_strategy = [99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
+    emulation_config.static_attacker_strategy = [99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
+    emulation_config.static_attacker_stops_prevented = 0
 
     # # Experienced Attacker
-    emulation_config.static_attacker_strategy = \
-        [100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100, 266, 104, 106]
+    # emulation_config.static_attacker_strategy = \
+    #     [100, 109, 33, 104, 106, 107, 100, 165, 104, 58, 104, 331, 106, 100, 200, 104,106,100, 266, 104, 106]
+    # emulation_config.static_attacker_stops_prevented = 0
     #
     # # Expert attacker
     # emulation_config.static_attacker_strategy = [100, 109, 104, 106, 100, 199, 104, 106,100, 265,
     #                                              104, 106, 100, 113, 104]
+    #emulation_config.static_attacker_stops_prevented = 0
 
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
-                                                   "network_intrusion/ctf/gym-pycr-ctf/" \
-                                                  "examples/difficulty_level_9/hello_world/"
+    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
+    #                                                "network_intrusion/ctf/gym-pycr-ctf/" \
+    #                                               "examples/difficulty_level_9/hello_world/"
 
     # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/" \
     #                                                 "examples/difficulty_level_9/hello_world/"
 
-    # eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
-    #                                                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+                                                     "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
 
     eval_emulation_config.skip_exploration = True
     eval_emulation_config.skip_exploration = True

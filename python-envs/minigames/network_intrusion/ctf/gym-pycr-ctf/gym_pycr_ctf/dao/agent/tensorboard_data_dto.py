@@ -552,7 +552,7 @@ class TensorboardDataDTO:
                       f"lr:{self.lr:.2E},avg_F:{self.avg_episode_flags:.2f}," \
                       f"avg_F%:{self.avg_episode_flags_percentage:.2f}," \
                       f"n_af:{self.n_af},n_d:{self.n_d}," \
-                      f"c:{self.episode_caught_frac:.2f},s:{self.episode_early_stopped_frac:.2f}," \
+                      f"c:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
                       f"costs:{self.avg_episode_costs:.2f},costs_N:{self.avg_episode_costs_norm:.2f}," \
                       f"alerts:{self.avg_episode_alerts:.2f}," \
@@ -573,11 +573,11 @@ class TensorboardDataDTO:
                       f"Opt_frac_E2:{self.avg_opt_frac_2:.2f},avg_t_E2:{self.eval_2_avg_episode_steps:.2f}," \
                       f"avg_F_E2:{self.eval_2_avg_episode_flags:.2f}," \
                       f"avg_F_E2%:{self.eval_2_avg_episode_flags_percentage:.2f},epsilon:{self.epsilon:.2f}," \
-                      f"c:{self.episode_caught_frac:.2f},s:{self.episode_early_stopped_frac:.2f}," \
+                      f"ca:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
-                      f"c_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
+                      f"ca_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
                       f"s_i_E:{self.eval_episode_successful_intrusion_frac:.2f}," \
-                      f"c_E2:{self.eval_2_episode_caught_frac:.2f},es_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
+                      f"ca_E2:{self.eval_2_episode_caught_frac:.2f},es_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
                       f"s_i_E:{self.eval_2_episode_successful_intrusion_frac:.2f},costs:{self.avg_episode_costs:.2f}," \
                       f"costs_N:{self.avg_episode_costs_norm:.2f},alerts:{self.avg_episode_alerts:.2f}," \
                       f"alerts_N:{self.avg_episode_alerts_norm:.2f},E_costs:{self.eval_avg_episode_costs:.2f}," \
@@ -615,7 +615,7 @@ class TensorboardDataDTO:
                       f"V_log_avg_ca:{self.avg_episode_var_log_baseline_caught_attacker:.2f}, " \
                       f"step_avg_ca:{self.avg_episode_step_baseline_caught_attacker:.2f}," \
                       f"S_sev_avg_es:{self.avg_episode_snort_severe_baseline_early_stopping:.2f}," \
-                      f"S_warn_avg_e:{self.avg_episode_snort_warning_baseline_early_stopping:.2f}," \
+                      f"S_warn_avg_es:{self.avg_episode_snort_warning_baseline_early_stopping:.2f}," \
                       f"S_crit_avg_es:{self.avg_episode_snort_critical_baseline_early_stopping:.2f}," \
                       f"V_log_avg_es:{self.avg_episode_var_log_baseline_early_stopping:.2f}, " \
                       f"step_avg_es:{self.avg_episode_step_baseline_early_stopping:.2f}," \
@@ -626,7 +626,7 @@ class TensorboardDataDTO:
                       f"step_avg_uit:{self.avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
                       f"avg_t:{self.avg_episode_steps:.2f},rolling_avg_t:{self.rolling_avg_steps:.2f}," \
                       f"lr:{self.lr:.2E}," \
-                      f"c:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
+                      f"ca:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f},avg_I_t:{self.avg_episode_intrusion_steps:.2f}, " \
                       f"avg_stops_left_T:{self.avg_defender_stops_remaining:.2f}," \
                       f"avg_first_stop_t_T:{self.avg_defender_first_stop_step:.2f}," \
@@ -738,12 +738,12 @@ class TensorboardDataDTO:
                       f"step_avg_uit_E2:{self.eval_avg_2_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
                       f"avg_t_E2:{self.eval_2_avg_episode_steps:.2f}," \
                       f"epsilon:{self.epsilon:.2f}," \
-                      f"c:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
+                      f"ca:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
                       f"n_af:{self.n_af:.2f}," \
-                      f"c_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
+                      f"ca_E:{self.eval_episode_caught_frac:.2f},es_E:{self.eval_episode_early_stopped_frac:.2f}," \
                       f"s_i_E:{self.eval_episode_successful_intrusion_frac:.2f}," \
-                      f"c_E2:{self.eval_2_episode_caught_frac:.2f},ess_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
+                      f"ca_E2:{self.eval_2_episode_caught_frac:.2f},es_E2:{self.eval_2_episode_early_stopped_frac:.2f}," \
                       f"s_i_E2:{self.eval_2_episode_successful_intrusion_frac:.2f},avg_F_T:{self.avg_episode_flags:.2f}," \
                       f"avg_F_T%:{self.avg_episode_flags_percentage:.2f}," \
                       f"avg_F_E:{self.eval_avg_episode_flags:.2f},avg_F_E%:{self.eval_avg_episode_flags_percentage:.2f}," \

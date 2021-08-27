@@ -218,13 +218,13 @@ class PyCRCTFEnv(gym.Env, ABC):
             self.env_state.attacker_obs_state.intrusion_started = self.env_state.attacker_obs_state.intrusion_started \
                                                                   or static_attack_started
 
-            if done:
-                self.env_state.attacker_obs_state.intrusion_completed = True
-                if self.env_state.defender_obs_state.caught_attacker:
-                    defense_action = self.env_config.defender_action_conf.actions[defense_action_id]
-                    if defense_action.id == DefenderActionId.CONTINUE:
-                        defender_reward = 0
-                    defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
+        if done:
+            self.env_state.attacker_obs_state.intrusion_completed = True
+            if self.env_state.defender_obs_state.caught_attacker:
+                defense_action = self.env_config.defender_action_conf.actions[defense_action_id]
+                if defense_action.id == DefenderActionId.CONTINUE:
+                    defender_reward = 0
+                defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
 
         # Merge infos
         if info is None:
@@ -406,9 +406,26 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         optimal_defender_reward = 0
         if self.env_state.defender_obs_state.stopped or self.env_state.defender_obs_state.caught_attacker:
+            costs = 0
+            for i in range(self.env_config.maximum_number_of_defender_stop_actions, 0, -1):
+                costs += self.env_config.multistop_costs[i]
+                if i == self.env_config.attacker_prevented_stops_remaining:
+                    break
+
+            optimal_stopping_time = max(self.env_state.attacker_obs_state.intrusion_step + 1,
+                                        self.env_config.maximum_number_of_defender_stop_actions -
+                                        self.env_config.attacker_prevented_stops_remaining)
+            optimal_intrusion_loss_steps = optimal_stopping_time - (self.env_state.attacker_obs_state.intrusion_step + 1)
+            optimal_intrusion_loss_steps = 0
+            if self.env_config.attacker_prevented_stops_remaining > 0:
+                optimal_service_reward = self.env_config.defender_service_reward*self.env_state.defender_obs_state.step
+            else:
+                optimal_service_reward = self.env_config.defender_service_reward*optimal_stopping_time
+
             optimal_defender_reward = \
-                self.env_config.defender_service_reward*self.env_state.attacker_obs_state.intrusion_step \
-                + self.env_config.defender_caught_attacker_reward
+                optimal_service_reward \
+                + optimal_intrusion_loss_steps*self.env_config.defender_intrusion_reward \
+                + self.env_config.defender_caught_attacker_reward + costs
 
         self.env_state = s_prime
 

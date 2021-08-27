@@ -126,12 +126,13 @@ class EnvConfig:
         self.attacker_final_steps_reward_coefficient = 1
 
         self.defender_final_steps_reward_coefficient = 0
-        self.defender_caught_attacker_reward = 100
+        self.defender_caught_attacker_reward = 200
         self.defender_early_stopping_reward = -100
         self.defender_service_reward = 10
         self.defender_intrusion_reward = -100
 
-        self.multistop_costs = [0, -6.25, -12.5, -25, -100]
+        # self.multistop_costs = [0, -6.25, -12.5, -25, -100]
+        self.multistop_costs = [0, -100, -25, -12.5, -6.25]
 
 
         self.defender_sum_costs = 1

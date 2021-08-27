@@ -713,18 +713,19 @@ class EnvDynamicsUtil:
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
-    def logged_in_ips_str(env_config: EnvConfig, a: AttackerAction, s: EnvState) -> str:
+    def logged_in_ips_str(env_config: EnvConfig, a: AttackerAction, s: EnvState, full_ip_str: bool = False) -> str:
         """
         Utility function to getting a string-id of the attacker state (Q) of logged in machines
 
         :param env_config: the environment config
         :param a: the action
         :param s: the current state
+        :param full_ip_str: a boolean indicating whether the full ip string should be used regardless of intrusion state
         :return: the string id
         """
         hacker_ip = env_config.hacker_ip
         machines = s.attacker_obs_state.machines
-        if s.defender_obs_state.caught_attacker:
+        if s.defender_obs_state.caught_attacker and not full_ip_str:
             machines = []
         logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),

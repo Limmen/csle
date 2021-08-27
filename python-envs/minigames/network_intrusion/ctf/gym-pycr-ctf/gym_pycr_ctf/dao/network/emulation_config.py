@@ -21,7 +21,7 @@ class EmulationConfig:
                  save_dynamics_model_dir : str = None, skip_exploration : bool = False,
                  save_dynamics_model_file: str = None, save_netconf_file: str = None,
                  save_trajectories_file : str = None, save_system_id_logs_file :str = None,
-                 static_attacker_strategy : List[int] = None):
+                 static_attacker_strategy : List[int] = None, static_attacker_stops_prevented : int = 1):
         """
         Initializes the emulation configuration
 
@@ -43,6 +43,7 @@ class EmulationConfig:
         :param save_trajectories_file: name of the file to save the stored trajectories from the emulation
         :param save_system_id_logs_file: name of the file to save the system-id logs
         :param static_attacker_strategy: if training only the defender, a static attacker strategy
+        :param static_attacker_stops_prevented: number of stops required to stop the static attacker
         """
         self.agent_ip = agent_ip
         self.agent_username = agent_username
@@ -69,6 +70,7 @@ class EmulationConfig:
         self.save_trajectories_file = save_trajectories_file
         self.save_system_id_logs_file = save_system_id_logs_file
         self.static_attacker_strategy = static_attacker_strategy
+        self.static_attacker_stops_prevented = static_attacker_stops_prevented
 
     def connect_server(self) -> None:
         """
@@ -520,4 +522,5 @@ class EmulationConfig:
                f"save_dynamics_model_file: {self.save_dynamics_model_file}, save_netconf_file: {self.save_netconf_file}, " \
                f"save_trajectories_file: {self.save_trajectories_file}, " \
                f"save_system_id_logs_file: {self.save_system_id_logs_file}, " \
-               f"static_attacker_strategy: {self.static_attacker_strategy}"
+               f"static_attacker_strategy: {self.static_attacker_strategy}," \
+               f"static_attacker_stops_prevented:{self.static_attacker_stops_prevented}"

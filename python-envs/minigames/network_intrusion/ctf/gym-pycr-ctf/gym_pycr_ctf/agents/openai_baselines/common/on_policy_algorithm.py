@@ -568,7 +568,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         eval_2_episode_caught_list, eval_2_episode_early_stopped_list, \
                         eval_2_episode_successful_intrusion_list, eval_2_attacker_cost_list, \
                         eval_2_attacker_cost_norm_list, \
-                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list, eval_2_episode_intrusion_steps = \
+                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list, eval_2_episode_intrusion_steps, \
+                        eval_2_defender_first_stop_step, eval_2_defender_second_stop_step, \
+                        eval_2_defender_third_stop_step, eval_2_defender_fourth_stop_step, \
+                        eval_2_defender_stops_remaining = \
                             EvalUtil.eval_defender(self.env.envs[0], self,
                                                    deterministic=self.attacker_agent_config.eval_deterministic)
 
@@ -611,6 +614,11 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
                         train_log_dto.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
                         train_log_dto.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
+                        train_log_dto.eval_2_defender_first_stop_step = eval_2_defender_first_stop_step
+                        train_log_dto.eval_2_defender_second_stop_step = eval_2_defender_second_stop_step
+                        train_log_dto.eval_2_defender_third_stop_step = eval_2_defender_third_stop_step
+                        train_log_dto.eval_2_defender_fourth_stop_step = eval_2_defender_fourth_stop_step
+                        train_log_dto.eval_2_defender_stops_remaining = eval_2_defender_stops_remaining
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):
