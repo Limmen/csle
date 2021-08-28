@@ -539,7 +539,7 @@ class PyCRCTFLevel9GeneratedSim6Env(PyCRCTFEnv):
             #               200, 104, 105, 106, 58, 104, 105, 331,
             #               105, 99, 266, 104, 105, 106, 99,  113, 104,105])
 
-            env_config.defender_caught_attacker_reward = 100
+            env_config.defender_caught_attacker_reward = 200
             env_config.defender_early_stopping_reward = -100
             env_config.defender_intrusion_reward = -100
             env_config.defender_service_reward = 10
@@ -548,6 +548,7 @@ class PyCRCTFLevel9GeneratedSim6Env(PyCRCTFEnv):
             env_config.snort_severe_baseline_threshold = 1
             env_config.var_log_baseline_threshold = 1
             env_config.step_baseline_threshold = 6
+            env_config.multistop_costs = [-100, -50, -25, -12.5, 0]
             env_config.emulate_detection = False
             env_config.simulate_detection = False
             env_config.attacker_early_stopping_reward = 10

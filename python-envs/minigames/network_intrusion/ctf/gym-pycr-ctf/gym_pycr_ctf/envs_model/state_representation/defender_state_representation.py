@@ -60,6 +60,15 @@ class DefenderStateRepresentation:
                 network_obs[5] = obs_state.sum_priority_alerts_total
                 network_obs[6] = obs_state.num_severe_alerts_total
                 network_obs[7] = obs_state.num_warning_alerts_total
+            else:
+                network_obs[0] = -1
+                network_obs[1] = -1
+                network_obs[2] = -1
+                network_obs[3] = -1
+                network_obs[4] = -1
+                network_obs[5] = -1
+                network_obs[6] = -1
+                network_obs[7] = -1
             if multiple_stopping:
                 network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
@@ -170,6 +179,15 @@ class DefenderStateRepresentation:
                 network_obs[5] = obs_state.sum_priority_alerts_total
                 network_obs[6] = obs_state.num_severe_alerts_total
                 network_obs[7] = obs_state.num_warning_alerts_total
+            else:
+                network_obs[0] = -1
+                network_obs[1] = -1
+                network_obs[2] = -1
+                network_obs[3] = -1
+                network_obs[4] = -1
+                network_obs[5] = -1
+                network_obs[6] = -1
+                network_obs[7] = -1
             network_obs[8] = obs_state.step
             if multiple_stopping:
                 network_obs[num_network_features - 1] = obs_state.stops_remaining
@@ -258,6 +276,11 @@ class DefenderStateRepresentation:
                 network_obs[1] = obs_state.sum_priority_alerts_recent
                 network_obs[2] = obs_state.num_severe_alerts_recent
                 network_obs[3] = obs_state.num_warning_alerts_recent
+            else:
+                network_obs[0] = -1
+                network_obs[1] = -1
+                network_obs[2] = -1
+                network_obs[3] = -1
             if multiple_stopping:
                 network_obs[num_network_features - 1] = obs_state.stops_remaining
         else:
@@ -326,6 +349,10 @@ class DefenderStateRepresentation:
                 network_obs[1] = obs_state.num_warning_alerts_total
                 num_login_attempts = sum(list(map(lambda x: x.num_failed_login_attempts, obs_state.machines)))
                 network_obs[2] = num_login_attempts
+            else:
+                network_obs[0] = -1
+                network_obs[1] = -1
+                network_obs[2] = -1
             network_obs[3] = obs_state.step
             if multiple_stopping:
                 network_obs[num_network_features - 1] = obs_state.stops_remaining
@@ -385,6 +412,15 @@ class DefenderStateRepresentation:
                 network_obs[5] = obs_state.sum_priority_alerts_total
                 network_obs[6] = obs_state.num_severe_alerts_total
                 network_obs[7] = obs_state.num_warning_alerts_total
+            else:
+                network_obs[0] = -1
+                network_obs[1] = -1
+                network_obs[2] = -1
+                network_obs[3] = -1
+                network_obs[4] = -1
+                network_obs[5] = -1
+                network_obs[6] = -1
+                network_obs[7] = -1
             network_obs[8] = obs_state.step
             if multiple_stopping:
                 network_obs[num_network_features-1] = obs_state.stops_remaining

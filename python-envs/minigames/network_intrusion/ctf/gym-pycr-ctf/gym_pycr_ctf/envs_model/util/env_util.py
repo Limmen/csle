@@ -1,3 +1,4 @@
+import math
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
@@ -280,3 +281,43 @@ class EnvUtil:
                     if action.id == AttackerActionId.FIND_FLAG and logged_in:
                         return True
         return False
+
+    @staticmethod
+    def compute_optimal_defender_reward(s: EnvState, env_config: EnvConfig) -> float:
+        """
+        Computes the optimal defender reward
+
+        :param s: the environment state
+        :param env_config: the environment configuration
+        :return: the optimal defender reward
+        """
+        optimal_stopping_time = max(s.attacker_obs_state.intrusion_step + 1,
+                                    env_config.maximum_number_of_defender_stop_actions -
+                                    env_config.attacker_prevented_stops_remaining)
+
+        costs = 0
+        for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
+            if i < env_config.attacker_prevented_stops_remaining:
+                break
+            costs += env_config.multistop_costs[i]
+
+        optimal_service_reward = 0
+        optimal_service_reward = optimal_service_reward + env_config.defender_service_reward * \
+                                 (optimal_stopping_time - 1 -
+                                  (env_config.maximum_number_of_defender_stop_actions -
+                                   env_config.attacker_prevented_stops_remaining))
+        for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
+            if i < env_config.attacker_prevented_stops_remaining:
+                break
+            elif i == env_config.attacker_prevented_stops_remaining:
+                if env_config.attacker_prevented_stops_remaining > 0:
+                    optimal_service_reward += (s.defender_obs_state.step - optimal_stopping_time + 1) * \
+                                              env_config.defender_service_reward / (
+                                                  math.pow(2, env_config.maximum_number_of_defender_stop_actions - i))
+                else:
+                    optimal_service_reward += (optimal_stopping_time) * \
+                                              env_config.defender_service_reward / \
+                                              (math.pow(2, env_config.maximum_number_of_defender_stop_actions - i))
+
+        optimal_defender_reward = optimal_service_reward + env_config.defender_caught_attacker_reward + costs
+        return optimal_defender_reward

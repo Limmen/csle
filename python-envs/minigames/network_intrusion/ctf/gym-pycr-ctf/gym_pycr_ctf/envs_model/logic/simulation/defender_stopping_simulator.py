@@ -1,4 +1,5 @@
 from typing import Tuple
+import math
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
@@ -40,9 +41,10 @@ class DefenderStoppingSimulator:
         done = False
         if s_prime.attacker_obs_state.ongoing_intrusion():
             s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-            if env_config.attacker_prevented_stops_remaining >= s_prime.defender_obs_state.stops_remaining:
+            if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.stops_remaining:
                 if not s_prime.defender_obs_state.caught_attacker:
                     s_prime.defender_obs_state.caught_attacker = True
+                    reward = reward + env_config.defender_caught_attacker_reward
             if s_prime.defender_obs_state.stops_remaining == 0:
                 done = True
             # else:
@@ -54,13 +56,13 @@ class DefenderStoppingSimulator:
                 s_prime.defender_obs_state.stopped = True
                 done = True
 
-        #costs = 0
         idx = env_config.maximum_number_of_defender_stop_actions - (env_config.maximum_number_of_defender_stop_actions -
                                                                     s_prime.defender_obs_state.stops_remaining)
         costs = env_config.multistop_costs[idx]
         reward = reward + costs
-        if not done:
-            reward = reward + env_config.defender_service_reward
+        # if not done:
+        reward = reward + env_config.defender_service_reward / math.pow(2, (env_config.maximum_number_of_defender_stop_actions -
+                                                                   s_prime.defender_obs_state.stops_remaining))
 
         return s_prime, reward, done
 
@@ -78,11 +80,16 @@ class DefenderStoppingSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
-        reward = env_config.defender_service_reward
+        reward = env_config.defender_service_reward/math.pow(2, (env_config.maximum_number_of_defender_stop_actions-
+                                                     s_prime.defender_obs_state.stops_remaining))
         if s_prime.attacker_obs_state.ongoing_intrusion():
             if not s.defender_obs_state.caught_attacker \
                     and not env_config.attacker_prevented_stops_remaining >= s_prime.defender_obs_state.stops_remaining:
                 reward = reward + env_config.defender_intrusion_reward
                 s_prime.attacker_obs_state.undetected_intrusions_steps += 1
+        # idx = env_config.maximum_number_of_defender_stop_actions - (env_config.maximum_number_of_defender_stop_actions -
+        #                                                             s_prime.defender_obs_state.stops_remaining)
+        #costs = env_config.multistop_costs[idx]
+        # reward = reward + costs
         return s_prime, reward, False
 

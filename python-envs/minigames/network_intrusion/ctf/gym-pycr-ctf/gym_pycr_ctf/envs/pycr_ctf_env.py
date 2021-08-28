@@ -204,11 +204,6 @@ class PyCRCTFEnv(gym.Env, ABC):
         defender_info[constants.INFO_DICT.ATTACKER_ALERTS] = self.env_state.attacker_obs_state.alerts
         defender_info[constants.INFO_DICT.ATTACKER_ALERTS_NORM] = self.env_state.attacker_obs_state.alerts_norm
         defender_info[constants.INFO_DICT.FLAGS] = 0
-        defender_info[constants.INFO_DICT.DEFENDER_STOPS_REMAINING] = self.env_config.maximum_number_of_defender_stop_actions
-        defender_info[constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP] = -1
-        defender_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP] = -1
-        defender_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP] = -1
-        defender_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP] = -1
 
         if not done:
 
@@ -224,7 +219,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                 defense_action = self.env_config.defender_action_conf.actions[defense_action_id]
                 if defense_action.id == DefenderActionId.CONTINUE:
                     defender_reward = 0
-                defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
+                # defender_reward = defender_reward + self.env_config.defender_caught_attacker_reward
 
         # Merge infos
         if info is None:
@@ -404,28 +399,7 @@ class PyCRCTFEnv(gym.Env, ABC):
                                        - self.env_state.attacker_obs_state.intrusion_step)
         info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS] = uncaught_intrusion_steps
 
-        optimal_defender_reward = 0
-        if self.env_state.defender_obs_state.stopped or self.env_state.defender_obs_state.caught_attacker:
-            costs = 0
-            for i in range(self.env_config.maximum_number_of_defender_stop_actions, 0, -1):
-                costs += self.env_config.multistop_costs[i]
-                if i == self.env_config.attacker_prevented_stops_remaining:
-                    break
-
-            optimal_stopping_time = max(self.env_state.attacker_obs_state.intrusion_step + 1,
-                                        self.env_config.maximum_number_of_defender_stop_actions -
-                                        self.env_config.attacker_prevented_stops_remaining)
-            optimal_intrusion_loss_steps = optimal_stopping_time - (self.env_state.attacker_obs_state.intrusion_step + 1)
-            optimal_intrusion_loss_steps = 0
-            if self.env_config.attacker_prevented_stops_remaining > 0:
-                optimal_service_reward = self.env_config.defender_service_reward*self.env_state.defender_obs_state.step
-            else:
-                optimal_service_reward = self.env_config.defender_service_reward*optimal_stopping_time
-
-            optimal_defender_reward = \
-                optimal_service_reward \
-                + optimal_intrusion_loss_steps*self.env_config.defender_intrusion_reward \
-                + self.env_config.defender_caught_attacker_reward + costs
+        optimal_defender_reward = EnvUtil.compute_optimal_defender_reward(s=self.env_state, env_config=self.env_config)
 
         self.env_state = s_prime
 
@@ -444,10 +418,10 @@ class PyCRCTFEnv(gym.Env, ABC):
             attacker_opponent=self.env_config.attacker_static_opponent)
 
         optimal_defender_reward = max(opt_r, optimal_defender_reward)
+
         info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD] = optimal_defender_reward
 
         info = self.env_state.defender_obs_state.update_info_dict(info)
-
         return defender_reward, attacker_reward, done, info
 
 

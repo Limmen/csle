@@ -1,6 +1,7 @@
 from typing import Tuple, List
 import torch
 import numpy as np
+import math
 from gym_pycr_ctf.dao.network.trajectory import Trajectory
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 import gym_pycr_ctf.constants.constants as constants
@@ -101,8 +102,6 @@ class EvalUtil:
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
                 env=env, intrusion_start_time=intrusion_start_time)
             optimal_stopping_time = max(intrusion_start_time + 1, env.env_config.maximum_number_of_defender_stop_actions - env.env_config.attacker_prevented_stops_remaining)
-            optimal_intrusion_loss_steps = optimal_stopping_time-(intrusion_start_time+1)
-            optimal_intrusion_loss_steps = 0
             optimal_stopping_indexes = []
             for i in range(env.env_config.maximum_number_of_defender_stop_actions-1, -1, -1):
                 if i >= env.env_config.attacker_prevented_stops_remaining:
@@ -112,21 +111,34 @@ class EvalUtil:
                 else:
                     optimal_stopping_indexes.append(-1)
 
-            if env.env_config.attacker_prevented_stops_remaining > 0:
-                optimal_service_reward = env.env_config.defender_service_reward*len(tau.defender_observations)
-            else:
-                optimal_service_reward = env.env_config.defender_service_reward*optimal_stopping_time
-
-            opt_r_l.append(optimal_service_reward
-                           + optimal_intrusion_loss_steps*env.env_config.defender_intrusion_reward
-                           + optimal_costs
-                           + env.env_config.defender_caught_attacker_reward)
             obs, obs_intrusion = EvalUtil.merge_observations(no_intrusion_obs, tau, env_config=env.env_config)
+
+            optimal_service_reward = 0
+            optimal_service_reward = optimal_service_reward + env.env_config.defender_service_reward * \
+                                     (optimal_stopping_time - 1 -
+                                      (env.env_config.maximum_number_of_defender_stop_actions -
+                                       env.env_config.attacker_prevented_stops_remaining))
+            for i in range(env.env_config.maximum_number_of_defender_stop_actions, 0, -1):
+                if i < env.env_config.attacker_prevented_stops_remaining:
+                    break
+                elif i == env.env_config.attacker_prevented_stops_remaining:
+                    if env.env_config.attacker_prevented_stops_remaining > 0:
+                        optimal_service_reward += (len(obs) - optimal_stopping_time + 1) * \
+                                                  env.env_config.defender_service_reward / (
+                                                      math.pow(2,
+                                                               env.env_config.maximum_number_of_defender_stop_actions - i))
+                    else:
+                        optimal_service_reward += (optimal_stopping_time) * \
+                                                  env.env_config.defender_service_reward / \
+                                                  (math.pow(2, env.env_config.maximum_number_of_defender_stop_actions - i))
+
+            opt_r_l.append(optimal_service_reward + optimal_costs + env.env_config.defender_caught_attacker_reward)
+
             actions, values = EvalUtil.predict(policy, obs, env, deterministic=deterministic)
             reward, early_stopping, succ_intrusion, caught, uncaught_intrusion_steps, stopping_indexes = \
                 EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
-                steps=len(np.array(tau.defender_observations)), intrusion_time=intrusion_start_time
+                steps=len(obs), intrusion_time=intrusion_start_time
             )
             stopping_obs_1 = obs[int(stopping_indexes[0])]
             flags, flags_percentage, attacker_cost, attacker_cost_norm, attacker_alerts, \
@@ -146,12 +158,12 @@ class EvalUtil:
             snort_warning_baseline_uit, snort_warning_baseline_s_indexes, snort_warning_baseline_succ_intrusion = \
                 EvalUtil.compute_snort_warning_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
-                steps=len(np.array(tau.defender_observations)), intrusion_time=intrusion_start_time)
+                steps=len(obs), intrusion_time=intrusion_start_time)
             snort_severe_baseline_r, snort_severe_baseline_ca, snort_severe_baseline_es, \
             snort_severe_baseline_uit, snort_severe_baseline_s_indexes, snort_warning_baseline_succ_intrusion \
                 = EvalUtil.compute_snort_severe_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
-                steps=len(np.array(tau.defender_observations)), intrusion_time=intrusion_start_time
+                steps=len(obs), intrusion_time=intrusion_start_time
             )
             snort_critical_baseline_r, snort_critical_baseline_ca, snort_critical_baseline_es, \
             snort_critical_baseline_uit, snort_critical_baseline_s_indexes, snort_warning_baseline_succ_intrusion \
@@ -162,12 +174,12 @@ class EvalUtil:
             var_log_baseline_uit, var_log_baseline_s_indexes, snort_warning_baseline_succ_intrusion = \
                 EvalUtil.compute_var_log_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
-                steps=len(np.array(tau.defender_observations)), intrusion_time=intrusion_start_time)
+                steps=len(obs), intrusion_time=intrusion_start_time)
             step_baseline_r, step_baseline_ca, step_baseline_es, \
             step_baseline_uit, step_baseline_indexes, snort_warning_baseline_succ_intrusion \
                 = EvalUtil.compute_step_baseline(
                 tau.defender_observations, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
-                steps=len(np.array(tau.defender_observations)), intrusion_time=intrusion_start_time)
+                steps=len(obs), intrusion_time=intrusion_start_time)
             steps_l = EvalUtil.compute_steps(actions, env_config=env.env_config)
             stops_remaining = EvalUtil.compute_stops_remaining(stopping_indexes)
             rewards.append(reward)
@@ -667,6 +679,16 @@ class EvalUtil:
         else:
             agent_service_reward = (episode_length-1)*env_config.defender_service_reward
 
+        agent_service_reward = 0
+        stops_remaining=env_config.maximum_number_of_defender_stop_actions
+        for i in range(1, episode_length+1):
+            if i in stopping_indexes:
+                stops_remaining +-1
+            else:
+                agent_service_reward += env_config.defender_service_reward/\
+                                        (math.pow(2,
+                                                  env_config.maximum_number_of_defender_stop_actions-stops_remaining))
+
         agent_intrusion_loss = 0
         if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx > optimal_stop_prevent_attacker_idx:
             agent_intrusion_loss = (max(0, agent_stop_prevent_attacker_idx - intrusion_time+1 -
@@ -678,7 +700,7 @@ class EvalUtil:
                                    * env_config.defender_intrusion_reward
 
         agent_attacker_caught_reward = 0
-        if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx >= optimal_stop_prevent_attacker_idx:
+        if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx > intrusion_time:
             agent_attacker_caught_reward = env_config.defender_caught_attacker_reward
             caught_attacker = True
             uncaught_intrusion_steps = max(0, agent_stop_prevent_attacker_idx - intrusion_time+1)

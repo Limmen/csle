@@ -281,7 +281,7 @@ class TensorboardDataDTO:
         self.avg_defender_third_stop_step = avg_defender_third_stop_step
         self.eval_avg_defender_third_stop_step = eval_avg_defender_third_stop_step
         self.eval_2_avg_defender_third_stop_step = eval_2_avg_defender_third_stop_step
-        self.avg_defender_fourth_stop_step = avg_defender_third_stop_step
+        self.avg_defender_fourth_stop_step = avg_defender_fourth_stop_step
         self.eval_avg_defender_fourth_stop_step = eval_avg_defender_fourth_stop_step
         self.eval_2_avg_defender_fourth_stop_step = eval_2_avg_defender_fourth_stop_step
 

@@ -12,7 +12,7 @@ def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
-    agent_config = AgentConfig(gamma=1, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
+    agent_config = AgentConfig(gamma=1, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
@@ -23,10 +23,10 @@ def default_config() -> ClientConfig:
                                save_dir=util.default_output_dir() + "/results/data",
                                checkpoint_freq=100, input_dim=(5),
                                output_dim=2,
-                               pi_hidden_dim=128, pi_hidden_layers=2,
-                               vf_hidden_dim=128, vf_hidden_layers=2,
-                               shared_hidden_layers=2, shared_hidden_dim=128,
-                               batch_size=12000,
+                               pi_hidden_dim=256, pi_hidden_layers=2,
+                               vf_hidden_dim=256, vf_hidden_layers=2,
+                               shared_hidden_layers=2, shared_hidden_dim=256,
+                               batch_size=2000,
                                gpu=False, tensorboard=True,
                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
@@ -68,7 +68,7 @@ def default_config() -> ClientConfig:
 
     # Novice attacker
     emulation_config.static_attacker_strategy = [99, 33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
-    emulation_config.static_attacker_stops_prevented = 0
+    emulation_config.static_attacker_stops_prevented = 2
 
     # # Experienced Attacker
     # emulation_config.static_attacker_strategy = \
@@ -78,7 +78,7 @@ def default_config() -> ClientConfig:
     # # Expert attacker
     # emulation_config.static_attacker_strategy = [100, 109, 104, 106, 100, 199, 104, 106,100, 265,
     #                                              104, 106, 100, 113, 104]
-    #emulation_config.static_attacker_stops_prevented = 0
+    # emulation_config.static_attacker_stops_prevented = 0
 
     # eval_emulation_config.save_dynamics_model_dir = "/home/kim/workspace/pycr/python-envs/minigames/" \
     #                                                "network_intrusion/ctf/gym-pycr-ctf/" \
@@ -107,7 +107,7 @@ def default_config() -> ClientConfig:
     client_config = ClientConfig(env_name=env_name, defender_agent_config=agent_config,
                                  agent_type=AgentType.PPO_BASELINE.value,
                                  output_dir=util.default_output_dir(),
-                                 title="PPO-Baseline level 9 v5",
+                                 title="PPO-Baseline level 9 v6",
                                  run_many=True, random_seeds=[0, 399, 999],
                                  random_seed=399, mode=RunnerMode.TRAIN_DEFENDER.value,
                                  eval_env=True, eval_env_name=eval_env_name,
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 
     # Setup
     args = util.parse_args(util.default_config_path())
-    experiment_title = "PPO level_9 v6 generated simulation"
+    experiment_title = "PPO level_9 v5 generated simulation"
     if args.configpath is not None and not args.noconfig:
         if not os.path.exists(args.configpath):
             write_default_config()

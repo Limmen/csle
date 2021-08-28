@@ -1,4 +1,5 @@
 import numpy as np
+from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
@@ -189,33 +190,11 @@ class StoppingBaselinesUtil:
         old_caught_attacker = s.defender_obs_state.caught_attacker
         s.defender_obs_state.caught_attacker = False
         if env_config.snort_baseline_simulate and \
-                attacker_opponent is not None and \
-                (done and (not s_prime.defender_obs_state.snort_severe_baseline_stopped or
-                           not s_prime.defender_obs_state.snort_warning_baseline_stopped
-                           or not s_prime.defender_obs_state.snort_critical_baseline_stopped
-                           or not s_prime.defender_obs_state.var_log_baseline_stopped
-                           or not s_prime.defender_obs_state.step_baseline_stopped
-                )):
+                attacker_opponent is not None and done:
             s = StoppingBaselinesUtil.simulate_baselines_vs_opponent(
                 attacker_opponent=attacker_opponent, env_config=env_config, env=env, s=s)
-            costs = 0
-            for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
-                costs += env_config.multistop_costs[i]
-                if i == env_config.attacker_prevented_stops_remaining:
-                    break
-            optimal_stopping_time = max(s.attacker_obs_state.intrusion_step + 1,
-                                        env_config.maximum_number_of_defender_stop_actions -
-                                        env_config.attacker_prevented_stops_remaining)
-            optimal_intrusion_loss_steps = optimal_stopping_time - (s.attacker_obs_state.intrusion_step + 1)
-            optimal_intrusion_loss_steps = 0
-            if env_config.attacker_prevented_stops_remaining > 0:
-                optimal_service_reward = env_config.defender_service_reward*s.defender_obs_state.step
-            else:
-                optimal_service_reward = env_config.defender_service_reward*optimal_stopping_time
-            optimal_defender_reward = \
-                optimal_service_reward \
-                + optimal_intrusion_loss_steps * env_config.defender_intrusion_reward \
-                + env_config.defender_caught_attacker_reward + costs
+
+            optimal_defender_reward = EnvUtil.compute_optimal_defender_reward(s=s, env_config=env_config)
         s.defender_obs_state.caught_attacker = old_caught_attacker
         return optimal_defender_reward
 
@@ -281,12 +260,12 @@ class StoppingBaselinesUtil:
                     s_prime.attacker_obs_state.intrusion_step = s_prime.defender_obs_state.step
             StoppingBaselinesUtil.compute_baseline_metrics(s=s, s_prime=s_prime, env_config=env_config)
 
-            if s_prime.defender_obs_state.snort_severe_baseline_stopped and \
-                    s_prime.defender_obs_state.snort_warning_baseline_stopped \
-                    and s_prime.defender_obs_state.snort_critical_baseline_stopped \
-                    and s_prime.defender_obs_state.var_log_baseline_stopped \
-                    and s_prime.defender_obs_state.step_baseline_stopped:
-                done = True
+            # if s_prime.defender_obs_state.snort_severe_baseline_stopped and \
+            #         s_prime.defender_obs_state.snort_warning_baseline_stopped \
+            #         and s_prime.defender_obs_state.snort_critical_baseline_stopped \
+            #         and s_prime.defender_obs_state.var_log_baseline_stopped \
+            #         and s_prime.defender_obs_state.step_baseline_stopped:
+            #     done = True
             s = s_prime
 
         return s

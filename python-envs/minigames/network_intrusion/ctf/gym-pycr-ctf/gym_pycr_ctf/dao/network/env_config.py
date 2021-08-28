@@ -132,7 +132,9 @@ class EnvConfig:
         self.defender_intrusion_reward = -100
 
         # self.multistop_costs = [0, -6.25, -12.5, -25, -100]
-        self.multistop_costs = [-100, -25, -12.5, -6.25, 0]
+        # self.multistop_costs = [-100, -25, -12.5, -6.25, 0]
+        # self.multistop_costs = [-100, -25, -12.5, -6.25, 0]
+        self.multistop_costs = [-100, -50, -25, -12.5, 0]
 
 
         self.defender_sum_costs = 1
