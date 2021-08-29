@@ -101,11 +101,11 @@ class DefenderObservationState:
         self.var_log_baseline_fourth_stop_step = 0
         self.step_baseline_fourth_stop_step = 0
 
-        self.snort_severe_baseline_stops_remaining = 0
-        self.snort_warning_baseline_stops_remaining = 0
-        self.snort_critical_baseline_stops_remaining = 0
-        self.var_log_baseline_stops_remaining = 0
-        self.step_baseline_stops_remaining = 0
+        self.snort_severe_baseline_stops_remaining = self.maximum_number_of_stops
+        self.snort_warning_baseline_stops_remaining = self.maximum_number_of_stops
+        self.snort_critical_baseline_stops_remaining = self.maximum_number_of_stops
+        self.var_log_baseline_stops_remaining = self.maximum_number_of_stops
+        self.step_baseline_stops_remaining = self.maximum_number_of_stops
 
 
     def sort_machines(self) -> None:

@@ -61,8 +61,8 @@ class DefenderStoppingSimulator:
         costs = env_config.multistop_costs[idx]
         reward = reward + costs
         # if not done:
-        reward = reward + env_config.defender_service_reward / math.pow(2, (env_config.maximum_number_of_defender_stop_actions -
-                                                                   s_prime.defender_obs_state.stops_remaining))
+        # reward = reward + env_config.defender_service_reward / math.pow(2, (env_config.maximum_number_of_defender_stop_actions -
+        #                                                            s_prime.defender_obs_state.stops_remaining))
 
         return s_prime, reward, done
 
