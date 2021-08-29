@@ -296,28 +296,31 @@ class EnvUtil:
                                     env_config.attacker_prevented_stops_remaining)
 
         costs = 0
-        for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
+        for i in range(env_config.maximum_number_of_defender_stop_actions, -1, -1):
             if i < env_config.attacker_prevented_stops_remaining:
                 break
             costs += env_config.multistop_costs[i]
 
         optimal_service_reward = 0
         optimal_service_reward = optimal_service_reward + env_config.defender_service_reward * \
-                                 (optimal_stopping_time - 1 -
+                                 max(0, (optimal_stopping_time  -
                                   (env_config.maximum_number_of_defender_stop_actions -
-                                   env_config.attacker_prevented_stops_remaining))
+                                   env_config.attacker_prevented_stops_remaining)))
         for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
             if i < env_config.attacker_prevented_stops_remaining:
                 break
             elif i == env_config.attacker_prevented_stops_remaining:
                 if env_config.attacker_prevented_stops_remaining > 0:
-                    optimal_service_reward += (s.defender_obs_state.step - optimal_stopping_time + 1) * \
+                    optimal_service_reward += (max(0, s.defender_obs_state.step - optimal_stopping_time + 1)) * \
                                               env_config.defender_service_reward / (
                                                   math.pow(2, env_config.maximum_number_of_defender_stop_actions - i))
-                else:
-                    optimal_service_reward += (optimal_stopping_time) * \
-                                              env_config.defender_service_reward / \
-                                              (math.pow(2, env_config.maximum_number_of_defender_stop_actions - i))
 
         optimal_defender_reward = optimal_service_reward + env_config.defender_caught_attacker_reward + costs
+        # print(f"optimal def rew:{optimal_defender_reward}, service:{optimal_service_reward}, "
+        #       f"caught_attacker:{env_config.defender_caught_attacker_reward}, costs: {costs},"
+        #       f"continue service step:{max(0, s.defender_obs_state.step - optimal_stopping_time + 1)},"
+        #       f"service steps prior to first stop :{max(0, optimal_stopping_time - (env_config.maximum_number_of_defender_stop_actions - env_config.attacker_prevented_stops_remaining))},"
+        #       f"optimal_stopping_step:{optimal_stopping_time},"
+        #       f"intrusion step:{s.attacker_obs_state.intrusion_step},"
+        #       f"number of stops:{(env_config.maximum_number_of_defender_stop_actions - env_config.attacker_prevented_stops_remaining)}")
         return optimal_defender_reward

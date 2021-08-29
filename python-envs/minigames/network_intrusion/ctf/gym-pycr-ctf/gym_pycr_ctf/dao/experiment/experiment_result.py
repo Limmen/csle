@@ -166,7 +166,82 @@ class ExperimentResult:
                  eval_2_avg_defender_third_stop_step: List = None,
                  avg_defender_fourth_stop_step: List = None,
                  eval_avg_defender_fourth_stop_step: List = None,
-                 eval_2_avg_defender_fourth_stop_step: List = None
+                 eval_2_avg_defender_fourth_stop_step: List = None,
+                 avg_snort_severe_baseline_first_stop_step: List = None,
+                 avg_snort_warning_baseline_first_stop_step: List = None,
+                 avg_snort_critical_baseline_first_stop_step: List = None,
+                 avg_var_log_baseline_first_stop_step: List = None,
+                 avg_step_baseline_first_stop_step: List = None,
+                 avg_snort_severe_baseline_second_stop_step: List = None,
+                 avg_snort_warning_baseline_second_stop_step: List = None,
+                 avg_snort_critical_baseline_second_stop_step: List = None,
+                 avg_var_log_baseline_second_stop_step: List = None,
+                 avg_step_baseline_second_stop_step: List = None,
+                 avg_snort_severe_baseline_third_stop_step: List = None,
+                 avg_snort_warning_baseline_third_stop_step: List = None,
+                 avg_snort_critical_baseline_third_stop_step: List = None,
+                 avg_var_log_baseline_third_stop_step: List = None,
+                 avg_step_baseline_third_stop_step: List = None,
+                 avg_snort_severe_baseline_fourth_stop_step: List = None,
+                 avg_snort_warning_baseline_fourth_stop_step: List = None,
+                 avg_snort_critical_baseline_fourth_stop_step: List = None,
+                 avg_var_log_baseline_fourth_stop_step: List = None,
+                 avg_step_baseline_fourth_stop_step: List = None,
+                 avg_snort_severe_baseline_stops_remaining: List = None,
+                 avg_snort_warning_baseline_stops_remaining: List = None,
+                 avg_snort_critical_baseline_stops_remaining: List = None,
+                 avg_var_log_baseline_stops_remaining: List = None,
+                 avg_step_baseline_stops_remaining: List = None,
+                 eval_avg_snort_severe_baseline_first_stop_step: List = None,
+                 eval_avg_snort_warning_baseline_first_stop_step: List = None,
+                 eval_avg_snort_critical_baseline_first_stop_step: List = None,
+                 eval_avg_var_log_baseline_first_stop_step: List = None,
+                 eval_avg_step_baseline_first_stop_step: List = None,
+                 eval_avg_snort_severe_baseline_second_stop_step: List = None,
+                 eval_avg_snort_warning_baseline_second_stop_step: List = None,
+                 eval_avg_snort_critical_baseline_second_stop_step: List = None,
+                 eval_avg_var_log_baseline_second_stop_step: List = None,
+                 eval_avg_step_baseline_second_stop_step: List = None,
+                 eval_avg_snort_severe_baseline_third_stop_step: List = None,
+                 eval_avg_snort_warning_baseline_third_stop_step: List = None,
+                 eval_avg_snort_critical_baseline_third_stop_step: List = None,
+                 eval_avg_var_log_baseline_third_stop_step: List = None,
+                 eval_avg_step_baseline_third_stop_step: List = None,
+                 eval_avg_snort_severe_baseline_fourth_stop_step: List = None,
+                 eval_avg_snort_warning_baseline_fourth_stop_step: List = None,
+                 eval_avg_snort_critical_baseline_fourth_stop_step: List = None,
+                 eval_avg_var_log_baseline_fourth_stop_step: List = None,
+                 eval_avg_step_baseline_fourth_stop_step: List = None,
+                 eval_avg_snort_severe_baseline_stops_remaining: List = None,
+                 eval_avg_snort_warning_baseline_stops_remaining: List = None,
+                 eval_avg_snort_critical_baseline_stops_remaining: List = None,
+                 eval_avg_var_log_baseline_stops_remaining: List = None,
+                 eval_avg_step_baseline_stops_remaining: List = None,
+                 eval_2_avg_snort_severe_baseline_first_stop_step: List = None,
+                 eval_2_avg_snort_warning_baseline_first_stop_step: List = None,
+                 eval_2_avg_snort_critical_baseline_first_stop_step: List = None,
+                 eval_2_avg_var_log_baseline_first_stop_step: List = None,
+                 eval_2_avg_step_baseline_first_stop_step: List = None,
+                 eval_2_avg_snort_severe_baseline_second_stop_step: List = None,
+                 eval_2_avg_snort_warning_baseline_second_stop_step: List = None,
+                 eval_2_avg_snort_critical_baseline_second_stop_step: List = None,
+                 eval_2_avg_var_log_baseline_second_stop_step: List = None,
+                 eval_2_avg_step_baseline_second_stop_step: List = None,
+                 eval_2_avg_snort_severe_baseline_third_stop_step: List = None,
+                 eval_2_avg_snort_warning_baseline_third_stop_step: List = None,
+                 eval_2_avg_snort_critical_baseline_third_stop_step: List = None,
+                 eval_2_avg_var_log_baseline_third_stop_step: List = None,
+                 eval_2_avg_step_baseline_third_stop_step: List = None,
+                 eval_2_avg_snort_severe_baseline_fourth_stop_step: List = None,
+                 eval_2_avg_snort_warning_baseline_fourth_stop_step: List = None,
+                 eval_2_avg_snort_critical_baseline_fourth_stop_step: List = None,
+                 eval_2_avg_var_log_baseline_fourth_stop_step: List = None,
+                 eval_2_avg_step_baseline_fourth_stop_step: List = None,
+                 eval_2_avg_snort_severe_baseline_stops_remaining: List = None,
+                 eval_2_avg_snort_warning_baseline_stops_remaining: List = None,
+                 eval_2_avg_snort_critical_baseline_stops_remaining: List = None,
+                 eval_2_avg_var_log_baseline_stops_remaining: List = None,
+                 eval_2_avg_step_baseline_stops_remaining: List = None
                  ):
         """
         Constructor, initializes the DTO
@@ -316,6 +391,81 @@ class ExperimentResult:
         :param avg_defender_fourth_stop_step: avg time-step of defender's fourth stop
         :param eval_avg_defender_fourth_stop_step: eval avg time-step of defender's fourth stop
         :param eval_2_avg_defender_fourth_stop_step: eval2 avg time-step of defender's fourth stop
+        :param avg_snort_severe_baseline_first_stop_step: avg time-step of snort_severe_baseline first stop
+        :param avg_snort_warning_baseline_first_stop_step: avg time-step of snort_warning_baseline first stop
+        :param avg_snort_critical_baseline_first_stop_step: avg time-step of snort_critical_baseline first stop
+        :param avg_var_log_baseline_first_stop_step_baseline_first_stop_step: avg time-step of var_log first stop
+        :param avg_step_baseline_first_stop_step: avg time-step of step first stop
+        :param avg_snort_severe_baseline_second_stop_step: avg time-step of snort_severe_baseline second stop
+        :param avg_snort_warning_baseline_second_stop_step: avg time-step of snort_warning_baseline second stop
+        :param avg_snort_critical_baseline_second_stop_step: avg time-step of snort_critical_baseline second stop
+        :param avg_var_log_baseline_second_stop_step_baseline_second_stop_step: avg time-step of var_log second stop
+        :param avg_step_baseline_second_stop_step: avg time-step of step second stop
+        :param avg_snort_severe_baseline_third_stop_step: avg time-step of snort_severe_baseline third stop
+        :param avg_snort_warning_baseline_third_stop_step: avg time-step of snort_warning_baseline third stop
+        :param avg_snort_critical_baseline_third_stop_step: avg time-step of snort_critical_baseline third stop
+        :param avg_var_log_baseline_third_stop_step_baseline_third_stop_step: avg time-step of var_log third stop
+        :param avg_step_baseline_third_stop_step: avg time-step of step third stop
+        :param avg_snort_severe_baseline_fourth_stop_step: avg time-step of snort_severe_baseline fourth stop
+        :param avg_snort_warning_baseline_fourth_stop_step: avg time-step of snort_warning_baseline fourth stop
+        :param avg_snort_critical_baseline_fourth_stop_step: avg time-step of snort_critical_baseline fourth stop
+        :param avg_var_log_baseline_fourth_stop_step_baseline_fourth_stop_step: avg time-step of var_log fourth stop
+        :param avg_step_baseline_fourth_stop_step: avg time-step of step fourth stop
+        :param avg_snort_severe_baseline_stops_remaining: avg time-step of snort_severe_baseline first stop
+        :param avg_snort_warning_baseline_stops_remaining: avg time-step of snort_warning_baseline first stop
+        :param avg_snort_critical_baseline_stops_remaining: avg time-step of snort_critical_baseline first stop
+        :param avg_var_log_baseline_stops_remaining_baseline_stops_remaining: avg time-step of var_log first stop
+        :param avg_step_baseline_stops_remaining: avg time-step of step first stop
+        :param eval_avg_snort_severe_baseline_first_stop_step: eval avgtime-step of snort_severe_baseline first stop
+        :param eval_avg_snort_warning_baseline_first_stop_step: eval avgtime-step of snort_warning_baseline first stop
+        :param eval_avg_snort_critical_baseline_first_stop_step: eval avgtime-step of snort_critical_baseline first stop
+        :param eval_avg_var_log_baseline_first_stop_step_baseline_first_stop_step: eval avgtime-step of var_log first stop
+        :param eval_avg_step_baseline_first_stop_step: eval avgtime-step of step first stop
+        :param eval_avg_snort_severe_baseline_second_stop_step: eval avgtime-step of snort_severe_baseline second stop
+        :param eval_avg_snort_warning_baseline_second_stop_step: eval avgtime-step of snort_warning_baseline second stop
+        :param eval_avg_snort_critical_baseline_second_stop_step: eval avgtime-step of snort_critical_baseline second stop
+        :param eval_avg_var_log_baseline_second_stop_step_baseline_second_stop_step: eval avgtime-step of var_log second stop
+        :param eval_avg_step_baseline_second_stop_step: eval avgtime-step of step second stop
+        :param eval_avg_snort_severe_baseline_third_stop_step: eval avgtime-step of snort_severe_baseline third stop
+        :param eval_avg_snort_warning_baseline_third_stop_step: eval avgtime-step of snort_warning_baseline third stop
+        :param eval_avg_snort_critical_baseline_third_stop_step: eval avgtime-step of snort_critical_baseline third stop
+        :param eval_avg_var_log_baseline_third_stop_step_baseline_third_stop_step: eval avgtime-step of var_log third stop
+        :param eval_avg_step_baseline_third_stop_step: eval avgtime-step of step third stop
+        :param eval_avg_snort_severe_baseline_fourth_stop_step: eval avgtime-step of snort_severe_baseline fourth stop
+        :param eval_avg_snort_warning_baseline_fourth_stop_step: eval avgtime-step of snort_warning_baseline fourth stop
+        :param eval_avg_snort_critical_baseline_fourth_stop_step: eval avgtime-step of snort_critical_baseline fourth stop
+        :param eval_avg_var_log_baseline_fourth_stop_step_baseline_fourth_stop_step: eval avgtime-step of var_log fourth stop
+        :param eval_avg_step_baseline_fourth_stop_step: eval avgtime-step of step fourth stop
+        :param eval_avg_snort_severe_baseline_stops_remaining: eval avgtime-step of snort_severe_baseline first stop
+        :param eval_avg_snort_warning_baseline_stops_remaining: eval avgtime-step of snort_warning_baseline first stop
+        :param eval_avg_snort_critical_baseline_stops_remaining: eval avgtime-step of snort_critical_baseline first stop
+        :param eval_avg_var_log_baseline_stops_remaining_baseline_stops_remaining: eval avgtime-step of var_log first stop
+        :param eval_avg_step_baseline_stops_remaining: eval avgtime-step of step first stop
+        :param eval_2_avg_snort_severe_baseline_first_stop_step: eval2 avgtime-step of snort_severe_baseline first stop
+        :param eval_2_avg_snort_warning_baseline_first_stop_step: eval2 avgtime-step of snort_warning_baseline first stop
+        :param eval_2_avg_snort_critical_baseline_first_stop_step: eval2 avgtime-step of snort_critical_baseline first stop
+        :param eval_2_avg_var_log_baseline_first_stop_step_baseline_first_stop_step: eval2 avgtime-step of var_log first stop
+        :param eval_2_avg_step_baseline_first_stop_step: eval2 avgtime-step of step first stop
+        :param eval_2_avg_snort_severe_baseline_second_stop_step: eval2 avgtime-step of snort_severe_baseline second stop
+        :param eval_2_avg_snort_warning_baseline_second_stop_step: eval2 avgtime-step of snort_warning_baseline second stop
+        :param eval_2_avg_snort_critical_baseline_second_stop_step: eval2 avgtime-step of snort_critical_baseline second stop
+        :param eval_2_avg_var_log_baseline_second_stop_step_baseline_second_stop_step: eval2 avgtime-step of var_log second stop
+        :param eval_2_avg_step_baseline_second_stop_step: eval2 avgtime-step of step second stop
+        :param eval_2_avg_snort_severe_baseline_third_stop_step: eval2 avgtime-step of snort_severe_baseline third stop
+        :param eval_2_avg_snort_warning_baseline_third_stop_step: eval2 avgtime-step of snort_warning_baseline third stop
+        :param eval_2_avg_snort_critical_baseline_third_stop_step: eval2 avgtime-step of snort_critical_baseline third stop
+        :param eval_2_avg_var_log_baseline_third_stop_step_baseline_third_stop_step: eval2 avgtime-step of var_log third stop
+        :param eval_2_avg_step_baseline_third_stop_step: eval2 avgtime-step of step third stop
+        :param eval_2_avg_snort_severe_baseline_fourth_stop_step: eval2 avgtime-step of snort_severe_baseline fourth stop
+        :param eval_2_avg_snort_warning_baseline_fourth_stop_step: eval2 avgtime-step of snort_warning_baseline fourth stop
+        :param eval_2_avg_snort_critical_baseline_fourth_stop_step: eval2 avgtime-step of snort_critical_baseline fourth stop
+        :param eval_2_avg_var_log_baseline_fourth_stop_step_baseline_fourth_stop_step: eval2 avgtime-step of var_log fourth stop
+        :param eval_2_avg_step_baseline_fourth_stop_step: eval2 avgtime-step of step fourth stop
+        :param eval_2_avg_snort_severe_baseline_stops_remaining: eval2 avgtime-step of snort_severe_baseline first stop
+        :param eval_2_avg_snort_warning_baseline_stops_remaining: eval2 avgtime-step of snort_warning_baseline first stop
+        :param eval_2_avg_snort_critical_baseline_stops_remaining: eval2 avgtime-step of snort_critical_baseline first stop
+        :param eval_2_avg_var_log_baseline_stops_remaining_baseline_stops_remaining: eval2 avgtime-step of var_log first stop
+        :param eval_2_avg_step_baseline_stops_remaining: eval2 avgtime-step of step first stop
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -503,6 +653,81 @@ class ExperimentResult:
         self.avg_defender_fourth_stop_step = avg_defender_fourth_stop_step
         self.eval_avg_defender_fourth_stop_step = eval_avg_defender_fourth_stop_step
         self.eval_2_avg_defender_fourth_stop_step = eval_2_avg_defender_fourth_stop_step
+        self.avg_snort_severe_baseline_first_stop_step = avg_snort_severe_baseline_first_stop_step
+        self.avg_snort_warning_baseline_first_stop_step = avg_snort_warning_baseline_first_stop_step
+        self.avg_snort_critical_baseline_first_stop_step = avg_snort_critical_baseline_first_stop_step
+        self.avg_var_log_baseline_first_stop_step = avg_var_log_baseline_first_stop_step
+        self.avg_step_baseline_first_stop_step = avg_step_baseline_first_stop_step
+        self.avg_snort_severe_baseline_second_stop_step = avg_snort_severe_baseline_second_stop_step
+        self.avg_snort_warning_baseline_second_stop_step = avg_snort_warning_baseline_second_stop_step
+        self.avg_snort_critical_baseline_second_stop_step = avg_snort_critical_baseline_second_stop_step
+        self.avg_var_log_baseline_second_stop_step = avg_var_log_baseline_second_stop_step
+        self.avg_step_baseline_second_stop_step = avg_step_baseline_second_stop_step
+        self.avg_snort_severe_baseline_third_stop_step = avg_snort_severe_baseline_third_stop_step
+        self.avg_snort_warning_baseline_third_stop_step = avg_snort_warning_baseline_third_stop_step
+        self.avg_snort_critical_baseline_third_stop_step = avg_snort_critical_baseline_third_stop_step
+        self.avg_var_log_baseline_third_stop_step = avg_var_log_baseline_third_stop_step
+        self.avg_step_baseline_third_stop_step = avg_step_baseline_third_stop_step
+        self.avg_snort_severe_baseline_fourth_stop_step = avg_snort_severe_baseline_fourth_stop_step
+        self.avg_snort_warning_baseline_fourth_stop_step = avg_snort_warning_baseline_fourth_stop_step
+        self.avg_snort_critical_baseline_fourth_stop_step = avg_snort_critical_baseline_fourth_stop_step
+        self.avg_var_log_baseline_fourth_stop_step = avg_var_log_baseline_fourth_stop_step
+        self.avg_step_baseline_fourth_stop_step = avg_step_baseline_fourth_stop_step
+        self.avg_snort_severe_baseline_stops_remaining = avg_snort_severe_baseline_stops_remaining
+        self.avg_snort_warning_baseline_stops_remaining = avg_snort_warning_baseline_stops_remaining
+        self.avg_snort_critical_baseline_stops_remaining = avg_snort_critical_baseline_stops_remaining
+        self.avg_var_log_baseline_stops_remaining = avg_var_log_baseline_stops_remaining
+        self.avg_step_baseline_stops_remaining = avg_step_baseline_stops_remaining
+        self.eval_avg_snort_severe_baseline_first_stop_step = eval_avg_snort_severe_baseline_first_stop_step
+        self.eval_avg_snort_warning_baseline_first_stop_step = eval_avg_snort_warning_baseline_first_stop_step
+        self.eval_avg_snort_critical_baseline_first_stop_step = eval_avg_snort_critical_baseline_first_stop_step
+        self.eval_avg_var_log_baseline_first_stop_step = eval_avg_var_log_baseline_first_stop_step
+        self.eval_avg_step_baseline_first_stop_step = eval_avg_step_baseline_first_stop_step
+        self.eval_avg_snort_severe_baseline_second_stop_step = eval_avg_snort_severe_baseline_second_stop_step
+        self.eval_avg_snort_warning_baseline_second_stop_step = eval_avg_snort_warning_baseline_second_stop_step
+        self.eval_avg_snort_critical_baseline_second_stop_step = eval_avg_snort_critical_baseline_second_stop_step
+        self.eval_avg_var_log_baseline_second_stop_step = eval_avg_var_log_baseline_second_stop_step
+        self.eval_avg_step_baseline_second_stop_step = eval_avg_step_baseline_second_stop_step
+        self.eval_avg_snort_severe_baseline_third_stop_step = eval_avg_snort_severe_baseline_third_stop_step
+        self.eval_avg_snort_warning_baseline_third_stop_step = eval_avg_snort_warning_baseline_third_stop_step
+        self.eval_avg_snort_critical_baseline_third_stop_step = eval_avg_snort_critical_baseline_third_stop_step
+        self.eval_avg_var_log_baseline_third_stop_step = eval_avg_var_log_baseline_third_stop_step
+        self.eval_avg_step_baseline_third_stop_step = eval_avg_step_baseline_third_stop_step
+        self.eval_avg_snort_severe_baseline_fourth_stop_step = eval_avg_snort_severe_baseline_fourth_stop_step
+        self.eval_avg_snort_warning_baseline_fourth_stop_step = eval_avg_snort_warning_baseline_fourth_stop_step
+        self.eval_avg_snort_critical_baseline_fourth_stop_step = eval_avg_snort_critical_baseline_fourth_stop_step
+        self.eval_avg_var_log_baseline_fourth_stop_step = eval_avg_var_log_baseline_fourth_stop_step
+        self.eval_avg_step_baseline_fourth_stop_step = eval_avg_step_baseline_fourth_stop_step
+        self.eval_avg_snort_severe_baseline_stops_remaining = eval_avg_snort_severe_baseline_stops_remaining
+        self.eval_avg_snort_warning_baseline_stops_remaining = eval_avg_snort_warning_baseline_stops_remaining
+        self.eval_avg_snort_critical_baseline_stops_remaining = eval_avg_snort_critical_baseline_stops_remaining
+        self.eval_avg_var_log_baseline_stops_remaining = eval_avg_var_log_baseline_stops_remaining
+        self.eval_avg_step_baseline_stops_remaining = eval_avg_step_baseline_stops_remaining
+        self.eval_2_avg_snort_severe_baseline_first_stop_step = eval_2_avg_snort_severe_baseline_first_stop_step
+        self.eval_2_avg_snort_warning_baseline_first_stop_step = eval_2_avg_snort_warning_baseline_first_stop_step
+        self.eval_2_avg_snort_critical_baseline_first_stop_step = eval_2_avg_snort_critical_baseline_first_stop_step
+        self.eval_2_avg_var_log_baseline_first_stop_step = eval_2_avg_var_log_baseline_first_stop_step
+        self.eval_2_avg_step_baseline_first_stop_step = eval_2_avg_step_baseline_first_stop_step
+        self.eval_2_avg_snort_severe_baseline_second_stop_step = eval_2_avg_snort_severe_baseline_second_stop_step
+        self.eval_2_avg_snort_warning_baseline_second_stop_step = eval_2_avg_snort_warning_baseline_second_stop_step
+        self.eval_2_avg_snort_critical_baseline_second_stop_step = eval_2_avg_snort_critical_baseline_second_stop_step
+        self.eval_2_avg_var_log_baseline_second_stop_step = eval_2_avg_var_log_baseline_second_stop_step
+        self.eval_2_avg_step_baseline_second_stop_step = eval_2_avg_step_baseline_second_stop_step
+        self.eval_2_avg_snort_severe_baseline_third_stop_step = eval_2_avg_snort_severe_baseline_third_stop_step
+        self.eval_2_avg_snort_warning_baseline_third_stop_step = eval_2_avg_snort_warning_baseline_third_stop_step
+        self.eval_2_avg_snort_critical_baseline_third_stop_step = eval_2_avg_snort_critical_baseline_third_stop_step
+        self.eval_2_avg_var_log_baseline_third_stop_step = eval_2_avg_var_log_baseline_third_stop_step
+        self.eval_2_avg_step_baseline_third_stop_step = eval_2_avg_step_baseline_third_stop_step
+        self.eval_2_avg_snort_severe_baseline_fourth_stop_step = eval_2_avg_snort_severe_baseline_fourth_stop_step
+        self.eval_2_avg_snort_warning_baseline_fourth_stop_step = eval_2_avg_snort_warning_baseline_fourth_stop_step
+        self.eval_2_avg_snort_critical_baseline_fourth_stop_step = eval_2_avg_snort_critical_baseline_fourth_stop_step
+        self.eval_2_avg_var_log_baseline_fourth_stop_step = eval_2_avg_var_log_baseline_fourth_stop_step
+        self.eval_2_avg_step_baseline_fourth_stop_step = eval_2_avg_step_baseline_fourth_stop_step
+        self.eval_2_avg_snort_severe_baseline_stops_remaining = eval_2_avg_snort_severe_baseline_stops_remaining
+        self.eval_2_avg_snort_warning_baseline_stops_remaining = eval_2_avg_snort_warning_baseline_stops_remaining
+        self.eval_2_avg_snort_critical_baseline_stops_remaining = eval_2_avg_snort_critical_baseline_stops_remaining
+        self.eval_2_avg_var_log_baseline_stops_remaining = eval_2_avg_var_log_baseline_stops_remaining
+        self.eval_2_avg_step_baseline_stops_remaining = eval_2_avg_step_baseline_stops_remaining
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -882,6 +1107,156 @@ class ExperimentResult:
             self.eval_avg_defender_fourth_stop_step = []
         if eval_2_avg_defender_fourth_stop_step is None:
             self.eval_2_avg_defender_fourth_stop_step = []
+        if avg_snort_severe_baseline_first_stop_step is None:
+            self.avg_snort_severe_baseline_first_stop_step = []
+        if avg_snort_warning_baseline_first_stop_step is None:
+            self.avg_snort_warning_baseline_first_stop_step = []
+        if avg_snort_critical_baseline_first_stop_step is None:
+            self.avg_snort_critical_baseline_first_stop_step = []
+        if avg_var_log_baseline_first_stop_step is None:
+            self.avg_var_log_baseline_first_stop_step = []
+        if avg_step_baseline_first_stop_step is None:
+            self.avg_step_baseline_first_stop_step = []
+        if avg_snort_severe_baseline_second_stop_step is None:
+            self.avg_snort_severe_baseline_second_stop_step = []
+        if avg_snort_warning_baseline_second_stop_step is None:
+            self.avg_snort_warning_baseline_second_stop_step = []
+        if avg_snort_critical_baseline_second_stop_step is None:
+            self.avg_snort_critical_baseline_second_stop_step = []
+        if avg_var_log_baseline_second_stop_step is None:
+            self.avg_var_log_baseline_second_stop_step = []
+        if avg_step_baseline_second_stop_step is None:
+            self.avg_step_baseline_second_stop_step = []
+        if avg_snort_severe_baseline_third_stop_step is None:
+            self.avg_snort_severe_baseline_third_stop_step = []
+        if avg_snort_warning_baseline_third_stop_step is None:
+            self.avg_snort_warning_baseline_third_stop_step = []
+        if avg_snort_critical_baseline_third_stop_step is None:
+            self.avg_snort_critical_baseline_third_stop_step = []
+        if avg_var_log_baseline_third_stop_step is None:
+            self.avg_var_log_baseline_third_stop_step = []
+        if avg_step_baseline_third_stop_step is None:
+            self.avg_step_baseline_third_stop_step = []
+        if avg_snort_severe_baseline_fourth_stop_step is None:
+            self.avg_snort_severe_baseline_fourth_stop_step = []
+        if avg_snort_warning_baseline_fourth_stop_step is None:
+            self.avg_snort_warning_baseline_fourth_stop_step = []
+        if avg_snort_critical_baseline_fourth_stop_step is None:
+            self.avg_snort_critical_baseline_fourth_stop_step = []
+        if avg_var_log_baseline_fourth_stop_step is None:
+            self.avg_var_log_baseline_fourth_stop_step = []
+        if avg_step_baseline_fourth_stop_step is None:
+            self.avg_step_baseline_fourth_stop_step = []
+        if avg_snort_severe_baseline_stops_remaining is None:
+            self.avg_snort_severe_baseline_stops_remaining = []
+        if avg_snort_warning_baseline_stops_remaining is None:
+            self.avg_snort_warning_baseline_stops_remaining = []
+        if avg_snort_critical_baseline_stops_remaining is None:
+            self.avg_snort_critical_baseline_stops_remaining = []
+        if avg_var_log_baseline_stops_remaining is None:
+            self.avg_var_log_baseline_stops_remaining = []
+        if avg_step_baseline_stops_remaining is None:
+            self.avg_step_baseline_stops_remaining = []
+        if eval_avg_snort_severe_baseline_first_stop_step is None:
+            self.eval_avg_snort_severe_baseline_first_stop_step = []
+        if eval_avg_snort_warning_baseline_first_stop_step is None:
+            self.eval_avg_snort_warning_baseline_first_stop_step = []
+        if eval_avg_snort_critical_baseline_first_stop_step is None:
+            self.eval_avg_snort_critical_baseline_first_stop_step = []
+        if eval_avg_var_log_baseline_first_stop_step is None:
+            self.eval_avg_var_log_baseline_first_stop_step = []
+        if eval_avg_step_baseline_first_stop_step is None:
+            self.eval_avg_step_baseline_first_stop_step = []
+        if eval_avg_snort_severe_baseline_second_stop_step is None:
+            self.eval_avg_snort_severe_baseline_second_stop_step = []
+        if eval_avg_snort_warning_baseline_second_stop_step is None:
+            self.eval_avg_snort_warning_baseline_second_stop_step = []
+        if eval_avg_snort_critical_baseline_second_stop_step is None:
+            self.eval_avg_snort_critical_baseline_second_stop_step = []
+        if eval_avg_var_log_baseline_second_stop_step is None:
+            self.eval_avg_var_log_baseline_second_stop_step = []
+        if eval_avg_step_baseline_second_stop_step is None:
+            self.eval_avg_step_baseline_second_stop_step = []
+        if eval_avg_snort_severe_baseline_third_stop_step is None:
+            self.eval_avg_snort_severe_baseline_third_stop_step = []
+        if eval_avg_snort_warning_baseline_third_stop_step is None:
+            self.eval_avg_snort_warning_baseline_third_stop_step = []
+        if eval_avg_snort_critical_baseline_third_stop_step is None:
+            self.eval_avg_snort_critical_baseline_third_stop_step = []
+        if eval_avg_var_log_baseline_third_stop_step is None:
+            self.eval_avg_var_log_baseline_third_stop_step = []
+        if eval_avg_step_baseline_third_stop_step is None:
+            self.eval_avg_step_baseline_third_stop_step = []
+        if eval_avg_snort_severe_baseline_fourth_stop_step is None:
+            self.eval_avg_snort_severe_baseline_fourth_stop_step = []
+        if eval_avg_snort_warning_baseline_fourth_stop_step is None:
+            self.eval_avg_snort_warning_baseline_fourth_stop_step = []
+        if eval_avg_snort_critical_baseline_fourth_stop_step is None:
+            self.eval_avg_snort_critical_baseline_fourth_stop_step = []
+        if eval_avg_var_log_baseline_fourth_stop_step is None:
+            self.eval_avg_var_log_baseline_fourth_stop_step = []
+        if eval_avg_step_baseline_fourth_stop_step is None:
+            self.eval_avg_step_baseline_fourth_stop_step = []
+        if eval_avg_snort_severe_baseline_stops_remaining is None:
+            self.eval_avg_snort_severe_baseline_stops_remaining = []
+        if eval_avg_snort_warning_baseline_stops_remaining is None:
+            self.eval_avg_snort_warning_baseline_stops_remaining = []
+        if eval_avg_snort_critical_baseline_stops_remaining is None:
+            self.eval_avg_snort_critical_baseline_stops_remaining = []
+        if eval_avg_var_log_baseline_stops_remaining is None:
+            self.eval_avg_var_log_baseline_stops_remaining = []
+        if eval_avg_step_baseline_stops_remaining is None:
+            self.eval_avg_step_baseline_stops_remaining = []
+        if eval_2_avg_snort_severe_baseline_first_stop_step is None:
+            self.eval_2_avg_snort_severe_baseline_first_stop_step = []
+        if eval_2_avg_snort_warning_baseline_first_stop_step is None:
+            self.eval_2_avg_snort_warning_baseline_first_stop_step = []
+        if eval_2_avg_snort_critical_baseline_first_stop_step is None:
+            self.eval_2_avg_snort_critical_baseline_first_stop_step = []
+        if eval_2_avg_var_log_baseline_first_stop_step is None:
+            self.eval_2_avg_var_log_baseline_first_stop_step = []
+        if eval_2_avg_step_baseline_first_stop_step is None:
+            self.eval_2_avg_step_baseline_first_stop_step = []
+        if eval_2_avg_snort_severe_baseline_second_stop_step is None:
+            self.eval_2_avg_snort_severe_baseline_second_stop_step = []
+        if eval_2_avg_snort_warning_baseline_second_stop_step is None:
+            self.eval_2_avg_snort_warning_baseline_second_stop_step = []
+        if eval_2_avg_snort_critical_baseline_second_stop_step is None:
+            self.eval_2_avg_snort_critical_baseline_second_stop_step = []
+        if eval_2_avg_var_log_baseline_second_stop_step is None:
+            self.eval_2_avg_var_log_baseline_second_stop_step = []
+        if eval_2_avg_step_baseline_second_stop_step is None:
+            self.eval_2_avg_step_baseline_second_stop_step = []
+        if eval_2_avg_snort_severe_baseline_third_stop_step is None:
+            self.eval_2_avg_snort_severe_baseline_third_stop_step = []
+        if eval_2_avg_snort_warning_baseline_third_stop_step is None:
+            self.eval_2_avg_snort_warning_baseline_third_stop_step = []
+        if eval_2_avg_snort_critical_baseline_third_stop_step is None:
+            self.eval_2_avg_snort_critical_baseline_third_stop_step = []
+        if eval_2_avg_var_log_baseline_third_stop_step is None:
+            self.eval_2_avg_var_log_baseline_third_stop_step = []
+        if eval_2_avg_step_baseline_third_stop_step is None:
+            self.eval_2_avg_step_baseline_third_stop_step = []
+        if eval_2_avg_snort_severe_baseline_fourth_stop_step is None:
+            self.eval_2_avg_snort_severe_baseline_fourth_stop_step = []
+        if eval_2_avg_snort_warning_baseline_fourth_stop_step is None:
+            self.eval_2_avg_snort_warning_baseline_fourth_stop_step = []
+        if eval_2_avg_snort_critical_baseline_fourth_stop_step is None:
+            self.eval_2_avg_snort_critical_baseline_fourth_stop_step = []
+        if eval_2_avg_var_log_baseline_fourth_stop_step is None:
+            self.eval_2_avg_var_log_baseline_fourth_stop_step = []
+        if eval_2_avg_step_baseline_fourth_stop_step is None:
+            self.eval_2_avg_step_baseline_fourth_stop_step = []
+        if eval_2_avg_snort_severe_baseline_stops_remaining is None:
+            self.eval_2_avg_snort_severe_baseline_stops_remaining = []
+        if eval_2_avg_snort_warning_baseline_stops_remaining is None:
+            self.eval_2_avg_snort_warning_baseline_stops_remaining = []
+        if eval_2_avg_snort_critical_baseline_stops_remaining is None:
+            self.eval_2_avg_snort_critical_baseline_stops_remaining = []
+        if eval_2_avg_var_log_baseline_stops_remaining is None:
+            self.eval_2_avg_var_log_baseline_stops_remaining = []
+        if eval_2_avg_step_baseline_stops_remaining is None:
+            self.eval_2_avg_step_baseline_stops_remaining = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -978,7 +1353,55 @@ class ExperimentResult:
                    self.avg_defender_third_stop_step,
                    self.eval_avg_defender_third_stop_step, self.eval_2_avg_defender_third_stop_step,
                    self.avg_defender_fourth_stop_step,
-                   self.eval_avg_defender_fourth_stop_step, self.eval_2_avg_defender_fourth_stop_step
+                   self.eval_avg_defender_fourth_stop_step, self.eval_2_avg_defender_fourth_stop_step,
+
+                   self.avg_snort_severe_baseline_first_stop_step, self.avg_snort_warning_baseline_first_stop_step,
+                   self.avg_snort_critical_baseline_first_stop_step, self.avg_var_log_baseline_first_stop_step,
+                   self.avg_step_baseline_first_stop_step,
+                   self.avg_snort_severe_baseline_second_stop_step, self.avg_snort_warning_baseline_second_stop_step,
+                   self.avg_snort_critical_baseline_second_stop_step, self.avg_var_log_baseline_second_stop_step,
+                   self.avg_step_baseline_second_stop_step,
+                   self.avg_snort_severe_baseline_third_stop_step, self.avg_snort_warning_baseline_third_stop_step,
+                   self.avg_snort_critical_baseline_third_stop_step, self.avg_var_log_baseline_third_stop_step,
+                   self.avg_step_baseline_third_stop_step,
+                   self.avg_snort_severe_baseline_fourth_stop_step, self.avg_snort_warning_baseline_fourth_stop_step,
+                   self.avg_snort_critical_baseline_fourth_stop_step, self.avg_var_log_baseline_fourth_stop_step,
+                   self.avg_step_baseline_fourth_stop_step,
+                   self.avg_snort_severe_baseline_stops_remaining, self.avg_snort_warning_baseline_stops_remaining,
+                   self.avg_snort_critical_baseline_stops_remaining, self.avg_var_log_baseline_stops_remaining,
+                   self.avg_step_baseline_stops_remaining,
+
+                   self.eval_avg_snort_severe_baseline_first_stop_step, self.eval_avg_snort_warning_baseline_first_stop_step,
+                   self.eval_avg_snort_critical_baseline_first_stop_step, self.eval_avg_var_log_baseline_first_stop_step,
+                   self.eval_avg_step_baseline_first_stop_step,
+                   self.eval_avg_snort_severe_baseline_second_stop_step, self.eval_avg_snort_warning_baseline_second_stop_step,
+                   self.eval_avg_snort_critical_baseline_second_stop_step, self.eval_avg_var_log_baseline_second_stop_step,
+                   self.eval_avg_step_baseline_second_stop_step,
+                   self.eval_avg_snort_severe_baseline_third_stop_step, self.eval_avg_snort_warning_baseline_third_stop_step,
+                   self.eval_avg_snort_critical_baseline_third_stop_step, self.eval_avg_var_log_baseline_third_stop_step,
+                   self.eval_avg_step_baseline_third_stop_step,
+                   self.eval_avg_snort_severe_baseline_fourth_stop_step, self.eval_avg_snort_warning_baseline_fourth_stop_step,
+                   self.eval_avg_snort_critical_baseline_fourth_stop_step, self.eval_avg_var_log_baseline_fourth_stop_step,
+                   self.eval_avg_step_baseline_fourth_stop_step,
+                   self.eval_avg_snort_severe_baseline_stops_remaining, self.eval_avg_snort_warning_baseline_stops_remaining,
+                   self.eval_avg_snort_critical_baseline_stops_remaining, self.eval_avg_var_log_baseline_stops_remaining,
+                   self.eval_avg_step_baseline_stops_remaining,
+
+                   self.eval_2_avg_snort_severe_baseline_first_stop_step, self.eval_2_avg_snort_warning_baseline_first_stop_step,
+                   self.eval_2_avg_snort_critical_baseline_first_stop_step, self.eval_2_avg_var_log_baseline_first_stop_step,
+                   self.eval_2_avg_step_baseline_first_stop_step,
+                   self.eval_2_avg_snort_severe_baseline_second_stop_step, self.eval_2_avg_snort_warning_baseline_second_stop_step,
+                   self.eval_2_avg_snort_critical_baseline_second_stop_step, self.eval_2_avg_var_log_baseline_second_stop_step,
+                   self.eval_2_avg_step_baseline_second_stop_step,
+                   self.eval_2_avg_snort_severe_baseline_third_stop_step, self.eval_2_avg_snort_warning_baseline_third_stop_step,
+                   self.eval_2_avg_snort_critical_baseline_third_stop_step, self.eval_2_avg_var_log_baseline_third_stop_step,
+                   self.eval_2_avg_step_baseline_third_stop_step,
+                   self.eval_2_avg_snort_severe_baseline_fourth_stop_step, self.eval_2_avg_snort_warning_baseline_fourth_stop_step,
+                   self.eval_2_avg_snort_critical_baseline_fourth_stop_step, self.eval_2_avg_var_log_baseline_fourth_stop_step,
+                   self.eval_2_avg_step_baseline_fourth_stop_step,
+                   self.eval_2_avg_snort_severe_baseline_stops_remaining, self.eval_2_avg_snort_warning_baseline_stops_remaining,
+                   self.eval_2_avg_snort_critical_baseline_stops_remaining, self.eval_2_avg_var_log_baseline_stops_remaining,
+                   self.eval_2_avg_step_baseline_stops_remaining
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -1065,7 +1488,82 @@ class ExperimentResult:
                          "avg_defender_third_stop_step",
                          "eval_avg_defender_third_stop_step", "eval_2_avg_defender_third_stop_step",
                          "avg_defender_fourth_stop_step",
-                         "eval_avg_defender_fourth_stop_step", "eval_2_avg_defender_fourth_stop_step"
+                         "eval_avg_defender_fourth_stop_step", "eval_2_avg_defender_fourth_stop_step",
+                         "avg_snort_severe_baseline_first_stop_step",
+                         "avg_snort_warning_baseline_first_stop_step",
+                         "avg_snort_critical_baseline_first_stop_step",
+                         "avg_var_log_baseline_first_stop_step",
+                         "avg_step_baseline_first_stop_step",
+                         "avg_snort_severe_baseline_second_stop_step",
+                         "avg_snort_warning_baseline_second_stop_step",
+                         "avg_snort_critical_baseline_second_stop_step",
+                         "avg_var_log_baseline_second_stop_step",
+                         "avg_step_baseline_second_stop_step",
+                         "avg_snort_severe_baseline_third_stop_step",
+                         "avg_snort_warning_baseline_third_stop_step",
+                         "avg_snort_critical_baseline_third_stop_step",
+                         "avg_var_log_baseline_third_stop_step",
+                         "avg_step_baseline_third_stop_step",
+                         "avg_snort_severe_baseline_fourth_stop_step",
+                         "avg_snort_warning_baseline_fourth_stop_step",
+                         "avg_snort_critical_baseline_fourth_stop_step",
+                         "avg_var_log_baseline_fourth_stop_step",
+                         "avg_step_baseline_fourth_stop_step",
+                         "avg_snort_severe_baseline_stops_remaining",
+                         "avg_snort_warning_baseline_stops_remaining",
+                         "avg_snort_critical_baseline_stops_remaining",
+                         "avg_var_log_baseline_stops_remaining",
+                         "avg_step_baseline_stops_remaining",
+                         "eval_avg_snort_severe_baseline_first_stop_step",
+                         "eval_avg_snort_warning_baseline_first_stop_step",
+                         "eval_avg_snort_critical_baseline_first_stop_step",
+                         "eval_avg_var_log_baseline_first_stop_step",
+                         "eval_avg_step_baseline_first_stop_step",
+                         "eval_avg_snort_severe_baseline_second_stop_step",
+                         "eval_avg_snort_warning_baseline_second_stop_step",
+                         "eval_avg_snort_critical_baseline_second_stop_step",
+                         "eval_avg_var_log_baseline_second_stop_step",
+                         "eval_avg_step_baseline_second_stop_step",
+                         "eval_avg_snort_severe_baseline_third_stop_step",
+                         "eval_avg_snort_warning_baseline_third_stop_step",
+                         "eval_avg_snort_critical_baseline_third_stop_step",
+                         "eval_avg_var_log_baseline_third_stop_step",
+                         "eval_avg_step_baseline_third_stop_step",
+                         "eval_avg_snort_severe_baseline_fourth_stop_step",
+                         "eval_avg_snort_warning_baseline_fourth_stop_step",
+                         "eval_avg_snort_critical_baseline_fourth_stop_step",
+                         "eval_avg_var_log_baseline_fourth_stop_step",
+                         "eval_avg_step_baseline_fourth_stop_step",
+                         "eval_avg_snort_severe_baseline_stops_remaining",
+                         "eval_avg_snort_warning_baseline_stops_remaining",
+                         "eval_avg_snort_critical_baseline_stops_remaining",
+                         "eval_avg_var_log_baseline_stops_remaining",
+                         "eval_avg_step_baseline_stops_remaining",
+                         "eval_2_avg_snort_severe_baseline_first_stop_step",
+                         "eval_2_avg_snort_warning_baseline_first_stop_step",
+                         "eval_2_avg_snort_critical_baseline_first_stop_step",
+                         "eval_2_avg_var_log_baseline_first_stop_step",
+                         "eval_2_avg_step_baseline_first_stop_step",
+                         "eval_2_avg_snort_severe_baseline_second_stop_step",
+                         "eval_2_avg_snort_warning_baseline_second_stop_step",
+                         "eval_2_avg_snort_critical_baseline_second_stop_step",
+                         "eval_2_avg_var_log_baseline_second_stop_step",
+                         "eval_2_avg_step_baseline_second_stop_step",
+                         "eval_2_avg_snort_severe_baseline_third_stop_step",
+                         "eval_2_avg_snort_warning_baseline_third_stop_step",
+                         "eval_2_avg_snort_critical_baseline_third_stop_step",
+                         "eval_2_avg_var_log_baseline_third_stop_step",
+                         "eval_2_avg_step_baseline_third_stop_step",
+                         "eval_2_avg_snort_severe_baseline_fourth_stop_step",
+                         "eval_2_avg_snort_warning_baseline_fourth_stop_step",
+                         "eval_2_avg_snort_critical_baseline_fourth_stop_step",
+                         "eval_2_avg_var_log_baseline_fourth_stop_step",
+                         "eval_2_avg_step_baseline_fourth_stop_step",
+                         "eval_2_avg_snort_severe_baseline_stops_remaining",
+                         "eval_2_avg_snort_warning_baseline_stops_remaining",
+                         "eval_2_avg_snort_critical_baseline_stops_remaining",
+                         "eval_2_avg_var_log_baseline_stops_remaining",
+                         "eval_2_avg_step_baseline_stops_remaining"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

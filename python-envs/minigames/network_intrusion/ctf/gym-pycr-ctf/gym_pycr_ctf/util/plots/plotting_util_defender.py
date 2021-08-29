@@ -3953,7 +3953,7 @@ def plot_defender_simulation_emulation_multiple_stops_tnsm_21(
 
 
     handles, labels = ax[0][2].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.505, 0.165),
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.505, 0.155),
                ncol=5, fancybox=True, shadow=True, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65)
 
     fig.tight_layout()

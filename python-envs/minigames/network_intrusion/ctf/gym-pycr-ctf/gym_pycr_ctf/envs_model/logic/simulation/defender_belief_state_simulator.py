@@ -257,5 +257,30 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.second_stop_step = -1
         s_prime.defender_obs_state.third_stop_step = -1
         s_prime.defender_obs_state.fourth_stop_step = -1
+        s_prime.snort_severe_baseline_first_stop_step = 0
+        s_prime.snort_warning_baseline_first_stop_step = 0
+        s_prime.snort_critical_baseline_first_stop_step = 0
+        s_prime.var_log_baseline_first_stop_step = 0
+        s_prime.step_baseline_first_stop_step = 0
+        s_prime.snort_severe_baseline_second_stop_step = 0
+        s_prime.snort_warning_baseline_second_stop_step = 0
+        s_prime.snort_critical_baseline_second_stop_step = 0
+        s_prime.var_log_baseline_second_stop_step = 0
+        s_prime.step_baseline_second_stop_step = 0
+        s_prime.snort_severe_baseline_third_stop_step = 0
+        s_prime.snort_warning_baseline_third_stop_step = 0
+        s_prime.snort_critical_baseline_third_stop_step = 0
+        s_prime.var_log_baseline_third_stop_step = 0
+        s_prime.step_baseline_third_stop_step = 0
+        s_prime.snort_severe_baseline_fourth_stop_step = 0
+        s_prime.snort_warning_baseline_fourth_stop_step = 0
+        s_prime.snort_critical_baseline_fourth_stop_step = 0
+        s_prime.var_log_baseline_fourth_stop_step = 0
+        s_prime.step_baseline_fourth_stop_step = 0
+        s_prime.snort_severe_baseline_stops_remaining = 0
+        s_prime.snort_warning_baseline_stops_remaining = 0
+        s_prime.snort_critical_baseline_stops_remaining = 0
+        s_prime.var_log_baseline_stops_remaining = 0
+        s_prime.step_baseline_stops_remaining = 0
 
         return s_prime, 0, False

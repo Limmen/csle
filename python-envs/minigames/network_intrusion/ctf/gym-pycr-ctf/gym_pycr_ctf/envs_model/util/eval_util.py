@@ -115,22 +115,18 @@ class EvalUtil:
 
             optimal_service_reward = 0
             optimal_service_reward = optimal_service_reward + env.env_config.defender_service_reward * \
-                                     (optimal_stopping_time - 1 -
+                                     max(0, (optimal_stopping_time -
                                       (env.env_config.maximum_number_of_defender_stop_actions -
-                                       env.env_config.attacker_prevented_stops_remaining))
+                                       env.env_config.attacker_prevented_stops_remaining)))
             for i in range(env.env_config.maximum_number_of_defender_stop_actions, 0, -1):
                 if i < env.env_config.attacker_prevented_stops_remaining:
                     break
                 elif i == env.env_config.attacker_prevented_stops_remaining:
                     if env.env_config.attacker_prevented_stops_remaining > 0:
-                        optimal_service_reward += (len(obs) - optimal_stopping_time + 1) * \
+                        optimal_service_reward += (max(0, len(obs) - optimal_stopping_time + 1)) * \
                                                   env.env_config.defender_service_reward / (
                                                       math.pow(2,
                                                                env.env_config.maximum_number_of_defender_stop_actions - i))
-                    else:
-                        optimal_service_reward += (optimal_stopping_time) * \
-                                                  env.env_config.defender_service_reward / \
-                                                  (math.pow(2, env.env_config.maximum_number_of_defender_stop_actions - i))
 
             opt_r_l.append(optimal_service_reward + optimal_costs + env.env_config.defender_caught_attacker_reward)
 

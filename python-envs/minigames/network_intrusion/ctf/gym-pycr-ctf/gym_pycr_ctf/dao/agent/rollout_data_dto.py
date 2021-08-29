@@ -52,7 +52,32 @@ class RolloutDataDTO:
                  defender_first_stop_step=None,
                  defender_second_stop_step=None,
                  defender_third_stop_step=None,
-                 defender_fourth_stop_step=None
+                 defender_fourth_stop_step=None,
+                 episode_snort_severe_baseline_first_stop_step = None,
+                 episode_snort_warning_baseline_first_stop_step=None,
+                 episode_snort_critical_baseline_first_stop_step=None,
+                 episode_var_log_baseline_first_stop_step=None,
+                 episode_step_baseline_first_stop_step=None,
+                 episode_snort_severe_baseline_second_stop_step=None,
+                 episode_snort_warning_baseline_second_stop_step=None,
+                 episode_snort_critical_baseline_second_stop_step=None,
+                 episode_var_log_baseline_second_stop_step=None,
+                 episode_step_baseline_second_stop_step=None,
+                 episode_snort_severe_baseline_third_stop_step=None,
+                 episode_snort_warning_baseline_third_stop_step=None,
+                 episode_snort_critical_baseline_third_stop_step=None,
+                 episode_var_log_baseline_third_stop_step=None,
+                 episode_step_baseline_third_stop_step=None,
+                 episode_snort_severe_baseline_fourth_stop_step=None,
+                 episode_snort_warning_baseline_fourth_stop_step=None,
+                 episode_snort_critical_baseline_fourth_stop_step=None,
+                 episode_var_log_baseline_fourth_stop_step=None,
+                 episode_step_baseline_fourth_stop_step=None,
+                 episode_snort_severe_baseline_stops_remaining=None,
+                 episode_snort_warning_baseline_stops_remaining=None,
+                 episode_snort_critical_baseline_stops_remaining=None,
+                 episode_var_log_baseline_stops_remaining=None,
+                 episode_step_baseline_stops_remaining=None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -106,6 +131,31 @@ class RolloutDataDTO:
         self.defender_second_stop_step = defender_second_stop_step
         self.defender_third_stop_step = defender_third_stop_step
         self.defender_fourth_stop_step = defender_fourth_stop_step
+        self.episode_snort_severe_baseline_first_stop_step = episode_snort_severe_baseline_first_stop_step
+        self.episode_snort_warning_baseline_first_stop_step = episode_snort_warning_baseline_first_stop_step
+        self.episode_snort_critical_baseline_first_stop_step = episode_snort_critical_baseline_first_stop_step
+        self.episode_var_log_baseline_first_stop_step = episode_var_log_baseline_first_stop_step
+        self.episode_step_baseline_first_stop_step = episode_step_baseline_first_stop_step
+        self.episode_snort_severe_baseline_second_stop_step = episode_snort_severe_baseline_second_stop_step
+        self.episode_snort_warning_baseline_second_stop_step = episode_snort_warning_baseline_second_stop_step
+        self.episode_snort_critical_baseline_second_stop_step = episode_snort_critical_baseline_second_stop_step
+        self.episode_var_log_baseline_second_stop_step = episode_var_log_baseline_second_stop_step
+        self.episode_step_baseline_second_stop_step = episode_step_baseline_second_stop_step
+        self.episode_snort_severe_baseline_third_stop_step = episode_snort_severe_baseline_third_stop_step
+        self.episode_snort_warning_baseline_third_stop_step = episode_snort_warning_baseline_third_stop_step
+        self.episode_snort_critical_baseline_third_stop_step = episode_snort_critical_baseline_third_stop_step
+        self.episode_var_log_baseline_third_stop_step = episode_var_log_baseline_third_stop_step
+        self.episode_step_baseline_third_stop_step = episode_step_baseline_third_stop_step
+        self.episode_snort_severe_baseline_fourth_stop_step = episode_snort_severe_baseline_fourth_stop_step
+        self.episode_snort_warning_baseline_fourth_stop_step = episode_snort_warning_baseline_fourth_stop_step
+        self.episode_snort_critical_baseline_fourth_stop_step = episode_snort_critical_baseline_fourth_stop_step
+        self.episode_var_log_baseline_fourth_stop_step = episode_var_log_baseline_fourth_stop_step
+        self.episode_step_baseline_fourth_stop_step = episode_step_baseline_fourth_stop_step
+        self.episode_snort_severe_baseline_stops_remaining = episode_snort_severe_baseline_stops_remaining
+        self.episode_snort_warning_baseline_stops_remaining = episode_snort_warning_baseline_stops_remaining
+        self.episode_snort_critical_baseline_stops_remaining = episode_snort_critical_baseline_stops_remaining
+        self.episode_var_log_baseline_stops_remaining = episode_var_log_baseline_stops_remaining
+        self.episode_step_baseline_stops_remaining = episode_step_baseline_stops_remaining
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -161,6 +211,31 @@ class RolloutDataDTO:
         self.defender_second_stop_step = []
         self.defender_third_stop_step = []
         self.defender_fourth_stop_step = []
+        self.episode_snort_severe_baseline_first_stop_step = []
+        self.episode_snort_warning_baseline_first_stop_step = []
+        self.episode_snort_critical_baseline_first_stop_step = []
+        self.episode_var_log_baseline_first_stop_step = []
+        self.episode_step_baseline_first_stop_step = []
+        self.episode_snort_severe_baseline_second_stop_step = []
+        self.episode_snort_warning_baseline_second_stop_step = []
+        self.episode_snort_critical_baseline_second_stop_step = []
+        self.episode_var_log_baseline_second_stop_step = []
+        self.episode_step_baseline_second_stop_step = []
+        self.episode_snort_severe_baseline_third_stop_step = []
+        self.episode_snort_warning_baseline_third_stop_step = []
+        self.episode_snort_critical_baseline_third_stop_step = []
+        self.episode_var_log_baseline_third_stop_step = []
+        self.episode_step_baseline_third_stop_step = []
+        self.episode_snort_severe_baseline_fourth_stop_step = []
+        self.episode_snort_warning_baseline_fourth_stop_step = []
+        self.episode_snort_critical_baseline_fourth_stop_step = []
+        self.episode_var_log_baseline_fourth_stop_step = []
+        self.episode_step_baseline_fourth_stop_step = []
+        self.episode_snort_severe_baseline_stops_remaining = []
+        self.episode_snort_warning_baseline_stops_remaining = []
+        self.episode_snort_critical_baseline_stops_remaining = []
+        self.episode_var_log_baseline_stops_remaining = []
+        self.episode_step_baseline_stops_remaining = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 
