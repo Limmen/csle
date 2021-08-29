@@ -3367,6 +3367,603 @@ def plot_defender_emulation_with_baselines_tnsm_21(
     fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
 
 
+
+def plot_defender_simulation_emulation_multiple_stops_tnsm_21(
+        avg_rewards_data_simulation, avg_rewards_means_simulation,
+        avg_rewards_stds_simulation,
+        avg_steps_data_simulation, avg_steps_means_simulation,
+        avg_steps_stds_simulation,
+        avg_caught_frac_data_simulation, avg_caught_frac_means_simulation,
+        avg_caught_frac_stds_simulation,
+        avg_early_stopping_frac_data_simulation, avg_early_stopping_means_simulation,
+        avg_early_stopping_stds_simulation, avg_intrusion_frac_data_simulation,
+        avg_intrusion_means_simulation,
+        avg_intrusion_stds_simulation,
+        avg_i_steps_data_simulation, avg_i_steps_means_simulation,
+        avg_i_steps_stds_simulation,
+        optimal_rewards_data_simulation, optimal_rewards_means_simulation, optimal_rewards_stds_simulation,
+        optimal_steps_data_simulation, optimal_steps_means_simulation, optimal_steps_stds_simulation,
+        avg_first_stop_step_simulation_data, avg_first_stop_step_simulation_means,
+        avg_first_stop_step_simulation_stds,
+        avg_second_stop_step_simulation_data, avg_second_stop_step_simulation_means,
+        avg_second_stop_step_simulation_stds,
+        avg_third_stop_step_simulation_data, avg_third_stop_step_simulation_means,
+        avg_third_stop_step_simulation_stds,
+        avg_fourth_stop_step_simulation_data, avg_fourth_stop_step_simulation_means,
+        avg_fourth_stop_step_simulation_stds,
+        avg_stops_remaining_simulation_data, avg_stops_remaining_simulation_means,
+        avg_stops_remaining_simulation_stds,
+        avg_rewards_data_emulation, avg_rewards_means_emulation,
+        avg_rewards_stds_emulation,
+        avg_steps_data_emulation, avg_steps_means_emulation,
+        avg_steps_stds_emulation,
+        avg_caught_frac_data_emulation, avg_caught_frac_means_emulation,
+        avg_caught_frac_stds_emulation,
+        avg_early_stopping_frac_data_emulation, avg_early_stopping_means_emulation,
+        avg_early_stopping_stds_emulation, avg_intrusion_frac_data_emulation,
+        avg_intrusion_means_emulation,
+        avg_intrusion_stds_emulation,
+        optimal_steps_data_emulation, optimal_steps_means_emulation,
+        optimal_steps_stds_emulation,
+        optimal_rewards_data_emulation, optimal_rewards_means_emulation,
+        optimal_rewards_stds_emulation,
+        avg_i_steps_data_emulation, avg_i_steps_means_emulation,
+        avg_i_steps_stds_emulation,
+        avg_first_stop_step_emulation_data, avg_first_stop_step_emulation_means,
+        avg_first_stop_step_emulation_stds,
+        avg_second_stop_step_emulation_data, avg_second_stop_step_emulation_means,
+        avg_second_stop_step_emulation_stds,
+        avg_third_stop_step_emulation_data, avg_third_stop_step_emulation_means,
+        avg_third_stop_step_emulation_stds,
+        avg_fourth_stop_step_emulation_data, avg_fourth_stop_step_emulation_means,
+        avg_fourth_stop_step_emulation_stds,
+        avg_stops_remaining_emulation_data, avg_stops_remaining_emulation_means,
+        avg_stops_remaining_emulation_stds,
+
+        steps_baseline_rewards_data, steps_baseline_rewards_means, steps_baseline_rewards_stds,
+        steps_baseline_steps_data, steps_baseline_steps_means, steps_baseline_steps_stds,
+        steps_baseline_early_stopping_data, steps_baseline_early_stopping_means, steps_baseline_early_stopping_stds,
+        steps_baseline_caught_data, steps_baseline_caught_means, steps_baseline_caught_stds,
+        steps_baseline_i_steps_data, steps_baseline_i_steps_means, steps_baseline_i_steps_stds,
+
+        snort_severe_baseline_rewards_data, snort_severe_baseline_rewards_means, snort_severe_baseline_rewards_stds,
+        snort_severe_baseline_early_stopping_data, snort_severe_baseline_early_stopping_means,
+        snort_severe_baseline_early_stopping_stds,
+        snort_severe_baseline_caught_data, snort_severe_baseline_caught_means, snort_severe_baseline_caught_stds,
+        snort_severe_baseline_steps_data, snort_severe_baseline_steps_means, snort_severe_baseline_steps_stds,
+        snort_severe_baseline_i_steps_data, snort_severe_baseline_i_steps_means, snort_severe_baseline_i_steps_stds,
+
+        fontsize : int = 6.5, figsize: Tuple[int,int] =  (3.75, 3.4),
+        title_fontsize=8, lw=0.5, wspace=0.02, hspace=0.3, top=0.9,
+        labelsize=6, markevery=10, optimal_reward = 95, sample_step = 1,
+        eval_only=False, plot_opt = False, iterations_per_step : int = 1, optimal_int = 1.0,
+        optimal_flag = 1.0, file_name = "test", markersize=5, bottom=0.02):
+
+    plt.rc('text', usetex=True)
+    plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
+    plt.rcParams['font.family'] = ['serif']
+    plt.rcParams['axes.titlepad'] = 0.02
+    # plt.rcParams['xtick.major.pad'] = 0.5
+    plt.rcParams['ytick.major.pad'] = 0.05
+    plt.rcParams['axes.labelpad'] = 0.8
+    plt.rcParams['axes.linewidth'] = 0.1
+    plt.rcParams.update({'font.size': fontsize})
+
+    # plt.rcParams['font.serif'] = ['Times New Roman']
+    fig, ax = plt.subplots(nrows=2, ncols=5, figsize=figsize)
+
+    # color="r"
+    # color="#599ad3"
+
+    ax[0][0].plot(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_rewards_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_rewards_means_emulation[::sample_step] - avg_rewards_stds_emulation[::sample_step],
+        avg_rewards_means_emulation[::sample_step] + avg_rewards_stds_emulation[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[0][0].plot(
+        np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_rewards_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_rewards_means_simulation[::sample_step] - avg_rewards_stds_simulation[::sample_step],
+        avg_rewards_means_simulation[::sample_step] + avg_rewards_stds_simulation[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[0][0].plot(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step] - steps_baseline_rewards_stds[::sample_step],
+        steps_baseline_rewards_means[::sample_step] + steps_baseline_rewards_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][0].plot(
+        np.array(list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step] - snort_severe_baseline_rewards_stds[::sample_step],
+        snort_severe_baseline_rewards_means[::sample_step] + snort_severe_baseline_rewards_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
+
+
+    ax[0][0].plot(np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+               optimal_rewards_means_emulation[::sample_step], label=r"Optimal $\pi^{*}$",
+               color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    ax[0][0].fill_between(
+        np.array(list(range(len(avg_rewards_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        optimal_rewards_means_emulation[::sample_step] - optimal_rewards_stds_emulation[::sample_step],
+        optimal_rewards_means_emulation[::sample_step] + optimal_rewards_stds_emulation[::sample_step],
+        alpha=0.35, color="black")
+
+    ax[0][0].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    #ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[0][0].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[0][0].xaxis.get_label()
+    ylab = ax[0][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][0].set_ylim(-130, 200)
+    ax[0][0].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][0].set_title(r"Reward per episode", fontsize=fontsize)
+    ax[0][1].plot(np.array(list(range(len(avg_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+               avg_steps_means_emulation[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
+               marker="s", ls='-', color="#599ad3",
+               markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(avg_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_steps_means_emulation[::sample_step] - avg_steps_stds_emulation[::sample_step],
+        avg_steps_means_emulation[::sample_step] + avg_steps_stds_emulation[::sample_step],
+        alpha=0.35, color="#599ad3")
+
+    ax[0][1].plot(np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+               avg_steps_means_simulation[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ simulation",
+               marker="o", ls='-', color="r",
+               markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_steps_means_simulation[::sample_step] - avg_steps_stds_simulation[::sample_step],
+        avg_steps_means_simulation[::sample_step] + avg_steps_stds_simulation[::sample_step],
+        alpha=0.35, color="r")
+
+    ax[0][1].plot(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_steps_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_steps_means[::sample_step] - steps_baseline_steps_stds[::sample_step],
+        steps_baseline_steps_means[::sample_step] + steps_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a")
+
+    ax[0][1].plot(np.array(list(range(len(snort_severe_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+               snort_severe_baseline_steps_means[::sample_step], label=r"$a=1$ baseline",
+               marker="h", ls='-', color="#E7298A",
+               markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_steps_means[::sample_step] - snort_severe_baseline_steps_stds[::sample_step],
+        snort_severe_baseline_steps_means[::sample_step] + snort_severe_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A")
+
+    ax[0][1].plot(
+        np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        optimal_steps_means_emulation[::sample_step], label=r"Optimal $\pi^{*}$",
+        color="black", linestyle="dashed", markersize=markersize, lw=lw, markevery=markevery, dashes=(4, 2))
+    ax[0][1].fill_between(
+        np.array(list(range(len(avg_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        optimal_steps_means_emulation[::sample_step] - optimal_steps_stds_emulation[::sample_step],
+        optimal_steps_means_emulation[::sample_step] + optimal_steps_stds_emulation[::sample_step],
+        alpha=0.35, color="black")
+
+    ax[0][1].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    #ax[0][0][1].set_ylabel(r"$\mathbb{P}[\text{detected}]$", fontsize=labelsize)
+    ax[0][1].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[0][1].xaxis.get_label()
+    ylab = ax[0][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][1].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][1].set_title(r"Episode length (steps)", fontsize=fontsize)
+
+    ax[0][2].plot(
+        np.array(list(range(len(avg_caught_frac_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_caught_frac_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(avg_caught_frac_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_caught_frac_means_emulation[::sample_step] - avg_caught_frac_stds_emulation[::sample_step],
+        avg_caught_frac_means_emulation[::sample_step] + avg_caught_frac_stds_emulation[::sample_step],
+        alpha=0.35, color="#599ad3")
+
+    ax[0][2].plot(
+        np.array(list(range(len(avg_caught_frac_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_caught_frac_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(avg_caught_frac_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_caught_frac_means_simulation[::sample_step] - avg_caught_frac_stds_simulation[::sample_step],
+        avg_caught_frac_means_simulation[::sample_step] + avg_caught_frac_stds_simulation[::sample_step],
+        alpha=0.35, color="r")
+
+    ax[0][2].plot(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_caught_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_caught_means[::sample_step] - steps_baseline_caught_stds[::sample_step],
+        steps_baseline_caught_means[::sample_step] + steps_baseline_caught_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][2].plot(
+        np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_caught_means[::sample_step] - snort_severe_baseline_caught_stds[::sample_step],
+        snort_severe_baseline_caught_means[::sample_step] + snort_severe_baseline_caught_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
+
+    ax[0][2].grid('on')
+    #ax[0][2].set_ylabel(r"Reward", fontsize=labelsize)
+    ax[0][2].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[0][2].xaxis.get_label()
+    ylab = ax[0][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    # ax[0][2].set_ylim(-100, 110)
+    # ax[0][2].set_ylim(0, 1)
+    ax[0][2].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][2].set_title(r"$\mathbb{P}[\text{intrusion interrupted}]$", fontsize=fontsize)
+
+    ax[0][2].plot(np.array(list(range(len(avg_rewards_means_simulation)))) * iterations_per_step,
+               [1.00] * len(avg_rewards_means_simulation), label=r"Upper bound $\pi^{*}$",
+               color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    ax[0][3].plot(
+        np.array(
+            list(range(len(avg_early_stopping_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_early_stopping_means_emulation[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(
+            list(range(len(avg_early_stopping_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_early_stopping_means_emulation[::sample_step] - avg_early_stopping_stds_emulation[::sample_step],
+        avg_early_stopping_means_emulation[::sample_step] + avg_early_stopping_stds_emulation[::sample_step],
+        alpha=0.35, color="#599ad3")
+
+    ax[0][3].plot(
+        np.array(
+            list(range(len(avg_early_stopping_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_early_stopping_means_simulation[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(
+            list(range(len(avg_early_stopping_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_early_stopping_means_simulation[::sample_step] - avg_early_stopping_stds_simulation[::sample_step],
+        avg_early_stopping_means_simulation[::sample_step] + avg_early_stopping_stds_simulation[::sample_step],
+        alpha=0.35, color="r")
+
+    ax[0][3].plot(
+        np.array(list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_early_stopping_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_early_stopping_means[::sample_step] - steps_baseline_early_stopping_stds[::sample_step],
+        steps_baseline_early_stopping_means[::sample_step] + steps_baseline_early_stopping_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][3].plot(
+        np.array(list(range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_early_stopping_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(list(range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_early_stopping_means[::sample_step] - snort_severe_baseline_early_stopping_stds[::sample_step],
+        snort_severe_baseline_early_stopping_means[::sample_step] + snort_severe_baseline_early_stopping_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
+    ax[0][3].plot(np.array(list(range(len(avg_rewards_means_simulation)))) * iterations_per_step,
+               [0.0] * len(avg_rewards_means_simulation), label=r"Optimal $\pi^{*}$",
+               color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    ax[0][3].grid('on')
+    # ax[0][0][2].set_ylabel(r"Reward", fontsize=labelsize)
+    ax[0][3].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[0][3].xaxis.get_label()
+    ylab = ax[0][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    # ax[0][2].set_ylim(-100, 110)
+    ax[0][3].set_ylim(0, 1)
+    ax[0][3].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
+
+    ax[0][4].plot(
+        np.array(
+            list(range(len(avg_i_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_i_steps_means_emulation[::sample_step]+1, label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(
+            list(range(len(avg_i_steps_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_i_steps_means_emulation[::sample_step]+ 1 - avg_early_stopping_stds_emulation[::sample_step],
+        avg_i_steps_means_emulation[::sample_step] +1  + avg_i_steps_stds_emulation[::sample_step],
+        alpha=0.35, color="#599ad3")
+
+    ax[0][4].plot(
+        np.array(
+            list(range(len(avg_i_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_i_steps_means_simulation[::sample_step] + 1, label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(
+            list(range(len(avg_i_steps_means_simulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_i_steps_means_simulation[::sample_step] +1  - avg_i_steps_stds_simulation[::sample_step],
+        avg_i_steps_means_simulation[::sample_step] + 1 + avg_i_steps_stds_simulation[::sample_step],
+        alpha=0.35, color="r")
+    ax[0][4].plot(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_i_steps_means[::sample_step] + 1, label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_i_steps_means[::sample_step] + 1 - steps_baseline_i_steps_stds[::sample_step],
+        steps_baseline_i_steps_means[::sample_step] + 1 + steps_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][4].plot(
+        np.array(list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_i_steps_means[::sample_step] + 1, label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_i_steps_means[::sample_step] + 1 - snort_severe_baseline_i_steps_stds[::sample_step],
+        snort_severe_baseline_i_steps_means[::sample_step] + 1 + snort_severe_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
+
+    ax[0][4].plot(np.array(list(range(len(avg_rewards_means_simulation)))) * iterations_per_step,
+               [1.0] * len(avg_rewards_means_simulation), label=r"Optimal $\pi^{*}$",
+               color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
+
+    ax[0][4].grid('on')
+    # ax[0][0][2].set_ylabel(r"Reward", fontsize=labelsize)
+    ax[0][4].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[0][4].xaxis.get_label()
+    ylab = ax[0][4].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[0][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[0][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    # ax[0][2].set_ylim(-100, 110)
+    ax[0][4].set_ylim(0, 20)
+    ax[0][4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[0][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+
+    ax[1][0].plot(
+        np.array(list(range(len(avg_first_stop_step_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_first_stop_step_emulation_means[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_first_stop_step_emulation_means[::sample_step] - avg_first_stop_step_emulation_stds[::sample_step],
+        avg_first_stop_step_emulation_means[::sample_step] + avg_first_stop_step_emulation_stds[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][0].plot(
+        np.array(list(range(len(avg_first_stop_step_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_first_stop_step_simulation_means[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(avg_first_stop_step_simulation_stds[::sample_step])))) * sample_step * iterations_per_step,
+        avg_first_stop_step_simulation_means[::sample_step] - avg_first_stop_step_simulation_stds[::sample_step],
+        avg_first_stop_step_simulation_means[::sample_step] + avg_first_stop_step_simulation_stds[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][0].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[1][0].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[1][0].xaxis.get_label()
+    ylab = ax[1][0].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][0].set_ylim(-1, 10)
+    ax[1][0].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[1][0].set_title(r"Time of first stop", fontsize=fontsize)
+
+    ax[1][1].plot(
+        np.array(
+            list(range(len(avg_second_stop_step_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_second_stop_step_emulation_means[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_second_stop_step_emulation_means[::sample_step] - avg_second_stop_step_emulation_stds[::sample_step],
+        avg_second_stop_step_emulation_means[::sample_step] + avg_second_stop_step_emulation_stds[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][1].plot(
+        np.array(
+            list(range(len(avg_second_stop_step_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_second_stop_step_simulation_means[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(
+            list(range(len(avg_second_stop_step_simulation_stds[::sample_step])))) * sample_step * iterations_per_step,
+        avg_second_stop_step_simulation_means[::sample_step] - avg_second_stop_step_simulation_stds[::sample_step],
+        avg_second_stop_step_simulation_means[::sample_step] + avg_second_stop_step_simulation_stds[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][1].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[1][1].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[1][1].xaxis.get_label()
+    ylab = ax[1][1].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][1].set_ylim(-1, 10)
+    ax[1][1].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[1][1].set_title(r"Time of second stop", fontsize=fontsize)
+
+    ax[1][2].plot(
+        np.array(
+            list(range(len(avg_third_stop_step_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_third_stop_step_emulation_means[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_third_stop_step_emulation_means[::sample_step] - avg_third_stop_step_emulation_stds[::sample_step],
+        avg_third_stop_step_emulation_means[::sample_step] + avg_third_stop_step_emulation_stds[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][2].plot(
+        np.array(
+            list(range(len(avg_third_stop_step_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_third_stop_step_simulation_means[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(
+            list(range(len(avg_third_stop_step_simulation_stds[::sample_step])))) * sample_step * iterations_per_step,
+        avg_third_stop_step_simulation_means[::sample_step] - avg_third_stop_step_simulation_stds[::sample_step],
+        avg_third_stop_step_simulation_means[::sample_step] + avg_third_stop_step_simulation_stds[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][2].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[1][2].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[1][2].xaxis.get_label()
+    ylab = ax[1][2].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][2].set_ylim(-1, 10)
+    ax[1][2].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[1][2].set_title(r"Time of third stop", fontsize=fontsize)
+
+    ax[1][3].plot(
+        np.array(
+            list(range(len(avg_fourth_stop_step_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_fourth_stop_step_emulation_means[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(list(range(len(avg_rewards_means_emulation[::sample_step])))) * sample_step * iterations_per_step,
+        avg_fourth_stop_step_emulation_means[::sample_step] - avg_fourth_stop_step_emulation_stds[::sample_step],
+        avg_fourth_stop_step_emulation_means[::sample_step] + avg_fourth_stop_step_emulation_stds[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][3].plot(
+        np.array(
+            list(range(len(avg_fourth_stop_step_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_fourth_stop_step_simulation_means[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(
+            list(range(len(avg_fourth_stop_step_simulation_stds[::sample_step])))) * sample_step * iterations_per_step,
+        avg_fourth_stop_step_simulation_means[::sample_step] - avg_fourth_stop_step_simulation_stds[::sample_step],
+        avg_fourth_stop_step_simulation_means[::sample_step] + avg_fourth_stop_step_simulation_stds[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][3].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[1][3].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[1][3].xaxis.get_label()
+    ylab = ax[1][3].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][3].set_ylim(-1, 10)
+    ax[1][3].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[1][3].set_title(r"Time of fourth stop", fontsize=fontsize)
+
+    ax[1][4].plot(
+        np.array(
+            list(range(len(avg_stops_remaining_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_stops_remaining_emulation_means[::sample_step], label=r"$\pi_{\theta}$ emulation",
+        marker="s", ls='-', color="#599ad3", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(list(range(len(avg_stops_remaining_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_stops_remaining_emulation_means[::sample_step] - avg_stops_remaining_emulation_stds[::sample_step],
+        avg_stops_remaining_emulation_means[::sample_step] + avg_stops_remaining_emulation_stds[::sample_step],
+        alpha=0.35, color="#599ad3", lw=lw)
+
+    ax[1][4].plot(
+        np.array(
+            list(range(len(avg_stops_remaining_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_stops_remaining_simulation_means[::sample_step], label=r"$\pi_{\theta}$ simulation",
+        marker="o", ls='-', color="r", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(
+            list(range(len(avg_stops_remaining_simulation_means[::sample_step])))) * sample_step * iterations_per_step,
+        avg_stops_remaining_simulation_means[::sample_step] - avg_stops_remaining_simulation_stds[::sample_step],
+        avg_stops_remaining_simulation_means[::sample_step] + avg_stops_remaining_simulation_stds[::sample_step],
+        alpha=0.35, color="r", lw=lw)
+
+    ax[1][4].grid('on')
+    # ax[0][0][0].set_xlabel("", fontsize=labelsize)
+    # ax[0][0][0].set_ylabel(r"\% Flags captured", fontsize=labelsize)
+    ax[1][4].set_xlabel(r"\# policy updates", fontsize=labelsize)
+    xlab = ax[1][4].xaxis.get_label()
+    ylab = ax[1][4].yaxis.get_label()
+    xlab.set_size(labelsize)
+    ylab.set_size(fontsize)
+    ax[1][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
+    ax[1][4].set_ylim(-0.5, 4.5)
+    ax[1][4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
+    ax[1][4].set_title(r"Stops remaining", fontsize=fontsize)
+
+
+    handles, labels = ax[0][2].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.505, 0.165),
+               ncol=5, fancybox=True, shadow=True, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65)
+
+    fig.tight_layout()
+    #fig.subplots_adjust(wspace=wspace, hspace=hspace, top=top, bottom=bottom)
+    fig.subplots_adjust(wspace=wspace, hspace=hspace, bottom=bottom)
+    fig.savefig(file_name + ".png", format="png", dpi=600)
+    fig.savefig(file_name + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+
+
+
 def reformat_large_tick_values(tick_val, pos):
     """
     Turns large tick values (in the billions, millions and thousands) such as 4500 into 4.5K and also appropriately turns 4000 into 4K (no zero after the decimal).
