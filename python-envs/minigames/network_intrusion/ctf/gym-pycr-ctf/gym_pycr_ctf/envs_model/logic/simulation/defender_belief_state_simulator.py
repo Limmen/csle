@@ -26,7 +26,6 @@ class DefenderBeliefStateSimulator:
         """
         s_prime = s
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
-        print("logged_in_ips:{}".format(logged_in_ips_str))
 
         num_new_alerts = 0
         num_new_priority = 0

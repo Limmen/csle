@@ -58,8 +58,8 @@ class DefenderStoppingSimulator:
                 s_prime.defender_obs_state.stopped = True
                 done = True
 
-        if env_config.attacker_prevented_stops_remaining > s_prime.defender_obs_state.stops_remaining:
-            reward = reward + env_config.defender_early_stopping_reward*2
+        # if env_config.attacker_prevented_stops_remaining > s_prime.defender_obs_state.stops_remaining:
+        #     reward = reward + env_config.defender_early_stopping_reward
 
         idx = env_config.maximum_number_of_defender_stop_actions - (env_config.maximum_number_of_defender_stop_actions -
                                                                     s_prime.defender_obs_state.stops_remaining)
