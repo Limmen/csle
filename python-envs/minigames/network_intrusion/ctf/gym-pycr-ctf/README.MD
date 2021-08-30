@@ -26,7 +26,17 @@ Moreover, the repository contains code to reproduce baseline results for various
 
 ## API Documentation 
 
+### Latest documentatation
+
 TODO
+
+### Generate API Documentation
+
+```bash
+cd docs
+sphinx-apidoc -f -o source/ ../gym_pycr_ctf/
+make html
+```
 
 ## Installation & Tests
 
@@ -140,14 +150,6 @@ ManualAttackerAgent(env=env, env_config=env.env_config)
 <p align="center">
 <img src="images/system_id_2.png" width="1200">
 </p>
-
-## Generate API Documentation
-
-```bash
-cd docs
-sphinx-apidoc -f -o source/ ../gym_pycr_ctf/
-make html
-```
 
 ## Author & Maintainer
 
