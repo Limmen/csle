@@ -26,6 +26,7 @@ class DefenderBeliefStateSimulator:
         """
         s_prime = s
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
+        print("logged_in_ips:{}".format(logged_in_ips_str))
 
         num_new_alerts = 0
         num_new_priority = 0
@@ -76,12 +77,18 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.num_alerts_recent = num_new_alerts
         s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
                                                          num_new_priority
+        s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = s_prime.defender_obs_state.sum_priority_alerts_total_all_stops + \
+                                                               num_new_priority
         s_prime.defender_obs_state.sum_priority_alerts_recent = num_new_priority
         s_prime.defender_obs_state.num_warning_alerts_total = s_prime.defender_obs_state.num_warning_alerts_total + \
                                                         num_new_warning_alerts
+        s_prime.defender_obs_state.num_warning_alerts_total_all_stops = s_prime.defender_obs_state.num_warning_alerts_total_all_stops + \
+                                                              num_new_warning_alerts
         s_prime.defender_obs_state.num_warning_alerts_recent = num_new_warning_alerts
         s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total + \
                                                        num_new_severe_alerts
+        s_prime.defender_obs_state.num_severe_alerts_total_all_stops = s_prime.defender_obs_state.num_severe_alerts_total_all_stops + \
+                                                             num_new_severe_alerts
         s_prime.defender_obs_state.num_severe_alerts_recent = num_new_severe_alerts
 
         # Update machines state
@@ -138,6 +145,10 @@ class DefenderBeliefStateSimulator:
                 m.num_processes_recent = num_new_processes
 
         s_prime.defender_obs_state.step = s_prime.defender_obs_state.step + 1
+        s_prime.defender_obs_state.num_login_attempts_total = \
+            sum(list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
+        s_prime.defender_obs_state.num_login_attempts_total_all_stops = \
+            sum(list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
 
         return s_prime, 0, True
 
@@ -183,6 +194,12 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.sum_priority_alerts_total = 0
         s_prime.defender_obs_state.num_severe_alerts_total = 0
         s_prime.defender_obs_state.num_warning_alerts_total = 0
+        s_prime.defender_obs_state.num_alerts_total_all_stops = 0
+        s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = 0
+        s_prime.defender_obs_state.num_severe_alerts_total_all_stops = 0
+        s_prime.defender_obs_state.num_warning_alerts_total_all_stops = 0
+        s_prime.defender_obs_state.num_login_attempts_total = 0
+        s_prime.defender_obs_state.num_login_attempts_total_all_stops = 0
 
         # Update logs timestamps and reset machine states
         for m in s_prime.defender_obs_state.machines:

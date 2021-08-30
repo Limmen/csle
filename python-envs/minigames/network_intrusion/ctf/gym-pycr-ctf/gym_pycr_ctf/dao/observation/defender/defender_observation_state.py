@@ -29,6 +29,14 @@ class DefenderObservationState:
         self.sum_priority_alerts_total = 0
         self.num_severe_alerts_total = 0
         self.num_warning_alerts_total = 0
+        self.num_login_attempts_total = 0
+
+        self.num_alerts_total_all_stops = 0
+        self.sum_priority_alerts_total_all_stops = 0
+        self.num_severe_alerts_total_all_stops = 0
+        self.num_warning_alerts_total_all_stops = 0
+        self.num_login_attempts_total_all_stops = 0
+
         self.caught_attacker = False
         self.stopped = False
         self.adj_matrix = np.array(0)
@@ -219,6 +227,11 @@ class DefenderObservationState:
         c.snort_critical_baseline_stops_remaining = self.snort_critical_baseline_stops_remaining
         c.var_log_baseline_stops_remaining = self.var_log_baseline_stops_remaining
         c.step_baseline_stops_remaining = self.step_baseline_stops_remaining
+        c.num_warning_alerts_total_all_stops = self.num_warning_alerts_total_all_stops
+        c.num_severe_alerts_total_all_stops = self.num_severe_alerts_total_all_stops
+        c.num_alerts_total_all_stops = self.num_alerts_total_all_stops
+        c.num_login_attempts_total = self.num_login_attempts_total
+        c.num_login_attempts_total_all_stops = self.num_login_attempts_total_all_stops
 
         for m in self.machines:
             c.machines.append(m.copy())
@@ -317,7 +330,10 @@ class DefenderObservationState:
                 "snort_critical_baseline_fourth_stop_step:{}, var_log_baseline_fourth_stop_step:{}, " \
                 "step_baseline_fourth_stop_step:{}, snort_severe_baseline_stops_remaining:{}, " \
                 "snort_warning_baseline_stops_remaining:{}, snort_critical_baseline_stops_remaining:{}, " \
-                "var_log_baseline_stops_remaining:{}, step_baseline_stops_remaining:{},".format(
+                "var_log_baseline_stops_remaining:{},step_baseline_stops_remaining:{}," \
+                "num_severe_alerts_total_all_stops:{},num_warning_alerts_total_all_stops:{}, " \
+                "num_login_attempts_total_all_stops:{},num_alerts_total_all_stops:{}," \
+                "num_login_attempts_total:{}".format(
             self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
             self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
             self.num_warning_alerts_total, self.sum_priority_alerts_total,
@@ -343,5 +359,7 @@ class DefenderObservationState:
             self.step_baseline_fourth_stop_step,
             self.snort_severe_baseline_stops_remaining, self.snort_warning_baseline_stops_remaining,
             self.snort_critical_baseline_fourth_stop_step, self.var_log_baseline_stops_remaining,
-            self.step_baseline_stops_remaining) \
-                + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+            self.step_baseline_stops_remaining,
+            self.num_severe_alerts_total_all_stops, self.num_warning_alerts_total_all_stops,
+            self.num_login_attempts_total_all_stops, self.num_alerts_total_all_stops, self.num_login_attempts_total
+        ) + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

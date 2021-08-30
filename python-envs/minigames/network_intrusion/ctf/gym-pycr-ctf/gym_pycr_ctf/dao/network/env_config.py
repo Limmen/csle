@@ -222,6 +222,7 @@ class EnvConfig:
         self.snort_baseline_simulate = False
         self.attacker_early_stopping_reward = 10
         self.use_attacker_action_stats_to_update_defender_state = False
+        self.randomize_defender_starting_state = False
 
         self.multiple_stopping_environment = False
         self.maximum_number_of_defender_stop_actions = 1

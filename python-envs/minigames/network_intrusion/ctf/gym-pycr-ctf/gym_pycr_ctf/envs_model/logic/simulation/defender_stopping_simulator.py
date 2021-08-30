@@ -37,6 +37,12 @@ class DefenderStoppingSimulator:
         else:
             raise ValueError("Stopping step not recognized")
 
+        s_prime.defender_obs_state.num_login_attempts_total = 0
+        s_prime.defender_obs_state.num_warning_alerts_total = 0
+        s_prime.defender_obs_state.num_severe_alerts_total = 0
+        s_prime.defender_obs_state.sum_priority_alerts_total = 0
+        s_prime.defender_obs_state.num_alerts_total = 0
+
         reward = 0
         done = False
         if s_prime.attacker_obs_state.ongoing_intrusion():

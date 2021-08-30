@@ -51,6 +51,18 @@ class DefenderUpdateStateMiddleware:
                                                                   num_new_warning_alerts
             s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
                                                                    num_new_priority
+            s_prime.defender_obs_state.num_login_attempts_total = sum(list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
+
+            s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total_all_stops + \
+                                                          num_new_alerts
+            s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total_all_stops + \
+                                                                 num_new_severe_alerts
+            s_prime.defender_obs_state.num_warning_alerts_total_all_stops = s_prime.defender_obs_state.num_warning_alerts_total_all_stops + \
+                                                                  num_new_warning_alerts
+            s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = s_prime.defender_obs_state.sum_priority_alerts_total_all_stops + \
+                                                                   num_new_priority
+            s_prime.defender_obs_state.num_login_attempts_total_all_stops = sum(
+                list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
 
             s_prime.defender_obs_state.num_alerts_recent = num_new_alerts
             s_prime.defender_obs_state.num_severe_alerts_recent = num_new_severe_alerts
@@ -185,6 +197,13 @@ class DefenderUpdateStateMiddleware:
             s_prime.defender_obs_state.sum_priority_alerts_total = 0
             s_prime.defender_obs_state.num_severe_alerts_total = 0
             s_prime.defender_obs_state.num_warning_alerts_total = 0
+            s_prime.defender_obs_state.num_login_attempts_total = 0
+
+            s_prime.defender_obs_state.num_alerts_total_all_stops = 0
+            s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = 0
+            s_prime.defender_obs_state.num_severe_alerts_total_all_stops = 0
+            s_prime.defender_obs_state.num_warning_alerts_total_all_stops = 0
+            s_prime.defender_obs_state.num_login_attempts_total_all_stops = 0
 
         s_prime.defender_obs_state.step = 1
         s_prime.defender_obs_state.snort_warning_baseline_reward = 0

@@ -6,6 +6,7 @@ import numpy as np
 import os
 import sys
 import time
+import random
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
@@ -485,6 +486,15 @@ class PyCRCTFEnv(gym.Env, ABC):
                 if d:
                     d = d2
                     self.reset_metrics()
+
+        if self.env_config.randomize_defender_starting_state:
+            self.env_state.defender_obs_state.stops_remaining = random.randint(1,4)
+            if self.env_state.defender_obs_state.stops_remaining <= 3:
+                self.env_state.defender_obs_state.first_stop_step = 1
+            if self.env_state.defender_obs_state.stops_remaining <= 2:
+                self.env_state.defender_obs_state.second_stop_step = 1
+            if self.env_state.defender_obs_state.stops_remaining <= 1:
+                self.env_state.defender_obs_state.third_stop_step = 1
 
 
         #self.viewer.mainframe.set_state(self.agent_state)

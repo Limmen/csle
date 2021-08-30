@@ -347,8 +347,7 @@ class DefenderStateRepresentation:
                     obs_state.stops_remaining <= env_config.ids_enabled_stops_remaining:
                 network_obs[0] = obs_state.num_severe_alerts_total
                 network_obs[1] = obs_state.num_warning_alerts_total
-                num_login_attempts = sum(list(map(lambda x: x.num_failed_login_attempts, obs_state.machines)))
-                network_obs[2] = num_login_attempts
+                network_obs[2] = obs_state.num_login_attempts_total
             else:
                 network_obs[0] = -1
                 network_obs[1] = -1

@@ -41,7 +41,7 @@ class StoppingBaselinesUtil:
         :return: None
         """
         if s_prime.defender_obs_state.snort_severe_baseline_stops_remaining > 0:
-            if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_severe_baseline_threshold:
+            if s_prime.defender_obs_state.num_severe_alerts_recent > env_config.snort_severe_baseline_threshold:
                 s_prime.defender_obs_state.snort_severe_baseline_stops_remaining -= 1
                 idx = env_config.maximum_number_of_defender_stop_actions - (
                             env_config.maximum_number_of_defender_stop_actions -
@@ -94,7 +94,7 @@ class StoppingBaselinesUtil:
         :return: None
         """
         if s_prime.defender_obs_state.snort_warning_baseline_stops_remaining > 0:
-            if s_prime.defender_obs_state.num_warning_alerts_total > env_config.snort_warning_baseline_threshold:
+            if s_prime.defender_obs_state.num_warning_alerts_recent > env_config.snort_warning_baseline_threshold:
                 s_prime.defender_obs_state.snort_warning_baseline_stops_remaining -= 1
                 idx = env_config.maximum_number_of_defender_stop_actions - (
                         env_config.maximum_number_of_defender_stop_actions -
@@ -147,7 +147,7 @@ class StoppingBaselinesUtil:
         :return: None
         """
         if s_prime.defender_obs_state.snort_critical_baseline_stops_remaining > 0:
-            if s_prime.defender_obs_state.num_severe_alerts_total > env_config.snort_critical_baseline_threshold:
+            if s_prime.defender_obs_state.num_severe_alerts_recent > env_config.snort_critical_baseline_threshold:
                 s_prime.defender_obs_state.snort_critical_baseline_stops_remaining -= 1
                 idx = env_config.maximum_number_of_defender_stop_actions - (
                         env_config.maximum_number_of_defender_stop_actions -

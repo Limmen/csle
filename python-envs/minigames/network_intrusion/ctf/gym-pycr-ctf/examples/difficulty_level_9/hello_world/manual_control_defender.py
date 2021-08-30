@@ -46,6 +46,7 @@ def manual_control():
 
     env = gym.make("pycr-ctf-level-9-generated-sim-v6", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
+    env.env_config.randomize_defender_starting_state = False
     env.env_config.attacker_use_nmap_cache = True
     env.env_config.attacker_use_nikto_cache = True
     env.env_config.attacker_use_file_system_cache = True
