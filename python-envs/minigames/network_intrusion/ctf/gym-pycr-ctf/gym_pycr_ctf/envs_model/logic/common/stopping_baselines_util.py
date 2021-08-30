@@ -1,3 +1,4 @@
+from typing import Tuple, List
 import numpy as np
 import math
 from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
@@ -299,7 +300,7 @@ class StoppingBaselinesUtil:
     @staticmethod
     def simulate_end_of_episode_performance(s_prime: EnvState, env_config: EnvConfig, done: bool,
                                             attacker_opponent: CustomAttackerBotAgent, env : "PyCRCTFEnv",
-                                            s: EnvState) -> int:
+                                            s: EnvState) -> Tuple[float, List[int], int, int]:
         """
         Simulates the end of an episode using a given attacker policy and the defender baselines
 
@@ -309,7 +310,7 @@ class StoppingBaselinesUtil:
         :param attacker_opponent: the attacker policy
         :param env: the environment
         :param s: the current state
-        :return: the optimal reward in the simulation of the defender
+        :return: the optimal reward, stopping indexes, stops remaining, and episode length based on the simulation
         """
         optimal_defender_reward = 0
         old_caught_attacker = s.defender_obs_state.caught_attacker
@@ -319,9 +320,14 @@ class StoppingBaselinesUtil:
             s = StoppingBaselinesUtil.simulate_baselines_vs_opponent(
                 attacker_opponent=attacker_opponent, env_config=env_config, env=env, s=s)
 
-            optimal_defender_reward = EnvUtil.compute_optimal_defender_reward(s=s, env_config=env_config)
+        optimal_defender_reward, optimal_stopping_indexes, optimal_stops_remaining = \
+            EnvUtil.compute_optimal_defender_reward(s=s, env_config=env_config)
         s.defender_obs_state.caught_attacker = old_caught_attacker
-        return optimal_defender_reward
+        if optimal_stopping_indexes[-1] != -1:
+            optimal_episode_steps = optimal_stopping_indexes[-1]
+        else:
+            optimal_episode_steps = s.defender_obs_state.step
+        return optimal_defender_reward, optimal_stopping_indexes, optimal_stops_remaining, optimal_episode_steps
 
 
     @staticmethod

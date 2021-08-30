@@ -203,7 +203,25 @@ class TensorboardDataDTO:
                  eval_2_avg_episode_snort_warning_baseline_stops_remaining: float = 0.0,
                  eval_2_avg_episode_snort_critical_baseline_stops_remaining: float = 0.0,
                  eval_2_avg_episode_var_log_baseline_stops_remaining: float = 0.0,
-                 eval_2_avg_episode_step_baseline_stops_remaining: float = 0.0
+                 eval_2_avg_episode_step_baseline_stops_remaining: float = 0.0,
+                 avg_optimal_stops_remaining: float = 0.0,
+                 eval_avg_optimal_stops_remaining: float = 0.0,
+                 eval_2_avg_optimal_stops_remaining: float = 0.0,
+                 avg_optimal_first_stop_step: float = 0.0,
+                 eval_avg_optimal_first_stop_step: float = 0.0,
+                 eval_2_avg_optimal_first_stop_step: float = 0.0,
+                 avg_optimal_second_stop_step: float = 0.0,
+                 eval_avg_optimal_second_stop_step: float = 0.0,
+                 eval_2_avg_optimal_second_stop_step: float = 0.0,
+                 avg_optimal_third_stop_step: float = 0.0,
+                 eval_avg_optimal_third_stop_step: float = 0.0,
+                 eval_2_avg_optimal_third_stop_step: float = 0.0,
+                 avg_optimal_fourth_stop_step: float = 0.0,
+                 eval_avg_optimal_fourth_stop_step: float = 0.0,
+                 eval_2_avg_optimal_fourth_stop_step: float = 0.0,
+                 avg_optimal_defender_episode_steps: float = 0.0,
+                 eval_avg_optimal_defender_episode_steps: float = 0.0,
+                 eval_2_avg_optimal_defender_episode_steps: float = 0.0
                  ):
         self.iteration = iteration
         self.avg_episode_rewards = avg_episode_rewards
@@ -434,6 +452,24 @@ class TensorboardDataDTO:
         self.eval_2_avg_episode_snort_critical_baseline_stops_remaining = eval_2_avg_episode_snort_critical_baseline_stops_remaining
         self.eval_2_avg_episode_var_log_baseline_stops_remaining = eval_2_avg_episode_var_log_baseline_stops_remaining
         self.eval_2_avg_episode_step_baseline_stops_remaining = eval_2_avg_episode_step_baseline_stops_remaining
+        self.avg_optimal_stops_remaining = avg_optimal_stops_remaining
+        self.eval_avg_optimal_stops_remaining = eval_avg_optimal_stops_remaining
+        self.eval_2_avg_optimal_stops_remaining = eval_2_avg_optimal_stops_remaining
+        self.avg_optimal_first_stop_step = avg_optimal_first_stop_step
+        self.eval_avg_optimal_first_stop_step = eval_avg_optimal_first_stop_step
+        self.eval_2_avg_optimal_first_stop_step = eval_2_avg_optimal_first_stop_step
+        self.avg_optimal_second_stop_step = avg_optimal_second_stop_step
+        self.eval_avg_optimal_second_stop_step = eval_avg_optimal_second_stop_step
+        self.eval_2_avg_optimal_second_stop_step = eval_2_avg_optimal_second_stop_step
+        self.avg_optimal_third_stop_step = avg_optimal_third_stop_step
+        self.eval_avg_optimal_third_stop_step = eval_avg_optimal_third_stop_step
+        self.eval_2_avg_optimal_third_stop_step = eval_2_avg_optimal_third_stop_step
+        self.avg_optimal_fourth_stop_step = avg_optimal_fourth_stop_step
+        self.eval_avg_optimal_fourth_stop_step = eval_avg_optimal_fourth_stop_step
+        self.eval_2_avg_optimal_fourth_stop_step = eval_2_avg_optimal_fourth_stop_step
+        self.avg_optimal_defender_episode_steps = avg_optimal_defender_episode_steps
+        self.eval_avg_optimal_defender_episode_steps = eval_avg_optimal_defender_episode_steps
+        self.eval_2_avg_optimal_defender_episode_steps = eval_2_avg_optimal_defender_episode_steps
 
     def log_tensorboard_defender(self) -> None:
         """
@@ -688,6 +724,37 @@ class TensorboardDataDTO:
         self.tensorboard_writer.add_scalar('defender/eval_2_avg_defender_fourth_stop_step/' + train_or_eval,
                                            self.eval_2_avg_defender_fourth_stop_step, self.iteration)
 
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_stops_remaining/' + train_or_eval,
+                                           self.avg_optimal_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_stops_remaining/' + train_or_eval,
+                                           self.eval_avg_optimal_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_stops_remaining/' + train_or_eval,
+                                           self.eval_2_avg_optimal_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_first_stop_step/' + train_or_eval,
+                                           self.avg_optimal_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_first_stop_step/' + train_or_eval,
+                                           self.eval_avg_optimal_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_first_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_optimal_first_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_second_stop_step/' + train_or_eval,
+                                           self.avg_optimal_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_second_stop_step/' + train_or_eval,
+                                           self.eval_avg_optimal_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_second_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_optimal_second_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_third_stop_step/' + train_or_eval,
+                                           self.avg_optimal_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_third_stop_step/' + train_or_eval,
+                                           self.eval_avg_optimal_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_third_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_optimal_third_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_fourth_stop_step/' + train_or_eval,
+                                           self.avg_optimal_fourth_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_fourth_stop_step/' + train_or_eval,
+                                           self.eval_avg_optimal_fourth_stop_step, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_fourth_stop_step/' + train_or_eval,
+                                           self.eval_2_avg_optimal_fourth_stop_step, self.iteration)
+
         self.tensorboard_writer.add_scalar('defender/avg_episode_snort_severe_baseline_first_stop_step/' + train_or_eval,
                                            self.avg_episode_snort_severe_baseline_first_stop_step, self.iteration)
         self.tensorboard_writer.add_scalar('defender/avg_episode_snort_warning_baseline_first_stop_step/' + train_or_eval,
@@ -838,6 +905,12 @@ class TensorboardDataDTO:
                                            self.eval_2_avg_episode_var_log_baseline_stops_remaining, self.iteration)
         self.tensorboard_writer.add_scalar('defender/eval_2_avg_episode_step_baseline_stops_remaining/' + train_or_eval,
                                            self.eval_2_avg_episode_step_baseline_stops_remaining, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/avg_optimal_defender_episode_steps/' + train_or_eval,
+                                           self.avg_optimal_defender_episode_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_avg_optimal_defender_episode_steps/' + train_or_eval,
+                                           self.avg_optimal_defender_episode_steps, self.iteration)
+        self.tensorboard_writer.add_scalar('defender/eval_2_avg_optimal_defender_episode_steps/' + train_or_eval,
+                                           self.avg_optimal_defender_episode_steps, self.iteration)
 
         if not eval:
             self.tensorboard_writer.add_scalar('defender/lr', self.lr, self.iteration)
@@ -927,7 +1000,7 @@ class TensorboardDataDTO:
                       f"V_log_avg_uit:{self.avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
                       f"step_avg_uit:{self.avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
                       f"avg_t:{self.avg_episode_steps:.2f},rolling_avg_t:{self.rolling_avg_steps:.2f}," \
-                      f"lr:{self.lr:.2E}," \
+                      f"avg_opt_def_t:{self.avg_optimal_defender_episode_steps:.2f}, lr:{self.lr:.2E}," \
                       f"ca:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f},avg_I_t:{self.avg_episode_intrusion_steps:.2f}, " \
                       f"avg_stops_left_T:{self.avg_defender_stops_remaining:.2f}," \
@@ -935,6 +1008,11 @@ class TensorboardDataDTO:
                       f"avg_second_stop_t_T:{self.avg_defender_second_stop_step:.2f}," \
                       f"avg_third_stop_t_T:{self.avg_defender_third_stop_step:.2f}," \
                       f"avg_fourth_stop_t_T:{self.avg_defender_fourth_stop_step:.2f}," \
+                      f"opt_avg_stops_left_T:{self.avg_optimal_stops_remaining:.2f}," \
+                      f"opt_avg_first_stop_t_T:{self.avg_optimal_first_stop_step:.2f}," \
+                      f"opt_avg_second_stop_t_T:{self.avg_optimal_second_stop_step:.2f}," \
+                      f"opt_avg_third_stop_t_T:{self.avg_optimal_third_stop_step:.2f}," \
+                      f"opt_avg_fourth_stop_t_T:{self.avg_optimal_fourth_stop_step:.2f}," \
                       f"S_sev_avg_first_stop_t_T:{self.avg_episode_snort_severe_baseline_first_stop_step:.2f}," \
                       f"S_warn_avg_first_stop_t_T:{self.avg_episode_snort_warning_baseline_first_stop_step:.2f}," \
                       f"S_crit_avg_first_stop_t_T:{self.avg_episode_snort_critical_baseline_first_stop_step:.2f}," \
@@ -991,6 +1069,7 @@ class TensorboardDataDTO:
                       f"V_log_avg_uit_T:{self.avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}," \
                       f"step_avg_uit_T:{self.avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
                       f"avg_t_T:{self.avg_episode_steps:.2f}," \
+                      f"avg_t_opt_def_T:{self.avg_optimal_defender_episode_steps:.2f}," \
                       f"rolling_avg_t_T:{self.rolling_avg_steps:.2f}," \
                       f"loss:{self.avg_episode_loss:.6f}," \
                       f"lr:{self.lr:.2E}," \
@@ -1000,6 +1079,11 @@ class TensorboardDataDTO:
                       f"avg_second_stop_t_T:{self.avg_defender_second_stop_step:.2f}," \
                       f"avg_third_stop_t_T:{self.avg_defender_third_stop_step:.2f}," \
                       f"avg_fourth_stop_t_T:{self.avg_defender_fourth_stop_step:.2f},eps:{self.eps:.2f}," \
+                      f"opt_avg_stops_left_T:{self.avg_optimal_stops_remaining:.2f}," \
+                      f"opt_avg_first_stop_t_T:{self.avg_optimal_first_stop_step:.2f}," \
+                      f"opt_avg_second_stop_t_T:{self.avg_optimal_second_stop_step:.2f}," \
+                      f"opt_avg_third_stop_t_T:{self.avg_optimal_third_stop_step:.2f}," \
+                      f"opt_avg_fourth_stop_t_T:{self.avg_optimal_fourth_stop_step:.2f},eps:{self.eps:.2f}," \
                       f"S_sev_avg_first_stop_t_T:{self.avg_episode_snort_severe_baseline_first_stop_step:.2f}," \
                       f"S_warn_avg_first_stop_t_T:{self.avg_episode_snort_warning_baseline_first_stop_step:.2f}," \
                       f"S_crit_avg_first_stop_t_T:{self.avg_episode_snort_critical_baseline_first_stop_step:.2f}," \
@@ -1054,12 +1138,18 @@ class TensorboardDataDTO:
                       f"V_log_avg_uit_E:{self.eval_avg_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
                       f"step_avg_uit_E:{self.eval_avg_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
                       f"avg_reg_E:{self.avg_eval_regret:.2f},avg_opt_frac_E:{self.eval_avg_opt_frac:.2f}," \
-                      f"avg_t_E:{self.eval_avg_episode_steps:.2f}," \
+                      f"avg_t_E:{self.eval_avg_episode_steps:.2f}, " \
+                      f"avg_opt_def_t_E:{self.eval_avg_optimal_defender_episode_steps:.2f}," \
                       f"avg_stops_left_E:{self.eval_avg_defender_stops_remaining:.2f}," \
                       f"avg_first_stop_t_E:{self.eval_avg_defender_first_stop_step:.2f}," \
                       f"avg_second_stop_t_E:{self.eval_avg_defender_second_stop_step:.2f}," \
                       f"avg_third_stop_t_E:{self.eval_avg_defender_third_stop_step:.2f}," \
                       f"avg_fourth_stop_t_E:{self.eval_avg_defender_fourth_stop_step:.2f}," \
+                      f"opt_avg_stops_left_E:{self.eval_avg_optimal_stops_remaining:.2f}," \
+                      f"opt_avg_first_stop_t_E:{self.eval_avg_optimal_first_stop_step:.2f}," \
+                      f"opt_avg_second_stop_t_E:{self.eval_avg_optimal_second_stop_step:.2f}," \
+                      f"opt_avg_third_stop_t_E:{self.eval_avg_optimal_third_stop_step:.2f}," \
+                      f"opt_avg_fourth_stop_t_E:{self.eval_avg_optimal_fourth_stop_step:.2f}," \
                       f"S_sev_avg_first_stop_t_E:{self.eval_avg_episode_snort_severe_baseline_first_stop_step:.2f}," \
                       f"S_warn_avg_first_stop_t_E:{self.eval_avg_episode_snort_warning_baseline_first_stop_step:.2f}," \
                       f"S_crit_avg_first_stop_t_E:{self.eval_avg_episode_snort_critical_baseline_first_stop_step:.2f}," \
@@ -1113,7 +1203,8 @@ class TensorboardDataDTO:
                       f"S_crit_avg_uit_E2:{self.eval_avg_2_episode_snort_critical_baseline_uncaught_intrusion_steps:.2f}," \
                       f"V_log_avg_uit_E2:{self.eval_avg_2_episode_var_log_baseline_uncaught_intrusion_steps:.2f}, " \
                       f"step_avg_uit_E2:{self.eval_avg_2_episode_step_baseline_uncaught_intrusion_steps:.2f}," \
-                      f"avg_t_E2:{self.eval_2_avg_episode_steps:.2f}," \
+                      f"avg_t_E2:{self.eval_2_avg_episode_steps:.2f}, " \
+                      f"avg_opt_def_t_E2:{self.eval_2_avg_optimal_defender_episode_steps:.2f}," \
                       f"epsilon:{self.epsilon:.2f}," \
                       f"ca:{self.episode_caught_frac:.2f},es:{self.episode_early_stopped_frac:.2f}," \
                       f"s_i:{self.episode_successful_intrusion_frac:.2f}," \
@@ -1144,6 +1235,11 @@ class TensorboardDataDTO:
                       f"avg_second_stop_t_E2:{self.eval_2_avg_defender_second_stop_step:.2f}," \
                       f"avg_third_stop_t_E2:{self.eval_2_avg_defender_third_stop_step:.2f}," \
                       f"avg_fourth_stop_t_E2:{self.eval_2_avg_defender_fourth_stop_step:.2f}," \
+                      f"opt_avg_stops_left_E2:{self.eval_2_avg_optimal_stops_remaining:.2f}," \
+                      f"opt_avg_first_stop_t_E2:{self.eval_2_avg_optimal_first_stop_step:.2f}," \
+                      f"opt_avg_second_stop_t_E2:{self.eval_2_avg_optimal_second_stop_step:.2f}," \
+                      f"opt_avg_third_stop_t_E2:{self.eval_2_avg_optimal_third_stop_step:.2f}," \
+                      f"opt_avg_fourth_stop_t_E2:{self.eval_2_avg_optimal_fourth_stop_step:.2f}," \
                       f"S_sev_avg_first_stop_t_E2:{self.eval_2_avg_episode_snort_severe_baseline_first_stop_step:.2f}," \
                       f"S_warn_avg_first_stop_t_E2:{self.eval_2_avg_episode_snort_warning_baseline_first_stop_step:.2f}," \
                       f"S_crit_avg_first_stop_t_E2:{self.eval_2_avg_episode_snort_critical_baseline_first_stop_step:.2f}," \

@@ -26,6 +26,7 @@ class EvalUtil:
         trajectories = EvalUtil.eval_taus(env.env_config.emulation_config.save_dynamics_model_dir)
         rewards = []
         steps = []
+        optimal_steps = []
         uncaught_intrusion_steps_l = []
         opt_r_l = []
         snort_severe_r = []
@@ -53,6 +54,16 @@ class EvalUtil:
         snort_critical_stop_4 = []
         var_log_stop_4 = []
         step_stop_4 = []
+        snort_severe_stops_remaining_l = []
+        snort_warning_stops_remaining_l = []
+        snort_critical_stops_remaining_l = []
+        var_log_stops_remaining_l = []
+        step_stops_remaining_l = []
+        snort_severe_steps_l = []
+        snort_warning_steps_l = []
+        snort_critical_steps_l = []
+        var_log_steps_l = []
+        step_steps_l = []
         snort_severe_ca = []
         snort_warning_ca = []
         snort_critical_ca = []
@@ -79,6 +90,11 @@ class EvalUtil:
         attacker_alerts_norm_list = []
         intrusion_steps = []
         optimal_stopping_times = []
+        optimal_stop_1 = []
+        optimal_stop_2 = []
+        optimal_stop_3 = []
+        optimal_stop_4 = []
+        optimal_stops_remaining_l = []
         model_stopping_times_1 = []
         model_stopping_times_2 = []
         model_stopping_times_3 = []
@@ -118,6 +134,7 @@ class EvalUtil:
                                      max(0, (optimal_stopping_time -
                                       (env.env_config.maximum_number_of_defender_stop_actions -
                                        env.env_config.attacker_prevented_stops_remaining)))
+
             for i in range(env.env_config.maximum_number_of_defender_stop_actions, 0, -1):
                 if i < env.env_config.attacker_prevented_stops_remaining:
                     break
@@ -178,12 +195,26 @@ class EvalUtil:
                 steps=len(obs), intrusion_time=intrusion_start_time)
             steps_l = EvalUtil.compute_steps(actions, env_config=env.env_config)
             stops_remaining = EvalUtil.compute_stops_remaining(stopping_indexes)
+            snort_severe_baseline_stops_remaining = EvalUtil.compute_stops_remaining(snort_severe_baseline_s_indexes)
+            snort_warning_baseline_stops_remaining = EvalUtil.compute_stops_remaining(snort_warning_baseline_s_indexes)
+            snort_critical_baseline_stops_remaining = EvalUtil.compute_stops_remaining(snort_critical_baseline_s_indexes)
+            var_log_baseline_stops_remaining = EvalUtil.compute_stops_remaining(var_log_baseline_s_indexes)
+            step_baseline_stops_remaining = EvalUtil.compute_stops_remaining(step_baseline_indexes)
+            snort_severe_baseline_step = EvalUtil.compute_steps_baseline(obs, snort_severe_baseline_s_indexes)
+            snort_warning_baseline_step = EvalUtil.compute_steps_baseline(obs, snort_warning_baseline_s_indexes)
+            snort_critical_baseline_step = EvalUtil.compute_steps_baseline(obs, snort_critical_baseline_s_indexes)
+            var_log_baseline_step = EvalUtil.compute_steps_baseline(obs, var_log_baseline_s_indexes)
+            step_baseline_step = EvalUtil.compute_steps_baseline(obs, step_baseline_indexes)
+
+            optimal_stops_remaining =env.env_config.attacker_prevented_stops_remaining
             rewards.append(reward)
             snort_severe_r.append(snort_severe_baseline_r)
             snort_severe_stop_1.append(int(snort_severe_baseline_s_indexes[0]))
             snort_severe_stop_2.append(int(snort_severe_baseline_s_indexes[1]))
             snort_severe_stop_3.append(int(snort_severe_baseline_s_indexes[2]))
             snort_severe_stop_4.append(int(snort_severe_baseline_s_indexes[3]))
+            snort_severe_stops_remaining_l.append(snort_severe_baseline_stops_remaining)
+            snort_severe_steps_l.append(snort_severe_baseline_step)
             snort_severe_ca.append(snort_severe_baseline_ca)
             snort_severe_es.append(snort_severe_baseline_es)
             snort_severe_uit.append(snort_severe_baseline_uit)
@@ -192,6 +223,8 @@ class EvalUtil:
             snort_warning_stop_2.append(int(snort_warning_baseline_s_indexes[1]))
             snort_warning_stop_3.append(int(snort_warning_baseline_s_indexes[2]))
             snort_warning_stop_4.append(int(snort_warning_baseline_s_indexes[3]))
+            snort_warning_stops_remaining_l.append(snort_warning_baseline_stops_remaining)
+            snort_warning_steps_l.append(snort_warning_baseline_step)
             snort_warning_ca.append(snort_warning_baseline_ca)
             snort_warning_es.append(snort_warning_baseline_es)
             snort_warning_uit.append(snort_warning_baseline_uit)
@@ -200,6 +233,8 @@ class EvalUtil:
             snort_critical_stop_2.append(int(snort_critical_baseline_s_indexes[1]))
             snort_critical_stop_3.append(int(snort_critical_baseline_s_indexes[2]))
             snort_critical_stop_4.append(int(snort_critical_baseline_s_indexes[3]))
+            snort_critical_steps_l.append(snort_critical_baseline_step)
+            snort_critical_stops_remaining_l.append(snort_critical_baseline_stops_remaining)
             snort_critical_ca.append(snort_critical_baseline_ca)
             snort_critical_es.append(snort_critical_baseline_es)
             snort_critical_uit.append(snort_critical_baseline_uit)
@@ -208,6 +243,8 @@ class EvalUtil:
             var_log_stop_2.append(int(var_log_baseline_s_indexes[1]))
             var_log_stop_3.append(int(var_log_baseline_s_indexes[2]))
             var_log_stop_4.append(int(var_log_baseline_s_indexes[3]))
+            var_log_steps_l.append(var_log_baseline_step)
+            var_log_stops_remaining_l.append(var_log_baseline_stops_remaining)
             var_log_ca.append(var_log_baseline_ca)
             var_log_es.append(var_log_baseline_es)
             var_log_uit.append(var_log_baseline_uit)
@@ -216,15 +253,26 @@ class EvalUtil:
             step_stop_2.append(int(step_baseline_indexes[1]))
             step_stop_3.append(int(step_baseline_indexes[2]))
             step_stop_4.append(int(step_baseline_indexes[3]))
+            step_stops_remaining_l.append(step_baseline_stops_remaining)
+            step_steps_l.append(step_baseline_step)
             step_ca.append(step_baseline_ca)
             step_es.append(step_baseline_es)
             step_uit.append(step_baseline_uit)
             steps.append(steps_l)
+            if env.env_config.attacker_prevented_stops_remaining == 0:
+                optimal_steps.append(optimal_stopping_indexes[-1])
+            else:
+                optimal_steps.append(len(obs))
             optimal_stopping_times.append(optimal_stopping_time)
             model_stopping_times_1.append(stopping_indexes[0])
             model_stopping_times_2.append(stopping_indexes[1])
             model_stopping_times_3.append(stopping_indexes[2])
             model_stopping_times_4.append(stopping_indexes[3])
+            optimal_stop_1.append(optimal_stopping_indexes[0])
+            optimal_stop_2.append(optimal_stopping_indexes[1])
+            optimal_stop_3.append(optimal_stopping_indexes[2])
+            optimal_stop_4.append(optimal_stopping_indexes[3])
+            optimal_stops_remaining_l.append(optimal_stops_remaining)
             intrusion_start_obs_1.append(obs[optimal_stopping_time])
             intrusion_start_obs_2.append(obs_intrusion[0])
             intrusion_start_obs_3.append(obs[optimal_stopping_time+1])
@@ -246,15 +294,22 @@ class EvalUtil:
 
         return rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
                snort_severe_r, snort_warning_r, snort_critical_r, \
-               var_log_r, step_r, snort_severe_stop_1, snort_warning_stop_1, \
-               snort_critical_stop_1, var_log_stop_1, step_stop_1, \
+               var_log_r, step_r, snort_severe_steps_l, snort_warning_steps_l, \
+               snort_critical_steps_l, var_log_steps_l, step_steps_l, \
                snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \
                snort_severe_es, snort_warning_es, snort_critical_es, var_log_es, step_es, \
                snort_severe_uit, snort_warning_uit, snort_critical_uit, var_log_uit, step_uit, \
                flags_list, flags_percentage_list, episode_caught_list, episode_early_stopped_list, \
                episode_successful_intrusion_list, attacker_cost_list, attacker_cost_norm_list, attacker_alerts_list, \
                attacker_alerts_norm_list, intrusion_steps, model_stopping_times_1, model_stopping_times_2, \
-               model_stopping_times_3, model_stopping_times_4, stops_remaining_l
+               model_stopping_times_3, model_stopping_times_4, stops_remaining_l, \
+               snort_severe_stop_1, snort_warning_stop_1, snort_critical_stop_1, var_log_stop_1, step_stop_1, \
+               snort_severe_stop_2, snort_warning_stop_2, snort_critical_stop_2, var_log_stop_2, step_stop_2, \
+               snort_severe_stop_3, snort_warning_stop_3, snort_critical_stop_3, var_log_stop_3, step_stop_3, \
+               snort_severe_stop_4, snort_warning_stop_4, snort_critical_stop_4, var_log_stop_4, step_stop_4, \
+               snort_severe_stops_remaining_l, snort_warning_stops_remaining_l, snort_critical_stops_remaining_l, \
+               var_log_stops_remaining_l, step_stops_remaining_l, optimal_stop_1, optimal_stop_2, optimal_stop_3, \
+               optimal_stop_4, optimal_stops_remaining_l, optimal_steps
 
 
     @staticmethod
@@ -409,6 +464,20 @@ class EvalUtil:
         stopping_indexes = EvalUtil.find_stopping_indexes(actions, env_config=env_config)
         if stopping_indexes[-1] == -1:
             return len(actions)
+        else:
+            return stopping_indexes[-1]
+
+    @staticmethod
+    def compute_steps_baseline(obs, stopping_indexes) -> int:
+        """
+        Utility function for computing the steps in the environment of a baseline
+
+        :param obs: the list of observations of the episode
+        :param stopping_indexes: the stopping indexes
+        :return: The number of steps
+        """
+        if stopping_indexes[-1] == -1:
+            return len(obs)
         else:
             return stopping_indexes[-1]
 

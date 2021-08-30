@@ -1,3 +1,4 @@
+from typing import Tuple, List
 import math
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
@@ -283,17 +284,26 @@ class EnvUtil:
         return False
 
     @staticmethod
-    def compute_optimal_defender_reward(s: EnvState, env_config: EnvConfig) -> float:
+    def compute_optimal_defender_reward(s: EnvState, env_config: EnvConfig) -> Tuple[float, List[int], int]:
         """
         Computes the optimal defender reward
 
         :param s: the environment state
         :param env_config: the environment configuration
-        :return: the optimal defender reward
+        :return: the optimal defender reward, the optimal stopping indexes, the optimal number of stops remaining
         """
-        optimal_stopping_time = max(s.attacker_obs_state.intrusion_step + 1,
+        optimal_final_stopping_time = max(s.attacker_obs_state.intrusion_step + 1,
                                     env_config.maximum_number_of_defender_stop_actions -
                                     env_config.attacker_prevented_stops_remaining)
+        optimal_stops_remaining = env_config.attacker_prevented_stops_remaining
+        optimal_stopping_indexes = []
+        for i in range(env_config.maximum_number_of_defender_stop_actions - 1, -1, -1):
+            if i >= env_config.attacker_prevented_stops_remaining:
+                j = i - env_config.attacker_prevented_stops_remaining
+                opt_stop_index = max(1, optimal_final_stopping_time - j)
+                optimal_stopping_indexes.append(opt_stop_index)
+            else:
+                optimal_stopping_indexes.append(-1)
 
         costs = 0
         for i in range(env_config.maximum_number_of_defender_stop_actions, -1, -1):
@@ -303,7 +313,7 @@ class EnvUtil:
 
         optimal_service_reward = 0
         optimal_service_reward = optimal_service_reward + env_config.defender_service_reward * \
-                                 max(0, (optimal_stopping_time  -
+                                 max(0, (optimal_final_stopping_time  -
                                   (env_config.maximum_number_of_defender_stop_actions -
                                    env_config.attacker_prevented_stops_remaining)))
         for i in range(env_config.maximum_number_of_defender_stop_actions, 0, -1):
@@ -311,7 +321,7 @@ class EnvUtil:
                 break
             elif i == env_config.attacker_prevented_stops_remaining:
                 if env_config.attacker_prevented_stops_remaining > 0:
-                    optimal_service_reward += (max(0, s.defender_obs_state.step - optimal_stopping_time + 1)) * \
+                    optimal_service_reward += (max(0, s.defender_obs_state.step - optimal_final_stopping_time + 1)) * \
                                               env_config.defender_service_reward / (
                                                   math.pow(2, env_config.maximum_number_of_defender_stop_actions - i))
 
@@ -323,4 +333,4 @@ class EnvUtil:
         #       f"optimal_stopping_step:{optimal_stopping_time},"
         #       f"intrusion step:{s.attacker_obs_state.intrusion_step},"
         #       f"number of stops:{(env_config.maximum_number_of_defender_stop_actions - env_config.attacker_prevented_stops_remaining)}")
-        return optimal_defender_reward
+        return optimal_defender_reward, optimal_stopping_indexes, optimal_stops_remaining

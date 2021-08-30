@@ -399,8 +399,6 @@ class PyCRCTFEnv(gym.Env, ABC):
                                        - self.env_state.attacker_obs_state.intrusion_step)
         info[constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS] = uncaught_intrusion_steps
 
-        optimal_defender_reward = EnvUtil.compute_optimal_defender_reward(s=self.env_state, env_config=self.env_config)
-
         self.env_state = s_prime
 
         if self.env_state.defender_obs_state.caught_attacker:
@@ -413,13 +411,18 @@ class PyCRCTFEnv(gym.Env, ABC):
                 self.env_state.attacker_obs_state.ongoing_intrusion():
             done = True
 
-        opt_r = StoppingBaselinesUtil.simulate_end_of_episode_performance(
+        optimal_defender_reward, optimal_stopping_indexes, optimal_stops_remaining, optimal_episode_steps = \
+            StoppingBaselinesUtil.simulate_end_of_episode_performance(
             s_prime=s_prime, env_config=self.env_config, done=done, env=self, s=self.env_state,
             attacker_opponent=self.env_config.attacker_static_opponent)
 
-        optimal_defender_reward = max(opt_r, optimal_defender_reward)
-
         info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD] = optimal_defender_reward
+        info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP] = optimal_stopping_indexes[0]
+        info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP] = optimal_stopping_indexes[1]
+        info[constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP] = optimal_stopping_indexes[2]
+        info[constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP] = optimal_stopping_indexes[3]
+        info[constants.INFO_DICT.OPTIMAL_STOPS_REMAINING] = optimal_stops_remaining
+        info[constants.INFO_DICT.OPTIMAL_DEFENDER_EPISODE_STEPS] = optimal_episode_steps
 
         info = self.env_state.defender_obs_state.update_info_dict(info)
         return defender_reward, attacker_reward, done, info

@@ -85,36 +85,42 @@ class DefenderTrainAgentLogDTOAvg:
         self.avg_episode_uncaught_intrusion_steps = DefenderTrainAgentLogDTOAvg.compute_avg_uncaught_intrusion_steps(
             self.train_log_dto.uncaught_intrusion_steps)
         self.avg_episode_defender_stops_remaining = np.mean(self.train_log_dto.defender_stops_remaining)
-        self.avg_episode_defender_first_stop_step = np.mean(self.train_log_dto.defender_first_stop_step)
-        self.avg_episode_defender_second_stop_step = np.mean(self.train_log_dto.defender_second_stop_step)
-        self.avg_episode_defender_third_stop_step = np.mean(self.train_log_dto.defender_third_stop_step)
-        self.avg_episode_defender_fourth_stop_step = np.mean(self.train_log_dto.defender_fourth_stop_step)
+        self.avg_episode_defender_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.defender_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_defender_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.defender_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_defender_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.defender_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_defender_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.defender_fourth_stop_step, self.avg_episode_steps)
         self.avg_episode_optimal_defender_reward = np.mean(self.train_log_dto.optimal_defender_reward)
-        self.avg_episode_snort_severe_baseline_first_stop_step = np.mean(self.train_log_dto.episode_snort_severe_baseline_first_stop_step)
-        self.avg_episode_snort_warning_baseline_first_stop_step = np.mean(self.train_log_dto.episode_snort_warning_baseline_first_stop_step)
-        self.avg_episode_snort_critical_baseline_first_stop_step = np.mean(self.train_log_dto.episode_snort_critical_baseline_first_stop_step)
-        self.avg_episode_var_log_baseline_first_stop_step = np.mean(self.train_log_dto.episode_var_log_baseline_first_stop_step)
-        self.avg_episode_step_baseline_first_stop_step = np.mean(self.train_log_dto.episode_step_baseline_first_stop_step)
-        self.avg_episode_snort_severe_baseline_second_stop_step = np.mean(self.train_log_dto.episode_snort_severe_baseline_second_stop_step)
-        self.avg_episode_snort_warning_baseline_second_stop_step = np.mean(self.train_log_dto.episode_snort_warning_baseline_second_stop_step)
-        self.avg_episode_snort_critical_baseline_second_stop_step = np.mean(self.train_log_dto.episode_snort_critical_baseline_second_stop_step)
-        self.avg_episode_var_log_baseline_second_stop_step = np.mean(self.train_log_dto.episode_var_log_baseline_second_stop_step)
-        self.avg_episode_step_baseline_second_stop_step = np.mean(self.train_log_dto.episode_step_baseline_second_stop_step)
-        self.avg_episode_snort_severe_baseline_third_stop_step = np.mean(self.train_log_dto.episode_snort_severe_baseline_third_stop_step)
-        self.avg_episode_snort_warning_baseline_third_stop_step = np.mean(self.train_log_dto.episode_snort_warning_baseline_third_stop_step)
-        self.avg_episode_snort_critical_baseline_third_stop_step = np.mean(self.train_log_dto.episode_snort_critical_baseline_third_stop_step)
-        self.avg_episode_var_log_baseline_third_stop_step = np.mean(self.train_log_dto.episode_var_log_baseline_third_stop_step)
-        self.avg_episode_step_baseline_third_stop_step = np.mean(self.train_log_dto.episode_step_baseline_third_stop_step)
-        self.avg_episode_snort_severe_baseline_fourth_stop_step = np.mean(self.train_log_dto.episode_snort_severe_baseline_fourth_stop_step)
-        self.avg_episode_snort_warning_baseline_fourth_stop_step = np.mean(self.train_log_dto.episode_snort_warning_baseline_fourth_stop_step)
-        self.avg_episode_snort_critical_baseline_fourth_stop_step = np.mean(self.train_log_dto.episode_snort_critical_baseline_fourth_stop_step)
-        self.avg_episode_var_log_baseline_fourth_stop_step = np.mean(self.train_log_dto.episode_var_log_baseline_fourth_stop_step)
-        self.avg_episode_step_baseline_fourth_stop_step = np.mean(self.train_log_dto.episode_step_baseline_fourth_stop_step)
+        self.avg_episode_snort_severe_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_severe_baseline_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_warning_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_warning_baseline_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_critical_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_critical_baseline_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_var_log_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_var_log_baseline_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_step_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_step_baseline_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_severe_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_severe_baseline_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_warning_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_warning_baseline_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_critical_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_critical_baseline_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_var_log_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_var_log_baseline_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_step_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_step_baseline_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_severe_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_severe_baseline_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_warning_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_warning_baseline_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_critical_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_critical_baseline_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_var_log_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_var_log_baseline_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_step_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_step_baseline_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_severe_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_severe_baseline_fourth_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_warning_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_warning_baseline_fourth_stop_step, self.avg_episode_steps)
+        self.avg_episode_snort_critical_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_snort_critical_baseline_fourth_stop_step, self.avg_episode_steps)
+        self.avg_episode_var_log_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_var_log_baseline_fourth_stop_step, self.avg_episode_steps)
+        self.avg_episode_step_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.episode_step_baseline_fourth_stop_step, self.avg_episode_steps)
         self.avg_episode_snort_severe_baseline_stops_remaining = np.mean(self.train_log_dto.episode_snort_severe_baseline_stops_remaining)
         self.avg_episode_snort_warning_baseline_stops_remaining = np.mean(self.train_log_dto.episode_snort_warning_baseline_stops_remaining)
         self.avg_episode_snort_critical_baseline_stops_remaining = np.mean(self.train_log_dto.episode_snort_critical_baseline_stops_remaining)
         self.avg_episode_var_log_baseline_stops_remaining = np.mean(self.train_log_dto.episode_var_log_baseline_stops_remaining)
         self.avg_episode_step_baseline_stops_remaining = np.mean(self.train_log_dto.episode_step_baseline_stops_remaining)
+        self.avg_episode_optimal_stops_remaining = np.mean(self.train_log_dto.optimal_stops_remaining)
+        self.avg_episode_optimal_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.optimal_first_stop_step, self.avg_episode_steps)
+        self.avg_episode_optimal_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.optimal_second_stop_step, self.avg_episode_steps)
+        self.avg_episode_optimal_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.optimal_third_stop_step, self.avg_episode_steps)
+        self.avg_episode_optimal_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(self.train_log_dto.optimal_fourth_stop_step, self.avg_episode_steps)
+        self.avg_optimal_defender_episode_steps = np.mean(self.train_log_dto.optimal_defender_episode_steps)
 
         if self.train_log_dto.episode_caught is not None and self.train_log_dto.episode_early_stopped is not None \
                 and self.train_log_dto.episode_successful_intrusion is not None:
@@ -218,6 +224,11 @@ class DefenderTrainAgentLogDTOAvg:
             self.eval_avg_episode_steps = np.mean(self.train_log_dto.eval_episode_steps)
         else:
             self.eval_avg_episode_steps = 0.0
+
+        if not eval and self.train_log_dto.eval_optimal_defender_episode_steps is not None:
+            self.eval_avg_optimal_defender_episode_steps = np.mean(self.train_log_dto.eval_optimal_defender_episode_steps)
+        else:
+            self.eval_avg_optimal_defender_episode_steps = 0.0
 
         if not eval and self.train_log_dto.eval_attacker_action_costs is not None:
             self.eval_avg_episode_costs = np.mean(self.train_log_dto.eval_attacker_action_costs)
@@ -407,6 +418,11 @@ class DefenderTrainAgentLogDTOAvg:
             self.eval_2_avg_episode_steps = np.mean(self.train_log_dto.eval_2_episode_steps)
         else:
             self.eval_2_avg_episode_steps = 0.0
+
+        if not eval and self.train_log_dto.eval_2_optimal_defender_episode_steps is not None:
+            self.eval_2_avg_optimal_defender_episode_steps = np.mean(self.train_log_dto.eval_2_optimal_defender_episode_steps)
+        else:
+            self.eval_2_avg_optimal_defender_episode_steps = 0.0
 
         if not eval and self.train_log_dto.eval_2_attacker_action_costs is not None:
             self.eval_2_avg_episode_costs = np.mean(self.train_log_dto.eval_2_attacker_action_costs)
@@ -658,141 +674,171 @@ class DefenderTrainAgentLogDTOAvg:
             self.eval_avg_episode_defender_stops_remaining = 0.0
 
         if not eval and self.train_log_dto.eval_defender_first_stop_step is not None:
-            self.eval_avg_episode_defender_first_stop_step = np.mean(
-                self.train_log_dto.eval_defender_first_stop_step)
+            self.eval_avg_episode_defender_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_defender_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_defender_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_defender_second_stop_step is not None:
-            self.eval_avg_episode_defender_second_stop_step = np.mean(
-                self.train_log_dto.eval_defender_second_stop_step)
+            self.eval_avg_episode_defender_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_defender_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_defender_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_defender_third_stop_step is not None:
-            self.eval_avg_episode_defender_third_stop_step = np.mean(
-                self.train_log_dto.eval_defender_third_stop_step)
+            self.eval_avg_episode_defender_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_defender_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_defender_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_defender_fourth_stop_step is not None:
-            self.eval_avg_episode_defender_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_defender_fourth_stop_step)
+            self.eval_avg_episode_defender_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_defender_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_defender_fourth_stop_step = 0.0
 
+        if not eval and self.train_log_dto.eval_optimal_stops_remaining is not None:
+            self.eval_avg_episode_optimal_stops_remaining = np.mean(
+                self.train_log_dto.eval_optimal_stops_remaining)
+        else:
+            self.eval_avg_episode_optimal_stops_remaining = 0.0
+
+        if not eval and self.train_log_dto.eval_optimal_first_stop_step is not None:
+            self.eval_avg_episode_optimal_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_optimal_first_stop_step, self.eval_avg_episode_steps)
+        else:
+            self.eval_avg_episode_optimal_first_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_optimal_second_stop_step is not None:
+            self.eval_avg_episode_optimal_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_optimal_second_stop_step, self.eval_avg_episode_steps)
+        else:
+            self.eval_avg_episode_optimal_second_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_optimal_third_stop_step is not None:
+            self.eval_avg_episode_optimal_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_optimal_third_stop_step, self.eval_avg_episode_steps)
+        else:
+            self.eval_avg_episode_optimal_third_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_optimal_fourth_stop_step is not None:
+            self.eval_avg_episode_optimal_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_optimal_fourth_stop_step, self.eval_avg_episode_steps)
+        else:
+            self.eval_avg_episode_optimal_fourth_stop_step = 0.0
+
         if not eval and self.train_log_dto.eval_episode_snort_severe_baseline_first_stop_step is not None:
-            self.eval_avg_episode_snort_severe_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_severe_baseline_first_stop_step)
+            self.eval_avg_episode_snort_severe_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_severe_baseline_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_severe_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_warning_baseline_first_stop_step is not None:
-            self.eval_avg_episode_snort_warning_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_warning_baseline_first_stop_step)
+            self.eval_avg_episode_snort_warning_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_warning_baseline_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_warning_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_critical_baseline_first_stop_step is not None:
-            self.eval_avg_episode_snort_critical_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_critical_baseline_first_stop_step)
+            self.eval_avg_episode_snort_critical_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_critical_baseline_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_critical_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_var_log_baseline_first_stop_step is not None:
-            self.eval_avg_episode_var_log_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_episode_var_log_baseline_first_stop_step)
+            self.eval_avg_episode_var_log_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_var_log_baseline_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_var_log_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_step_baseline_first_stop_step is not None:
-            self.eval_avg_episode_step_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_episode_step_baseline_first_stop_step)
+            self.eval_avg_episode_step_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_step_baseline_first_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_step_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_severe_baseline_second_stop_step is not None:
-            self.eval_avg_episode_snort_severe_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_severe_baseline_second_stop_step)
+            self.eval_avg_episode_snort_severe_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_severe_baseline_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_severe_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_warning_baseline_second_stop_step is not None:
-            self.eval_avg_episode_snort_warning_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_warning_baseline_second_stop_step)
+            self.eval_avg_episode_snort_warning_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_warning_baseline_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_warning_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_critical_baseline_second_stop_step is not None:
-            self.eval_avg_episode_snort_critical_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_critical_baseline_second_stop_step)
+            self.eval_avg_episode_snort_critical_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_critical_baseline_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_critical_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_var_log_baseline_second_stop_step is not None:
-            self.eval_avg_episode_var_log_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_episode_var_log_baseline_second_stop_step)
+            self.eval_avg_episode_var_log_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_var_log_baseline_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_var_log_baseline_second_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_step_baseline_second_stop_step is not None:
-            self.eval_avg_episode_step_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_episode_step_baseline_second_stop_step)
+            self.eval_avg_episode_step_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_step_baseline_second_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_step_baseline_second_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_snort_severe_baseline_third_stop_step is not None:
-            self.eval_avg_episode_snort_severe_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_severe_baseline_third_stop_step)
+            self.eval_avg_episode_snort_severe_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_severe_baseline_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_severe_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_warning_baseline_third_stop_step is not None:
-            self.eval_avg_episode_snort_warning_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_warning_baseline_third_stop_step)
+            self.eval_avg_episode_snort_warning_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_warning_baseline_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_warning_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_critical_baseline_third_stop_step is not None:
-            self.eval_avg_episode_snort_critical_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_critical_baseline_third_stop_step)
+            self.eval_avg_episode_snort_critical_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_critical_baseline_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_critical_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_var_log_baseline_third_stop_step is not None:
-            self.eval_avg_episode_var_log_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_episode_var_log_baseline_third_stop_step)
+            self.eval_avg_episode_var_log_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_var_log_baseline_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_var_log_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_step_baseline_third_stop_step is not None:
-            self.eval_avg_episode_step_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_episode_step_baseline_third_stop_step)
+            self.eval_avg_episode_step_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_step_baseline_third_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_step_baseline_third_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_snort_severe_baseline_fourth_stop_step is not None:
-            self.eval_avg_episode_snort_severe_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_severe_baseline_fourth_stop_step)
+            self.eval_avg_episode_snort_severe_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_severe_baseline_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_severe_baseline_fourth_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_snort_warning_baseline_fourth_stop_step is not None:
-            self.eval_avg_episode_snort_warning_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_warning_baseline_fourth_stop_step)
+            self.eval_avg_episode_snort_warning_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_warning_baseline_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_warning_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_snort_critical_baseline_fourth_stop_step is not None:
-            self.eval_avg_episode_snort_critical_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_episode_snort_critical_baseline_fourth_stop_step)
+            self.eval_avg_episode_snort_critical_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_snort_critical_baseline_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_snort_critical_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_var_log_baseline_fourth_stop_step is not None:
-            self.eval_avg_episode_var_log_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_episode_var_log_baseline_fourth_stop_step)
+            self.eval_avg_episode_var_log_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_var_log_baseline_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_var_log_baseline_fourth_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_episode_step_baseline_fourth_stop_step is not None:
-            self.eval_avg_episode_step_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_episode_step_baseline_fourth_stop_step)
+            self.eval_avg_episode_step_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_episode_step_baseline_fourth_stop_step, self.eval_avg_episode_steps)
         else:
             self.eval_avg_episode_step_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_episode_snort_severe_baseline_stops_remaining is not None:
@@ -832,140 +878,171 @@ class DefenderTrainAgentLogDTOAvg:
 
         if not eval and self.train_log_dto.eval_2_defender_first_stop_step is not None:
             self.eval_2_avg_episode_defender_first_stop_step = \
-                np.mean(self.train_log_dto.eval_2_defender_first_stop_step)
+                DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                    self.train_log_dto.eval_2_defender_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_defender_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_defender_second_stop_step is not None:
-            self.eval_2_avg_episode_defender_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_defender_second_stop_step)
+            self.eval_2_avg_episode_defender_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_defender_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_defender_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_defender_third_stop_step is not None:
-            self.eval_2_avg_episode_defender_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_defender_third_stop_step)
+            self.eval_2_avg_episode_defender_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_defender_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_defender_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_defender_fourth_stop_step is not None:
-            self.eval_2_avg_episode_defender_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_defender_fourth_stop_step)
+            self.eval_2_avg_episode_defender_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_defender_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_defender_fourth_stop_step = 0.0
 
+        if not eval and self.train_log_dto.eval_2_optimal_stops_remaining is not None:
+            self.eval_2_avg_episode_optimal_stops_remaining = np.mean(self.train_log_dto.eval_2_optimal_stops_remaining)
+        else:
+            self.eval_2_avg_episode_optimal_stops_remaining = 0.0
+
+        if not eval and self.train_log_dto.eval_2_optimal_first_stop_step is not None:
+            self.eval_2_avg_episode_optimal_first_stop_step = \
+                DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                    self.train_log_dto.eval_2_optimal_first_stop_step, self.eval_2_avg_episode_steps)
+        else:
+            self.eval_2_avg_episode_optimal_first_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_2_optimal_second_stop_step is not None:
+            self.eval_2_avg_episode_optimal_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_optimal_second_stop_step, self.eval_2_avg_episode_steps)
+        else:
+            self.eval_2_avg_episode_optimal_second_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_2_optimal_third_stop_step is not None:
+            self.eval_2_avg_episode_optimal_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_optimal_third_stop_step, self.eval_2_avg_episode_steps)
+        else:
+            self.eval_2_avg_episode_optimal_third_stop_step = 0.0
+
+        if not eval and self.train_log_dto.eval_2_optimal_fourth_stop_step is not None:
+            self.eval_2_avg_episode_optimal_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_optimal_fourth_stop_step, self.eval_2_avg_episode_steps)
+        else:
+            self.eval_2_avg_episode_optimal_fourth_stop_step = 0.0
+
         if not eval and self.train_log_dto.eval_2_episode_snort_severe_baseline_first_stop_step is not None:
-            self.eval_2_avg_episode_snort_severe_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_severe_baseline_first_stop_step)
+            self.eval_2_avg_episode_snort_severe_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_severe_baseline_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_severe_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_warning_baseline_first_stop_step is not None:
-            self.eval_2_avg_episode_snort_warning_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_warning_baseline_first_stop_step)
+            self.eval_2_avg_episode_snort_warning_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_warning_baseline_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_warning_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_critical_baseline_first_stop_step is not None:
-            self.eval_2_avg_episode_snort_critical_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_critical_baseline_first_stop_step)
+            self.eval_2_avg_episode_snort_critical_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_critical_baseline_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_critical_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_var_log_baseline_first_stop_step is not None:
-            self.eval_2_avg_episode_var_log_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_var_log_baseline_first_stop_step)
+            self.eval_2_avg_episode_var_log_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_var_log_baseline_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_var_log_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_step_baseline_first_stop_step is not None:
-            self.eval_2_avg_episode_step_baseline_first_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_step_baseline_first_stop_step)
+            self.eval_2_avg_episode_step_baseline_first_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_step_baseline_first_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_step_baseline_first_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_severe_baseline_second_stop_step is not None:
-            self.eval_2_avg_episode_snort_severe_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_severe_baseline_second_stop_step)
+            self.eval_2_avg_episode_snort_severe_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_severe_baseline_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_severe_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_warning_baseline_second_stop_step is not None:
-            self.eval_2_avg_episode_snort_warning_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_warning_baseline_second_stop_step)
+            self.eval_2_avg_episode_snort_warning_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_warning_baseline_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_warning_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_critical_baseline_second_stop_step is not None:
-            self.eval_2_avg_episode_snort_critical_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_critical_baseline_second_stop_step)
+            self.eval_2_avg_episode_snort_critical_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_critical_baseline_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_critical_baseline_second_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_var_log_baseline_second_stop_step is not None:
-            self.eval_2_avg_episode_var_log_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_var_log_baseline_second_stop_step)
+            self.eval_2_avg_episode_var_log_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_var_log_baseline_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_var_log_baseline_second_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_step_baseline_second_stop_step is not None:
-            self.eval_2_avg_episode_step_baseline_second_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_step_baseline_second_stop_step)
+            self.eval_2_avg_episode_step_baseline_second_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_step_baseline_second_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_step_baseline_second_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_snort_severe_baseline_third_stop_step is not None:
-            self.eval_2_avg_episode_snort_severe_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_severe_baseline_third_stop_step)
+            self.eval_2_avg_episode_snort_severe_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_severe_baseline_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_severe_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_warning_baseline_third_stop_step is not None:
-            self.eval_2_avg_episode_snort_warning_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_warning_baseline_third_stop_step)
+            self.eval_2_avg_episode_snort_warning_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_warning_baseline_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_warning_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_critical_baseline_third_stop_step is not None:
-            self.eval_2_avg_episode_snort_critical_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_critical_baseline_third_stop_step)
+            self.eval_2_avg_episode_snort_critical_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_critical_baseline_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_critical_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_var_log_baseline_third_stop_step is not None:
-            self.eval_2_avg_episode_var_log_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_var_log_baseline_third_stop_step)
+            self.eval_2_avg_episode_var_log_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_var_log_baseline_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_var_log_baseline_third_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_step_baseline_third_stop_step is not None:
-            self.eval_2_avg_episode_step_baseline_third_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_step_baseline_third_stop_step)
+            self.eval_2_avg_episode_step_baseline_third_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_step_baseline_third_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_step_baseline_third_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_snort_severe_baseline_fourth_stop_step is not None:
-            self.eval_2_avg_episode_snort_severe_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_severe_baseline_fourth_stop_step)
+            self.eval_2_avg_episode_snort_severe_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_severe_baseline_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_severe_baseline_fourth_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_snort_warning_baseline_fourth_stop_step is not None:
-            self.eval_2_avg_episode_snort_warning_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_warning_baseline_fourth_stop_step)
+            self.eval_2_avg_episode_snort_warning_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_warning_baseline_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_warning_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_snort_critical_baseline_fourth_stop_step is not None:
-            self.eval_2_avg_episode_snort_critical_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_snort_critical_baseline_fourth_stop_step)
+            self.eval_2_avg_episode_snort_critical_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_snort_critical_baseline_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_snort_critical_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_var_log_baseline_fourth_stop_step is not None:
-            self.eval_2_avg_episode_var_log_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_var_log_baseline_fourth_stop_step)
+            self.eval_2_avg_episode_var_log_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_var_log_baseline_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_var_log_baseline_fourth_stop_step = 0.0
 
         if not eval and self.train_log_dto.eval_2_episode_step_baseline_fourth_stop_step is not None:
-            self.eval_2_avg_episode_step_baseline_fourth_stop_step = np.mean(
-                self.train_log_dto.eval_2_episode_step_baseline_fourth_stop_step)
+            self.eval_2_avg_episode_step_baseline_fourth_stop_step = DefenderTrainAgentLogDTOAvg.compute_avg_stopping_steps(
+                self.train_log_dto.eval_2_episode_step_baseline_fourth_stop_step, self.eval_2_avg_episode_steps)
         else:
             self.eval_2_avg_episode_step_baseline_fourth_stop_step = 0.0
         if not eval and self.train_log_dto.eval_2_episode_snort_severe_baseline_stops_remaining is not None:
@@ -1181,6 +1258,22 @@ class DefenderTrainAgentLogDTOAvg:
         self.result.eval_avg_defender_fourth_stop_step.append(self.eval_avg_episode_defender_fourth_stop_step)
         self.result.eval_2_avg_defender_fourth_stop_step.append(self.eval_2_avg_episode_defender_fourth_stop_step)
 
+        self.result.avg_optimal_stops_remaining.append(self.avg_episode_optimal_stops_remaining)
+        self.result.eval_avg_optimal_stops_remaining.append(self.eval_avg_episode_optimal_stops_remaining)
+        self.result.eval_2_avg_optimal_stops_remaining.append(self.eval_2_avg_episode_optimal_stops_remaining)
+        self.result.avg_optimal_first_stop_step.append(self.avg_episode_optimal_first_stop_step)
+        self.result.eval_avg_optimal_first_stop_step.append(self.eval_avg_episode_optimal_first_stop_step)
+        self.result.eval_2_avg_optimal_first_stop_step.append(self.eval_2_avg_episode_optimal_first_stop_step)
+        self.result.avg_optimal_second_stop_step.append(self.avg_episode_optimal_second_stop_step)
+        self.result.eval_avg_optimal_second_stop_step.append(self.eval_avg_episode_optimal_second_stop_step)
+        self.result.eval_2_avg_optimal_second_stop_step.append(self.eval_2_avg_episode_optimal_second_stop_step)
+        self.result.avg_optimal_third_stop_step.append(self.avg_episode_optimal_third_stop_step)
+        self.result.eval_avg_optimal_third_stop_step.append(self.eval_avg_episode_optimal_third_stop_step)
+        self.result.eval_2_avg_optimal_third_stop_step.append(self.eval_2_avg_episode_optimal_third_stop_step)
+        self.result.avg_optimal_fourth_stop_step.append(self.avg_episode_optimal_fourth_stop_step)
+        self.result.eval_avg_optimal_fourth_stop_step.append(self.eval_avg_episode_optimal_fourth_stop_step)
+        self.result.eval_2_avg_optimal_fourth_stop_step.append(self.eval_2_avg_episode_optimal_fourth_stop_step)
+
         self.result.avg_snort_severe_baseline_first_stop_step.append(self.avg_episode_snort_severe_baseline_first_stop_step)
         self.result.avg_snort_warning_baseline_first_stop_step.append(self.avg_episode_snort_warning_baseline_first_stop_step)
         self.result.avg_snort_critical_baseline_first_stop_step.append(self.avg_episode_snort_critical_baseline_first_stop_step)
@@ -1206,7 +1299,6 @@ class DefenderTrainAgentLogDTOAvg:
         self.result.avg_snort_critical_baseline_stops_remaining.append(self.avg_episode_snort_critical_baseline_stops_remaining)
         self.result.avg_var_log_baseline_stops_remaining.append(self.avg_episode_var_log_baseline_stops_remaining)
         self.result.avg_step_baseline_stops_remaining.append(self.avg_episode_step_baseline_stops_remaining)
-
         self.result.eval_avg_snort_severe_baseline_first_stop_step.append(self.eval_avg_episode_snort_severe_baseline_first_stop_step)
         self.result.eval_avg_snort_warning_baseline_first_stop_step.append(self.eval_avg_episode_snort_warning_baseline_first_stop_step)
         self.result.eval_avg_snort_critical_baseline_first_stop_step.append(self.eval_avg_episode_snort_critical_baseline_first_stop_step)
@@ -1232,7 +1324,6 @@ class DefenderTrainAgentLogDTOAvg:
         self.result.eval_avg_snort_critical_baseline_stops_remaining.append(self.eval_avg_episode_snort_critical_baseline_stops_remaining)
         self.result.eval_avg_var_log_baseline_stops_remaining.append(self.eval_avg_episode_var_log_baseline_stops_remaining)
         self.result.eval_avg_step_baseline_stops_remaining.append(self.eval_avg_episode_step_baseline_stops_remaining)
-
         self.result.eval_2_avg_snort_severe_baseline_first_stop_step.append(self.eval_2_avg_episode_snort_severe_baseline_first_stop_step)
         self.result.eval_2_avg_snort_warning_baseline_first_stop_step.append(self.eval_2_avg_episode_snort_warning_baseline_first_stop_step)
         self.result.eval_2_avg_snort_critical_baseline_first_stop_step.append(self.eval_2_avg_episode_snort_critical_baseline_first_stop_step)
@@ -1258,6 +1349,9 @@ class DefenderTrainAgentLogDTOAvg:
         self.result.eval_2_avg_snort_critical_baseline_stops_remaining.append(self.eval_2_avg_episode_snort_critical_baseline_stops_remaining)
         self.result.eval_2_avg_var_log_baseline_stops_remaining.append(self.eval_2_avg_episode_var_log_baseline_stops_remaining)
         self.result.eval_2_avg_step_baseline_stops_remaining.append(self.eval_2_avg_episode_step_baseline_stops_remaining)
+        self.result.avg_optimal_episode_steps.append(self.avg_optimal_defender_episode_steps)
+        self.result.eval_avg_optimal_episode_steps.append(self.eval_avg_optimal_defender_episode_steps)
+        self.result.eval_2_avg_optimal_episode_steps.append(self.eval_2_avg_optimal_defender_episode_steps)
 
         if self.train_log_dto.defender_train_episode_env_specific_rewards is not None:
             for key in self.train_log_dto.defender_train_episode_env_specific_rewards.keys():
@@ -1285,8 +1379,8 @@ class DefenderTrainAgentLogDTOAvg:
 
         # General metrics
         if not self.train_mode == TrainMode.SELF_PLAY:
-            self.result.avg_episode_steps.append(self.avg_episode_steps)
             self.result.epsilon_values.append(self.defender_agent_config.epsilon)
+            self.result.avg_episode_steps.append(self.avg_episode_steps)
             self.result.eval_avg_episode_steps.append(self.eval_avg_episode_steps)
             self.result.eval_2_avg_episode_steps.append(self.eval_2_avg_episode_steps)
             self.result.lr_list.append(self.train_log_dto.defender_lr)
@@ -1395,6 +1489,21 @@ class DefenderTrainAgentLogDTOAvg:
             return np.mean(filtered_steps)
         else:
             return 0.0
+
+    @staticmethod
+    def compute_avg_stopping_steps(stopping_steps, avg_episode_len):
+        """
+        Utility function for computing the average number of stopping time steps from a list of steps
+
+        :param steps: the list of stopping time steps
+        :param avg_episode_len: the average episode length
+        :return: the average number of uncaught intrusion steps
+        """
+        filtered_stopping_steps = np.array(list(filter(lambda x: x > 0, stopping_steps)))
+        if len(filtered_stopping_steps) > 0:
+            return np.mean(filtered_stopping_steps)
+        else:
+            return avg_episode_len
 
     @staticmethod
     def to_tensorboard_dto(avg_log_dto: "DefenderTrainAgentLogDTOAvg", eps: float, tensorboard_writer)\
@@ -1549,6 +1658,21 @@ class DefenderTrainAgentLogDTOAvg:
             eval_2_avg_defender_second_stop_step=avg_log_dto.eval_2_avg_episode_defender_second_stop_step,
             eval_2_avg_defender_third_stop_step=avg_log_dto.eval_2_avg_episode_defender_third_stop_step,
             eval_2_avg_defender_fourth_stop_step=avg_log_dto.eval_2_avg_episode_defender_fourth_stop_step,
+            avg_optimal_stops_remaining=avg_log_dto.avg_episode_optimal_stops_remaining,
+            eval_avg_optimal_stops_remaining=avg_log_dto.eval_avg_episode_optimal_stops_remaining,
+            eval_2_avg_optimal_stops_remaining=avg_log_dto.eval_2_avg_episode_optimal_stops_remaining,
+            avg_optimal_first_stop_step=avg_log_dto.avg_episode_optimal_first_stop_step,
+            avg_optimal_second_stop_step=avg_log_dto.avg_episode_optimal_second_stop_step,
+            avg_optimal_third_stop_step=avg_log_dto.avg_episode_optimal_third_stop_step,
+            avg_optimal_fourth_stop_step=avg_log_dto.avg_episode_optimal_fourth_stop_step,
+            eval_avg_optimal_first_stop_step=avg_log_dto.eval_avg_episode_optimal_first_stop_step,
+            eval_avg_optimal_second_stop_step=avg_log_dto.eval_avg_episode_optimal_second_stop_step,
+            eval_avg_optimal_third_stop_step=avg_log_dto.eval_avg_episode_optimal_third_stop_step,
+            eval_avg_optimal_fourth_stop_step=avg_log_dto.eval_avg_episode_optimal_fourth_stop_step,
+            eval_2_avg_optimal_first_stop_step=avg_log_dto.eval_2_avg_episode_optimal_first_stop_step,
+            eval_2_avg_optimal_second_stop_step=avg_log_dto.eval_2_avg_episode_optimal_second_stop_step,
+            eval_2_avg_optimal_third_stop_step=avg_log_dto.eval_2_avg_episode_optimal_third_stop_step,
+            eval_2_avg_optimal_fourth_stop_step=avg_log_dto.eval_2_avg_episode_optimal_fourth_stop_step,
             avg_episode_snort_severe_baseline_first_stop_step = avg_log_dto.avg_episode_snort_severe_baseline_first_stop_step,
             avg_episode_snort_warning_baseline_first_stop_step=avg_log_dto.avg_episode_snort_warning_baseline_first_stop_step,
             avg_episode_snort_critical_baseline_first_stop_step=avg_log_dto.avg_episode_snort_critical_baseline_first_stop_step,
@@ -1623,6 +1747,9 @@ class DefenderTrainAgentLogDTOAvg:
             eval_2_avg_episode_snort_warning_baseline_stops_remaining=avg_log_dto.eval_2_avg_episode_snort_warning_baseline_stops_remaining,
             eval_2_avg_episode_snort_critical_baseline_stops_remaining=avg_log_dto.eval_2_avg_episode_snort_critical_baseline_stops_remaining,
             eval_2_avg_episode_var_log_baseline_stops_remaining=avg_log_dto.eval_2_avg_episode_var_log_baseline_stops_remaining,
-            eval_2_avg_episode_step_baseline_stops_remaining=avg_log_dto.eval_2_avg_episode_step_baseline_stops_remaining
+            eval_2_avg_episode_step_baseline_stops_remaining=avg_log_dto.eval_2_avg_episode_step_baseline_stops_remaining,
+            avg_optimal_defender_episode_steps=avg_log_dto.avg_optimal_defender_episode_steps,
+            eval_avg_optimal_defender_episode_steps=avg_log_dto.avg_optimal_defender_episode_steps,
+            eval_2_avg_optimal_defender_episode_steps=avg_log_dto.avg_optimal_defender_episode_steps
         )
         return tensorboard_data_dto

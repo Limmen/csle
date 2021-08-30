@@ -238,6 +238,24 @@ class TrainAgentLogDTO:
                  eval_2_episode_snort_critical_baseline_stops_remaining: List[int] = None,
                  eval_2_episode_var_log_baseline_stops_remaining: List[int] = None,
                  eval_2_episode_step_baseline_stops_remaining: List[int] = None,
+                 optimal_stops_remaining: List[int] = None,
+                 eval_optimal_stops_remaining: List[int] = None,
+                 eval_2_optimal_stops_remaining: List[int] = None,
+                 optimal_first_stop_step: List[int] = None,
+                 eval_optimal_first_stop_step: List[int] = None,
+                 eval_2_optimal_first_stop_step: List[int] = None,
+                 optimal_second_stop_step: List[int] = None,
+                 eval_optimal_second_stop_step: List[int] = None,
+                 eval_2_optimal_second_stop_step: List[int] = None,
+                 optimal_third_stop_step: List[int] = None,
+                 eval_optimal_third_stop_step: List[int] = None,
+                 eval_2_optimal_third_stop_step: List[int] = None,
+                 optimal_fourth_stop_step: List[int] = None,
+                 eval_optimal_fourth_stop_step: List[int] = None,
+                 eval_2_optimal_fourth_stop_step: List[int] = None,
+                 optimal_defender_episode_steps: List[int] = None,
+                 eval_optimal_defender_episode_steps: List[int] = None,
+                 eval_2_optimal_defender_episode_steps: List[int] = None
                  ):
         self.iteration = iteration
         self.train_result = train_result
@@ -482,6 +500,24 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_critical_baseline_stops_remaining = eval_2_episode_snort_critical_baseline_stops_remaining
         self.eval_2_episode_var_log_baseline_stops_remaining = eval_2_episode_var_log_baseline_stops_remaining
         self.eval_2_episode_step_baseline_stops_remaining = eval_2_episode_step_baseline_stops_remaining
+        self.optimal_stops_remaining = optimal_stops_remaining
+        self.eval_optimal_stops_remaining = eval_optimal_stops_remaining
+        self.eval_2_optimal_stops_remaining = eval_2_optimal_stops_remaining
+        self.optimal_first_stop_step = optimal_first_stop_step
+        self.eval_optimal_first_stop_step = eval_optimal_first_stop_step
+        self.eval_2_optimal_first_stop_step = eval_2_optimal_first_stop_step
+        self.optimal_second_stop_step = optimal_second_stop_step
+        self.eval_optimal_second_stop_step = eval_optimal_second_stop_step
+        self.eval_2_optimal_second_stop_step = eval_2_optimal_second_stop_step
+        self.optimal_third_stop_step = optimal_third_stop_step
+        self.eval_optimal_third_stop_step = eval_optimal_third_stop_step
+        self.eval_2_optimal_third_stop_step = eval_2_optimal_third_stop_step
+        self.optimal_fourth_stop_step = optimal_fourth_stop_step
+        self.eval_optimal_fourth_stop_step = eval_optimal_fourth_stop_step
+        self.eval_2_optimal_fourth_stop_step = eval_2_optimal_fourth_stop_step
+        self.optimal_defender_episode_steps = optimal_defender_episode_steps
+        self.eval_optimal_defender_episode_steps = eval_optimal_defender_episode_steps
+        self.eval_2_optimal_defender_episode_steps = eval_2_optimal_defender_episode_steps
 
     def initialize(self) -> None:
         """
@@ -750,6 +786,24 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_critical_baseline_stops_remaining = []
         self.eval_2_episode_var_log_baseline_stops_remaining = []
         self.eval_2_episode_step_baseline_stops_remaining = []
+        self.optimal_stops_remaining = []
+        self.eval_optimal_stops_remaining = []
+        self.eval_2_optimal_stops_remaining = []
+        self.optimal_first_stop_step = []
+        self.eval_optimal_first_stop_step = []
+        self.eval_2_optimal_first_stop_step = []
+        self.optimal_second_stop_step = []
+        self.eval_optimal_second_stop_step = []
+        self.eval_2_optimal_second_stop_step = []
+        self.optimal_third_stop_step = []
+        self.eval_optimal_third_stop_step = []
+        self.eval_2_optimal_third_stop_step = []
+        self.optimal_fourth_stop_step = []
+        self.eval_optimal_fourth_stop_step = []
+        self.eval_2_optimal_fourth_stop_step = []
+        self.optimal_defender_episode_steps = []
+        self.eval_optimal_defender_episode_steps = []
+        self.eval_2_optimal_defender_episode_steps = []
 
     def copy(self) -> "TrainAgentLogDTO":
         """        
@@ -999,6 +1053,24 @@ class TrainAgentLogDTO:
         c.eval_2_episode_snort_critical_baseline_stops_remaining = self.eval_2_episode_snort_critical_baseline_stops_remaining
         c.eval_2_episode_var_log_baseline_stops_remaining = self.eval_2_episode_var_log_baseline_stops_remaining
         c.eval_2_episode_step_baseline_stops_remaining = self.eval_2_episode_step_baseline_stops_remaining
+        c.optimal_stops_remaining = self.optimal_stops_remaining
+        c.eval_optimal_stops_remaining = self.eval_optimal_stops_remaining
+        c.eval_2_optimal_stops_remaining = self.eval_2_optimal_stops_remaining
+        c.optimal_first_stop_step = self.optimal_first_stop_step
+        c.eval_optimal_first_stop_step = self.eval_optimal_first_stop_step
+        c.eval_2_optimal_first_stop_step = self.eval_2_optimal_first_stop_step
+        c.optimal_second_stop_step = self.optimal_second_stop_step
+        c.eval_optimal_second_stop_step = self.eval_optimal_second_stop_step
+        c.eval_2_optimal_second_stop_step = self.eval_2_optimal_second_stop_step
+        c.optimal_third_stop_step = self.optimal_third_stop_step
+        c.eval_optimal_third_stop_step = self.eval_optimal_third_stop_step
+        c.eval_2_optimal_third_stop_step = self.eval_2_optimal_third_stop_step
+        c.optimal_fourth_stop_step = self.optimal_fourth_stop_step
+        c.eval_optimal_fourth_stop_step = self.eval_optimal_fourth_stop_step
+        c.eval_2_optimal_fourth_stop_step = self.eval_2_optimal_fourth_stop_step
+        c.optimal_defender_episode_steps = self.optimal_defender_episode_steps
+        c.eval_optimal_defender_episode_steps = self.eval_optimal_defender_episode_steps
+        c.eval_2_optimal_defender_episode_steps = self.eval_2_optimal_defender_episode_steps
 
     def copy_saved_env_2(self, saved_log_dto : "TrainAgentLogDTO") -> None:
         """
@@ -1082,6 +1154,12 @@ class TrainAgentLogDTO:
         self.eval_2_episode_snort_critical_baseline_stops_remaining = saved_log_dto.eval_2_episode_snort_critical_baseline_stops_remaining
         self.eval_2_episode_var_log_baseline_stops_remaining = saved_log_dto.eval_2_episode_var_log_baseline_stops_remaining
         self.eval_2_episode_step_baseline_stops_remaining = saved_log_dto.eval_2_episode_step_baseline_stops_remaining
+        self.eval_2_optimal_stops_remaining = saved_log_dto.optimal_stops_remaining
+        self.eval_2_optimal_first_stop_step = saved_log_dto.eval_2_optimal_first_stop_step
+        self.eval_2_optimal_second_stop_step = saved_log_dto.eval_2_optimal_second_stop_step
+        self.eval_2_optimal_third_stop_step = saved_log_dto.eval_2_optimal_third_stop_step
+        self.eval_2_optimal_fourth_stop_step = saved_log_dto.eval_2_optimal_fourth_stop_step
+        self.eval_2_optimal_defender_episode_steps = saved_log_dto.eval_2_optimal_defender_episode_steps
 
     def eval_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i: int) -> int:
         """

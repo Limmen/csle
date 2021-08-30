@@ -34,8 +34,8 @@ class DefenderObservationState:
         self.adj_matrix = np.array(0)
         self.last_alert_ts = None
         self.step = 1
+        self.maximum_number_of_stops = maximum_number_of_stops
         self.stops_remaining = maximum_number_of_stops
-        self.maximum_number_of_stops =maximum_number_of_stops
         self.first_stop_step = -1
         self.second_stop_step = -1
         self.third_stop_step = -1

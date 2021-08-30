@@ -241,7 +241,25 @@ class ExperimentResult:
                  eval_2_avg_snort_warning_baseline_stops_remaining: List = None,
                  eval_2_avg_snort_critical_baseline_stops_remaining: List = None,
                  eval_2_avg_var_log_baseline_stops_remaining: List = None,
-                 eval_2_avg_step_baseline_stops_remaining: List = None
+                 eval_2_avg_step_baseline_stops_remaining: List = None,
+                 avg_optimal_stops_remaining: List = None,
+                 eval_avg_optimal_stops_remaining: List = None,
+                 eval_2_avg_optimal_stops_remaining: List = None,
+                 avg_optimal_first_stop_step: List = None,
+                 eval_avg_optimal_first_stop_step: List = None,
+                 eval_2_avg_optimal_first_stop_step: List = None,
+                 avg_optimal_second_stop_step: List = None,
+                 eval_avg_optimal_second_stop_step: List = None,
+                 eval_2_avg_optimal_second_stop_step: List = None,
+                 avg_optimal_third_stop_step: List = None,
+                 eval_avg_optimal_third_stop_step: List = None,
+                 eval_2_avg_optimal_third_stop_step: List = None,
+                 avg_optimal_fourth_stop_step: List = None,
+                 eval_avg_optimal_fourth_stop_step: List = None,
+                 eval_2_avg_optimal_fourth_stop_step: List = None,
+                 avg_optimal_episode_steps: List[int] = None,
+                 eval_avg_optimal_episode_steps: List[int] = None,
+                 eval_2_avg_optimal_episode_steps: List[int] = None
                  ):
         """
         Constructor, initializes the DTO
@@ -466,6 +484,23 @@ class ExperimentResult:
         :param eval_2_avg_snort_critical_baseline_stops_remaining: eval2 avgtime-step of snort_critical_baseline first stop
         :param eval_2_avg_var_log_baseline_stops_remaining_baseline_stops_remaining: eval2 avgtime-step of var_log first stop
         :param eval_2_avg_step_baseline_stops_remaining: eval2 avgtime-step of step first stop
+        :param eval_avg_optimal_stops_remaining: avg number of stops remaining for the optimal when episode ends
+        :param eval_2_avg_optimal_stops_remaining: avg number of stops remaining for the optimal when episode ends
+        :param avg_optimal_first_stop_step: avg time-step of optimal's first stop
+        :param eval_avg_optimal_first_stop_step: eval avg time-step of optimal's first stop
+        :param eval_2_avg_optimal_first_stop_step: eval 2avg time-step of optimal's first stop
+        :param avg_optimal_second_stop_step: avg time-step of optimal's second stop
+        :param eval_avg_optimal_second_stop_step: eval avg time-step of optimal's second stop
+        :param eval_2_avg_optimal_second_stop_step: eval2 avg time-step of optimal's second stop
+        :param avg_optimal_third_stop_step: avg time-step of optimal's third stop
+        :param eval_avg_optimal_third_stop_step: eval avg time-step of optimal's third stop
+        :param eval_2_avg_optimal_third_stop_step: eval2 avg time-step of optimal's third stop
+        :param avg_optimal_fourth_stop_step: avg time-step of optimal's fourth stop
+        :param eval_avg_optimal_fourth_stop_step: eval avg time-step of optimal's fourth stop
+        :param eval_2_avg_optimal_fourth_stop_step: eval2 avg time-step of optimal's fourth stop
+        :param avg_optimal_episode_steps: the average optimal number of steps in the episode
+        :param eval_avg_optimal_episode_steps: the eval average optimal number of steps in the episode
+        :param eval_2_avg_optimal_episode_steps: the eval 2average optimal number of steps in the episode
         """
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
@@ -728,6 +763,24 @@ class ExperimentResult:
         self.eval_2_avg_snort_critical_baseline_stops_remaining = eval_2_avg_snort_critical_baseline_stops_remaining
         self.eval_2_avg_var_log_baseline_stops_remaining = eval_2_avg_var_log_baseline_stops_remaining
         self.eval_2_avg_step_baseline_stops_remaining = eval_2_avg_step_baseline_stops_remaining
+        self.avg_optimal_stops_remaining = avg_optimal_stops_remaining
+        self.eval_avg_optimal_stops_remaining = eval_avg_optimal_stops_remaining
+        self.eval_2_avg_optimal_stops_remaining = eval_2_avg_optimal_stops_remaining
+        self.avg_optimal_first_stop_step = avg_optimal_first_stop_step
+        self.eval_avg_optimal_first_stop_step = eval_avg_optimal_first_stop_step
+        self.eval_2_avg_optimal_first_stop_step = eval_2_avg_optimal_first_stop_step
+        self.avg_optimal_second_stop_step = avg_optimal_second_stop_step
+        self.eval_avg_optimal_second_stop_step = eval_avg_optimal_second_stop_step
+        self.eval_2_avg_optimal_second_stop_step = eval_2_avg_optimal_second_stop_step
+        self.avg_optimal_third_stop_step = avg_optimal_third_stop_step
+        self.eval_avg_optimal_third_stop_step = eval_avg_optimal_third_stop_step
+        self.eval_2_avg_optimal_third_stop_step = eval_2_avg_optimal_third_stop_step
+        self.avg_optimal_fourth_stop_step = avg_optimal_fourth_stop_step
+        self.eval_avg_optimal_fourth_stop_step = eval_avg_optimal_fourth_stop_step
+        self.eval_2_avg_optimal_fourth_stop_step = eval_2_avg_optimal_fourth_stop_step
+        self.avg_optimal_episode_steps = avg_optimal_episode_steps
+        self.eval_avg_optimal_episode_steps = eval_avg_optimal_episode_steps
+        self.eval_2_avg_optimal_episode_steps = eval_2_avg_optimal_episode_steps
 
         if avg_episode_steps is None:
             self.avg_episode_steps = []
@@ -1257,6 +1310,42 @@ class ExperimentResult:
             self.eval_2_avg_var_log_baseline_stops_remaining = []
         if eval_2_avg_step_baseline_stops_remaining is None:
             self.eval_2_avg_step_baseline_stops_remaining = []
+        if avg_optimal_stops_remaining is None:
+            self.avg_optimal_stops_remaining = []
+        if eval_avg_optimal_stops_remaining is None:
+            self.eval_avg_optimal_stops_remaining = []
+        if eval_2_avg_optimal_stops_remaining is None:
+            self.eval_2_avg_optimal_stops_remaining = []
+        if avg_optimal_first_stop_step is None:
+            self.avg_optimal_first_stop_step = []
+        if eval_avg_optimal_first_stop_step is None:
+            self.eval_avg_optimal_first_stop_step = []
+        if eval_2_avg_optimal_first_stop_step is None:
+            self.eval_2_avg_optimal_first_stop_step = []
+        if avg_optimal_second_stop_step is None:
+            self.avg_optimal_second_stop_step = []
+        if eval_avg_optimal_second_stop_step is None:
+            self.eval_avg_optimal_second_stop_step = []
+        if eval_2_avg_optimal_second_stop_step is None:
+            self.eval_2_avg_optimal_second_stop_step = []
+        if avg_optimal_third_stop_step is None:
+            self.avg_optimal_third_stop_step = []
+        if eval_avg_optimal_third_stop_step is None:
+            self.eval_avg_optimal_third_stop_step = []
+        if eval_2_avg_optimal_third_stop_step is None:
+            self.eval_2_avg_optimal_third_stop_step = []
+        if avg_optimal_fourth_stop_step is None:
+            self.avg_optimal_fourth_stop_step = []
+        if eval_avg_optimal_fourth_stop_step is None:
+            self.eval_avg_optimal_fourth_stop_step = []
+        if eval_2_avg_optimal_fourth_stop_step is None:
+            self.eval_2_avg_optimal_fourth_stop_step = []
+        if avg_optimal_episode_steps is None:
+            self.avg_optimal_episode_steps = []
+        if eval_avg_optimal_episode_steps is None:
+            self.eval_avg_optimal_episode_steps = []
+        if eval_2_avg_optimal_episode_steps is None:
+            self.eval_2_avg_optimal_episode_steps = []
 
     def to_csv(self, file_path : str) -> None:
         """
@@ -1354,7 +1443,6 @@ class ExperimentResult:
                    self.eval_avg_defender_third_stop_step, self.eval_2_avg_defender_third_stop_step,
                    self.avg_defender_fourth_stop_step,
                    self.eval_avg_defender_fourth_stop_step, self.eval_2_avg_defender_fourth_stop_step,
-
                    self.avg_snort_severe_baseline_first_stop_step, self.avg_snort_warning_baseline_first_stop_step,
                    self.avg_snort_critical_baseline_first_stop_step, self.avg_var_log_baseline_first_stop_step,
                    self.avg_step_baseline_first_stop_step,
@@ -1370,7 +1458,6 @@ class ExperimentResult:
                    self.avg_snort_severe_baseline_stops_remaining, self.avg_snort_warning_baseline_stops_remaining,
                    self.avg_snort_critical_baseline_stops_remaining, self.avg_var_log_baseline_stops_remaining,
                    self.avg_step_baseline_stops_remaining,
-
                    self.eval_avg_snort_severe_baseline_first_stop_step, self.eval_avg_snort_warning_baseline_first_stop_step,
                    self.eval_avg_snort_critical_baseline_first_stop_step, self.eval_avg_var_log_baseline_first_stop_step,
                    self.eval_avg_step_baseline_first_stop_step,
@@ -1386,7 +1473,6 @@ class ExperimentResult:
                    self.eval_avg_snort_severe_baseline_stops_remaining, self.eval_avg_snort_warning_baseline_stops_remaining,
                    self.eval_avg_snort_critical_baseline_stops_remaining, self.eval_avg_var_log_baseline_stops_remaining,
                    self.eval_avg_step_baseline_stops_remaining,
-
                    self.eval_2_avg_snort_severe_baseline_first_stop_step, self.eval_2_avg_snort_warning_baseline_first_stop_step,
                    self.eval_2_avg_snort_critical_baseline_first_stop_step, self.eval_2_avg_var_log_baseline_first_stop_step,
                    self.eval_2_avg_step_baseline_first_stop_step,
@@ -1401,7 +1487,19 @@ class ExperimentResult:
                    self.eval_2_avg_step_baseline_fourth_stop_step,
                    self.eval_2_avg_snort_severe_baseline_stops_remaining, self.eval_2_avg_snort_warning_baseline_stops_remaining,
                    self.eval_2_avg_snort_critical_baseline_stops_remaining, self.eval_2_avg_var_log_baseline_stops_remaining,
-                   self.eval_2_avg_step_baseline_stops_remaining
+                   self.eval_2_avg_step_baseline_stops_remaining,
+                   self.avg_optimal_stops_remaining, self.eval_avg_optimal_stops_remaining,
+                   self.eval_2_avg_optimal_stops_remaining,
+                   self.avg_optimal_first_stop_step,
+                   self.eval_avg_optimal_first_stop_step, self.eval_2_avg_optimal_first_stop_step,
+                   self.avg_optimal_second_stop_step,
+                   self.eval_avg_optimal_second_stop_step, self.eval_2_avg_optimal_second_stop_step,
+                   self.avg_optimal_third_stop_step,
+                   self.eval_avg_optimal_third_stop_step, self.eval_2_avg_optimal_third_stop_step,
+                   self.avg_optimal_fourth_stop_step,
+                   self.eval_avg_optimal_fourth_stop_step, self.eval_2_avg_optimal_fourth_stop_step,
+                   self.avg_optimal_episode_steps, self.eval_avg_optimal_episode_steps,
+                   self.eval_2_avg_optimal_episode_steps
                    ]
         metric_labels = ["attacker_avg_episode_rewards", "defender_avg_episode_rewards", "avg_episode_steps",
                          "epsilon_values", "attacker_cumulative_reward", "defender_cumulative_reward",
@@ -1563,7 +1661,19 @@ class ExperimentResult:
                          "eval_2_avg_snort_warning_baseline_stops_remaining",
                          "eval_2_avg_snort_critical_baseline_stops_remaining",
                          "eval_2_avg_var_log_baseline_stops_remaining",
-                         "eval_2_avg_step_baseline_stops_remaining"
+                         "eval_2_avg_step_baseline_stops_remaining",
+                         "avg_optimal_stops_remaining", "eval_avg_optimal_stops_remaining",
+                         "eval_2_avg_optimal_stops_remaining",
+                         "avg_optimal_first_stop_step",
+                         "eval_avg_optimal_first_stop_step", "eval_2_avg_optimal_first_stop_step",
+                         "avg_optimal_second_stop_step",
+                         "eval_avg_optimal_second_stop_step", "eval_2_avg_optimal_second_stop_step",
+                         "avg_optimal_third_stop_step",
+                         "eval_avg_optimal_third_stop_step", "eval_2_avg_optimal_third_stop_step",
+                         "avg_optimal_fourth_stop_step",
+                         "eval_avg_optimal_fourth_stop_step", "eval_2_avg_optimal_fourth_stop_step",
+                         "avg_optimal_episode_steps", "eval_avg_optimal_episode_steps",
+                         "eval_2_avg_optimal_episode_steps"
                          ]
         filtered_metric_labels = []
         filtered_metrics = []

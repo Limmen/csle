@@ -77,7 +77,13 @@ class RolloutDataDTO:
                  episode_snort_warning_baseline_stops_remaining=None,
                  episode_snort_critical_baseline_stops_remaining=None,
                  episode_var_log_baseline_stops_remaining=None,
-                 episode_step_baseline_stops_remaining=None
+                 episode_step_baseline_stops_remaining=None,
+                 optimal_stops_remaining=None,
+                 optimal_first_stop_step=None,
+                 optimal_second_stop_step=None,
+                 optimal_third_stop_step=None,
+                 optimal_fourth_stop_step=None,
+                 optimal_defender_episode_steps = None
                  ):
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -156,6 +162,12 @@ class RolloutDataDTO:
         self.episode_snort_critical_baseline_stops_remaining = episode_snort_critical_baseline_stops_remaining
         self.episode_var_log_baseline_stops_remaining = episode_var_log_baseline_stops_remaining
         self.episode_step_baseline_stops_remaining = episode_step_baseline_stops_remaining
+        self.optimal_stops_remaining = optimal_stops_remaining
+        self.optimal_first_stop_step = optimal_first_stop_step
+        self.optimal_second_stop_step = optimal_second_stop_step
+        self.optimal_third_stop_step = optimal_third_stop_step
+        self.optimal_fourth_stop_step = optimal_fourth_stop_step
+        self.optimal_defender_episode_steps = optimal_defender_episode_steps
 
     def initialize(self):
         self.attacker_episode_rewards = []
@@ -236,6 +248,12 @@ class RolloutDataDTO:
         self.episode_snort_critical_baseline_stops_remaining = []
         self.episode_var_log_baseline_stops_remaining = []
         self.episode_step_baseline_stops_remaining = []
+        self.optimal_stops_remaining = []
+        self.optimal_first_stop_step = []
+        self.optimal_second_stop_step = []
+        self.optimal_third_stop_step = []
+        self.optimal_fourth_stop_step = []
+        self.optimal_defender_episode_steps = []
 
     def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
 
