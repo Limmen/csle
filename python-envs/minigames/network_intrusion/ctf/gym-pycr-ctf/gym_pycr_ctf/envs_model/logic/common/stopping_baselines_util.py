@@ -49,10 +49,14 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_severe_baseline_reward += costs
                 
                 if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.snort_severe_baseline_stops_remaining:
-                    s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_caught_attacker_reward
-                    s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = \
-                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
-                    s_prime.defender_obs_state.snort_severe_baseline_caught_attacker = True
+                    if s.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_caught_attacker_reward
+                        s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = \
+                            max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
+                        s_prime.defender_obs_state.snort_severe_baseline_caught_attacker = True
+                    else:
+                        s_prime.defender_obs_state.snort_severe_baseline_uncaught_intrusion_steps = 0
+                        s_prime.defender_obs_state.snort_severe_baseline_early_stopping = True
 
                 if s_prime.defender_obs_state.snort_severe_baseline_stops_remaining == 3:
                     s_prime.defender_obs_state.snort_severe_baseline_first_stop_step = s_prime.defender_obs_state.step
@@ -98,10 +102,14 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_warning_baseline_reward += costs
 
                 if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.snort_warning_baseline_stops_remaining:
-                    s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_caught_attacker_reward
-                    s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = \
-                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
-                    s_prime.defender_obs_state.snort_warning_baseline_caught_attacker = True
+                    if s.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_caught_attacker_reward
+                        s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = \
+                            max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
+                        s_prime.defender_obs_state.snort_warning_baseline_caught_attacker = True
+                    else:
+                        s_prime.defender_obs_state.snort_warning_baseline_uncaught_intrusion_steps = 0
+                        s_prime.defender_obs_state.snort_warning_baseline_early_stopping = True
 
                 if s_prime.defender_obs_state.snort_warning_baseline_stops_remaining == 3:
                     s_prime.defender_obs_state.snort_warning_baseline_first_stop_step = s_prime.defender_obs_state.step
@@ -147,10 +155,14 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.snort_critical_baseline_reward += costs
 
                 if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.snort_critical_baseline_stops_remaining:
-                    s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_caught_attacker_reward
-                    s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = \
-                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
-                    s_prime.defender_obs_state.snort_critical_baseline_caught_attacker = True
+                    if s.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_caught_attacker_reward
+                        s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = \
+                            max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
+                        s_prime.defender_obs_state.snort_critical_baseline_caught_attacker = True
+                    else:
+                        s_prime.defender_obs_state.snort_critical_baseline_early_stopping = True
+                        s_prime.defender_obs_state.snort_critical_baseline_uncaught_intrusion_steps = 0
 
                 if s_prime.defender_obs_state.snort_critical_baseline_stops_remaining == 3:
                     s_prime.defender_obs_state.snort_critical_baseline_first_stop_step = s_prime.defender_obs_state.step
@@ -198,10 +210,14 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.var_log_baseline_reward += costs
 
                 if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.var_log_baseline_stops_remaining:
-                    s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_caught_attacker_reward
-                    s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = \
-                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
-                    s_prime.defender_obs_state.var_log_baseline_caught_attacker = True
+                    if s.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_caught_attacker_reward
+                        s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = \
+                            max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
+                        s_prime.defender_obs_state.var_log_baseline_caught_attacker = True
+                    else:
+                        s_prime.defender_obs_state.var_log_baseline_early_stopping = True
+                        s_prime.defender_obs_state.var_log_baseline_uncaught_intrusion_steps = 0
 
                 if s_prime.defender_obs_state.var_log_baseline_stops_remaining == 3:
                     s_prime.defender_obs_state.var_log_baseline_first_stop_step = s_prime.defender_obs_state.step
@@ -247,10 +263,14 @@ class StoppingBaselinesUtil:
                 s_prime.defender_obs_state.step_baseline_reward += costs
 
                 if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.step_baseline_stops_remaining:
-                    s_prime.defender_obs_state.step_baseline_reward += env_config.defender_caught_attacker_reward
-                    s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = \
-                        max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
-                    s_prime.defender_obs_state.step_baseline_caught_attacker = True
+                    if s.attacker_obs_state.ongoing_intrusion():
+                        s_prime.defender_obs_state.step_baseline_reward += env_config.defender_caught_attacker_reward
+                        s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = \
+                            max(0, s.defender_obs_state.step - s.attacker_obs_state.intrusion_step)
+                        s_prime.defender_obs_state.step_baseline_caught_attacker = True
+                    else:
+                        s_prime.defender_obs_state.step_baseline_early_stopping = True
+                        s_prime.defender_obs_state.step_baseline_uncaught_intrusion_steps = 0
 
                 if s_prime.defender_obs_state.step_baseline_stops_remaining == 3:
                     s_prime.defender_obs_state.step_baseline_first_stop_step = s_prime.defender_obs_state.step
