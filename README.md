@@ -95,10 +95,14 @@ For basic documentation, see the README.md files inside each sub-directory,
 ### API Documentation
 For API documentation follow the links inside each python project's README:
 
-- ([gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD)). 
+- [gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD). 
 
 ### Technical Documentation
 For technical documentation see: TODO
+
+### Emulation Management
+
+Documentation on how to manage running emulations is available [here](./emulation-envs/management/README.md).
 
 ## Video tutorial
 
