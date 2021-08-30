@@ -1227,7 +1227,7 @@ class TensorboardDataDTO:
                       f"E2_alerts_N:{self.eval_2_avg_episode_alerts_norm:.2f}," \
                       f"avg_I_t:{self.avg_episode_intrusion_steps:.2f}," \
                       f"E_avg_I_t:{self.eval_avg_episode_intrusion_steps:.2f}," \
-                      f"E2_avg_I_t:{self.eval_2_avg_defender_stops_remaining:.2f}," \
+                      f"E2_avg_stops_left:{self.eval_2_avg_defender_stops_remaining:.2f}," \
                       f"avg_F_T_E2:{self.eval_2_avg_episode_flags:.2f}," \
                       f"avg_F_T_E2%:{self.eval_2_avg_episode_flags_percentage:.2f}," \
                       f"avg_stops_left_E2:{self.eval_2_avg_defender_stops_remaining:.2f}," \

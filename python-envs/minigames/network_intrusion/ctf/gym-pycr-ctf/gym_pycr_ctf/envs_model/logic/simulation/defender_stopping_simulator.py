@@ -47,14 +47,13 @@ class DefenderStoppingSimulator:
                     reward = reward + env_config.defender_caught_attacker_reward
             if s_prime.defender_obs_state.stops_remaining == 0:
                 done = True
-            # else:
-            #     if not s_prime.defender_obs_state.caught_attacker:
-            #         reward = reward + env_config.defender_intrusion_reward
-            #         s_prime.attacker_obs_state.undetected_intrusions_steps += 1
         else:
             if s_prime.defender_obs_state.stops_remaining == 0:
                 s_prime.defender_obs_state.stopped = True
                 done = True
+
+        if env_config.attacker_prevented_stops_remaining > s_prime.defender_obs_state.stops_remaining:
+            reward = reward + env_config.defender_early_stopping_reward*2
 
         idx = env_config.maximum_number_of_defender_stop_actions - (env_config.maximum_number_of_defender_stop_actions -
                                                                     s_prime.defender_obs_state.stops_remaining)
