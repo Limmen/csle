@@ -49,7 +49,7 @@ class CustomAttackerBotAgent:
             step = env.env_state.attacker_obs_state.step-1
 
         if not self.started:
-            if np.random.rand() < self.start_p:
+            if np.random.rand() <= self.start_p:
                 self.started = True
 
         if self.started:

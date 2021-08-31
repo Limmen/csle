@@ -803,6 +803,7 @@ class INFO_DICT:
     """
     Constants for strings in the info dict of the PyCr_CTF Environment
     """
+    EPISODE_LENGTH = "episode_length"
     FLAGS = "flags"
     CAUGHT_ATTACKER = "caught_attacker"
     EARLY_STOPPED = "early_stopped"

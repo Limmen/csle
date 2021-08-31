@@ -1499,11 +1499,13 @@ class DefenderTrainAgentLogDTOAvg:
         :param avg_episode_len: the average episode length
         :return: the average number of uncaught intrusion steps
         """
-        filtered_stopping_steps = np.array(list(filter(lambda x: x > 0, stopping_steps)))
-        if len(filtered_stopping_steps) > 0:
-            return np.mean(filtered_stopping_steps)
-        else:
-            return avg_episode_len
+        stopping_steps_prime = []
+        for st in stopping_steps:
+            if st > 0:
+                stopping_steps_prime.append(st)
+            else:
+                stopping_steps_prime.append(avg_episode_len)
+        return np.mean(stopping_steps_prime)
 
     @staticmethod
     def to_tensorboard_dto(avg_log_dto: "DefenderTrainAgentLogDTOAvg", eps: float, tensorboard_writer)\

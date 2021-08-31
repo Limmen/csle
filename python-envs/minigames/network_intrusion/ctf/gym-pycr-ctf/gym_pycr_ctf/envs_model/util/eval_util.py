@@ -117,6 +117,8 @@ class EvalUtil:
             intrusion_start_time = np.random.geometric(p=0.2, size=1)[0]
             no_intrusion_obs = EvalUtil.get_observations_prior_to_intrusion(
                 env=env, intrusion_start_time=intrusion_start_time)
+            intrusion_prevented_obs = EvalUtil.get_observations_prior_to_intrusion(
+                env=env, intrusion_start_time=intrusion_start_time + len(tau.defender_observations))
             optimal_stopping_time = max(intrusion_start_time + 1, env.env_config.maximum_number_of_defender_stop_actions - env.env_config.attacker_prevented_stops_remaining)
             optimal_stopping_indexes = []
             for i in range(env.env_config.maximum_number_of_defender_stop_actions-1, -1, -1):
@@ -147,7 +149,7 @@ class EvalUtil:
 
             opt_r_l.append(optimal_service_reward + optimal_costs + env.env_config.defender_caught_attacker_reward)
 
-            actions, values = EvalUtil.predict(policy, obs, env, deterministic=deterministic)
+            actions, values = EvalUtil.predict(policy, obs, env, deterministic=deterministic, intrusion_prevented_obs=intrusion_prevented_obs)
             reward, early_stopping, succ_intrusion, caught, uncaught_intrusion_steps, stopping_indexes = \
                 EvalUtil.compute_reward(
                 actions, env.env_config, optimal_stopping_indexes=optimal_stopping_indexes,
@@ -291,7 +293,6 @@ class EvalUtil:
         # print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
         # print("stopping obs:{}".format(stopping_obs_l))
         # print("merged tau:{}".format(merged_taus))
-
         return rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
                snort_severe_r, snort_warning_r, snort_critical_r, \
                var_log_r, step_r, snort_severe_steps_l, snort_warning_steps_l, \
@@ -330,7 +331,7 @@ class EvalUtil:
             obs_l = [[0, 0, 0, t, env.env_config.maximum_number_of_defender_stop_actions]]
         else:
             obs_l = [[0, 0, 0, t]]
-        for i in range(0, intrusion_start_time):
+        for i in range(0, intrusion_start_time-1):
             t +=1
             x_delta = fx.rvs(size=1)[0]
             y_delta = fy.rvs(size=1)[0]
@@ -382,7 +383,7 @@ class EvalUtil:
         x = obs_prior_to_intrusion[-1][0]
         y = obs_prior_to_intrusion[-1][1]
         z = obs_prior_to_intrusion[-1][2]
-        for i in range(len(obs_intrusion)):
+        for i in range(len(obs_intrusion)-1):
             if len(obs_intrusion[i]) == 9:
                 x += obs_intrusion[i][2]
                 y += obs_intrusion[i][3]
@@ -665,7 +666,7 @@ class EvalUtil:
 
 
     @staticmethod
-    def predict(policy, obs, env, deterministic: bool = False) -> Tuple[List[int], List[float]]:
+    def predict(policy, obs, env, deterministic: bool = False, intrusion_prevented_obs = None) -> Tuple[List[int], List[float]]:
         """
         Utility function for predicting the next action given a model, an environment, and a observation
 
@@ -673,15 +674,40 @@ class EvalUtil:
         :param obs: the observation from the environment
         :param env: the environment
         :param deterministic: whether to do deterministic predictions or not
+        :param intrusion_prevented_obs: observations when intrusion has been prevented
         :return: the predicted action and values
         """
         stops_left = obs[0][-1]
         actions_l = []
         values_l = []
+        stop_subtract_1 = [0,0,0]
+        stop_subtract_2 = [0, 0, 0]
         for i in range(len(obs)):
-            obs_temp = obs[i]
-            obs_temp[-1]= stops_left
-            obs_tensor_i = torch.as_tensor([obs_temp])
+            obs_temp_1 = np.copy(obs[i])
+            obs_temp_1[0] = obs_temp_1[0] - stop_subtract_1[0]
+            obs_temp_1[1] = obs_temp_1[1] - stop_subtract_1[1]
+            obs_temp_1[2] = obs_temp_1[2] - stop_subtract_1[2]
+            obs_temp_1[-1]= stops_left
+
+            obs_temp_2 = np.copy(intrusion_prevented_obs[i])
+            obs_temp_2[0] = obs_temp_2[0] - stop_subtract_2[0]
+            obs_temp_2[1] = obs_temp_2[1] - stop_subtract_2[1]
+            obs_temp_2[2] = obs_temp_2[2] - stop_subtract_2[2]
+            obs_temp_2[-1] = stops_left
+
+            if stops_left == env.env_config.maximum_number_of_defender_stop_actions:
+                obs_temp_1[0]= -1
+                obs_temp_1[1] = -1
+                obs_temp_1[2] = -1
+                obs_temp_2[0] = -1
+                obs_temp_2[1] = -1
+                obs_temp_2[2] = -1
+
+            if stops_left > env.env_config.attacker_prevented_stops_remaining:
+                obs_tensor_i = torch.as_tensor([obs_temp_1])
+            else:
+                obs_tensor_i = torch.as_tensor([obs_temp_2])
+
             actions, values = policy.predict(obs_tensor_i, None, None, deterministic=deterministic,
                                              env_config=env.env_config,
                                              env_state=env.env_state, env_configs=None,
@@ -689,6 +715,14 @@ class EvalUtil:
                                              attacker=False)
             if actions[0] == 0 and stops_left > 0:
                 stops_left -= 1
+                temp_1 = np.copy(obs_temp_1)
+                stop_subtract_1[0] = temp_1[0] + stop_subtract_1[0]
+                stop_subtract_1[1] = temp_1[1] + stop_subtract_1[1]
+                stop_subtract_1[2] = temp_1[2] + stop_subtract_1[2]
+                temp_2 = np.copy(obs_temp_2)
+                stop_subtract_2[0] = temp_2[0] + stop_subtract_2[0]
+                stop_subtract_2[1] = temp_2[1] + stop_subtract_2[1]
+                stop_subtract_2[2] = temp_2[2] + stop_subtract_2[2]
             actions_l.append(actions[0])
             if values is not None:
                 values_l.append(values[0])
@@ -738,47 +772,33 @@ class EvalUtil:
         if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx < optimal_stop_prevent_attacker_idx:
             early_stopping = True
 
+        stops_remaining = 4
+        agent_costs = 0
         agent_service_reward = 0
-        if agent_final_stop_idx != -1:
-            agent_service_reward = (agent_final_stop_idx-1)*env_config.defender_service_reward
-        else:
-            agent_service_reward = (episode_length-1)*env_config.defender_service_reward
-
-        agent_service_reward = 0
-        stops_remaining=env_config.maximum_number_of_defender_stop_actions
-        for i in range(1, episode_length+1):
-            if i in stopping_indexes:
-                stops_remaining +-1
+        agent_caught_reward = 0
+        agent_intrusion_reward = 0
+        num_service_steps = 0
+        for i in range(episode_length-1):
+            if stops_remaining > 0 \
+                    and stopping_indexes[env_config.maximum_number_of_defender_stop_actions-stops_remaining] != -1 \
+                    and i == (stopping_indexes[env_config.maximum_number_of_defender_stop_actions-stops_remaining]):
+                stops_remaining -= 1
+                agent_costs += env_config.multistop_costs[stops_remaining]
+                if stops_remaining == env_config.attacker_prevented_stops_remaining and (i+1) > intrusion_time:
+                    agent_caught_reward += env_config.defender_caught_attacker_reward
             else:
-                agent_service_reward += env_config.defender_service_reward/\
-                                        (math.pow(2,
-                                                  env_config.maximum_number_of_defender_stop_actions-stops_remaining))
+                if stops_remaining > 0:
+                    agent_service_reward += env_config.defender_service_reward/(math.pow(2, env_config.maximum_number_of_defender_stop_actions-stops_remaining))
+                    num_service_steps += 1
+                    if stops_remaining > env_config.attacker_prevented_stops_remaining and (i+1) > intrusion_time:
+                        agent_intrusion_reward += env_config.defender_intrusion_reward
 
-        agent_intrusion_loss = 0
-        if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx > optimal_stop_prevent_attacker_idx:
-            agent_intrusion_loss = (max(0, agent_stop_prevent_attacker_idx - intrusion_time+1 -
-                                        (env_config.maximum_number_of_defender_stop_actions -
-                                         env_config.attacker_prevented_stops_remaining))) \
-                                   *env_config.defender_intrusion_reward
-        elif agent_stop_prevent_attacker_idx == -1:
-            agent_intrusion_loss = (max(0, episode_length-1 - intrusion_time+1)) \
-                                   * env_config.defender_intrusion_reward
-
-        agent_attacker_caught_reward = 0
-        if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx > intrusion_time:
-            agent_attacker_caught_reward = env_config.defender_caught_attacker_reward
-            caught_attacker = True
-            uncaught_intrusion_steps = max(0, agent_stop_prevent_attacker_idx - intrusion_time+1)
-
-
-        r = agent_costs + agent_service_reward + agent_intrusion_loss + agent_attacker_caught_reward
+        r = agent_costs + agent_service_reward + agent_caught_reward + agent_intrusion_reward
 
         succ_intrusion = agent_stop_prevent_attacker_idx == -1
-        # print("stopping_indexes:{}, optimal_stopping_indexes:{}, r:{}, intrusion_time:{}, agent_costs:{}, "
-        #       "agent_service_reward:{}, agent_intrusion_loss:{}, agent_attacker_caught_reward:{},"
-        #       "optimal_stop_prevent_attacker_idx:{}, episode length:{}".format(
-        #     stopping_indexes, optimal_stopping_indexes, r, intrusion_time, agent_costs, agent_service_reward,
-        #     agent_intrusion_loss, agent_attacker_caught_reward, optimal_final_stop_idx, episode_length))
+
+        uncaught_intrusion_steps = max(0, agent_stop_prevent_attacker_idx - intrusion_time)
+        #print(f"uuit:{uncaught_intrusion_steps}, intrusion time:{intrusion_time}, stop time:{agent_stop_prevent_attacker_idx}")
 
         # if stopping_indexes < optimal_stopping_indexes:
         #     r = env_config.defender_service_reward * (stopping_indexes - 1)

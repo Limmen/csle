@@ -268,6 +268,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         self.num_episodes_total += 1
                         rollout_data_dto.attacker_episode_rewards.append(episode_reward_attacker[i])
                         rollout_data_dto.defender_episode_rewards.append(episode_reward_defender[i])
+                        rollout_data_dto.episode_steps.append(infos[i][constants.INFO_DICT.EPISODE_LENGTH])
                         rollout_data_dto.episode_steps.append(episode_step[i])
                         rollout_data_dto.episode_flags.append(infos[i][constants.INFO_DICT.FLAGS])
                         rollout_data_dto.episode_caught.append(infos[i][constants.INFO_DICT.CAUGHT_ATTACKER])
