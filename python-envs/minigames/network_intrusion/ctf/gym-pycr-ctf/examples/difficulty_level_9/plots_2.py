@@ -139,6 +139,7 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
         map(lambda df: util.running_average_list(df["step_baseline_uncaught_intrusion_steps"].values[0:max_len],
                                                  running_avg),
             ppo_dfs_novice_attacker))
+
     train_step_baseline_uncaught_intrusion_steps_means_novice_attacker = np.mean(
         tuple(train_step_baseline_uncaught_intrusion_steps_data_novice_attacker), axis=0)
     train_step_baseline_uncaught_intrusion_steps_stds_novice_attacker = np.std(
