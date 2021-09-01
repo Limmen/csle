@@ -54,8 +54,10 @@ class DefenderStoppingSimulator:
             if s_prime.defender_obs_state.stops_remaining == 0:
                 done = True
         else:
-            if s_prime.defender_obs_state.stops_remaining == 0:
+            if s_prime.defender_obs_state.stops_remaining <= env_config.attacker_prevented_stops_remaining:
                 s_prime.defender_obs_state.stopped = True
+
+            if s_prime.defender_obs_state.stops_remaining == 0:
                 done = True
 
         # if env_config.attacker_prevented_stops_remaining > s_prime.defender_obs_state.stops_remaining:

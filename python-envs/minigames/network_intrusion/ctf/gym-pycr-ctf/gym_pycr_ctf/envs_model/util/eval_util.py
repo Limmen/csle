@@ -211,50 +211,50 @@ class EvalUtil:
             optimal_stops_remaining =env.env_config.attacker_prevented_stops_remaining
             rewards.append(reward)
             snort_severe_r.append(snort_severe_baseline_r)
-            snort_severe_stop_1.append(int(snort_severe_baseline_s_indexes[0]))
-            snort_severe_stop_2.append(int(snort_severe_baseline_s_indexes[1]))
-            snort_severe_stop_3.append(int(snort_severe_baseline_s_indexes[2]))
-            snort_severe_stop_4.append(int(snort_severe_baseline_s_indexes[3]))
+            snort_severe_stop_1.append(int(snort_severe_baseline_s_indexes[0])+1)
+            snort_severe_stop_2.append(int(snort_severe_baseline_s_indexes[1])+1)
+            snort_severe_stop_3.append(int(snort_severe_baseline_s_indexes[2])+1)
+            snort_severe_stop_4.append(int(snort_severe_baseline_s_indexes[3])+1)
             snort_severe_stops_remaining_l.append(snort_severe_baseline_stops_remaining)
             snort_severe_steps_l.append(snort_severe_baseline_step)
             snort_severe_ca.append(snort_severe_baseline_ca)
             snort_severe_es.append(snort_severe_baseline_es)
             snort_severe_uit.append(snort_severe_baseline_uit)
             snort_warning_r.append(snort_warning_baseline_r)
-            snort_warning_stop_1.append(int(snort_warning_baseline_s_indexes[0]))
-            snort_warning_stop_2.append(int(snort_warning_baseline_s_indexes[1]))
-            snort_warning_stop_3.append(int(snort_warning_baseline_s_indexes[2]))
-            snort_warning_stop_4.append(int(snort_warning_baseline_s_indexes[3]))
+            snort_warning_stop_1.append(int(snort_warning_baseline_s_indexes[0])+1)
+            snort_warning_stop_2.append(int(snort_warning_baseline_s_indexes[1])+1)
+            snort_warning_stop_3.append(int(snort_warning_baseline_s_indexes[2])+1)
+            snort_warning_stop_4.append(int(snort_warning_baseline_s_indexes[3])+1)
             snort_warning_stops_remaining_l.append(snort_warning_baseline_stops_remaining)
             snort_warning_steps_l.append(snort_warning_baseline_step)
             snort_warning_ca.append(snort_warning_baseline_ca)
             snort_warning_es.append(snort_warning_baseline_es)
             snort_warning_uit.append(snort_warning_baseline_uit)
             snort_critical_r.append(snort_critical_baseline_r)
-            snort_critical_stop_1.append(int(snort_critical_baseline_s_indexes[0]))
-            snort_critical_stop_2.append(int(snort_critical_baseline_s_indexes[1]))
-            snort_critical_stop_3.append(int(snort_critical_baseline_s_indexes[2]))
-            snort_critical_stop_4.append(int(snort_critical_baseline_s_indexes[3]))
+            snort_critical_stop_1.append(int(snort_critical_baseline_s_indexes[0])+1)
+            snort_critical_stop_2.append(int(snort_critical_baseline_s_indexes[1])+1)
+            snort_critical_stop_3.append(int(snort_critical_baseline_s_indexes[2])+1)
+            snort_critical_stop_4.append(int(snort_critical_baseline_s_indexes[3])+1)
             snort_critical_steps_l.append(snort_critical_baseline_step)
             snort_critical_stops_remaining_l.append(snort_critical_baseline_stops_remaining)
             snort_critical_ca.append(snort_critical_baseline_ca)
             snort_critical_es.append(snort_critical_baseline_es)
             snort_critical_uit.append(snort_critical_baseline_uit)
             var_log_r.append(var_log_baseline_r)
-            var_log_stop_1.append(int(var_log_baseline_s_indexes[0]))
-            var_log_stop_2.append(int(var_log_baseline_s_indexes[1]))
-            var_log_stop_3.append(int(var_log_baseline_s_indexes[2]))
-            var_log_stop_4.append(int(var_log_baseline_s_indexes[3]))
+            var_log_stop_1.append(int(var_log_baseline_s_indexes[0])+1)
+            var_log_stop_2.append(int(var_log_baseline_s_indexes[1])+1)
+            var_log_stop_3.append(int(var_log_baseline_s_indexes[2])+1)
+            var_log_stop_4.append(int(var_log_baseline_s_indexes[3])+1)
             var_log_steps_l.append(var_log_baseline_step)
             var_log_stops_remaining_l.append(var_log_baseline_stops_remaining)
             var_log_ca.append(var_log_baseline_ca)
             var_log_es.append(var_log_baseline_es)
             var_log_uit.append(var_log_baseline_uit)
             step_r.append(step_baseline_r)
-            step_stop_1.append(int(step_baseline_indexes[0]))
-            step_stop_2.append(int(step_baseline_indexes[1]))
-            step_stop_3.append(int(step_baseline_indexes[2]))
-            step_stop_4.append(int(step_baseline_indexes[3]))
+            step_stop_1.append(int(step_baseline_indexes[0])+1)
+            step_stop_2.append(int(step_baseline_indexes[1])+1)
+            step_stop_3.append(int(step_baseline_indexes[2])+1)
+            step_stop_4.append(int(step_baseline_indexes[3])+1)
             step_stops_remaining_l.append(step_baseline_stops_remaining)
             step_steps_l.append(step_baseline_step)
             step_ca.append(step_baseline_ca)
@@ -266,14 +266,14 @@ class EvalUtil:
             else:
                 optimal_steps.append(len(obs))
             optimal_stopping_times.append(optimal_stopping_time)
-            model_stopping_times_1.append(stopping_indexes[0])
-            model_stopping_times_2.append(stopping_indexes[1])
-            model_stopping_times_3.append(stopping_indexes[2])
-            model_stopping_times_4.append(stopping_indexes[3])
-            optimal_stop_1.append(optimal_stopping_indexes[0])
-            optimal_stop_2.append(optimal_stopping_indexes[1])
-            optimal_stop_3.append(optimal_stopping_indexes[2])
-            optimal_stop_4.append(optimal_stopping_indexes[3])
+            model_stopping_times_1.append(stopping_indexes[0]+1)
+            model_stopping_times_2.append(stopping_indexes[1]+1)
+            model_stopping_times_3.append(stopping_indexes[2]+1)
+            model_stopping_times_4.append(stopping_indexes[3]+1)
+            optimal_stop_1.append(optimal_stopping_indexes[0]+1)
+            optimal_stop_2.append(optimal_stopping_indexes[1]+1)
+            optimal_stop_3.append(optimal_stopping_indexes[2]+1)
+            optimal_stop_4.append(optimal_stopping_indexes[3]+1)
             optimal_stops_remaining_l.append(optimal_stops_remaining)
             intrusion_start_obs_1.append(obs[optimal_stopping_time])
             intrusion_start_obs_2.append(obs_intrusion[0])
@@ -769,9 +769,6 @@ class EvalUtil:
             if i == env_config.attacker_prevented_stops_remaining:
                 break
 
-        if agent_stop_prevent_attacker_idx != -1 and agent_stop_prevent_attacker_idx < optimal_stop_prevent_attacker_idx:
-            early_stopping = True
-
         stops_remaining = 4
         agent_costs = 0
         agent_service_reward = 0
@@ -784,8 +781,17 @@ class EvalUtil:
                     and i == (stopping_indexes[env_config.maximum_number_of_defender_stop_actions-stops_remaining]):
                 stops_remaining -= 1
                 agent_costs += env_config.multistop_costs[stops_remaining]
-                if stops_remaining == env_config.attacker_prevented_stops_remaining and (i+1) > intrusion_time:
-                    agent_caught_reward += env_config.defender_caught_attacker_reward
+                if stops_remaining == env_config.attacker_prevented_stops_remaining:
+                    if (i+1) > intrusion_time:
+                        agent_caught_reward += env_config.defender_caught_attacker_reward
+                        caught_attacker =  True
+                        if early_stopping:
+                            print("setting CA to true despite ES, stops remaining:{}, prevented stops:{}".format(
+                                stops_remaining, env_config.attacker_prevented_stops_remaining))
+                    else:
+                        early_stopping = True
+                        if caught_attacker:
+                            print("setting ES to true despite caught A, stops remaining: {}, prevented stops: {}".format(stops_remaining, env_config.attacker_prevented_stops_remaining))
             else:
                 if stops_remaining > 0:
                     agent_service_reward += env_config.defender_service_reward/(math.pow(2, env_config.maximum_number_of_defender_stop_actions-stops_remaining))
@@ -796,6 +802,13 @@ class EvalUtil:
         r = agent_costs + agent_service_reward + agent_caught_reward + agent_intrusion_reward
 
         succ_intrusion = agent_stop_prevent_attacker_idx == -1
+        # print("stopping_indexes:{}, optimal_stopping_indexes:{}, r:{}, intrusion_time:{}, agent_costs:{}, "
+        #       "agent_service_reward:{}, agent_intrusion_loss:{}, agent_attacker_caught_reward:{},"
+        #       "optimal_stop_prevent_attacker_idx:{}, episode length:{}, successful_intrusion:{}, num_service_steps:{}, "
+        #       "early_stopping:{}, caught:{}".format(
+        #     stopping_indexes, optimal_stopping_indexes, r, intrusion_time, agent_costs, agent_service_reward,
+        #     agent_intrusion_reward, agent_caught_reward, optimal_final_stop_idx, episode_length, succ_intrusion,
+        #     num_service_steps, early_stopping, caught_attacker))
 
         uncaught_intrusion_steps = max(0, agent_stop_prevent_attacker_idx - intrusion_time)
         #print(f"uuit:{uncaught_intrusion_steps}, intrusion time:{intrusion_time}, stop time:{agent_stop_prevent_attacker_idx}")

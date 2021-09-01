@@ -3083,7 +3083,7 @@ def plot_train(
 
 
 if __name__ == '__main__':
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_novice_31_aug/data/"
+    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_novice_1_sep/data/"
     avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
     avg_train_rewards_stds_novice_attacker, \
     avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker, \
@@ -3370,7 +3370,7 @@ if __name__ == '__main__':
 
     # Experienced
 
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_experienced_31_aug/data/"
+    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_experienced_1_sep/data/"
     avg_train_rewards_data_experienced_attacker, avg_train_rewards_means_experienced_attacker, \
     avg_train_rewards_stds_experienced_attacker, \
     avg_train_steps_data_experienced_attacker, avg_train_steps_means_experienced_attacker, \

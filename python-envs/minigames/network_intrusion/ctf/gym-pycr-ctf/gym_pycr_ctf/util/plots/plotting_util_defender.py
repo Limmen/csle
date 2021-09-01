@@ -4454,7 +4454,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[0][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].set_xticks([])
-    ax[0][3].set_ylim(-0.1, 1)
+    ax[0][3].set_ylim(-0.1, 1.1)
     ax[0][3].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -4893,7 +4893,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[1][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][3].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[1][3].set_ylim(-0.1, 1)
+    ax[1][3].set_ylim(-0.1, 1.1)
     ax[1][3].set_xlim(0, (len(
         avg_rewards_means_simulation_experienced_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -5348,7 +5348,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ylab.set_size(fontsize)
     ax[2][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][3].set_ylim(-0.1, 1)
+    ax[2][3].set_ylim(-0.1, 1.1)
     ax[2][3].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -6321,29 +6321,29 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][4].plot(
         np.array(
             list(range(len(avg_stops_remaining_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_emulation_novice_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ emulation",
+        avg_stops_remaining_means_emulation_novice_attacker[::sample_step], label=r"$\pi_{\theta}$ emulation",
         marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][4].fill_between(
         np.array(
             list(range(len(avg_stops_remaining_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_novice_attacker[::sample_step] + 1 - avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_emulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        avg_stops_remaining_means_emulation_novice_attacker[::sample_step] + 1 + avg_stops_remaining_stds_emulation_novice_attacker[::sample_step],
+        avg_stops_remaining_means_emulation_novice_attacker[::sample_step] + avg_stops_remaining_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[0][4].plot(
         np.array(
             list(range(len(avg_stops_remaining_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_simulation_novice_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ simulation",
+        avg_stops_remaining_means_simulation_novice_attacker[::sample_step], label=r"$\pi_{\theta}$ simulation",
         marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][4].fill_between(
         np.array(
             list(range(len(avg_stops_remaining_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_novice_attacker[::sample_step] + 1 - avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_simulation_novice_attacker[::sample_step] - avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        avg_stops_remaining_means_simulation_novice_attacker[::sample_step] + 1 + avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
+        avg_stops_remaining_means_simulation_novice_attacker[::sample_step] + avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[0][4].plot(np.array(list(
@@ -6635,16 +6635,16 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(
                 len(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ emulation",
+        avg_stops_remaining_means_emulation_experienced_attacker[::sample_step], label=r"$\pi_{\theta}$ emulation",
         marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[1][4].fill_between(
         np.array(
             list(range(
                 len(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] + 1 - avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] + 1 + avg_stops_remaining_stds_emulation_experienced_attacker[
+        avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] + avg_stops_remaining_stds_emulation_experienced_attacker[
                                                                          ::sample_step],
         alpha=0.35, color="#599ad3")
 
@@ -6652,16 +6652,16 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(
                 len(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ simulation",
+        avg_stops_remaining_means_simulation_experienced_attacker[::sample_step], label=r"$\pi_{\theta}$ simulation",
         marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[1][4].fill_between(
         np.array(
             list(range(
                 len(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] + 1 - avg_stops_remaining_stds_simulation_experienced_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] - avg_stops_remaining_stds_simulation_experienced_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] + 1 + avg_stops_remaining_stds_simulation_experienced_attacker[
+        avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] + avg_stops_remaining_stds_simulation_experienced_attacker[
                                                                           ::sample_step],
         alpha=0.35, color="r")
 
@@ -6947,7 +6947,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_emulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_emulation_expert_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ emulation",
+        avg_stops_remaining_means_emulation_expert_attacker[::sample_step], label=r"$\pi_{\theta}$ emulation",
         marker="s", ls='-', color="#599ad3",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[2][4].fill_between(
@@ -6955,9 +6955,9 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_emulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_expert_attacker[::sample_step] + 1 - avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_emulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step]))))),
-        avg_stops_remaining_means_emulation_expert_attacker[::sample_step] + 1 + avg_stops_remaining_stds_emulation_expert_attacker[::sample_step],
+        avg_stops_remaining_means_emulation_expert_attacker[::sample_step] + avg_stops_remaining_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[2][4].plot(
@@ -6965,7 +6965,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_simulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        avg_stops_remaining_means_simulation_expert_attacker[::sample_step] + 1, label=r"$\pi_{\theta}$ simulation",
+        avg_stops_remaining_means_simulation_expert_attacker[::sample_step], label=r"$\pi_{\theta}$ simulation",
         marker="o", ls='-', color="r",
         markevery=markevery, markersize=markersize, lw=lw)
     ax[2][4].fill_between(
@@ -6973,9 +6973,9 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_simulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_expert_attacker[::sample_step] + 1 - avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
+        np.maximum(avg_stops_remaining_means_simulation_expert_attacker[::sample_step] - avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
-        avg_stops_remaining_means_simulation_expert_attacker[::sample_step] + 1 + avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
+        avg_stops_remaining_means_simulation_expert_attacker[::sample_step] + avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[2][4].plot(np.array(list(
