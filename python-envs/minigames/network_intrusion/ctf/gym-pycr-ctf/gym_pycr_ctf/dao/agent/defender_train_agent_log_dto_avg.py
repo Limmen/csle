@@ -1398,6 +1398,8 @@ class DefenderTrainAgentLogDTOAvg:
             self.result.eval_2_caught_frac.append(self.eval_2_episode_caught_frac)
             self.result.eval_2_early_stopping_frac.append(self.eval_2_episode_early_stopped_frac)
             self.result.eval_2_intrusion_frac.append(self.eval_2_episode_successful_intrusion_frac)
+            print(f"early stopped:{self.result.eval_2_early_stopping_frac}, "
+                  f"intrusion:{self.result.eval_2_intrusion_frac}, caught:{self.result.eval_2_caught_frac}")
             self.result.attacker_action_costs.append(self.avg_episode_costs)
             self.result.attacker_action_costs_norm.append(self.avg_episode_costs_norm)
             self.result.attacker_action_alerts.append(self.avg_episode_alerts)

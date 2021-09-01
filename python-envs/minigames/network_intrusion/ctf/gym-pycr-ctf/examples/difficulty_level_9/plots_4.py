@@ -2535,9 +2535,6 @@ def plot_train(
     suffix = "gensim"
     ylim_rew = (-300, 170)
     max_iter = 400
-    print(train_snort_severe_baseline_rewards_data_novice_attacker[0:max_iter])
-    print(train_snort_severe_baseline_rewards_data_experienced_attacker[0:max_iter])
-    print(train_snort_severe_baseline_rewards_data_expert_attacker[0:max_iter])
 
 
     plotting_util_defender.plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(

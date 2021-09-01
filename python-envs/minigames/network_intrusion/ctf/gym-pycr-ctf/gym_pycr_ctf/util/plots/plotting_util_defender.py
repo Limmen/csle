@@ -6147,7 +6147,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].set_xticks([])
-    ax[0][0].set_ylim(1, 25)
+    ax[0][0].set_ylim(0.5, 25)
     ax[0][0].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][0].set_title(r"First stop", fontsize=fontsize)
@@ -6195,7 +6195,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][1].set_xticks([])
-    ax[0][1].set_ylim(1, 25)
+    ax[0][1].set_ylim(0.5, 25)
     ax[0][1].set_xlim(0, (len(
         avg_second_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][1].set_title(r"Second stop", fontsize=fontsize)
@@ -6250,7 +6250,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][2].set_xticks([])
-    ax[0][2].set_ylim(1, 25)
+    ax[0][2].set_ylim(0.5, 25)
     ax[0][2].set_xlim(0, (len(
         avg_third_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][2].set_title(r"Third stop", fontsize=fontsize)
@@ -6313,7 +6313,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].set_xticks([])
-    ax[0][3].set_ylim(1, 25)
+    ax[0][3].set_ylim(0.5, 25)
     ax[0][3].set_xlim(0, (len(
         avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][3].set_title(r"Fourth stop", fontsize=fontsize)
@@ -6374,7 +6374,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][4].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[0][4].set_ylim(-0.5, 4)
+    ax[0][4].set_ylim(-0.5, 4.5)
     ax[0][4].set_xlim(0, (len(
         avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][4].set_title(r"Stops remaining at $T_{\emptyset}$", fontsize=fontsize)
@@ -6432,7 +6432,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].set_xticks([])
-    ax[1][0].set_ylim(1, 25)
+    ax[1][0].set_ylim(0.5, 25)
     ax[1][0].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][0].set_title(r"Reward per episode", fontsize=fontsize)
@@ -6492,7 +6492,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][1].set_xticks([])
-    ax[1][1].set_ylim(1, 25)
+    ax[1][1].set_ylim(0.5, 25)
     ax[1][1].set_xlim(0, (len(
         avg_second_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][1].set_title(r"Episode length (steps)", fontsize=fontsize)
@@ -6555,7 +6555,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].set_xticks([])
-    ax[1][2].set_ylim(1, 25)
+    ax[1][2].set_ylim(0.5, 25)
     ax[1][2].set_xlim(0, (len(
         avg_third_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][2].set_title(r"$\mathbb{P}[\text{intrusion interrupted}]$", fontsize=fontsize)
@@ -6626,7 +6626,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][3].set_xticks([])
-    ax[1][3].set_ylim(1, 25)
+    ax[1][3].set_ylim(0.5, 25)
     ax[1][3].set_xlim(0, (len(
         avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -6748,7 +6748,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][0].set_ylim(1, 25)
+    ax[2][0].set_ylim(0.5, 25)
     ax[2][0].set_xlim(0, (len(avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][0].set_title(r"Reward per episode", fontsize=fontsize)
 
@@ -6810,7 +6810,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][1].set_ylim(1, 25)
+    ax[2][1].set_ylim(0.5, 25)
     ax[2][1].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][1].set_title(r"Episode length (steps)", fontsize=fontsize)
@@ -6871,7 +6871,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][2].set_ylim(1, 25)
+    ax[2][2].set_ylim(0.5, 25)
     ax[2][2].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][2].set_title(r"$\mathbb{P}[\text{intrusion interrupted}]$", fontsize=fontsize)
@@ -6937,7 +6937,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][3].set_ylim(1, 25)
+    ax[2][3].set_ylim(0.5, 25)
     ax[2][3].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
