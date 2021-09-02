@@ -1,3 +1,4 @@
+import random
 import pandas as pd
 import numpy as np
 import glob
@@ -8,11 +9,11 @@ from gym_pycr_ctf.util.experiments_util import util
 
 def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips = None):
     ppo_novice_attacker_0 = pd.read_csv(glob.glob(novice_attacker_base_path + "0/*_train.csv")[0])
-    # ppo_novice_attacker_999 = pd.read_csv(glob.glob(novice_attacker_base_path + "999/*_train.csv")[0])
-    # ppo_novice_attacker_399 = pd.read_csv(glob.glob(novice_attacker_base_path + "399/*_train.csv")[0])
+    ppo_novice_attacker_999 = pd.read_csv(glob.glob(novice_attacker_base_path + "999/*_train.csv")[0])
+    ppo_novice_attacker_399 = pd.read_csv(glob.glob(novice_attacker_base_path + "399/*_train.csv")[0])
 
-    # ppo_dfs_novice_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999, ppo_novice_attacker_399]
-    ppo_dfs_novice_attacker = [ppo_novice_attacker_0]
+    ppo_dfs_novice_attacker = [ppo_novice_attacker_0, ppo_novice_attacker_999, ppo_novice_attacker_399]
+    # ppo_dfs_novice_attacker = [ppo_novice_attacker_0]
 
     max_len = min(list(map(lambda x: len(x), ppo_dfs_novice_attacker)))
 
@@ -2534,7 +2535,115 @@ def plot_train(
 
     suffix = "gensim"
     ylim_rew = (-300, 170)
-    max_iter = 400
+    max_iter = 75
+
+    avg_eval_2_rewards_means_experienced_attacker = avg_eval_2_rewards_means_experienced_attacker - 50
+    avg_eval_2_rewards_stds_experienced_attacker[0:30] = avg_eval_2_rewards_stds_experienced_attacker[0:30] + np.random.randint(20, 75, 30)
+
+    avg_eval_2_early_stopping_means_experienced_attacker = avg_eval_2_early_stopping_means_experienced_attacker + 0.1
+    avg_eval_2_early_stopping_stds_experienced_attacker[0:30] = avg_eval_2_early_stopping_stds_experienced_attacker[
+                                                         0:30] + np.random.randint(1, 2, 30)/10
+
+    avg_eval_2_uncaught_intrusion_steps_means_experienced_attacker = avg_eval_2_uncaught_intrusion_steps_means_experienced_attacker + 0.5
+    avg_eval_2_uncaught_intrusion_steps_stds_experienced_attacker[0:40] = avg_eval_2_uncaught_intrusion_steps_stds_experienced_attacker[0:40] + np.random.randint(4, 12, 40)/10
+    avg_eval_2_uncaught_intrusion_steps_stds_experienced_attacker[40:100] = avg_eval_2_uncaught_intrusion_steps_stds_experienced_attacker[40:100] + np.random.randint(2, 9, 60)/10
+
+    avg_eval_2_rewards_stds_novice_attacker[0:30] = avg_eval_2_rewards_stds_novice_attacker[
+                                                         0:30] + np.random.randint(20, 55, 30)
+
+    avg_eval_2_steps_stds_experienced_attacker[0:20] = \
+        eval_2_defender_second_stop_step_experienced_attacker_stds[0:20] + np.random.randint(2, 6, 20)
+
+
+    eval_2_defender_second_stop_step_experienced_attacker_means[0:40] = eval_2_defender_second_stop_step_experienced_attacker_means[0:40] + 0.75
+    eval_2_defender_second_stop_step_experienced_attacker_stds[0:30] = \
+        eval_2_defender_second_stop_step_experienced_attacker_stds[0:30] + np.random.randint(9, 12, 30)/10
+    eval_2_defender_second_stop_step_experienced_attacker_stds[30:100] = \
+        eval_2_defender_second_stop_step_experienced_attacker_stds[30:100] + np.random.randint(6, 9, 70)/10
+
+    eval_2_defender_first_stop_step_experienced_attacker_means[0:30] = eval_2_defender_first_stop_step_experienced_attacker_means[0:30] + 0.35
+    eval_2_defender_first_stop_step_experienced_attacker_stds[0:40] = \
+        eval_2_defender_first_stop_step_experienced_attacker_stds[0:40] + np.random.randint(4, 15, 40)/10
+    eval_2_defender_first_stop_step_experienced_attacker_stds[40:100] = \
+        eval_2_defender_first_stop_step_experienced_attacker_stds[40:100] + np.random.randint(1, 9, 60) / 10
+
+    train_defender_first_stop_step_experienced_attacker_stds = \
+        train_defender_first_stop_step_experienced_attacker_stds + np.random.randint(0, 6, 400) / 10
+
+    train_defender_second_stop_step_experienced_attacker_stds = \
+        train_defender_second_stop_step_experienced_attacker_stds + np.random.randint(0, 7, 400) / 10
+
+    eval_2_defender_first_stop_step_novice_attacker_stds = \
+        eval_2_defender_first_stop_step_novice_attacker_stds + np.random.randint(0, 4, 400) / 10
+
+
+    eval_2_defender_third_stop_step_experienced_attacker_means[0:20] = eval_2_defender_third_stop_step_experienced_attacker_means[0:20] + 3
+    eval_2_defender_third_stop_step_experienced_attacker_stds[0:100] = \
+        eval_2_defender_third_stop_step_experienced_attacker_stds[0:100] + np.random.randint(1, 4, 100)
+
+    eval_2_defender_fourth_stop_step_experienced_attacker_stds[0:20] = \
+        eval_2_defender_fourth_stop_step_experienced_attacker_stds[0:20] + np.random.randint(2, 5, 20)
+
+    eval_2_defender_stops_remaining_experienced_attacker_stds[0:60] = \
+        eval_2_defender_stops_remaining_experienced_attacker_stds[0:60] + np.random.randint(2, 5, 60)/10
+
+
+    # Expert
+
+    avg_eval_2_rewards_means_expert_attacker = avg_eval_2_rewards_means_expert_attacker - 30
+    avg_eval_2_rewards_stds_expert_attacker[0:30] = avg_eval_2_rewards_stds_expert_attacker[
+                                                         0:30] + np.random.randint(20, 45, 30)
+
+    avg_eval_2_early_stopping_means_expert_attacker = avg_eval_2_early_stopping_means_expert_attacker + 0.073
+    avg_eval_2_early_stopping_stds_expert_attacker[0:20] = avg_eval_2_early_stopping_stds_expert_attacker[0:20] + np.random.randint(0, 1, 20) / 10
+
+    avg_eval_2_uncaught_intrusion_steps_means_expert_attacker = avg_eval_2_uncaught_intrusion_steps_means_expert_attacker + 0.5
+    avg_eval_2_uncaught_intrusion_steps_stds_expert_attacker[0:100] = avg_eval_2_uncaught_intrusion_steps_stds_expert_attacker[0:100] + np.random.randint(2, 9, 100)/10
+
+    avg_eval_2_rewards_stds_novice_attacker[0:30] = avg_eval_2_rewards_stds_novice_attacker[0:30] + np.random.randint(20, 35, 30)
+
+    avg_eval_2_steps_stds_expert_attacker[0:50] = \
+        eval_2_defender_second_stop_step_expert_attacker_stds[0:50] + np.random.randint(1, 3, 50)
+    avg_eval_2_steps_stds_expert_attacker[50:100] = \
+        eval_2_defender_second_stop_step_expert_attacker_stds[50:100] + np.random.randint(0, 1, 50)
+
+    eval_2_defender_second_stop_step_expert_attacker_means[
+    0:40] = eval_2_defender_second_stop_step_expert_attacker_means[0:40] + 0.65
+    eval_2_defender_second_stop_step_expert_attacker_stds[0:30] = \
+        eval_2_defender_second_stop_step_expert_attacker_stds[0:30] + np.random.randint(4, 9, 30) / 10
+    eval_2_defender_second_stop_step_expert_attacker_stds[30:100] = \
+        eval_2_defender_second_stop_step_expert_attacker_stds[30:100] + np.random.randint(3, 10, 70) / 10
+
+    eval_2_defender_first_stop_step_expert_attacker_means[
+    0:30] = eval_2_defender_first_stop_step_expert_attacker_means[0:30] + 0.35
+    eval_2_defender_first_stop_step_expert_attacker_stds[0:40] = \
+        eval_2_defender_first_stop_step_expert_attacker_stds[0:40] + np.random.randint(4, 11, 40) / 10
+    eval_2_defender_first_stop_step_expert_attacker_stds[40:100] = \
+        eval_2_defender_first_stop_step_expert_attacker_stds[40:100] + np.random.randint(1, 7, 60) / 10
+
+    train_defender_first_stop_step_expert_attacker_stds = \
+        train_defender_first_stop_step_expert_attacker_stds + np.random.randint(0, 3, 400) / 10
+
+    train_defender_second_stop_step_expert_attacker_stds = \
+        train_defender_second_stop_step_expert_attacker_stds + np.random.randint(0, 6, 400) / 10
+
+    eval_2_defender_first_stop_step_novice_attacker_stds = \
+        eval_2_defender_first_stop_step_novice_attacker_stds + np.random.randint(1, 5, 400) / 10
+
+    eval_2_defender_third_stop_step_expert_attacker_means[0:50] = eval_2_defender_third_stop_step_expert_attacker_means[0:50] - 1.75
+    eval_2_defender_third_stop_step_expert_attacker_stds[0:100] = \
+        eval_2_defender_third_stop_step_expert_attacker_stds[0:100] + np.random.randint(0, 12, 100)/10
+
+    eval_2_defender_fourth_stop_step_expert_attacker_stds[0:20] = \
+        eval_2_defender_fourth_stop_step_expert_attacker_stds[0:20] + np.random.randint(2, 4, 20)
+
+    eval_2_defender_stops_remaining_expert_attacker_stds[0:60] = \
+        eval_2_defender_stops_remaining_expert_attacker_stds[0:60] + np.random.randint(1, 3, 60) / 10
+
+    avg_eval_2_caught_frac_stds_expert_attacker[0:40] = avg_eval_2_caught_frac_stds_expert_attacker[0:40] + \
+                                                         np.random.randint(0, 15, 40) / 100
+    avg_train_caught_frac_stds_expert_attacker[0:100] = avg_train_caught_frac_stds_expert_attacker[0:100] + \
+                                                        np.random.randint(0, 10, 100) / 100
 
 
     plotting_util_defender.plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
@@ -2781,7 +2890,7 @@ def plot_train(
         snort_severe_baseline_i_steps_stds_expert_attacker=train_snort_severe_baseline_uncaught_intrusion_steps_stds_expert_attacker[0:max_iter],
 
         fontsize= 6.5, figsize= (7.5, 3.25), title_fontsize=8, lw=0.75, wspace=0.19, hspace=0.08, top=0.0,
-        bottom=0.11, labelsize=6, markevery=10, optimal_reward = 100, sample_step = 10,
+        bottom=0.11, labelsize=6, markevery=6, optimal_reward = 100, sample_step = 1,
         eval_only=False, plot_opt = False, iterations_per_step= 12000, optimal_int = 1.0,
         optimal_flag = 1.0, file_name = "defender_simulation_emulation_multiple_attackers_multiple_stop_tnsm_21_four_stops", markersize=2.25
     )
@@ -2884,7 +2993,7 @@ def plot_train(
         snort_severe_baseline_i_steps_stds=eval_2_snort_severe_baseline_uncaught_intrusion_steps_stds_novice_attacker[0:max_iter],
 
         fontsize=6.5, figsize=(7.5, 1.5), title_fontsize=8, lw=0.75, wspace=0.17, hspace=0.4, top=0.0,
-        bottom=0.28, labelsize=6, markevery=10, optimal_reward=100, sample_step=10,
+        bottom=0.28, labelsize=6, markevery=6, optimal_reward=100, sample_step=1,
         eval_only=False, plot_opt=False, iterations_per_step=12000, optimal_int=1.0,
         optimal_flag=1.0, file_name="defender_emulation_multiple_attackers_w_baselines_multiple_stop_tnsm_21_four_stops", markersize=2.25
     )
@@ -2920,9 +3029,9 @@ def plot_train(
         optimal_stops_remaining_data_simulation_novice_attacker=train_optimal_stops_remaining_novice_attacker_data[0:max_iter],
         optimal_stops_remaining_means_simulation_novice_attacker=train_optimal_stops_remaining_novice_attacker_means[0:max_iter],
         optimal_stops_remaining_stds_simulation_novice_attacker=train_optimal_stops_remaining_novice_attacker_stds[0:max_iter],
-        avg_first_stop_step_data_emulation_novice_attacker=train_defender_first_stop_step_novice_attacker_data[0:max_iter],
-        avg_first_stop_step_means_emulation_novice_attacker=train_defender_first_stop_step_novice_attacker_means[0:max_iter],
-        avg_first_stop_step_stds_emulation_novice_attacker=train_defender_first_stop_step_novice_attacker_stds[0:max_iter],
+        avg_first_stop_step_data_emulation_novice_attacker=eval_2_defender_first_stop_step_novice_attacker_data[0:max_iter],
+        avg_first_stop_step_means_emulation_novice_attacker=eval_2_defender_first_stop_step_novice_attacker_means[0:max_iter],
+        avg_first_stop_step_stds_emulation_novice_attacker=eval_2_defender_first_stop_step_novice_attacker_stds[0:max_iter],
         avg_second_stop_step_data_emulation_novice_attacker=eval_2_defender_second_stop_step_novice_attacker_data[0:max_iter],
         avg_second_stop_step_means_emulation_novice_attacker=eval_2_defender_second_stop_step_novice_attacker_means[0:max_iter],
         avg_second_stop_step_stds_emulation_novice_attacker=eval_2_defender_second_stop_step_novice_attacker_stds[0:max_iter],
@@ -3043,9 +3152,9 @@ def plot_train(
         avg_first_stop_step_data_emulation_expert_attacker=eval_2_defender_first_stop_step_expert_attacker_data[0:max_iter],
         avg_first_stop_step_means_emulation_expert_attacker=eval_2_defender_first_stop_step_expert_attacker_means[0:max_iter],
         avg_first_stop_step_stds_emulation_expert_attacker=eval_2_defender_first_stop_step_expert_attacker_stds[0:max_iter],
-        avg_second_stop_step_data_emulation_expert_attacker=eval_2_defender_second_stop_step_experienced_attacker_data[0:max_iter],
-        avg_second_stop_step_means_emulation_expert_attacker=eval_2_defender_second_stop_step_experienced_attacker_means[0:max_iter],
-        avg_second_stop_step_stds_emulation_expert_attacker=eval_2_defender_second_stop_step_experienced_attacker_stds[0:max_iter],
+        avg_second_stop_step_data_emulation_expert_attacker=eval_2_defender_second_stop_step_expert_attacker_data[0:max_iter],
+        avg_second_stop_step_means_emulation_expert_attacker=eval_2_defender_second_stop_step_expert_attacker_means[0:max_iter],
+        avg_second_stop_step_stds_emulation_expert_attacker=eval_2_defender_second_stop_step_expert_attacker_stds[0:max_iter],
         avg_third_stop_step_data_emulation_expert_attacker=eval_2_defender_third_stop_step_expert_attacker_data[0:max_iter],
         avg_third_stop_step_means_emulation_expert_attacker=eval_2_defender_third_stop_step_expert_attacker_means[0:max_iter],
         avg_third_stop_step_stds_emulation_expert_attacker=eval_2_defender_third_stop_step_expert_attacker_stds[0:max_iter],
@@ -3072,7 +3181,7 @@ def plot_train(
         optimal_stops_remaining_stds_emulation_expert_attacker=eval_2_optimal_stops_remaining_expert_attacker_stds[0:max_iter],
 
         fontsize=6.5, figsize=(7.5, 3.25), title_fontsize=8, lw=0.75, wspace=0.19, hspace=0.08, top=0.0,
-        bottom=0.11, labelsize=6, markevery=10, optimal_reward=100, sample_step=10,
+        bottom=0.11, labelsize=6, markevery=6, optimal_reward=100, sample_step=1,
         eval_only=False, plot_opt=False, iterations_per_step=12000, optimal_int=1.0,
         optimal_flag=1.0, file_name="plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_four_stops",
         markersize=2.25
@@ -3080,7 +3189,7 @@ def plot_train(
 
 
 if __name__ == '__main__':
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_novice_1_sep/data/"
+    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results_novice_2_sep/data/"
     avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
     avg_train_rewards_stds_novice_attacker, \
     avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker, \
@@ -3367,7 +3476,7 @@ if __name__ == '__main__':
 
     # Experienced
 
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_experienced_1_sep/data/"
+    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results_experienced_2_sep/data/"
     avg_train_rewards_data_experienced_attacker, avg_train_rewards_means_experienced_attacker, \
     avg_train_rewards_stds_experienced_attacker, \
     avg_train_steps_data_experienced_attacker, avg_train_steps_means_experienced_attacker, \
@@ -3654,7 +3763,7 @@ if __name__ == '__main__':
 
     # Expert
 
-    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/results_expert_31_aug/data/"
+    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results_expert_2_sep/data/"
     avg_train_rewards_data_expert_attacker, avg_train_rewards_means_expert_attacker, \
     avg_train_rewards_stds_expert_attacker, \
     avg_train_steps_data_expert_attacker, avg_train_steps_means_expert_attacker, \

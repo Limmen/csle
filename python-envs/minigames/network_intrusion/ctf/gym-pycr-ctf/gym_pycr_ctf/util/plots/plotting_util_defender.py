@@ -4527,7 +4527,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[0][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][4].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[0][4].set_ylim(0, 10)
+    ax[0][4].set_ylim(0, 8)
     ax[0][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
@@ -4909,7 +4909,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
         np.array(
             list(range(
                 len(avg_i_steps_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_i_steps_means_emulation_experienced_attacker[::sample_step] + 1 - avg_early_stopping_stds_emulation_experienced_attacker[::sample_step],
+        np.maximum(avg_i_steps_means_emulation_experienced_attacker[::sample_step] + 1 - avg_i_steps_stds_emulation_experienced_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         avg_i_steps_means_emulation_experienced_attacker[::sample_step] + 1 + avg_i_steps_stds_emulation_experienced_attacker[
                                                                          ::sample_step],
@@ -4979,7 +4979,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[1][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][4].set_xticks([])
-    ax[1][4].set_ylim(0, 20)
+    ax[1][4].set_ylim(0, 8)
     ax[1][4].set_xlim(0, (len(
         avg_rewards_means_simulation_experienced_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
@@ -5366,7 +5366,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
             list(range(
                 len(avg_i_steps_means_emulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_i_steps_means_emulation_expert_attacker[::sample_step] + 1 - avg_early_stopping_stds_emulation_expert_attacker[::sample_step],
+        np.maximum(avg_i_steps_means_emulation_expert_attacker[::sample_step] + 1 - avg_i_steps_stds_emulation_expert_attacker[::sample_step],
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_expert_attacker[::sample_step]))))),
         avg_i_steps_means_emulation_expert_attacker[::sample_step] + 1 + avg_i_steps_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
@@ -5403,7 +5403,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ylab.set_size(fontsize)
     ax[2][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][4].set_ylim(0, 20)
+    ax[2][4].set_ylim(0, 8)
     ax[2][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
@@ -6112,8 +6112,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][0].fill_between(
         np.array(list(range(len(avg_first_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_emulation_novice_attacker[::sample_step] - avg_first_stop_step_stds_emulation_novice_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_emulation_novice_attacker[::sample_step] + avg_first_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   optimal_first_stop_step_means_emulation_novice_attacker[::sample_step]),
+        avg_first_stop_step_means_emulation_novice_attacker[::sample_step] + avg_first_stop_step_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3", lw=lw)
 
     ax[0][0].plot(
@@ -6123,8 +6122,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][0].fill_between(
         np.array(list(range(len(avg_first_stop_step_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_simulation_novice_attacker[::sample_step] - avg_first_stop_step_stds_simulation_novice_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_simulation_novice_attacker[::sample_step] + avg_first_stop_step_stds_simulation_novice_attacker[::sample_step],
-            optimal_first_stop_step_means_emulation_novice_attacker[::sample_step]), alpha=0.35, color="r", lw=lw)
+        avg_first_stop_step_means_simulation_novice_attacker[::sample_step] + avg_first_stop_step_stds_simulation_novice_attacker[::sample_step]
+        , alpha=0.35, color="r", lw=lw)
 
     ax[0][0].plot(np.array(list(range(len(avg_first_stop_step_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
                optimal_first_stop_step_means_emulation_novice_attacker[::sample_step], label=r"Optimal $\pi^{*}$",
@@ -6147,10 +6146,10 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].set_xticks([])
-    ax[0][0].set_ylim(0.5, 25)
+    ax[0][0].set_ylim(0.5, 10)
     ax[0][0].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][0].set_title(r"First stop", fontsize=fontsize)
+    ax[0][0].set_title(r"Time of first stop $\tau_{l=4}$", fontsize=fontsize)
 
     ax[0][1].plot(np.array(list(range(len(avg_second_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
                avg_second_stop_step_means_emulation_novice_attacker[::sample_step], label=r"$\mathbb{P}[detected]$ $\pi_{\theta}$ emulation",
@@ -6158,8 +6157,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
                markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(
         np.array(list(range(len(avg_second_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_emulation_novice_attacker[::sample_step] - avg_second_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_second_stop_step_means_emulation_novice_attacker[::sample_step] - avg_second_stop_step_stds_emulation_novice_attacker[::sample_step],
         avg_second_stop_step_means_emulation_novice_attacker[::sample_step] + avg_second_stop_step_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
@@ -6169,8 +6167,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
                markevery=markevery, markersize=markersize, lw=lw)
     ax[0][1].fill_between(
         np.array(list(range(len(avg_second_stop_step_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_simulation_novice_attacker[::sample_step] - avg_second_stop_step_stds_simulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_second_stop_step_means_simulation_novice_attacker[::sample_step] - avg_second_stop_step_stds_simulation_novice_attacker[::sample_step],
         avg_second_stop_step_means_simulation_novice_attacker[::sample_step] + avg_second_stop_step_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
@@ -6195,10 +6192,10 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][1].set_xticks([])
-    ax[0][1].set_ylim(0.5, 25)
+    ax[0][1].set_ylim(0.5, 12)
     ax[0][1].set_xlim(0, (len(
         avg_second_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][1].set_title(r"Second stop", fontsize=fontsize)
+    ax[0][1].set_title(r"Time of second stop $\tau_{l=3}$", fontsize=fontsize)
 
     ax[0][2].plot(
         np.array(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
@@ -6207,10 +6204,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_emulation_novice_attacker[::sample_step] - avg_third_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_emulation_novice_attacker[::sample_step] + avg_third_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_third_stop_step_means_emulation_novice_attacker[::sample_step] - avg_third_stop_step_stds_emulation_novice_attacker[::sample_step],
+        avg_third_stop_step_means_emulation_novice_attacker[::sample_step] + avg_third_stop_step_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[0][2].plot(
@@ -6220,10 +6215,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(avg_third_stop_step_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_simulation_novice_attacker[::sample_step] - avg_third_stop_step_stds_simulation_novice_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_simulation_novice_attacker[::sample_step] + avg_third_stop_step_stds_simulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_third_stop_step_means_simulation_novice_attacker[::sample_step] - avg_third_stop_step_stds_simulation_novice_attacker[::sample_step],
+        avg_third_stop_step_means_simulation_novice_attacker[::sample_step] + avg_third_stop_step_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[0][2].plot(np.array(list(range(
@@ -6253,7 +6246,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][2].set_ylim(0.5, 25)
     ax[0][2].set_xlim(0, (len(
         avg_third_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][2].set_title(r"Third stop", fontsize=fontsize)
+    ax[0][2].set_title(r"Time of third stop $\tau_{l=2}$", fontsize=fontsize)
 
     ax[0][2].plot(np.array(list(range(len(avg_second_stop_step_means_simulation_novice_attacker)))) * iterations_per_step,
                [1.00] * len(avg_second_stop_step_means_simulation_novice_attacker), label=r"Upper bound $\pi^{*}$",
@@ -6268,10 +6261,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][3].fill_between(
         np.array(
             list(range(len(avg_fourth_stop_step_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_emulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_emulation_novice_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_emulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
+        avg_fourth_stop_step_means_emulation_novice_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[0][3].plot(
@@ -6283,10 +6274,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][3].fill_between(
         np.array(
             list(range(len(avg_fourth_stop_step_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_simulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_novice_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_simulation_novice_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_simulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_novice_attacker[::sample_step],
+        avg_fourth_stop_step_means_simulation_novice_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[0][3].plot(np.array(list(range(
@@ -6316,7 +6305,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][3].set_ylim(0.5, 25)
     ax[0][3].set_xlim(0, (len(
         avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][3].set_title(r"Fourth stop", fontsize=fontsize)
+    ax[0][3].set_title(r"Time of fourth stop $\tau_{l=1}$", fontsize=fontsize)
 
     ax[0][4].plot(
         np.array(
@@ -6327,8 +6316,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][4].fill_between(
         np.array(
             list(range(len(avg_stops_remaining_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_novice_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_stops_remaining_means_emulation_novice_attacker[::sample_step] - avg_stops_remaining_stds_emulation_novice_attacker[::sample_step],
         avg_stops_remaining_means_emulation_novice_attacker[::sample_step] + avg_stops_remaining_stds_emulation_novice_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
@@ -6341,8 +6329,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][4].fill_between(
         np.array(
             list(range(len(avg_stops_remaining_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_novice_attacker[::sample_step] - avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_novice_attacker[::sample_step]))))),
+        avg_stops_remaining_means_simulation_novice_attacker[::sample_step] - avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
         avg_stops_remaining_means_simulation_novice_attacker[::sample_step] + avg_stops_remaining_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
@@ -6374,7 +6361,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[0][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][4].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[0][4].set_ylim(-0.5, 4.5)
+    ax[0][4].set_ylim(-0.5, 3.5)
     ax[0][4].set_xlim(0, (len(
         avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][4].set_title(r"Stops remaining at $T_{\emptyset}$", fontsize=fontsize)
@@ -6390,8 +6377,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(range(
             len(avg_first_stop_step_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_first_stop_step_stds_emulation_experienced_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_first_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   optimal_first_stop_step_means_emulation_experienced_attacker[::sample_step] + optimal_first_stop_step_stds_emulation_experienced_attacker[::sample_step]),
+        avg_first_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_first_stop_step_stds_emulation_experienced_attacker[::sample_step],
         alpha=0.35, color="#599ad3", lw=lw)
 
     ax[1][0].plot(
@@ -6403,8 +6389,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(range(
             len(avg_first_stop_step_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_first_stop_step_stds_simulation_experienced_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_first_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   optimal_first_stop_step_means_emulation_experienced_attacker[::sample_step] + optimal_first_stop_step_stds_emulation_experienced_attacker[::sample_step]),
+        avg_first_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_first_stop_step_stds_simulation_experienced_attacker[::sample_step],
         alpha=0.35, color="r", lw=lw)
 
     ax[1][0].plot(np.array(list(
@@ -6432,7 +6417,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].set_xticks([])
-    ax[1][0].set_ylim(0.5, 25)
+    ax[1][0].set_ylim(0.5, 10)
     ax[1][0].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][0].set_title(r"Reward per episode", fontsize=fontsize)
@@ -6446,8 +6431,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][1].fill_between(
         np.array(list(
             range(len(avg_second_stop_step_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_second_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_second_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_second_stop_step_stds_emulation_experienced_attacker[::sample_step],
         avg_second_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_second_stop_step_stds_emulation_experienced_attacker[
                                                                    ::sample_step],
         alpha=0.35, color="#599ad3")
@@ -6461,8 +6445,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][1].fill_between(
         np.array(list(
             range(len(avg_second_stop_step_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_second_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_second_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_second_stop_step_stds_simulation_experienced_attacker[::sample_step],
         avg_second_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_second_stop_step_stds_simulation_experienced_attacker[
                                                                     ::sample_step],
         alpha=0.35, color="r")
@@ -6475,8 +6458,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][1].fill_between(
         np.array(list(
             range(len(avg_second_stop_step_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(optimal_second_stop_step_means_emulation_experienced_attacker[::sample_step] - optimal_second_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        optimal_second_stop_step_means_emulation_experienced_attacker[::sample_step] - optimal_second_stop_step_stds_emulation_experienced_attacker[::sample_step],
         optimal_second_stop_step_means_emulation_experienced_attacker[::sample_step] + optimal_second_stop_step_stds_emulation_experienced_attacker[
                                                                        ::sample_step],
         alpha=0.35, color="black")
@@ -6492,7 +6474,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][1].set_xticks([])
-    ax[1][1].set_ylim(0.5, 25)
+    ax[1][1].set_ylim(0.5, 12)
     ax[1][1].set_xlim(0, (len(
         avg_second_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][1].set_title(r"Episode length (steps)", fontsize=fontsize)
@@ -6506,10 +6488,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][2].fill_between(
         np.array(list(range(
             len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_third_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_third_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_third_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_third_stop_step_stds_emulation_experienced_attacker[::sample_step],
+        avg_third_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_third_stop_step_stds_emulation_experienced_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[1][2].plot(
@@ -6521,10 +6501,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][2].fill_between(
         np.array(list(range(
             len(avg_third_stop_step_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_third_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_third_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_third_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_third_stop_step_stds_simulation_experienced_attacker[::sample_step],
+        avg_third_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_third_stop_step_stds_simulation_experienced_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[1][2].plot(
@@ -6537,9 +6515,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(
             range(len(avg_third_stop_step_means_simulation_experienced_attacker[
                       ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(optimal_third_stop_step_means_emulation_experienced_attacker[
+        optimal_third_stop_step_means_emulation_experienced_attacker[
                    ::sample_step] - optimal_third_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0] * len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
         optimal_third_stop_step_means_emulation_experienced_attacker[
         ::sample_step] + optimal_third_stop_step_stds_emulation_experienced_attacker[
                          ::sample_step],
@@ -6555,7 +6532,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][2].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][2].set_xticks([])
-    ax[1][2].set_ylim(0.5, 25)
+    ax[1][2].set_ylim(0.5, 18)
     ax[1][2].set_xlim(0, (len(
         avg_third_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][2].set_title(r"$\mathbb{P}[\text{intrusion interrupted}]$", fontsize=fontsize)
@@ -6575,10 +6552,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(len(avg_fourth_stop_step_means_emulation_experienced_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_emulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
+        avg_fourth_stop_step_means_emulation_experienced_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[1][3].plot(
@@ -6592,10 +6567,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(len(avg_fourth_stop_step_means_simulation_experienced_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_simulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_experienced_attacker[::sample_step],
+        avg_fourth_stop_step_means_simulation_experienced_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_experienced_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[1][3].plot(np.array(list(
@@ -6642,8 +6615,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(
                 len(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] - avg_stops_remaining_stds_emulation_experienced_attacker[::sample_step],
         avg_stops_remaining_means_emulation_experienced_attacker[::sample_step] + avg_stops_remaining_stds_emulation_experienced_attacker[
                                                                          ::sample_step],
         alpha=0.35, color="#599ad3")
@@ -6659,8 +6631,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(
                 len(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] - avg_stops_remaining_stds_simulation_experienced_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_experienced_attacker[::sample_step]))))),
+        avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] - avg_stops_remaining_stds_simulation_experienced_attacker[::sample_step],
         avg_stops_remaining_means_simulation_experienced_attacker[::sample_step] + avg_stops_remaining_stds_simulation_experienced_attacker[
                                                                           ::sample_step],
         alpha=0.35, color="r")
@@ -6688,7 +6659,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][4].set_xticks([])
-    ax[1][4].set_ylim(-0.5, 4)
+    ax[1][4].set_ylim(-0.5, 2.5)
     ax[1][4].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
@@ -6703,8 +6674,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(range(
             len(avg_first_stop_step_means_emulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_emulation_expert_attacker[::sample_step] - avg_first_stop_step_stds_emulation_expert_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_emulation_expert_attacker[::sample_step] + avg_first_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   optimal_first_stop_step_means_emulation_expert_attacker[::sample_step] + optimal_first_stop_step_stds_emulation_expert_attacker[::sample_step]),
+        avg_first_stop_step_means_emulation_expert_attacker[::sample_step] + avg_first_stop_step_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3", lw=lw)
 
     ax[2][0].plot(
@@ -6718,8 +6688,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             len(avg_first_stop_step_means_simulation_expert_attacker[
                 ::sample_step])))) * sample_step * iterations_per_step,
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step] - avg_first_stop_step_stds_simulation_expert_attacker[::sample_step],
-        np.minimum(avg_first_stop_step_means_simulation_expert_attacker[::sample_step] + avg_first_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   optimal_first_stop_step_means_emulation_expert_attacker[::sample_step] + optimal_first_stop_step_stds_emulation_expert_attacker[::sample_step]),
+        avg_first_stop_step_means_simulation_expert_attacker[::sample_step] + avg_first_stop_step_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r", lw=lw)
 
     ax[2][0].plot(np.array(list(
@@ -6748,7 +6717,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][0].set_ylim(0.5, 25)
+    ax[2][0].set_ylim(0.5, 10)
     ax[2][0].set_xlim(0, (len(avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][0].set_title(r"Reward per episode", fontsize=fontsize)
 
@@ -6763,8 +6732,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(
             range(len(
                 avg_second_stop_step_means_emulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_emulation_expert_attacker[::sample_step] - avg_second_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_second_stop_step_means_emulation_expert_attacker[::sample_step] - avg_second_stop_step_stds_emulation_expert_attacker[::sample_step],
         avg_second_stop_step_means_emulation_expert_attacker[::sample_step] + avg_second_stop_step_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
@@ -6779,8 +6747,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(
             range(len(
                 avg_second_stop_step_means_simulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_second_stop_step_means_simulation_expert_attacker[::sample_step] - avg_second_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_second_stop_step_means_simulation_expert_attacker[::sample_step] - avg_second_stop_step_stds_simulation_expert_attacker[::sample_step],
         avg_second_stop_step_means_simulation_expert_attacker[::sample_step] + avg_second_stop_step_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
 
@@ -6794,8 +6761,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(
             range(len(
                 avg_second_stop_step_means_simulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(optimal_second_stop_step_means_emulation_expert_attacker[::sample_step] - optimal_second_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        optimal_second_stop_step_means_emulation_expert_attacker[::sample_step] - optimal_second_stop_step_stds_emulation_expert_attacker[::sample_step],
         optimal_second_stop_step_means_emulation_expert_attacker[::sample_step] + optimal_second_stop_step_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="black")
 
@@ -6810,7 +6776,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][1].set_ylim(0.5, 25)
+    ax[2][1].set_ylim(0.5, 12)
     ax[2][1].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][1].set_title(r"Episode length (steps)", fontsize=fontsize)
@@ -6822,10 +6788,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         markevery=markevery, markersize=markersize, lw=lw)
     ax[2][2].fill_between(
         np.array(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_emulation_expert_attacker[::sample_step] - avg_third_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_emulation_expert_attacker[::sample_step] + avg_third_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_third_stop_step_means_emulation_expert_attacker[::sample_step] - avg_third_stop_step_stds_emulation_expert_attacker[::sample_step],
+        avg_third_stop_step_means_emulation_expert_attacker[::sample_step] + avg_third_stop_step_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[2][2].plot(
@@ -6839,10 +6803,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(list(range(
             len(avg_third_stop_step_means_simulation_expert_attacker[
                 ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_third_stop_step_means_simulation_expert_attacker[::sample_step] - avg_third_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
-        np.minimum(avg_third_stop_step_means_simulation_expert_attacker[::sample_step] + avg_third_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_third_stop_step_means_simulation_expert_attacker[::sample_step] - avg_third_stop_step_stds_simulation_expert_attacker[::sample_step],
+        avg_third_stop_step_means_simulation_expert_attacker[::sample_step] + avg_third_stop_step_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[2][2].plot(np.array(list(
@@ -6891,10 +6853,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(len(avg_fourth_stop_step_means_emulation_expert_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_emulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_emulation_expert_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_emulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
+        avg_fourth_stop_step_means_emulation_expert_attacker[::sample_step] + avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
     ax[2][3].plot(
@@ -6908,10 +6868,8 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
         np.array(
             list(range(len(avg_fourth_stop_step_means_simulation_expert_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   [0.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
-        np.minimum(avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_simulation_expert_attacker[::sample_step],
+        avg_fourth_stop_step_means_simulation_expert_attacker[::sample_step] + avg_fourth_stop_step_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
 
     ax[2][3].plot(np.array(list(
@@ -6955,8 +6913,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_emulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_emulation_expert_attacker[::sample_step] - avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_fourth_stop_step_stds_emulation_expert_attacker[::sample_step]))))),
+        avg_stops_remaining_means_emulation_expert_attacker[::sample_step] - avg_stops_remaining_stds_emulation_expert_attacker[::sample_step],
         avg_stops_remaining_means_emulation_expert_attacker[::sample_step] + avg_stops_remaining_stds_emulation_expert_attacker[::sample_step],
         alpha=0.35, color="#599ad3")
 
@@ -6973,8 +6930,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
             list(range(
                 len(avg_stops_remaining_means_simulation_expert_attacker[
                     ::sample_step])))) * sample_step * iterations_per_step,
-        np.maximum(avg_stops_remaining_means_simulation_expert_attacker[::sample_step] - avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
-                   [1.0]*len(list(range(len(avg_third_stop_step_means_emulation_expert_attacker[::sample_step]))))),
+        avg_stops_remaining_means_simulation_expert_attacker[::sample_step] - avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
         avg_stops_remaining_means_simulation_expert_attacker[::sample_step] + avg_stops_remaining_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
 
@@ -7000,7 +6956,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ylab.set_size(fontsize)
     ax[2][4].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][4].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][4].set_ylim(-0.5, 4)
+    ax[2][4].set_ylim(-0.5, 2.5)
     ax[2][4].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
