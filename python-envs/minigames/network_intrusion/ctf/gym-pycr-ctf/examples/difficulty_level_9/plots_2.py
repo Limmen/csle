@@ -1117,7 +1117,7 @@ def plot_train(
 
 
 if __name__ == '__main__':
-    base_path_1 = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/results_backup11/data/"
+    base_path_1 = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/20_aug/results_novice_attacker_128_neurons_2_hidden_layers_12k_batch/data/"
     avg_train_rewards_data_novice_attacker, avg_train_rewards_means_novice_attacker, \
     avg_train_rewards_stds_novice_attacker, \
     avg_train_steps_data_novice_attacker, avg_train_steps_means_novice_attacker, \

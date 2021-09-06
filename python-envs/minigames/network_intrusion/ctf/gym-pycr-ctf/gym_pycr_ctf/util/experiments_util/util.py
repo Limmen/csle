@@ -504,6 +504,7 @@ def running_average_list(x, N):
         y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
     else:
         y = np.zeros_like(x)
+    y = add(y)
     return y
 
 

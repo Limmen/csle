@@ -1727,7 +1727,7 @@ def plot_defender_simulation_emulation_tnsm_21(
 
     ax[2].plot(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[2].fill_between(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -1995,6 +1995,19 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
         avg_i_steps_data_emulation_expert_attacker, avg_i_steps_means_emulation_expert_attacker,
         avg_i_steps_stds_emulation_expert_attacker,
 
+        steps_baseline_rewards_data, steps_baseline_rewards_means, steps_baseline_rewards_stds,
+        steps_baseline_steps_data, steps_baseline_steps_means, steps_baseline_steps_stds,
+        steps_baseline_early_stopping_data, steps_baseline_early_stopping_means, steps_baseline_early_stopping_stds,
+        steps_baseline_caught_data, steps_baseline_caught_means, steps_baseline_caught_stds,
+        steps_baseline_i_steps_data, steps_baseline_i_steps_means, steps_baseline_i_steps_stds,
+
+        snort_severe_baseline_rewards_data, snort_severe_baseline_rewards_means, snort_severe_baseline_rewards_stds,
+        snort_severe_baseline_early_stopping_data, snort_severe_baseline_early_stopping_means,
+        snort_severe_baseline_early_stopping_stds,
+        snort_severe_baseline_caught_data, snort_severe_baseline_caught_means, snort_severe_baseline_caught_stds,
+        snort_severe_baseline_steps_data, snort_severe_baseline_steps_means, snort_severe_baseline_steps_stds,
+        snort_severe_baseline_i_steps_data, snort_severe_baseline_i_steps_means, snort_severe_baseline_i_steps_stds,
+
         fontsize : int = 6.5, figsize: Tuple[int,int] =  (3.75, 3.4),
         title_fontsize=8, lw=0.5, wspace=0.02, hspace=0.3, top=0.9,
         labelsize=6, markevery=10, optimal_reward = 95, sample_step = 1,
@@ -2039,6 +2052,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
         np.minimum(avg_rewards_means_simulation_novice_attacker[::sample_step] + avg_rewards_stds_simulation_novice_attacker[::sample_step],
             optimal_rewards_means_emulation_novice_attacker[::sample_step]), alpha=0.35, color="r", lw=lw)
 
+    ax[0][0].plot(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step] - steps_baseline_rewards_stds[::sample_step],
+        np.minimum(steps_baseline_rewards_means[::sample_step] + steps_baseline_rewards_stds[::sample_step],
+                   optimal_rewards_means_emulation_novice_attacker[::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][0].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][0].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step] - snort_severe_baseline_rewards_stds[::sample_step],
+        np.minimum(
+            snort_severe_baseline_rewards_means[::sample_step] + snort_severe_baseline_rewards_stds[::sample_step],
+            optimal_rewards_means_emulation_novice_attacker[::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     ax[0][0].plot(np.array(list(range(len(avg_rewards_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
                optimal_rewards_means_emulation_novice_attacker[::sample_step], label=r"Optimal $\pi^{*}$",
                color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
@@ -2060,7 +2098,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[0][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][0].set_xticks([])
-    ax[0][0].set_ylim(-30, 170)
+    ax[0][0].set_ylim(-120, 170)
     ax[0][0].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][0].set_title(r"Reward per episode", fontsize=fontsize)
@@ -2086,6 +2124,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         avg_steps_means_simulation_novice_attacker[::sample_step] + avg_steps_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
+
+    ax[0][1].plot(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_steps_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_steps_means[::sample_step] - steps_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_steps_means[::sample_step] + steps_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a")
+
+    ax[0][1].plot(np.array(
+        list(range(len(snort_severe_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+               snort_severe_baseline_steps_means[::sample_step], label=r"$a=1$ baseline",
+               marker="h", ls='-', color="#E7298A",
+               markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][1].fill_between(
+        np.array(list(
+            range(len(avg_steps_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_steps_means[::sample_step] - snort_severe_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_steps_means[::sample_step] + snort_severe_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A")
 
     ax[0][1].plot(
         np.array(list(range(len(avg_steps_means_simulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
@@ -2138,6 +2201,32 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[0][2].plot(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_caught_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_caught_means[::sample_step] - steps_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(steps_baseline_caught_means[::sample_step] + steps_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][2].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta y)\geq 1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][2].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_caught_means[::sample_step] - snort_severe_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(snort_severe_baseline_caught_means[::sample_step] + snort_severe_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     #ax[0][2].grid('on')
     #ax[0][2].set_ylabel(r"Reward", fontsize=labelsize)
     #ax[0][2].set_xlabel(r"\# policy updates", fontsize=labelsize)
@@ -2188,6 +2277,40 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[0][3].plot(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_early_stopping_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            steps_baseline_early_stopping_means[::sample_step] - steps_baseline_early_stopping_stds[::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            steps_baseline_early_stopping_means[::sample_step] + steps_baseline_early_stopping_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][3].plot(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_early_stopping_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][3].fill_between(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_early_stopping_means[::sample_step] - snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            snort_severe_baseline_early_stopping_means[::sample_step] + snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     ax[0][3].plot(np.array(list(range(len(avg_rewards_means_simulation_novice_attacker)))) * iterations_per_step,
                [0.0] * len(avg_rewards_means_simulation_novice_attacker), label=r"Optimal $\pi^{*}$",
                color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
@@ -2203,7 +2326,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[0][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[0][3].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[0][3].set_ylim(-0.1, 1)
+    ax[0][3].set_ylim(-0.1, 1.1)
     ax[0][3].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     ax[0][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -2236,6 +2359,30 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
         avg_i_steps_means_simulation_novice_attacker[::sample_step] + 1 + avg_i_steps_stds_simulation_novice_attacker[::sample_step],
         alpha=0.35, color="r")
 
+    ax[0][4].plot(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_i_steps_means[::sample_step] + 1, label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_i_steps_means[::sample_step] + 1 - steps_baseline_i_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_i_steps_means[::sample_step] + 1 + steps_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[0][4].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_i_steps_means[::sample_step] + 1, label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[0][4].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_i_steps_means[::sample_step] + 1 - snort_severe_baseline_i_steps_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_i_steps_means[::sample_step] + 1 + snort_severe_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
 
     ax[0][4].plot(np.array(list(range(len(avg_rewards_means_simulation_novice_attacker)))) * iterations_per_step,
                [1.0] * len(avg_rewards_means_simulation_novice_attacker), label=r"Optimal $\pi^{*}$",
@@ -2285,6 +2432,33 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    optimal_rewards_means_emulation_experienced_attacker[::sample_step] + optimal_rewards_stds_emulation_experienced_attacker[::sample_step]),
         alpha=0.35, color="r", lw=lw)
 
+    ax[1][0].plot(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step] - steps_baseline_rewards_stds[::sample_step],
+        np.minimum(steps_baseline_rewards_means[::sample_step] + steps_baseline_rewards_stds[::sample_step],
+                   optimal_rewards_means_emulation_novice_attacker[
+                   ::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][0].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][0].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step] - snort_severe_baseline_rewards_stds[::sample_step],
+        np.minimum(
+            snort_severe_baseline_rewards_means[::sample_step] + snort_severe_baseline_rewards_stds[::sample_step],
+            optimal_rewards_means_emulation_novice_attacker[
+            ::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     ax[1][0].plot(np.array(list(
         range(len(avg_rewards_means_simulation_experienced_attacker[::sample_step])))) * sample_step * iterations_per_step,
                   optimal_rewards_means_emulation_experienced_attacker[::sample_step], label=r"Optimal $\pi^{*}$",
@@ -2310,7 +2484,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[1][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][0].set_xticks([])
-    ax[1][0].set_ylim(-30, 170)
+    ax[1][0].set_ylim(-120, 170)
     ax[1][0].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][0].set_title(r"Reward per episode", fontsize=fontsize)
@@ -2344,6 +2518,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
         avg_steps_means_simulation_experienced_attacker[::sample_step] + avg_steps_stds_simulation_experienced_attacker[
                                                                     ::sample_step],
         alpha=0.35, color="r")
+
+    ax[1][1].plot(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_steps_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_steps_means[::sample_step] - steps_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_steps_means[::sample_step] + steps_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a")
+
+    ax[1][1].plot(np.array(
+        list(range(len(snort_severe_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+                  snort_severe_baseline_steps_means[::sample_step], label=r"$a=1$ baseline",
+                  marker="h", ls='-', color="#E7298A",
+                  markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][1].fill_between(
+        np.array(list(
+            range(len(avg_steps_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_steps_means[::sample_step] - snort_severe_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_steps_means[::sample_step] + snort_severe_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A")
 
     ax[1][1].plot(
         np.array(list(
@@ -2404,6 +2603,32 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[1][2].plot(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_caught_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_caught_means[::sample_step] - steps_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(steps_baseline_caught_means[::sample_step] + steps_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][2].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][2].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_caught_means[::sample_step] - snort_severe_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(snort_severe_baseline_caught_means[::sample_step] + snort_severe_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     #ax[1][2].grid('on')
     # ax[1][2].set_ylabel(r"Reward", fontsize=labelsize)
     #ax[1][2].set_xlabel(r"\# policy updates", fontsize=labelsize)
@@ -2458,6 +2683,40 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[1][3].plot(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_early_stopping_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            steps_baseline_early_stopping_means[::sample_step] - steps_baseline_early_stopping_stds[::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            steps_baseline_early_stopping_means[::sample_step] + steps_baseline_early_stopping_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][3].plot(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_early_stopping_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][3].fill_between(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_early_stopping_means[::sample_step] - snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            snort_severe_baseline_early_stopping_means[::sample_step] + snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     ax[1][3].plot(np.array(list(range(len(avg_rewards_means_simulation_experienced_attacker)))) * iterations_per_step,
                   [0.0] * len(avg_rewards_means_simulation_experienced_attacker), label=r"Optimal $\pi^{*}$",
                   color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
@@ -2473,7 +2732,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[1][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1][3].set_xticks([])
     # ax[2].set_ylim(-100, 110)
-    ax[1][3].set_ylim(-0.1, 1)
+    ax[1][3].set_ylim(-0.1, 1.1)
     ax[1][3].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[1][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -2511,6 +2770,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
         avg_i_steps_means_simulation_experienced_attacker[::sample_step] + 1 + avg_i_steps_stds_simulation_experienced_attacker[
                                                                           ::sample_step],
         alpha=0.35, color="r")
+
+    ax[1][4].plot(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_i_steps_means[::sample_step] + 1, label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_i_steps_means[::sample_step] + 1 - steps_baseline_i_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_i_steps_means[::sample_step] + 1 + steps_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[1][4].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_i_steps_means[::sample_step] + 1, label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[1][4].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_i_steps_means[::sample_step] + 1 - snort_severe_baseline_i_steps_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_i_steps_means[::sample_step] + 1 + snort_severe_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
 
     ax[1][4].plot(np.array(list(range(len(avg_rewards_means_simulation_experienced_attacker)))) * iterations_per_step,
                   [1.0] * len(avg_rewards_means_simulation_experienced_attacker), label=r"Optimal $\pi^{*}$",
@@ -2561,6 +2845,34 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    optimal_rewards_means_emulation_expert_attacker[::sample_step] + optimal_rewards_stds_emulation_expert_attacker[::sample_step]),
         alpha=0.35, color="r", lw=lw)
 
+    ax[2][0].plot(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][0].fill_between(
+        np.array(list(range(len(steps_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_rewards_means[::sample_step] - steps_baseline_rewards_stds[::sample_step],
+        np.minimum(steps_baseline_rewards_means[::sample_step] + steps_baseline_rewards_stds[::sample_step],
+                   optimal_rewards_means_emulation_novice_attacker[
+                   ::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][0].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][0].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_rewards_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_rewards_means[::sample_step] - snort_severe_baseline_rewards_stds[::sample_step],
+        np.minimum(
+            snort_severe_baseline_rewards_means[::sample_step] + snort_severe_baseline_rewards_stds[::sample_step],
+            optimal_rewards_means_emulation_novice_attacker[
+            ::sample_step] + optimal_rewards_stds_emulation_novice_attacker[::sample_step]),
+        alpha=0.35, color="#E7298A", lw=lw)
+
+
     ax[2][0].plot(np.array(list(
         range(len(
             avg_rewards_means_simulation_expert_attacker[::sample_step])))) * sample_step * iterations_per_step,
@@ -2587,7 +2899,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ylab.set_size(fontsize)
     ax[2][0].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
-    ax[2][0].set_ylim(-30, 170)
+    ax[2][0].set_ylim(-120, 170)
     ax[2][0].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][0].set_title(r"Reward per episode", fontsize=fontsize)
@@ -2623,6 +2935,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         avg_steps_means_simulation_expert_attacker[::sample_step] + avg_steps_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
+
+    ax[2][1].plot(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_steps_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a",
+        markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][1].fill_between(
+        np.array(list(range(len(steps_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_steps_means[::sample_step] - steps_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_steps_means[::sample_step] + steps_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a")
+
+    ax[2][1].plot(np.array(
+        list(range(len(snort_severe_baseline_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+                  snort_severe_baseline_steps_means[::sample_step], label=r"$a=1$ baseline",
+                  marker="h", ls='-', color="#E7298A",
+                  markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][1].fill_between(
+        np.array(list(
+            range(len(avg_steps_means_emulation_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_steps_means[::sample_step] - snort_severe_baseline_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_steps_means[::sample_step] + snort_severe_baseline_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A")
 
     ax[2][1].plot(
         np.array(list(
@@ -2684,6 +3021,32 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[2][2].plot(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_caught_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][2].fill_between(
+        np.array(list(range(len(steps_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_caught_means[::sample_step] - steps_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(steps_baseline_caught_means[::sample_step] + steps_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][2].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][2].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(snort_severe_baseline_caught_means[::sample_step] - snort_severe_baseline_caught_stds[::sample_step],
+                   [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(snort_severe_baseline_caught_means[::sample_step] + snort_severe_baseline_caught_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     #ax[2][2].grid('on')
     # ax[2][2].set_ylabel(r"Reward", fontsize=labelsize)
     ax[2][2].set_xlabel(r"\# training episodes", fontsize=labelsize)
@@ -2738,6 +3101,40 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         alpha=0.35, color="r")
 
+    ax[2][3].plot(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_early_stopping_means[::sample_step], label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][3].fill_between(
+        np.array(
+            list(range(len(steps_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            steps_baseline_early_stopping_means[::sample_step] - steps_baseline_early_stopping_stds[::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            steps_baseline_early_stopping_means[::sample_step] + steps_baseline_early_stopping_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][3].plot(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_early_stopping_means[::sample_step], label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][3].fill_between(
+        np.array(list(
+            range(len(snort_severe_baseline_early_stopping_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_early_stopping_means[::sample_step] - snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [0.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        np.minimum(
+            snort_severe_baseline_early_stopping_means[::sample_step] + snort_severe_baseline_early_stopping_stds[
+                                                                        ::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        alpha=0.35, color="#E7298A", lw=lw)
+
     ax[2][3].plot(np.array(list(range(len(avg_rewards_means_simulation_expert_attacker)))) * iterations_per_step,
                   [0.0] * len(avg_rewards_means_simulation_expert_attacker), label=r"Optimal $\pi^{*}$",
                   color="black", linestyle="dashed", markersize=markersize, dashes=(4, 2), lw=lw)
@@ -2753,7 +3150,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[2][3].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[2][3].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     # ax[2].set_ylim(-100, 110)
-    ax[2][3].set_ylim(-0.1, 1)
+    ax[2][3].set_ylim(-0.1, 1.1)
     ax[2][3].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
     #ax[2][3].set_title(r"$\mathbb{P}[\text{early stopping}]$", fontsize=fontsize)
@@ -2793,6 +3190,31 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
                    [1.0]*len(list(range(len(avg_caught_frac_means_emulation_novice_attacker[::sample_step]))))),
         avg_i_steps_means_simulation_expert_attacker[::sample_step] + 1 + avg_i_steps_stds_simulation_expert_attacker[::sample_step],
         alpha=0.35, color="r")
+
+    ax[2][4].plot(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        steps_baseline_i_steps_means[::sample_step] + 1, label=r"$t=6$ baseline",
+        marker="d", ls='-', color="#f9a65a", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][4].fill_between(
+        np.array(list(range(len(steps_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(steps_baseline_i_steps_means[::sample_step] + 1 - steps_baseline_i_steps_stds[::sample_step],
+                   [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        steps_baseline_i_steps_means[::sample_step] + 1 + steps_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#f9a65a", lw=lw)
+
+    ax[2][4].plot(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        snort_severe_baseline_i_steps_means[::sample_step] + 1, label=r"$a=1$ baseline",
+        marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
+    ax[2][4].fill_between(
+        np.array(
+            list(range(len(snort_severe_baseline_i_steps_means[::sample_step])))) * sample_step * iterations_per_step,
+        np.maximum(
+            snort_severe_baseline_i_steps_means[::sample_step] + 1 - snort_severe_baseline_i_steps_stds[::sample_step],
+            [1.0] * len(list(range(len(avg_steps_means_emulation_novice_attacker[::sample_step]))))),
+        snort_severe_baseline_i_steps_means[::sample_step] + 1 + snort_severe_baseline_i_steps_stds[::sample_step],
+        alpha=0.35, color="#E7298A", lw=lw)
 
     ax[2][4].plot(np.array(list(range(len(avg_rewards_means_simulation_expert_attacker)))) * iterations_per_step,
                   [1.0] * len(avg_rewards_means_simulation_expert_attacker), label=r"Optimal $\pi^{*}$",
@@ -3150,7 +3572,7 @@ def plot_defender_emulation_with_baselines_tnsm_21(
 
     ax[2].plot(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[2].fill_between(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -3617,7 +4039,7 @@ def plot_defender_simulation_emulation_multiple_stops_tnsm_21(
 
     ax[0][2].plot(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -4345,7 +4767,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[0][2].plot(
         np.array(
             list(range(len(snort_severe_baseline_caught_means_novice_attacker[::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means_novice_attacker[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means_novice_attacker[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[0][2].fill_between(
         np.array(
@@ -4770,7 +5192,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
         np.array(
             list(range(len(snort_severe_baseline_caught_means_experienced_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means_experienced_attacker[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means_experienced_attacker[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[1][2].fill_between(
         np.array(
@@ -5227,7 +5649,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
         np.array(
             list(range(len(snort_severe_baseline_caught_means_expert_attacker[
                            ::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means_expert_attacker[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means_expert_attacker[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[2][2].fill_between(
         np.array(
@@ -5743,7 +6165,7 @@ def plot_defender_emulation_with_baselines_tnsm_21_four_stops(
 
     ax[2].plot(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
-        snort_severe_baseline_caught_means[::sample_step], label=r"$(x+y)\geq 1$ baseline",
+        snort_severe_baseline_caught_means[::sample_step], label=r"$(\Delta x +\Delta)\geq 1$ baseline",
         marker="h", ls='-', color="#E7298A", markevery=markevery, markersize=markersize, lw=lw)
     ax[2].fill_between(
         np.array(list(range(len(snort_severe_baseline_caught_means[::sample_step])))) * sample_step * iterations_per_step,
