@@ -11,15 +11,23 @@ import matplotlib.ticker as tick
 
 def read_model():
     print("reading model")
-    path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/defender_dynamics_model.json"
+    path = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/defender_dynamics_model.json"
     defender_dynamics_model = plot_dynamics_model.read_model(path)
     print("model read")
+
+    # total_values = []
+    # for k,v in defender_dynamics_model.num_new_severe_alerts.items():
+    #     for k2,v2 in defender_dynamics_model.num_new_severe_alerts[k].items():
+    #         total_values = total_values + list(defender_dynamics_model.num_new_severe_alerts[k][k2].values())
+    #
+    # print(sum(total_values))
+
     #plot_dynamics_model.plot_all(defender_dynamics_model)
     # actions_conf = PyCrCTFLevel9Base.attacker_all_actions_conf(num_nodes=PyCrCTFLevel9Base.num_nodes(),
     #                                                            subnet_mask="test", hacker_ip="test")
     # plot_dynamics_model.plot_ids_infra_and_one_machine_2(defender_dynamics_model)
     taus: List[Trajectory] = Trajectory.load_trajectories(
-        trajectories_save_dir="/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/",
+        trajectories_save_dir="/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/",
         trajectories_file="taus.json")
 
     x_delta_no_int = []
@@ -174,12 +182,25 @@ def plot(x_delta_novice, y_delta_novice, z_delta_novice, x_delta_experienced, y_
     lw = 0.75
     wspace = 0.19
     hspace = 0.4
-    markevery = 1
+    markevery = 10
     labelsize = 6
-    sample_step = 5
+    sample_step = 1
     markersize = 2.25
     file_name = "dynamics_model_tnsm_21_x_y_z_attackers"
-    bottom = 0.09
+    bottom = 0.11
+
+    x_delta_novice.sort()
+    y_delta_novice.sort()
+    z_delta_novice.sort()
+    x_delta_experienced.sort()
+    y_delta_experienced.sort()
+    z_delta_experienced.sort()
+    x_delta_expert.sort()
+    y_delta_expert.sort()
+    z_delta_expert.sort()
+    x_delta_no_int.sort()
+    y_delta_no_int.sort()
+    z_delta_no_int.sort()
 
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
@@ -200,13 +221,13 @@ def plot(x_delta_novice, y_delta_novice, z_delta_novice, x_delta_experienced, y_
     alpha = 0.3
     bins = 50
     plot_range = (0, 600)
-    ax[0].hist(x_delta_novice, bins=bins, alpha=alpha, range=plot_range,
+    ax[0].hist(x_delta_novice[::sample_step], bins=bins, alpha=alpha, range=plot_range,
             label=r"vs \textsc{Novice}", stacked=False, log=True, color="#599ad3", density=True, edgecolor='black', ls="-.")
-    ax[0].hist(x_delta_experienced, bins=bins, alpha=alpha, range=plot_range,
+    ax[0].hist(x_delta_experienced[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Experienced}", stacked=False, log=True, color="r", density=True, edgecolor='black', ls="dotted")
-    ax[0].hist(x_delta_expert, bins=bins, alpha=alpha, range=plot_range,
+    ax[0].hist(x_delta_expert[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Expert}", stacked=False, log=True, color="#661D98", density=True, edgecolor='black', ls="dashed")
-    ax[0].hist(x_delta_no_int, bins=bins, alpha=alpha, range=plot_range,
+    ax[0].hist(x_delta_no_int[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"No intrusion", stacked=False, log=True, color="#f9a65a", density=True, edgecolor='black')
 
     ax[0].grid('on')
@@ -225,16 +246,16 @@ def plot(x_delta_novice, y_delta_novice, z_delta_novice, x_delta_experienced, y_
     alpha = 0.3
     bins = 50
     plot_range = (0, 300)
-    ax[1].hist(y_delta_novice, bins=bins, alpha=alpha, range=plot_range,
+    ax[1].hist(y_delta_novice[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Novice}", stacked=False, log=True, color="#599ad3", density=True, edgecolor='black',
                ls="-.")
-    ax[1].hist(y_delta_experienced, bins=bins, alpha=alpha, range=plot_range,
+    ax[1].hist(y_delta_experienced[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Experienced}", stacked=False, log=True, color="r", density=True, edgecolor='black',
                ls="dotted")
-    ax[1].hist(y_delta_expert, bins=bins, alpha=alpha, range=plot_range,
+    ax[1].hist(y_delta_expert[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Expert}", stacked=False, log=True, color="#661D98", density=True, edgecolor='black',
                ls="dashed")
-    ax[1].hist(y_delta_no_int, bins=bins, alpha=alpha, range=plot_range,
+    ax[1].hist(y_delta_no_int[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"No intrusion", stacked=False, log=True, color="#f9a65a", density=True, edgecolor='black')
 
     ax[1].grid('on')
@@ -248,20 +269,19 @@ def plot(x_delta_novice, y_delta_novice, z_delta_novice, x_delta_experienced, y_
     ax[1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1].set_xlim(0, 300)
     ax[1].set_title(r"\# Warning IDS Alerts $\Delta y$", fontsize=fontsize)
-
     alpha = 0.3
     bins = 50
     plot_range = (0, 100)
-    ax[2].hist(z_delta_novice, bins=bins, alpha=alpha, range=plot_range,
+    ax[2].hist(z_delta_novice[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Novice}", stacked=False, log=True, color="#599ad3", density=True, edgecolor='black',
                ls="-.")
-    ax[2].hist(z_delta_experienced, bins=bins, alpha=alpha, range=plot_range,
+    ax[2].hist(z_delta_experienced[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Experienced}", stacked=False, log=True, color="r", density=True, edgecolor='black',
                ls="dotted")
-    ax[2].hist(z_delta_expert, bins=bins, alpha=alpha, range=plot_range,
+    ax[2].hist(z_delta_expert[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"vs \textsc{Expert}", stacked=False, log=True, color="#661D98", density=True, edgecolor='black',
                ls="dashed")
-    ax[2].hist(z_delta_no_int, bins=bins, alpha=alpha, range=plot_range,
+    ax[2].hist(z_delta_no_int[::sample_step], bins=bins, alpha=alpha, range=plot_range,
                label=r"No intrusion", stacked=False, log=True, color="#f9a65a", density=True, edgecolor='black')
 
     ax[2].grid('on')
@@ -277,7 +297,7 @@ def plot(x_delta_novice, y_delta_novice, z_delta_novice, x_delta_experienced, y_
     ax[2].set_title(r"\# Login Attempts $\Delta z$", fontsize=fontsize)
 
     handles, labels = ax[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.53, 0.075),
+    fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.53, 0.07),
                ncol=4, fancybox=True, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65)
 
     fig.tight_layout()
