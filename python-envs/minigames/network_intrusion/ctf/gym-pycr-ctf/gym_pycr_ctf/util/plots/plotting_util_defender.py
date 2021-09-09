@@ -1877,7 +1877,7 @@ def plot_defender_simulation_emulation_tnsm_21(
     # ax[2].set_ylim(-100, 110)
     ax[4].set_ylim(0, 20)
     ax[4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
-    ax[4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     handles, labels = ax[2].get_legend_handles_labels()
@@ -2402,7 +2402,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[0][4].set_ylim(0, 5)
     ax[0][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[0][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     # Experienced
@@ -2814,7 +2814,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[1][4].set_ylim(0, 5)
     ax[1][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[1][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[1][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
     # Expert
     ax[2][0].plot(
@@ -3234,7 +3234,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers(
     ax[2][4].set_ylim(0, 5)
     ax[2][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[2][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[2][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     handles, labels = ax[0][2].get_legend_handles_labels()
@@ -3774,7 +3774,7 @@ def plot_defender_emulation_with_baselines_tnsm_21(
     ax[4].set_ylim(0, 5)
     ax[4].set_xlim(0, (len(
         avg_rewards_means_emulation_novice_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[4].set_title(r"Duration of intrusion", fontsize=fontsize)
     ax[4].xaxis.set_major_formatter(tick.FuncFormatter(reformat_large_tick_values))
 
 
@@ -4189,7 +4189,7 @@ def plot_defender_simulation_emulation_multiple_stops_tnsm_21(
     # ax[0][2].set_ylim(-100, 110)
     ax[0][4].set_ylim(0, 20)
     ax[0][4].set_xlim(0, len(avg_rewards_means_simulation[::sample_step]) * sample_step * iterations_per_step)
-    ax[0][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[0][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
     ax[1][0].plot(
         np.array(list(range(len(avg_first_stop_step_emulation_means[::sample_step])))) * sample_step * iterations_per_step,
@@ -4952,7 +4952,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[0][4].set_ylim(0, 8)
     ax[0][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[0][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[0][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     # Experienced
@@ -5404,7 +5404,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[1][4].set_ylim(0, 8)
     ax[1][4].set_xlim(0, (len(
         avg_rewards_means_simulation_experienced_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[1][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[1][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
     # Expert
     ax[2][0].plot(
@@ -5828,7 +5828,7 @@ def plot_defender_simulation_emulation_tnsm_21_multiple_attackers_four_stops(
     ax[2][4].set_ylim(0, 8)
     ax[2][4].set_xlim(0, (len(
         avg_rewards_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[2][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[2][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     handles, labels = ax[0][2].get_legend_handles_labels()
@@ -6368,7 +6368,7 @@ def plot_defender_emulation_with_baselines_tnsm_21_four_stops(
     ax[4].set_ylim(0, 5)
     ax[4].set_xlim(0, (len(
         avg_rewards_means_emulation_novice_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    ax[4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    ax[4].set_title(r"Duration of intrusion", fontsize=fontsize)
     ax[4].xaxis.set_major_formatter(tick.FuncFormatter(reformat_large_tick_values))
 
 
@@ -7084,7 +7084,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[1][4].set_ylim(-0.5, 2.5)
     ax[1][4].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[1][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[1][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
     # Expert
     ax[2][0].plot(
@@ -7381,7 +7381,7 @@ def plot_defender_simulation_emulation_steps_dist_tnsm_21_multiple_attackers_fou
     ax[2][4].set_ylim(-0.5, 2.5)
     ax[2][4].set_xlim(0, (len(
         avg_first_stop_step_means_simulation_expert_attacker[::sample_step]) - 1) * sample_step * iterations_per_step)
-    #ax[2][4].set_title(r"Uninterrupted intrusion $t$", fontsize=fontsize)
+    #ax[2][4].set_title(r"Duration of intrusion", fontsize=fontsize)
 
 
     handles, labels = ax[0][2].get_legend_handles_labels()
