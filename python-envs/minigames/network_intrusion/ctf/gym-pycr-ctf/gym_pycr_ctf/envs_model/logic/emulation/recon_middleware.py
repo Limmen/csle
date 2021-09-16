@@ -1,9 +1,9 @@
 from typing import Tuple
+from pycr_common.envs_model.logic.emulation.util.attacker.nmap_util import NmapUtil
+from pycr_common.envs_model.logic.emulation.util.attacker.nikto_util import NiktoUtil
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_pycr_ctf.envs_model.logic.emulation.util.attacker.nmap_util import NmapUtil
-from gym_pycr_ctf.envs_model.logic.emulation.util.attacker.nikto_util import NiktoUtil
 
 class ReconMiddleware:
     """

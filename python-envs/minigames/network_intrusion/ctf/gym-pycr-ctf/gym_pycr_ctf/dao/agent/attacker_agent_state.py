@@ -1,6 +1,6 @@
 from typing import Union
 import numpy as np
-from gym_pycr_ctf.dao.agent.agent_log import AgentLog
+from pycr_common.dao.agent.agent_log import AgentLog
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 

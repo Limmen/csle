@@ -64,7 +64,7 @@ your preference.
 import numpy as np
 import gym
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 
 # Specify configuration to connect to the emulation
 emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
@@ -107,7 +107,7 @@ You can run the environment in a mode of "manual control" as well:
 ```python
 import gym
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv, PyCRctfLevel1emulation1Env
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration for connecting to the emulation

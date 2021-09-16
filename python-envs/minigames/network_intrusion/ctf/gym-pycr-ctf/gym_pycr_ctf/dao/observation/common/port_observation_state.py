@@ -1,5 +1,5 @@
-from gym_pycr_ctf.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.dao.network.network_service import NetworkService
+from pycr_common.dao.network.transport_protocol import TransportProtocol
+from pycr_common.dao.network.network_service import NetworkService
 
 
 class PortObservationState:

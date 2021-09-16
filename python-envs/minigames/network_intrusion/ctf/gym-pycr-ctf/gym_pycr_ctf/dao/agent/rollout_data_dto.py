@@ -1,4 +1,4 @@
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
+from pycr_common.agents.config.agent_config import AgentConfig
 
 
 class RolloutDataDTO:

@@ -1,5 +1,5 @@
 from typing import Tuple
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
+from pycr_common.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.envs.derived_envs.level4.emulation.pycr_ctf_level4_emulation_env import PyCrCTFLevel4Base
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
@@ -8,6 +8,7 @@ from gym_pycr_ctf.util.plots import plotting_action_costs
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def read_model(model_path):
     #model_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model.json"
     #model_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/hello_world/defender_dynamics_model_server.json"
@@ -15,6 +16,7 @@ def read_model(model_path):
     defender_dynamics_model.read_model_path(model_path)
     defender_dynamics_model.normalize()
     return defender_dynamics_model
+
 
 def plot_all(defender_dynamics_model, num_colors : int = 75):
     action_cfg = PyCrCTFLevel4Base.attacker_all_actions_conf(num_nodes=10, subnet_mask="test", hacker_ip = "test")
@@ -34,6 +36,7 @@ def plot_all(defender_dynamics_model, num_colors : int = 75):
                                   nrows=len(total_row_x_labels), figsize=(3, 2.2), fontsize=3.2, labelsize=2.5,
                                   suptitle="Estimated Emulation Dynamics", ms=0.4, title_fontsize=4.5, lw=0.2,
                                   row_labels=row_labels, wspace=0.03, hspace=0.18, top=0.92, num_colors=num_colors)
+
 
 def plot_machines_dynamics(defender_dynamics_model, action_cfg):
     total_row_dists = []

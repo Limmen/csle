@@ -1,11 +1,12 @@
 from typing import Tuple
+from pycr_common.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.envs_model.logic.emulation.emulation_middleware import EmulationMiddleware
 from gym_pycr_ctf.envs_model.logic.simulation.simulator import Simulator
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+
 
 class TransitionOperator:
     """

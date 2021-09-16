@@ -1,4 +1,3 @@
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.util.plots import plot_dynamics_model
 
 def plot():

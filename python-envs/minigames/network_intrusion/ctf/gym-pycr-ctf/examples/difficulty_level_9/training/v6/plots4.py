@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import glob
-import random
 from gym_pycr_ctf.util.plots import plotting_util_defender
 from gym_pycr_ctf.util.experiments_util import util
 

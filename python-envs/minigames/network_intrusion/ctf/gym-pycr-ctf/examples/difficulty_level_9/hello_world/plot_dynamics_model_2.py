@@ -1,13 +1,10 @@
 from typing import List
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
-from gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env import PyCrCTFLevel9Base
 from gym_pycr_ctf.util.plots import plot_dynamics_model
-from gym_pycr_ctf.dao.network.trajectory import Trajectory
+from pycr_common.dao.network.trajectory import Trajectory
 import random
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.ticker as tick
+
 
 def read_model():
     print("reading model")

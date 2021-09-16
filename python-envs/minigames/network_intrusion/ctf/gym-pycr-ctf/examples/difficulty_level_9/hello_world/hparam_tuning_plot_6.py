@@ -1,14 +1,10 @@
-from matplotlib.collections import PolyCollection
-import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import glob
 from gym_pycr_ctf.util.experiments_util import util
 import matplotlib.ticker as tick
 import matplotlib
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import os
 # Fixing random state for reproducibility
 np.random.seed(19780203)

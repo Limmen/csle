@@ -1,12 +1,5 @@
-from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
-import gym_pycr_ctf.constants.constants as constants
-import gym
-import time
-import numpy as np
-import os
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 import json
 
 def test_env(env_name : str, num_steps : int):

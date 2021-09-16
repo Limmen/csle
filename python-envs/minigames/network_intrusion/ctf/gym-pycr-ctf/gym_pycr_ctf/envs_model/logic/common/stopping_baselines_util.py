@@ -1,10 +1,10 @@
 from typing import Tuple, List
 import numpy as np
 import math
+from pycr_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 
 

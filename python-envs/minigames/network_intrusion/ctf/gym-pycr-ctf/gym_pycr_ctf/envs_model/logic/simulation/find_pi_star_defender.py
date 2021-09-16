@@ -1,6 +1,7 @@
 import math
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 
+
 class FindPiStarDefender:
     """
     Class with utility methods for finding pi-star for the defender, can be used to

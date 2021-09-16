@@ -1,12 +1,12 @@
 import os
 import glob
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.plots import plotting_util_basic
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.agent.train_mode import TrainMode
 
 
 def default_config() -> ClientConfig:
@@ -15,37 +15,37 @@ def default_config() -> ClientConfig:
     """
     max_num_nodes = 10
     agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
-                                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=5000,
-                                                eval_render=False, gifs=True,
-                                                gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=10,
-                                                save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=500,
-                                                input_dim=(max_num_nodes-1) * 12,
-                                                output_dim = 9 + (3*(max_num_nodes-1)),
-                                                pi_hidden_dim=64, pi_hidden_layers=1,
-                                                vf_hidden_dim=64, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=2000,
-                                                gpu=False, tensorboard=True,
-                                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
-                                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                                                state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10,
-                                                render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=1, eval_deterministic=False,
-                                                num_nodes=max_num_nodes, domain_randomization = True,
-                                                dr_max_num_nodes=max_num_nodes,
-                                                dr_min_num_nodes=4, dr_min_num_users=1,
-                                                dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
-                                                dr_use_base=True, log_regret=True, running_avg=50
-                                                )
+                               min_epsilon=0.01, eval_episodes=1, train_log_frequency=1,
+                               epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+                               video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                               num_iterations=5000,
+                               eval_render=False, gifs=True,
+                               gif_dir=util.default_output_dir() + "/results/gifs",
+                               eval_frequency=100, video_frequency=10,
+                               save_dir=util.default_output_dir() + "/results/data",
+                               checkpoint_freq=500,
+                               input_dim=(max_num_nodes-1) * 12,
+                               output_dim = 9 + (3*(max_num_nodes-1)),
+                               pi_hidden_dim=64, pi_hidden_layers=1,
+                               vf_hidden_dim=64, vf_hidden_layers=1,
+                               shared_hidden_layers=2, shared_hidden_dim=64,
+                               batch_size=2000,
+                               gpu=False, tensorboard=True,
+                               tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
+                               optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
+                               state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
+                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
+                               vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
+                               eps_clip=0.2, optimization_iterations=10,
+                               render_steps=100, illegal_action_logit=-100,
+                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                               n_deterministic_eval_iter=1, eval_deterministic=False,
+                               num_nodes=max_num_nodes, domain_randomization = True,
+                               dr_max_num_nodes=max_num_nodes,
+                               dr_min_num_nodes=4, dr_min_num_users=1,
+                               dr_max_num_users=5, dr_min_num_flags=1, dr_max_num_flags=3,
+                               dr_use_base=True, log_regret=True, running_avg=50
+                               )
     eval_env_name = "pycr-ctf-multisim-v1"
     eval_n_envs = 1
     env_name="pycr-ctf-multisim-v1"
@@ -62,7 +62,7 @@ def default_config() -> ClientConfig:
                                  eval_multi_env=False,
                                  eval_env_num_nodes=max_num_nodes, eval_n_envs = eval_n_envs,
                                  eval_dummy_vec_env=False, eval_sub_proc_env=True,
-                                 train_multi_sim=True,  eval_multi_sim=True, num_sims = 10, num_sims_eval=2,
+                                 train_multi_sim=True, eval_multi_sim=True, num_sims = 10, num_sims_eval=2,
                                  train_mode=TrainMode.TRAIN_ATTACKER
                                  )
     return client_config
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     if args.plotonly:
         if args.csvfile is not None:
             plotting_util_basic.plot_csv_files([args.csvfile],
-                                        config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+                                               config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
         elif args.resultdirs is not None:
             rds = args.resultdirs.split(",")
             total_files = []

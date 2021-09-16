@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
 import glob
-import math
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.util.plots import plotting_util_defender
 from gym_pycr_ctf.util.experiments_util import util
 

@@ -1,13 +1,13 @@
 import os
 import glob
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.plots import plotting_util_basic
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
     """
@@ -77,7 +77,7 @@ def default_config() -> ClientConfig:
                                  title="PPO level_9 v1 emulation",
                                  run_many=True, random_seeds=[0, 999, 299],
                                  random_seed=299, emulation_config=emulation_config,
-                                 mode=RunnerMode.TRAIN_ATTACKER.value,train_mode=TrainMode.TRAIN_ATTACKER
+                                 mode=RunnerMode.TRAIN_ATTACKER.value, train_mode=TrainMode.TRAIN_ATTACKER
                                  )
     #random_seeds = [0, 999, 299, 399, 499],
     return client_config
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     if args.plotonly:
         if args.csvfile is not None:
             plotting_util_basic.plot_csv_files([args.csvfile],
-                                        config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
+                                               config.output_dir + "/results/plots/" + str(config.random_seed) + "/")
         elif args.resultdirs is not None:
             rds = args.resultdirs.split(",")
             total_files = []

@@ -5,26 +5,26 @@ from typing import Tuple
 import gym
 import time
 from copy import deepcopy
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.agent.agent_type import AgentType
+from pycr_common.agents.policy_gradient.reinforce.reinforce_agent import ReinforceAgent
+from pycr_common.agents.train_agent import TrainAgent
+from pycr_common.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
+from pycr_common.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.agents.dqn.dqn_baseline_agent import DQNBaselineAgent
+from pycr_common.agents.policy_gradient.a2c_baseline.a2c_baseline_agent import A2CBaselineAgent
+from pycr_common.agents.td3.td3_baseline_agent import TD3BaselineAgent
+from pycr_common.agents.ddpg.ddpg_baseline_agent import DDPGBaselineAgent
+from pycr_common.agents.openai_baselines.common.env_util import make_vec_env
+from pycr_common.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from pycr_common.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from pycr_common.dao.agent.train_mode import TrainMode
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_ctf.agents.policy_gradient.reinforce.reinforce_agent import ReinforceAgent
-#from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.agents.train_agent import TrainAgent
-from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.ppo_baseline_agent import PPOBaselineAgent
-from gym_pycr_ctf.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
 from gym_pycr_ctf.util.experiments_util.simulator import Simulator
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.agents.dqn.dqn_baseline_agent import DQNBaselineAgent
-from gym_pycr_ctf.agents.policy_gradient.a2c_baseline.a2c_baseline_agent import A2CBaselineAgent
-from gym_pycr_ctf.agents.td3.td3_baseline_agent import TD3BaselineAgent
-from gym_pycr_ctf.agents.ddpg.ddpg_baseline_agent import DDPGBaselineAgent
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
-from gym_pycr_ctf.agents.openai_baselines.common.env_util import make_vec_env
-from gym_pycr_ctf.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from gym_pycr_ctf.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+
 
 class Runner:
     """

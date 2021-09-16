@@ -2,9 +2,9 @@ from typing import Tuple, List
 import torch
 import numpy as np
 import math
-from gym_pycr_ctf.dao.network.trajectory import Trajectory
+import pycr_common.constants.constants as constants
+from pycr_common.dao.network.trajectory import Trajectory
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-import gym_pycr_ctf.constants.constants as constants
 
 
 class EvalUtil:

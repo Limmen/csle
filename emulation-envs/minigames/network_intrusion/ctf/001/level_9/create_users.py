@@ -1,9 +1,9 @@
 import os
 from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
-from gym_pycr_ctf.dao.container_config.node_users_config import NodeUsersConfig
+from pycr_common.dao.container_config.node_users_config import NodeUsersConfig
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs_model.config.generator.users_generator import UsersGenerator
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.envs_model.config.generator.users_generator import UsersGenerator
 
 def default_users() -> UsersConfig:
     users = [

@@ -1,9 +1,6 @@
-import random
 import pandas as pd
 import numpy as np
 import glob
-import math
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.util.plots import plotting_util_defender
 from gym_pycr_ctf.util.experiments_util import util
 
@@ -62,7 +59,7 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     # avg_train_intrusion_frac_means_novice_attacker = np.mean(tuple(avg_train_intrusion_frac_data_novice_attacker), axis=0)
     # avg_train_intrusion_frac_stds_novice_attacker = np.std(tuple(avg_train_intrusion_frac_data_novice_attacker), axis=0, ddof=1)
 
-    avg_train_optimal_defender_rewards_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_defender_reward"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    avg_train_optimal_defender_rewards_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_defender_reward"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     avg_train_optimal_defender_rewards_data_novice_attacker = np.array(avg_train_optimal_defender_rewards_novice_attacker_data).reshape(max_len, num_seeds)
     avg_train_optimal_defender_rewards_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_optimal_defender_rewards_data_novice_attacker)))
     avg_train_optimal_defender_rewards_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_optimal_defender_rewards_data_novice_attacker)))
@@ -76,14 +73,14 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     # avg_train_i_steps_means_novice_attacker = np.mean(tuple(avg_train_i_steps_data_novice_attacker), axis=0)
     # avg_train_i_steps_stds_novice_attacker = np.std(tuple(avg_train_i_steps_data_novice_attacker), axis=0, ddof=1)
 
-    avg_train_uncaught_intrusion_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["avg_uncaught_intrusion_steps"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    avg_train_uncaught_intrusion_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["avg_uncaught_intrusion_steps"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     # avg_train_uncaught_intrusion_steps_means_novice_attacker = np.mean(tuple(avg_train_uncaught_intrusion_steps_data_novice_attacker), axis=0)
     # avg_train_uncaught_intrusion_steps_stds_novice_attacker = np.std(tuple(avg_train_uncaught_intrusion_steps_data_novice_attacker), axis=0, ddof=1)
     avg_train_uncaught_intrusion_steps_data_novice_attacker = np.array(avg_train_uncaught_intrusion_steps_data_novice_attacker).reshape(max_len, num_seeds)
     avg_train_uncaught_intrusion_steps_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_uncaught_intrusion_steps_data_novice_attacker)))
     avg_train_uncaught_intrusion_steps_means_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_uncaught_intrusion_steps_data_novice_attacker)))
 
-    train_snort_severe_baseline_rewards_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_rewards"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_rewards_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_rewards"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     avg_train_snort_severe_baseline_rewards_data_novice_attacker = np.array(train_snort_severe_baseline_rewards_data_novice_attacker).reshape(max_len, num_seeds)
     train_snort_severe_baseline_rewards_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_snort_severe_baseline_rewards_data_novice_attacker)))
     train_snort_severe_baseline_rewards_means_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_snort_severe_baseline_rewards_data_novice_attacker)))
@@ -97,21 +94,21 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     # train_step_baseline_rewards_means_novice_attacker = np.mean(tuple(train_step_baseline_rewards_data_novice_attacker), axis=0)
     # train_step_baseline_rewards_stds_novice_attacker = np.std(tuple(train_step_baseline_rewards_data_novice_attacker), axis=0, ddof=1)
 
-    train_snort_severe_baseline_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_steps"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_steps"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     avg_train_snort_severe_baseline_steps_data_novice_attacker = np.array(train_snort_severe_baseline_steps_data_novice_attacker).reshape(max_len, num_seeds)
     train_snort_severe_baseline_steps_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_snort_severe_baseline_steps_data_novice_attacker)))
     train_snort_severe_baseline_steps_means_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_snort_severe_baseline_steps_data_novice_attacker)))
     # train_snort_severe_baseline_steps_means_novice_attacker = np.mean(tuple(train_snort_severe_baseline_steps_data_novice_attacker), axis=0)
     # train_snort_severe_baseline_steps_stds_novice_attacker = np.std(tuple(train_snort_severe_baseline_steps_data_novice_attacker), axis=0, ddof=1)
 
-    train_step_baseline_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["step_baseline_steps"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_step_baseline_steps_data_novice_attacker = list(map(lambda df: util.running_average_list(df["step_baseline_steps"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     avg_train_step_baseline_steps_data_novice_attacker = np.array(train_step_baseline_steps_data_novice_attacker).reshape(max_len, num_seeds)
     train_step_baseline_steps_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_step_baseline_steps_data_novice_attacker)))
     train_step_baseline_steps_means_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_step_baseline_steps_data_novice_attacker)))
     # train_step_baseline_steps_means_novice_attacker = np.mean(tuple(train_step_baseline_steps_data_novice_attacker), axis=0)
     # train_step_baseline_steps_stds_novice_attacker = np.std(tuple(train_step_baseline_steps_data_novice_attacker), axis=0, ddof=1)
 
-    train_snort_severe_baseline_early_stopping_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_early_stopping"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_early_stopping_data_novice_attacker = list(map(lambda df: util.running_average_list(df["snort_severe_baseline_early_stopping"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     avg_train_snort_severe_baseline_early_stopping_data_novice_attacker = np.array(train_snort_severe_baseline_early_stopping_data_novice_attacker).reshape(max_len, num_seeds)
     train_snort_severe_baseline_early_stopping_stds_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], avg_train_snort_severe_baseline_early_stopping_data_novice_attacker)))
     train_snort_severe_baseline_early_stopping_means_novice_attacker = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], avg_train_snort_severe_baseline_early_stopping_data_novice_attacker)))
@@ -155,19 +152,19 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
 
     train_defender_first_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_defender_first_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_defender_first_stop_step_novice_attacker_data = np.array(train_defender_first_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
-    train_defender_first_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],train_defender_first_stop_step_novice_attacker_data)))
-    train_defender_first_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0],train_defender_first_stop_step_novice_attacker_data)))
+    train_defender_first_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_defender_first_stop_step_novice_attacker_data)))
+    train_defender_first_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_defender_first_stop_step_novice_attacker_data)))
     # train_defender_first_stop_step_novice_attacker_means = np.mean(tuple(train_defender_first_stop_step_novice_attacker_data), axis=0)
     # train_defender_first_stop_step_novice_attacker_stds = np.std(tuple(train_defender_first_stop_step_novice_attacker_data), axis=0, ddof=1)
 
-    train_defender_second_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_defender_second_stop_step"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_defender_second_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_defender_second_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_defender_second_stop_step_novice_attacker_data = np.array(train_defender_second_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
-    train_defender_second_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],train_defender_second_stop_step_novice_attacker_data)))
-    train_defender_second_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0],train_defender_second_stop_step_novice_attacker_data)))
+    train_defender_second_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_defender_second_stop_step_novice_attacker_data)))
+    train_defender_second_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_defender_second_stop_step_novice_attacker_data)))
     # train_defender_second_stop_step_novice_attacker_means = np.mean(tuple(train_defender_second_stop_step_novice_attacker_data), axis=0)
     # train_defender_second_stop_step_novice_attacker_stds = np.std(tuple(train_defender_second_stop_step_novice_attacker_data), axis=0, ddof=1)
 
-    train_defender_third_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_defender_third_stop_step"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_defender_third_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_defender_third_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_defender_third_stop_step_novice_attacker_data = np.array(train_defender_third_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
     train_defender_third_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_defender_third_stop_step_novice_attacker_data)))
     train_defender_third_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_defender_third_stop_step_novice_attacker_data)))
@@ -188,7 +185,7 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     # train_defender_stops_remaining_novice_attacker_means = np.mean(tuple(train_defender_stops_remaining_novice_attacker_data), axis=0)
     # train_defender_stops_remaining_novice_attacker_stds = np.std(tuple(train_defender_stops_remaining_novice_attacker_data), axis=0, ddof=1)
 
-    train_optimal_first_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_first_stop_step"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_optimal_first_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_first_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_optimal_first_stop_step_novice_attacker_data = np.array(train_optimal_first_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
     train_optimal_first_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_optimal_first_stop_step_novice_attacker_data)))
     train_optimal_first_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_optimal_first_stop_step_novice_attacker_data)))
@@ -209,7 +206,7 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     # train_optimal_third_stop_step_novice_attacker_means = np.mean(tuple(train_optimal_third_stop_step_novice_attacker_data), axis=0)
     # train_optimal_third_stop_step_novice_attacker_stds = np.std(tuple(train_optimal_third_stop_step_novice_attacker_data), axis=0, ddof=1)
 
-    train_optimal_fourth_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_fourth_stop_step"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_optimal_fourth_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_fourth_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_optimal_fourth_stop_step_novice_attacker_data = np.array(train_optimal_fourth_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
     train_optimal_fourth_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_optimal_fourth_stop_step_novice_attacker_data)))
     train_optimal_fourth_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_optimal_fourth_stop_step_novice_attacker_data)))
@@ -239,19 +236,19 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
 
     train_snort_severe_baseline_third_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_snort_severe_baseline_third_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_snort_severe_baseline_third_stop_step_novice_attacker_data = np.array(train_snort_severe_baseline_third_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
-    train_snort_severe_baseline_third_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],train_snort_severe_baseline_third_stop_step_novice_attacker_data)))
+    train_snort_severe_baseline_third_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_snort_severe_baseline_third_stop_step_novice_attacker_data)))
     train_snort_severe_baseline_third_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_snort_severe_baseline_third_stop_step_novice_attacker_data)))
     # train_snort_severe_baseline_third_stop_step_novice_attacker_means = np.mean(tuple(train_snort_severe_baseline_third_stop_step_novice_attacker_data), axis=0)
     # train_snort_severe_baseline_third_stop_step_novice_attacker_stds = np.std(tuple(train_snort_severe_baseline_third_stop_step_novice_attacker_data), axis=0, ddof=1)
 
-    train_snort_severe_baseline_fourth_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_snort_severe_baseline_fourth_stop_step"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_fourth_stop_step_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_snort_severe_baseline_fourth_stop_step"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_snort_severe_baseline_fourth_stop_step_novice_attacker_data = np.array(train_snort_severe_baseline_fourth_stop_step_novice_attacker_data).reshape(max_len, num_seeds)
-    train_snort_severe_baseline_fourth_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],train_snort_severe_baseline_fourth_stop_step_novice_attacker_data)))
+    train_snort_severe_baseline_fourth_stop_step_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_snort_severe_baseline_fourth_stop_step_novice_attacker_data)))
     train_snort_severe_baseline_fourth_stop_step_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_snort_severe_baseline_fourth_stop_step_novice_attacker_data)))
     # train_snort_severe_baseline_fourth_stop_step_novice_attacker_means = np.mean(tuple(train_snort_severe_baseline_fourth_stop_step_novice_attacker_data), axis=0)
     # train_snort_severe_baseline_fourth_stop_step_novice_attacker_stds = np.std(tuple(train_snort_severe_baseline_fourth_stop_step_novice_attacker_data), axis=0, ddof=1)
 
-    train_snort_severe_baseline_stops_remaining_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_snort_severe_baseline_stops_remaining"].values[0:max_len], running_avg),ppo_dfs_novice_attacker))
+    train_snort_severe_baseline_stops_remaining_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_snort_severe_baseline_stops_remaining"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_snort_severe_baseline_stops_remaining_novice_attacker_data = np.array(train_snort_severe_baseline_stops_remaining_novice_attacker_data).reshape(max_len, num_seeds)
     train_snort_severe_baseline_stops_remaining_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_snort_severe_baseline_stops_remaining_novice_attacker_data)))
     train_snort_severe_baseline_stops_remaining_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_snort_severe_baseline_stops_remaining_novice_attacker_data)))
@@ -289,13 +286,13 @@ def parse_data(novice_attacker_base_path: str, suffix: str, ips = None, eval_ips
     train_step_baseline_stops_remaining_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_step_baseline_stops_remaining"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_step_baseline_stops_remaining_novice_attacker_data = np.array(train_step_baseline_stops_remaining_novice_attacker_data).reshape(max_len, num_seeds)
     train_step_baseline_stops_remaining_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_step_baseline_stops_remaining_novice_attacker_data)))
-    train_step_baseline_stops_remaining_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0],train_step_baseline_stops_remaining_novice_attacker_data)))
+    train_step_baseline_stops_remaining_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_step_baseline_stops_remaining_novice_attacker_data)))
     # train_step_baseline_stops_remaining_novice_attacker_means = np.mean(tuple(train_step_baseline_stops_remaining_novice_attacker_data), axis=0)
     # train_step_baseline_stops_remaining_novice_attacker_stds = np.std(tuple(train_step_baseline_stops_remaining_novice_attacker_data), axis=0, ddof=1)
 
     train_optimal_episode_steps_novice_attacker_data = list(map(lambda df: util.running_average_list(df["avg_optimal_episode_steps"].values[0:max_len], running_avg), ppo_dfs_novice_attacker))
     train_optimal_episode_steps_novice_attacker_data = np.array(train_optimal_episode_steps_novice_attacker_data).reshape(max_len, num_seeds)
-    train_optimal_episode_steps_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1],train_optimal_episode_steps_novice_attacker_data)))
+    train_optimal_episode_steps_novice_attacker_stds = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[1], train_optimal_episode_steps_novice_attacker_data)))
     train_optimal_episode_steps_novice_attacker_means = np.array(list(map(lambda x: util.mean_confidence_interval(data=x, confidence=confidence)[0], train_optimal_episode_steps_novice_attacker_data)))
     # train_optimal_episode_steps_novice_attacker_means = np.mean(tuple(train_optimal_episode_steps_novice_attacker_data), axis=0)
     # train_optimal_episode_steps_novice_attacker_stds = np.std(tuple(train_optimal_episode_steps_novice_attacker_data), axis=0, ddof=1)

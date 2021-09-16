@@ -7,8 +7,10 @@ import imageio
 from gym_pycr_ctf.rendering.video.pycr_ctf_stats_recorder import StatsRecorder
 from gym_pycr_ctf.rendering.video.pycr_ctf_video_recorder import PyCrCTFVideoRecorder
 
+
 FILE_PREFIX = 'openaigym'
 MANIFEST_PREFIX = FILE_PREFIX + '.manifest'
+
 
 class PyCrCTFMonitor(Wrapper):
     """

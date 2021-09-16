@@ -1,12 +1,7 @@
-from typing import List
 import pandas as pd
 import numpy as np
-import torch
 import glob
 from gym_pycr_ctf.util.plots import plotting_util_defender
-from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.util.experiments_util import util
 
 def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):

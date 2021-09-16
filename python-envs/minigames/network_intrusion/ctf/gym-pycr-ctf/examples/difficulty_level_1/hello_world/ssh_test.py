@@ -1,4 +1,4 @@
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 
 

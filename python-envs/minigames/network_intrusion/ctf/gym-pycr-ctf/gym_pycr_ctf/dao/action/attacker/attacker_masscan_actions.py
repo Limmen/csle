@@ -1,6 +1,6 @@
+import pycr_common.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
-import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerActionOutcome
 

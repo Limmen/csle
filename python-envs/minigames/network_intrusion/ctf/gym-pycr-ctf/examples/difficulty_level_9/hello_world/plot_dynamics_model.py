@@ -1,4 +1,3 @@
-from gym_pycr_ctf.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from gym_pycr_ctf.envs.derived_envs.level9.emulation.pycr_ctf_level9_emulation_env import PyCrCTFLevel9Base
 from gym_pycr_ctf.util.plots import plot_dynamics_model
 

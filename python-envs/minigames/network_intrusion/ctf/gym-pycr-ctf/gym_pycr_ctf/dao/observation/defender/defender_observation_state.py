@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-import gym_pycr_ctf.constants.constants as constants
+import pycr_common.constants.constants as constants
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 

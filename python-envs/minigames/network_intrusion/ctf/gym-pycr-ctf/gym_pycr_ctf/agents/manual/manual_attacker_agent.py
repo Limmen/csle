@@ -7,7 +7,7 @@ except:
     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.dao.agent.agent_type import AgentType
 import numpy as np
 
 

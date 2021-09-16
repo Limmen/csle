@@ -1,5 +1,5 @@
 import threading
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 import gym

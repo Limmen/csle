@@ -1,4 +1,4 @@
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 import gym
 import numpy as np

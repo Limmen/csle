@@ -1,5 +1,5 @@
 import os
-from gym_pycr_ctf.dao.container_config.containers_config import ContainersConfig
+from pycr_common.dao.container_config.containers_config import ContainersConfig
 from gym_pycr_ctf.dao.container_config.node_container_config import NodeContainerConfig
 from gym_pycr_ctf.envs_model.config.generator.container_generator import ContainerGenerator
 from gym_pycr_ctf.util.experiments_util import util

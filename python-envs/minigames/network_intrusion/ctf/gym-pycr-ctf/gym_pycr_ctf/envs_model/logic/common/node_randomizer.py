@@ -1,18 +1,17 @@
 from typing import List, Tuple, Set
 import random
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
-from gym_pycr_ctf.dao.network.node import Node
-from gym_pycr_ctf.dao.network.node_type import NodeType
-from gym_pycr_ctf.dao.container_config.node_users_config import NodeUsersConfig
-from gym_pycr_ctf.dao.container_config.node_flags_config import NodeFlagsConfig
-from gym_pycr_ctf.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
-from gym_pycr_ctf.dao.container_config.vulnerability_type import VulnType
-from gym_pycr_ctf.dao.network.flag import Flag
-from gym_pycr_ctf.dao.network.credential import Credential
-from gym_pycr_ctf.dao.domain_randomization.randomization_space import RandomizationSpace
-from gym_pycr_ctf.dao.network.network_service import NetworkService
-from gym_pycr_ctf.dao.network.vulnerability import Vulnerability
-import gym_pycr_ctf.constants.constants as constants
+import pycr_common.constants.constants as constants
+from pycr_common.dao.network.node import Node
+from pycr_common.dao.network.node_type import NodeType
+from pycr_common.dao.container_config.vulnerability_type import VulnType
+from pycr_common.dao.network.flag import Flag
+from pycr_common.dao.network.credential import Credential
+from pycr_common.dao.domain_randomization.randomization_space import RandomizationSpace
+from pycr_common.dao.network.network_service import NetworkService
+from pycr_common.dao.network.vulnerability import Vulnerability
+from pycr_common.dao.container_config.node_users_config import NodeUsersConfig
+from pycr_common.dao.container_config.node_flags_config import NodeFlagsConfig
+from pycr_common.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
 
 
 class NodeRandomizer:

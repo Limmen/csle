@@ -21,16 +21,16 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
     router_containers = [("router2", "0.0.1")]
 
     subnet_id_blacklist = EnvConfigGenerator.generate_envs(num_envs=num_envs,
-                                     container_pool=container_pool,
-                                     gw_vuln_compatible_containers=gw_vuln_compatible_containers,
-                                     pw_vuln_compatible_containers=pw_vuln_compatible_containers,
-                                     agent_containers=agent_containers, router_containers=router_containers,
-                                     path=util.default_output_dir(),
-                                     min_num_users=min_num_users, max_num_users=max_num_users,
-                                     min_num_flags=min_num_flags, max_num_flags=max_num_flags,
-                                     min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
-                                     subnet_prefix=subnet_prefix, cleanup_old_envs = False,
-                                     start_idx=idx, subnet_id_blacklist=subnet_id_blacklist)
+                                                           container_pool=container_pool,
+                                                           gw_vuln_compatible_containers=gw_vuln_compatible_containers,
+                                                           pw_vuln_compatible_containers=pw_vuln_compatible_containers,
+                                                           agent_containers=agent_containers, router_containers=router_containers,
+                                                           path=util.default_output_dir(),
+                                                           min_num_users=min_num_users, max_num_users=max_num_users,
+                                                           min_num_flags=min_num_flags, max_num_flags=max_num_flags,
+                                                           min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
+                                                           subnet_prefix=subnet_prefix, cleanup_old_envs = False,
+                                                           start_idx=idx, subnet_id_blacklist=subnet_id_blacklist)
     return subnet_id_blacklist
 if __name__ == '__main__':
     subnet_id_blacklist = generate_envs(1, min_num_users=1, max_num_users=3, min_num_flags=8, max_num_flags=8, min_num_nodes=25,

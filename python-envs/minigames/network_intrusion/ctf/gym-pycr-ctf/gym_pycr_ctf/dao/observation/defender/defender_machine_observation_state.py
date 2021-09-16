@@ -1,9 +1,9 @@
 from typing import List
 import copy
 import datetime
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 
 
 class DefenderMachineObservationState:

@@ -1,7 +1,6 @@
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 import gym
 
 def manual_control():

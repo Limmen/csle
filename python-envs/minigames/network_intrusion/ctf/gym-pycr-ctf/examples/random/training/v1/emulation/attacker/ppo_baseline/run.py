@@ -1,14 +1,14 @@
 import os
 import glob
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.experiment.runner_mode import RunnerMode
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from pycr_common.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
     """
@@ -34,35 +34,35 @@ def default_config() -> ClientConfig:
     num_nodes = max_num_nodes - 1
 
     agent_config = AgentConfig(gamma=0.99, alpha=0.00005, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
-                                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=2000,
-                                                eval_render=True, gifs=True,
-                                                gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=10,
-                                                save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=500,
-                                                input_dim=num_nodes * 40,
-                                                #input_dim=7,
-                                                #input_dim=11 * 8,
-                                                #output_dim=9,
-                                                output_dim = 9 + (3*num_nodes),
-                                                pi_hidden_dim=64, pi_hidden_layers=1,
-                                                vf_hidden_dim=64, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=1000,
-                                                gpu=False, tensorboard=True,
-                                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
-                                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                                                state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=500,
-                                                eps_clip=0.2, optimization_iterations=10,
-                                                render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=1, num_nodes=max_num_nodes
-                                                )
+                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+                               epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+                               video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                               num_iterations=2000,
+                               eval_render=True, gifs=True,
+                               gif_dir=util.default_output_dir() + "/results/gifs",
+                               eval_frequency=100, video_frequency=10,
+                               save_dir=util.default_output_dir() + "/results/data",
+                               checkpoint_freq=500,
+                               input_dim=num_nodes * 40,
+                               #input_dim=7,
+                               #input_dim=11 * 8,
+                               #output_dim=9,
+                               output_dim = 9 + (3*num_nodes),
+                               pi_hidden_dim=64, pi_hidden_layers=1,
+                               vf_hidden_dim=64, vf_hidden_layers=1,
+                               shared_hidden_layers=2, shared_hidden_dim=64,
+                               batch_size=1000,
+                               gpu=False, tensorboard=True,
+                               tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
+                               optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
+                               state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
+                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
+                               vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=500,
+                               eps_clip=0.2, optimization_iterations=10,
+                               render_steps=100, illegal_action_logit=-100,
+                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                               n_deterministic_eval_iter=1, num_nodes=max_num_nodes
+                               )
     #env_name = "pycr-ctf-random-emulation-v1"
     env_name = "pycr-ctf-random-generated-sim-v1"
     #env_name = "pycr-ctf-random-emulation-costs-v1"

@@ -1,10 +1,10 @@
 import os
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.agent.agent_type import AgentType
+from pycr_common.dao.agent.train_mode import TrainMode
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.util.experiments_util import util
 
 

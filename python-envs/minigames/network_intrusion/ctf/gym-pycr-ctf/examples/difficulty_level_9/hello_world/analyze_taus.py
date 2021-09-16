@@ -1,5 +1,4 @@
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
-from gym_pycr_ctf.dao.network.trajectory import Trajectory
+from pycr_common.dao.network.trajectory import Trajectory
 from typing import List
 
 def analyze_taus():

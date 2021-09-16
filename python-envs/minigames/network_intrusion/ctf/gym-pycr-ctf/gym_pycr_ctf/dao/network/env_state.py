@@ -1,11 +1,11 @@
 from typing import List, Tuple
 import numpy as np
+from pycr_common.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
 from gym_pycr_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
 from gym_pycr_ctf.envs_model.state_representation.defender_state_representation import DefenderStateRepresentation
-from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 

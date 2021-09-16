@@ -2,7 +2,7 @@ from typing import List
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
-import gym_pycr_ctf.constants.constants as constants
+import pycr_common.constants.constants as constants
 
 
 class AttackerAction:

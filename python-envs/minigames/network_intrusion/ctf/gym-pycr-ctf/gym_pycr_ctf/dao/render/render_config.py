@@ -1,5 +1,4 @@
-import gym_pycr_ctf.constants.constants as constants
-
+import pycr_common.constants.constants as constants
 
 class RenderConfig:
     """

@@ -2,7 +2,7 @@
 Utility scripts for plotting
 """
 
-from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
+from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 import torch
 import numpy as np
 import gym

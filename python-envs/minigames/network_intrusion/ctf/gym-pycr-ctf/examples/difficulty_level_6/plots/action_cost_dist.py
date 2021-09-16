@@ -41,12 +41,12 @@ if __name__ == '__main__':
     #                        ncols=4, figsize=(11, 2.5))
 
     plotting_action_costs.plot_freq_dist_w_boxes_all_2_rows(d1=d_1, d2=d_factors, num_bins=100,
-                               labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
+                                                            labels=[r"$|\mathcal{N}|=25$", r"$|\mathcal{N}|=50$", r"$|\mathcal{N}|=75$",
                                        r"$|\mathcal{N}|=100$"],
-                               title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
-                               filename="action_cost_dist_plot_all_boxes_2_rows", bin_edges=bin_edges,
+                                                            title=r"Action execution times (costs)", xlabel=r"Time Cost (s)", colors=colors,
+                                                            filename="action_cost_dist_plot_all_boxes_2_rows", bin_edges=bin_edges,
                                                             data=costs_factors,
-                               ncols=2, figsize=(8, 5))
+                                                            ncols=2, figsize=(8, 5))
 
     #
     # colors = ["r"]

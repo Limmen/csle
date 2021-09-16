@@ -1,8 +1,9 @@
 from typing import Tuple
+from pycr_common.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.network.env_mode import EnvMode
+
 
 class FindPiStarAttacker:
     """

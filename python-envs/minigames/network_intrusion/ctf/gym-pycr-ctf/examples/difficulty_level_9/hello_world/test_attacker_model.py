@@ -1,17 +1,9 @@
-from gym_pycr_ctf.envs.derived_envs.level1.simulation.pycr_ctf_level1_sim_env import PyCRCTFLevel1Sim1Env
-from gym_pycr_ctf.envs.derived_envs.level1.emulation.pycr_ctf_level1_emulation_env import PyCRCTFLevel1Emulation1Env
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.agents.manual.manual_defender_agent import ManualDefenderAgent
-from gym_pycr_ctf.agents.bots.random_attacker_bot_agent import RandomAttackerBotAgent
-from gym_pycr_ctf.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
-from gym_pycr_ctf.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
+from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 import torch
 import numpy as np
-import gym
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import math
-from gym_pycr_ctf.dao.network.trajectory import Trajectory
+from pycr_common.dao.network.trajectory import Trajectory
 
 def initialize_model(env, load_path, device, agent_config) -> None:
     """

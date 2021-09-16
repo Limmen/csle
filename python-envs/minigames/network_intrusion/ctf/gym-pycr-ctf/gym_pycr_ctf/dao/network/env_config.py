@@ -1,17 +1,17 @@
 import re
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.env_mode import EnvMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.action_results.nmap_scan_cache import NMAPScanCache
+from pycr_common.dao.action_results.action_costs import ActionCosts
+from pycr_common.dao.action_results.filesystem_scan_cache import FileSystemScanCache
+from pycr_common.dao.action_results.nikto_scan_cache import NiktoScanCache
+from pycr_common.dao.state_representation.state_type import StateType
+from pycr_common.dao.action_results.user_command_cache import UserCommandCache
+from pycr_common.dao.action_results.action_alerts import ActionAlerts
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
-from gym_pycr_ctf.dao.network.env_mode import EnvMode
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
-from gym_pycr_ctf.dao.action_results.nmap_scan_cache import NMAPScanCache
-from gym_pycr_ctf.dao.action_results.action_costs import ActionCosts
-from gym_pycr_ctf.dao.action_results.filesystem_scan_cache import FileSystemScanCache
-from gym_pycr_ctf.dao.action_results.nikto_scan_cache import NiktoScanCache
-from gym_pycr_ctf.dao.state_representation.state_type import StateType
-from gym_pycr_ctf.dao.action_results.user_command_cache import UserCommandCache
-from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
 
 
 class EnvConfig:

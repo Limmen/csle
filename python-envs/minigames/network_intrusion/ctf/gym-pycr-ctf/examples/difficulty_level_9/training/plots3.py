@@ -172,7 +172,7 @@ def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):
     avg_eval_2_caught_frac_stds_v1[160:165] = avg_eval_2_caught_frac_stds_v1[160:165] + 0.16
 
     avg_eval_2_early_stopping_frac_data_v1 = list(
-        map(lambda df: util.running_average_list(df["eval_2_early_stopping_frac"].values[0:max_len]+0.1, running_avg), ppo_dfs_v1))
+        map(lambda df: util.running_average_list(df["eval_2_early_stopping_frac"].values[0:max_len] + 0.1, running_avg), ppo_dfs_v1))
     avg_eval_2_early_stopping_means_v1 = np.mean(tuple(avg_eval_2_early_stopping_frac_data_v1), axis=0)
     avg_eval_2_early_stopping_stds_v1 = np.std(tuple(avg_eval_2_early_stopping_frac_data_v1), axis=0, ddof=1) + 0.05
     avg_eval_2_early_stopping_stds_v1[60:80] = avg_eval_2_early_stopping_stds_v1[60:80] + 0.08
@@ -198,7 +198,7 @@ def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):
     avg_eval_2_attacker_action_costs_stds_v1 = np.std(tuple(avg_eval_2_attacker_action_costs_data_v1), axis=0, ddof=1) + random.uniform(-10, 10)
 
     avg_eval_2_flags_data_v1 = list(
-        map(lambda df: util.running_average_list(df["eval_2_avg_episode_flags_percentage"].values[0:max_len] +0.02, running_avg), ppo_dfs_v1))
+        map(lambda df: util.running_average_list(df["eval_2_avg_episode_flags_percentage"].values[0:max_len] + 0.02, running_avg), ppo_dfs_v1))
     avg_eval_2_flags_means_v1 = np.mean(tuple(avg_eval_2_flags_data_v1), axis=0)
     avg_eval_2_flags_stds_v1 = np.std(tuple(avg_eval_2_flags_data_v1), axis=0, ddof=1) + 0.02
 

@@ -1,9 +1,9 @@
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
 from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.network_config import NetworkConfig
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",

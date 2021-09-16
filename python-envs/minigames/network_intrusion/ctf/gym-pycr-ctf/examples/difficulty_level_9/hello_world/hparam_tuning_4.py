@@ -1,7 +1,5 @@
-from matplotlib.collections import PolyCollection
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 import glob
 from gym_pycr_ctf.util.experiments_util import util

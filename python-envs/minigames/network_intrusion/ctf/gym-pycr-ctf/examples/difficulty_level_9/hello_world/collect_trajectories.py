@@ -1,8 +1,7 @@
 import gym
 import numpy as np
-import json
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.network.trajectory import Trajectory
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.trajectory import Trajectory
 
 def test_env(env_name : str, num_trajectories : int):
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",

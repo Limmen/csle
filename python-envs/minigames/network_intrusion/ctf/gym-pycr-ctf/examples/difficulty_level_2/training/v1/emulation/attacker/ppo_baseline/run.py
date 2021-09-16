@@ -1,48 +1,48 @@
 import os
 import glob
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.agent.agent_type import AgentType
 from gym_pycr_ctf.util.experiments_util import util
 from gym_pycr_ctf.util.experiments_util import plotting_util
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
     """
     :return: Default configuration for the experiment
     """
     agent_config = AgentConfig(gamma=0.0, alpha=0.001, epsilon=1, render=False, eval_sleep=0.0,
-                                                min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
-                                                epsilon_decay=0.9999, video=False, eval_log_frequency=1,
-                                                video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                                                num_iterations=300,
-                                                eval_render=True, gifs=True,
-                                                gif_dir=util.default_output_dir() + "/results/gifs",
-                                                eval_frequency=100, video_frequency=10,
-                                                save_dir=util.default_output_dir() + "/results/data",
-                                                checkpoint_freq=500,
-                                                input_dim=11 * 40,
-                                                #input_dim=7,
-                                                #input_dim=11 * 8,
-                                                #output_dim=9,
-                                                output_dim = 42,
-                                                pi_hidden_dim=64, pi_hidden_layers=1,
-                                                vf_hidden_dim=64, vf_hidden_layers=1,
-                                                shared_hidden_layers=2, shared_hidden_dim=64,
-                                                batch_size=200,
-                                                gpu=False, tensorboard=True,
-                                                tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
-                                                optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                                                state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                                                lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
-                                                vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                                                eps_clip=0.2, optimization_iterations=10,
-                                                render_steps=100, illegal_action_logit=-100,
-                                                filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                                                n_deterministic_eval_iter=1
-                                                )
+                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+                               epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+                               video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                               num_iterations=300,
+                               eval_render=True, gifs=True,
+                               gif_dir=util.default_output_dir() + "/results/gifs",
+                               eval_frequency=100, video_frequency=10,
+                               save_dir=util.default_output_dir() + "/results/data",
+                               checkpoint_freq=500,
+                               input_dim=11 * 40,
+                               #input_dim=7,
+                               #input_dim=11 * 8,
+                               #output_dim=9,
+                               output_dim = 42,
+                               pi_hidden_dim=64, pi_hidden_layers=1,
+                               vf_hidden_dim=64, vf_hidden_layers=1,
+                               shared_hidden_layers=2, shared_hidden_dim=64,
+                               batch_size=200,
+                               gpu=False, tensorboard=True,
+                               tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
+                               optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
+                               state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
+                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.001,
+                               vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
+                               eps_clip=0.2, optimization_iterations=10,
+                               render_steps=100, illegal_action_logit=-100,
+                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                               n_deterministic_eval_iter=1
+                               )
     #env_name = "pycr-ctf-level-2-emulation-v1"
     env_name = "pycr-ctf-level-2-emulation-costs-v1"
     emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",

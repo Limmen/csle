@@ -1,6 +1,6 @@
 import os
 from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
 
 if __name__ == '__main__':

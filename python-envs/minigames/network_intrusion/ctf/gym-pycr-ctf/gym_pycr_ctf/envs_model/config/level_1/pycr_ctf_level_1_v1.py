@@ -1,18 +1,19 @@
+from pycr_common.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.env_mode import EnvMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
-from gym_pycr_ctf.dao.network.env_mode import EnvMode
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
 from gym_pycr_ctf.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
 from gym_pycr_ctf.dao.action.attacker.attacker_shell_actions import AttackerShellActions
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.state_representation.state_type import StateType
 from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_base import PyCrCTFLevel1Base
 from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+
 
 class PyCrCTFLevel1V1:
     """

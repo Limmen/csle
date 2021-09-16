@@ -4,14 +4,16 @@ The main frame for the pycr-ctf environment
 import pyperclip
 import os
 import pyglet
-from gym_pycr_ctf.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
+import pycr_common.constants.constants as constants
+from pycr_common.dao.network.env_mode import EnvMode
+from pycr_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
-import gym_pycr_ctf.constants.constants as constants
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.env_mode import EnvMode
+
+
 class MainFrame(pyglet.window.Window):
     """
     A class representing the OpenGL/Pyglet Game Frame
@@ -288,7 +290,7 @@ class MainFrame(pyglet.window.Window):
                 c_3 = c2[0]
                 c_4 = c1[1] - (c1[1] - c2[1]) / 2
                 l2 = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
-                               constants.RENDERING.LINE_WIDTH)
+                                constants.RENDERING.LINE_WIDTH)
                 links.append((c_1, c_2, c_3, c_4))
                 # draw second straight line down
                 c_1 = c2[0]
@@ -296,7 +298,7 @@ class MainFrame(pyglet.window.Window):
                 c_3 = c2[0]
                 c_4 = c2[1]
                 l3 = batch_line(c_1, c_2, c_3, c_4, color, self.batch, self.background,
-                               constants.RENDERING.LINE_WIDTH)
+                                constants.RENDERING.LINE_WIDTH)
                 links.append((c_1, c_2, c_3, c_4))
                 self.complete_graph_links[(c1, c2)] = links
 
@@ -345,7 +347,7 @@ class MainFrame(pyglet.window.Window):
         for m in range(self.state.machines_state.shape[0]):
             c_labels = []
             for c in range(self.state.machines_state.shape[1]):
-                batch_rect_border(x_start+c*w, y-(m*h), w, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(x_start + c * w, y - (m*h), w, h, constants.RENDERING.BLACK, self.batch, self.background)
                 #y_s = y-(m*h)+w/2
                 y_s = y - (m * h) + w / 3
                 state_rect_coords[(m,c)] = (x_start+c*w,y-(m*h))
@@ -388,10 +390,10 @@ class MainFrame(pyglet.window.Window):
             y_p = int(y - (p * h))
             if y_p > 5:
                 batch_rect_border(int(x_start + 0 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_rect_border(int(x_start + 1 * w), y_p, w*2, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 1 * w), y_p, w * 2, h, constants.RENDERING.BLACK, self.batch, self.background)
                 batch_rect_border(int(x_start + 3 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
                 batch_rect_border(int(x_start + 4 * w), y_p, w, h, constants.RENDERING.BLACK, self.batch, self.background)
-                batch_rect_border(int(x_start + 5 * w), y_p, w*3, h, constants.RENDERING.BLACK, self.batch, self.background)
+                batch_rect_border(int(x_start + 5 * w), y_p, w * 3, h, constants.RENDERING.BLACK, self.batch, self.background)
                 p_0_l = batch_label(str(self.state.ports_state[p][0]), int(x_start+10 + 0 * w), y_p+w/3, 5, (0, 0, 0, 255),
                             self.batch,
                             self.second_foreground)
@@ -670,7 +672,7 @@ class MainFrame(pyglet.window.Window):
                 links = self.complete_graph_links[(x,y), (x2,y2)]
                 for link in links:
                     batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
-                                   constants.RENDERING.LINE_WIDTH)
+                               constants.RENDERING.LINE_WIDTH)
 
         if self.env_config.render_config.render_adj_matrix:
             for i in range(len(self.adj_matrix_labels)):

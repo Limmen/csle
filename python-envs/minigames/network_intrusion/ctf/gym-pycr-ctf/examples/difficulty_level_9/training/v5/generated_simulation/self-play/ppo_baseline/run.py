@@ -1,10 +1,10 @@
 import os
-from gym_pycr_ctf.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.dao.agent.train_mode import TrainMode
-from gym_pycr_ctf.dao.experiment.client_config import ClientConfig
-from gym_pycr_ctf.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.network.emulation_config import EmulationConfig
+from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.dao.agent.agent_type import AgentType
+from pycr_common.dao.agent.train_mode import TrainMode
+from pycr_common.dao.experiment.client_config import ClientConfig
+from pycr_common.dao.experiment.runner_mode import RunnerMode
+from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.util.experiments_util import util
 
 
@@ -13,64 +13,64 @@ def default_config() -> ClientConfig:
     :return: Default configuration for the experiment
     """
     defender_agent_config = AgentConfig(gamma=1, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
-                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
-                               epsilon_decay=0.9999, video=False, eval_log_frequency=1,
-                               video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=2000,
-                               eval_render=False, gifs=False,
-                               gif_dir=util.default_output_dir() + "/results/gifs",
-                               eval_frequency=500000, video_frequency=10,
-                               save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=10, input_dim=(9),
-                               output_dim=2,
-                               pi_hidden_dim=32, pi_hidden_layers=1,
-                               vf_hidden_dim=32, vf_hidden_layers=1,
-                               shared_hidden_layers=2, shared_hidden_dim=128,
-                               batch_size=8000,
-                               gpu=False, tensorboard=True,
-                               tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
-                               optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                               state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
-                               vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                               eps_clip=0.2, optimization_iterations=10,
-                               render_steps=100, illegal_action_logit=-1000,
-                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               n_deterministic_eval_iter=25, attacker_opponent_baseline_type = 8,
-                               running_avg=50, n_quick_eval_iter=1,
-                               log_regret=True, snort_baseline_simulate=False, quick_eval_freq=5,
-                               eval_deterministic = False, static_eval_defender=False
-                               )
+                                        min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+                                        epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+                                        video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                                        num_iterations=2000,
+                                        eval_render=False, gifs=False,
+                                        gif_dir=util.default_output_dir() + "/results/gifs",
+                                        eval_frequency=500000, video_frequency=10,
+                                        save_dir=util.default_output_dir() + "/results/data",
+                                        checkpoint_freq=10, input_dim=(9),
+                                        output_dim=2,
+                                        pi_hidden_dim=32, pi_hidden_layers=1,
+                                        vf_hidden_dim=32, vf_hidden_layers=1,
+                                        shared_hidden_layers=2, shared_hidden_dim=128,
+                                        batch_size=8000,
+                                        gpu=False, tensorboard=True,
+                                        tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
+                                        optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
+                                        state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
+                                        lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
+                                        vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
+                                        eps_clip=0.2, optimization_iterations=10,
+                                        render_steps=100, illegal_action_logit=-1000,
+                                        filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                                        n_deterministic_eval_iter=25, attacker_opponent_baseline_type = 8,
+                                        running_avg=50, n_quick_eval_iter=1,
+                                        log_regret=True, snort_baseline_simulate=False, quick_eval_freq=5,
+                                        eval_deterministic = False, static_eval_defender=False
+                                        )
 
     attacker_agent_config = AgentConfig(gamma=1, alpha=0.0005, epsilon=1, render=False, eval_sleep=0.0,
-                               min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
-                               epsilon_decay=0.9999, video=False, eval_log_frequency=1,
-                               video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
-                               num_iterations=50000,
-                               eval_render=False, gifs=False,
-                               gif_dir=util.default_output_dir() + "/results/gifs",
-                               eval_frequency=500000, video_frequency=10,
-                               save_dir=util.default_output_dir() + "/results/data",
-                               checkpoint_freq=10, input_dim=(1 + (20) * 33),
-                               output_dim=373,
-                               pi_hidden_dim=256, pi_hidden_layers=1,
-                               vf_hidden_dim=256, vf_hidden_layers=1,
-                               shared_hidden_layers=1, shared_hidden_dim=256,
-                               batch_size=8000,
-                               gpu=False, tensorboard=True,
-                               tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
-                               optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
-                               state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
-                               lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
-                               vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
-                               eps_clip=0.2, optimization_iterations=10,
-                               render_steps=100, illegal_action_logit=-1000,
-                               filter_illegal_actions=True, train_progress_deterministic_eval=True,
-                               attacker_opponent_baseline_type=8,
-                               running_avg=50, n_quick_eval_iter=25, n_deterministic_eval_iter=5,
-                               log_regret=True, snort_baseline_simulate=False, quick_eval_freq=1,
-                               eval_deterministic=False
-                               )
+                                        min_epsilon=0.01, eval_episodes=0, train_log_frequency=1,
+                                        epsilon_decay=0.9999, video=False, eval_log_frequency=1,
+                                        video_fps=5, video_dir=util.default_output_dir() + "/results/videos",
+                                        num_iterations=50000,
+                                        eval_render=False, gifs=False,
+                                        gif_dir=util.default_output_dir() + "/results/gifs",
+                                        eval_frequency=500000, video_frequency=10,
+                                        save_dir=util.default_output_dir() + "/results/data",
+                                        checkpoint_freq=10, input_dim=(1 + (20) * 33),
+                                        output_dim=373,
+                                        pi_hidden_dim=256, pi_hidden_layers=1,
+                                        vf_hidden_dim=256, vf_hidden_layers=1,
+                                        shared_hidden_layers=1, shared_hidden_dim=256,
+                                        batch_size=8000,
+                                        gpu=False, tensorboard=True,
+                                        tensorboard_dir=util.default_output_dir() + "/results/tensorboard",
+                                        optimizer="Adam", lr_exp_decay=False, lr_decay_rate=0.999,
+                                        state_length=1, gpu_id=0, sde_sample_freq=4, use_sde=False,
+                                        lr_progress_decay=False, lr_progress_power_decay=4, ent_coef=0.0005,
+                                        vf_coef=0.5, features_dim=512, gae_lambda=0.95, max_gradient_norm=0.5,
+                                        eps_clip=0.2, optimization_iterations=10,
+                                        render_steps=100, illegal_action_logit=-1000,
+                                        filter_illegal_actions=True, train_progress_deterministic_eval=True,
+                                        attacker_opponent_baseline_type=8,
+                                        running_avg=50, n_quick_eval_iter=25, n_deterministic_eval_iter=5,
+                                        log_regret=True, snort_baseline_simulate=False, quick_eval_freq=1,
+                                        eval_deterministic=False
+                                        )
 
     env_name = "pycr-ctf-level-9-generated-sim-v5"
     #eval_env_name = "pycr-ctf-level-9-generated-sim-v5"

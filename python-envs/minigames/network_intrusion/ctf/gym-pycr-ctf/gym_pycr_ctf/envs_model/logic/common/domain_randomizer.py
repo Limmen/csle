@@ -1,17 +1,17 @@
 from typing import List
 import random
 import numpy as np
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.network_config import NetworkConfig
+from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
+from pycr_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
+from pycr_common.envs_model.config.generator.users_generator import UsersGenerator
+from pycr_common.envs_model.config.generator.flags_generator import FlagsGenerator
+from pycr_common.dao.container_config.vulnerability_type import VulnType
+from pycr_common.dao.domain_randomization.randomization_space import RandomizationSpace
+from pycr_common.envs_model.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
+from pycr_common.dao.network.flag import Flag
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.envs_model.config.generator.topology_generator import TopologyGenerator
-from gym_pycr_ctf.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
-from gym_pycr_ctf.envs_model.config.generator.users_generator import UsersGenerator
-from gym_pycr_ctf.envs_model.config.generator.flags_generator import FlagsGenerator
-from gym_pycr_ctf.dao.container_config.vulnerability_type import VulnType
 from gym_pycr_ctf.envs_model.logic.common.node_randomizer import NodeRandomizer
-from gym_pycr_ctf.dao.domain_randomization.randomization_space import RandomizationSpace
-from gym_pycr_ctf.envs_model.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
-from gym_pycr_ctf.dao.network.flag import Flag
 
 class DomainRandomizer:
     """

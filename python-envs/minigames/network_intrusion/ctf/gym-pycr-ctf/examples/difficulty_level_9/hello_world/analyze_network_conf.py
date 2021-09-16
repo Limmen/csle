@@ -1,4 +1,4 @@
-from gym_pycr_ctf.dao.network.network_config import NetworkConfig
+from pycr_common.dao.network.network_config import NetworkConfig
 
 def merge_network_confs():
     conf1 = NetworkConfig.load(dir_path="/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world",
