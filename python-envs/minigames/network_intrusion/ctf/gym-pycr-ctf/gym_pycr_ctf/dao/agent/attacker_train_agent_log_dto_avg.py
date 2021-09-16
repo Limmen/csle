@@ -1,9 +1,9 @@
 import numpy as np
 import time
 import pycr_common.envs_model.logic.common.util as pycr_util
-from pycr_common.agents.config.agent_config import AgentConfig
-from pycr_common.agents.openai_baselines.common.vec_env import SubprocVecEnv
-from pycr_common.dao.agent.base_attacker_train_agent_log_dto_avg import BaseAttackerTrainAgentLogDTOAvg
+from pycr_common import AgentConfig
+from pycr_common import SubprocVecEnv
+from pycr_common import BaseAttackerTrainAgentLogDTOAvg
 from gym_pycr_ctf.dao.agent.tensorboard_data_dto import TensorboardDataDTO
 
 

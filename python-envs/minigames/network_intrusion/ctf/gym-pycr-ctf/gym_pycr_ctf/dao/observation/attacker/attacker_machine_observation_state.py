@@ -1,12 +1,12 @@
 from typing import List
 import copy
-from pycr_common.dao.network.credential import Credential
+from pycr_common import Credential
 from pycr_common.dao.network.node import Node
-from pycr_common.dao.network.node_type import NodeType
-from pycr_common.dao.observation.common.port_observation_state import PortObservationState
-from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from pycr_common.dao.action_results.nmap_host_result import NmapHostResult
+from pycr_common import NodeType
+from pycr_common import PortObservationState
+from pycr_common import VulnerabilityObservationState
+from pycr_common import ConnectionObservationState
+from pycr_common import NmapHostResult
 
 
 class AttackerMachineObservationState:

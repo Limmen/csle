@@ -1,9 +1,9 @@
 from typing import List
 import copy
 import datetime
-from pycr_common.dao.network.emulation_config import EmulationConfig
-from pycr_common.dao.observation.common.port_observation_state import PortObservationState
-from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common import EmulationConfig
+from pycr_common import PortObservationState
+from pycr_common import ConnectionObservationState
 from pycr_common.dao.network.node import Node
 
 

@@ -1,9 +1,9 @@
 from typing import List
 import time
-import pycr_common.constants.constants as constants
-from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
-from pycr_common.dao.agent.train_mode import TrainMode
-from pycr_common.agents.config.agent_config import AgentConfig
+import pycr_common as constants
+from pycr_common import BaseTrainAgentLogDTO
+from pycr_common import TrainMode
+from pycr_common import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
@@ -1264,8 +1264,10 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_episode_early_stopped.append(_info[constants.INFO_DICT.EARLY_STOPPED])
         self.eval_episode_successful_intrusion.append(_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION])
         self.eval_episode_snort_severe_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
-        self.eval_episode_snort_warning_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
-        self.eval_episode_snort_critical_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
+        self.eval_episode_snort_warning_baseline_rewards.append(_info[
+                                                                    constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
+        self.eval_episode_snort_critical_baseline_rewards.append(_info[
+                                                                     constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
         self.eval_episode_var_log_baseline_rewards.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
         self.eval_episode_step_baseline_rewards.append(_info[constants.INFO_DICT.STEP_BASELINE_REWARD])
         self.eval_episode_snort_severe_baseline_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
@@ -1273,21 +1275,34 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_episode_snort_critical_baseline_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
         self.eval_episode_var_log_baseline_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
         self.eval_episode_step_baseline_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_STEP])
-        self.eval_episode_snort_severe_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
-        self.eval_episode_snort_warning_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
-        self.eval_episode_snort_critical_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
-        self.eval_episode_var_log_baseline_caught_attacker.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
+        self.eval_episode_snort_severe_baseline_caught_attacker.append(_info[
+                                                                           constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
+        self.eval_episode_snort_warning_baseline_caught_attacker.append(_info[
+                                                                            constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
+        self.eval_episode_snort_critical_baseline_caught_attacker.append(_info[
+                                                                             constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
+        self.eval_episode_var_log_baseline_caught_attacker.append(_info[
+                                                                      constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
         self.eval_episode_step_baseline_caught_attacker.append(_info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
-        self.eval_episode_snort_severe_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
-        self.eval_episode_snort_warning_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
-        self.eval_episode_snort_critical_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
-        self.eval_episode_var_log_baseline_early_stopping.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
+        self.eval_episode_snort_severe_baseline_early_stopping.append(_info[
+                                                                          constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
+        self.eval_episode_snort_warning_baseline_early_stopping.append(_info[
+                                                                           constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
+        self.eval_episode_snort_critical_baseline_early_stopping.append(_info[
+                                                                            constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
+        self.eval_episode_var_log_baseline_early_stopping.append(_info[
+                                                                     constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
         self.eval_episode_step_baseline_early_stopping.append(_info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
-        self.eval_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_episode_step_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                    constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                     constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                      constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[
+                                                                               constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_episode_step_baseline_uncaught_intrusion_steps.append(_info[
+                                                                            constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
         self.eval_episode_flags_percentage.append(_info[constants.INFO_DICT.FLAGS] / env_conf.num_flags)
         self.eval_attacker_action_costs.append(_info[constants.INFO_DICT.ATTACKER_COST])
         self.eval_attacker_action_costs_norm.append(_info[constants.INFO_DICT.ATTACKER_COST_NORM])
@@ -1301,30 +1316,52 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_defender_second_stop_step.append(_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
         self.eval_defender_third_stop_step.append(_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
         self.eval_defender_fourth_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
-        self.eval_episode_snort_severe_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP])
-        self.eval_episode_snort_warning_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP])
-        self.eval_episode_snort_critical_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP])
-        self.eval_episode_var_log_baseline_first_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP])
+        self.eval_episode_snort_severe_baseline_first_stop_step.append(_info[
+                                                                           constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP])
+        self.eval_episode_snort_warning_baseline_first_stop_step.append(_info[
+                                                                            constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP])
+        self.eval_episode_snort_critical_baseline_first_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP])
+        self.eval_episode_var_log_baseline_first_stop_step.append(_info[
+                                                                      constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP])
         self.eval_episode_step_baseline_first_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_FIRST_STOP_STEP])
-        self.eval_episode_snort_severe_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP])
-        self.eval_episode_snort_warning_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP])
-        self.eval_episode_snort_critical_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP])
-        self.eval_episode_var_log_baseline_second_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP])
-        self.eval_episode_step_baseline_second_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP])
-        self.eval_episode_snort_severe_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP])
-        self.eval_episode_snort_warning_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP])
-        self.eval_episode_snort_critical_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP])
-        self.eval_episode_var_log_baseline_third_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP])
+        self.eval_episode_snort_severe_baseline_second_stop_step.append(_info[
+                                                                            constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP])
+        self.eval_episode_snort_warning_baseline_second_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP])
+        self.eval_episode_snort_critical_baseline_second_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP])
+        self.eval_episode_var_log_baseline_second_stop_step.append(_info[
+                                                                       constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP])
+        self.eval_episode_step_baseline_second_stop_step.append(_info[
+                                                                    constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP])
+        self.eval_episode_snort_severe_baseline_third_stop_step.append(_info[
+                                                                           constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP])
+        self.eval_episode_snort_warning_baseline_third_stop_step.append(_info[
+                                                                            constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP])
+        self.eval_episode_snort_critical_baseline_third_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP])
+        self.eval_episode_var_log_baseline_third_stop_step.append(_info[
+                                                                      constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP])
         self.eval_episode_step_baseline_third_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_THIRD_STOP_STEP])
-        self.eval_episode_snort_severe_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP])
-        self.eval_episode_snort_warning_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP])
-        self.eval_episode_snort_critical_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP])
-        self.eval_episode_var_log_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP])
-        self.eval_episode_step_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP])
-        self.eval_episode_snort_severe_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING])
-        self.eval_episode_snort_warning_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING])
-        self.eval_episode_snort_critical_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING])
-        self.eval_episode_var_log_baseline_stops_remaining.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING])
+        self.eval_episode_snort_severe_baseline_fourth_stop_step.append(_info[
+                                                                            constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP])
+        self.eval_episode_snort_warning_baseline_fourth_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP])
+        self.eval_episode_snort_critical_baseline_fourth_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP])
+        self.eval_episode_var_log_baseline_fourth_stop_step.append(_info[
+                                                                       constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP])
+        self.eval_episode_step_baseline_fourth_stop_step.append(_info[
+                                                                    constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP])
+        self.eval_episode_snort_severe_baseline_stops_remaining.append(_info[
+                                                                           constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING])
+        self.eval_episode_snort_warning_baseline_stops_remaining.append(_info[
+                                                                            constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING])
+        self.eval_episode_snort_critical_baseline_stops_remaining.append(_info[
+                                                                             constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING])
+        self.eval_episode_var_log_baseline_stops_remaining.append(_info[
+                                                                      constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING])
         self.eval_episode_step_baseline_stops_remaining.append(_info[constants.INFO_DICT.STEP_BASELINE_STOPS_REMAINING])
         self.eval_optimal_stops_remaining.append(_info[constants.INFO_DICT.OPTIMAL_STOPS_REMAINING])
         self.eval_optimal_first_stop_step.append(_info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP])
@@ -1344,30 +1381,48 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_2_episode_caught.append(_info[constants.INFO_DICT.CAUGHT_ATTACKER])
         self.eval_2_episode_early_stopped.append(_info[constants.INFO_DICT.EARLY_STOPPED])
         self.eval_2_episode_successful_intrusion.append(_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION])
-        self.eval_2_episode_snort_severe_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
-        self.eval_2_episode_snort_warning_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
-        self.eval_2_episode_snort_critical_baseline_rewards.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
+        self.eval_2_episode_snort_severe_baseline_rewards.append(_info[
+                                                                     constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
+        self.eval_2_episode_snort_warning_baseline_rewards.append(_info[
+                                                                      constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
+        self.eval_2_episode_snort_critical_baseline_rewards.append(_info[
+                                                                       constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
         self.eval_2_episode_step_baseline_rewards.append(_info[constants.INFO_DICT.STEP_BASELINE_REWARD])
         self.eval_2_episode_snort_severe_baseline_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
         self.eval_2_episode_snort_warning_baseline_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP])
-        self.eval_2_episode_snort_critical_baseline_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
+        self.eval_2_episode_snort_critical_baseline_steps.append(_info[
+                                                                     constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
         self.eval_2_episode_var_log_baseline_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
         self.eval_2_episode_step_baseline_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_STEP])
-        self.eval_2_episode_snort_severe_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
-        self.eval_2_episode_snort_warning_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
-        self.eval_2_episode_snort_critical_baseline_caught_attacker.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
-        self.eval_2_episode_var_log_baseline_caught_attacker.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
-        self.eval_2_episode_step_baseline_caught_attacker.append(_info[constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
-        self.eval_2_episode_snort_severe_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
-        self.eval_2_episode_snort_warning_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
-        self.eval_2_episode_snort_critical_baseline_early_stopping.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
-        self.eval_2_episode_var_log_baseline_early_stopping.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
+        self.eval_2_episode_snort_severe_baseline_caught_attacker.append(_info[
+                                                                             constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
+        self.eval_2_episode_snort_warning_baseline_caught_attacker.append(_info[
+                                                                              constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
+        self.eval_2_episode_snort_critical_baseline_caught_attacker.append(_info[
+                                                                               constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
+        self.eval_2_episode_var_log_baseline_caught_attacker.append(_info[
+                                                                        constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
+        self.eval_2_episode_step_baseline_caught_attacker.append(_info[
+                                                                     constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
+        self.eval_2_episode_snort_severe_baseline_early_stopping.append(_info[
+                                                                            constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
+        self.eval_2_episode_snort_warning_baseline_early_stopping.append(_info[
+                                                                             constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
+        self.eval_2_episode_snort_critical_baseline_early_stopping.append(_info[
+                                                                              constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
+        self.eval_2_episode_var_log_baseline_early_stopping.append(_info[
+                                                                       constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
         self.eval_2_episode_step_baseline_early_stopping.append(_info[constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
-        self.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_2_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-        self.eval_2_episode_step_baseline_uncaught_intrusion_steps.append(_info[constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                      constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                       constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                        constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_2_episode_var_log_baseline_uncaught_intrusion_steps.append(_info[
+                                                                                 constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
+        self.eval_2_episode_step_baseline_uncaught_intrusion_steps.append(_info[
+                                                                              constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
         self.eval_2_episode_var_log_baseline_rewards.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
         self.eval_2_episode_flags_percentage.append(_info[constants.INFO_DICT.FLAGS] / env_conf.num_flags)
         self.eval_2_attacker_action_costs.append(_info[constants.INFO_DICT.ATTACKER_COST])
@@ -1382,31 +1437,56 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_2_defender_second_stop_step.append(_info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
         self.eval_2_defender_third_stop_step.append(_info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
         self.eval_2_defender_fourth_stop_step.append(_info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
-        self.eval_2_episode_snort_severe_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP])
-        self.eval_2_episode_snort_warning_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP])
-        self.eval_2_episode_snort_critical_baseline_first_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP])
-        self.eval_2_episode_var_log_baseline_first_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP])
-        self.eval_2_episode_step_baseline_first_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_FIRST_STOP_STEP])
-        self.eval_2_episode_snort_severe_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP])
-        self.eval_2_episode_snort_warning_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP])
-        self.eval_2_episode_snort_critical_baseline_second_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP])
-        self.eval_2_episode_var_log_baseline_second_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP])
-        self.eval_2_episode_step_baseline_second_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP])
-        self.eval_2_episode_snort_severe_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP])
-        self.eval_2_episode_snort_warning_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP])
-        self.eval_2_episode_snort_critical_baseline_third_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP])
-        self.eval_2_episode_var_log_baseline_third_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP])
-        self.eval_2_episode_step_baseline_third_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_THIRD_STOP_STEP])
-        self.eval_2_episode_snort_severe_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP])
-        self.eval_2_episode_snort_warning_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP])
-        self.eval_2_episode_snort_critical_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP])
-        self.eval_2_episode_var_log_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP])
-        self.eval_2_episode_step_baseline_fourth_stop_step.append(_info[constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP])
-        self.eval_2_episode_snort_severe_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING])
-        self.eval_2_episode_snort_warning_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING])
-        self.eval_2_episode_snort_critical_baseline_stops_remaining.append(_info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING])
-        self.eval_2_episode_var_log_baseline_stops_remaining.append(_info[constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING])
-        self.eval_2_episode_step_baseline_stops_remaining.append(_info[constants.INFO_DICT.STEP_BASELINE_STOPS_REMAINING])
+        self.eval_2_episode_snort_severe_baseline_first_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP])
+        self.eval_2_episode_snort_warning_baseline_first_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP])
+        self.eval_2_episode_snort_critical_baseline_first_stop_step.append(_info[
+                                                                               constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP])
+        self.eval_2_episode_var_log_baseline_first_stop_step.append(_info[
+                                                                        constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP])
+        self.eval_2_episode_step_baseline_first_stop_step.append(_info[
+                                                                     constants.INFO_DICT.STEP_BASELINE_FIRST_STOP_STEP])
+        self.eval_2_episode_snort_severe_baseline_second_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP])
+        self.eval_2_episode_snort_warning_baseline_second_stop_step.append(_info[
+                                                                               constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP])
+        self.eval_2_episode_snort_critical_baseline_second_stop_step.append(_info[
+                                                                                constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP])
+        self.eval_2_episode_var_log_baseline_second_stop_step.append(_info[
+                                                                         constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP])
+        self.eval_2_episode_step_baseline_second_stop_step.append(_info[
+                                                                      constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP])
+        self.eval_2_episode_snort_severe_baseline_third_stop_step.append(_info[
+                                                                             constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP])
+        self.eval_2_episode_snort_warning_baseline_third_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP])
+        self.eval_2_episode_snort_critical_baseline_third_stop_step.append(_info[
+                                                                               constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP])
+        self.eval_2_episode_var_log_baseline_third_stop_step.append(_info[
+                                                                        constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP])
+        self.eval_2_episode_step_baseline_third_stop_step.append(_info[
+                                                                     constants.INFO_DICT.STEP_BASELINE_THIRD_STOP_STEP])
+        self.eval_2_episode_snort_severe_baseline_fourth_stop_step.append(_info[
+                                                                              constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP])
+        self.eval_2_episode_snort_warning_baseline_fourth_stop_step.append(_info[
+                                                                               constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP])
+        self.eval_2_episode_snort_critical_baseline_fourth_stop_step.append(_info[
+                                                                                constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP])
+        self.eval_2_episode_var_log_baseline_fourth_stop_step.append(_info[
+                                                                         constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP])
+        self.eval_2_episode_step_baseline_fourth_stop_step.append(_info[
+                                                                      constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP])
+        self.eval_2_episode_snort_severe_baseline_stops_remaining.append(_info[
+                                                                             constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING])
+        self.eval_2_episode_snort_warning_baseline_stops_remaining.append(_info[
+                                                                              constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING])
+        self.eval_2_episode_snort_critical_baseline_stops_remaining.append(_info[
+                                                                               constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING])
+        self.eval_2_episode_var_log_baseline_stops_remaining.append(_info[
+                                                                        constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING])
+        self.eval_2_episode_step_baseline_stops_remaining.append(_info[
+                                                                     constants.INFO_DICT.STEP_BASELINE_STOPS_REMAINING])
         self.eval_2_optimal_stops_remaining.append(_info[constants.INFO_DICT.OPTIMAL_STOPS_REMAINING])
         self.eval_2_optimal_first_stop_step.append(_info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP])
         self.eval_2_optimal_second_stop_step.append(_info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP])

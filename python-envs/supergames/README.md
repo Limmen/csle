@@ -1,4 +1,4 @@
-# Python Interfaces to emulated "minigames" 
+# Python Interfaces to emulated "supergames" 
 
 This folder contains a set of python environments that interface to emulated infrastructures for various security "supergames"--challenges/environments
 to evaluate automatic controllers and autonomous agents on security-related tasks. 

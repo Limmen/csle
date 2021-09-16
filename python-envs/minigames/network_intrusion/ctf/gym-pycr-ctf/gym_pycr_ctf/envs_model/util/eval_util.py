@@ -2,7 +2,7 @@ from typing import Tuple, List
 import torch
 import numpy as np
 import math
-import pycr_common.constants.constants as constants
+import pycr_common as constants
 from pycr_common.dao.network.trajectory import Trajectory
 from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 from gym_pycr_ctf.dao.network.env_config import EnvConfig

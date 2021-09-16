@@ -1,9 +1,9 @@
 import numpy as np
 import time
 import pycr_common.envs_model.logic.common.util as pycr_util
-from pycr_common.agents.config.agent_config import AgentConfig
-from pycr_common.dao.agent.train_mode import TrainMode
-from pycr_common.dao.agent.base_defender_train_agent_log_dto_avg import BaseDefenderTrainAgentLogDTOAvg
+from pycr_common import AgentConfig
+from pycr_common import TrainMode
+from pycr_common import BaseDefenderTrainAgentLogDTOAvg
 from gym_pycr_ctf.dao.agent.tensorboard_data_dto import TensorboardDataDTO
 
 

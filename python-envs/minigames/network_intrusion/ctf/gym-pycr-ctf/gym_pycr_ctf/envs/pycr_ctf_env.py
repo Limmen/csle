@@ -7,14 +7,14 @@ import os
 import sys
 import time
 import random
-from pycr_common.dao.agent.agent_log import AgentLog
-from pycr_common.dao.network.env_mode import EnvMode
-from pycr_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from pycr_common.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
-from pycr_common.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
-import pycr_common.constants.constants as constants
+from pycr_common import AgentLog
+from pycr_common.dao.network import EnvMode
+from pycr_common import RandomExplorationPolicy
+from pycr_common.envs_model.logic.emulation.warmup import EmulationWarmup
+from pycr_common import InitialStateRandomizer
+import pycr_common as constants
 import pycr_common.envs_model.logic.common.util as util
-from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common import BasePyCREnv
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
@@ -670,7 +670,7 @@ class PyCRCTFEnv(gym.Env, ABC, BasePyCREnv):
 
         :return: None
         """
-        from pycr_common.rendering.viewer import Viewer
+        from pycr_common import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path
