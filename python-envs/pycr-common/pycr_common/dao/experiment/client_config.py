@@ -2,13 +2,14 @@
 Client configuration for running experiments (parsed from JSON)
 """
 from typing import List
+from pycr_common.dao.experiment.base_simulation_config import BaseSimulationConfig
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.dao.agent.train_mode import TrainMode
+
 
 class ClientConfig:
     """
@@ -24,7 +25,7 @@ class ClientConfig:
                  agent_type : int = 0,
                  emulation_config = None, env_checkpoint_dir : str = None,
                  mode: RunnerMode = RunnerMode.TRAIN_ATTACKER,
-                 simulation_config: SimulationConfig = None,
+                 simulation_config: BaseSimulationConfig = None,
                  eval_env: bool = None,
                  eval_env_name: str = None,
                  eval_emulation_config = None,

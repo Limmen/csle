@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import glob
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 import matplotlib.ticker as tick
 import matplotlib
 import matplotlib.pyplot as plt

@@ -5,9 +5,9 @@ import torch
 import glob
 from gym_pycr_ctf.util.experiments_util import plotting_util
 from pycr_common.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 
 def plot_emulation_train(train_containers_configs: List[ContainersConfig], eval_containers_configs: List[ContainersConfig],

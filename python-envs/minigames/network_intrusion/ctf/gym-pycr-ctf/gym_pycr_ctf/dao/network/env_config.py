@@ -9,12 +9,13 @@ from pycr_common.dao.action_results.nikto_scan_cache import NiktoScanCache
 from pycr_common.dao.state_representation.state_type import StateType
 from pycr_common.dao.action_results.user_command_cache import UserCommandCache
 from pycr_common.dao.action_results.action_alerts import ActionAlerts
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
 
 
-class EnvConfig:
+class EnvConfig(BaseEnvConfig):
     """
     Class containing the complete configuration of a pycr-ctf env
     """
@@ -47,9 +48,10 @@ class EnvConfig:
         :param base_detection_p: base detection probability for simulation
         :param manual_play: boolean flag whether manual play is used
         """
+        super(EnvConfig, self).__init__(
+            attacker_action_conf=attacker_action_conf, defender_action_conf=defender_action_conf,
+            manual_play=manual_play, attacker_exploration_filter_illegal=True)
         self.network_conf = network_conf
-        self.attacker_action_conf = attacker_action_conf
-        self.defender_action_conf = defender_action_conf
         self.attacker_num_ports_obs = attacker_num_ports_obs
         self.attacker_num_vuln_obs = attacker_num_vuln_obs
         self.attacker_num_sh_obs = attacker_num_sh_obs
@@ -148,7 +150,6 @@ class EnvConfig:
         self.ip_to_machine_id_mapping = {}
         self.save_trajectories = False
         self.blacklist_ips = ["172.18.1.1"]
-        self.manual_play = manual_play
         self.state_type = state_type
 
         self.attacker_ssh_retry_find_flag = 5
@@ -165,7 +166,6 @@ class EnvConfig:
         self.print_cache_details_freq = 500
         self.ids_router = False
         self.idx = 0
-        self.attacker_exploration_filter_illegal = True
         self.domain_randomization = False
         self.compute_pi_star_attacker = False
         self.use_upper_bound_pi_star_attacker = False

@@ -54,14 +54,12 @@ class PyCRCTFRandomManyEmulation1Env(PyCRCTFEnv):
             env_config.use_upper_bound_pi_star_attacker = False
             env_config.detection_alerts_threshold = -1
             env_config.emulate_detection = True
-            #env_config.detection_prob_factor = 0.05
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomManyEmulation1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 With Costs ------------
-
 class PyCRCTFRandomManyEmulationWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -101,4 +99,4 @@ class PyCRCTFRandomManyEmulationWithCosts1Env(PyCRCTFEnv):
             env_config.max_episode_length = 200
             env_config.compute_pi_star_attacker = False
             env_config.use_upper_bound_pi_star_attacker = True
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomManyEmulationWithCosts1Env, self).__init__(env_config=env_config)

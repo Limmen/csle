@@ -34,7 +34,7 @@ class PyCRCTFLevel1SimBaseEnv(PyCRCTFEnv):
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel1SimBaseEnv, self).__init__(env_config=env_config)
 
 # -------- Version 1 ------------
 class PyCRCTFLevel1Sim1Env(PyCRCTFEnv):

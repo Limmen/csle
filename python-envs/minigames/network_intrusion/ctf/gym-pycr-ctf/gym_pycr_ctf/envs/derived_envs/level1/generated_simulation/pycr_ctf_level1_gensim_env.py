@@ -9,6 +9,7 @@ from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_v2 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_v3 import PyCrCTFLevel1V3
 from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_v4 import PyCrCTFLevel1V4
 
+
 # -------- Version 1 ------------
 class PyCRCTFLevel1GeneratedSim1Env(PyCRCTFEnv):
     """
@@ -43,7 +44,7 @@ class PyCRCTFLevel1GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel1GeneratedSim1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1, costs ------------

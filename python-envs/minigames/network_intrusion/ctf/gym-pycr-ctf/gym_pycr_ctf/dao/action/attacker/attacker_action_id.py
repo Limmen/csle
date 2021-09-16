@@ -1,7 +1,8 @@
 from enum import Enum
+from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
 
 
-class AttackerActionId(Enum):
+class AttackerActionId(Enum, BaseAttackerActionId):
     """
     Enum representing the different attacks
     """
@@ -98,3 +99,6 @@ class AttackerActionId(Enum):
 
     STOP=84
     CONTINUE=85
+
+    def __init__(self):
+        super().__init__()

@@ -2,7 +2,7 @@ import os
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.experiment.client_config import ClientConfig
 from pycr_common.dao.agent.agent_type import AgentType
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.experiment.runner_mode import RunnerMode
 from pycr_common.dao.agent.train_mode import TrainMode
 

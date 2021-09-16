@@ -1,9 +1,9 @@
 from typing import List
+import pycr_common.constants.constants as constants
 from pycr_common.dao.network.network_service import NetworkService
 from pycr_common.dao.network.transport_protocol import TransportProtocol
 from pycr_common.dao.network.vulnerability import Vulnerability
 from pycr_common.dao.network.credential import Credential
-import pycr_common.constants.constants as constants
 
 
 class BaseRandomizationSpace:

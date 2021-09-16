@@ -1,5 +1,6 @@
 from typing import Tuple
 from pycr_common.dao.network.env_mode import EnvMode
+from pycr_common.envs_model.logic.base_transition_operator import BaseTransitionOperator
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs_model.logic.emulation.emulation_middleware import EmulationMiddleware
@@ -8,15 +9,19 @@ from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 
 
-class TransitionOperator:
+class TransitionOperator(BaseTransitionOperator):
     """
     Implements the transition operator of the MDP/Markov Game:
 
     (s, a) --> (s', r)
     """
 
+    def __init__(self):
+        super().__init__()
+
     @staticmethod
-    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : EnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : EnvConfig) -> \
+            Tuple[EnvState, float, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for attack actions,
         supporting both simulation and emulation mode

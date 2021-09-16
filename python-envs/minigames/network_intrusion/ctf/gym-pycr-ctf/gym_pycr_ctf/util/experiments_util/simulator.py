@@ -8,7 +8,7 @@ from pycr_common.agents.bots.ppo_attacker_bot_agent import PPOAttackerBotAgent
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.experiment.simulation_config import SimulationConfig
-from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
+from pycr_common.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 
 
 class Simulator:

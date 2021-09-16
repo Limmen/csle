@@ -1,6 +1,6 @@
 from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 def apply_config():
     topology_config = util.read_topology(util.default_topology_path())

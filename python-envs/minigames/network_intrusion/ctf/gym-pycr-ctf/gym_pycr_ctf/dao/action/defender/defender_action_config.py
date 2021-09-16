@@ -1,11 +1,12 @@
 from typing import List
 import gym
+from pycr_common.dao.action.defender.base_defender_action_config import BaseDefenderActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_update_state_actions import DefenderUpdateStateActions
 
 
-class DefenderActionConfig:
+class DefenderActionConfig(BaseDefenderActionConfig):
     """
     Configuration of the action space for the defender
     """
@@ -22,6 +23,7 @@ class DefenderActionConfig:
         :param multiple_stop_actions_ids: if it is a multiple stopping environment, this defines the ids of
                                           the stop actions
         """
+        super().__init__(num_actions=len(self.actions))
         self.actions = actions
         self.num_actions = len(self.actions)
         self.num_indices = num_indices

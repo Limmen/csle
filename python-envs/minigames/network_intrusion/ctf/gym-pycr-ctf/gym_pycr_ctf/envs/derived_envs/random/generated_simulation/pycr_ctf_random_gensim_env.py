@@ -11,6 +11,7 @@ from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v2 import PyCrCTFRand
 from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v3 import PyCrCTFRandomV3
 from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v4 import PyCrCTFRandomV4
 
+
 # -------- Version 1 Generated Sim ------------
 class PyCRCTFRandomGeneratedSim1Env(PyCRCTFEnv):
     """
@@ -56,10 +57,10 @@ class PyCRCTFRandomGeneratedSim1Env(PyCRCTFEnv):
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSim1Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 1 Generated Sim With Costs ------------
-
 class PyCRCTFRandomGeneratedSimWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -97,7 +98,7 @@ class PyCRCTFRandomGeneratedSimWithCosts1Env(PyCRCTFEnv):
             env_config.attacker_exploration_policy = exp_policy
             env_config.domain_randomization = False
             env_config.attacker_exploration_filter_illegal = True
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSimWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 Generated Sim ------------
@@ -138,10 +139,10 @@ class PyCRCTFRandomGeneratedSim2Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSim2Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 2 Generated Sim With Costs ------------
-
 class PyCRCTFRandomGeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
@@ -179,7 +180,7 @@ class PyCRCTFRandomGeneratedSimWithCosts2Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSimWithCosts2Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 3, Generated Simulation ------------
@@ -220,7 +221,8 @@ class PyCRCTFRandomGeneratedSim3Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSim3Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3, Generated Simulation With Costs ------------
 class PyCRCTFRandomGeneratedSimWithCosts3Env(PyCRCTFEnv):
@@ -260,7 +262,7 @@ class PyCRCTFRandomGeneratedSimWithCosts3Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSimWithCosts3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4, Generated Simulation ------------
@@ -302,7 +304,8 @@ class PyCRCTFRandomGeneratedSim4Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSim4Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 4, Generated Simulation, With Costs------------
 class PyCRCTFRandomGeneratedSimWithCosts4Env(PyCRCTFEnv):
@@ -345,4 +348,4 @@ class PyCRCTFRandomGeneratedSimWithCosts4Env(PyCRCTFEnv):
             env_config.max_episode_length = 50
             env_config.compute_pi_star_attacker = False
             env_config.use_upper_bound_pi_star_attacker = True
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomGeneratedSimWithCosts4Env, self).__init__(env_config=env_config)

@@ -1,7 +1,8 @@
 import threading
 import time
-from gym_pycr_ctf.envs_model.logic.emulation.tunnel.forward_ssh_server import ForwardSSHServer
-from gym_pycr_ctf.envs_model.logic.emulation.tunnel.forward_ssh_handler import ForwardSSHHandler
+from pycr_common.envs_model.logic.emulation.tunnel.forward_ssh_server import ForwardSSHServer
+from pycr_common.envs_model.logic.emulation.tunnel.forward_ssh_handler import ForwardSSHHandler
+
 
 class ForwardTunnelThread(threading.Thread):
     """

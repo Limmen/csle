@@ -2,24 +2,24 @@
 Some utility functions for PyCr CTF minigame
 """
 import numpy as np
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from pycr_common.dao.network.network_config import NetworkConfig
 
 
-def is_network_conf_incomplete(env_config: EnvConfig):
+def is_network_conf_incomplete(network_conf: NetworkConfig):
     """
     Checks if the network configuration is complete or not
     :param env_config:
     :return:
     """
-    if env_config.network_conf is None:
+    if network_conf is None:
         return True
-    if env_config.network_conf.nodes is None:
+    if network_conf.nodes is None:
         return True
-    if len(env_config.network_conf.nodes) == 0:
+    if len(network_conf.nodes) == 0:
         return True
-    if env_config.network_conf.adj_matrix is None:
+    if network_conf.adj_matrix is None:
         return True
-    if len(env_config.network_conf.adj_matrix) == 0:
+    if len(network_conf.adj_matrix) == 0:
         return True
     return False
 

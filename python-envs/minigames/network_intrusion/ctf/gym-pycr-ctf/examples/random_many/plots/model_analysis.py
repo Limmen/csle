@@ -1,8 +1,8 @@
 from pycr_common.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 import gym
 import numpy as np
 import random

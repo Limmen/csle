@@ -1,6 +1,6 @@
 from pycr_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 def apply_config():
     vuln_config = util.read_vulns_config(util.default_vulnerabilities_path())

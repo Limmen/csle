@@ -1,6 +1,6 @@
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.container_config.container_env_config import ContainerEnvConfig
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.util.experiments_util import util
+from pycr_common.dao.container_config.container_env_config import ContainerEnvConfig
 
 def generate_config():
     container_pool = [("ftp1", "0.0.1"), ("ftp2", "0.0.1"), ("honeypot1", "0.0.1"),

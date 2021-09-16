@@ -4,8 +4,8 @@ An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from O
 import time
 import math
 
-from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
-from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
+from pycr_common.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.train_agent import TrainAgent
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
@@ -13,6 +13,9 @@ from pycr_common.agents.openai_baselines.common.vec_env.dummy_vec_env import Dum
 from pycr_common.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.agents.util.agent_util import AgentUtil
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
+from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 
 
 class PPOBaselineAgent(TrainAgent):
@@ -22,17 +25,28 @@ class PPOBaselineAgent(TrainAgent):
 
     def __init__(self, env, attacker_agent_config: AgentConfig,
                  defender_agent_config: AgentConfig,
+                 train_agent_dto: BaseTrainAgentLogDTO, rollout_data_dto: BaseRolloutDataDTO,
+                 eval_util: BaseEvalUtil, experiment_result: BaseExperimentResult,
                  eval_env, train_mode: TrainMode = TrainMode.TRAIN_ATTACKER):
         """
         Initialize environment and hyperparameters
 
-        :param attacker_agent_config: the configuration
+        :param the training env
+        :param attacker_config: the attacker configuration
+        :param defender_config: the defender configuration
+        :param train_agent_dto: the DTO for logging training data
+        :param rollout_data_dto: the DTO for rollout data
+        :param eval_util: the util class for running custom evaluations
+        :param experiment_result: the DTO for saving experiment results
+        :param eval_env: the evaluation env
         """
         super(PPOBaselineAgent, self).__init__(env, attacker_agent_config,
                                                defender_agent_config,
+                                               train_agent_dto, rollout_data_dto,
+                                               eval_util,
                                                eval_env, train_mode)
 
-    def train(self) -> ExperimentResult:
+    def train(self) -> BaseExperimentResult:
         """
         Starts the training loop and returns the result when complete
 
@@ -114,7 +128,10 @@ class PPOBaselineAgent(TrainAgent):
                     attacker_ent_coef=self.attacker_config.ent_coef,
                     defender_ent_coef=self.defender_config.ent_coef,
                     env_2=self.eval_env,
-                    train_mode = self.train_mode
+                    train_mode = self.train_mode,
+                    train_agent_log_dto=self.train_agent_dto,
+                    rollout_data_dto=self.rollout_data_dto,
+                    eval_util=self.eval_util
                     )
 
         if self.attacker_config.load_path is not None:
@@ -205,5 +222,5 @@ class PPOBaselineAgent(TrainAgent):
     def get_action(self, s, eval=False, attacker=True) -> int:
         raise NotImplemented("not implemented")
 
-    def eval(self, log=True) -> ExperimentResult:
+    def eval(self, log=True) -> BaseExperimentResult:
         raise NotImplemented("not implemented")

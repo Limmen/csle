@@ -2,8 +2,9 @@ from typing import List
 import copy
 import datetime
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common.dao.observation.common.port_observation_state import PortObservationState
+from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common.dao.network.node import Node
 
 
 class DefenderMachineObservationState:
@@ -101,6 +102,21 @@ class DefenderMachineObservationState:
         m_copy.num_login_events_recent = self.num_login_events_recent
         m_copy.num_processes_recent = self.num_processes_recent
         return m_copy
+
+
+    @staticmethod
+    def from_node(node: Node, service_lookup: dict) -> "DefenderMachineObservationState":
+        """
+        Converts a node to a defender machine observation
+
+        :param service_lookup: a service lookup table
+        :return: the defender machine observation
+        """
+        d_obs = DefenderMachineObservationState(node.ip)
+        d_obs.os = node.os
+        d_obs.num_flags = len(node.flags)
+        d_obs.ports = list(map(lambda x: PortObservationState.from_network_service(x, service_lookup), node.services))
+        return d_obs
 
 
 

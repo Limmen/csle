@@ -1,5 +1,5 @@
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
 
 
 class InitialStateRandomizer:
@@ -8,7 +8,7 @@ class InitialStateRandomizer:
     """
 
     @staticmethod
-    def explore(attacker_exp_policy: ExplorationPolicy, env_config: EnvConfig, env, max_steps : int) -> bool:
+    def explore(attacker_exp_policy: ExplorationPolicy, env_config: BaseEnvConfig, env, max_steps : int) -> bool:
         """
         Explores the environment to generate trajectories that can be used to learn a dynamics model
 
@@ -39,7 +39,7 @@ class InitialStateRandomizer:
         return done
 
     @staticmethod
-    def randomize_starting_state(exp_policy: ExplorationPolicy, env_config: EnvConfig, env, max_steps : int) -> bool:
+    def randomize_starting_state(exp_policy: ExplorationPolicy, env_config: BaseEnvConfig, env, max_steps : int) -> bool:
 
         # Initialize model
         return InitialStateRandomizer.explore(attacker_exp_policy=exp_policy, env_config=env_config, env=env,

@@ -9,6 +9,7 @@ from gym_pycr_ctf.envs_model.config.level_2.pycr_ctf_level_2_v2 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_2.pycr_ctf_level_2_v3 import PyCrCTFLevel2V3
 from gym_pycr_ctf.envs_model.config.level_2.pycr_ctf_level_2_v4 import PyCrCTFLevel2V4
 
+
 # -------- Version 1 ------------
 class PyCRCTFLevel2GeneratedSim1Env(PyCRCTFEnv):
     """
@@ -43,7 +44,8 @@ class PyCRCTFLevel2GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSim1Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 1, Costs ------------
 class PyCRCTFLevel2GeneratedSimWithCosts1Env(PyCRCTFEnv):
@@ -79,7 +81,7 @@ class PyCRCTFLevel2GeneratedSimWithCosts1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSimWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
@@ -116,7 +118,8 @@ class PyCRCTFLevel2GeneratedSim2Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSim2Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 2, Costs ------------
 class PyCRCTFLevel2GeneratedSimWithCosts2Env(PyCRCTFEnv):
@@ -152,7 +155,8 @@ class PyCRCTFLevel2GeneratedSimWithCosts2Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSimWithCosts2Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3 ------------
 class PyCRCTFLevel2GeneratedSim3Env(PyCRCTFEnv):
@@ -188,7 +192,8 @@ class PyCRCTFLevel2GeneratedSim3Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSim3Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3, Costs ------------
 class PyCRCTFLevel2GeneratedSimWithCosts3Env(PyCRCTFEnv):
@@ -224,7 +229,8 @@ class PyCRCTFLevel2GeneratedSimWithCosts3Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSimWithCosts3Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 4 ------------
 class PyCRCTFLevel2GeneratedSim4Env(PyCRCTFEnv):
@@ -260,7 +266,8 @@ class PyCRCTFLevel2GeneratedSim4Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSim4Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 4 ------------
 class PyCRCTFLevel2GeneratedSimWithCosts4Env(PyCRCTFEnv):
@@ -296,4 +303,4 @@ class PyCRCTFLevel2GeneratedSimWithCosts4Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2GeneratedSimWithCosts4Env, self).__init__(env_config=env_config)

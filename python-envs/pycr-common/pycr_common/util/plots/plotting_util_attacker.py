@@ -2,10 +2,8 @@
 Utility functions for plotting training results of attacker
 """
 from typing import Tuple
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 
 def plot_rewards_attacker(

@@ -4,13 +4,13 @@ An agent for the pycr-ctf env that uses the DDPG algorithm from OpenAI stable ba
 import time
 import math
 
+from pycr_common.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.train_agent import TrainAgent
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.ddpg.impl.ddpg import DDPG
 from pycr_common.agents.util.agent_util import AgentUtil
-from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 
 
 class DDPGBaselineAgent(TrainAgent):
@@ -18,7 +18,7 @@ class DDPGBaselineAgent(TrainAgent):
     An agent for the pycr-ctf env that uses the DDPG algorithm from OpenAI stable baselines
     """
 
-    def __init__(self, env: PyCRCTFEnv, attacker_config: AgentConfig, eval_env: PyCRCTFEnv):
+    def __init__(self, env: BasePyCREnv, attacker_config: AgentConfig, eval_env: BasePyCREnv):
         """
         Initialize environment and hyperparameters
 
@@ -26,7 +26,7 @@ class DDPGBaselineAgent(TrainAgent):
         """
         super(DDPGBaselineAgent, self).__init__(env, attacker_config, eval_env)
 
-    def train(self) -> ExperimentResult:
+    def train(self) -> BaseExperimentResult:
         """
         Starts the training loop and returns the result when complete
 
@@ -106,5 +106,5 @@ class DDPGBaselineAgent(TrainAgent):
     def get_action(self, s, eval=False, attacker=True) -> int:
         raise NotImplemented("not implemented")
 
-    def eval(self, log=True) -> ExperimentResult:
+    def eval(self, log=True) -> BaseExperimentResult:
         raise NotImplemented("not implemented")

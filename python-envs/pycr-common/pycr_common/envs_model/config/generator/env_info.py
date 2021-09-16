@@ -1,8 +1,8 @@
 from typing import List
 import docker
-from gym_pycr_ctf.dao.env_info.running_env_container import RunningEnvContainer
-from gym_pycr_ctf.dao.env_info.running_env import RunningEnv
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.dao.env_info.running_env_container import RunningEnvContainer
+from pycr_common.dao.env_info.running_env import RunningEnv
+from pycr_common.util.experiments_util import util
 
 class EnvInfo:
     """

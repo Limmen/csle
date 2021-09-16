@@ -32,9 +32,10 @@ class PyCRCTFLevel2SimBaseEnv(PyCRCTFEnv):
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2SimBaseEnv, self).__init__(env_config=env_config)
 
 # -------- Simulations ------------
+
 
 # -------- Version 1 ------------
 class PyCRCTFLevel2Sim1Env(PyCRCTFEnv):
@@ -61,7 +62,7 @@ class PyCRCTFLevel2Sim1Env(PyCRCTFEnv):
             env_config.env_mode = EnvMode.SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel2Sim1Env, self).__init__(env_config=env_config)
 
 # -------- Version 1, Costs ------------
 class PyCRCTFLevel2SimWithCosts1Env(PyCRCTFEnv):

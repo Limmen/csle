@@ -1,11 +1,12 @@
 from typing import List
+import pycr_common.constants.constants as constants
+from pycr_common.dao.action.attacker.base_attacker_action import BaseAttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_pycr_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
-import pycr_common.constants.constants as constants
 
 
-class AttackerAction:
+class AttackerAction(BaseAttackerAction):
     """
     Class representing an action of the attacker in the environment
     """
@@ -32,6 +33,7 @@ class AttackerAction:
         :param alerts: the number of IDS alerts triggered by this action
         :param backdoor: if the action also installs a backdoor (some exploits does this)
         """
+        super().__init__()
         self.id = id
         self.name = name
         self.cmd = cmd

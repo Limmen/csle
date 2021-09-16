@@ -11,13 +11,13 @@ from pycr_common.envs_model.config.generator.topology_generator import TopologyG
 from pycr_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
 from pycr_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from pycr_common.envs_model.config.generator.users_generator import UsersGenerator
-from gym_pycr_ctf.envs_model.config.generator.container_generator import ContainerGenerator
-from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
+from pycr_common.envs_model.config.generator.container_generator import ContainerGenerator
+from pycr_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.container_config.container_env_config import ContainerEnvConfig
-from gym_pycr_ctf.dao.container_config.created_env_config import CreatedEnvConfig
+from pycr_common.util.experiments_util import util
+from pycr_common.dao.container_config.container_env_config import ContainerEnvConfig
+from pycr_common.dao.container_config.created_env_config import CreatedEnvConfig
 
 
 class EnvConfigGenerator:

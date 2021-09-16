@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import glob
 from gym_pycr_ctf.util.plots import plotting_util_attacker
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 def parse_data(base_path: str, suffix: str, ips = None, eval_ips = None):
     ppo_v1_df_0 = pd.read_csv(glob.glob(base_path + "0/*_train.csv")[0])

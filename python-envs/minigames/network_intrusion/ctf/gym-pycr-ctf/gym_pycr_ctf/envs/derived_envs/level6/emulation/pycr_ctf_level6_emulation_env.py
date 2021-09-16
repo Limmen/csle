@@ -8,6 +8,7 @@ from gym_pycr_ctf.envs_model.config.level_6.pycr_ctf_level_6_v2 import PyCrCTFLe
 from gym_pycr_ctf.envs_model.config.level_6.pycr_ctf_level_6_v3 import PyCrCTFLevel6V3
 from gym_pycr_ctf.envs_model.config.level_6.pycr_ctf_level_6_v4 import PyCrCTFLevel6V4
 
+
 # -------- Base Version (for testing) ------------
 class PyCRCTFLevel6EmulationBaseEnv(PyCRCTFEnv):
     """
@@ -36,7 +37,7 @@ class PyCRCTFLevel6EmulationBaseEnv(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel6EmulationBaseEnv, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 ------------

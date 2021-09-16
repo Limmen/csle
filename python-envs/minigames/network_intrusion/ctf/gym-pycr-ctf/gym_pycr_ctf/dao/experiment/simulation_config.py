@@ -1,5 +1,6 @@
 import csv
 
+
 class SimulationConfig:
     """
     Object representing the configuration of a simulation

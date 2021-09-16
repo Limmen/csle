@@ -3,20 +3,20 @@ from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
 import time
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+import pycr_common.constants.constants as constants
 from pycr_common.dao.action_results.nmap_scan_result import NmapScanResult
 from pycr_common.dao.action_results.nmap_host_result import NmapHostResult
 from pycr_common.dao.action_results.nmap_port_status import NmapPortStatus
 from pycr_common.dao.action_results.nmap_port import NmapPort
-from gym_pycr_ctf.dao.action_results.nmap_addr_type import NmapAddrType
-from gym_pycr_ctf.dao.network.env_state import EnvState
+from pycr_common.dao.action_results.nmap_addr_type import NmapAddrType
 from pycr_common.dao.network.transport_protocol import TransportProtocol
-from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from pycr_common.dao.action_results.nmap_os import NmapOs
-import pycr_common.constants.constants as constants
 from pycr_common.dao.action_results.nmap_vuln import NmapVuln
 from pycr_common.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
-from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from pycr_common.dao.action_results.nmap_hop import NmapHop
 from pycr_common.dao.action_results.nmap_trace import NmapTrace
 from pycr_common.dao.action_results.nmap_http_enum import NmapHttpEnum
@@ -528,7 +528,7 @@ class NmapUtil:
         """
         new_m_obs = []
         for host in scan_result.hosts:
-            m_obs = host.to_obs()
+            m_obs = AttackerMachineObservationState.from_nmap_result(host)
             # m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 

@@ -1,13 +1,13 @@
 """
-A bot attack agent for the pycr-ctf environment that acts greedily according to a pre-trained policy network
+A bot attack agent for pycr environments that acts greedily according to a pre-trained policy network
 """
 import torch
 import traceback
 import time
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
+from pycr_common.dao.network.base_env_state import BaseEnvState
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
 from pycr_common.agents.config.agent_config import AgentConfig
 
 
@@ -16,8 +16,8 @@ class PPOAttackerBotAgent:
     Class implementing an attack policy that acts greedily according to a given policy network
     """
 
-    def __init__(self, pg_config: AgentConfig, env_config: EnvConfig, model_path: str = None,
-                 env: PyCRCTFEnv = None):
+    def __init__(self, pg_config: AgentConfig, env_config: BaseEnvConfig, model_path: str = None,
+                 env: BasePyCREnv = None):
         """
         Constructor, initializes the policy
 
@@ -45,7 +45,7 @@ class PPOAttackerBotAgent:
         self.model = PPO.load(env=self.env, load_path=self.agent_config.load_path, device=self.device,
                               agent_config=self.agent_config)
 
-    def action(self, s: EnvState, agent_state = None) -> int:
+    def action(self, s: BaseEnvState, agent_state = None) -> int:
         """
         Samples an action from the policy.
 

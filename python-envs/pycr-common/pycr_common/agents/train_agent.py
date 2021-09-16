@@ -5,33 +5,49 @@ import numpy as np
 import logging
 import random
 import torch
+import copy
 from abc import ABC, abstractmethod
-from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.dao.agent.agent_type import AgentType
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
+from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 
 
 class TrainAgent(ABC):
     """
     Abstract Train Agent
+
+    :param experiment_result: the DTO for saving experiment results
     """
     def __init__(self, env, attacker_config: AgentConfig,
                  defender_config: AgentConfig,
+                 train_agent_dto: BaseTrainAgentLogDTO, rollout_data_dto: BaseRolloutDataDTO,
+                 eval_util: BaseEvalUtil,
+                 experiment_result: BaseExperimentResult,
                  eval_env, train_mode : TrainMode = TrainMode.TRAIN_ATTACKER):
         """
         Initialize environment and hyperparameters
 
         :param env: the training env
-        :param attacker_config: the configuration
+        :param attacker_config: the attacker configuration
+        :param defender_config: the defender configuration
+        :param train_agent_dto: the DTO for logging training data
+        :param rollout_data_dto: the DTO for rollout data
+        :param eval_util: the util class for running custom evaluations
         :param eval_env: the eval env
         """
         self.env = env
         self.eval_env = eval_env
         self.attacker_config = attacker_config
         self.defender_config = defender_config
-        self.train_result = ExperimentResult()
-        self.eval_result = ExperimentResult()
+        self.train_agent_dto = train_agent_dto
+        self.rollout_data_dto = rollout_data_dto
+        self.eval_util = eval_util
+        self.train_result = copy.deepcopy(experiment_result)
+        self.eval_result = copy.deepcopy(experiment_result)
         self.train_mode=train_mode
         #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
         if self.attacker_config is None:
@@ -70,7 +86,7 @@ class TrainAgent(ABC):
         log_str = log_str + dist_str + "]"
         self.defender_config.logger.info(log_str)
 
-    def log_metrics_attacker(self, iteration: int, result: ExperimentResult, episode_rewards: list,
+    def log_metrics_attacker(self, iteration: int, result: BaseExperimentResult, episode_rewards: list,
                              episode_steps: list, episode_avg_loss: list = None,
                              eval: bool = False, lr: float = None, total_num_episodes : int = 0) -> None:
         """
@@ -163,9 +179,9 @@ class TrainAgent(ABC):
         return state
 
     @abstractmethod
-    def train(self) -> ExperimentResult:
+    def train(self) -> BaseExperimentResult:
         pass
 
     @abstractmethod
-    def eval(self, log=True) -> ExperimentResult:
+    def eval(self, log=True) -> BaseExperimentResult:
         pass

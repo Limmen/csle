@@ -47,7 +47,7 @@ class PyCRCTFLevel4GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSim1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1, costs ------------
@@ -86,11 +86,10 @@ class PyCRCTFLevel4GeneratedSimWithCosts1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSimWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
-
 class PyCRCTFLevel4GeneratedSim2Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -125,10 +124,10 @@ class PyCRCTFLevel4GeneratedSim2Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSim2Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 2, costs ------------
-
 class PyCRCTFLevel4GeneratedSimWithCosts2Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -163,10 +162,10 @@ class PyCRCTFLevel4GeneratedSimWithCosts2Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSimWithCosts2Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3 ------------
-
 class PyCRCTFLevel4GeneratedSim3Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -201,10 +200,10 @@ class PyCRCTFLevel4GeneratedSim3Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSim3Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3, costs ------------
-
 class PyCRCTFLevel4GeneratedSimWithCosts3Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -239,11 +238,10 @@ class PyCRCTFLevel4GeneratedSimWithCosts3Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSimWithCosts3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 ------------
-
 class PyCRCTFLevel4GeneratedSim4Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -278,11 +276,10 @@ class PyCRCTFLevel4GeneratedSim4Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSim4Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 4 ------------
-
-
 class PyCRCTFLevel4GeneratedSimWithCosts4Env(PyCRCTFEnv):
     """
     Generated simulation.
@@ -317,11 +314,10 @@ class PyCRCTFLevel4GeneratedSimWithCosts4Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSimWithCosts4Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 5 ------------
-
 class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
     """
     Generated Simulation.
@@ -368,4 +364,4 @@ class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
             env_config.defender_early_stopping_reward = -1
             env_config.defender_intrusion_reward = -1
             env_config.stop_after_failed_detection = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4GeneratedSim5Env, self).__init__(env_config=env_config)

@@ -2,9 +2,9 @@
 A bot defense agent for the pycr-ctf environment that acts randomly
 """
 import numpy as np
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_state import BaseEnvState
 
 
 class RandomDefenderBotAgent:
@@ -12,7 +12,7 @@ class RandomDefenderBotAgent:
     Class implementing an defense policy that acts randomly
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv = None):
+    def __init__(self, env_config: BaseEnvConfig, env: BasePyCREnv = None):
         """
         Constructor, initializes the policy
 
@@ -24,7 +24,7 @@ class RandomDefenderBotAgent:
         self.num_actions = env.env_config.defender_action_conf.num_actions
         self.actions = np.array(list(range(self.num_actions)))
 
-    def action(self, s: EnvState) -> int:
+    def action(self, s: BaseEnvState) -> int:
         """
         Samples an action from the policy.
 

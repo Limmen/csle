@@ -4,9 +4,9 @@ import datetime
 import paramiko
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 import pycr_common.constants.constants as constants
-from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
-from gym_pycr_ctf.dao.action_results.ids_alert import IdsAlert
+from pycr_common.dao.action_results.ids_alert import IdsAlert
 
 
 class EmulationUtil:

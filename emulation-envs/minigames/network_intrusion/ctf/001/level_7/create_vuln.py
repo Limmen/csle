@@ -1,13 +1,13 @@
 import os
 from pycr_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
+from pycr_common.util.experiments_util import util
+from pycr_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from gym_pycr_ctf.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
 from gym_pycr_ctf.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
 from gym_pycr_ctf.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
 from pycr_common.dao.container_config.vulnerability_type import VulnType
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 
 def default_vulns():
     vulns = [

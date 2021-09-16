@@ -1,14 +1,16 @@
 from typing import Tuple
-from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
-from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+import pycr_common.constants.constants as constants
 from pycr_common.envs_model.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
 from pycr_common.envs_model.logic.emulation.util.defender.shell_util import ShellUtil
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from pycr_common.dao.state_representation.state_type import StateType
-from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
-import pycr_common.constants.constants as constants
+from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from gym_pycr_ctf.dao.network.env_state import EnvState
+from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
+from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
+
 
 class DefenderUpdateStateMiddleware:
     """
@@ -139,7 +141,7 @@ class DefenderUpdateStateMiddleware:
         for node in env_config.network_conf.nodes:
             if node.ip == env_config.emulation_config.agent_ip:
                 continue
-            d_obs = node.to_defender_machine_obs(s.service_lookup)
+            d_obs = DefenderMachineObservationState.from_node(node,s.service_lookup)
 
             # Setup connection
             if node.ip in s_prime.defender_cached_ssh_connections:

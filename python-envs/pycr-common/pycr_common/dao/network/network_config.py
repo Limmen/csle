@@ -1,12 +1,12 @@
 from typing import List, Tuple
 import pickle
+import numpy as np
+import os
+import pycr_common.constants.constants as constants
 from pycr_common.dao.network.node import Node
 from pycr_common.dao.network.node_type import NodeType
 from pycr_common.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
-import pycr_common.constants.constants as constants
-from gym_pycr_ctf.util.experiments_util import util
-import numpy as np
-import os
+from pycr_common.util.experiments_util import util
 
 class NetworkConfig:
     """

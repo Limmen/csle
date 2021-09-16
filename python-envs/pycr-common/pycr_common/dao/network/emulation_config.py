@@ -2,10 +2,10 @@ from typing import List
 import paramiko
 import time
 import pycr_common.constants.constants as constants
-from gym_pycr_ctf.dao.action_results.action_costs import ActionCosts
-from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_pycr_ctf.dao.action_results.action_alerts import ActionAlerts
+from pycr_common.dao.action.attacker.base_attacker_action import BaseAttackerAction
+from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
+from pycr_common.dao.action_results.action_costs import ActionCosts
+from pycr_common.dao.action_results.action_alerts import ActionAlerts
 
 
 class EmulationConfig:
@@ -237,9 +237,9 @@ class EmulationConfig:
             self.server_conn.close()
             self.server_conn = None
 
-    def load_action_costs(self, actions: List[AttackerAction], dir: str, nmap_ids: List[AttackerActionId],
-                          network_service_ids: List[AttackerActionId], shell_ids: List[AttackerActionId],
-                          nikto_ids: List[AttackerActionId], masscan_ids: List[AttackerActionId],
+    def load_action_costs(self, actions: List[BaseAttackerAction], dir: str, nmap_ids: List[BaseAttackerActionId],
+                          network_service_ids: List[BaseAttackerActionId], shell_ids: List[BaseAttackerActionId],
+                          nikto_ids: List[BaseAttackerActionId], masscan_ids: List[BaseAttackerActionId],
                           action_lookup_d_val: dict) -> ActionCosts:
         """
         Loads measured action costs from the emulation
@@ -377,8 +377,8 @@ class EmulationConfig:
                                                                         len(action_costs.pivot_scan_costs)))
         return action_costs
 
-    def load_action_alerts(self, actions: List[AttackerAction], dir: str, action_ids: List[AttackerActionId],
-                           shell_ids: List[AttackerActionId],
+    def load_action_alerts(self, actions: List[BaseAttackerAction], dir: str, action_ids: List[BaseAttackerActionId],
+                           shell_ids: List[BaseAttackerActionId],
                            action_lookup_d_val: dict) -> ActionCosts:
         """
         Load stored action-alerts from the Emulation

@@ -1,10 +1,10 @@
 from typing import List, Tuple
 import random
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.node_container_config import NodeContainerConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.container_config.node_container_config import NodeContainerConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 
 class ContainerGenerator:

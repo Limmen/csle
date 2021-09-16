@@ -4,8 +4,8 @@ import os, json, numpy as np, six
 from gym.utils import atomic_write, closer
 from gym.utils.json_utils import json_encode_np
 import imageio
-from gym_pycr_ctf.rendering.video.pycr_ctf_stats_recorder import StatsRecorder
-from gym_pycr_ctf.rendering.video.pycr_ctf_video_recorder import PyCrCTFVideoRecorder
+from pycr_common.rendering.video.pycr_ctf_stats_recorder import StatsRecorder
+from pycr_common.rendering.video.pycr_ctf_video_recorder import PyCrCTFVideoRecorder
 
 
 FILE_PREFIX = 'openaigym'

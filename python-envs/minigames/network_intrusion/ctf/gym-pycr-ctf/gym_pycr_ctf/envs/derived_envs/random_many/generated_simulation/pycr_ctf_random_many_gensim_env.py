@@ -82,4 +82,4 @@ class PyCRCTFRandomManyGeneratedSim1Env(PyCRCTFEnv):
             # # env_config.detection_prob_factor = 0.05
             # env_config.detection_prob_factor = 0.05
             # env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomManyGeneratedSim1Env, self).__init__(env_config=env_config)

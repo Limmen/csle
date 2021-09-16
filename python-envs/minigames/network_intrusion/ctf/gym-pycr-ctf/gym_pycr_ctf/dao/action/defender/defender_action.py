@@ -1,10 +1,11 @@
 from typing import List
+from pycr_common.dao.action.defender.base_defender_action import BaseDefenderAction
 from gym_pycr_ctf.dao.action.defender.defender_action_type import DefenderActionType
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_action_outcome import DefenderActionOutcome
 
 
-class DefenderAction:
+class DefenderAction(BaseDefenderAction):
     """
     Class representing an action of the defender in the environment
     """
@@ -29,6 +30,7 @@ class DefenderAction:
         :param action_outcome: type of the outcome of the action
         :param alt_cmd: alternative command if the first command does not work
         """
+        super().__init__()
         self.id = id
         self.name = name
         self.cmd = cmd

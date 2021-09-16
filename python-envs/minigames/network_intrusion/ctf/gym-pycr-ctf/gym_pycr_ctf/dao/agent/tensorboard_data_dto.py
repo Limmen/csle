@@ -1,5 +1,6 @@
+from pycr_common.dao.agent.base_tensorboard_data_dto import BaseTensorboardDataDTO
 
-class TensorboardDataDTO:
+class TensorboardDataDTO(BaseTensorboardDataDTO):
     """
     DTO with information for logging in tensorboard
     """
@@ -223,6 +224,7 @@ class TensorboardDataDTO:
                  eval_avg_optimal_defender_episode_steps: float = 0.0,
                  eval_2_avg_optimal_defender_episode_steps: float = 0.0
                  ):
+        super(TensorboardDataDTO, self).__init__()
         self.iteration = iteration
         self.avg_episode_rewards = avg_episode_rewards
         self.avg_episode_steps = avg_episode_steps

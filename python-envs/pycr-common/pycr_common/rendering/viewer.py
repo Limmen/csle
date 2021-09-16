@@ -22,15 +22,16 @@ except ImportError as e:
     ''')
 import numpy as np
 import sys
-from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
-from gym_pycr_ctf.envs import PyCRCTFEnv
+from pycr_common.dao.network.attacker.base_attacker_agent_state import BaseAttackerAgentState
+from pycr_common.rendering.frames.pycr_base_frame import PyCRBaseFrame
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+
 
 
 class Viewer():
 
-    def __init__(self, env_config: EnvConfig, init_state : AttackerAgentState):
+    def __init__(self, env_config: BaseEnvConfig, init_state : BaseAttackerAgentState):
         """
         Initialize the viewer
 
@@ -46,20 +47,20 @@ class Viewer():
         Starts the viewer (opens the frame)
         :return:
         """
-        self.mainframe = MainFrame(env_config=self.env_config, init_state=self.init_state)
+        self.mainframe = PyCRBaseFrame(env_config=self.env_config, init_state=self.init_state)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         if interactive:
             pyglet.app.run()
 
-    def manual_start_attacker(self, env: PyCRCTFEnv) -> None:
+    def manual_start_attacker(self, env: BasePyCREnv) -> None:
         """
         Starts the PyCr-game app in a manual mode where the actions are controlled with the keyboard
 
         :return: None
         """
         self.env_config.manual_play = True
-        self.mainframe = MainFrame(env_config=self.env_config, init_state=self.init_state, env=env)
+        self.mainframe = PyCRBaseFrame(env_config=self.env_config, init_state=self.init_state, env=env)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         pyglet.clock.schedule_interval(self.mainframe.update, 1 / 10.)

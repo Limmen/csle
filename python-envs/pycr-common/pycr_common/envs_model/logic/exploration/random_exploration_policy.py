@@ -1,5 +1,6 @@
 import numpy as np
-from gym_pycr_ctf.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
+from pycr_common.envs_model.logic.exploration.exploration_policy import ExplorationPolicy
+
 
 class RandomExplorationPolicy(ExplorationPolicy):
 

@@ -26,17 +26,19 @@ from pycr_common.agents.openai_baselines.common.utils import (
     set_random_seed,
     update_learning_rate,
 )
+from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
 from pycr_common.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from pycr_common.agents.openai_baselines.common.callbacks import BaseCallback, CallbackList, ConvertCallback, EvalCallback
 from pycr_common.agents.openai_baselines.common.vec_env import DummyVecEnv, VecEnv, VecNormalize, VecTransposeImage, unwrap_vec_normalize, SubprocVecEnv
-
 from pycr_common.agents.openai_baselines.common.policies import BasePolicy, get_policy_from_name
 from pycr_common.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_state import BaseEnvState
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.util.log_util import LogUtil
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 
 
 def maybe_make_env(env: Union[GymEnv, str, None], monitor_wrapper: bool, verbose: int) -> Optional[GymEnv]:
@@ -101,12 +103,18 @@ class BaseAlgorithm(ABC):
             attacker_agent_config: AgentConfig = None,
             defender_agent_config: AgentConfig = None,
             env_2: Union[GymEnv, str, None] = None,
-            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER
+            train_mode : TrainMode = TrainMode.TRAIN_ATTACKER,
+            train_agent_log_dto: BaseTrainAgentLogDTO = None,
+            rollout_data_dto: BaseRolloutDataDTO = None,
+            eval_util: BaseEvalUtil = None
     ):
         self.attacker_agent_config = attacker_agent_config
         self.defender_agent_config = defender_agent_config
-        self.train_result = ExperimentResult()
-        self.eval_result = ExperimentResult()
+        self.train_agent_log_dto = train_agent_log_dto
+        self.rollout_data_dto = rollout_data_dto
+        self.eval_util = eval_util
+        self.train_result = BaseExperimentResult()
+        self.eval_result = BaseExperimentResult()
         self.training_start = time.time()
 
         try:
@@ -219,8 +227,8 @@ class BaseAlgorithm(ABC):
             env = VecTransposeImage(env)
         return env
 
-    def log_metrics_attacker(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) \
-            -> TrainAgentLogDTO:
+    def log_metrics_attacker(self, train_log_dto: BaseTrainAgentLogDTO, eps: float = None, eval: bool = False) \
+            -> BaseTrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -233,8 +241,8 @@ class BaseAlgorithm(ABC):
                                      attacker_agent_config=self.attacker_agent_config, env=self.env,
                                      env_2=self.env_2, tensorboard_writer=self.tensorboard_writer)
 
-    def log_metrics_defender(self, train_log_dto: TrainAgentLogDTO, eps: float = None, eval: bool = False) \
-            -> TrainAgentLogDTO:
+    def log_metrics_defender(self, train_log_dto: BaseTrainAgentLogDTO, eps: float = None, eval: bool = False) \
+            -> BaseTrainAgentLogDTO:
         """
         Logs average metrics for the last <self.config.log_frequency> episodes
 
@@ -374,9 +382,9 @@ class BaseAlgorithm(ABC):
             state: Optional[np.ndarray] = None,
             mask: Optional[np.ndarray] = None,
             deterministic: bool = False,
-            env_config : EnvConfig = None,
-            env_configs: List[EnvConfig] = None,
-            env_state : EnvState = None,
+            env_config : BaseEnvConfig = None,
+            env_configs: List[BaseEnvConfig] = None,
+            env_state : BaseEnvState = None,
             infos = None,
             env_idx: int = None,
             m_index: int = None,

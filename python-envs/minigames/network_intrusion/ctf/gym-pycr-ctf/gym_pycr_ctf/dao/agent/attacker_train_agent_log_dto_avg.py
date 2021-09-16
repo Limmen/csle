@@ -3,10 +3,11 @@ import time
 import pycr_common.envs_model.logic.common.util as pycr_util
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.openai_baselines.common.vec_env import SubprocVecEnv
+from pycr_common.dao.agent.base_attacker_train_agent_log_dto_avg import BaseAttackerTrainAgentLogDTOAvg
 from gym_pycr_ctf.dao.agent.tensorboard_data_dto import TensorboardDataDTO
 
 
-class AttackerTrainAgentLogDTOAvg:
+class AttackerTrainAgentLogDTOAvg(BaseAttackerTrainAgentLogDTOAvg):
     """
     DTO with average metrics of the attacker for logging during training
     """
@@ -22,6 +23,7 @@ class AttackerTrainAgentLogDTOAvg:
         :param env_2: the evaluation environment
         :param eval: boolean flag whether it is an evaluation or not
         """
+        super(AttackerTrainAgentLogDTOAvg, self).__init__()
         if not eval:
             self.result = train_log_dto.train_result
         else:

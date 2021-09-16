@@ -3,8 +3,10 @@ Experiment results
 """
 from typing import List
 import csv
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 
-class ExperimentResult:
+
+class ExperimentResult(BaseExperimentResult):
     """
     DTO with experiment result from an experiment in the pycr-ctf-envs
     """
@@ -502,6 +504,7 @@ class ExperimentResult:
         :param eval_avg_optimal_episode_steps: the eval average optimal number of steps in the episode
         :param eval_2_avg_optimal_episode_steps: the eval 2average optimal number of steps in the episode
         """
+        super(ExperimentResult, self).__init__()
         self.attacker_avg_episode_rewards = attacker_avg_episode_rewards
         self.defender_avg_episode_rewards = defender_avg_episode_rewards
         self.avg_episode_steps = avg_episode_steps

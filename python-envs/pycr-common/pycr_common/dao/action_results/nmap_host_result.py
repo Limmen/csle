@@ -1,6 +1,5 @@
 from typing import List
 import copy
-from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from pycr_common.dao.action_results.nmap_host_status import NmapHostStatus
 from pycr_common.dao.action_results.nmap_port import NmapPort
 from pycr_common.dao.action_results.nmap_os import NmapOs
@@ -58,27 +57,6 @@ class NmapHostResult:
             self.trace
         )
 
-    def to_obs(self) -> AttackerMachineObservationState:
-        """
-        Converts the DTO intoa a AttackerMachineObservationState
-
-        :return: the created AttackerMachineObservationState
-        """
-        m_obs = AttackerMachineObservationState(ip=self.ip_addr)
-        ports = list(map(lambda x: x.to_obs(), self.ports))
-        m_obs.ports = ports
-        if self.os is not None:
-            m_obs.os = self.os.vendor.lower()
-        vulnerabilities = list(map(lambda x: x.to_obs(), self.vulnerabilities))
-        m_obs.cve_vulns = vulnerabilities
-        credentials = list(map(lambda x: x.to_obs(), self.credentials))
-        m_obs.shell_access_credentials = credentials
-        if len(credentials) > 0:
-            m_obs.shell_access = True
-            m_obs.untried_credentials = True
-        m_obs.hostnames = self.hostnames
-        m_obs.trace = self.trace
-        return m_obs
 
     def copy(self) -> "NmapHostResult":
         """

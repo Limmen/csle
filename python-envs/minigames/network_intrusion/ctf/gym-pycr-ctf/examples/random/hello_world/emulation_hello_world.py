@@ -1,7 +1,7 @@
 from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 
 def test_env(env_name : str, num_steps : int):

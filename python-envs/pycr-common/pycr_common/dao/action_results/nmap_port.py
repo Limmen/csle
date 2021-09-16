@@ -1,5 +1,5 @@
-from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
 import pycr_common.constants.constants as constants
+from pycr_common.dao.observation.common.port_observation_state import PortObservationState
 from pycr_common.dao.action_results.nmap_port_status import NmapPortStatus
 from pycr_common.dao.network.transport_protocol import TransportProtocol
 from pycr_common.dao.action_results.nmap_http_enum import NmapHttpEnum

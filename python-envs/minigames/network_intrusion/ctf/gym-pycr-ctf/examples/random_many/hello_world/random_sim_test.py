@@ -1,7 +1,7 @@
 from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
 from pycr_common.dao.network.network_config import NetworkConfig
 

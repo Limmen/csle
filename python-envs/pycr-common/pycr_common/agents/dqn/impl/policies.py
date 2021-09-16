@@ -8,9 +8,9 @@ from pycr_common.agents.openai_baselines.common.policies import BasePolicy, regi
 from pycr_common.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, \
     NatureCNN, create_mlp
 from pycr_common.agents.config.agent_config import AgentConfig
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_state import BaseEnvState
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 
 
 class QNetwork(BasePolicy):
@@ -63,13 +63,13 @@ class QNetwork(BasePolicy):
         """
         return self.q_net(self.extract_features(obs))
 
-    def _predict(self, observation: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
+    def _predict(self, observation: th.Tensor, deterministic: bool = True, env_state: BaseEnvState = None,
+                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
         q_values = self.forward(observation)
 
         # Masking legal actions
         actions = list(range(env_config.attacker_action_conf.num_actions))
-        legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
+        legal_actions = list(filter(lambda action: BasePyCREnv.is_attack_action_legal(
             action, env_config=env_config, env_state=env_state), actions))
 
         # Greedy actions
@@ -181,8 +181,8 @@ class DQNPolicy(BasePolicy):
     def forward(self, obs: th.Tensor, deterministic: bool = True) -> th.Tensor:
         return self._predict(obs, deterministic=deterministic)
 
-    def _predict(self, obs: th.Tensor, deterministic: bool = True, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
+    def _predict(self, obs: th.Tensor, deterministic: bool = True, env_state: BaseEnvState = None,
+                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
         return self.q_net._predict(obs, deterministic=deterministic, env_config=env_config, env_state=env_state)
 
     def _get_data(self) -> Dict[str, Any]:

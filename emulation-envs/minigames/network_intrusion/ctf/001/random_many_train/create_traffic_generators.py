@@ -1,6 +1,6 @@
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
+from pycr_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 
 
 def apply_config():

@@ -2,8 +2,8 @@
 A bot attack agent for the pycr-ctf environment that acts randomly
 """
 import numpy as np
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_state import BaseEnvState
 
 
 class RandomAttackerBotAgent:
@@ -11,7 +11,7 @@ class RandomAttackerBotAgent:
     Class implementing an attack policy that acts randomly
     """
 
-    def __init__(self, env_config: EnvConfig, env):
+    def __init__(self, env_config: BaseEnvConfig, env):
         """
         Constructor, initializes the policy
 
@@ -23,7 +23,7 @@ class RandomAttackerBotAgent:
         self.num_actions = env.env_config.attacker_action_conf.num_actions
         self.actions = np.array(list(range(self.num_actions)))
 
-    def action(self, s: EnvState) -> int:
+    def action(self, s: BaseEnvState) -> int:
         """
         Samples an action from the policy.
 

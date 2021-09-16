@@ -1,13 +1,13 @@
 from typing import List
-from gym_pycr_ctf.dao.container_config.topology import Topology
+import pycr_common.constants.constants as constants
+from pycr_common.dao.container_config.topology import Topology
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from gym_pycr_ctf.envs_model.config.generator.generator_util import GeneratorUtil
-from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
-from gym_pycr_ctf.dao.container_config.node_traffic_config import NodeTrafficConfig
-from gym_pycr_ctf.util.experiments_util import util
-import pycr_common.constants.constants as constants
+from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
+from pycr_common.dao.container_config.traffic_config import TrafficConfig
+from pycr_common.dao.container_config.node_traffic_config import NodeTrafficConfig
+from pycr_common.util.experiments_util import util
 
 
 class TrafficGenerator:

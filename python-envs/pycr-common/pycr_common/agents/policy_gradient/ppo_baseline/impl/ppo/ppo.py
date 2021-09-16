@@ -5,12 +5,15 @@ import torch as th
 from gym import spaces
 from torch.nn import functional as F
 
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
+from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
 from pycr_common.agents.openai_baselines.common.utils import explained_variance, get_schedule_fn
 from pycr_common.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from pycr_common.agents.openai_baselines.common.policies import ActorCriticPolicy
 from pycr_common.agents.openai_baselines.common.on_policy_algorithm import OnPolicyAlgorithm
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.agent.train_mode import TrainMode
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 
 
 class PPO(OnPolicyAlgorithm):
@@ -94,7 +97,10 @@ class PPO(OnPolicyAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+        train_agent_log_dto: BaseTrainAgentLogDTO = None,
+        rollout_data_dto: BaseRolloutDataDTO = None,
+        eval_util: BaseEvalUtil = None
     ):
 
         super(PPO, self).__init__(
@@ -123,7 +129,10 @@ class PPO(OnPolicyAlgorithm):
             attacker_agent_config=attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode
+            train_mode=train_mode,
+            train_agent_log_dto=train_agent_log_dto,
+            rollout_data_dto=rollout_data_dto,
+            eval_util=eval_util
         )
 
         self.batch_size = batch_size

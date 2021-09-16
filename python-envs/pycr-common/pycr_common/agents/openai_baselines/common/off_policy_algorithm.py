@@ -7,7 +7,6 @@ import numpy as np
 import torch as th
 
 from stable_baselines3.common.noise import ActionNoise
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from pycr_common.agents.openai_baselines.common.save_util import load_from_pkl, save_to_pkl
 from pycr_common.agents.openai_baselines.common.base_class import BaseAlgorithm
 from pycr_common.agents.openai_baselines.common.buffers import ReplayBuffer
@@ -337,7 +336,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             # Warmup phase
             legal_actions = list(range(self.agent_config.output_dim))
             if self.agent_config.filter_illegal_actions:
-                legal_actions = list(filter(lambda action: PyCRCTFEnv.is_attack_action_legal(
+                legal_actions = list(filter(lambda action: self.env.envs[0].is_attack_action_legal(
                     action, env_config=self.env.envs[0].env_config, env_state=self.env.envs[0].env_state), legal_actions))
             unscaled_action = np.array([np.random.choice(legal_actions)])
         else:

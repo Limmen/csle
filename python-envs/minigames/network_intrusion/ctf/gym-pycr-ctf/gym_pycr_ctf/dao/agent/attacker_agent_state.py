@@ -1,11 +1,12 @@
 from typing import Union
 import numpy as np
 from pycr_common.dao.agent.agent_log import AgentLog
+from pycr_common.dao.network.attacker.base_attacker_agent_state import BaseAttackerAgentState
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 
 
-class AttackerAgentState:
+class AttackerAgentState(BaseAttackerAgentState):
     """
     DTO with attacker agent's state information for rendering
     """

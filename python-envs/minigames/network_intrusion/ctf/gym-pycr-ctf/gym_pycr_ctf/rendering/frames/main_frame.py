@@ -8,13 +8,14 @@ import pycr_common.constants.constants as constants
 from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
+from pycr_common.rendering.frames.pycr_base_frame import PyCRBaseFrame
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs import PyCRCTFEnv
 
 
-class MainFrame(pyglet.window.Window):
+class MainFrame(PyCRBaseFrame):
     """
     A class representing the OpenGL/Pyglet Game Frame
     By subclassing pyglet.window.Window, event handlers can be defined simply by overriding functions, e.g.
@@ -29,10 +30,9 @@ class MainFrame(pyglet.window.Window):
         """
 
         # call constructor of parent class
-        super(MainFrame, self).__init__(height=850, width=1400, caption=constants.RENDERING.CAPTION)
-        self.env_config = env_config
+        super(MainFrame, self).__init__(height=850, width=1400, caption=constants.RENDERING.CAPTION,
+                                        env_config=env_config, init_state=init_state)
         self.env = env
-        self.init_state = init_state
         self.batch = pyglet.graphics.Batch()
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)

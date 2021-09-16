@@ -1,5 +1,5 @@
 from typing import List
-from gym_pycr_ctf.dao.container_config.node_traffic_config import NodeTrafficConfig
+from pycr_common.dao.container_config.node_traffic_config import NodeTrafficConfig
 
 
 class TrafficConfig:

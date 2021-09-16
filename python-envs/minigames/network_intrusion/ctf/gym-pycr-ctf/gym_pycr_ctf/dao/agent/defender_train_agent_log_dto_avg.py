@@ -3,10 +3,11 @@ import time
 import pycr_common.envs_model.logic.common.util as pycr_util
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.agent.train_mode import TrainMode
+from pycr_common.dao.agent.base_defender_train_agent_log_dto_avg import BaseDefenderTrainAgentLogDTOAvg
 from gym_pycr_ctf.dao.agent.tensorboard_data_dto import TensorboardDataDTO
 
 
-class DefenderTrainAgentLogDTOAvg:
+class DefenderTrainAgentLogDTOAvg(BaseDefenderTrainAgentLogDTOAvg):
     """
     DTO with average metrics of the defender for logging during training
     """
@@ -23,6 +24,7 @@ class DefenderTrainAgentLogDTOAvg:
         :param eval: whether this is an evaluation run or not
         :param train_mode: the training mode
         """
+        super(DefenderTrainAgentLogDTOAvg, self).__init__()
         self.train_mode = train_mode
         self.defender_agent_config = defender_agent_config
         self.train_log_dto = train_log_dto

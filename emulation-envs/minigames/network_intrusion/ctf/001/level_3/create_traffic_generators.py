@@ -1,9 +1,9 @@
 import os
-from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
-from gym_pycr_ctf.dao.container_config.node_traffic_config import NodeTrafficConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.dao.container_config.traffic_config import TrafficConfig
+from pycr_common.dao.container_config.node_traffic_config import NodeTrafficConfig
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs_model.config.generator.traffic_generator import TrafficGenerator
+from pycr_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 
 def default_traffic_generators() -> TrafficConfig:
     traffic_generators = [

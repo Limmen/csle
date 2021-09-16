@@ -4,23 +4,25 @@ import numpy as np
 import math
 import pycr_common.constants.constants as constants
 from pycr_common.dao.network.trajectory import Trajectory
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 
 
-class EvalUtil:
+class EvalUtil(BaseEvalUtil):
     """
     Utility class for evaluating policies
     """
     @staticmethod
-    def eval_defender(env, model, deterministic: bool = False):
+    def eval_defender(env, model, train_log_dto: TrainAgentLogDTO, deterministic: bool = False) -> TrainAgentLogDTO:
         """
         Evaluates a given model in the given environment
 
         :param env: the environment
         :param model: the model
+        :param train_log_dto: the train log dto to populate
         :param deterministic: whether to do deterministic predictions or not
-        :return: (avg_reward, avg_steps, avg_baseline_severe_r, avg_baseline_warning_r,
-                  avg_baseline_critical_r, avg_baseline_var_log_r)
+        :return: the updated train agent log dto
         """
         stops_remaining_l = []
         trajectories = EvalUtil.eval_taus(env.env_config.emulation_config.save_dynamics_model_dir)
@@ -293,24 +295,150 @@ class EvalUtil:
         # print("intrusion start obs 4:{}".format(intrusion_start_obs_4))
         # print("stopping obs:{}".format(stopping_obs_l))
         # print("merged tau:{}".format(merged_taus))
-        return rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
-               snort_severe_r, snort_warning_r, snort_critical_r, \
-               var_log_r, step_r, snort_severe_steps_l, snort_warning_steps_l, \
-               snort_critical_steps_l, var_log_steps_l, step_steps_l, \
-               snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \
-               snort_severe_es, snort_warning_es, snort_critical_es, var_log_es, step_es, \
-               snort_severe_uit, snort_warning_uit, snort_critical_uit, var_log_uit, step_uit, \
-               flags_list, flags_percentage_list, episode_caught_list, episode_early_stopped_list, \
-               episode_successful_intrusion_list, attacker_cost_list, attacker_cost_norm_list, attacker_alerts_list, \
-               attacker_alerts_norm_list, intrusion_steps, model_stopping_times_1, model_stopping_times_2, \
-               model_stopping_times_3, model_stopping_times_4, stops_remaining_l, \
-               snort_severe_stop_1, snort_warning_stop_1, snort_critical_stop_1, var_log_stop_1, step_stop_1, \
-               snort_severe_stop_2, snort_warning_stop_2, snort_critical_stop_2, var_log_stop_2, step_stop_2, \
-               snort_severe_stop_3, snort_warning_stop_3, snort_critical_stop_3, var_log_stop_3, step_stop_3, \
-               snort_severe_stop_4, snort_warning_stop_4, snort_critical_stop_4, var_log_stop_4, step_stop_4, \
-               snort_severe_stops_remaining_l, snort_warning_stops_remaining_l, snort_critical_stops_remaining_l, \
-               var_log_stops_remaining_l, step_stops_remaining_l, optimal_stop_1, optimal_stop_2, optimal_stop_3, \
-               optimal_stop_4, optimal_stops_remaining_l, optimal_steps
+
+        eval_2_defender_episode_rewards, eval_2_episode_steps, eval_2_uncaught_intrusion_steps, \
+        eval_2_optimal_defender_reward, \
+        eval_2_episode_snort_severe_baseline_rewards, eval_2_episode_snort_warning_baseline_rewards, \
+        eval_2_episode_snort_critical_baseline_rewards, \
+        eval_2_episode_var_log_baseline_rewards, eval_2_episode_step_baseline_rewards, \
+        eval_2_episode_snort_severe_baseline_steps, eval_2_episode_snort_warning_baseline_steps, \
+        eval_2_episode_snort_critical_baseline_steps, \
+        eval_2_episode_var_log_baseline_steps, eval_2_episode_step_baseline_steps, \
+        eval_2_episode_snort_severe_baseline_caught_attacker, \
+        eval_2_episode_snort_warning_baseline_caught_attacker, \
+        eval_2_episode_snort_critical_baseline_caught_attacker, \
+        eval_2_episode_var_log_baseline_caught_attacker, \
+        eval_2_episode_step_baseline_caught_attacker, \
+        eval_2_episode_snort_severe_baseline_early_stopping, \
+        eval_2_episode_snort_warning_baseline_early_stopping, \
+        eval_2_episode_snort_critical_baseline_early_stopping, \
+        eval_2_episode_var_log_baseline_early_stopping, eval_2_episode_step_baseline_early_stopping, \
+        eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps, \
+        eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps, \
+        eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps, \
+        eval_2_episode_var_log_baseline_uncaught_intrusion_steps, \
+        eval_2_episode_step_baseline_uncaught_intrusion_steps, \
+        eval_2_flags_list, eval_2_flags_percentage_list, \
+        eval_2_episode_caught_list, eval_2_episode_early_stopped_list, \
+        eval_2_episode_successful_intrusion_list, eval_2_attacker_cost_list, \
+        eval_2_attacker_cost_norm_list, \
+        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list, eval_2_episode_intrusion_steps, \
+        eval_2_defender_first_stop_step, eval_2_defender_second_stop_step, \
+        eval_2_defender_third_stop_step, eval_2_defender_fourth_stop_step, \
+        eval_2_defender_stops_remaining, \
+        eval_2_episode_snort_severe_baseline_first_stop_step, \
+        eval_2_episode_snort_warning_baseline_first_stop_step, eval_2_episode_snort_critical_baseline_first_stop_step, \
+        eval_2_episode_var_log_baseline_first_stop_step, eval_2_episode_step_baseline_first_stop_step, \
+        eval_2_episode_snort_severe_baseline_second_stop_step, \
+        eval_2_episode_snort_warning_baseline_second_stop_step, eval_2_episode_snort_critical_baseline_second_stop_step, \
+        eval_2_episode_var_log_baseline_second_stop_step, eval_2_episode_step_baseline_second_stop_step, \
+        eval_2_episode_snort_severe_baseline_third_stop_step, \
+        eval_2_episode_snort_warning_baseline_third_stop_step, eval_2_episode_snort_critical_baseline_third_stop_step, \
+        eval_2_episode_var_log_baseline_third_stop_step, eval_2_episode_step_baseline_third_stop_step, \
+        eval_2_episode_snort_severe_baseline_fourth_stop_step, \
+        eval_2_episode_snort_warning_baseline_fourth_stop_step, eval_2_episode_snort_critical_baseline_fourth_stop_step, \
+        eval_2_episode_var_log_baseline_fourth_stop_step, eval_2_episode_step_baseline_fourth_stop_step, \
+        eval_2_episode_snort_severe_baseline_stops_remaining, \
+        eval_2_episode_snort_warning_baseline_stops_remaining, eval_2_episode_snort_critical_baseline_stops_remaining, \
+        eval_2_episode_var_log_baseline_stops_remaining, eval_2_episode_step_baseline_stops_remaining, \
+        eval_2_optimal_first_stop_step, eval_2_optimal_second_stop_step, eval_2_optimal_third_stop_step, \
+        eval_2_optimal_fourth_stop_step, eval_2_optimal_stops_remaining, eval_2_optimal_defender_episode_steps = \
+            rewards, steps, uncaught_intrusion_steps_l, opt_r_l, \
+            snort_severe_r, snort_warning_r, snort_critical_r, \
+            var_log_r, step_r, snort_severe_steps_l, snort_warning_steps_l, \
+            snort_critical_steps_l, var_log_steps_l, step_steps_l, \
+            snort_severe_ca, snort_warning_ca, snort_critical_ca, var_log_ca, step_ca, \
+            snort_severe_es, snort_warning_es, snort_critical_es, var_log_es, step_es, \
+            snort_severe_uit, snort_warning_uit, snort_critical_uit, var_log_uit, step_uit, \
+            flags_list, flags_percentage_list, episode_caught_list, episode_early_stopped_list, \
+            episode_successful_intrusion_list, attacker_cost_list, attacker_cost_norm_list, attacker_alerts_list, \
+            attacker_alerts_norm_list, intrusion_steps, model_stopping_times_1, model_stopping_times_2, \
+            model_stopping_times_3, model_stopping_times_4, stops_remaining_l, \
+            snort_severe_stop_1, snort_warning_stop_1, snort_critical_stop_1, var_log_stop_1, step_stop_1, \
+            snort_severe_stop_2, snort_warning_stop_2, snort_critical_stop_2, var_log_stop_2, step_stop_2, \
+            snort_severe_stop_3, snort_warning_stop_3, snort_critical_stop_3, var_log_stop_3, step_stop_3, \
+            snort_severe_stop_4, snort_warning_stop_4, snort_critical_stop_4, var_log_stop_4, step_stop_4, \
+            snort_severe_stops_remaining_l, snort_warning_stops_remaining_l, snort_critical_stops_remaining_l, \
+            var_log_stops_remaining_l, step_stops_remaining_l, optimal_stop_1, optimal_stop_2, optimal_stop_3, \
+            optimal_stop_4, optimal_stops_remaining_l, optimal_steps
+
+        train_log_dto.defender_eval_2_episode_rewards = eval_2_defender_episode_rewards
+        train_log_dto.eval_2_episode_steps = eval_2_episode_steps
+        train_log_dto.eval_2_episode_snort_severe_baseline_rewards = eval_2_episode_snort_severe_baseline_rewards
+        train_log_dto.eval_2_episode_snort_warning_baseline_rewards = eval_2_episode_snort_warning_baseline_rewards
+        train_log_dto.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
+        train_log_dto.eval_2_episode_var_log_baseline_rewards = eval_2_episode_var_log_baseline_rewards
+        train_log_dto.eval_2_episode_step_baseline_rewards = eval_2_episode_step_baseline_rewards
+        train_log_dto.eval_2_episode_snort_severe_baseline_steps = eval_2_episode_snort_severe_baseline_steps
+        train_log_dto.eval_2_episode_snort_warning_baseline_steps = eval_2_episode_snort_warning_baseline_steps
+        train_log_dto.eval_2_episode_snort_critical_baseline_steps = eval_2_episode_snort_critical_baseline_steps
+        train_log_dto.eval_2_episode_var_log_baseline_steps = eval_2_episode_var_log_baseline_steps
+        train_log_dto.eval_2_episode_step_baseline_steps = eval_2_episode_step_baseline_steps
+        train_log_dto.eval_2_episode_snort_severe_baseline_caught_attacker = eval_2_episode_snort_severe_baseline_caught_attacker
+        train_log_dto.eval_2_episode_snort_warning_baseline_caught_attacker = eval_2_episode_snort_warning_baseline_caught_attacker
+        train_log_dto.eval_2_episode_snort_critical_baseline_caught_attacker = eval_2_episode_snort_critical_baseline_caught_attacker
+        train_log_dto.eval_2_episode_var_log_baseline_caught_attacker = eval_2_episode_var_log_baseline_caught_attacker
+        train_log_dto.eval_2_episode_step_baseline_caught_attacker = eval_2_episode_step_baseline_caught_attacker
+        train_log_dto.eval_2_episode_snort_severe_baseline_early_stopping = eval_2_episode_snort_severe_baseline_early_stopping
+        train_log_dto.eval_2_episode_snort_warning_baseline_early_stopping = eval_2_episode_snort_warning_baseline_early_stopping
+        train_log_dto.eval_2_episode_snort_critical_baseline_early_stopping = eval_2_episode_snort_critical_baseline_early_stopping
+        train_log_dto.eval_2_episode_var_log_baseline_early_stopping = eval_2_episode_var_log_baseline_early_stopping
+        train_log_dto.eval_2_episode_step_baseline_early_stopping = eval_2_episode_step_baseline_early_stopping
+        train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps = eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps
+        train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps = eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps
+        train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps = eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps
+        train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps = eval_2_episode_var_log_baseline_uncaught_intrusion_steps
+        train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps = eval_2_episode_step_baseline_uncaught_intrusion_steps
+        train_log_dto.eval_2_episode_flags = eval_2_flags_list
+        train_log_dto.eval_2_episode_flags_percentage = eval_2_flags_percentage_list
+        train_log_dto.eval_2_episode_caught = eval_2_episode_caught_list
+        train_log_dto.eval_2_episode_early_stopped = eval_2_episode_early_stopped_list
+        train_log_dto.eval_2_episode_successful_intrusion = eval_2_episode_successful_intrusion_list
+        train_log_dto.eval_2_attacker_action_costs = eval_2_attacker_cost_list
+        train_log_dto.eval_2_attacker_action_costs_norm = eval_2_attacker_cost_norm_list
+        train_log_dto.eval_2_attacker_action_alerts = eval_2_attacker_alerts_list
+        train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
+        train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
+        train_log_dto.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
+        train_log_dto.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
+        train_log_dto.eval_2_defender_first_stop_step = eval_2_defender_first_stop_step
+        train_log_dto.eval_2_defender_second_stop_step = eval_2_defender_second_stop_step
+        train_log_dto.eval_2_defender_third_stop_step = eval_2_defender_third_stop_step
+        train_log_dto.eval_2_defender_fourth_stop_step = eval_2_defender_fourth_stop_step
+        train_log_dto.eval_2_defender_stops_remaining = eval_2_defender_stops_remaining
+        train_log_dto.eval_2_episode_snort_severe_baseline_first_stop_step = eval_2_episode_snort_severe_baseline_first_stop_step
+        train_log_dto.eval_2_episode_snort_warning_baseline_first_stop_step = eval_2_episode_snort_warning_baseline_first_stop_step
+        train_log_dto.eval_2_episode_snort_critical_baseline_first_stop_step = eval_2_episode_snort_critical_baseline_first_stop_step
+        train_log_dto.eval_2_episode_var_log_baseline_first_stop_step = eval_2_episode_var_log_baseline_first_stop_step
+        train_log_dto.eval_2_episode_step_baseline_first_stop_step = eval_2_episode_step_baseline_first_stop_step
+        train_log_dto.eval_2_episode_snort_severe_baseline_second_stop_step = eval_2_episode_snort_severe_baseline_second_stop_step
+        train_log_dto.eval_2_episode_snort_warning_baseline_second_stop_step = eval_2_episode_snort_warning_baseline_second_stop_step
+        train_log_dto.eval_2_episode_snort_critical_baseline_second_stop_step = eval_2_episode_snort_critical_baseline_second_stop_step
+        train_log_dto.eval_2_episode_var_log_baseline_second_stop_step = eval_2_episode_var_log_baseline_second_stop_step
+        train_log_dto.eval_2_episode_step_baseline_second_stop_step = eval_2_episode_step_baseline_second_stop_step
+        train_log_dto.eval_2_episode_snort_severe_baseline_third_stop_step = eval_2_episode_snort_severe_baseline_third_stop_step
+        train_log_dto.eval_2_episode_snort_warning_baseline_third_stop_step = eval_2_episode_snort_warning_baseline_third_stop_step
+        train_log_dto.eval_2_episode_snort_critical_baseline_third_stop_step = eval_2_episode_snort_critical_baseline_third_stop_step
+        train_log_dto.eval_2_episode_var_log_baseline_third_stop_step = eval_2_episode_var_log_baseline_third_stop_step
+        train_log_dto.eval_2_episode_step_baseline_third_stop_step = eval_2_episode_step_baseline_third_stop_step
+        train_log_dto.eval_2_episode_snort_severe_baseline_fourth_stop_step = eval_2_episode_snort_severe_baseline_fourth_stop_step
+        train_log_dto.eval_2_episode_snort_warning_baseline_fourth_stop_step = eval_2_episode_snort_warning_baseline_fourth_stop_step
+        train_log_dto.eval_2_episode_snort_critical_baseline_fourth_stop_step = eval_2_episode_snort_critical_baseline_fourth_stop_step
+        train_log_dto.eval_2_episode_var_log_baseline_fourth_stop_step = eval_2_episode_var_log_baseline_fourth_stop_step
+        train_log_dto.eval_2_episode_step_baseline_fourth_stop_step = eval_2_episode_step_baseline_fourth_stop_step
+        train_log_dto.eval_2_episode_snort_severe_baseline_stops_remaining = eval_2_episode_snort_severe_baseline_stops_remaining
+        train_log_dto.eval_2_episode_snort_warning_baseline_stops_remaining = eval_2_episode_snort_warning_baseline_stops_remaining
+        train_log_dto.eval_2_episode_snort_critical_baseline_stops_remaining = eval_2_episode_snort_critical_baseline_stops_remaining
+        train_log_dto.eval_2_episode_var_log_baseline_stops_remaining = eval_2_episode_var_log_baseline_stops_remaining
+        train_log_dto.eval_2_episode_step_baseline_stops_remaining = eval_2_episode_step_baseline_stops_remaining
+        train_log_dto.eval_2_optimal_first_stop_step = eval_2_optimal_first_stop_step
+        train_log_dto.eval_2_optimal_second_stop_step = eval_2_optimal_second_stop_step
+        train_log_dto.eval_2_optimal_third_stop_step = eval_2_optimal_third_stop_step
+        train_log_dto.eval_2_optimal_fourth_stop_step = eval_2_optimal_fourth_stop_step
+        train_log_dto.eval_2_optimal_stops_remaining = eval_2_optimal_stops_remaining
+        train_log_dto.eval_2_optimal_defender_episode_steps = eval_2_optimal_defender_episode_steps
+
+        return train_log_dto
 
 
     @staticmethod

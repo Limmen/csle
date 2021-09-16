@@ -1,12 +1,12 @@
 import random
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from pycr_common.dao.container_config.node_flags_config import NodeFlagsConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.dao.container_config.vulnerability_type import VulnType
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from gym_pycr_ctf.envs_model.config.generator.generator_util import GeneratorUtil
+from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
 
 class FlagsGenerator:
 

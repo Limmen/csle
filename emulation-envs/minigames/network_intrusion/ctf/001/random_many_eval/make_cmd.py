@@ -1,6 +1,6 @@
 import argparse
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.util.experiments_util import util
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 
 
 def parse_args():

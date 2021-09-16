@@ -5,10 +5,10 @@ import gym
 import numpy as np
 import torch as th
 
-from gym_pycr_ctf.envs_model.util.eval_util import EvalUtil
-from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
-from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
 import pycr_common.constants.constants as constants
+from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
+from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
+from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
 from pycr_common.agents.openai_baselines.common.buffers import RolloutBuffer, RolloutBufferAR
 from pycr_common.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback
 from pycr_common.agents.openai_baselines.common.vec_env import VecEnv
@@ -80,7 +80,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         attacker_agent_config: AgentConfig = None,
         defender_agent_config: AgentConfig = None,
         env_2: Union[GymEnv, str] = None,
-        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER
+        train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
+        train_agent_log_dto: BaseTrainAgentLogDTO = None,
+        rollout_data_dto: BaseRolloutDataDTO = None,
+        eval_util: BaseEvalUtil = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -101,7 +104,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             attacker_agent_config = attacker_agent_config,
             defender_agent_config=defender_agent_config,
             env_2=env_2,
-            train_mode=train_mode
+            train_mode=train_mode,
+            train_agent_log_dto = train_agent_log_dto,
+            rollout_data_dto=rollout_data_dto,
+            eval_util=eval_util
         )
 
         self.n_steps = n_steps
@@ -121,7 +127,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.num_episodes = 0
         self.num_episodes_total = 0
 
-        self.saved_log_dto = TrainAgentLogDTO()
+        self.saved_log_dto = self.train_agent_log_dto.copy().initialize()
         self.saved_log_dto.initialize()
 
         if _init_setup_model:
@@ -205,7 +211,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self, env: VecEnv, callback: BaseCallback, attacker_rollout_buffer: RolloutBuffer,
             defender_rollout_buffer: RolloutBuffer,
             n_rollout_steps: int
-    ) -> Union[bool, RolloutDataDTO]:
+    ) -> Union[bool, BaseRolloutDataDTO]:
         """
         Collect rollouts using the current policy and fill a `RolloutBuffer`.
 
@@ -225,8 +231,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         defender_rollout_buffer.reset()
 
         # Avg metrics
-        rollout_data_dto = RolloutDataDTO()
-        rollout_data_dto.initialize()
+        rollout_data_dto = self.rollout_data_dto.copy().initialize()
 
         # Per episode metrics
         episode_reward_attacker = np.zeros(env.num_envs)
@@ -266,166 +271,10 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         # Record episode metrics
                         self.num_episodes += 1
                         self.num_episodes_total += 1
-                        rollout_data_dto.attacker_episode_rewards.append(episode_reward_attacker[i])
-                        rollout_data_dto.defender_episode_rewards.append(episode_reward_defender[i])
-                        rollout_data_dto.episode_steps.append(infos[i][constants.INFO_DICT.EPISODE_LENGTH])
-                        rollout_data_dto.episode_steps.append(episode_step[i])
-                        rollout_data_dto.episode_flags.append(infos[i][constants.INFO_DICT.FLAGS])
-                        rollout_data_dto.episode_caught.append(infos[i][constants.INFO_DICT.CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_early_stopped.append(infos[i][constants.INFO_DICT.EARLY_STOPPED])
-                        rollout_data_dto.episode_successful_intrusion.append(infos[i][
-                                                                                 constants.INFO_DICT.SUCCESSFUL_INTRUSION])
-                        rollout_data_dto.episode_snort_severe_baseline_rewards.append(infos[i][
-                                                                                          constants.INFO_DICT.SNORT_SEVERE_BASELINE_REWARD])
-                        rollout_data_dto.episode_snort_warning_baseline_rewards.append(infos[i][
-                                                                                           constants.INFO_DICT.SNORT_WARNING_BASELINE_REWARD])
-                        rollout_data_dto.episode_snort_critical_baseline_rewards.append(infos[i][
-                                                                                            constants.INFO_DICT.SNORT_CRITICAL_BASELINE_REWARD])
-                        rollout_data_dto.episode_var_log_baseline_rewards.append(infos[i][
-                                                                                     constants.INFO_DICT.VAR_LOG_BASELINE_REWARD])
-                        rollout_data_dto.episode_step_baseline_rewards.append(infos[i][
-                                                                                  constants.INFO_DICT.STEP_BASELINE_REWARD])
-                        rollout_data_dto.episode_snort_severe_baseline_steps.append(infos[i][
-                                                                                        constants.INFO_DICT.SNORT_SEVERE_BASELINE_STEP])
-                        rollout_data_dto.episode_snort_warning_baseline_steps.append(infos[i][
-                                                                                         constants.INFO_DICT.SNORT_WARNING_BASELINE_STEP])
-                        rollout_data_dto.episode_snort_critical_baseline_steps.append(infos[i][
-                                                                                          constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STEP])
-                        rollout_data_dto.episode_var_log_baseline_steps.append(infos[i][
-                                                                                   constants.INFO_DICT.VAR_LOG_BASELINE_STEP])
-                        rollout_data_dto.episode_step_baseline_steps.append(infos[i][
-                                                                                constants.INFO_DICT.STEP_BASELINE_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_caught_attacker.append(infos[i][
-                                                                                                  constants.INFO_DICT.SNORT_SEVERE_BASELINE_CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_snort_warning_baseline_caught_attacker.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_WARNING_BASELINE_CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_snort_critical_baseline_caught_attacker.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_CRITICAL_BASELINE_CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_var_log_baseline_caught_attacker.append(infos[i][
-                                                                                             constants.INFO_DICT.VAR_LOG_BASELINE_CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_step_baseline_caught_attacker.append(infos[i][
-                                                                                          constants.INFO_DICT.STEP_BASELINE_CAUGHT_ATTACKER])
-                        rollout_data_dto.episode_snort_severe_baseline_early_stopping.append(infos[i][
-                                                                                                 constants.INFO_DICT.SNORT_SEVERE_BASELINE_EARLY_STOPPING])
-                        rollout_data_dto.episode_snort_warning_baseline_early_stopping.append(infos[i][
-                                                                                                  constants.INFO_DICT.SNORT_WARNING_BASELINE_EARLY_STOPPING])
-                        rollout_data_dto.episode_snort_critical_baseline_early_stopping.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_CRITICAL_BASELINE_EARLY_STOPPING])
-                        rollout_data_dto.episode_var_log_baseline_early_stopping.append(infos[i][
-                                                                                            constants.INFO_DICT.VAR_LOG_BASELINE_EARLY_STOPPING])
-                        rollout_data_dto.episode_step_baseline_early_stopping.append(infos[i][
-                                                                                         constants.INFO_DICT.STEP_BASELINE_EARLY_STOPPING])
-                        rollout_data_dto.episode_snort_severe_baseline_uncaught_intrusion_steps.append(infos[i][
-                                                                                                           constants.INFO_DICT.SNORT_SEVERE_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.episode_snort_warning_baseline_uncaught_intrusion_steps.append(infos[i][
-                                                                                                            constants.INFO_DICT.SNORT_WARNING_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.episode_snort_critical_baseline_uncaught_intrusion_steps.append(infos[i][
-                                                                                                             constants.INFO_DICT.SNORT_CRITICAL_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.episode_var_log_baseline_uncaught_intrusion_steps.append(infos[i][
-                                                                                                      constants.INFO_DICT.VAR_LOG_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps.append(infos[i][
-                                                                                                   constants.INFO_DICT.STEP_BASELINE_UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.attacker_action_costs.append(infos[i][constants.INFO_DICT.ATTACKER_COST])
-                        rollout_data_dto.attacker_action_costs_norm.append(infos[i][
-                                                                               constants.INFO_DICT.ATTACKER_COST_NORM])
-                        rollout_data_dto.attacker_action_alerts.append(infos[i][constants.INFO_DICT.ATTACKER_ALERTS])
-                        rollout_data_dto.attacker_action_alerts_norm.append(infos[i][
-                                                                                constants.INFO_DICT.ATTACKER_ALERTS_NORM])
-                        rollout_data_dto.episode_intrusion_steps.append(infos[i][constants.INFO_DICT.INTRUSION_STEP])
-                        rollout_data_dto.uncaught_intrusion_steps.append(infos[i][
-                                                                             constants.INFO_DICT.UNCAUGHT_INTRUSION_STEPS])
-                        rollout_data_dto.optimal_defender_reward.append(infos[i][
-                                                                            constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD])
-                        rollout_data_dto.defender_stops_remaining.append(infos[i][
-                                                                             constants.INFO_DICT.DEFENDER_STOPS_REMAINING])
-                        rollout_data_dto.defender_first_stop_step.append(infos[i][
-                                                                             constants.INFO_DICT.DEFENDER_FIRST_STOP_STEP])
-                        rollout_data_dto.defender_second_stop_step.append(infos[i][
-                                                                              constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP])
-                        rollout_data_dto.defender_third_stop_step.append(infos[i][
-                                                                             constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP])
-                        rollout_data_dto.defender_fourth_stop_step.append(infos[i][
-                                                                              constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_first_stop_step.append(infos[i][
-                                                                                                  constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP])
-                        rollout_data_dto.episode_snort_warning_baseline_first_stop_step.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP])
-                        rollout_data_dto.episode_snort_critical_baseline_first_stop_step.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP])
-                        rollout_data_dto.episode_var_log_baseline_first_stop_step.append(infos[i][
-                                                                                             constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP])
-                        rollout_data_dto.episode_step_baseline_first_stop_step.append(infos[i][
-                                                                                          constants.INFO_DICT.STEP_BASELINE_FIRST_STOP_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_second_stop_step.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP])
-                        rollout_data_dto.episode_snort_warning_baseline_second_stop_step.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP])
-                        rollout_data_dto.episode_snort_critical_baseline_second_stop_step.append(infos[i][
-                                                                                                     constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP])
-                        rollout_data_dto.episode_var_log_baseline_second_stop_step.append(infos[i][
-                                                                                              constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP])
-                        rollout_data_dto.episode_step_baseline_second_stop_step.append(infos[i][
-                                                                                           constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_third_stop_step.append(infos[i][
-                                                                                                  constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP])
-                        rollout_data_dto.episode_snort_warning_baseline_third_stop_step.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP])
-                        rollout_data_dto.episode_snort_critical_baseline_third_stop_step.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP])
-                        rollout_data_dto.episode_var_log_baseline_third_stop_step.append(infos[i][
-                                                                                             constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP])
-                        rollout_data_dto.episode_step_baseline_third_stop_step.append(infos[i][
-                                                                                          constants.INFO_DICT.STEP_BASELINE_THIRD_STOP_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_fourth_stop_step.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_snort_warning_baseline_fourth_stop_step.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_snort_critical_baseline_fourth_stop_step.append(infos[i][
-                                                                                                     constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_var_log_baseline_fourth_stop_step.append(infos[i][
-                                                                                              constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_step_baseline_fourth_stop_step.append(infos[i][
-                                                                                           constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP])
-                        rollout_data_dto.episode_snort_severe_baseline_stops_remaining.append(infos[i][
-                                                                                                  constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING])
-                        rollout_data_dto.episode_snort_warning_baseline_stops_remaining.append(infos[i][
-                                                                                                   constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING])
-                        rollout_data_dto.episode_snort_critical_baseline_stops_remaining.append(infos[i][
-                                                                                                    constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING])
-                        rollout_data_dto.episode_var_log_baseline_stops_remaining.append(infos[i][
-                                                                                             constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING])
-                        rollout_data_dto.episode_step_baseline_stops_remaining.append(infos[i][
-                                                                                          constants.INFO_DICT.STEP_BASELINE_STOPS_REMAINING])
-                        rollout_data_dto.optimal_stops_remaining.append(infos[i][
-                                                                            constants.INFO_DICT.OPTIMAL_STOPS_REMAINING])
-                        rollout_data_dto.optimal_first_stop_step.append(infos[i][
-                                                                            constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP])
-                        rollout_data_dto.optimal_second_stop_step.append(infos[i][
-                                                                             constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP])
-                        rollout_data_dto.optimal_third_stop_step.append(infos[i][
-                                                                            constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP])
-                        rollout_data_dto.optimal_fourth_stop_step.append(infos[i][
-                                                                             constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP])
-                        rollout_data_dto.optimal_defender_episode_steps.append(infos[i][
-                                                                                   constants.INFO_DICT.OPTIMAL_DEFENDER_EPISODE_STEPS])
-
-                        if self.attacker_agent_config.env_config is not None:
-                            rollout_data_dto.episode_flags_percentage.append(
-                                infos[i][constants.INFO_DICT.FLAGS] / self.attacker_agent_config.env_config.num_flags
-                            ) # TODO this does not work with DR
-                        else:
-                            #print("env config None?:{}".format(self.attacker_agent_config.env_config))
-                            rollout_data_dto.episode_flags_percentage.append(
-                                infos[i][constants.INFO_DICT.FLAGS] / self.attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
-
-                        if self.attacker_agent_config.performance_analysis:
-                            rollout_data_dto.env_response_times.append(env_response_time)
-                            rollout_data_dto.action_pred_times.append(action_pred_time)
-                            env_response_time = 0
-                            action_pred_time = 0
-
-                        rollout_data_dto.update_env_specific_metrics(infos=infos, i=i,
-                                                                     agent_config=self.attacker_agent_config)
+                        rollout_data_dto.update(
+                            attacker_rewards = episode_reward_attacker[i],
+                            defender_rewards = episode_reward_defender[i],  episode_steps = episode_step[i],
+                            infos=infos, i=i, env_response_time=env_response_time, action_pred_time=action_pred_time)
                         episode_reward_attacker[i] = 0
                         episode_reward_defender[i] = 0
                         episode_step[i] = 0
@@ -442,9 +291,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback.on_rollout_end()
         for i in range(len(dones)):
             if not dones[i]:
-                rollout_data_dto.attacker_episode_rewards.append(episode_reward_attacker[i])
-                rollout_data_dto.defender_episode_rewards.append(episode_reward_defender[i])
-                rollout_data_dto.episode_steps.append(episode_step[i])
+                rollout_data_dto.update_done(attacker_rewards = episode_reward_attacker[i],
+                                             defender_rewards = episode_reward_defender[i],
+                                             episode_steps = episode_step[i])
         return True, rollout_data_dto
 
     def train(self) -> None:
@@ -511,114 +360,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                                       self.defender_rollout_buffer,
                                       n_rollout_steps=self.n_steps)
 
-            if self.attacker_agent_config.performance_analysis:
-                end = time.time()
-                train_log_dto.rollout_times.append(end-start)
-                train_log_dto.env_response_times.extend(rollout_data_dto.env_response_times)
-                train_log_dto.action_pred_times.extend(rollout_data_dto.action_pred_times)
-
-            train_log_dto.attacker_episode_rewards.extend(rollout_data_dto.attacker_episode_rewards)
-            train_log_dto.defender_episode_rewards.extend(rollout_data_dto.defender_episode_rewards)
-            train_log_dto.episode_steps.extend(rollout_data_dto.episode_steps)
-            train_log_dto.episode_flags.extend(rollout_data_dto.episode_flags)
-            train_log_dto.episode_caught.extend(rollout_data_dto.episode_caught)
-            train_log_dto.episode_successful_intrusion.extend(rollout_data_dto.episode_successful_intrusion)
-            train_log_dto.episode_early_stopped.extend(rollout_data_dto.episode_early_stopped)
-            train_log_dto.episode_flags_percentage.extend(rollout_data_dto.episode_flags_percentage)
-            train_log_dto.episode_snort_severe_baseline_rewards.extend(rollout_data_dto.episode_snort_severe_baseline_rewards)
-            train_log_dto.episode_snort_warning_baseline_rewards.extend(rollout_data_dto.episode_snort_warning_baseline_rewards)
-            train_log_dto.episode_snort_critical_baseline_rewards.extend(rollout_data_dto.episode_snort_critical_baseline_rewards)
-            train_log_dto.episode_var_log_baseline_rewards.extend(rollout_data_dto.episode_var_log_baseline_rewards)
-            train_log_dto.episode_step_baseline_rewards.extend(rollout_data_dto.episode_step_baseline_rewards)
-            train_log_dto.episode_snort_severe_baseline_steps.extend(rollout_data_dto.episode_snort_severe_baseline_steps)
-            train_log_dto.episode_snort_warning_baseline_steps.extend(rollout_data_dto.episode_snort_warning_baseline_steps)
-            train_log_dto.episode_snort_critical_baseline_steps.extend(rollout_data_dto.episode_snort_critical_baseline_steps)
-            train_log_dto.episode_var_log_baseline_steps.extend(rollout_data_dto.episode_var_log_baseline_steps)
-            train_log_dto.episode_step_baseline_steps.extend(rollout_data_dto.episode_step_baseline_steps)
-            train_log_dto.attacker_action_costs.extend(rollout_data_dto.attacker_action_costs)
-            train_log_dto.attacker_action_costs_norm.extend(rollout_data_dto.attacker_action_costs_norm)
-            train_log_dto.attacker_action_alerts.extend(rollout_data_dto.attacker_action_alerts)
-            train_log_dto.attacker_action_alerts_norm.extend(rollout_data_dto.attacker_action_alerts_norm)
-            train_log_dto.episode_intrusion_steps.extend(rollout_data_dto.episode_intrusion_steps)
-            train_log_dto.episode_snort_severe_baseline_caught_attacker.extend(rollout_data_dto.episode_snort_severe_baseline_caught_attacker)
-            train_log_dto.episode_snort_warning_baseline_caught_attacker.extend(rollout_data_dto.episode_snort_warning_baseline_caught_attacker)
-            train_log_dto.episode_snort_critical_baseline_caught_attacker.extend(rollout_data_dto.episode_snort_critical_baseline_caught_attacker)
-            train_log_dto.episode_var_log_baseline_caught_attacker.extend(rollout_data_dto.episode_var_log_baseline_caught_attacker)
-            train_log_dto.episode_step_baseline_caught_attacker.extend(rollout_data_dto.episode_step_baseline_caught_attacker)
-            train_log_dto.episode_snort_severe_baseline_early_stopping.extend(rollout_data_dto.episode_snort_severe_baseline_early_stopping)
-            train_log_dto.episode_snort_warning_baseline_early_stopping.extend(rollout_data_dto.episode_snort_warning_baseline_early_stopping)
-            train_log_dto.episode_snort_critical_baseline_early_stopping.extend(rollout_data_dto.episode_snort_critical_baseline_early_stopping)
-            train_log_dto.episode_var_log_baseline_early_stopping.extend(rollout_data_dto.episode_var_log_baseline_early_stopping)
-            train_log_dto.episode_step_baseline_early_stopping.extend(rollout_data_dto.episode_step_baseline_early_stopping)
-            train_log_dto.episode_snort_severe_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_snort_severe_baseline_uncaught_intrusion_steps)
-            train_log_dto.episode_snort_warning_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_snort_warning_baseline_uncaught_intrusion_steps)
-            train_log_dto.episode_snort_critical_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_snort_critical_baseline_uncaught_intrusion_steps)
-            train_log_dto.episode_var_log_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_var_log_baseline_uncaught_intrusion_steps)
-            train_log_dto.episode_step_baseline_uncaught_intrusion_steps.extend(rollout_data_dto.episode_step_baseline_uncaught_intrusion_steps)
-            train_log_dto.uncaught_intrusion_steps.extend(rollout_data_dto.uncaught_intrusion_steps)
-            train_log_dto.optimal_defender_reward.extend(rollout_data_dto.optimal_defender_reward)
-            train_log_dto.defender_stops_remaining.extend(rollout_data_dto.defender_stops_remaining)
-            train_log_dto.defender_first_stop_step.extend(rollout_data_dto.defender_first_stop_step)
-            train_log_dto.defender_second_stop_step.extend(rollout_data_dto.defender_second_stop_step)
-            train_log_dto.defender_third_stop_step.extend(rollout_data_dto.defender_third_stop_step)
-            train_log_dto.defender_fourth_stop_step.extend(rollout_data_dto.defender_fourth_stop_step)
-            train_log_dto.episode_snort_severe_baseline_first_stop_step.extend(rollout_data_dto.episode_snort_severe_baseline_first_stop_step)
-            train_log_dto.episode_snort_warning_baseline_first_stop_step.extend(rollout_data_dto.episode_snort_warning_baseline_first_stop_step)
-            train_log_dto.episode_snort_critical_baseline_first_stop_step.extend(rollout_data_dto.episode_snort_critical_baseline_first_stop_step)
-            train_log_dto.episode_var_log_baseline_first_stop_step.extend(rollout_data_dto.episode_var_log_baseline_first_stop_step)
-            train_log_dto.episode_step_baseline_first_stop_step.extend(rollout_data_dto.episode_step_baseline_first_stop_step)
-            train_log_dto.episode_snort_severe_baseline_second_stop_step.extend(rollout_data_dto.episode_snort_severe_baseline_second_stop_step)
-            train_log_dto.episode_snort_warning_baseline_second_stop_step.extend(rollout_data_dto.episode_snort_warning_baseline_second_stop_step)
-            train_log_dto.episode_snort_critical_baseline_second_stop_step.extend(rollout_data_dto.episode_snort_critical_baseline_second_stop_step)
-            train_log_dto.episode_var_log_baseline_second_stop_step.extend(rollout_data_dto.episode_var_log_baseline_second_stop_step)
-            train_log_dto.episode_step_baseline_second_stop_step.extend(rollout_data_dto.episode_step_baseline_second_stop_step)
-            train_log_dto.episode_snort_severe_baseline_third_stop_step.extend(rollout_data_dto.episode_snort_severe_baseline_third_stop_step)
-            train_log_dto.episode_snort_warning_baseline_third_stop_step.extend(rollout_data_dto.episode_snort_warning_baseline_third_stop_step)
-            train_log_dto.episode_snort_critical_baseline_third_stop_step.extend(rollout_data_dto.episode_snort_critical_baseline_third_stop_step)
-            train_log_dto.episode_var_log_baseline_third_stop_step.extend(rollout_data_dto.episode_var_log_baseline_third_stop_step)
-            train_log_dto.episode_step_baseline_third_stop_step.extend(rollout_data_dto.episode_step_baseline_third_stop_step)
-            train_log_dto.episode_snort_severe_baseline_fourth_stop_step.extend(rollout_data_dto.episode_snort_severe_baseline_fourth_stop_step)
-            train_log_dto.episode_snort_warning_baseline_fourth_stop_step.extend(rollout_data_dto.episode_snort_warning_baseline_fourth_stop_step)
-            train_log_dto.episode_snort_critical_baseline_fourth_stop_step.extend(rollout_data_dto.episode_snort_critical_baseline_fourth_stop_step)
-            train_log_dto.episode_var_log_baseline_fourth_stop_step.extend(rollout_data_dto.episode_var_log_baseline_fourth_stop_step)
-            train_log_dto.episode_step_baseline_fourth_stop_step.extend(rollout_data_dto.episode_step_baseline_fourth_stop_step)
-            train_log_dto.episode_snort_severe_baseline_stops_remaining.extend(rollout_data_dto.episode_snort_severe_baseline_stops_remaining)
-            train_log_dto.episode_snort_warning_baseline_stops_remaining.extend(rollout_data_dto.episode_snort_warning_baseline_stops_remaining)
-            train_log_dto.episode_snort_critical_baseline_stops_remaining.extend(rollout_data_dto.episode_snort_critical_baseline_stops_remaining)
-            train_log_dto.episode_var_log_baseline_stops_remaining.extend(rollout_data_dto.episode_var_log_baseline_stops_remaining)
-            train_log_dto.episode_step_baseline_stops_remaining.extend(rollout_data_dto.episode_step_baseline_stops_remaining)
-            train_log_dto.optimal_stops_remaining.extend(rollout_data_dto.optimal_stops_remaining)
-            train_log_dto.optimal_first_stop_step.extend(rollout_data_dto.optimal_first_stop_step)
-            train_log_dto.optimal_second_stop_step.extend(rollout_data_dto.optimal_second_stop_step)
-            train_log_dto.optimal_third_stop_step.extend(rollout_data_dto.optimal_third_stop_step)
-            train_log_dto.optimal_fourth_stop_step.extend(rollout_data_dto.optimal_fourth_stop_step)
-            train_log_dto.optimal_defender_episode_steps.extend(rollout_data_dto.optimal_defender_episode_steps)
-
-            for key in rollout_data_dto.attacker_env_specific_rewards.keys():
-                if key in train_log_dto.attacker_train_episode_env_specific_rewards:
-                    train_log_dto.attacker_train_episode_env_specific_rewards[key].extend(rollout_data_dto.attacker_env_specific_rewards[key])
-                else:
-                    train_log_dto.attacker_train_episode_env_specific_rewards[key] = rollout_data_dto.attacker_env_specific_rewards[key]
-            for key in rollout_data_dto.defender_env_specific_rewards.keys():
-                if key in train_log_dto.defender_train_episode_env_specific_rewards:
-                    train_log_dto.defender_train_episode_env_specific_rewards[key].extend(rollout_data_dto.defender_env_specific_rewards[key])
-                else:
-                    train_log_dto.defender_train_episode_env_specific_rewards[key] = rollout_data_dto.defender_env_specific_rewards[key]
-            for key in rollout_data_dto.env_specific_steps.keys():
-                if key in train_log_dto.train_env_specific_steps:
-                    train_log_dto.train_env_specific_steps[key].extend(rollout_data_dto.env_specific_steps[key])
-                else:
-                    train_log_dto.train_env_specific_steps[key] = rollout_data_dto.env_specific_steps[key]
-            for key in rollout_data_dto.env_specific_flags.keys():
-                if key in train_log_dto.train_env_specific_flags:
-                    train_log_dto.train_env_specific_flags[key].extend(rollout_data_dto.env_specific_flags[key])
-                else:
-                    train_log_dto.train_env_specific_flags[key] = rollout_data_dto.env_specific_flags[key]
-            for key in train_log_dto.train_env_specific_flags_percentage.keys():
-                if key in train_log_dto.train_env_specific_flags_percentage:
-                    train_log_dto.train_env_specific_flags_percentage[key].extend(rollout_data_dto.env_specific_flags_percentage[key])
-                else:
-                    train_log_dto.train_env_specific_flags_percentage[key] = rollout_data_dto.env_specific_flags_percentage[key]
+            train_log_dto.update(rollout_data_dto=rollout_data_dto, start=start)
 
             if continue_training is False:
                 break
@@ -672,131 +414,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         train_log_dto.copy_saved_env_2(self.saved_log_dto)
 
                     if self.defender_agent_config is not None and self.defender_agent_config.static_eval_defender:
-                        eval_2_defender_episode_rewards, eval_2_episode_steps, eval_2_uncaught_intrusion_steps, \
-                        eval_2_optimal_defender_reward, \
-                        eval_2_episode_snort_severe_baseline_rewards, eval_2_episode_snort_warning_baseline_rewards, \
-                        eval_2_episode_snort_critical_baseline_rewards, \
-                        eval_2_episode_var_log_baseline_rewards, eval_2_episode_step_baseline_rewards, \
-                        eval_2_episode_snort_severe_baseline_steps, eval_2_episode_snort_warning_baseline_steps, \
-                        eval_2_episode_snort_critical_baseline_steps, \
-                        eval_2_episode_var_log_baseline_steps, eval_2_episode_step_baseline_steps, \
-                        eval_2_episode_snort_severe_baseline_caught_attacker, \
-                        eval_2_episode_snort_warning_baseline_caught_attacker, \
-                        eval_2_episode_snort_critical_baseline_caught_attacker, \
-                        eval_2_episode_var_log_baseline_caught_attacker, \
-                        eval_2_episode_step_baseline_caught_attacker, \
-                        eval_2_episode_snort_severe_baseline_early_stopping, \
-                        eval_2_episode_snort_warning_baseline_early_stopping, \
-                        eval_2_episode_snort_critical_baseline_early_stopping, \
-                        eval_2_episode_var_log_baseline_early_stopping, eval_2_episode_step_baseline_early_stopping, \
-                        eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps, \
-                        eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps, \
-                        eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps, \
-                        eval_2_episode_var_log_baseline_uncaught_intrusion_steps, \
-                        eval_2_episode_step_baseline_uncaught_intrusion_steps, \
-                        eval_2_flags_list, eval_2_flags_percentage_list, \
-                        eval_2_episode_caught_list, eval_2_episode_early_stopped_list, \
-                        eval_2_episode_successful_intrusion_list, eval_2_attacker_cost_list, \
-                        eval_2_attacker_cost_norm_list, \
-                        eval_2_attacker_alerts_list, eval_2_attacker_alerts_norm_list, eval_2_episode_intrusion_steps, \
-                        eval_2_defender_first_stop_step, eval_2_defender_second_stop_step, \
-                        eval_2_defender_third_stop_step, eval_2_defender_fourth_stop_step, \
-                        eval_2_defender_stops_remaining, \
-                        eval_2_episode_snort_severe_baseline_first_stop_step, \
-                        eval_2_episode_snort_warning_baseline_first_stop_step, eval_2_episode_snort_critical_baseline_first_stop_step, \
-                        eval_2_episode_var_log_baseline_first_stop_step, eval_2_episode_step_baseline_first_stop_step, \
-                        eval_2_episode_snort_severe_baseline_second_stop_step, \
-                        eval_2_episode_snort_warning_baseline_second_stop_step, eval_2_episode_snort_critical_baseline_second_stop_step, \
-                        eval_2_episode_var_log_baseline_second_stop_step, eval_2_episode_step_baseline_second_stop_step, \
-                        eval_2_episode_snort_severe_baseline_third_stop_step, \
-                        eval_2_episode_snort_warning_baseline_third_stop_step, eval_2_episode_snort_critical_baseline_third_stop_step, \
-                        eval_2_episode_var_log_baseline_third_stop_step, eval_2_episode_step_baseline_third_stop_step, \
-                        eval_2_episode_snort_severe_baseline_fourth_stop_step, \
-                        eval_2_episode_snort_warning_baseline_fourth_stop_step, eval_2_episode_snort_critical_baseline_fourth_stop_step, \
-                        eval_2_episode_var_log_baseline_fourth_stop_step, eval_2_episode_step_baseline_fourth_stop_step, \
-                        eval_2_episode_snort_severe_baseline_stops_remaining, \
-                        eval_2_episode_snort_warning_baseline_stops_remaining, eval_2_episode_snort_critical_baseline_stops_remaining, \
-                        eval_2_episode_var_log_baseline_stops_remaining, eval_2_episode_step_baseline_stops_remaining, \
-                        eval_2_optimal_first_stop_step, eval_2_optimal_second_stop_step, eval_2_optimal_third_stop_step, \
-                        eval_2_optimal_fourth_stop_step, eval_2_optimal_stops_remaining, eval_2_optimal_defender_episode_steps = \
-                            EvalUtil.eval_defender(self.env.envs[0], self,
-                                                   deterministic=self.attacker_agent_config.eval_deterministic)
-
-                        train_log_dto.defender_eval_2_episode_rewards = eval_2_defender_episode_rewards
-                        train_log_dto.eval_2_episode_steps = eval_2_episode_steps
-                        train_log_dto.eval_2_episode_snort_severe_baseline_rewards = eval_2_episode_snort_severe_baseline_rewards
-                        train_log_dto.eval_2_episode_snort_warning_baseline_rewards = eval_2_episode_snort_warning_baseline_rewards
-                        train_log_dto.eval_2_episode_snort_critical_baseline_rewards = eval_2_episode_snort_critical_baseline_rewards
-                        train_log_dto.eval_2_episode_var_log_baseline_rewards= eval_2_episode_var_log_baseline_rewards
-                        train_log_dto.eval_2_episode_step_baseline_rewards = eval_2_episode_step_baseline_rewards
-                        train_log_dto.eval_2_episode_snort_severe_baseline_steps = eval_2_episode_snort_severe_baseline_steps
-                        train_log_dto.eval_2_episode_snort_warning_baseline_steps = eval_2_episode_snort_warning_baseline_steps
-                        train_log_dto.eval_2_episode_snort_critical_baseline_steps = eval_2_episode_snort_critical_baseline_steps
-                        train_log_dto.eval_2_episode_var_log_baseline_steps = eval_2_episode_var_log_baseline_steps
-                        train_log_dto.eval_2_episode_step_baseline_steps = eval_2_episode_step_baseline_steps
-                        train_log_dto.eval_2_episode_snort_severe_baseline_caught_attacker = eval_2_episode_snort_severe_baseline_caught_attacker
-                        train_log_dto.eval_2_episode_snort_warning_baseline_caught_attacker = eval_2_episode_snort_warning_baseline_caught_attacker
-                        train_log_dto.eval_2_episode_snort_critical_baseline_caught_attacker = eval_2_episode_snort_critical_baseline_caught_attacker
-                        train_log_dto.eval_2_episode_var_log_baseline_caught_attacker = eval_2_episode_var_log_baseline_caught_attacker
-                        train_log_dto.eval_2_episode_step_baseline_caught_attacker = eval_2_episode_step_baseline_caught_attacker
-                        train_log_dto.eval_2_episode_snort_severe_baseline_early_stopping = eval_2_episode_snort_severe_baseline_early_stopping
-                        train_log_dto.eval_2_episode_snort_warning_baseline_early_stopping = eval_2_episode_snort_warning_baseline_early_stopping
-                        train_log_dto.eval_2_episode_snort_critical_baseline_early_stopping = eval_2_episode_snort_critical_baseline_early_stopping
-                        train_log_dto.eval_2_episode_var_log_baseline_early_stopping = eval_2_episode_var_log_baseline_early_stopping
-                        train_log_dto.eval_2_episode_step_baseline_early_stopping = eval_2_episode_step_baseline_early_stopping
-                        train_log_dto.eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps = eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps
-                        train_log_dto.eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps = eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps
-                        train_log_dto.eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps = eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps
-                        train_log_dto.eval_2_episode_var_log_baseline_uncaught_intrusion_steps = eval_2_episode_var_log_baseline_uncaught_intrusion_steps
-                        train_log_dto.eval_2_episode_step_baseline_uncaught_intrusion_steps = eval_2_episode_step_baseline_uncaught_intrusion_steps
-                        train_log_dto.eval_2_episode_flags = eval_2_flags_list
-                        train_log_dto.eval_2_episode_flags_percentage = eval_2_flags_percentage_list
-                        train_log_dto.eval_2_episode_caught = eval_2_episode_caught_list
-                        train_log_dto.eval_2_episode_early_stopped = eval_2_episode_early_stopped_list
-                        train_log_dto.eval_2_episode_successful_intrusion = eval_2_episode_successful_intrusion_list
-                        train_log_dto.eval_2_attacker_action_costs = eval_2_attacker_cost_list
-                        train_log_dto.eval_2_attacker_action_costs_norm = eval_2_attacker_cost_norm_list
-                        train_log_dto.eval_2_attacker_action_alerts = eval_2_attacker_alerts_list
-                        train_log_dto.eval_2_attacker_action_alerts_norm = eval_2_attacker_alerts_norm_list
-                        train_log_dto.eval_2_episode_intrusion_steps = eval_2_episode_intrusion_steps
-                        train_log_dto.eval_2_uncaught_intrusion_steps = eval_2_uncaught_intrusion_steps
-                        train_log_dto.eval_2_optimal_defender_reward = eval_2_optimal_defender_reward
-                        train_log_dto.eval_2_defender_first_stop_step = eval_2_defender_first_stop_step
-                        train_log_dto.eval_2_defender_second_stop_step = eval_2_defender_second_stop_step
-                        train_log_dto.eval_2_defender_third_stop_step = eval_2_defender_third_stop_step
-                        train_log_dto.eval_2_defender_fourth_stop_step = eval_2_defender_fourth_stop_step
-                        train_log_dto.eval_2_defender_stops_remaining = eval_2_defender_stops_remaining
-                        train_log_dto.eval_2_episode_snort_severe_baseline_first_stop_step = eval_2_episode_snort_severe_baseline_first_stop_step
-                        train_log_dto.eval_2_episode_snort_warning_baseline_first_stop_step = eval_2_episode_snort_warning_baseline_first_stop_step
-                        train_log_dto.eval_2_episode_snort_critical_baseline_first_stop_step = eval_2_episode_snort_critical_baseline_first_stop_step
-                        train_log_dto.eval_2_episode_var_log_baseline_first_stop_step = eval_2_episode_var_log_baseline_first_stop_step
-                        train_log_dto.eval_2_episode_step_baseline_first_stop_step = eval_2_episode_step_baseline_first_stop_step
-                        train_log_dto.eval_2_episode_snort_severe_baseline_second_stop_step = eval_2_episode_snort_severe_baseline_second_stop_step
-                        train_log_dto.eval_2_episode_snort_warning_baseline_second_stop_step = eval_2_episode_snort_warning_baseline_second_stop_step
-                        train_log_dto.eval_2_episode_snort_critical_baseline_second_stop_step = eval_2_episode_snort_critical_baseline_second_stop_step
-                        train_log_dto.eval_2_episode_var_log_baseline_second_stop_step = eval_2_episode_var_log_baseline_second_stop_step
-                        train_log_dto.eval_2_episode_step_baseline_second_stop_step = eval_2_episode_step_baseline_second_stop_step
-                        train_log_dto.eval_2_episode_snort_severe_baseline_third_stop_step = eval_2_episode_snort_severe_baseline_third_stop_step
-                        train_log_dto.eval_2_episode_snort_warning_baseline_third_stop_step = eval_2_episode_snort_warning_baseline_third_stop_step
-                        train_log_dto.eval_2_episode_snort_critical_baseline_third_stop_step = eval_2_episode_snort_critical_baseline_third_stop_step
-                        train_log_dto.eval_2_episode_var_log_baseline_third_stop_step = eval_2_episode_var_log_baseline_third_stop_step
-                        train_log_dto.eval_2_episode_step_baseline_third_stop_step = eval_2_episode_step_baseline_third_stop_step
-                        train_log_dto.eval_2_episode_snort_severe_baseline_fourth_stop_step = eval_2_episode_snort_severe_baseline_fourth_stop_step
-                        train_log_dto.eval_2_episode_snort_warning_baseline_fourth_stop_step = eval_2_episode_snort_warning_baseline_fourth_stop_step
-                        train_log_dto.eval_2_episode_snort_critical_baseline_fourth_stop_step = eval_2_episode_snort_critical_baseline_fourth_stop_step
-                        train_log_dto.eval_2_episode_var_log_baseline_fourth_stop_step = eval_2_episode_var_log_baseline_fourth_stop_step
-                        train_log_dto.eval_2_episode_step_baseline_fourth_stop_step = eval_2_episode_step_baseline_fourth_stop_step
-                        train_log_dto.eval_2_episode_snort_severe_baseline_stops_remaining = eval_2_episode_snort_severe_baseline_stops_remaining
-                        train_log_dto.eval_2_episode_snort_warning_baseline_stops_remaining = eval_2_episode_snort_warning_baseline_stops_remaining
-                        train_log_dto.eval_2_episode_snort_critical_baseline_stops_remaining = eval_2_episode_snort_critical_baseline_stops_remaining
-                        train_log_dto.eval_2_episode_var_log_baseline_stops_remaining = eval_2_episode_var_log_baseline_stops_remaining
-                        train_log_dto.eval_2_episode_step_baseline_stops_remaining = eval_2_episode_step_baseline_stops_remaining
-                        train_log_dto.eval_2_optimal_first_stop_step = eval_2_optimal_first_stop_step
-                        train_log_dto.eval_2_optimal_second_stop_step = eval_2_optimal_second_stop_step
-                        train_log_dto.eval_2_optimal_third_stop_step = eval_2_optimal_third_stop_step
-                        train_log_dto.eval_2_optimal_fourth_stop_step = eval_2_optimal_fourth_stop_step
-                        train_log_dto.eval_2_optimal_stops_remaining = eval_2_optimal_stops_remaining
-                        train_log_dto.eval_2_optimal_defender_episode_steps = eval_2_optimal_defender_episode_steps
+                        train_log_dto = self.eval_util.eval_defender(
+                            self.env.envs[0], self, train_log_dto=train_log_dto,
+                            deterministic=self.attacker_agent_config.eval_deterministic)
 
                     d = {}
                     if isinstance(self.env, SubprocVecEnv):

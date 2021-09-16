@@ -41,7 +41,6 @@ class PyCRCTFLevel10EmulationBaseEnv(PyCRCTFEnv):
 
 
 # -------- Version 1 ------------
-
 class PyCRCTFLevel10Emulation1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -69,11 +68,10 @@ class PyCRCTFLevel10Emulation1Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10Emulation1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 with costs------------
-
 class PyCRCTFLevel10EmulationWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -101,11 +99,10 @@ class PyCRCTFLevel10EmulationWithCosts1Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10EmulationWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
-
 class PyCRCTFLevel10Emulation2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -133,11 +130,10 @@ class PyCRCTFLevel10Emulation2Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10Emulation2Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 with costs------------
-
 class PyCRCTFLevel10EmulationWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
@@ -165,11 +161,10 @@ class PyCRCTFLevel10EmulationWithCosts2Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10EmulationWithCosts2Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 3 ------------
-
 class PyCRCTFLevel10Emulation3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
@@ -197,11 +192,10 @@ class PyCRCTFLevel10Emulation3Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10Emulation3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 3 with costs------------
-
 class PyCRCTFLevel10EmulationWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
@@ -229,11 +223,10 @@ class PyCRCTFLevel10EmulationWithCosts3Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10EmulationWithCosts3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 ------------
-
 class PyCRCTFLevel10Emulation4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
@@ -261,11 +254,10 @@ class PyCRCTFLevel10Emulation4Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10Emulation4Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 with costs------------
-
 class PyCRCTFLevel10EmulationWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
@@ -293,4 +285,4 @@ class PyCRCTFLevel10EmulationWithCosts4Env(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel10EmulationWithCosts4Env, self).__init__(env_config=env_config)

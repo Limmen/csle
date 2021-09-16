@@ -1,7 +1,7 @@
 import os
 from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.dao.container_config.node_flags_config import NodeFlagsConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.config.generator.flags_generator import FlagsGenerator
 

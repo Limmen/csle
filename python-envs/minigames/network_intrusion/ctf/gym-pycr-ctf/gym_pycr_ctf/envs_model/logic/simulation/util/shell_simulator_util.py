@@ -4,7 +4,8 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from pycr_common.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
+from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
+
 
 class ShellSimulatorUtil:
     """

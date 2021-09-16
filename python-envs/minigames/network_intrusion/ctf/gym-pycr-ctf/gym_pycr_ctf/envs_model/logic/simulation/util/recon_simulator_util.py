@@ -1,15 +1,15 @@
 from typing import Tuple
 import numpy as np
+from pycr_common.dao.observation.common.port_observation_state import PortObservationState
+from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
+from pycr_common.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
-from pycr_common.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
-from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from pycr_common.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
 from gym_pycr_ctf.dao.network.network_outcome import NetworkOutcome
+from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
 
 
 class ReconSimulatorUtil:

@@ -3,9 +3,10 @@ import copy
 from pycr_common.dao.network.credential import Credential
 from pycr_common.dao.network.node import Node
 from pycr_common.dao.network.node_type import NodeType
-from gym_pycr_ctf.dao.observation.common.port_observation_state import PortObservationState
-from gym_pycr_ctf.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common.dao.observation.common.port_observation_state import PortObservationState
+from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
+from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common.dao.action_results.nmap_host_result import NmapHostResult
 
 
 class AttackerMachineObservationState:
@@ -225,5 +226,28 @@ class AttackerMachineObservationState:
                     credentials=self.shell_access_credentials, root_usernames=root_usernames, visible=False,
                     reachable_nodes=self.reachable, firewall=False)
         return node
+
+    @staticmethod
+    def from_nmap_result(nmap_host_result: NmapHostResult) -> "AttackerMachineObservationState":
+        """
+        Converts the NmapHostResultDTO into a a AttackerMachineObservationState
+
+        :return: the created AttackerMachineObservationState
+        """
+        m_obs = AttackerMachineObservationState(ip=nmap_host_result.ip_addr)
+        ports = list(map(lambda x: x.to_obs(), nmap_host_result.ports))
+        m_obs.ports = ports
+        if nmap_host_result.os is not None:
+            m_obs.os = nmap_host_result.os.vendor.lower()
+        vulnerabilities = list(map(lambda x: x.to_obs(), nmap_host_result.vulnerabilities))
+        m_obs.cve_vulns = vulnerabilities
+        credentials = list(map(lambda x: x.to_obs(), nmap_host_result.credentials))
+        m_obs.shell_access_credentials = credentials
+        if len(credentials) > 0:
+            m_obs.shell_access = True
+            m_obs.untried_credentials = True
+        m_obs.hostnames = nmap_host_result.hostnames
+        m_obs.trace = nmap_host_result.trace
+        return m_obs
 
 

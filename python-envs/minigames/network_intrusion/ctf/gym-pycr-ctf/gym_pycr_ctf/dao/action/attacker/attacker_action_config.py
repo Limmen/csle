@@ -1,10 +1,11 @@
 from typing import List
 import gym
+from pycr_common.dao.action.attacker.base_attacker_action_config import BaseAttackerActionConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
 
-class AttackerActionConfig:
+class AttackerActionConfig(BaseAttackerActionConfig):
     """
     Configuration of the action space for the attacker
     """
@@ -24,8 +25,8 @@ class AttackerActionConfig:
         :param masscan_action_ids: list of ids of the actions that are Masscan actions
         :param stopping_action_ids: List of ids of the actions that are actions related to optimal stopping
         """
+        super(AttackerActionConfig, self).__init__(num_actions=len(self.actions))
         self.actions = actions
-        self.num_actions = len(self.actions)
         self.num_indices = num_indices
         self.action_space = gym.spaces.Discrete(self.num_actions)
         self.action_lookup_d = {}

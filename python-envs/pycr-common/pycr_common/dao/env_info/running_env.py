@@ -1,13 +1,13 @@
 from typing import List
 import jsonpickle
 import json
-from gym_pycr_ctf.dao.env_info.running_env_container import RunningEnvContainer
+from pycr_common.dao.env_info.running_env_container import RunningEnvContainer
 from pycr_common.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
+from pycr_common.dao.container_config.users_config import UsersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.container_config.traffic_config import TrafficConfig
 
 
 class RunningEnv:

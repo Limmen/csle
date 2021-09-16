@@ -1,10 +1,10 @@
 from typing import List
 import docker
-from gym_pycr_ctf.envs_model.config.generator.env_info import EnvInfo
+from pycr_common.envs_model.config.generator.env_info import EnvInfo
 from pycr_common.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.util.experiments_util import util
-from gym_pycr_ctf.envs_model.config.generator.container_generator import ContainerGenerator
-from gym_pycr_ctf.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from pycr_common.util.experiments_util import util
+from pycr_common.envs_model.config.generator.container_generator import ContainerGenerator
+from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 
 
 class ContainerManager:

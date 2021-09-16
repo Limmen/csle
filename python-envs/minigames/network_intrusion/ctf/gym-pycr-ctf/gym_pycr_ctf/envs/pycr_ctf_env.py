@@ -9,15 +9,16 @@ import time
 import random
 from pycr_common.dao.agent.agent_log import AgentLog
 from pycr_common.dao.network.env_mode import EnvMode
-from pycr_common.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
 from pycr_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from pycr_common.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from pycr_common.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 import pycr_common.constants.constants as constants
 import pycr_common.envs_model.logic.common.util as util
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
+from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -29,14 +30,14 @@ from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
 from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 
 
-class PyCRCTFEnv(gym.Env, ABC):
+class PyCRCTFEnv(gym.Env, ABC, BasePyCREnv):
     """
     Abstract OpenAI Gym Env for the PyCr CTF minigame
     """
 
     def __init__(self, env_config : EnvConfig, rs = None):
         self.env_config = env_config
-        if util.is_network_conf_incomplete(env_config) and self.env_config.env_mode == EnvMode.SIMULATION:
+        if util.is_network_conf_incomplete(env_config.network_conf) and self.env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Must provide a simulation model to run in simulation mode")
 
         # Initialize environment state
@@ -669,7 +670,7 @@ class PyCRCTFEnv(gym.Env, ABC):
 
         :return: None
         """
-        from gym_pycr_ctf.rendering.viewer import Viewer
+        from pycr_common.rendering.viewer import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path
@@ -739,7 +740,8 @@ class PyCRCTFEnv(gym.Env, ABC):
         :return: None
         """
         self.env_config.network_conf, obs_state = SimulationGenerator.build_model(
-            exp_policy=self.env_config.attacker_exploration_policy, env_config=self.env_config, env=self)
+            exp_policy=self.env_config.attacker_exploration_policy, env_config=self.env_config, env=self,
+        )
         self.env_state.attacker_obs_state = obs_state
         self.env_config.env_mode = EnvMode.SIMULATION
         self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])

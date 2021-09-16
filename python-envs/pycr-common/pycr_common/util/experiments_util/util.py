@@ -15,12 +15,12 @@ import random
 import scipy.stats
 from pycr_common.dao.experiment.client_config import ClientConfig
 from pycr_common.dao.experiment.runner_mode import RunnerMode
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.container_config.users_config import UsersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
-from gym_pycr_ctf.dao.container_config.traffic_config import TrafficConfig
+from pycr_common.dao.container_config.traffic_config import TrafficConfig
 
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:

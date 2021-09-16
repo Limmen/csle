@@ -42,7 +42,7 @@ class PyCRCTFRandomEmulationBaseEnv(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulationBaseEnv, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 ------------
@@ -91,11 +91,10 @@ class PyCRCTFRandomEmulation1Env(PyCRCTFEnv):
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulation1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 with costs------------
-
 class PyCRCTFRandomEmulationWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
@@ -140,7 +139,7 @@ class PyCRCTFRandomEmulationWithCosts1Env(PyCRCTFEnv):
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulationWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
@@ -177,11 +176,10 @@ class PyCRCTFRandomEmulation2Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulation2Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 with costs------------
-
 class PyCRCTFRandomEmulationWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
@@ -215,7 +213,7 @@ class PyCRCTFRandomEmulationWithCosts2Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulationWithCosts2Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 3 ------------
@@ -252,10 +250,10 @@ class PyCRCTFRandomEmulation3Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulation3Env, self).__init__(env_config=env_config)
+
 
 # -------- Version 3 with costs------------
-
 class PyCRCTFRandomEmulationWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
@@ -289,7 +287,7 @@ class PyCRCTFRandomEmulationWithCosts3Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulationWithCosts3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 ------------
@@ -326,7 +324,7 @@ class PyCRCTFRandomEmulation4Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulation4Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 with costs------------
@@ -363,5 +361,5 @@ class PyCRCTFRandomEmulationWithCosts4Env(PyCRCTFEnv):
             env_config.checkpoint_freq = 1000
             env_config.attacker_filter_illegal_actions = False
             env_config.max_episode_length = 50
-        super().__init__(env_config=env_config)
+        super(PyCRCTFRandomEmulationWithCosts4Env, self).__init__(env_config=env_config)
 

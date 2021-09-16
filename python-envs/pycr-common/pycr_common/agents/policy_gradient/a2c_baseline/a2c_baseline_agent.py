@@ -4,9 +4,9 @@ An agent for the pycr-ctf env that uses the A2C Policy Gradient algorithm from O
 import time
 import math
 
-from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
-from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
+from pycr_common.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.train_agent import TrainAgent
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.policy_gradient.a2c_baseline.impl.a2c import A2C
@@ -18,7 +18,7 @@ class A2CBaselineAgent(TrainAgent):
     An agent for the pycr-ctf env that uses the A2C Policy Gradient algorithm from OpenAI stable baselines
     """
 
-    def __init__(self, env: PyCRCTFEnv, attacker_config: AgentConfig, eval_env: PyCRCTFEnv):
+    def __init__(self, env: BasePyCREnv, attacker_config: AgentConfig, eval_env: BasePyCREnv):
         """
         Initialize environment and hyperparameters
 
@@ -26,7 +26,7 @@ class A2CBaselineAgent(TrainAgent):
         """
         super(A2CBaselineAgent, self).__init__(env, attacker_config, eval_env)
 
-    def train(self) -> ExperimentResult:
+    def train(self) -> BaseExperimentResult:
         """
         Starts the training loop and returns the result when complete
 

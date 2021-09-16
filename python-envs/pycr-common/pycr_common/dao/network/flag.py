@@ -1,3 +1,4 @@
+
 class Flag:
     """
     Class that represents a flag in the environment

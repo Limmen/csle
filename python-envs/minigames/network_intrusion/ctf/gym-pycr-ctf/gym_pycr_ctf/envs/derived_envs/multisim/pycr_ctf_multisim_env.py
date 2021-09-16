@@ -49,4 +49,4 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
                                                                              network_ids=list(range(1, 254)),
                                                                              r_space=self.randomization_space,
                                                                              env_config=env_config)
-        super().__init__(env_config=env_config, rs=randomization_space)
+        super(PyCRCTFMultiSim1Env, self).__init__(env_config=env_config, rs=randomization_space)

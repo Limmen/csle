@@ -50,11 +50,10 @@ class PyCRCTFLevel9EmulationBaseEnv(PyCRCTFEnv):
             env_config.detection_alerts_threshold = 10
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9EmulationBaseEnv, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 ------------
-
 class PyCRCTFLevel9Emulation1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -93,7 +92,7 @@ class PyCRCTFLevel9Emulation1Env(PyCRCTFEnv):
             env_config.emulate_detection = True
             env_config.detection_prob_factor = 0.05
             env_config.randomize_attacker_starting_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9Emulation1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 with costs------------

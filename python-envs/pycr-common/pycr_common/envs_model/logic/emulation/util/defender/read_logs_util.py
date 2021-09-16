@@ -1,11 +1,11 @@
 from typing import Tuple
 import datetime
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
+import pycr_common.constants.constants as constants
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-import pycr_common.constants.constants as constants
-from gym_pycr_ctf.dao.action_results.failed_login_attempt import FailedLoginAttempt
-from gym_pycr_ctf.dao.action_results.successful_login import SuccessfulLogin
+from pycr_common.dao.action_results.failed_login_attempt import FailedLoginAttempt
+from pycr_common.dao.action_results.successful_login import SuccessfulLogin
 
 
 class ReadLogsUtil:

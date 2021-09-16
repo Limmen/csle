@@ -5,11 +5,12 @@ import torch as th
 from torch import nn
 
 from stable_baselines3.common.preprocessing import get_action_dim
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_state import BaseEnvState
 from pycr_common.agents.openai_baselines.common.policies import BasePolicy, ContinuousCritic, register_policy
 from pycr_common.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, NatureCNN, create_mlp
 from pycr_common.agents.config.agent_config import AgentConfig
+
 
 class Actor(BasePolicy):
     """
@@ -73,8 +74,8 @@ class Actor(BasePolicy):
         features = self.extract_features(obs)
         return self.mu(features)
 
-    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_config : EnvConfig = None,
-                 env_state: EnvState = None, m_index : int = None) -> th.Tensor:
+    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_config : BaseEnvConfig = None,
+                 env_state: BaseEnvState = None, m_index : int = None) -> th.Tensor:
         return self.forward(observation, deterministic=deterministic)
 
 
@@ -190,7 +191,7 @@ class TD3Policy(BasePolicy):
         return self._predict(observation, deterministic=deterministic)
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False,
-                 env_config: EnvConfig = None, env_state: EnvState = None, m_index : int = None) -> th.Tensor:
+                 env_config: BaseEnvConfig = None, env_state: BaseEnvState = None, m_index : int = None) -> th.Tensor:
         return self.actor(observation, deterministic=deterministic)
 
 

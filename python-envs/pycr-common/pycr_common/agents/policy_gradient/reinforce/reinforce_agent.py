@@ -9,7 +9,7 @@ from pycr_common.agents.models.fnn_w_softmax import FNNwithSoftmax
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.train_agent import TrainAgent
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_ctf.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
+from pycr_common.rendering.video.pycr_ctf_monitor import PyCrCTFMonitor
 
 
 class ReinforceAgent(TrainAgent):

@@ -2,6 +2,7 @@ from typing import List
 from pycr_common.dao.network.network_service import NetworkService
 from pycr_common.dao.network.vulnerability import Vulnerability
 
+
 class RandomizationSpace:
     """
     Object representing a randomization space

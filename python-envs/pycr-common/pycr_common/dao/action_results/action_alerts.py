@@ -1,5 +1,5 @@
 from typing import Tuple
-from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
 
 
 class ActionAlerts:
@@ -15,7 +15,7 @@ class ActionAlerts:
         self.user_ip_alerts = {}
         self.pivot_scan_alerts = {}
 
-    def add_alert(self, action_id : AttackerActionId, ip: str, alert : Tuple) -> None:
+    def add_alert(self, action_id : BaseAttackerActionId, ip: str, alert : Tuple) -> None:
         """
         Adds an action-alert
 
@@ -27,7 +27,7 @@ class ActionAlerts:
         key = (action_id, ip)
         self.alerts[key] = alert
 
-    def get_alert(self, action_id : AttackerActionId, ip: str) -> int:
+    def get_alert(self, action_id : BaseAttackerActionId, ip: str) -> int:
         """
         Looks up the number of alerts for a given action and ip
 
@@ -38,7 +38,7 @@ class ActionAlerts:
         key = (action_id, ip)
         return self.alerts[key]
 
-    def exists(self, action_id: AttackerActionId, ip: str) -> bool:
+    def exists(self, action_id: BaseAttackerActionId, ip: str) -> bool:
         """
         Checks if there is a number of alerts that exist for the given action and ip
 
@@ -49,7 +49,7 @@ class ActionAlerts:
         key = (action_id, ip)
         return key in self.alerts
 
-    def user_ip_add_alert(self, action_id: AttackerActionId, ip: str, alert : Tuple, user: str, service: str) -> None:
+    def user_ip_add_alert(self, action_id: BaseAttackerActionId, ip: str, alert : Tuple, user: str, service: str) -> None:
         """
         Adds a number of alerts for a given user and action and ip
 
@@ -63,7 +63,7 @@ class ActionAlerts:
         key = (action_id, ip, service, user)
         self.user_ip_alerts[key] = alert
 
-    def user_ip_get_alert(self, action_id: AttackerActionId, ip: str, user: str, service: str) -> int:
+    def user_ip_get_alert(self, action_id: BaseAttackerActionId, ip: str, user: str, service: str) -> int:
         """
         Gets the number of alerts for a given user, ip, service and action
 
@@ -76,7 +76,7 @@ class ActionAlerts:
         key = (action_id, ip, service, user)
         return self.user_ip_alerts[key]
 
-    def user_ip_exists(self, action_id: AttackerActionId, ip: str, user: str, service: str) -> bool:
+    def user_ip_exists(self, action_id: BaseAttackerActionId, ip: str, user: str, service: str) -> bool:
         """
         Checks if there is a number of alerts stored for a given action id, ip, user, and service
 
@@ -89,7 +89,7 @@ class ActionAlerts:
         key = (action_id, ip, service, user)
         return key in self.user_ip_alerts
 
-    def pivot_scan_add_alert(self, action_id: AttackerActionId, ip: str, alert : Tuple, user: str, target_ip: str) \
+    def pivot_scan_add_alert(self, action_id: BaseAttackerActionId, ip: str, alert : Tuple, user: str, target_ip: str) \
             -> None:
         """
         Add a number of alerts for a given action, ip, user, and target ip
@@ -104,7 +104,7 @@ class ActionAlerts:
         key = (action_id, ip, user, target_ip)
         self.pivot_scan_alerts[key] = alert
 
-    def pivot_scan_get_alert(self, action_id: AttackerActionId, ip: str, user: str, target_ip: str) -> int:
+    def pivot_scan_get_alert(self, action_id: BaseAttackerActionId, ip: str, user: str, target_ip: str) -> int:
         """
         Gets the number of alerts for a given action id, target ip, and user
 
@@ -117,7 +117,7 @@ class ActionAlerts:
         key = (action_id, ip, user, target_ip)
         return self.pivot_scan_alerts[key]
 
-    def pivot_scan_exists(self, action_id: AttackerActionId, ip: str, user: str, target_ip: str) -> bool:
+    def pivot_scan_exists(self, action_id: BaseAttackerActionId, ip: str, user: str, target_ip: str) -> bool:
         """
         Checks if there is a number of alerts stored for a given user id and target ip
 

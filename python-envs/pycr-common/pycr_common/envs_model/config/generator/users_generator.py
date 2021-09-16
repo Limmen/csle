@@ -1,16 +1,16 @@
 import random
 import numpy as np
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from pycr_common.dao.network.emulation_config import EmulationConfig
-from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from gym_pycr_ctf.dao.container_config.users_config import UsersConfig
-from pycr_common.dao.container_config.node_users_config import NodeUsersConfig
-from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
-from gym_pycr_ctf.envs_model.config.generator.generator_util import GeneratorUtil
 from random_username.generate import generate_username
-from gym_pycr_ctf.util.experiments_util import util
 import secrets
 import string
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.network.emulation_config import EmulationConfig
+from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
+from pycr_common.dao.container_config.users_config import UsersConfig
+from pycr_common.dao.container_config.node_users_config import NodeUsersConfig
+from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
+from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
+from pycr_common.util.experiments_util import util
 
 
 class UsersGenerator:

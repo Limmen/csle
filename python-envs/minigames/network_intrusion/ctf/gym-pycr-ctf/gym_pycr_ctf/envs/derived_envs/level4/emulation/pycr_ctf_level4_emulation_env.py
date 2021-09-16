@@ -38,11 +38,10 @@ class PyCRCTFLevel4EmulationBaseEnv(PyCRCTFEnv):
             env_config.save_trajectories = False
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4EmulationBaseEnv, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 ------------
-
 class PyCRCTFLevel4Emulation1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
@@ -71,7 +70,7 @@ class PyCRCTFLevel4Emulation1Env(PyCRCTFEnv):
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000
             env_config.defender_update_state = False
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel4Emulation1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1 with costs------------

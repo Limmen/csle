@@ -13,9 +13,9 @@ import copy
 
 from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
 from stable_baselines3.common.utils import get_device
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
+from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
+from pycr_common.dao.network.base_env_state import BaseEnvState
+from pycr_common.dao.network.base_env_config import BaseEnvConfig
 from pycr_common.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, \
     FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
 from pycr_common.agents.config.agent_config import AgentConfig
@@ -200,8 +200,8 @@ class BasePolicy(BaseModel):
                 module.bias.data.fill_(0.0)
 
     @abstractmethod
-    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None) -> th.Tensor:
+    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: BaseEnvState = None,
+                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -219,9 +219,9 @@ class BasePolicy(BaseModel):
         state: Optional[np.ndarray] = None,
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
-        env_config: EnvConfig = None,
-        env_configs: EnvConfig = None,
-        env_state: EnvState = None,
+        env_config: BaseEnvConfig = None,
+        env_configs: BaseEnvConfig = None,
+        env_state: BaseEnvState = None,
         env_idx: int = None,
         m_index: int = None,
         infos=None,
@@ -461,18 +461,22 @@ class ActorCriticPolicy(BasePolicy):
                     if self.agent_config.filter_illegal_actions:
                         if self.agent_config.ar_policy:
                             if self.m_action:
-                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_action=True, m_index = m_index), actions))
+                                non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
+                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state,
+                                    m_action=True, m_index = m_index), actions))
                             elif self.m_selection:
-                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state, m_selection=True), actions))
+                                non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
+                                    action, env_config=env.envs[i].env_config,
+                                    env_state=env.envs[i].env_state, m_selection=True), actions))
                         else:
                             if attacker:
-                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
-                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
+                                non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
+                                    action, env_config=env.envs[i].env_config,
+                                    env_state=env.envs[i].env_state), actions))
                             else:
-                                non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
-                                    action, env_config=env.envs[i].env_config, env_state=env.envs[i].env_state), actions))
+                                non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_defense_action_legal(
+                                    action, env_config=env.envs[i].env_config,
+                                    env_state=env.envs[i].env_state), actions))
                     non_legal_actions_total.append(non_legal_actions)
                 elif isinstance(env, SubprocVecEnv):
                     if attacker:
@@ -532,9 +536,9 @@ class ActorCriticPolicy(BasePolicy):
         return self.action_dist.proba_distribution(action_logits=action_logits_1)
 
 
-    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: EnvState = None,
-                env_config: EnvConfig = None, m_index : int = None, env = None, infos = None,
-                 env_configs: List[EnvConfig] = None, env_idx: int = None, mask_actions: bool = True,
+    def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: BaseEnvState = None,
+                 env_config: BaseEnvConfig = None, m_index : int = None, env = None, infos = None,
+                 env_configs: List[BaseEnvConfig] = None, env_idx: int = None, mask_actions: bool = True,
                  attacker : bool = True) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
@@ -560,17 +564,17 @@ class ActorCriticPolicy(BasePolicy):
                 if self.agent_config.filter_illegal_actions:
                     if self.agent_config.ar_policy:
                         if self.m_action:
-                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                            non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
                                 action, env_config=env_config, env_state=env_state, m_action=True, m_index=m_index), actions))
                         elif self.m_selection:
-                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                            non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
                                 action, env_config=env_config, env_state=env_state, m_selection=True), actions))
                     else:
                         if attacker:
-                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
+                            non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_attack_action_legal(
                                 action, env_config=env_config, env_state=env_state), actions))
                         else:
-                            non_legal_actions = list(filter(lambda action: not PyCRCTFEnv.is_defense_action_legal(
+                            non_legal_actions = list(filter(lambda action: not BasePyCREnv.is_defense_action_legal(
                                 action, env_config=env_config, env_state=env_state), actions))
                 non_legal_actions = [non_legal_actions]
             elif isinstance(env, SubprocVecEnv):

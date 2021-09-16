@@ -2,7 +2,7 @@
 Manual attacker agent
 """
 try:
-    from gym_pycr_ctf.rendering.viewer import Viewer
+    from pycr_common.rendering.viewer import Viewer
 except:
     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig

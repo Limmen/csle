@@ -1,7 +1,7 @@
 import zipfile as z
 import os
 import re
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 if __name__ == '__main__':
     zip_files_paths = []

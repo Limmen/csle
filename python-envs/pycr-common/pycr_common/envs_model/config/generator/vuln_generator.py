@@ -1,16 +1,16 @@
 from typing import List
 import random
 import numpy as np
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
-from gym_pycr_ctf.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from gym_pycr_ctf.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.container_config.node_firewall_config import NodeFirewallConfig
+from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from pycr_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from pycr_common.dao.container_config.vulnerability_type import VulnType
 from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
-from gym_pycr_ctf.envs_model.config.generator.generator_util import GeneratorUtil
+from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 class VulnerabilityGenerator:
 

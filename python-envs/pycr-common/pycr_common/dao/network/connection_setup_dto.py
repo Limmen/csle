@@ -1,7 +1,7 @@
 from typing import List
+from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from pycr_common.dao.network.credential import Credential
-from gym_pycr_ctf.envs_model.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
-from gym_pycr_ctf.dao.observation.common.connection_observation_state import ConnectionObservationState
+from pycr_common.envs_model.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
 
 
 class ConnectionSetupDTO:
@@ -68,6 +68,7 @@ class ConnectionSetupDTO:
             list(map(lambda x: str(x), self.interactive_shells)),
             list(map(lambda x: str(x), self.non_failed_credentials)),
             list(map(lambda x: str(x), self.proxies)))
+
 
     def copy(self) -> "ConnectionSetupDTO":
         """

@@ -68,7 +68,7 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
             #env_config.randomize_state_steps_list = [30, 30, 30, 30, 30, 30, 30, 30]
             #env_config.randomize_state_steps_list = [0,0,0,0,0,0,5, 9, 13, 17, 20, 25, 30, 30, 30, 30, 30, 30, 30, 30]
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSim1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 1, costs ------------
@@ -107,7 +107,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts1Env(PyCRCTFEnv):
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
 
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSimWithCosts1Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 2 ------------
@@ -146,7 +146,7 @@ class PyCRCTFLevel9GeneratedSim2Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSim2Env, self).__init__(env_config=env_config)
 
 # -------- Version 2, costs ------------
 
@@ -185,7 +185,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts2Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSimWithCosts2Env, self).__init__(env_config=env_config)
 
 # -------- Version 3 ------------
 
@@ -223,7 +223,7 @@ class PyCRCTFLevel9GeneratedSim3Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSim3Env, self).__init__(env_config=env_config)
 
 # -------- Version 3, costs ------------
 
@@ -261,7 +261,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts3Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSimWithCosts3Env, self).__init__(env_config=env_config)
 
 
 # -------- Version 4 ------------
@@ -300,7 +300,7 @@ class PyCRCTFLevel9GeneratedSim4Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 500
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSim4Env, self).__init__(env_config=env_config)
 
 # -------- Version 4 ------------
 
@@ -339,7 +339,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts4Env(PyCRCTFEnv):
             env_config.domain_randomization = False
             env_config.attacker_max_exploration_steps = 100
             env_config.attacker_max_exploration_trajectories = 10
-        super().__init__(env_config=env_config)
+        super(PyCRCTFLevel9GeneratedSimWithCosts4Env, self).__init__(env_config=env_config)
 
 
 

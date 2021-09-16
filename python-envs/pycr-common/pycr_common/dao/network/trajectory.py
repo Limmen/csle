@@ -2,7 +2,7 @@ from typing import List
 import json
 import os
 import pycr_common.constants.constants as constants
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.util.experiments_util import util
 
 
 class Trajectory:

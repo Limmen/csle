@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import numpy as np
 from pycr_common.dao.state_representation.state_type import StateType
+from pycr_common.dao.network.base_env_state import BaseEnvState
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
@@ -9,7 +10,8 @@ from gym_pycr_ctf.envs_model.state_representation.defender_state_representation 
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 
-class EnvState:
+
+class EnvState(BaseEnvState):
     """
     Represents the combined state of the environment, including both the attacker's and the defender's belief states.
     """
@@ -33,6 +35,7 @@ class EnvState:
         :param state_type: the state type
         :param ids: whether there is an IDS in the env
         """
+        super().__init__()
         self.env_config = env_config
         self.state_type = state_type
         self.reward_range = (float(0), float(1))

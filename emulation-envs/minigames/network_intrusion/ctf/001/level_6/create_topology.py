@@ -1,7 +1,7 @@
 import os
-from gym_pycr_ctf.dao.container_config.topology import Topology
-from gym_pycr_ctf.dao.container_config.node_firewall_config import NodeFirewallConfig
-from gym_pycr_ctf.util.experiments_util import util
+from pycr_common.dao.container_config.topology import Topology
+from pycr_common.dao.container_config.node_firewall_config import NodeFirewallConfig
+from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
 

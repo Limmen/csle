@@ -1,5 +1,5 @@
 from typing import List
-from gym_pycr_ctf.dao.container_config.node_container_config import NodeContainerConfig
+from pycr_common.dao.container_config.node_container_config import NodeContainerConfig
 
 
 class ContainersConfig:
