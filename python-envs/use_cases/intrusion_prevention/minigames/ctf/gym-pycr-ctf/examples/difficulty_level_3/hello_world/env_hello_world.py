@@ -1,4 +1,4 @@
-from gym_pycr_ctf.envs.pycr_ctf_env import PyCrCTFLevel2Base
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 import gym
 import time
 import numpy as np

@@ -6,6 +6,7 @@ import gym
 import matplotlib.pyplot as plt
 import math
 
+
 def initialize_model(env, load_path, device, agent_config) -> None:
     """
     Initialize models
@@ -350,15 +351,8 @@ def plot():
     plot_value_logged_in(model, env)
 
 def plot_value_logged_in(model, env):
-    #num_sh = np.arange(0, 4, 1)
     num_severe_alerts_recent = np.arange(0, 100, 1)
     num_severe_alerts_total = np.arange(0, 100, 1)
-    #num_sh = np.arange(0, 4, 0.1)
-    #num_logged_in = np.arange(0, 4, 1)
-    #num_logged_in = np.arange(0, agent_config.num_nodes-2, 1)
-    #num_logged_in = np.arange(0, 4, 0.1)
-    #theta = np.arange(-np.pi, np.pi, 0.1)
-    #sh, logged_in = np.meshgrid(num_sh, num_logged_in)  # grid of point
     sev, warn = np.meshgrid(num_severe_alerts_recent, num_severe_alerts_total)
     action_val = action_pred_core_state_severe_warning(sev, warn, model, env)  # evaluation of the function on the grid
 

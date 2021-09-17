@@ -2,6 +2,7 @@ from pycr_common.dao.network.emulation_config import EmulationConfig
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 import gym
 
+
 def manual_control():
     # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.7.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,

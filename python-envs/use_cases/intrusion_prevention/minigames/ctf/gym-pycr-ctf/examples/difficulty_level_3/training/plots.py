@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from gym_pycr_ctf.util.experiments_util import plotting_util
+import pycr_common.util.plots.plotting_util_basic as plotting_util
 
 def plot_rewards_steps_v1_v2_v3_v4():
     ppo_v1_df_0 = pd.read_csv(

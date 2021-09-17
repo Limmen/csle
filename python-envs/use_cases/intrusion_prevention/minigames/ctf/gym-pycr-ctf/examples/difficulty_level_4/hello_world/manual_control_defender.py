@@ -1,8 +1,8 @@
+import gym
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.agents.manual.manual_defender_agent import ManualDefenderAgent
 from pycr_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
-import gym
+from gym_pycr_ctf.agents.manual.manual_defender_agent import ManualDefenderAgent
 
 
 def initialize_models(self) -> None:

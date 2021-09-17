@@ -4,10 +4,11 @@ from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.experiment.client_config import ClientConfig
 from pycr_common.dao.agent.agent_type import AgentType
 from pycr_common.util.experiments_util import util
-from gym_pycr_ctf.util.experiments_util import plotting_util
+import pycr_common.util.plots as plotting_util
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.dao.experiment.runner_mode import RunnerMode
 from pycr_common.dao.agent.train_mode import TrainMode
+
 
 def default_config() -> ClientConfig:
     """
@@ -72,6 +73,7 @@ def write_default_config(path:str = None) -> None:
         path = util.default_config_path()
     config = default_config()
     util.write_config_file(config, path)
+
 
 
 # Program entrypoint

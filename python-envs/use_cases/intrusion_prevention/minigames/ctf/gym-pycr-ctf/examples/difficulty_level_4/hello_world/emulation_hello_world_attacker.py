@@ -1,7 +1,7 @@
-from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
 import sys
+from pycr_common.dao.network.emulation_config import EmulationConfig
 
 def test_env(env_name : str, num_steps : int):
     # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
