@@ -1,5 +1,0 @@
-2021-09-01 13:41:26.068550: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libnvinfer.so.6
-2021-09-01 13:41:26.070335: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libnvinfer_plugin.so.6
-Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
-TensorBoard 2.1.0 at http://localhost:9999/ (Press CTRL+C to quit)
-E0901 18:53:34.392939 140193755735808 directory_watcher.py:244] File ./tensorboard/events.out.tfevents.1630484009.ubuntu.15247.0 updated even though the current file is ./tensorboard/events.out.tfevents.1630515169.ubuntu.15247.2
