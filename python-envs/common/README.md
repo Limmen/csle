@@ -1,8 +1,9 @@
-# Common 
+# Common libraries 
 
-A library of common functionality between all python environments
+This folder contains common libraries for all python environments.
 
-(Coming soon..)
+- **pycr-common** ([pycr-common](./pycr-common)):
+     - A library with common functionality for implementing python environments that interface with emulations.
 
 ## Author & Maintainer
 
