@@ -274,7 +274,7 @@ class Runner:
             env.randomization_space = randomization_space
             env.env_config.domain_randomization = True
             env.randomize()
-        ManualAttackerAgent(env_config=env.env_config, env=env)
+        ManualAttackerAgent(env_config=env.env_config, env=env, render=config.simulation_config.render)
         return env
 
     @staticmethod

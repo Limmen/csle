@@ -881,3 +881,4 @@ class INFO_DICT:
     OPTIMAL_THIRD_STOP_STEP = "optimal_third_stop_step"
     OPTIMAL_FOURTH_STOP_STEP = "optimal_fourth_stop_step"
     OPTIMAL_DEFENDER_EPISODE_STEPS = "optimal_defender_episode_steps"
+    TERMINAL_OBSERVATION = "terminal_observation"

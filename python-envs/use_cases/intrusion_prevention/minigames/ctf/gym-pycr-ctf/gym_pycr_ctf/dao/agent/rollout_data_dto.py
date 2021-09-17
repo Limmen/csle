@@ -439,7 +439,8 @@ class RolloutDataDTO(BaseRolloutDataDTO):
         else:
             # print("env config None?:{}".format(self.attacker_agent_config.env_config))
             self.episode_flags_percentage.append(
-                infos[i][constants.INFO_DICT.FLAGS] / attacker_agent_config.env_configs[infos[i]["idx"]].num_flags)
+                infos[i][constants.INFO_DICT.FLAGS] / attacker_agent_config.env_configs[
+                    infos[i][constants.INFO_DICT.IDX]].num_flags)
 
         if attacker_agent_config.performance_analysis:
             self.env_response_times.append(env_response_time)

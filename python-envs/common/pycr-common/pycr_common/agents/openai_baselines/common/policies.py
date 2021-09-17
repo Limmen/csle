@@ -13,6 +13,7 @@ import copy
 
 from stable_baselines3.common.preprocessing import get_action_dim, preprocess_obs
 from stable_baselines3.common.utils import get_device
+import pycr_common.constants.constants as constants
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 from pycr_common.dao.network.base_env_state import BaseEnvState
 from pycr_common.dao.network.base_env_config import BaseEnvConfig
@@ -453,7 +454,6 @@ class ActorCriticPolicy(BasePolicy):
             actions = list(range(self.agent_config.output_dim))
 
         non_legal_actions_total = []
-        non_legal_actions = []
         if mask_actions:
             for i in range(env.num_envs):
                 if isinstance(env, DummyVecEnv):
@@ -480,9 +480,9 @@ class ActorCriticPolicy(BasePolicy):
                     non_legal_actions_total.append(non_legal_actions)
                 elif isinstance(env, SubprocVecEnv):
                     if attacker:
-                        non_legal_actions_total.append(infos[i]["attacker_non_legal_actions"])
+                        non_legal_actions_total.append(infos[i][constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS])
                     else:
-                        non_legal_actions_total.append(infos[i]["defender_non_legal_actions"])
+                        non_legal_actions_total.append(infos[i][constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS])
                 else:
                     raise ValueError("Unrecognized env")
         distribution = self._get_action_dist_from_latent(latent_pi, non_legal_actions=non_legal_actions_total)
@@ -579,9 +579,9 @@ class ActorCriticPolicy(BasePolicy):
                 non_legal_actions = [non_legal_actions]
             elif isinstance(env, SubprocVecEnv):
                 if attacker:
-                    non_legal_actions = infos[0]["attacker_non_legal_actions"]
+                    non_legal_actions = infos[0][constants.INFO_DICT.ATTACKER_NON_LEGAL_ACTIONS]
                 else:
-                    non_legal_actions = infos[0]["defender_non_legal_actions"]
+                    non_legal_actions = infos[0][constants.INFO_DICT.DEFENDER_NON_LEGAL_ACTIONS]
                 non_legal_actions = [non_legal_actions]
             else:
                 pass

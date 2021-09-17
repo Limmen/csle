@@ -1,7 +1,8 @@
 import csv
+from pycr_common.dao.experiment.base_simulation_config import BaseSimulationConfig
 
 
-class SimulationConfig:
+class SimulationConfig(BaseSimulationConfig):
     """
     Object representing the configuration of a simulation
     """
@@ -36,6 +37,7 @@ class SimulationConfig:
         :param dr_max_num_users: the maximum users for domain randomization of the simulation
         :param dr_use_base: boolean flag whether to use the base randomization space for domain randomization
         """
+        super().__init__()
         self.num_episodes = num_episodes
         self.video_fps = video_fps
         self.video = video

@@ -529,7 +529,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_log_probs = None
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                 attacker_actions, attacker_values, attacker_log_probs = \
-                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True)
+                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True, )
                 attacker_actions = attacker_actions.cpu().numpy()
             if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
                 defender_actions, defender_values, defender_log_probs = \

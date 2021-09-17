@@ -62,7 +62,7 @@ class FindPiStarDefender:
         :param env: the environment
         :return: the updated environment configuration
         """
-        if env_config.use_upper_bound_pi_star_defender:
+        if env_config.use_upper_bound_pi_star_defender and env_config.attacker_static_opponent is not None:
             env_config.pi_star_rew_defender = FindPiStarDefender.upper_bound_pi(env_config)
             env_config.pi_star_tau_defender = None
             env_config.pi_star_rew_list_attacker.append(env_config.pi_star_rew_defender)

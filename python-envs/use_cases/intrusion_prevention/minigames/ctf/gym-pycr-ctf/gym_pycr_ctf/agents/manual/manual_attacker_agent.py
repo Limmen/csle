@@ -1,12 +1,14 @@
 """
 Manual attacker agent
 """
-try:
-    from pycr_common.rendering.viewer import Viewer
-except:
-    pass
+from pycr_common.rendering.viewer import Viewer
+# try:
+#     from pycr_common.rendering.viewer import Viewer
+# except:
+#     pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
+from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
 from pycr_common.dao.agent.agent_type import AgentType
 import numpy as np
 
@@ -30,7 +32,7 @@ class ManualAttackerAgent:
         self.env.env_config.attacker_action_conf.print_actions()
         if render:
             agent_state = self.env.attacker_agent_state
-            viewer = Viewer(self.env_config, init_state=agent_state)
+            viewer = Viewer(mainframe=MainFrame(env_config=env_config, init_state=agent_state, env=env))
             viewer.manual_start_attacker(env=self.env)
         else:
             num_actions = env.env_config.attacker_action_conf.num_actions

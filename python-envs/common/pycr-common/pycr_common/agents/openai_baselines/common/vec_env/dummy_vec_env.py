@@ -43,7 +43,7 @@ class DummyVecEnv(VecEnv):
         self.buf_dones = np.zeros((self.num_envs,), dtype=np.bool)
         self.buf_rews_attacker = np.zeros((self.num_envs,), dtype=np.float32)
         self.buf_rews_defender = np.zeros((self.num_envs,), dtype=np.float32)
-        self.buf_infos = [{"idx": self.envs[i].idx} for i in range(self.num_envs)]
+        self.buf_infos = [{constants.INFO_DICT.IDX: self.envs[i].idx} for i in range(self.num_envs)]
         self.actions = None
         self.metadata = env.metadata
         #self.initial_illegal_actions = self.envs[0].initial_illegal_actions
@@ -66,12 +66,12 @@ class DummyVecEnv(VecEnv):
             self.buf_rews_defender[env_idx] = defender_rew
             self.buf_dones[env_idx] = done
             self.buf_infos[env_idx] = info
-            self.buf_infos[env_idx]["idx"] = self.envs[env_idx].idx
+            self.buf_infos[env_idx][constants.INFO_DICT.IDX] = self.envs[env_idx].idx
 
 
             if self.buf_dones[env_idx]:
                 # save final observation where user can get it, then reset
-                self.buf_infos[env_idx]["terminal_observation"] = obs
+                self.buf_infos[env_idx][constants.INFO_DICT.TERMINAL_OBSERVATION] = obs
                 obs = self.envs[env_idx].reset()
             self._save_obs(env_idx, obs)
         return (self._obs_from_buf(), (np.copy(self.buf_rews_attacker), np.copy(self.buf_rews_defender)), np.copy(self.buf_dones), deepcopy(self.buf_infos))
