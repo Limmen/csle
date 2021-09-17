@@ -80,7 +80,7 @@ def default_config() -> ClientConfig:
     # eval_emulation_config.save_dynamics_model_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/" \
     #                                                 "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_4/" \
     #                                                 "hello_world/defender_dynamics_model.json"
-    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    eval_emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                                                     "gym-pycr-ctf/examples/difficulty_level_4/hello_world"
 
     eval_emulation_config.skip_exploration = True

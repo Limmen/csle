@@ -46,8 +46,8 @@ class TrainAgent(ABC):
         self.train_agent_dto = train_agent_dto
         self.rollout_data_dto = rollout_data_dto
         self.eval_util = eval_util
-        self.train_result = copy.deepcopy(experiment_result)
-        self.eval_result = copy.deepcopy(experiment_result)
+        self.train_result = experiment_result.reset()
+        self.eval_result = experiment_result.reset()
         self.train_mode=train_mode
         #self.outer_train = tqdm.tqdm(total=self.config.num_iterations, desc='Train Episode', position=0)
         if self.attacker_config is None:

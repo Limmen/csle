@@ -1776,3 +1776,6 @@ class ExperimentResult(BaseExperimentResult):
             writer.writerow(filtered_metric_labels)
             for row in rows:
                 writer.writerow(row)
+
+    def reset(self) -> "ExperimentResult":
+        return ExperimentResult()

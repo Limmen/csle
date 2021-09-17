@@ -19,7 +19,7 @@ def test_env(env_name : str, num_steps : int):
     # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/" \
     #                                            "network_intrusion/ctf/gym-pycr-ctf/examples/difficulty_level_9/" \
     #                                            "hello_world/"
-    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                                                "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     emulation_config.skip_exploration = False
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)

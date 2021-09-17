@@ -14,6 +14,7 @@ from pycr_common.agents.openai_baselines.common.on_policy_algorithm import OnPol
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 
 
 class PPO(OnPolicyAlgorithm):
@@ -100,7 +101,9 @@ class PPO(OnPolicyAlgorithm):
         train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
         train_agent_log_dto: BaseTrainAgentLogDTO = None,
         rollout_data_dto: BaseRolloutDataDTO = None,
-        eval_util: BaseEvalUtil = None
+        eval_util: BaseEvalUtil = None,
+        train_experiment_result: BaseExperimentResult = None,
+        eval_experiment_result: BaseExperimentResult = None
     ):
 
         super(PPO, self).__init__(
@@ -132,7 +135,9 @@ class PPO(OnPolicyAlgorithm):
             train_mode=train_mode,
             train_agent_log_dto=train_agent_log_dto,
             rollout_data_dto=rollout_data_dto,
-            eval_util=eval_util
+            eval_util=eval_util,
+            train_experiment_result=train_experiment_result,
+            eval_experiment_result=eval_experiment_result
         )
 
         self.batch_size = batch_size

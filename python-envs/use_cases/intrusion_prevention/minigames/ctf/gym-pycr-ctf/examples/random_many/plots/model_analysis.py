@@ -288,7 +288,7 @@ def plot_value_logged_in(agent_config: AgentConfig, model):
 
 if __name__ == '__main__':
     env, agent_config = create_env()
-    load_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/0/1609769574.4061646_policy_network.zip"
+    load_path = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/0/1609769574.4061646_policy_network.zip"
     device="cpu"
     model = load_model(env=env, load_path=load_path, device=device, agent_config=agent_config)
     print("model loaded")

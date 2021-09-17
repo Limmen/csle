@@ -1081,6 +1081,7 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         c.optimal_defender_episode_steps = self.optimal_defender_episode_steps
         c.eval_optimal_defender_episode_steps = self.eval_optimal_defender_episode_steps
         c.eval_2_optimal_defender_episode_steps = self.eval_2_optimal_defender_episode_steps
+        return c
 
     def copy_saved_env_2(self, saved_log_dto : "TrainAgentLogDTO") -> None:
         """

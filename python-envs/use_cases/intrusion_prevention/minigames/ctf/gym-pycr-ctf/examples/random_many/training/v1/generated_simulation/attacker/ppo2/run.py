@@ -101,7 +101,7 @@ def default_config() -> ClientConfig:
     #     EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                     server_connection=False, port_forward_next_port=4001 + i*150,
     #                     warmup=True, warmup_iterations=200,
-    #                     save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+    #                     save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
     #                     save_dynamics_model_file="defender_dynamics_model_" + str(i) + ".json",
     #                     save_netconf_file="network_conf_" + str(i) + ".pickle",
     #                     save_trajectories_file="taus_" + str(i) + ".json",
@@ -109,13 +109,13 @@ def default_config() -> ClientConfig:
     #                     )
     #     for i in range(len(containers_configs))
     # ]
-    #save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    #save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                                                 #"gym-pycr-ctf/examples/random_many/hello_world/",
     emulation_configs = [
         EmulationConfig(agent_ip=containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         port_forward_next_port=4001 + i * 150,
                         warmup=True, warmup_iterations=200,
-                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                        save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
                         save_dynamics_model_file="defender_dynamics_model_" + str(i) + ".json",
                         save_netconf_file="network_conf_" + str(i) + ".pickle",
                         save_trajectories_file="taus_" + str(i) + ".json",
@@ -132,7 +132,7 @@ def default_config() -> ClientConfig:
     #     EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
     #                     server_connection=False, port_forward_next_port=6001 + i * 150,
     #                     warmup=True, warmup_iterations=200,
-    #                     save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+    #                     save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
     #                     save_dynamics_model_file="defender_dynamics_model_" + str(i) + "_eval.json",
     #                     save_netconf_file="network_conf_" + str(i) + "_eval.pickle",
     #                     save_trajectories_file="taus_" + str(i) + "_eval.json",
@@ -145,7 +145,7 @@ def default_config() -> ClientConfig:
         EmulationConfig(agent_ip=eval_env_containers_configs[i].agent_ip, agent_username="agent", agent_pw="agent",
                         port_forward_next_port=6001 + i * 150,
                         warmup=True, warmup_iterations=200,
-                        save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                        save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
                         save_dynamics_model_file="defender_dynamics_model_" + str(i) + "_eval.json",
                         save_netconf_file="network_conf_" + str(i) + "_eval.pickle",
                         save_trajectories_file="taus_" + str(i) + "_eval.json",
@@ -155,7 +155,7 @@ def default_config() -> ClientConfig:
         for i in range(len(eval_env_containers_configs))
     ]
 
-    # save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    # save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
     #                           "gym-pycr-ctf/examples/random_many/hello_world/",
 
 

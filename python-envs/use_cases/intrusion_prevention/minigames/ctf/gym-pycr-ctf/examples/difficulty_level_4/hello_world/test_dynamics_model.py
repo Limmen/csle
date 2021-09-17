@@ -15,7 +15,7 @@ def test_env(env_name : str, num_steps : int):
     #                                server_username="kim")
     emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False)
-    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                                                "gym-pycr-ctf/examples/difficulty_level_4/hello_world/"
     env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
 

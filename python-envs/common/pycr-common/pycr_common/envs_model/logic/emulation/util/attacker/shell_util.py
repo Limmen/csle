@@ -654,7 +654,7 @@ class ShellUtil:
                     users = sorted(users, key=lambda x: x)
                     user_exists = False
                     for user in users:
-                        if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
+                        if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user and not user == constants.SAMBA.BACKDOOR_USER:
                             user_exists = True
                             username = user
 
@@ -720,7 +720,8 @@ class ShellUtil:
                         users = EmulationUtil._list_all_users(c, env_config=env_config, telnet=True)
                         user_exists = False
                         for user in users:
-                            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user:
+                            if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user \
+                                    and not user == constants.SAMBA.BACKDOOR_USER:
                                 user_exists = True
                                 username = user
 

@@ -5,9 +5,9 @@ from pycr_common.util.experiments_util import util
 from pycr_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from pycr_common.dao.container_config.vulnerability_type import VulnType
 from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from gym_pycr_ctf.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
-from gym_pycr_ctf.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
-from gym_pycr_ctf.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
+from pycr_common.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
+from pycr_common.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
+from pycr_common.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
 
 def default_vulns():
     vulns = [

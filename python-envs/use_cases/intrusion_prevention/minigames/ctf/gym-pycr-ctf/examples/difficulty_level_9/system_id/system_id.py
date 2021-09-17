@@ -1,6 +1,7 @@
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
+from pycr_common.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
+from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv # register envs
 import gym
 
 
@@ -32,9 +33,9 @@ def system_id():
     #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                         server_username="kim", port_forward_next_port=3000)
     emulation_config.skip_exploration = False
-    model_path_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    model_path_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                      "gym-pycr-ctf/examples/difficulty_level_9/system_id"
-    # model_path_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    # model_path_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
     #                  "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     emulation_config.save_dynamics_model_dir = model_path_dir
 

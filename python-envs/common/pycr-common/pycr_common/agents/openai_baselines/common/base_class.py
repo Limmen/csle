@@ -106,15 +106,17 @@ class BaseAlgorithm(ABC):
             train_mode : TrainMode = TrainMode.TRAIN_ATTACKER,
             train_agent_log_dto: BaseTrainAgentLogDTO = None,
             rollout_data_dto: BaseRolloutDataDTO = None,
-            eval_util: BaseEvalUtil = None
+            eval_util: BaseEvalUtil = None,
+            train_experiment_result: BaseExperimentResult = None,
+            eval_experiment_result: BaseExperimentResult = None
     ):
         self.attacker_agent_config = attacker_agent_config
         self.defender_agent_config = defender_agent_config
         self.train_agent_log_dto = train_agent_log_dto
         self.rollout_data_dto = rollout_data_dto
         self.eval_util = eval_util
-        self.train_result = BaseExperimentResult()
-        self.eval_result = BaseExperimentResult()
+        self.train_result = train_experiment_result.reset()
+        self.eval_result = eval_experiment_result.reset()
         self.training_start = time.time()
 
         try:

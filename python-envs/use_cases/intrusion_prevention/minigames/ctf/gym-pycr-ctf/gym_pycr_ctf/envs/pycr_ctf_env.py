@@ -435,10 +435,22 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
             attacker_opponent=self.env_config.attacker_static_opponent)
 
         info[constants.INFO_DICT.OPTIMAL_DEFENDER_REWARD] = optimal_defender_reward
-        info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP] = optimal_stopping_indexes[0]
-        info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP] = optimal_stopping_indexes[1]
-        info[constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP] = optimal_stopping_indexes[2]
-        info[constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP] = optimal_stopping_indexes[3]
+        if len(optimal_stopping_indexes) > 0:
+            info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP] = optimal_stopping_indexes[0]
+        else:
+            info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP] = self.env_state.defender_obs_state.step
+        if len(optimal_stopping_indexes) > 1:
+            info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP] = optimal_stopping_indexes[1]
+        else:
+            info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP] = self.env_state.defender_obs_state.step
+        if len(optimal_stopping_indexes) > 2:
+            info[constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP] = optimal_stopping_indexes[2]
+        else:
+            info[constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP] = self.env_state.defender_obs_state.step
+        if len(optimal_stopping_indexes) > 3:
+            info[constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP] = optimal_stopping_indexes[3]
+        else:
+            info[constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP] = self.env_state.defender_obs_state.step
         info[constants.INFO_DICT.OPTIMAL_STOPS_REMAINING] = optimal_stops_remaining
         info[constants.INFO_DICT.OPTIMAL_DEFENDER_EPISODE_STEPS] = optimal_episode_steps
 
@@ -672,7 +684,7 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
 
         :return: None
         """
-        from pycr_common import Viewer
+        from pycr_common.rendering.viewer import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
         self.env_config.render_config.resources_dir = resource_path

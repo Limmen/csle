@@ -20,6 +20,7 @@ from pycr_common.agents.openai_baselines.common.evaluation import quick_evaluate
 from pycr_common.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from pycr_common.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from pycr_common.dao.agent.train_mode import TrainMode
+from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 
 
 class OnPolicyAlgorithm(BaseAlgorithm):
@@ -83,7 +84,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
         train_agent_log_dto: BaseTrainAgentLogDTO = None,
         rollout_data_dto: BaseRolloutDataDTO = None,
-        eval_util: BaseEvalUtil = None
+        eval_util: BaseEvalUtil = None,
+        train_experiment_result: BaseExperimentResult = None,
+        eval_experiment_result: BaseExperimentResult = None
     ):
 
         super(OnPolicyAlgorithm, self).__init__(
@@ -107,7 +110,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             train_mode=train_mode,
             train_agent_log_dto = train_agent_log_dto,
             rollout_data_dto=rollout_data_dto,
-            eval_util=eval_util
+            eval_util=eval_util,
+            train_experiment_result=train_experiment_result,
+            eval_experiment_result=eval_experiment_result
         )
 
         self.n_steps = n_steps
@@ -127,7 +132,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         self.num_episodes = 0
         self.num_episodes_total = 0
 
-        self.saved_log_dto = self.train_agent_log_dto.copy().initialize()
+        self.saved_log_dto = self.train_agent_log_dto.copy()
         self.saved_log_dto.initialize()
 
         if _init_setup_model:
@@ -231,7 +236,8 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         defender_rollout_buffer.reset()
 
         # Avg metrics
-        rollout_data_dto = self.rollout_data_dto.copy().initialize()
+        rollout_data_dto = self.rollout_data_dto.copy()
+        rollout_data_dto.initialize()
 
         # Per episode metrics
         episode_reward_attacker = np.zeros(env.num_envs)
@@ -274,7 +280,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
                         rollout_data_dto.update(
                             attacker_rewards = episode_reward_attacker[i],
                             defender_rewards = episode_reward_defender[i],  episode_steps = episode_step[i],
-                            infos=infos, i=i, env_response_time=env_response_time, action_pred_time=action_pred_time)
+                            infos=infos, i=i, env_response_time=env_response_time, action_pred_time=action_pred_time,
+                            attacker_agent_config = self.attacker_agent_config
+                        )
                         episode_reward_attacker[i] = 0
                         episode_reward_defender[i] = 0
                         episode_step[i] = 0
@@ -339,7 +347,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             self.defender_agent_config.logger.info(self.attacker_agent_config.to_str())
 
         # Tracking metrics
-        train_log_dto = TrainAgentLogDTO()
+        train_log_dto = self.train_agent_log_dto.copy()
         train_log_dto.initialize()
         train_log_dto.train_result = self.train_result
         train_log_dto.eval_result = self.eval_result

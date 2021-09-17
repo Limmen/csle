@@ -672,7 +672,7 @@ if __name__ == '__main__':
     eval_env_flags_configs = EnvConfigGenerator.get_all_envs_flags_config(
         "/Users/kimham/workspace/pycr/emulation-envs/minigames/network_intrusion/ctf/001/random_many_2/")
     # base_path = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/"
-    # base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/generated_simulation/ppo_baseline/results_backup/data/"
+    # base_path = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/training/v1/generated_simulation/ppo_baseline/results_backup/data/"
 
     base_path = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/generated_simulation/ppo_baseline/results/data/"
     avg_train_steps_data_v1_gensim, avg_train_steps_means_v1_gensim, avg_train_steps_stds_v1_gensim, avg_eval_steps_data_v1_gensim, \
@@ -962,8 +962,8 @@ if __name__ == '__main__':
     # )
 
 
-    #base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/"
-    # base_path = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random/training/v1/emulation/ppo_baseline/results/data/"
+    #base_path = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/training/v1/emulation/ppo_baseline/results/data/"
+    # base_path = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random/training/v1/emulation/ppo_baseline/results/data/"
     # model_path = base_path + "0/1608569758.6168735_policy_network.zip"
     # max_num_nodes_train = max(list(map(lambda x: len(x.containers), containers_configs)))
     # max_num_nodes_eval = max(list(map(lambda x: len(x.containers), eval_env_containers_configs)))

@@ -58,7 +58,7 @@ class DefenderBeliefStateSimulator:
                     env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[
                         (attacker_action.id.value, logged_in_ips_str)].rvs()
             else:
-                print("miss 1: {}, action:{}".format((attacker_action.id.value, logged_in_ips_str), attacker_action))
+                print("miss 1: {}, action:{}, id: {}".format((attacker_action.id.value, logged_in_ips_str), attacker_action, attacker_action.id.value))
 
             if (attacker_action.id.value, logged_in_ips_str) in \
                     env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:

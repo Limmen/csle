@@ -3,7 +3,7 @@ from pycr_common.dao.network.trajectory import Trajectory
 def test_trajectories():
     # save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion/ctf/" \
     #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
-    save_dynamics_model_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                               "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     trajectories = Trajectory.load_trajectories(save_dynamics_model_dir, trajectories_file="taus6.json")
     print(len(trajectories))

@@ -34,7 +34,7 @@ def manual_control():
     emulation_config.skip_exploration = True
     # model_path_dir = "/home/kim/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/" \
     #                  "difficulty_level_9/hello_world"
-    model_path_dir = "/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/" \
+    model_path_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/" \
                      "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     # model_path_dir = "/Users/kimham/workspace/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/" \
     #                  "examples/difficulty_level_9/hello_world/"

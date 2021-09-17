@@ -45,6 +45,7 @@ class PPOBaselineAgent(TrainAgent):
                                                defender_agent_config,
                                                train_agent_dto, rollout_data_dto,
                                                eval_util,
+                                               experiment_result,
                                                eval_env, train_mode)
 
     def train(self) -> BaseExperimentResult:
@@ -132,7 +133,9 @@ class PPOBaselineAgent(TrainAgent):
                     train_mode = self.train_mode,
                     train_agent_log_dto=self.train_agent_dto,
                     rollout_data_dto=self.rollout_data_dto,
-                    eval_util=self.eval_util
+                    eval_util=self.eval_util,
+                    train_experiment_result=self.train_result,
+                    eval_experiment_result=self.eval_result
                     )
 
         if self.attacker_config.load_path is not None:

@@ -345,6 +345,7 @@ class RolloutDataDTO(BaseRolloutDataDTO):
             optimal_fourth_stop_step = self.optimal_fourth_stop_step,
             optimal_defender_episode_steps = self.optimal_defender_episode_steps
         )
+        return c
 
     def update_done(self, attacker_reward : List[float], defender_reward : List[float], steps: List[int]):
         self.attacker_episode_rewards.append(attacker_reward)

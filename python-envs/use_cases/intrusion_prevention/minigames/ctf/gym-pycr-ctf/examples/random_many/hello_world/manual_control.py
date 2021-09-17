@@ -32,7 +32,7 @@ def manual_control():
     emulation_config = EmulationConfig(agent_ip=eval_containers_configs[idx].agent_ip, agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=9840,
                                        skip_exploration=False,
-                                       save_dynamics_model_dir="/home/kim/pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
+                                       save_dynamics_model_dir="/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/random_many/hello_world/",
                                        save_dynamics_model_file="defender_dynamics_model_" + str(idx) + "_eval.json",
                                        save_netconf_file="network_conf_" + str(idx) + "_eval.pickle",
                                        save_trajectories_file="taus_" + str(idx) + "_eval.json"
