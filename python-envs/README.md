@@ -6,11 +6,8 @@ The Python environments expose MDP/POMDP interfaces to emulated infrastructures 
 - **Common** ([common](./common)):
     - Contains common functionality to all python environments
     
-- **Minigames** ([minigames](./minigames)):
-    - Implements minigame interfaces to different emulations
-    
-- **Supergames** ([supergames](./supergames)):
-    - Implements supergame interfaces to different emulations        
+- **Use cases** ([use cases](./use_cases)):
+    - Implements python interfaces to emulated infrastructures for different use cases        
 
 ## Author & Maintainer
 

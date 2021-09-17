@@ -9,6 +9,7 @@ from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResu
 from pycr_common.agents.train_agent import TrainAgent
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
+import pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.policies # to register policies
 from pycr_common.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from pycr_common.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from pycr_common.dao.agent.train_mode import TrainMode

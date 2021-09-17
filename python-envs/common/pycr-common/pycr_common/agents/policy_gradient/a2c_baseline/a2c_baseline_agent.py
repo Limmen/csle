@@ -121,5 +121,5 @@ class A2CBaselineAgent(TrainAgent):
     def get_action(self, s, eval=False, attacker=True) -> int:
         raise NotImplemented("not implemented")
 
-    def eval(self, log=True) -> ExperimentResult:
+    def eval(self, log=True) -> BaseExperimentResult:
         raise NotImplemented("not implemented")

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+import gym
 from pycr_common.dao.network.base_env_config import BaseEnvConfig
 from pycr_common.dao.network.base_env_state import BaseEnvState
 
 
-class BasePyCREnv(ABC):
+class BasePyCREnv(gym.Env, ABC):
 
     @staticmethod
     @abstractmethod

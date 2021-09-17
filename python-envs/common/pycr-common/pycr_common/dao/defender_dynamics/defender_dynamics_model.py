@@ -3,7 +3,7 @@ import os
 from scipy import stats
 import numpy as np
 from pycr_common.util.experiments_util import util
-from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
+from enum import Enum
 from pycr_common.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
 from pycr_common.dao.defender_dynamics.defender_dynamics_tensorboard_dto import DefenderDynamicsTensorboardDTO
 import pycr_common.constants.constants as constants
@@ -168,7 +168,7 @@ class DefenderDynamicsModel:
         for machine_ip, v in self.machines_dynamics_model.items():
             v.normalize()
 
-    def add_new_alert_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_alert_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                  num_new_alerts: int) -> None:
         """
         Adds a new transition for alerts
@@ -193,7 +193,7 @@ class DefenderDynamicsModel:
                 self.num_new_alerts[str(attacker_action_id.value)][logged_in_ips] = {}
                 self.num_new_alerts[str(attacker_action_id.value)][logged_in_ips][str(num_new_alerts)] = 1
 
-    def add_new_priority_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_priority_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                     num_new_priority: int) -> None:
         """
         Adds a new transition for intrusion prevention priorities
@@ -218,7 +218,7 @@ class DefenderDynamicsModel:
                 self.num_new_priority[str(attacker_action_id.value)][logged_in_ips] = {}
                 self.num_new_priority[str(attacker_action_id.value)][logged_in_ips][str(num_new_priority)] = 1
 
-    def add_new_severe_alert_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_severe_alert_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                         num_new_severe_alerts: int) -> None:
         """
         Adds a new transition for intrusion prevention severe alerts
@@ -248,7 +248,7 @@ class DefenderDynamicsModel:
                 self.num_new_severe_alerts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_severe_alerts)] = 1
 
-    def add_new_warning_alert_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_warning_alert_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                          num_new_warning_alerts: int) -> None:
         """
         Adds a new transition for intrusion prevention warning alerts
@@ -279,7 +279,7 @@ class DefenderDynamicsModel:
                 self.num_new_warning_alerts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_warning_alerts)] = 1
 
-    def add_new_failed_login_attempt_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips: str,
+    def add_new_failed_login_attempt_transition(self, attacker_action_id: Enum, logged_in_ips: str,
                                                 num_new_login_attempts: int) -> None:
         """
         Adds a new transition for intrusion prevention login attempts
@@ -310,7 +310,7 @@ class DefenderDynamicsModel:
                 self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_login_attempts)] = 1
 
-    def add_new_connections_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips: str,
+    def add_new_connections_transition(self, attacker_action_id: Enum, logged_in_ips: str,
                                        num_new_connections: int) -> None:
         """
         Adds a new transition for intrusion prevention new connections
@@ -341,7 +341,7 @@ class DefenderDynamicsModel:
                 self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_connections)] = 1
 
-    def add_new_login_events_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips: str,
+    def add_new_login_events_transition(self, attacker_action_id: Enum, logged_in_ips: str,
                                         num_new_login_events: int) -> None:
         """
         Adds a new transition for intrusion prevention new login events
@@ -372,7 +372,7 @@ class DefenderDynamicsModel:
                 self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_login_events)] = 1
 
-    def add_new_processes_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips: str,
+    def add_new_processes_transition(self, attacker_action_id: Enum, logged_in_ips: str,
                                      num_new_processes: int) -> None:
         """
         Adds a new transition for intrusion prevention new processes
@@ -403,7 +403,7 @@ class DefenderDynamicsModel:
                 self.num_new_processes[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_processes)] = 1
 
-    def update_model(self, s, s_prime, attacker_action_id: BaseAttackerActionId, logged_in_ips: str, t: int=0,
+    def update_model(self, s, s_prime, attacker_action_id: Enum, logged_in_ips: str, t: int=0,
                      idx: int = 0, attacker_action_name = "", attacker_action_idx : int = 0) -> DefenderDynamicsTensorboardDTO:
         """
         Updates the dynamics model after observing a (s,a)->s' transition.

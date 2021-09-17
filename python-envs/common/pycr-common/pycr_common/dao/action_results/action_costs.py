@@ -1,4 +1,4 @@
-from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
+from enum import Enum
 
 
 class ActionCosts:
@@ -16,7 +16,7 @@ class ActionCosts:
         self.install_costs = {}
         self.pivot_scan_costs = {}
 
-    def add_cost(self, action_id : BaseAttackerActionId, ip: str, cost: float) -> None:
+    def add_cost(self, action_id : Enum, ip: str, cost: float) -> None:
         """
         Adds a cost for a given action id and ip
 
@@ -28,7 +28,7 @@ class ActionCosts:
         key = (action_id, ip)
         self.costs[key] = cost
 
-    def get_cost(self, action_id : BaseAttackerActionId, ip: str) -> int:
+    def get_cost(self, action_id : Enum, ip: str) -> int:
         """
         Get the cost of a given action and ip
 
@@ -39,7 +39,7 @@ class ActionCosts:
         key = (action_id, ip)
         return self.costs[key]
 
-    def exists(self, action_id: BaseAttackerActionId, ip: str) -> bool:
+    def exists(self, action_id: Enum, ip: str) -> bool:
         """
         Checks if there is a cost stored for the given action id and ip
 
@@ -50,7 +50,7 @@ class ActionCosts:
         key = (action_id, ip)
         return key in self.costs
 
-    def find_add_cost(self, action_id: BaseAttackerActionId, ip: str, cost: float, user: str, service: str) -> None:
+    def find_add_cost(self, action_id: Enum, ip: str, cost: float, user: str, service: str) -> None:
         """
         Adds a cost for a given user service and action id
 
@@ -64,7 +64,7 @@ class ActionCosts:
         key = (action_id, ip, service, user)
         self.find_costs[key] = cost
 
-    def find_get_cost(self, action_id: BaseAttackerActionId, ip: str, user: str, service: str) -> float:
+    def find_get_cost(self, action_id: Enum, ip: str, user: str, service: str) -> float:
         """
         Gets the cost stored for a given action, ip, user and service
 
@@ -77,7 +77,7 @@ class ActionCosts:
         key = (action_id, ip, service, user)
         return self.find_costs[key]
 
-    def find_exists(self, action_id: BaseAttackerActionId, ip: str, user: str, service: str) -> bool:
+    def find_exists(self, action_id: Enum, ip: str, user: str, service: str) -> bool:
         """
         Checks if there is a cost stored for the given action, ip, user, and service
 
@@ -90,7 +90,7 @@ class ActionCosts:
         key = (action_id, ip, service, user)
         return key in self.find_costs
 
-    def service_add_cost(self, action_id: BaseAttackerActionId, ip: str, cost: float) -> None:
+    def service_add_cost(self, action_id: Enum, ip: str, cost: float) -> None:
         """
         Adds a cost for a given action id and ip
 
@@ -102,7 +102,7 @@ class ActionCosts:
         key = (action_id, ip)
         self.costs[key] = cost
 
-    def service_get_cost(self, action_id: BaseAttackerActionId, ip: str) -> float:
+    def service_get_cost(self, action_id: Enum, ip: str) -> float:
         """
         Gets the cost for a given action id
 
@@ -114,7 +114,7 @@ class ActionCosts:
         key = (action_id, ip)
         return self.costs[key]
 
-    def service_exists(self, action_id: BaseAttackerActionId, ip: str) -> bool:
+    def service_exists(self, action_id: Enum, ip: str) -> bool:
         """
         Checks if there exists a cost stored for a given action id and ip
 
@@ -125,7 +125,7 @@ class ActionCosts:
         key = (action_id, ip)
         return key in self.costs
 
-    def install_add_cost(self, action_id: BaseAttackerActionId, ip: str, cost: float, user: str) -> None:
+    def install_add_cost(self, action_id: Enum, ip: str, cost: float, user: str) -> None:
         """
         Adds a cost for a given action id, user and ip
 
@@ -138,7 +138,7 @@ class ActionCosts:
         key = (action_id, ip, user)
         self.install_costs[key] = cost
 
-    def install_get_cost(self, action_id: BaseAttackerActionId, ip: str, user: str) -> float:
+    def install_get_cost(self, action_id: Enum, ip: str, user: str) -> float:
         """
         Gets the cost of an install action for a given action id and ip
 
@@ -150,7 +150,7 @@ class ActionCosts:
         key = (action_id, ip, user)
         return self.install_costs[key]
 
-    def install_exists(self, action_id: BaseAttackerActionId, ip: str, user: str) -> bool:
+    def install_exists(self, action_id: Enum, ip: str, user: str) -> bool:
         """
         Checks if there exists a cost stored for a given install action id and ip
 
@@ -162,7 +162,7 @@ class ActionCosts:
         key = (action_id, ip, user)
         return key in self.install_costs
 
-    def pivot_scan_add_cost(self, action_id: BaseAttackerActionId, ip: str, cost: float,
+    def pivot_scan_add_cost(self, action_id: Enum, ip: str, cost: float,
                             user: str, target_ip: str) -> None:
         """
         Adds a cost for a given pivot scan action id, ip, user, and target ip
@@ -177,7 +177,7 @@ class ActionCosts:
         key = (action_id, ip, user, target_ip)
         self.pivot_scan_costs[key] = cost
 
-    def pivot_scan_get_cost(self, action_id: BaseAttackerActionId, ip: str, user: str, target_ip: str) -> float:
+    def pivot_scan_get_cost(self, action_id: Enum, ip: str, user: str, target_ip: str) -> float:
         """
         Gets the cost of a given pivot scan action, ip, user, and target ip
 
@@ -190,7 +190,7 @@ class ActionCosts:
         key = (action_id, ip, user, target_ip)
         return self.pivot_scan_costs[key]
 
-    def pivot_scan_exists(self, action_id: BaseAttackerActionId, ip: str, user: str, target_ip: str) -> bool:
+    def pivot_scan_exists(self, action_id: Enum, ip: str, user: str, target_ip: str) -> bool:
         """
         Checks if there exists a cost stored for a given pivot scan action id, ip, user, and target ip
 

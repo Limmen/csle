@@ -1,6 +1,6 @@
 from scipy import stats
 import numpy as np
-from pycr_common.dao.action.attacker.base_attacker_action_id import BaseAttackerActionId
+from enum import Enum
 
 
 class DefenderMachineDynamicsModel:
@@ -235,7 +235,7 @@ class DefenderMachineDynamicsModel:
         else:
             self.init_processes[str(init_processes)] = 1
 
-    def add_new_open_connection_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_open_connection_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                  num_new_open_connections: int) -> None:
         """
         Adds a new transition for open connections
@@ -265,7 +265,7 @@ class DefenderMachineDynamicsModel:
                 self.num_new_open_connections[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_open_connections)] = 1
 
-    def add_new_failed_login_attempt_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_failed_login_attempt_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                     num_new_failed_login_attempts: int) -> None:
         """
         Adds a new transition for failed login attempts
@@ -296,7 +296,7 @@ class DefenderMachineDynamicsModel:
                 self.num_new_failed_login_attempts[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_failed_login_attempts)] = 1
 
-    def add_new_user_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_user_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                         num_new_users: int) -> None:
         """
         Adds a new transition for user accounts
@@ -321,7 +321,7 @@ class DefenderMachineDynamicsModel:
                 self.num_new_users[str(attacker_action_id.value)][logged_in_ips] = {}
                 self.num_new_users[str(attacker_action_id.value)][logged_in_ips][str(num_new_users)] = 1
 
-    def add_new_logged_in_user_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_logged_in_user_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                           num_new_logged_in_users: int) -> None:
         """
         Adds a new transition for logged in users
@@ -352,7 +352,7 @@ class DefenderMachineDynamicsModel:
                 self.num_new_logged_in_users[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_logged_in_users)] = 1
 
-    def add_new_login_event_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_login_event_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                          num_new_login_events: int) -> None:
         """
         Adds a new transition for login events
@@ -382,7 +382,7 @@ class DefenderMachineDynamicsModel:
                 self.num_new_login_events[str(attacker_action_id.value)][logged_in_ips][
                     str(num_new_login_events)] = 1
 
-    def add_new_processes_transition(self, attacker_action_id: BaseAttackerActionId, logged_in_ips : str,
+    def add_new_processes_transition(self, attacker_action_id: Enum, logged_in_ips : str,
                                           num_new_processes: int) -> None:
         """
         Adds a new transition for running processes

@@ -5,8 +5,8 @@ from pycr_common.dao.agent.base_tensorboard_data_dto import BaseTensorboardDataD
 class BaseAttackerTrainAgentLogDTOAvg(ABC):
 
 
-    @abstractmethod
     @staticmethod
-    def to_tensorboard_dto(avg_log_dto: "BaseAttackerTrainAgentLogDTOAvg", eps: float,
-                           tensorboard_writer) -> BaseTensorboardDataDTO:
+    @abstractmethod
+    def to_tensorboard_dto(self, avg_log_dto: "BaseAttackerTrainAgentLogDTOAvg", eps: float, tensorboard_writer) \
+            -> BaseTensorboardDataDTO:
         pass

@@ -27,7 +27,7 @@ class DummyVecEnv(VecEnv):
             time.sleep(constants.DUMMY_VEC_ENV.SLEEP_TIME_STARTUP)
             print("sleep finished")
             self.envs.append(fn())
-        self.envs = [fn() for fn in env_fns]
+        #self.envs = [fn() for fn in env_fns]
         env = self.envs[0]
         VecEnv.__init__(self, len(env_fns), env.attacker_observation_space, env.attacker_action_space,
                         env.defender_observation_space, env.defender_action_space)
