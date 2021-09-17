@@ -52,7 +52,7 @@ def default_config() -> ClientConfig:
                                  title="PPO-Baseline v3",
                                  run_many=True, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
-                                 eval_env=True, eval_env_name=eval_env_name,
+                                 eval_env=False, eval_env_name=eval_env_name,
                                  eval_emulation_config=eval_emulation_config,
                                  train_mode=TrainMode.TRAIN_ATTACKER)
     return client_config

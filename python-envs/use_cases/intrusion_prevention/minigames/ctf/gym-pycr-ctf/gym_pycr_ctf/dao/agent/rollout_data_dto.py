@@ -89,6 +89,108 @@ class RolloutDataDTO(BaseRolloutDataDTO):
                  optimal_fourth_stop_step: List[int] = None,
                  optimal_defender_episode_steps: List[int]  = None
                  ):
+        """
+        Class constructor
+
+        :param attacker_episode_rewards: the list of episode rewards of the attacker
+        :param defender_episode_rewards: the list of episode rewards of the defender
+        :param episode_steps: the list of episode steps
+        :param episode_flags: the list of flags per episode
+        :param episode_caught: the list of boolean flags whether the attacker was caught or not
+        :param episode_early_stopped: the list of boolean flags whether the defender stopped prematurely or not
+        :param episode_successful_intrusion: the list of boolean flags indicating when the intrusion was successful
+        :param episode_snort_severe_baseline_rewards: the list of rewards of the snort_severe baseline
+        :param episode_snort_warning_baseline_rewards: the list of rewards of the snort_warning baseline
+        :param episode_snort_critical_baseline_rewards: the list of rewards of the snort_critical baseline
+        :param episode_var_log_baseline_rewards: the list of rewards of the var_log baseline
+        :param episode_step_baseline_rewards: the list of rewards of the step_baseline
+        :param episode_snort_severe_baseline_steps: the list of steps of the snort_severe baseline
+        :param episode_snort_warning_baseline_steps: the list of steps of the snort_warning baseline
+        :param episode_snort_critical_baseline_steps: the list of steps of the snort_critical baseline
+        :param episode_var_log_baseline_steps: the list of steps of the var_log baseline
+        :param episode_step_baseline_steps: the list of steps of the step_baseline
+        :param episode_snort_severe_baseline_caught_attacker: the list of boolean flags indicating if the attacker
+                                                              was caught by the snort_severe baseline
+        :param episode_snort_warning_baseline_caught_attacker: the list of boolean flags indicating if the attacker
+                                                              was caught by the snort_warning baseline
+        :param episode_snort_critical_baseline_caught_attacker: the list of boolean flags indicating if the attacker
+                                                              was caught by the snort_critical baseline
+        :param episode_var_log_baseline_caught_attacker: the list of boolean flags indicating if the attacker
+                                                              was caught by the var_log baseline
+        :param episode_step_baseline_caught_attacker: the list of boolean flags indicating if the attacker
+                                                              was caught by the step baseline
+        :param episode_snort_severe_baseline_early_stopping: the list of boolean flags indicating if the snort_severe
+                                                              baseline stopped early
+        :param episode_snort_warning_baseline_early_stopping: the list of boolean flags indicating if the snort_warning
+                                                              baseline stopped early
+        :param episode_snort_critical_baseline_early_stopping: the list of boolean flags indicating if the snort_critical
+                                                              baseline stopped early
+        :param episode_var_log_baseline_early_stopping: the list of boolean flags indicating if the var_log
+                                                              baseline stopped early
+        :param episode_step_baseline_early_stopping: the list of boolean flags indicating if the step
+                                                              baseline stopped early
+        :param episode_snort_severe_baseline_uncaught_intrusion_steps: the list of the number of uncaught intrusion
+                                                              steps of the snort_severe baseline
+        :param episode_snort_warning_baseline_uncaught_intrusion_steps: the list of the number of uncaught intrusion
+                                                              steps of the snort_severe baseline
+        :param episode_snort_critical_baseline_uncaught_intrusion_steps: the list of the number of uncaught intrusion
+                                                              steps of the snort_critical baseline
+        :param episode_var_log_baseline_uncaught_intrusion_steps: the list of the number of uncaught intrusion
+                                                              steps of the var_log baseline
+        :param episode_step_baseline_uncaught_intrusion_steps: the list of the number of uncaught intrusion
+                                                              steps of the step baseline
+        :param episode_flags_percentage: the list of catched flags percentage
+        :param attacker_env_specific_rewards: episodic rewards of the attacker for different environments
+        :param defender_env_specific_rewards: episodic rewards of the defender for different environments
+        :param env_specific_steps: episode lengths for different environments
+        :param env_specific_flags: number of flags catched for different environments
+        :param env_specific_flags_percentage: percentage of flags catched for different environments
+        :param env_response_times: response times from the environment
+        :param action_pred_times: time it takes to make action predictions
+        :param attacker_action_costs: costs of the attacker actions
+        :param attacker_action_costs_norm: normalized costs of the attacker
+        :param attacker_action_alerts: alerts of the attacker
+        :param attacker_action_alerts_norm: normalized alerts of the attacker
+        :param episode_intrusion_steps: number of intrusion steps
+        :param uncaught_intrusion_steps: number of uncaught intrusion steps
+        :param optimal_defender_reward: the optimal rewards for the defnder
+        :param defender_stops_remaining: the number of stops remaining for the defender
+        :param defender_first_stop_step: the time-step of the first stop of the defender
+        :param defender_second_stop_step: the time-step of the second stop of the defender
+        :param defender_third_stop_step: the time-step of the third stop of the defender
+        :param defender_fourth_stop_step: the time-step of the fourth stop of the defender
+        :param episode_snort_severe_baseline_first_stop_step: the time-step of the first stop of the snort_severe_baseline
+        :param episode_snort_warning_baseline_first_stop_step: the time-step of the first stop of the snort_warning_baseline
+        :param episode_snort_critical_baseline_first_stop_step: the time-step of the first stop of the snort_critical_baseline
+        :param episode_var_log_baseline_first_stop_step: the time-step of the first stop of the var_log_baseline
+        :param episode_step_baseline_first_stop_step: the time-step of the first stop of the step_baseline
+        :param episode_snort_severe_baseline_second_stop_step: the time-step of the second stop of the snort_severe_baseline
+        :param episode_snort_warning_baseline_second_stop_step: the time-step of the second stop of the snort_warning_baseline
+        :param episode_snort_critical_baseline_second_stop_step: the time-step of the second stop of the snort_critical_baseline
+        :param episode_var_log_baseline_second_stop_step: the time-step of the second stop of the var_log_baseline
+        :param episode_step_baseline_second_stop_step: the time-step of the second stop of the step_baseline
+        :param episode_snort_severe_baseline_third_stop_step: the time-step of the third stop of the snort_severe_baseline
+        :param episode_snort_warning_baseline_third_stop_step: the time-step of the third stop of the snort_warning_baseline
+        :param episode_snort_critical_baseline_third_stop_step: the time-step of the third stop of the snort_critical_baseline
+        :param episode_var_log_baseline_third_stop_step: the time-step of the third stop of the var_log_baseline
+        :param episode_step_baseline_third_stop_step: the time-step of the third stop of the step_baseline
+        :param episode_snort_severe_baseline_fourth_stop_step: the time-step of the fourth stop of the snort_severe_baseline
+        :param episode_snort_warning_baseline_fourth_stop_step: the time-step of the fourth stop of the snort_warning_baseline
+        :param episode_snort_critical_baseline_fourth_stop_step: the time-step of the fourth stop of the snort_critical_baseline
+        :param episode_var_log_baseline_fourth_stop_step: the time-step of the fourth stop of the var_log_baseline
+        :param episode_step_baseline_fourth_stop_step: the time-step of the fourth stop of the step_baseline
+        :param episode_snort_severe_baseline_stops_remaining: the number of stops remaining of the snort_severe_baseline
+        :param episode_snort_warning_baseline_stops_remaining: the number of stops remaining of the snort_warning_baseline
+        :param episode_snort_critical_baseline_stops_remaining: the number of stops remaining of the snort_critical_baseline
+        :param episode_var_log_baseline_stops_remaining: the number of stops remaining of the var_log_baseline
+        :param episode_step_baseline_stops_remaining: the number of stops remaining of the step_baseline
+        :param optimal_stops_remaining: the optimal number of stops remaining
+        :param optimal_first_stop_step: the time-step of the first stop of the optimal policy
+        :param optimal_second_stop_step: the time-step of the second stop of the optimal policy
+        :param optimal_third_stop_step: the time-step of the third stop of the optimal policy
+        :param optimal_fourth_stop_step: the time-step of the fourth stop of the optimal policy
+        :param optimal_defender_episode_steps: the episode length of the optimal policy
+        """
         super(RolloutDataDTO, self).__init__()
         self.attacker_episode_rewards = attacker_episode_rewards
         self.defender_episode_rewards = defender_episode_rewards
@@ -175,6 +277,11 @@ class RolloutDataDTO(BaseRolloutDataDTO):
         self.optimal_defender_episode_steps = optimal_defender_episode_steps
 
     def initialize(self) -> None:
+        """
+        Initializes the DTO
+
+        :return: None
+        """
         self.attacker_episode_rewards = []
         self.attacker_episode_rewards = []
         self.defender_episode_rewards = []
@@ -262,6 +369,9 @@ class RolloutDataDTO(BaseRolloutDataDTO):
 
 
     def copy(self) -> "RolloutDataDTO":
+        """
+        :return: a copy of the DTO
+        """
         c = RolloutDataDTO(
             attacker_episode_rewards=self.attacker_episode_rewards,
             defender_episode_rewards=self.defender_episode_rewards,
@@ -347,7 +457,15 @@ class RolloutDataDTO(BaseRolloutDataDTO):
         )
         return c
 
-    def update_done(self, attacker_reward : List[float], defender_reward : List[float], steps: List[int]):
+    def update_done(self, attacker_reward : List[float], defender_reward : List[float], steps: List[int]) -> None:
+        """
+        Performs a final update to the DTO after the episode has ended
+
+        :param attacker_reward: the terminal attacker reward
+        :param defender_reward: the terminal defeder reward
+        :param steps: the terminal number of steps
+        :return: None
+        """
         self.attacker_episode_rewards.append(attacker_reward)
         self.defender_episode_rewards.append(defender_reward)
         self.episode_steps.append(steps)
@@ -355,6 +473,19 @@ class RolloutDataDTO(BaseRolloutDataDTO):
     def update(self, attacker_rewards: List[float], defender_rewards: List[float], episode_steps: List[int],
                infos: List[dict], i: int, env_response_time: float, action_pred_time: float,
                attacker_agent_config: AgentConfig) -> None:
+        """
+        Updates the DTO with new information
+
+        :param attacker_rewards: list of attacker rewards
+        :param defender_rewards: list of defender rewards
+        :param episode_steps: list of episode steps
+        :param infos: list of info dicts
+        :param i: index
+        :param env_response_time: the response time from the environment
+        :param action_pred_time: the time it took to make an action prediction
+        :param attacker_agent_config: the training configuration
+        :return: None
+        """
         self.attacker_episode_rewards.append(attacker_rewards)
         self.defender_episode_rewards.append(defender_rewards)
         self.episode_steps.append(infos[i][constants.INFO_DICT.EPISODE_LENGTH])
@@ -452,7 +583,15 @@ class RolloutDataDTO(BaseRolloutDataDTO):
 
 
 
-    def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig):
+    def update_env_specific_metrics(self, infos, i, agent_config: AgentConfig) -> None:
+        """
+        Updates environment specific metrics
+
+        :param infos: list of info dicts
+        :param i: index
+        :param agent_config: the training configuration
+        :return: None
+        """
 
         if agent_config.env_config is not None:
             num_flags = agent_config.env_config.num_flags

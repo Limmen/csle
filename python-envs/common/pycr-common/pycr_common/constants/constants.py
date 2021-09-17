@@ -1,5 +1,5 @@
 """
-Constants for the pycr-ctf environment
+Constants for the PyCr environment
 """
 
 import re

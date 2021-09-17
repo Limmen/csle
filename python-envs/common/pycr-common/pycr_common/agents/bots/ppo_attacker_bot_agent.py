@@ -1,5 +1,5 @@
 """
-A bot attack agent for pycr environments that acts greedily according to a pre-trained policy network
+A general bot attack agent for PyCr environments that acts greedily according to a pre-trained policy network
 """
 import torch
 import traceback

@@ -74,7 +74,7 @@ class PyCrCTFLevel2V1:
                                                       nikto_action_ids=nikto_action_ids,
                                                       masscan_action_ids=masscan_action_ids,
                                                       stopping_action_ids=stopping_action_ids)
-        return action_config
+        return attacker_action_config
 
     @staticmethod
     def defender_actions_conf(num_nodes: int, subnet_mask: str) -> DefenderActionConfig:

@@ -1,5 +1,5 @@
 """
-A bot attack agent for the pycr-ctf environment that acts randomly
+A general bot attack agent for the PyCR environment that acts randomly
 """
 import numpy as np
 from pycr_common.dao.network.base_env_config import BaseEnvConfig

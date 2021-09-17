@@ -1,5 +1,5 @@
 """
-An agent for the pycr-ctf env that uses the A2C Policy Gradient algorithm from OpenAI stable baselines
+An agent for the PyCr env that uses the A2C Policy Gradient algorithm from OpenAI stable baselines
 """
 import time
 import math
@@ -15,7 +15,7 @@ from pycr_common.agents.util.agent_util import AgentUtil
 
 class A2CBaselineAgent(TrainAgent):
     """
-    An agent for the pycr-ctf env that uses the A2C Policy Gradient algorithm from OpenAI stable baselines
+    An agent for the PyCr env that uses the A2C Policy Gradient algorithm from OpenAI stable baselines
     """
 
     def __init__(self, env: BasePyCREnv, attacker_config: AgentConfig, eval_env: BasePyCREnv):

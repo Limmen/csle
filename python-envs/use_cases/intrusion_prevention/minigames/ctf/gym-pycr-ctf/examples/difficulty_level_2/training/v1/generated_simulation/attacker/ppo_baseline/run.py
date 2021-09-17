@@ -6,7 +6,7 @@ from pycr_common.dao.agent.agent_type import AgentType
 from pycr_common.util.experiments_util import util
 from pycr_common.dao.experiment.runner_mode import RunnerMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
-import gym_pycr_ctf.util.experiments_util.plotting_util as plotting_util
+import pycr_common.util.plots.plotting_util_basic as plotting_util
 from pycr_common.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:

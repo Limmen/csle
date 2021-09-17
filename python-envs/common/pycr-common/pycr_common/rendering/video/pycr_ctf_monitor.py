@@ -1,3 +1,4 @@
+from typing import List
 from gym import Wrapper
 from gym import error, version, logger
 import os, json, numpy as np, six
@@ -167,7 +168,13 @@ class PyCrCTFMonitor(Wrapper):
 
         logger.info('''Finished writing results. You can upload them to the scoreboard via gym.upload(%r)''', self.directory)
 
-    def _set_mode(self, mode):
+    def _set_mode(self, mode: str) -> None:
+        """
+        Sets the mode of the monitoring
+
+        :param mode: the mode to set
+        :return: None
+        """
         if mode == 'evaluation':
             type = 'e'
         elif mode == 'training':
@@ -176,11 +183,26 @@ class PyCrCTFMonitor(Wrapper):
             raise error.Error('Invalid mode {}: must be "training" or "evaluation"', mode)
         self.stats_recorder.type = type
 
-    def _before_step(self, action):
+    def _before_step(self, action) -> None:
+        """
+        Method called before each action-step
+
+        :param action: the action
+        :return: None
+        """
         if not self.enabled: return
         self.stats_recorder.before_step(action)
 
-    def _after_step(self, observation, reward, done, info):
+    def _after_step(self, observation: np.ndarray, reward: float, done: bool, info: dict) -> bool:
+        """
+        Method called after each step
+
+        :param observation: the observation from the env
+        :param reward: the reward
+        :param done: whether the episode is done or not
+        :param info: the info from the env
+        :return: done
+        """
         if not self.enabled: return done
 
         if done and self.env_semantics_autoreset:
@@ -198,7 +220,14 @@ class PyCrCTFMonitor(Wrapper):
                 self.episode_frames.append(frame)
         return done
 
-    def generate_gif(self, path, fps = 55):
+    def generate_gif(self, path, fps = 55) -> None:
+        """
+        Utility method for generating gifs
+
+        :param path: the path to save the gifs
+        :param fps: the fps to use for generation
+        :return: None
+        """
         if (self.episode_frames is not None and len(self.episode_frames) > 0
                 and (self.episode_id-1) % (self.video_frequency) == 0):
             imageio.mimsave(path, self.episode_frames, fps=fps)
@@ -206,11 +235,22 @@ class PyCrCTFMonitor(Wrapper):
             self.episode_frames = []
             self.openai_baseline_reset = True
 
-    def _before_reset(self):
+    def _before_reset(self) -> None:
+        """
+        Method called before the reset of the environment
+
+        :return: None
+        """
         if not self.enabled: return
         self.stats_recorder.before_reset()
 
-    def _after_reset(self, observation):
+    def _after_reset(self, observation) -> None:
+        """
+        Method called after the reset of the environment
+
+        :param observation: the observation from the reset of the env
+        :return: None
+        """
         if not self.enabled: return
 
         # Reset the stat count
@@ -231,7 +271,12 @@ class PyCrCTFMonitor(Wrapper):
 
         self._flush()
 
-    def reset_video_recorder(self):
+    def reset_video_recorder(self) -> None:
+        """
+        Resets the video recordder
+
+        :return: None
+        """
         # Close any existing video recorder
         if self.video_recorder:
             self._close_video_recorder()
@@ -252,15 +297,28 @@ class PyCrCTFMonitor(Wrapper):
             for frame in frames:
                 self.episode_frames.append(frame)
 
-    def _close_video_recorder(self):
+    def _close_video_recorder(self) -> None:
+        """
+        Closes the video recorder
+
+        :return: None
+        """
         self.video_recorder.close()
         if self.video_recorder.functional:
             self.videos.append((self.video_recorder.path, self.video_recorder.metadata_path))
 
-    def _video_enabled(self):
+    def _video_enabled(self) -> bool:
+        """
+        Checks whether video is enabled or not
+
+        :return: True or False
+        """
         return self.video_callable(self.episode_id)
 
-    def _env_info(self):
+    def _env_info(self) -> dict:
+        """
+        :return: environment information
+        """
         env_info = {
             'gym_version': version.VERSION,
         }
@@ -268,34 +326,75 @@ class PyCrCTFMonitor(Wrapper):
             env_info['env_id'] = self.env.spec.id
         return env_info
 
-    def __del__(self):
+    def __del__(self) -> None:
+        """
+        Deletes the object
+        :return: None
+        """
         # Make sure we've closed up shop when garbage collecting
         self.close()
 
-    def get_total_steps(self):
+    def get_total_steps(self) -> int:
+        """
+        :return: number of steps in the environment
+        """
         return self.stats_recorder.total_steps
 
-    def get_episode_rewards(self):
+    def get_episode_rewards(self) -> float:
+        """
+        :return: rewards in the environment
+        """
         return self.stats_recorder.episode_rewards
 
-    def get_episode_lengths(self):
+    def get_episode_lengths(self) -> int:
+        """
+        :return: length of the episodes
+        """
         return self.stats_recorder.episode_lengths
 
-    def periodic_video_schedule(self, episode_id):
+    def periodic_video_schedule(self, episode_id) -> bool:
+        """
+        Checkes whether video should be recorded this episode or not
+
+        :param episode_id: the episode id to check
+        :return: True or False
+        """
         if episode_id % self.video_frequency == 0:
             return True
         else:
             return False
 
-def detect_training_manifests(training_dir, files=None):
+
+def detect_training_manifests(training_dir, files=None) -> List[str]:
+    """
+    Utility method for detecting training manifests
+
+    :param training_dir: the training directory
+    :param files: the files in the training directory
+    :return: The list of files
+    """
     if files is None:
         files = os.listdir(training_dir)
     return [os.path.join(training_dir, f) for f in files if f.startswith(MANIFEST_PREFIX + '.')]
 
-def detect_monitor_files(training_dir):
+
+def detect_monitor_files(training_dir) -> List[str]:
+    """
+    Utility method for detecting monitoring files
+
+    :param training_dir: the training directory
+    :return: List of monitoring files
+    """
     return [os.path.join(training_dir, f) for f in os.listdir(training_dir) if f.startswith(FILE_PREFIX + '.')]
 
-def clear_monitor_files(training_dir):
+
+def clear_monitor_files(training_dir) -> None:
+    """
+    Clears the monitoring files
+
+    :param training_dir: the directory where the files are stored
+    :return: None
+    """
     files = detect_monitor_files(training_dir)
     if len(files) == 0:
         return
@@ -304,13 +403,27 @@ def clear_monitor_files(training_dir):
     for file in files:
         os.unlink(file)
 
-def capped_cubic_video_schedule(episode_id):
+
+def capped_cubic_video_schedule(episode_id) -> bool:
+    """
+    Utility function to check if the capped cubic schedule matches this episode
+
+    :param episode_id: the episode id to check
+    :return: True or False
+    """
     if episode_id < 1000:
         return int(round(episode_id ** (1. / 3))) ** 3 == episode_id
     else:
         return episode_id % 1000 == 0
 
-def disable_videos(episode_id):
+
+def disable_videos(episode_id) -> bool:
+    """
+    Utility function for disabling videos
+
+    :param episode_id:  the episode id
+    :return: False
+    """
     return False
 
 monitor_closer = closer.Closer()
@@ -318,9 +431,20 @@ monitor_closer = closer.Closer()
 # This method gets used for a sanity check in scoreboard/api.py. It's
 # not intended for use outside of the gym codebase.
 def _open_monitors():
+    """
+    Opens the monitors
+    :return: list of monitors
+    """
     return list(monitor_closer.closeables.values())
 
-def load_env_info_from_manifests(manifests, training_dir):
+def load_env_info_from_manifests(manifests, training_dir) -> dict:
+    """
+    Loads the environment info from a list of manifests
+
+    :param manifests: the manifests
+    :param training_dir: the training directory
+    :return: the environment info
+    """
     env_infos = []
     for manifest in manifests:
         with open(manifest) as f:
@@ -330,7 +454,14 @@ def load_env_info_from_manifests(manifests, training_dir):
     env_info = collapse_env_infos(env_infos, training_dir)
     return env_info
 
+
 def load_results(training_dir):
+    """
+    Loads results from a training directory
+
+    :param training_dir: the training directory
+    :return: None
+    """
     if not os.path.exists(training_dir):
         logger.error('Training directory %s not found', training_dir)
         return
@@ -373,7 +504,14 @@ def load_results(training_dir):
         'videos': videos,
     }
 
+
 def merge_stats_files(stats_files):
+    """
+    Merges statistics files
+
+    :param stats_files: the statistics files
+    :return: the merged files
+    """
     timestamps = []
     episode_lengths = []
     episode_rewards = []
@@ -414,8 +552,16 @@ def merge_stats_files(stats_files):
     return data_sources, initial_reset_timestamps, timestamps, episode_lengths, episode_rewards, episode_types, \
            initial_reset_timestamp
 
+
 # TODO training_dir isn't used except for error messages, clean up the layering
 def collapse_env_infos(env_infos, training_dir):
+    """
+    Collapses environment informations into one
+
+    :param env_infos: the list of environment infos
+    :param training_dir: the training directory
+    :return: the collapsed environment info
+    """
     assert len(env_infos) > 0
 
     first = env_infos[0]

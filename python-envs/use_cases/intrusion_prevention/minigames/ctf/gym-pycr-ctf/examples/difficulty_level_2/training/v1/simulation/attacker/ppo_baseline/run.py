@@ -6,7 +6,7 @@ from pycr_common.dao.agent.agent_type import AgentType
 from pycr_common.util.experiments_util import util
 from pycr_common.dao.experiment.runner_mode import RunnerMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
-import gym_pycr_ctf.util.experiments_util.plotting_util as plotting_util
+import pycr_common.util.plots.plotting_util_basic as plotting_util
 from pycr_common.dao.agent.train_mode import TrainMode
 
 def default_config() -> ClientConfig:
@@ -56,7 +56,7 @@ def default_config() -> ClientConfig:
                                  title="PPO-Baseline v1",
                                  run_many=False, random_seeds=[0, 999, 299, 399, 499],
                                  random_seed=399, mode=RunnerMode.TRAIN_ATTACKER.value,
-                                 eval_env=True, eval_env_name=eval_env_name,
+                                 eval_env=False, eval_env_name=eval_env_name,
                                  eval_emulation_config=eval_emulation_config,
                                  train_mode=TrainMode.TRAIN_ATTACKER)
     return client_config

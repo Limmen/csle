@@ -1,5 +1,5 @@
 """
-A bot defense agent for the pycr-ctf environment that acts randomly
+A general bot defense agent for the PyCR environment that acts randomly
 """
 import numpy as np
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv

@@ -27,6 +27,9 @@ from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 
 
 class Viewer():
+    """
+    Viewer class that orchestrates rendering of PyCR environments
+    """
 
     def __init__(self, mainframe: PyCRBaseFrame):
         """
