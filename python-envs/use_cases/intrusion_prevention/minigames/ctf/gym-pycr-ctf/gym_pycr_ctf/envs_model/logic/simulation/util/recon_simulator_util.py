@@ -66,10 +66,10 @@ class ReconSimulatorUtil:
                         net_outcome.attacker_machine_observations.append(merged_machine_obs)
                         merged = True
                     else:
-                        net_outcome.attacker_machine_observations.append.append(o_m)
+                        net_outcome.attacker_machine_observations.append(o_m)
                 # New machine, was not known before
                 if not merged:
-                    net_outcome.attacker_machine_observations.append.append(new_m_obs)
+                    net_outcome.attacker_machine_observations.append(new_m_obs)
                     net_outcome.total_new_machines_found +=1
             else:
                 net_outcome.attacker_machine_observations = s.attacker_obs_state.machines
@@ -153,10 +153,10 @@ class ReconSimulatorUtil:
                         net_outcome.attacker_machine_observations.append(merged_machine_obs)
                         merged = True
                     else:
-                        net_outcome.attacker_machine_observations.append.append(o_m)
+                        net_outcome.attacker_machine_observations.append(o_m)
                 # New machine, was not known before
                 if not merged:
-                    net_outcome.attacker_machine_observations.append.append(new_m_obs)
+                    net_outcome.attacker_machine_observations.append(new_m_obs)
                     net_outcome.total_new_machines_found +=1
             else:
                 net_outcome.attacker_machine_observations = s.attacker_obs_state.machines

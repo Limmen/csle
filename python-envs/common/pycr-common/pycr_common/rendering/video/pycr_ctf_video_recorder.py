@@ -10,7 +10,13 @@ import six
 from gym import error, logger
 
 
-def touch(path):
+def touch(path) -> None:
+    """
+    Creates a path
+
+    :param path: the path to create
+    :return: None
+    """
     open(path, 'a').close()
 
 
@@ -95,6 +101,9 @@ class PyCrCTFVideoRecorder(object):
 
     @property
     def functional(self):
+        """
+        :return: Video-recorder enabled or not property
+        """
         return self.enabled and not self.broken
 
     def capture_frame(self):
@@ -157,18 +166,35 @@ class PyCrCTFVideoRecorder(object):
 
         self.write_metadata()
 
-    def write_metadata(self):
+    def write_metadata(self) -> None:
+        """
+        Writes metadata to a given path
+
+        :return: None
+        """
         with open(self.metadata_path, 'w') as f:
             json.dump(self.metadata, f)
 
-    def _encode_ansi_frame(self, frame):
+    def _encode_ansi_frame(self, frame) -> None:
+        """
+        Encode a frame in Ansi
+
+        :param frame: the frame to encode
+        :return: None
+        """
         if not self.encoder:
             self.encoder = TextEncoder(self.path, self.frames_per_sec)
             self.metadata['encoder_version'] = self.encoder.version_info
         self.encoder.capture_frame(frame)
         self.empty = False
 
-    def _encode_image_frame(self, frame):
+    def _encode_image_frame(self, frame) -> None:
+        """
+        Encodes an image frame
+
+        :param frame: the frame to encode
+        :return: None
+        """
         if not self.encoder:
             self.encoder = ImageEncoder(self.path, frame.shape, self.frames_per_sec)
             self.metadata['encoder_version'] = self.encoder.version_info
@@ -187,11 +213,23 @@ class TextEncoder(object):
     https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v1.md"""
 
     def __init__(self, output_path, frames_per_sec):
+        """
+        Initializes the text encoder
+
+        :param output_path: the path to save outputs
+        :param frames_per_sec: number of frames per second
+        """
         self.output_path = output_path
         self.frames_per_sec = frames_per_sec
         self.frames = []
 
-    def capture_frame(self, frame):
+    def capture_frame(self, frame) -> None:
+        """
+        Captures a frame
+
+        :param frame: the frame to capture
+        :return: None
+        """
         from six import string_types
         string = None
         if isinstance(frame, string_types):
@@ -213,7 +251,12 @@ class TextEncoder(object):
 
         self.frames.append(frame_bytes)
 
-    def close(self):
+    def close(self) -> None:
+        """
+        Closes the frame
+
+        :return: None
+        """
         #frame_duration = float(1) / self.frames_per_sec
         frame_duration = .5
 
@@ -245,11 +288,24 @@ class TextEncoder(object):
             json.dump(data, f)
 
     @property
-    def version_info(self):
+    def version_info(self) -> dict:
+        """
+        :return: version info
+        """
         return {'backend':'TextEncoder','version':1}
 
 class ImageEncoder(object):
+    """
+    Encoder for images
+    """
     def __init__(self, output_path, frame_shape, frames_per_sec):
+        """
+        Initializes the encoder
+
+        :param output_path: the path to save outputs
+        :param frame_shape: the shape of the  frame
+        :param frames_per_sec: the number of frames per second
+        """
         self.proc = None
         self.output_path = output_path
         # Frame shape should be lines-first, so w and h are swapped
@@ -275,7 +331,10 @@ class ImageEncoder(object):
         self.start()
 
     @property
-    def version_info(self):
+    def version_info(self) -> dict:
+        """
+        :return: version info
+        """
         return {
             'backend':self.backend,
             'version':str(subprocess.check_output([self.backend, '-version'],
@@ -283,7 +342,12 @@ class ImageEncoder(object):
             'cmdline':self.cmdline
         }
 
-    def start(self):
+    def start(self) -> None:
+        """
+        Starts the encoder
+
+        :return: None
+        """
         self.cmdline = (self.backend,
                      '-nostats',
                      '-loglevel', 'error', # suppress warnings
@@ -309,7 +373,13 @@ class ImageEncoder(object):
         else:
             self.proc = subprocess.Popen(self.cmdline, stdin=subprocess.PIPE)
 
-    def capture_frame(self, frame):
+    def capture_frame(self, frame) -> None:
+        """
+        Captures a frame
+
+        :param frame: the frame to capture
+        :return: None
+        """
         if not isinstance(frame, (np.ndarray, np.generic)):
             raise error.InvalidFrame('Wrong type {} for {} (must be np.ndarray or '
                                      'np.generic)'.format(type(frame), frame))
@@ -325,7 +395,12 @@ class ImageEncoder(object):
         else:
             self.proc.stdin.write(frame.tostring())
 
-    def close(self):
+    def close(self) -> None:
+        """
+        Closes the encoder
+
+        :return: None
+        """
         self.proc.stdin.close()
         ret = self.proc.wait()
         if ret != 0:

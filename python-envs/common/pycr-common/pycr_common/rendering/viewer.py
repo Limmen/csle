@@ -22,16 +22,16 @@ except ImportError as e:
     ''')
 import numpy as np
 import sys
-from pycr_common.dao.network.attacker.base_attacker_agent_state import BaseAttackerAgentState
 from pycr_common.rendering.frames.pycr_base_frame import PyCRBaseFrame
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 
 
-
 class Viewer():
+    """
+    Viewer class that orchestrates rendering of PyCR environments
+    """
 
-    def __init__(self, env_config: BaseEnvConfig, init_state : BaseAttackerAgentState):
+    def __init__(self, mainframe: PyCRBaseFrame):
         """
         Initialize the viewer
 
@@ -39,15 +39,15 @@ class Viewer():
         :param init_state: the initial state
         """
         self.isopen = True
-        self.env_config = env_config
-        self.init_state = init_state
+        self.mainframe = mainframe
 
     def start(self, interactive = False) -> None:
         """
         Starts the viewer (opens the frame)
         :return:
         """
-        self.mainframe = PyCRBaseFrame(env_config=self.env_config, init_state=self.init_state)
+        # self.mainframe = PyCRBaseFrame(env_config=self.env_config, init_state=self.init_state)
+        self.mainframe.__init__(env_config=self.mainframe.env_config, init_state=self.mainframe.init_state)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         if interactive:
@@ -59,8 +59,8 @@ class Viewer():
 
         :return: None
         """
-        self.env_config.manual_play = True
-        self.mainframe = PyCRBaseFrame(env_config=self.env_config, init_state=self.init_state, env=env)
+        self.mainframe.env_config.manual_play = True
+        self.mainframe.__init__(env_config=self.mainframe.env_config, init_state=self.mainframe.init_state, env=env)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         pyglet.clock.schedule_interval(self.mainframe.update, 1 / 10.)

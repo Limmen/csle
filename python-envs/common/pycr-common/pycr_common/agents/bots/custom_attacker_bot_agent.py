@@ -1,5 +1,5 @@
 """
-A bot attack agent for the pycr-ctf environment that acts according to a custom pre-defined policy
+A general bot attack agent for the PyCr environment that acts according to a custom pre-defined policy
 """
 from typing import List, Tuple
 import numpy as np

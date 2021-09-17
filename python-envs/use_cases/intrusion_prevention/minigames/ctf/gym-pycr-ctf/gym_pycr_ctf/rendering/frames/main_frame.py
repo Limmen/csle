@@ -31,8 +31,7 @@ class MainFrame(PyCRBaseFrame):
 
         # call constructor of parent class
         super(MainFrame, self).__init__(height=850, width=1400, caption=constants.RENDERING.CAPTION,
-                                        env_config=env_config, init_state=init_state)
-        self.env = env
+                                        env_config=env_config, init_state=init_state, env=env)
         self.batch = pyglet.graphics.Batch()
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)

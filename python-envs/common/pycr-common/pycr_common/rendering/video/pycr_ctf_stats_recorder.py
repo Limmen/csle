@@ -37,15 +37,29 @@ class StatsRecorder(object):
 
     @property
     def type(self):
+        """
+        :return: the type of the stats recorder
+        """
         return self._type
 
     @type.setter
-    def type(self, type):
+    def type(self, type) -> None:
+        """
+        Sets the type of the stats recorded
+
+        :param type:  the type to set
+        :return: None
+        """
         if type not in ['t', 'e']:
             raise error.Error('Invalid episode type {}: must be t for training or e for evaluation', type)
         self._type = type
 
-    def before_step(self, action):
+    def before_step(self, action) -> None:
+        """
+        Utility function called before each step
+        :param action: the action of the step
+        :return: None
+        """
         assert not self.closed
 
         if self.done:
@@ -56,7 +70,16 @@ class StatsRecorder(object):
             raise error.ResetNeeded("Trying to step an environment before reset. While the monitor is active for {}, "
                                     "you must call 'env.reset()' before taking an initial step.".format(self.env_id))
 
-    def after_step(self, observation, reward, done, info):
+    def after_step(self, observation, reward: float, done: bool, info: dict) -> None:
+        """
+        Function called after each step
+
+        :param observation: the observation of the step
+        :param reward: the reward of the step
+        :param done: whether the interaction with the environment is done or not
+        :param info: the info dict
+        :return: None
+        """
         self.steps += 1
         self.total_steps += 1
         if type(reward) == tuple:
@@ -80,7 +103,12 @@ class StatsRecorder(object):
                 self.before_reset()
                 self.after_reset(observation)
 
-    def before_reset(self):
+    def before_reset(self) -> None:
+        """
+        Function called before the reset of the environment
+
+        :return: None
+        """
         assert not self.closed
 
         # if self.done is not None and not self.done and self.steps > 0:
@@ -92,7 +120,13 @@ class StatsRecorder(object):
         if self.initial_reset_timestamp is None:
             self.initial_reset_timestamp = time.time()
 
-    def after_reset(self, observation):
+    def after_reset(self, observation) -> None:
+        """
+        Function called after the reset of the environment
+
+        :param observation: the observation of the reset
+        :return: None
+        """
         self.steps = 0
         self.rewards_1 = 0
         self.rewards_2 = 0
@@ -101,18 +135,32 @@ class StatsRecorder(object):
         # time the user calls reset().
         self.episode_types.append(self._type)
 
-    def save_complete(self):
+    def save_complete(self) -> None:
+        """
+        Completes the saving
+
+        :return: None
+        """
         if self.steps is not None:
             self.episode_lengths.append(self.steps)
             self.episode_rewards_1.append(float(self.rewards_1))
             self.episode_rewards_2.append(float(self.rewards_2))
             self.timestamps.append(time.time())
 
-    def close(self):
+    def close(self) -> None:
+        """
+        Closes the environment
+
+        :return: None
+        """
         self.flush()
         self.closed = True
 
-    def flush(self):
+    def flush(self) -> None:
+        """
+        Flushes the environment
+        :return:
+        """
         if self.closed:
             return
 

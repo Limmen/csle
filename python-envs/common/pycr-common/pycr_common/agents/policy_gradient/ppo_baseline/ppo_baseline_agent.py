@@ -1,5 +1,5 @@
 """
-An agent for the pycr-ctf env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
+An agent for the PyCr env that uses the PPO Policy Gradient algorithm from OpenAI stable baselines
 """
 import time
 import math

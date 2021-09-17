@@ -5,6 +5,7 @@ import gym
 import numpy as np
 import time
 
+
 class ExploreThread(threading.Thread):
 
     def __init__(self, env_name: str, num_steps: int, port_start):
@@ -56,7 +57,7 @@ class ExploreThread(threading.Thread):
             action = np.random.choice(legal_actions)
             obs, reward, done, info = env.step(action)
             if not done and EnvDynamicsUtil.is_all_flags_collected(s=env.env_state, env_config=env.env_config):
-                print("not done but got all flags???")
+                print("not done but got all flags, error")
             trajectory.append(action)
             #env.render()
             if done:

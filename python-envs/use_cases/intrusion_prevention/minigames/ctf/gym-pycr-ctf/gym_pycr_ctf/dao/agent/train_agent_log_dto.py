@@ -4,6 +4,7 @@ import pycr_common.constants.constants as constants
 from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
@@ -267,6 +268,321 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
                  eval_optimal_defender_episode_steps: List[int] = None,
                  eval_2_optimal_defender_episode_steps: List[int] = None
                  ):
+        """
+        Initializes the DTO
+
+        :param iteration: the iteration
+        :param train_result: the accumulated training result
+        :param eval_result: the accumulated evaluation result
+        :param attacker_episode_rewards: the list of attacker rewards
+        :param attacker_episode_avg_loss: the list of losses of the attacker
+        :param attacker_lr: the list of learning rates of the attacker
+        :param defender_episode_rewards: the list of rewards of the defender
+        :param defender_episode_avg_loss: the list of losses of the defender
+        :param defender_lr: the list of learning rates of the defender
+        :param total_num_episodes: the total number of episodes
+        :param episode_steps: the list of episode steps
+        :param episode_flags: the list of episode flags
+        :param eval: boolean flag whether this is an evaluation or not
+        :param episode_flags_percentage: a list of percentages of flags captured
+        :param progress_left: fraction of progress left
+        :param n_af: number of times all flags were captured
+        :param n_d: number of times the attacker was detected
+        :param attacker_eval_episode_rewards: list of rewards of the attacker
+        :param defender_eval_episode_rewards: list of rewards of the defender
+        :param eval_episode_steps: list of evaluation steps
+        :param eval_episode_flags: list of evalation flags
+        :param eval_episode_flags_percentage: list of flags percentages
+        :param attacker_eval_2_episode_rewards: list of attacker episode rewards in the second eval environment
+        :param defender_eval_2_episode_rewards: list of defender episode rewards in the second eval environment
+        :param eval_2_episode_steps: list of steps in the second eval environment
+        :param eval_2_episode_flags: list of flags captured in the second eval environment
+        :param eval_2_episode_flags_percentage: list of percentages of flags captured
+        :param attacker_train_episode_env_specific_rewards: list of attacker rewards captured per environment
+        :param defender_train_episode_env_specific_rewards: list of defender rewards captured per environment
+        :param train_env_specific_steps: list of steps per environment
+        :param train_env_specific_flags: list of flags per environment
+        :param train_env_specific_flags_percentage: list of percetanges of flags captured per environment
+        :param attacker_eval_env_specific_rewards: list of attacker rewards per eval environment
+        :param defender_eval_env_specific_rewards: list of defende rewards per eval environment
+        :param eval_env_specific_steps: list of steps per eval environment
+        :param eval_env_specific_flags: list of flags captured per eval environment
+        :param eval_env_specific_flags_percentage: list of percentages of flags captured per environment
+        :param attacker_eval_2_env_specific_rewards: list of attacker rewards captured for each eval2 environment
+        :param defender_eval_2_env_specific_rewards: list of defender rewards captured for each eval2 environment
+        :param eval_2_env_specific_steps: list of steps for each eval2 environment
+        :param eval_2_env_specific_flags: list of flags for each eval2 environment
+        :param eval_2_env_specific_flags_percentage: list of percentages of flags captured for each eval2 environment
+        :param rollout_times: list of rollout times
+        :param env_response_times: list of environment response times
+        :param action_pred_times: list of times it takes to predict actions
+        :param grad_comp_times: list of times for computing gradients
+        :param weight_update_times: list of times for updating the weights
+        :param episode_caught: list of boolean indicators whether the attacker was caught
+        :param episode_early_stopped: list of boolean indicators whether the defender stopped too early
+        :param episode_successful_intrusion: list of boolean indicators whether the attacker made a successful intrusion
+        :param eval_episode_caught: list of boolean indicators whether the attacker was caught in the eval environment
+        :param eval_episode_early_stopped: list of boolean indicators whether the defender stopped too early
+                                           in the eval environment
+        :param eval_episode_successful_intrusion: list of boolean indicators whether the attacker made a successful
+                                           intrusion in the eval environment
+        :param eval_2_episode_caught: list of boolean indicators whether the attacker was caught
+                                           in the eval2 environment
+        :param eval_2_episode_early_stopped: list of boolean indicators whether the defender stopped too early
+                                           in the eval2 environment
+        :param eval_2_episode_successful_intrusion: list of boolean indicators whether the attacker made a successful
+                                           intrusion in the eval2 environment
+        :param episode_snort_severe_baseline_rewards: list of rewards of the snort_severe_baseline
+        :param episode_snort_warning_baseline_rewards: list of rewards of the snort_warning_baseline
+        :param eval_episode_snort_severe_baseline_rewards: list of eval rewards of the snort_severe_baseline
+        :param eval_episode_snort_warning_baseline_rewards: list of eval rewards of the snort_warning_baseline
+        :param eval_2_episode_snort_severe_baseline_rewards: list of eval2 rewards of the snort_severe_baseline
+        :param eval_2_episode_snort_warning_baseline_rewards: list of eval2 rewards of the snort_severe_baseline
+        :param episode_snort_critical_baseline_rewards: list of rewards of the snort_critical_baseline
+        :param episode_var_log_baseline_rewards: list of rewards of the var_log_baseline
+        :param eval_episode_snort_critical_baseline_rewards: list of eval rewards of the snort_critical_baseline
+        :param eval_episode_var_log_baseline_rewards: list of eval rewards of the var_log_baseline
+        :param eval_2_episode_snort_critical_baseline_rewards: list of eval2 rewards of the snort_critical_baseline
+        :param eval_2_episode_var_log_baseline_rewards: list of eval2 rewards of the var_log_baseline
+        :param episode_snort_severe_baseline_steps: list of steps of the snort_severe_baseline
+        :param episode_snort_warning_baseline_steps: list of steps of the snort_warning_baseline
+        :param eval_episode_snort_severe_baseline_steps: list of eval steps of the snort_severe_baseline
+        :param eval_episode_snort_warning_baseline_steps: list of eval steps of the snort_warning_baseline
+        :param eval_2_episode_snort_severe_baseline_steps: list of eval2 steps of the snort_severe_baseline
+        :param eval_2_episode_snort_warning_baseline_steps: list of eval2 steps of the snort_warning_baseline
+        :param episode_snort_critical_baseline_steps: list of eval2 steps of the snort_critical_baseline
+        :param episode_var_log_baseline_steps: list of steps of the var_log_baseline
+        :param eval_episode_snort_critical_baseline_steps: list of eval steps of the snort_critical_baseline
+        :param eval_episode_var_log_baseline_steps: list of eval steps of the var_log_baseline
+        :param eval_2_episode_snort_critical_baseline_steps: list of eval2 steps of the snort_critical_baseline
+        :param eval_2_episode_var_log_baseline_steps: list of eval2 steps of the var_log_baseline
+        :param episode_step_baseline_rewards: list of rewards of the step_baseline
+        :param episode_step_baseline_steps: list of steps of the step_baseline
+        :param eval_episode_step_baseline_rewards: list of eval rewards of the step_baseline
+        :param eval_episode_step_baseline_steps: list of eval steps of the step_baseline
+        :param eval_2_episode_step_baseline_rewards: list of eval2 rewards of the step_baseline
+        :param eval_2_episode_step_baseline_steps: list of eval2 steps of the step_baseline
+        :param attacker_action_costs: list of costs of the attacker
+        :param attacker_action_costs_norm: list of normalized costs of the attacker
+        :param attacker_action_alerts: list of alerts of the attacker
+        :param attacker_action_alerts_norm: list of normalized alerts of the attacker
+        :param eval_attacker_action_costs: list of eval costs of the attacker
+        :param eval_attacker_action_costs_norm: list of eval normalized costs of the attacker
+        :param eval_attacker_action_alerts: list of eval alerts of the attacker
+        :param eval_attacker_action_alerts_norm: list of normalized eval alerts of the attacker
+        :param eval_2_attacker_action_costs: list of eval2 costs of the attacker
+        :param eval_2_attacker_action_costs_norm: list of normalized eval2 costs of the attacker
+        :param eval_2_attacker_action_alerts: list of eval2 alerts of the attacker
+        :param eval_2_attacker_action_alerts_norm: list of noramlized eval2 costs of the attacker
+        :param start_time: the start time of the training step
+        :param episode_intrusion_steps: list of intrusion steps
+        :param eval_episode_intrusion_steps: list of eval intrusion steps
+        :param eval_2_episode_intrusion_steps: list of eval2 intrusion stepsb
+        :param episode_snort_severe_baseline_caught_attacker: list of boolean flags indicating that
+                                                              the attacker was caught by the snort_severe_baseline
+        :param episode_snort_warning_baseline_caught_attacker: list of boolean flags indicating that
+                                                              the attacker was caught by the snort_warning_baseline
+        :param eval_episode_snort_severe_baseline_caught_attacker: list of eval boolean flags indicating that
+                                                              the attacker was caught by the snort_severe_baseline
+        :param eval_episode_snort_warning_baseline_caught_attacker: list of eval boolean flags indicating that
+                                                              the attacker was caught by the snort_warning_baseline
+        :param eval_2_episode_snort_severe_baseline_caught_attacker: list of eval2 boolean flags indicating that
+                                                              the attacker was caught by the snort_severe_baselinea
+        :param eval_2_episode_snort_warning_baseline_caught_attacker: list of eval2 boolean flags indicating that
+                                                              the attacker was caught by the snort_warning_baseline
+        :param episode_snort_critical_baseline_caught_attacker: list of boolean flags indicating that
+                                                              the attacker was caught by the snort_critical baseline
+        :param episode_var_log_baseline_caught_attacker: list of boolean flags indicating that
+                                                              the attacker was caught by the var_log_baseline
+        :param eval_episode_snort_critical_baseline_caught_attacker: list of eval boolean flags indicating that
+                                                              the attacker was caught by the snort_critical_baseline
+        :param eval_episode_var_log_baseline_caught_attacker: list of eval boolean flags indicating that
+                                                              the attacker was caught by the var_log_baseline
+        :param eval_2_episode_snort_critical_baseline_caught_attacker: list of eval2 boolean flags indicating that
+                                                              the attacker was caught by the snort_critical_baseline
+        :param eval_2_episode_var_log_baseline_caught_attacker: list of eval2 boolean flags indicating that
+                                                              the attacker was caught by the var_log_baseline
+        :param episode_step_baseline_caught_attacker: list of boolean flags indicating that
+                                                              the attacker was caught by the step_baseline
+        :param eval_episode_step_baseline_caught_attacker: list of eval boolean flags indicating that
+                                                              the attacker was caught by the step_baseline
+        :param eval_2_episode_step_baseline_caught_attacker: list of eval2 boolean flags indicating that
+                                                              the attacker was caught by the step_baseline
+        :param episode_snort_severe_baseline_early_stopping: list of boolean flags indicating that
+                                                              the snort_severe_baseline defender stopped too early
+        :param episode_snort_warning_baseline_early_stopping: list of boolean flags indicating that
+                                                              the snort_warning_baseline defender stopped too early
+        :param eval_episode_snort_severe_baseline_early_stopping: list of eval boolean flags indicating that
+                                                              the snort_severe_baseline defender stopped too early
+        :param eval_episode_snort_warning_baseline_early_stopping: list eval of boolean flags indicating that
+                                                              the snort_warning_baseline defender stopped too early
+        :param eval_2_episode_snort_severe_baseline_early_stopping: list of eval2 boolean flags indicating that
+                                                              the snort_severe_baseline defender stopped too early
+        :param eval_2_episode_snort_warning_baseline_early_stopping: list of eval2 boolean flags indicating that
+                                                              the snort_warning_baseline defender stopped too early
+        :param episode_snort_critical_baseline_early_stopping: list of boolean flags indicating that
+                                                              the snort_critical_baseline defender stopped too early
+        :param episode_var_log_baseline_early_stopping: list of boolean flags indicating that
+                                                              the var_log_baseline defender stopped too early
+        :param eval_episode_snort_critical_baseline_early_stopping: list of eval boolean flags indicating that
+                                                              the snort_critical_baseline defender stopped too early
+        :param eval_episode_var_log_baseline_early_stopping: list of eval boolean flags indicating that
+                                                              the var_log_baseline defender stopped too early
+        :param eval_2_episode_snort_critical_baseline_early_stopping: list of eval2 boolean flags indicating that
+                                                              the snort_critical_baseline defender stopped too early
+        :param eval_2_episode_var_log_baseline_early_stopping: list of eval2 boolean flags indicating that
+                                                              the var_log_baseline defender stopped too early
+        :param episode_step_baseline_early_stopping: list of boolean flags indicating that
+                                                              the step_baseline defender stopped too early
+        :param eval_episode_step_baseline_early_stopping: list of eval boolean flags indicating that
+                                                              the step_baseline defender stopped too early
+        :param eval_2_episode_step_baseline_early_stopping: list of eval2 boolean flags indicating that
+                                                              the step_baseline defender stopped too early
+        :param episode_snort_severe_baseline_uncaught_intrusion_steps: list of uncaught intrusion steps of
+                                                                       the snort_severe_baseline
+        :param episode_snort_warning_baseline_uncaught_intrusion_steps: list of uncaught intrusion steps of
+                                                                       the snort_warning_baseline
+        :param eval_episode_snort_severe_baseline_uncaught_intrusion_steps: list of eval uncaught intrusion steps of
+                                                                       the snort_severe_baseline
+        :param eval_episode_snort_warning_baseline_uncaught_intrusion_steps: list of eval uncaught intrusion steps of
+                                                                       the snort_warning_baseline
+        :param eval_2_episode_snort_severe_baseline_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps of
+                                                                       the snort_severe_baseline
+        :param eval_2_episode_snort_warning_baseline_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps of
+                                                                       the snort_warning_baseline
+        :param episode_snort_critical_baseline_uncaught_intrusion_steps: list of uncaught intrusion steps of
+                                                                       the snort_critical_baseline
+        :param episode_var_log_baseline_uncaught_intrusion_steps: list of uncaught intrusion steps of
+                                                                       the var_log_baseline
+        :param eval_episode_snort_critical_baseline_uncaught_intrusion_steps: list of eval uncaught intrusion steps of
+                                                                       the snort_critical_baseline
+        :param eval_episode_var_log_baseline_uncaught_intrusion_steps: list of eval uncaught intrusion steps of
+                                                                       the var_log_baseline
+        :param eval_2_episode_snort_critical_baseline_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps of
+                                                                       the snort_critical_baseline
+        :param eval_2_episode_var_log_baseline_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps of
+                                                                       the var_log_baseline
+        :param episode_step_baseline_uncaught_intrusion_steps: list of uncaught intrusion steps of
+                                                                       the step baseline
+        :param eval_episode_step_baseline_uncaught_intrusion_steps: list of eval uncaught intrusion steps of
+                                                                       the step baseline
+        :param eval_2_episode_step_baseline_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps of
+                                                                       the step baseline
+        :param uncaught_intrusion_steps: list of uncaught intrusion steps
+        :param eval_uncaught_intrusion_steps: list of eval uncaught intrusion steps
+        :param eval_2_uncaught_intrusion_steps: list of eval2 uncaught intrusion steps
+        :param optimal_defender_reward: list of optimal defender rewardsb
+        :param eval_optimal_defender_reward: list of eval optimal defender rewardsb
+        :param eval_2_optimal_defender_reward: list of eval2 optimal defender rewardsb
+        :param defender_stops_remaining: list of optimal defender stops remaining
+        :param eval_defender_stops_remaining: list of eval optimal defender stops remaining
+        :param eval_2_defender_stops_remaining: list of eval2 optimal defender stops remaining
+        :param defender_first_stop_step: list of optimal defender first stop step
+        :param eval_defender_first_stop_step: list of eval optimal defender first stop step
+        :param eval_2_defender_first_stop_step: list of eval2 optimal defender first stop step
+        :param defender_second_stop_step: list of optimal defender second stop step
+        :param eval_defender_second_stop_step: list of eval optimal defender second stop step
+        :param eval_2_defender_second_stop_step: list of eval2 optimal defender second stop step
+        :param defender_third_stop_step: list of optimal defender third stop step
+        :param eval_defender_third_stop_step: list of eval optimal defender third stop step
+        :param eval_2_defender_third_stop_step: list of eval2 optimal defender third stop step
+        :param defender_fourth_stop_step: list of optimal defender fourth stop step
+        :param eval_defender_fourth_stop_step: list of eval optimal defender fourth stop step
+        :param eval_2_defender_fourth_stop_step: list of eval2 optimal defender fourth stop step
+        :param episode_snort_severe_baseline_first_stop_step: list of snort_severe_baseline first stop step
+        :param episode_snort_warning_baseline_first_stop_step: list of snort_warning_baseline first stop step
+        :param episode_snort_critical_baseline_first_stop_step: list of snort_critical_baseline first stop step
+        :param episode_var_log_baseline_first_stop_step: list of var_log_baseline first stop step
+        :param episode_step_baseline_first_stop_step: list of step_baseline first stop step
+        :param episode_snort_severe_baseline_second_stop_step: list of snort_severe_baseline second stop step
+        :param episode_snort_warning_baseline_second_stop_step: list of snort_warning_baseline second stop step
+        :param episode_snort_critical_baseline_second_stop_step: list of snort_critical_baseline second stop step
+        :param episode_var_log_baseline_second_stop_step: list of var_log_baseline second stop step
+        :param episode_step_baseline_second_stop_step: list of step_baseline second stop step
+        :param episode_snort_severe_baseline_third_stop_step: list of snort_severe_baseline third stop step
+        :param episode_snort_warning_baseline_third_stop_step: list of snort_warning_baseline third stop step
+        :param episode_snort_critical_baseline_third_stop_step: list of snort_critical_baseline third stop step
+        :param episode_var_log_baseline_third_stop_step: list of var_log_baseline third stop step
+        :param episode_step_baseline_third_stop_step: list of step_baseline third stop step
+        :param episode_snort_severe_baseline_fourth_stop_step: list of snort_severe_baseline fourth stop step
+        :param episode_snort_warning_baseline_fourth_stop_step: list of snort_warning_baseline fourth stop step
+        :param episode_snort_critical_baseline_fourth_stop_step: list of snort_critical_baseline fourth stop step
+        :param episode_var_log_baseline_fourth_stop_step: list of var_log_baseline fourth stop step
+        :param episode_step_baseline_fourth_stop_step: list of step_baseline fourth stop step
+        :param episode_snort_severe_baseline_stops_remaining: list of snort_severe_baseline stops remaining
+        :param episode_snort_warning_baseline_stops_remaining: list of snort_warning_baseline stops remaining
+        :param episode_snort_critical_baseline_stops_remaining: list of snort_critical_baseline stops remaining
+        :param episode_var_log_baseline_stops_remaining: list of var_log_baseline stops remaining
+        :param episode_step_baseline_stops_remaining: list of step_baseline stops remaining
+        :param eval_episode_snort_severe_baseline_first_stop_step: eval list of snort_severe_baseline first stop step
+        :param eval_episode_snort_warning_baseline_first_stop_step: eval list of snort_warning_baseline first stop step
+        :param eval_episode_snort_critical_baseline_first_stop_step: eval list of snort_critical_baseline first stop step
+        :param eval_episode_var_log_baseline_first_stop_step: eval list of var_log_baseline first stop step
+        :param eval_episode_step_baseline_first_stop_step: eval list of step_baseline first stop step
+        :param eval_episode_snort_severe_baseline_second_stop_step: eval list of snort_severe_baseline second stop step
+        :param eval_episode_snort_warning_baseline_second_stop_step: eval list of snort_warning_baseline second stop step
+        :param eval_episode_snort_critical_baseline_second_stop_step: eval list of snort_critical_baseline second stop step
+        :param eval_episode_var_log_baseline_second_stop_step: eval list of var_log_baseline second stop step
+        :param eval_episode_step_baseline_second_stop_step: eval list of step_baseline second stop step
+        :param eval_episode_snort_severe_baseline_third_stop_step: eval list of snort_severe_baseline third stop step
+        :param eval_episode_snort_warning_baseline_third_stop_step: eval list of snort_warning_baseline third stop step
+        :param eval_episode_snort_critical_baseline_third_stop_step: eval list of snort_critical_baseline third stop step
+        :param eval_episode_var_log_baseline_third_stop_step: eval list of var_log_baseline third stop step
+        :param eval_episode_step_baseline_third_stop_step: eval list of step_baseline third stop step
+        :param eval_episode_snort_severe_baseline_fourth_stop_step: eval list of snort_severe_baseline fourth stop step
+        :param eval_episode_snort_warning_baseline_fourth_stop_step: eval list of snort_warning_baseline fourth stop step
+        :param eval_episode_snort_critical_baseline_fourth_stop_step: eval list of snort_critical_baseline fourth stop step
+        :param eval_episode_var_log_baseline_fourth_stop_step: eval list of var_log_baseline fourth stop step
+        :param eval_episode_step_baseline_fourth_stop_step: eval list of step_baseline fourth stop step
+        :param eval_episode_snort_severe_baseline_stops_remaining: eval list of snort_severe_baseline stops remaining
+        :param eval_episode_snort_warning_baseline_stops_remaining: eval list of snort_warning_baseline stops remaining
+        :param eval_episode_snort_critical_baseline_stops_remaining: eval list of snort_critical_baseline stops remaining
+        :param eval_episode_var_log_baseline_stops_remaining: eval list of var_log_baseline stops remaining
+        :param eval_episode_step_baseline_stops_remaining: eval list of step_baseline stops remaining
+        :param eval_2_episode_snort_severe_baseline_first_stop_step: eval2 list of snort_severe_baseline first stop step
+        :param eval_2_episode_snort_warning_baseline_first_stop_step: eval2 list of snort_warning_baseline first stop step
+        :param eval_2_episode_snort_critical_baseline_first_stop_step: eval2 list of snort_critical_baseline first stop step
+        :param eval_2_episode_var_log_baseline_first_stop_step: eval2 list of var_log_baseline first stop step
+        :param eval_2_episode_step_baseline_first_stop_step: eval2 list of step_baseline first stop step
+        :param eval_2_episode_snort_severe_baseline_second_stop_step: eval2 list of snort_severe_baseline second stop step
+        :param eval_2_episode_snort_warning_baseline_second_stop_step: eval2 list of snort_warning_baseline second stop step
+        :param eval_2_episode_snort_critical_baseline_second_stop_step: eval2 list of snort_critical_baseline second stop step
+        :param eval_2_episode_var_log_baseline_second_stop_step: eval2 list of var_log_baseline second stop step
+        :param eval_2_episode_step_baseline_second_stop_step: eval2 list of step_baseline second stop step
+        :param eval_2_episode_snort_severe_baseline_third_stop_step: eval2 list of snort_severe_baseline third stop step
+        :param eval_2_episode_snort_warning_baseline_third_stop_step: eval2 list of snort_warning_baseline third stop step
+        :param eval_2_episode_snort_critical_baseline_third_stop_step: eval2 list of snort_critical_baseline third stop step
+        :param eval_2_episode_var_log_baseline_third_stop_step: eval2 list of var_log_baseline third stop step
+        :param eval_2_episode_step_baseline_third_stop_step: eval2 list of step_baseline third stop step
+        :param eval_2_episode_snort_severe_baseline_fourth_stop_step: eval2 list of snort_severe_baseline fourth stop step
+        :param eval_2_episode_snort_warning_baseline_fourth_stop_step: eval2 list of snort_warning_baseline fourth stop step
+        :param eval_2_episode_snort_critical_baseline_fourth_stop_step: eval2 list of snort_critical_baseline fourth stop step
+        :param eval_2_episode_var_log_baseline_fourth_stop_step: eval2 list of var_log_baseline fourth stop step
+        :param eval_2_episode_step_baseline_fourth_stop_step: eval2 list of step_baseline fourth stop step
+        :param eval_2_episode_snort_severe_baseline_stops_remaining: eval2 list of snort_severe_baseline stops remaining
+        :param eval_2_episode_snort_warning_baseline_stops_remaining: eval2 list of snort_warning_baseline stops remaining
+        :param eval_2_episode_snort_critical_baseline_stops_remaining: eval2 list of snort_critical_baseline stops remaining
+        :param eval_2_episode_var_log_baseline_stops_remaining: eval2 list of var_log_baseline stops remaining
+        :param eval_2_episode_step_baseline_stops_remaining: eval2 list of step_baseline stops remaining
+        :param optimal_stops_remaining: optimal number of stops remaining
+        :param eval_optimal_stops_remaining: eval optimal number of stops remaining
+        :param eval_2_optimal_stops_remaining: eval2 optimal number of stops remaining
+        :param optimal_first_stop_step: optimal time of first stop
+        :param eval_optimal_first_stop_step: eval optimal time of first stop
+        :param eval_2_optimal_first_stop_step: eval2 optimal time of first stop
+        :param optimal_second_stop_step: optimal time of second stop
+        :param eval_optimal_second_stop_step: eval optimal time of second stop
+        :param eval_2_optimal_second_stop_step: eval2 optimal time of second stop
+        :param optimal_third_stop_step: optimal time of third stop
+        :param eval_optimal_third_stop_step: eval optimal time of third stop
+        :param eval_2_optimal_third_stop_step: eval2 optimal time of third stop
+        :param optimal_fourth_stop_step: eval optimal time of fourth stop
+        :param eval_optimal_fourth_stop_step: eval optimal time of fourth stop
+        :param eval_2_optimal_fourth_stop_step: eval2 optimal time of fourth stop
+        :param optimal_defender_episode_steps: optimal episode length
+        :param eval_optimal_defender_episode_steps: eval optimal episode length
+        :param eval_2_optimal_defender_episode_steps: eval2 optimal episode length
+        """
         super(TrainAgentLogDTO, self).__init__(iteration = iteration)
         self.train_result = train_result
         self.eval_result = eval_result
@@ -1257,6 +1573,17 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
 
     def eval_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
                     env_conf: EnvConfig, i: int) -> None:
+        """
+        Updates the eval metrics of the DTO with new data
+
+        :param attacker_episode_reward: the attacker episode reward
+        :param defender_episode_reward: the defender episode reward
+        :param _info: the list of info dicts
+        :param episode_length: the length of the episode
+        :param env_conf: the environment configuration
+        :param i: the index i
+        :return: None
+        """
         self.attacker_eval_episode_rewards.append(attacker_episode_reward)
         self.defender_eval_episode_rewards.append(defender_episode_reward)
         self.eval_episode_steps.append(episode_length)
@@ -1372,9 +1699,19 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_optimal_defender_episode_steps.append(_info[constants.INFO_DICT.OPTIMAL_DEFENDER_EPISODE_STEPS])
         self.eval_update_env_specific_metrics(env_conf, _info, i)
 
-
     def eval_2_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
                       env_conf: EnvConfig, i: int) -> None:
+        """
+        Updates the eval2 metrics of the DTO with data from an evaluation episode
+
+        :param attacker_episode_reward: the attacker episode reward
+        :param defender_episode_reward: the defender episode reward
+        :param _info: the info dicts
+        :param episode_length: the episode length
+        :param env_conf: the environment configuration
+        :param i: the index
+        :return: None
+        """
         self.attacker_eval_2_episode_rewards.append(attacker_episode_reward)
         self.defender_eval_2_episode_rewards.append(defender_episode_reward)
         self.eval_2_episode_steps.append(episode_length)
@@ -1497,8 +1834,17 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_2_update_env_specific_metrics(env_conf, _info, i)
 
 
-    def update(self, rollout_data_dto: RolloutDataDTO, start):
-        if self.attacker_agent_config.performance_analysis:
+    def update(self, rollout_data_dto: RolloutDataDTO, start, attacker_agent_config: AgentConfig) -> None:
+        """
+        Updates the DTO with new data from a rollout
+
+        :param rollout_data_dto: a DTO with the rollout data
+        :param start: the time-step where the episode started
+        :param attacker_agent_config: the agent config
+        :return: None
+        """
+
+        if attacker_agent_config.performance_analysis:
             end = time.time()
             self.rollout_times.append(end - start)
             self.env_response_times.extend(rollout_data_dto.env_response_times)
@@ -1614,12 +1960,31 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
 
 
     def get_avg_attacker_dto(self, attacker_agent_config: AgentConfig, env: PyCRCTFEnv, env_2: PyCRCTFEnv, eval : bool):
+        """
+        Returns a DTO where all of the attacker metrics are averaged
+
+        :param attacker_agent_config: the training configuration
+        :param env: the training environment
+        :param env_2: the evaluation environment
+        :param eval: a boolean flag whether it is an evaluation episode or not
+        :return: the DTO with the average metrics
+        """
         return AttackerTrainAgentLogDTOAvg(train_log_dto=self,
                                     attacker_agent_config=attacker_agent_config,
                                     env=env, env_2=env_2, eval=eval)
 
     def get_avg_defender_dto(self, defender_agent_config: AgentConfig, env: PyCRCTFEnv, env_2: PyCRCTFEnv, eval : bool,
                              train_mode: TrainMode):
+        """
+        Returns a DTO where all of the defender metrics are averaged
+
+        :param defender_agent_config: the training configuration
+        :param env: the training environment
+        :param env_2: the evaluation environment
+        :param eval: a boolean flag whether it is an evaluation episode or not
+        :param train_mode: the training mode
+        :return: the DTO with the averaged metrics
+        """
         return DefenderTrainAgentLogDTOAvg(
             train_log_dto=self, defender_agent_config=defender_agent_config, env=env, env_2=env_2, eval=eval,
             train_mode=train_mode)

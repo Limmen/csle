@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 from gym import spaces
 
+import pycr_common.constants.constants as constants
 from pycr_common.agents.openai_baselines.common.vec_env import VecEnv, VecEnvWrapper
 
 
@@ -34,10 +35,10 @@ class VecFrameStack(VecEnvWrapper):
         self.stackedobs = np.roll(self.stackedobs, shift=-last_ax_size, axis=-1)
         for i, done in enumerate(dones):
             if done:
-                if "terminal_observation" in infos[i]:
-                    old_terminal = infos[i]["terminal_observation"]
+                if constants.INFO_DICT.TERMINAL_OBSERVATION in infos[i]:
+                    old_terminal = infos[i][constants.INFO_DICT.TERMINAL_OBSERVATION]
                     new_terminal = np.concatenate((self.stackedobs[i, ..., :-last_ax_size], old_terminal), axis=-1)
-                    infos[i]["terminal_observation"] = new_terminal
+                    infos[i][constants.INFO_DICT.TERMINAL_OBSERVATION] = new_terminal
                 else:
                     warnings.warn("VecFrameStack wrapping a VecEnv without terminal_observation info")
                 self.stackedobs[i] = 0

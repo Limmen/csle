@@ -299,9 +299,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback.on_rollout_end()
         for i in range(len(dones)):
             if not dones[i]:
-                rollout_data_dto.update_done(attacker_rewards = episode_reward_attacker[i],
-                                             defender_rewards = episode_reward_defender[i],
-                                             episode_steps = episode_step[i])
+                rollout_data_dto.update_done(attacker_reward = episode_reward_attacker[i],
+                                             defender_reward = episode_reward_defender[i],
+                                             steps = episode_step[i])
         return True, rollout_data_dto
 
     def train(self) -> None:
@@ -360,15 +360,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         while self.iteration < num_iterations:
 
-            if self.attacker_agent_config.performance_analysis:
-                start = time.time()
+            start = time.time()
 
             continue_training, rollout_data_dto = \
                 self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer,
                                       self.defender_rollout_buffer,
                                       n_rollout_steps=self.n_steps)
 
-            train_log_dto.update(rollout_data_dto=rollout_data_dto, start=start)
+            train_log_dto.update(rollout_data_dto=rollout_data_dto, start=start,
+                                 attacker_agent_config=self.attacker_agent_config)
 
             if continue_training is False:
                 break
@@ -529,7 +529,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
             defender_log_probs = None
             if self.train_mode == TrainMode.TRAIN_ATTACKER or self.train_mode == TrainMode.SELF_PLAY:
                 attacker_actions, attacker_values, attacker_log_probs = \
-                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True)
+                    self.attacker_policy.forward(obs_tensor_attacker, env=env, infos=self._last_infos, attacker=True, )
                 attacker_actions = attacker_actions.cpu().numpy()
             if self.train_mode == TrainMode.TRAIN_DEFENDER or self.train_mode == TrainMode.SELF_PLAY:
                 defender_actions, defender_values, defender_log_probs = \

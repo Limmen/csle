@@ -111,8 +111,7 @@ class Simulator:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.NIKTO_WEB_HOST_SCAN:
             return ReconSimulator.simulate_nikto_web_host_scan(s=s, a=a, env_config=env_config)
-        elif a.id == AttackerActionId.MASSCAN_HOST_SCAN or a.id == AttackerActionId.MASSCAN_SUBNET_SCAN\
-                or a.id == AttackerActionId.MASSCAN_SUBNET_ALL:
+        elif a.id == AttackerActionId.MASSCAN_HOST_SCAN or a.id == AttackerActionId.MASSCAN_SUBNET_SCAN:
             return ReconSimulator.simulate_masscan_scan(s=s, a=a, env_config=env_config)
         elif a.id == AttackerActionId.FIREWALK_HOST or a.id == AttackerActionId.FIREWALK_SUBNET\
                 or a.id == AttackerActionId.FIREWALK_ALL:

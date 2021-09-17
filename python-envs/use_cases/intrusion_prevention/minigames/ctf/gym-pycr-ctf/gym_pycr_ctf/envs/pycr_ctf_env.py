@@ -199,8 +199,6 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
                                    attacker_action=self.env_state.attacker_obs_state.last_attacker_action,
                                    attacker_opponent=self.env_config.attacker_static_opponent)
             attacker_reward = attacker_reward
-        else:
-            print("defender action is none")
 
         defender_info[constants.INFO_DICT.SUCCESSFUL_INTRUSION] = False
         defender_info[constants.INFO_DICT.ATTACKER_COST] = self.env_state.attacker_obs_state.cost
@@ -214,8 +212,6 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
 
             # Second step attacker
             attacker_reward, done, info = self.step_attacker(attacker_action_id=attack_action_id)
-            if done:
-                print("attacker done? {}, action:{}".format(attack_action_id))
             done = done or attacker_done
             self.env_state.attacker_obs_state.intrusion_started = self.env_state.attacker_obs_state.intrusion_started \
                                                                   or static_attack_started
@@ -839,4 +835,35 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
         info[constants.INFO_DICT.DEFENDER_SECOND_STOP_STEP] = -1
         info[constants.INFO_DICT.DEFENDER_THIRD_STOP_STEP] = -1
         info[constants.INFO_DICT.DEFENDER_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FIRST_STOP_STEP]= -1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.STEP_BASELINE_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.STEP_BASELINE_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.STEP_BASELINE_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.STEP_BASELINE_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.SNORT_SEVERE_BASELINE_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.SNORT_WARNING_BASELINE_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.SNORT_CRITICAL_BASELINE_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.VAR_LOG_BASELINE_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.STEP_BASELINE_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.OPTIMAL_STOPS_REMAINING] = -1
+        info[constants.INFO_DICT.OPTIMAL_FIRST_STOP_STEP] = -1
+        info[constants.INFO_DICT.OPTIMAL_SECOND_STOP_STEP] = -1
+        info[constants.INFO_DICT.OPTIMAL_THIRD_STOP_STEP] = -1
+        info[constants.INFO_DICT.OPTIMAL_FOURTH_STOP_STEP] = -1
+        info[constants.INFO_DICT.OPTIMAL_DEFENDER_EPISODE_STEPS] = -1
         return info
