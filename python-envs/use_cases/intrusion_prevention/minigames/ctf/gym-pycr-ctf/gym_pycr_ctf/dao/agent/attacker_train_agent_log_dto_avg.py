@@ -24,6 +24,7 @@ class AttackerTrainAgentLogDTOAvg(BaseAttackerTrainAgentLogDTOAvg):
         :param eval: boolean flag whether it is an evaluation or not
         """
         super(AttackerTrainAgentLogDTOAvg, self).__init__()
+        self.eval = eval
         if not eval:
             self.result = train_log_dto.train_result
         else:
@@ -609,7 +610,7 @@ class AttackerTrainAgentLogDTOAvg(BaseAttackerTrainAgentLogDTOAvg):
                 else:
                     self.result.attacker_train_env_specific_regrets[key] = [avg]
         if self.attacker_train_env_specific_opt_frac is not None:
-            for key in self.tattacker_rain_env_specific_opt_frac.keys():
+            for key in self.attacker_train_env_specific_opt_frac.keys():
                 avg = np.mean(self.attacker_train_env_specific_opt_frac[key])
                 if key in self.result.attacker_train_env_specific_opt_fracs:
                     self.result.attacker_train_env_specific_opt_fracs[key].append(avg)

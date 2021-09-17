@@ -299,9 +299,9 @@ class OnPolicyAlgorithm(BaseAlgorithm):
         callback.on_rollout_end()
         for i in range(len(dones)):
             if not dones[i]:
-                rollout_data_dto.update_done(attacker_rewards = episode_reward_attacker[i],
-                                             defender_rewards = episode_reward_defender[i],
-                                             episode_steps = episode_step[i])
+                rollout_data_dto.update_done(attacker_reward = episode_reward_attacker[i],
+                                             defender_reward = episode_reward_defender[i],
+                                             steps = episode_step[i])
         return True, rollout_data_dto
 
     def train(self) -> None:
@@ -360,15 +360,15 @@ class OnPolicyAlgorithm(BaseAlgorithm):
 
         while self.iteration < num_iterations:
 
-            if self.attacker_agent_config.performance_analysis:
-                start = time.time()
+            start = time.time()
 
             continue_training, rollout_data_dto = \
                 self.collect_rollouts(self.env, callback, self.attacker_rollout_buffer,
                                       self.defender_rollout_buffer,
                                       n_rollout_steps=self.n_steps)
 
-            train_log_dto.update(rollout_data_dto=rollout_data_dto, start=start)
+            train_log_dto.update(rollout_data_dto=rollout_data_dto, start=start,
+                                 attacker_agent_config=self.attacker_agent_config)
 
             if continue_training is False:
                 break

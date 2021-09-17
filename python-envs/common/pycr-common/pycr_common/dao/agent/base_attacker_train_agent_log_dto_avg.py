@@ -7,6 +7,6 @@ class BaseAttackerTrainAgentLogDTOAvg(ABC):
 
     @staticmethod
     @abstractmethod
-    def to_tensorboard_dto(self, avg_log_dto: "BaseAttackerTrainAgentLogDTOAvg", eps: float, tensorboard_writer) \
+    def to_tensorboard_dto(avg_log_dto: "BaseAttackerTrainAgentLogDTOAvg", eps: float, tensorboard_writer) \
             -> BaseTensorboardDataDTO:
         pass

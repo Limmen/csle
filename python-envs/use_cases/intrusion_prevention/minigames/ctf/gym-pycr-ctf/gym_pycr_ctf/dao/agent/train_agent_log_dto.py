@@ -4,6 +4,7 @@ import pycr_common.constants.constants as constants
 from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.agents.config.agent_config import AgentConfig
+from pycr_common.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
@@ -1497,8 +1498,9 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_2_update_env_specific_metrics(env_conf, _info, i)
 
 
-    def update(self, rollout_data_dto: RolloutDataDTO, start):
-        if self.attacker_agent_config.performance_analysis:
+    def update(self, rollout_data_dto: RolloutDataDTO, start, attacker_agent_config: AgentConfig):
+
+        if attacker_agent_config.performance_analysis:
             end = time.time()
             self.rollout_times.append(end - start)
             self.env_response_times.extend(rollout_data_dto.env_response_times)
