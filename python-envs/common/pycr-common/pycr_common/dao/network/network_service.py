@@ -29,8 +29,9 @@ class NetworkService:
         """
         cr = []
         if self.credentials is not None:
-            list(map(lambda x: str(x), self.credentials))
-        return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name, cr)
+            cr = list(map(lambda x: str(x), self.credentials))
+        return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name,
+                                                                       cr)
 
     def copy(self) -> "NetworkService":
         """

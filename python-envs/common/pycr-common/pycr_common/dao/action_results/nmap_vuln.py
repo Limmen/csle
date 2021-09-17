@@ -34,8 +34,11 @@ class NmapVuln:
 
         :return: the created VulnerabilityObservationState
         """
+        service = ""
+        if len(self.credentials) > 0:
+            service = self.credentials[0].service
         vuln = VulnerabilityObservationState(name=self.name, port=self.port, protocol=self.protocol, cvss=self.cvss,
-                                             credentials=self.credentials)
+                                             credentials=self.credentials, service=service)
         return vuln
 
     def __hash__(self) -> int:

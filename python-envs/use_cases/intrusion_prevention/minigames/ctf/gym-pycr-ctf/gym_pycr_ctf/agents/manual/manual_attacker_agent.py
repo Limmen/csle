@@ -1,14 +1,13 @@
 """
 Manual attacker agent
 """
-from pycr_common.rendering.viewer import Viewer
-# try:
-#     from pycr_common.rendering.viewer import Viewer
-# except:
-#     pass
+try:
+    from pycr_common.rendering.viewer import Viewer
+    from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
+except:
+    pass
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
-from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
 from pycr_common.dao.agent.agent_type import AgentType
 import numpy as np
 

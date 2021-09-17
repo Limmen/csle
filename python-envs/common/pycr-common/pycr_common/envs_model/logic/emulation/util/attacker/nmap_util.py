@@ -526,6 +526,7 @@ class NmapUtil:
         :param a: the action just executed
         :return: s', reward, done
         """
+
         new_m_obs = []
         for host in scan_result.hosts:
             m_obs = AttackerMachineObservationState.from_nmap_result(host)

@@ -42,8 +42,8 @@ def default_config() -> ClientConfig:
                                log_regret=True, snort_baseline_simulate=False, quick_eval_freq=1,
                                eval_deterministic=False
                                )
-    env_name = "pycr-ctf-level-9-generated-sim-v1"
-    eval_env_name = "pycr-ctf-level-9-generated-sim-v1"
+    env_name = "pycr-ctf-level-9-emulation-v1"
+    eval_env_name = "pycr-ctf-level-9-emulation-v1"
 
     emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
                                        server_connection=False, port_forward_next_port=4000)

@@ -29,6 +29,8 @@ class ShellSimulatorUtil:
         discovered_nodes = list(map(lambda x: x.ip, s.attacker_obs_state.machines))
         reachable_nodes = list(filter(lambda x: x in discovered_nodes, reachable_nodes))
         for node in env_config.network_conf.nodes:
+            for service in node.services:
+                print("NODE SERVICES:{}".format(service))
             if node.ip not in reachable_nodes:
                 continue
             new_m_obs = AttackerMachineObservationState(ip=node.ip)
@@ -39,12 +41,18 @@ class ShellSimulatorUtil:
                 if o_m.ip == node.ip:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
+            print("credentials:{}".format(credentials))
             if access:
                 for service in node.services:
+                    print("service.name:{}, service_name:{}".format(service.name, service_name))
                     if service.name == service_name:
+                        print("service credentials:{}".format(service.credentials))
+                        print("a_cr credentials:{}".format(credentials))
                         for cr in service.credentials:
                             for a_cr in credentials:
+                                print(f"comparing:{a_cr.username}, {cr.username}")
                                 if a_cr.username == cr.username and a_cr.pw == cr.pw:
+                                    print("match")
                                     new_m_obs.logged_in = True
 
                 if new_m_obs.logged_in:
