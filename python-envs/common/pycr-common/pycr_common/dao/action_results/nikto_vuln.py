@@ -1,4 +1,6 @@
+import pycr_common.constants.constants as constants
 from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
+from pycr_common.dao.network.transport_protocol import TransportProtocol
 
 
 class NiktoVuln:
@@ -32,8 +34,10 @@ class NiktoVuln:
 
         :return: the created VulnerabilityObservationState object
         """
-        vuln = VulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=None, protocol="HTTP",
-                                             cvss=0, osvdbid=self.osvdb_id, description=self.description)
+        vuln = VulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=None,
+                                             protocol=TransportProtocol.TCP,
+                                             cvss=0, osvdbid=self.osvdb_id, description=self.description,
+                                             service = "http")
         return vuln
 
     def __str__(self):

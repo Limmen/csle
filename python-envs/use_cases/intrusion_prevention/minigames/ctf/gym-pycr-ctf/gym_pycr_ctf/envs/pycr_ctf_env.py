@@ -789,10 +789,6 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
             self.env_config.network_conf.defender_dynamics_model.normalize()
             print('Dynamics Model Loaded Successfully')
 
-            for node in self.env_config.network_conf.nodes:
-                for service in node.services:
-                    print("NODE SERVICES:{}".format(service))
-
         self.env_config.env_mode = EnvMode.SIMULATION
 
 

@@ -1,6 +1,5 @@
 from pycr_common.dao.network.transport_protocol import TransportProtocol
 
-
 class Credential:
     """
     A DTO Class to represent a credential to a service of some component in the infrastructure

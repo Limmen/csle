@@ -59,7 +59,11 @@ class PortObservationState:
         :param service_lookup: a lookup table for converting between service names and service ids
         :return:
         """
+        if network_service.name in service_lookup:
+            s = service_lookup[network_service.name]
+        else:
+            s = service_lookup["unknown"]
         port = PortObservationState(port=network_service.port, open=True,
-                                    service=service_lookup[network_service.name],
+                                    service=s,
                                     protocol=network_service.protocol)
         return port

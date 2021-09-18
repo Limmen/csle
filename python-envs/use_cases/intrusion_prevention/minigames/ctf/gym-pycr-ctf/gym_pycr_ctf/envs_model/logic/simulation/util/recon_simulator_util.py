@@ -51,8 +51,9 @@ class ReconSimulatorUtil:
                     if vuln_scan:
                         for vuln in node.vulnerabilities:
                             if not np.random.rand() < miss_p:
-                                vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
-                                                                         protocol=vuln.protocol, cvss=vuln.cvss)
+                                vuln_obs = VulnerabilityObservationState(
+                                    name=vuln.name, port=vuln.port, protocol=vuln.protocol, cvss=vuln.cvss,
+                                    service=vuln.service, credentials=vuln.credentials)
                                 new_m_obs.cve_vulns.append(vuln_obs)
             if new_m_obs is not None:
                 merged = False
@@ -96,8 +97,9 @@ class ReconSimulatorUtil:
                 if vuln_scan:
                     for vuln in node.vulnerabilities:
                         if not np.random.rand() < miss_p:
-                            vuln_obs = VulnerabilityObservationState(name=vuln.name, port=vuln.port,
-                                                                     protocol=vuln.protocol, cvss=vuln.cvss)
+                            vuln_obs = VulnerabilityObservationState(
+                                name=vuln.name, port=vuln.port, protocol=vuln.protocol, cvss=vuln.cvss,
+                                service=vuln.service, credentials=vuln.credentials)
                             m_obs.cve_vulns.append(vuln_obs)
 
                 new_m_obs.append(m_obs)

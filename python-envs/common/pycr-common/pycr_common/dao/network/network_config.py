@@ -8,6 +8,7 @@ from pycr_common.dao.network.node_type import NodeType
 from pycr_common.dao.defender_dynamics.defender_dynamics_model import DefenderDynamicsModel
 from pycr_common.util.experiments_util import util
 
+
 class NetworkConfig:
     """
     DTO Representing a network configuration
@@ -36,6 +37,8 @@ class NetworkConfig:
         self.flags_lookup = flags_lookup
         self.agent_reachable = agent_reachable
         self.vulnerable_nodes = vulnerable_nodes
+        if vulnerable_nodes is None:
+            vulnerable_nodes = set()
         self.defender_dynamics_model = DefenderDynamicsModel()
 
     def __str__(self) -> str:
@@ -171,16 +174,11 @@ class NetworkConfig:
             for n in self.nodes:
                 if node.ip == n.ip:
                     new_node = False
-                    for vuln in node.vulnerabilities:
-                        new_vuln = True
-                        for vuln2 in n.vulnerabilities:
-                            if vuln.name == vuln2.name:
-                                new_vuln = False
-                        if new_vuln:
-                            n.vulnerabilities.append(vuln)
+                    n.merge(node)
             if new_node:
                 self.nodes.append(node)
-        self.vulnerable_nodes = self.vulnerable_nodes.union(network_conf.vulnerable_nodes)
+        if network_conf.vulnerable_nodes is not None:
+            self.vulnerable_nodes = self.vulnerable_nodes.union(network_conf.vulnerable_nodes)
         for node in self.nodes:
             for vuln in node.vulnerabilities:
                 if vuln.name == constants.SAMBA.VULNERABILITY_NAME:

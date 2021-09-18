@@ -52,6 +52,58 @@ class Node:
         self.reachable_nodes = reachable_nodes
         self.firewall = firewall
 
+    def merge(self, other_node: "Node") -> None:
+        """
+        Merges this node with another node
+
+        :param other_node: the node to merge with
+        :return: None
+        """
+        for fl2 in other_node.flags:
+            new_flag = True
+            for fl1 in self.flags:
+                if fl2.name == fl1.name:
+                    new_flag = False
+            if new_flag:
+                self.flags.append(fl2)
+
+        for vuln2 in other_node.vulnerabilities:
+            new_vuln = True
+            for vuln1 in self.vulnerabilities:
+                if vuln2.name == vuln1.name:
+                    new_vuln = False
+                    vuln1.credentials = vuln1.credentials + vuln2.credentials
+            if new_vuln:
+                self.vulnerabilities.append(vuln2)
+
+        for s2 in other_node.services:
+            new_service = True
+            for s1 in self.services:
+                if s2.name == s1.name:
+                    new_service = False
+                    s1.credentials = s1.credentials + s2.credentials
+            if new_service:
+                self.services.append(s2)
+
+        for root_user in other_node.root_usernames:
+            new_root_user = True
+            for root_user2 in self.root_usernames:
+                if root_user == root_user2:
+                    new_root_user = False
+            if new_root_user:
+                self.root_usernames.append(root_user)
+
+
+        for cr2 in other_node.credentials:
+            new_credential = True
+            for cr1 in self.credentials:
+                if cr2.username == cr1.username:
+                    new_credential = False
+            if new_credential:
+                self.credentials.append(cr2)
+
+        self.reachable_nodes = self.reachable_nodes.union(other_node.reachable_nodes)
+
     def __str__(self) -> str:
         """
         :return: a string representation of the node

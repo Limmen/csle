@@ -53,3 +53,29 @@ class NetworkService:
         telnet_vuln_service = (NetworkService(protocol=TransportProtocol.TCP, port=23, name="telnet", credentials=[]),
                                constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS)
         return [ssh_vuln_service, ftp_vuln_service, telnet_vuln_service], [ssh_vuln_service, telnet_vuln_service]
+
+    def __eq__(self, other) -> bool:
+        """
+        Tests equality with another service
+
+        :param other: the service to compare with
+        :return: True if equal otherwise False
+        """
+        if not isinstance(other, NetworkService):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+
+        return self.name == other.name and self.protocol == other.protocol and self.port == other.port
+
+
+    @staticmethod
+    def from_credential(credential: Credential) -> "NetworkService":
+        """
+        Converts the object into a network service representation
+
+        :return: the network service representation
+        """
+        service = NetworkService(protocol=credential.protocol, port=credential.port,
+                                 name=credential.service,
+                                 credentials=[credential])
+        return service

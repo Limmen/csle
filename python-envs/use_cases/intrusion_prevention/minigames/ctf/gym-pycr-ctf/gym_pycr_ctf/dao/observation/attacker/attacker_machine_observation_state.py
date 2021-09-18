@@ -7,6 +7,7 @@ from pycr_common.dao.observation.common.port_observation_state import PortObserv
 from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from pycr_common.dao.action_results.nmap_host_result import NmapHostResult
+from pycr_common.dao.network.network_service import NetworkService
 
 
 class AttackerMachineObservationState:
@@ -211,6 +212,39 @@ class AttackerMachineObservationState:
         services = []
         for port in self.ports:
             services.append(port.to_network_service())
+
+        for vuln in self.cve_vulns:
+            service_list = vuln.to_network_services()
+            for s in service_list:
+                duplicate = False
+                for s2 in services:
+                    if s2.name == s.name:
+                        duplicate = True
+                        s2.credentials = s2.credentials + s.credentials
+                if not duplicate:
+                    services.append(s)
+
+        new_services = []
+        for s1 in services:
+            for cr in s1.credentials:
+                new_service = True
+                for s1 in services:
+                    if s1.name == cr.service:
+                        new_service = False
+                if new_service:
+                    new_services.append(NetworkService.from_credential(cr))
+        services = services + new_services
+
+        for cr in self.shell_access_credentials:
+            s = NetworkService.from_credential(cr)
+            duplicate = False
+            for s2 in services:
+                if s2.name == s.name:
+                    duplicate = True
+                    s2.credentials = s2.credentials + s.credentials
+            if not duplicate:
+                services.append(s)
+
         for service in services:
             for cr in self.shell_access_credentials:
                 if service.name.lower() == cr.service.lower():

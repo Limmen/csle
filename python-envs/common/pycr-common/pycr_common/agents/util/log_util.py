@@ -63,7 +63,7 @@ class LogUtil:
         """
         avg_log_dto = train_log_dto.get_avg_defender_dto(defender_agent_config=defender_agent_config,
                                                   env=env, env_2=env_2, eval=eval, train_mode=train_mode)
-        tensorboard_data_dto = BaseDefenderTrainAgentLogDTOAvg.to_tensorboard_dto(
+        tensorboard_data_dto = avg_log_dto.to_tensorboard_dto(
             avg_log_dto=avg_log_dto, eps=eps, tensorboard_writer=tensorboard_writer)
         log_str = tensorboard_data_dto.log_str_defender()
         defender_agent_config.logger.info(log_str)

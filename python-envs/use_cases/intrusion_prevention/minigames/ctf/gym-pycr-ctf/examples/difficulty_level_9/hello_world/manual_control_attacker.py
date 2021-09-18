@@ -29,11 +29,13 @@ def manual_control():
     #                                            "gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
     # emulation_config.save_dynamics_model_dir = "/home/kim/storage/workspace/pycr/python-envs/minigames/network_intrusion" \
     #                                                 "/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world/"
-    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/examples/difficulty_level_9/hello_world"
+    emulation_config.save_dynamics_model_dir = "/home/kim/pycr/python-envs/use_cases/intrusion_prevention/minigames/" \
+                                               "ctf/gym-pycr-ctf/examples/difficulty_level_9/system_id"
     emulation_config.skip_exploration = True
     #env = gym.make("pycr-ctf-level-9-emulation-v5", env_config=None, emulation_config=emulation_config)
     #env = gym.make("pycr-ctf-level-9-generated-sim-v5", env_config=None, emulation_config=emulation_config)
     env = gym.make("pycr-ctf-level-9-generated-sim-v6", env_config=None, emulation_config=emulation_config)
+    #env = gym.make("pycr-ctf-level-9-emulation-v6", env_config=None, emulation_config=emulation_config)
 
     env.env_config.attacker_use_nmap_cache = False
     env.env_config.attacker_nmap_scan_cache = False

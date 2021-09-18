@@ -102,7 +102,7 @@ class EnvDynamicsUtil:
             net_outcome.attacker_machine_observation = o_m
             return net_outcome
 
-        merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports)
+        merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports, acc=True)
         n_m.ports = merged_ports
         merged_os, num_new_os_found = EnvDynamicsUtil.merge_os(o_m.os, n_m.os)
         n_m.os = merged_os

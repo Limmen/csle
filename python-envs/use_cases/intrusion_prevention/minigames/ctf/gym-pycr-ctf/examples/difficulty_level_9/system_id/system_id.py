@@ -58,16 +58,15 @@ def system_id():
     env.env_config.attacker_continue_action_sleep = 0.001
 
     # Novice Attacker
-    env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
-        num_actions=env.env_config.attacker_action_conf.num_actions,
-
-        # Continue, TCP/UDP Scan, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
-        # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
-        # Continue, SSH brute (25), Login,
-        # CVE-2010-0426 (25), Continue, TCP/UDP Scan
-        strategy=[100, 33, 1, 70, 104]
-        # strategy=[372,99,33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
-    )
+    # env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
+    #     num_actions=env.env_config.attacker_action_conf.num_actions,
+    #
+    #     # Continue, TCP/UDP Scan, SSH Brute (0), Telnet Brute (1), FTP Brute (4), Login, Install Tools, Backdoor, Continue,
+    #     # TCP/UDP Scan, Shellshock (CVE-2014-6271) (24) with backdoor, Login, Install Tools,
+    #     # Continue, SSH brute (25), Login,
+    #     # CVE-2010-0426 (25), Continue, TCP/UDP Scan
+    #     strategy=[372,99,33, 1, 70, 104, 106, 107, 99, 165, 104, 106, 58, 104, 331, 99]
+    # )
 
     # # Experienced Attacker
     # env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
@@ -82,15 +81,15 @@ def system_id():
     # )
 
     # Expert Attacker
-    # env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
-    #     num_actions=env.env_config.attacker_action_conf.num_actions,
-    #
-    #     # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
-    #     # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
-    #     # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
-    #     # SambaCry Exploit(5) with backdoor, Login
-    #     strategy=[372, 100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104]
-    # )
+    env.env_config.attacker_exploration_policy = CustomExplorationPolicy(
+        num_actions=env.env_config.attacker_action_conf.num_actions,
+
+        # Continue, Ping Scan, SambaCry Exploit(1) with backdoor, Login, Install tools, Backdoor, Ping Scan
+        # SQL Injection (25) with backdoor, Login, Install Tools, Ping Scan
+        # CVE-2015-1427 (25) with backdoor, Login, Install Tools, Ping Scan
+        # SambaCry Exploit(5) with backdoor, Login
+        strategy=[372, 100, 109, 104, 106, 100, 199, 104, 106,100, 265, 104, 106, 100, 113, 104]
+    )
 
 
     #, 100, 113, 104

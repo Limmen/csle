@@ -171,7 +171,11 @@ class SimulationGenerator:
                 num_machines, num_vulnerabilities, num_credentials, num_flags))
 
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
-            env_config.network_conf.nodes = nodes
+            new_net_conf = NetworkConfig(subnet_mask=env_config.network_conf.subnet_mask, nodes=nodes,
+                                         adj_matrix=env_config.network_conf.adj_matrix,
+                                         flags_lookup=env_config.network_conf.flags_lookup,
+                                         agent_reachable=env_config.network_conf.agent_reachable)
+            env_config.network_conf.merge(new_net_conf)
             # for n2 in env_config.network_conf.nodes:
             #     print("node:{}, flags:{}".format(n2.ip, list(map(lambda x: str(x), n2.flags))))
             env_config.network_conf.defender_dynamics_model = defender_dynamics_model
