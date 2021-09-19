@@ -7,8 +7,8 @@ network emulation, to simulation and implementation of network commands have bee
 co-designed to provide an environment where it is possible to train and evaluate 
 reinforcement learning agents on practical problems in cyber security.
 
-The platform can be used to implement different use cases. Each use case consist
-of an emulated infrastructure (used for evaluation), and a MDP/POMDP interface.  
+The platform can be used to implement different use cases. Each use case consist of an 
+emulated infrastructure (used for evaluation), and a MDP/POMDP interface for training agents. 
 For example, the platform can be used to study the use case of intrusion prevention and 
 train a reinforcement learning agent to prevent network intrusions by attackers in real-time.  
 
