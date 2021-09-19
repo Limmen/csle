@@ -1,6 +1,17 @@
 # `pycr` The Python Cyber Range for Self-Learning Cyber Security Systems
 
-TODO abstract
+`pycr` is a platform for evaluating and developing reinforcement learning agents 
+for on control problems in cyber security. It can be considered as a cyber range 
+specifically designed for reinforcement learning agents. Everything from 
+network emulation, to simulation and implementation of network commands have been
+co-designed to provide an environment where it is possible to train and evaluate 
+reinforcement learning agents on practical problems in cyber security.
+
+The platform can be used to implement different use cases. Each use case consist
+of an emulated infrastructure (used for evaluation), and a MDP/POMDP interface.  
+For example, the platform can be used to study the use case of intrusion prevention and 
+train a reinforcement learning agent to prevent network intrusions by attackers in real-time.  
+
 
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
@@ -19,16 +30,19 @@ TODO abstract
  * [Author &amp; Maintainer](#author--maintainer)
  * [Copyright and license](#copyright-and-license)
  * [Disclaimer](#disclaimer)
-
-
-## What is `pycr`?
-
-TODO
-
-The environment implements virtual cyber ranges for training reinforcement learning agents. 
-The environment exposes a Markov-game or Markov Decision Process API for OpenAI Gym.    
+    
 
 ## Architecture
+
+`pycr` is built around three systems:
+the target system, an emulation system, and a simulation system. First, the target
+infrastructure is emulated by selectively replicating functionality of the
+infrastructure in a virtualization environment. Second, the
+measurements from the emulation are used to estimate a simulation
+model. The estimated model is then used to simulate intrusion
+prevention episodes and learn policies through reinforcement
+learning. Finally, to evaluate the learned policies, they are executed
+them in the emulation system.
 
 <p align="center">
 <img src="docs/arch.png" width="600">

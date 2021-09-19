@@ -52,6 +52,14 @@ gym\_pycr\_ctf.envs\_model.config.level\_9.pycr\_ctf\_level\_9\_v5 module
    :undoc-members:
    :show-inheritance:
 
+gym\_pycr\_ctf.envs\_model.config.level\_9.pycr\_ctf\_level\_9\_v6 module
+-------------------------------------------------------------------------
+
+.. automodule:: gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v6
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

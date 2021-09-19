@@ -1,8 +1,9 @@
 # Network Intrusion Mini-Games
 
-This folder contains a set of python environments that interfaces to emulations of different intrusion prevention scenarios. The environments 
+This folder contains a set of python environments that interfaces to 
+emulations of different intrusion prevention scenarios (or "minigames"). The environments 
 can be used to train/evaluate automatic controllers or reinforcement learning agents on
-attack/defense tasks related to network intrusion. 
+attack/defense tasks related to network intrusion prevention.
 
 
 - [x] Capture the flag [./ctf](minigames/ctf)

@@ -20,38 +20,6 @@ gym\_pycr\_ctf.util.plots.plotting\_action\_costs module
    :undoc-members:
    :show-inheritance:
 
-gym\_pycr\_ctf.util.plots.plotting\_util\_attacker module
----------------------------------------------------------
-
-.. automodule:: gym_pycr_ctf.util.plots.plotting_util_attacker
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gym\_pycr\_ctf.util.plots.plotting\_util\_basic module
-------------------------------------------------------
-
-.. automodule:: gym_pycr_ctf.util.plots.plotting_util_basic
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gym\_pycr\_ctf.util.plots.plotting\_util\_defender module
----------------------------------------------------------
-
-.. automodule:: gym_pycr_ctf.util.plots.plotting_util_defender
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gym\_pycr\_ctf.util.plots.plotting\_util\_mult\_envs module
------------------------------------------------------------
-
-.. automodule:: gym_pycr_ctf.util.plots.plotting_util_mult_envs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

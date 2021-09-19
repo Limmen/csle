@@ -7,8 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   gym_pycr_ctf.envs_model.config.domain_randomization
-   gym_pycr_ctf.envs_model.config.generator
    gym_pycr_ctf.envs_model.config.level_1
    gym_pycr_ctf.envs_model.config.level_10
    gym_pycr_ctf.envs_model.config.level_2

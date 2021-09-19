@@ -1,7 +1,10 @@
 # Python Environments
 
-This folder contains a set of Open-AI-gym Python Environments for interfacing with the emulated infrastructures and for generating correlated simulations.
-The Python environments expose MDP/POMDP interfaces to emulated infrastructures that can be used to optimize policies for autonomous controllers.
+This folder contains a set of Open-AI-gym Python Environments for interfacing 
+with the emulated infrastructures and for generating correlated simulations.
+The Python environments expose MDP/POMDP 
+interfaces to emulated infrastructures that can be used to 
+optimize control policies.
 
 - **Common** ([common](./common)):
     - Contains common functionality to all python environments

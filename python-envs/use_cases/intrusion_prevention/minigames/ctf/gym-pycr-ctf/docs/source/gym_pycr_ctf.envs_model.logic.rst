@@ -9,7 +9,6 @@ Subpackages
 
    gym_pycr_ctf.envs_model.logic.common
    gym_pycr_ctf.envs_model.logic.emulation
-   gym_pycr_ctf.envs_model.logic.exploration
    gym_pycr_ctf.envs_model.logic.simulation
 
 Submodules

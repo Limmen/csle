@@ -1,7 +1,9 @@
 # Network Intrusion Prevention Mini-Games
 
-This folder contains a set of emulated environments for different intrusion prevention scenarios. The environments 
-(cyber ranges/emulations) can be used to train/evaluate automatic controllers or reinforcement learning agents on
+This folder contains a set of emulated environments for different intrusion 
+prevention scenarios (so called "minigames"). 
+The environments (cyber ranges/emulations) can be used to 
+train/evaluate automatic controllers or reinforcement learning agents on
 attack/defense tasks related to network intrusion. 
 
 

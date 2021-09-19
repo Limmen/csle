@@ -23,8 +23,11 @@ Moreover, the repository contains code to reproduce baseline results for various
 - Torch (for baseline algorithms)
 - Paramiko (for SSH tunnels)
 - Docker (for interacting with the emulations)
+- `pycr-common` (library with common functionality for all pycr environments)
 
 ## API Documentation 
+
+This section contains instructions for generating API documentation using `sphinx`.
 
 ### Latest documentatation
 
@@ -50,7 +53,7 @@ $ pip install -e gym-pycr-ctf --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/pycr
-cd pycr/python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf
+pycr/python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf
 pip3 install -e .
 ```
 

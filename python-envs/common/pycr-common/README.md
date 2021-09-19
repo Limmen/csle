@@ -1,8 +1,6 @@
-# Common 
+# PyCR-Common 
 
 A library of common functionality between all python environments
-
-(Coming soon..)
 
 ## Author & Maintainer
 

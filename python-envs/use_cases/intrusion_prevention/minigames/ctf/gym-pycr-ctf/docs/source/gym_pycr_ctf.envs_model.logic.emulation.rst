@@ -8,9 +8,6 @@ Subpackages
    :maxdepth: 4
 
    gym_pycr_ctf.envs_model.logic.emulation.system_id
-   gym_pycr_ctf.envs_model.logic.emulation.tunnel
-   gym_pycr_ctf.envs_model.logic.emulation.util
-   gym_pycr_ctf.envs_model.logic.emulation.warmup
 
 Submodules
 ----------

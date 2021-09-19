@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    gym_pycr_ctf.agents
-   gym_pycr_ctf.constants
    gym_pycr_ctf.dao
    gym_pycr_ctf.envs
    gym_pycr_ctf.envs_model

@@ -36,14 +36,6 @@ gym\_pycr\_ctf.envs\_model.logic.common.stopping\_baselines\_util module
    :undoc-members:
    :show-inheritance:
 
-gym\_pycr\_ctf.envs\_model.logic.common.util module
----------------------------------------------------
-
-.. automodule:: gym_pycr_ctf.envs_model.logic.common.util
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

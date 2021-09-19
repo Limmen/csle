@@ -4,22 +4,6 @@ gym\_pycr\_ctf.dao.agent package
 Submodules
 ----------
 
-gym\_pycr\_ctf.dao.agent.agent\_log module
-------------------------------------------
-
-.. automodule:: gym_pycr_ctf.dao.agent.agent_log
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gym\_pycr\_ctf.dao.agent.agent\_type module
--------------------------------------------
-
-.. automodule:: gym_pycr_ctf.dao.agent.agent_type
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 gym\_pycr\_ctf.dao.agent.attacker\_agent\_state module
 ------------------------------------------------------
 
@@ -64,14 +48,6 @@ gym\_pycr\_ctf.dao.agent.train\_agent\_log\_dto module
 ------------------------------------------------------
 
 .. automodule:: gym_pycr_ctf.dao.agent.train_agent_log_dto
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-gym\_pycr\_ctf.dao.agent.train\_mode module
--------------------------------------------
-
-.. automodule:: gym_pycr_ctf.dao.agent.train_mode
    :members:
    :undoc-members:
    :show-inheritance:
