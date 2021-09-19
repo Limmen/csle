@@ -109,6 +109,7 @@ For basic documentation, see the README.md files inside each sub-directory,
 ### API Documentation
 For API documentation follow the links inside each python project's README:
 
+- [pycr-common](./python-envs/common/pycr-common/README.md).
 - [gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD). 
 
 ### Technical Documentation
