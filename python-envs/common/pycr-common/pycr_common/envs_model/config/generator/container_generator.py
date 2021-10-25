@@ -5,6 +5,7 @@ from pycr_common.dao.container_config.topology import Topology
 from pycr_common.dao.container_config.node_container_config import NodeContainerConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.util.experiments_util import util
+import pycr_common.constants.constants as constants
 
 
 class ContainerGenerator:
@@ -40,8 +41,8 @@ class ContainerGenerator:
         :return: a containers configuration
         """
 
-        network = "pycr_net_" + str(subnet_id)
-        minigame = "ctf"
+        network = constants.PYCR.PYCR_NET_PREFIX + str(subnet_id)
+        minigame = constants.PYCR.CTF_MINIGAME
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))
         container_configs = []
@@ -54,7 +55,7 @@ class ContainerGenerator:
                 container = agent_containers[random.randint(0, len(agent_containers)-1)]
             elif ip == router_ip:
                 container = router_containers[random.randint(0, len(router_containers) - 1)]
-                if container[0] == "router1":
+                if container[0] == constants.PYCR.NON_IDS_ROUTER:
                     ids_enabled = False
             else:
                 gw_node = False

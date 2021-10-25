@@ -1,6 +1,7 @@
 import argparse
 from pycr_common.envs_model.config.generator.container_manager import ContainerManager
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Parse flags for command to apply to the containers')
     parser.add_argument("-c", "--cmd", help="command to apply", type=str)

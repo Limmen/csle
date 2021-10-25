@@ -14,6 +14,9 @@ from pycr_common.util.experiments_util import util
 
 
 class UsersGenerator:
+    """
+    A Utility Class for generating users configuration files
+    """
 
     @staticmethod
     def generate(max_num_users: int, topology: Topology, agent_ip: str):

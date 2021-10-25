@@ -218,6 +218,8 @@ class OS:
     os_lookup["redhat"] = 8
     os_lookup["linux"] = 9
     os_lookup_inv = {v: k for k, v in os_lookup.items()}
+    KALI = "kali"
+    UBUNTU = "ubuntu"
 
 
 class SECLISTS:
@@ -554,12 +556,25 @@ class COMMANDS:
     SUDO = "sudo"
     CHMOD_777 = "chmod 777"
     SLASH_DELIM = "/"
+    COLON_DELIM = ":"
+    DASH_DELIM = "-"
+    UNDERSCORE_DELIM = "_"
+    STAR_DELIM = "*"
+    DOT_DELIM = "."
     TOUCH = "touch"
     NOHUP = "nohup"
     AMP = "&"
     PKILL = "pkill -f"
     RM_F = "rm -f"
     SPACE_DELIM = " "
+    TMP_DIR = "tmp"
+    HOME_DIR = "home"
+    SUDO_RM_RF = "sudo rm -rf"
+    SUDO_TOUCH = "sudo touch"
+    ECHO = "echo"
+    LS_HOME = "ls /home/"
+    RM_F_HOME = "rm -f home/"
+
 
 class FILE_PATTERNS:
     """
@@ -568,6 +583,8 @@ class FILE_PATTERNS:
     COST_FILE_SUFFIX = "_cost.txt"
     NMAP_ACTION_RESULT_SUFFIX = ".xml"
     ALERTS_FILE_SUFFIX = "_alerts.txt"
+    TXT_FILE_SUFFIX = ".txt"
+    XML_FILE_SUFFIX = ".xm"
 
 
 class NIKTO:
@@ -766,8 +783,8 @@ class PYCR_ADMIN:
     """
     Constants related to the PyCr admin account
     """
-    user="pycr_admin"
-    pw="pycr@admin-pw_191"
+    USER= "pycr_admin"
+    PW= "pycr@admin-pw_191"
 
 
 class DEFENDER:
@@ -882,3 +899,101 @@ class INFO_DICT:
     OPTIMAL_FOURTH_STOP_STEP = "optimal_fourth_stop_step"
     OPTIMAL_DEFENDER_EPISODE_STEPS = "optimal_defender_episode_steps"
     TERMINAL_OBSERVATION = "terminal_observation"
+
+class DOCKER:
+    CONTAINER_EXIT_STATUS = "exited"
+    CONTAINER_CREATED_STATUS = "created"
+    REPO_TAGS = "RepoTags"
+    BASE_CONTAINER_TYPE = "base"
+    CONTAINER_CONFIG_DIR = "dir"
+    CONTAINER_CONFIG_CFG = "containers_cfg"
+    CONTAINER_CONFIG_FLAGS_CFG = "flags_cfg"
+    CONTAINER_CONFIG_TOPOLOGY_CFG = "topology_cfg"
+    CONTAINER_CONFIG_USERS_CFG = "users_cfg"
+    CONTAINER_CONFIG_VULNERABILITIES_CFG = "vulnerabilities_cfg"
+    CONTAINER_CONFIG_TRAFFIC_CFG = "traffic_cfg"
+    CONTAINER_CONFIG_CFG_PATH = "/containers.json"
+    CONTAINER_CONFIG_FLAGS_CFG_PATH = "/flags.json"
+    CONTAINER_CONFIG_TOPOLOGY_CFG_PATH = "/topology.json"
+    CONTAINER_CONFIG_USERS_CFG_PATH = "/users.json"
+    CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH = "/vulnerabilities.json"
+    CONTAINER_CONFIG_TRAFFIC_CFG_PATH = "/traffic.json"
+    NET_ADMIN = "NET_ADMIN"
+    UNIX_DOCKER_SOCK_URL = "unix://var/run/docker.sock"
+    CREATE_FLAGS_SCRIPT = "./create_flags.py"
+    CREATE_TOPOLOGY_SCRIPT = "./create_topology.py"
+    CREATE_VULN_SCRIPT = "./create_vuln.py"
+    CREATE_USERS_SCRIPT = "./create_users.py"
+    CREATE_TRAFFIC_GENERATORS_SCRIPT = "./create_traffic_generators.py"
+    LIST_NETWORKS_CMD = "docker network ls"
+    LIST_RUNNING_CONTAINERS_CMD = "docker ps -q"
+    INSPECT_CONTAINER_CONFIG_CMD = "docker inspect"
+    MAKEFILE_PATH = "/Makefile"
+    NETWORK_SETTINGS = "NetworkSettings"
+    NETWORKS = "Networks"
+    CREATED_INFO = "Created"
+    CONFIG = "Config"
+    IMAGE_INFO = "Info"
+    IP_ADDRESS_INFO = "IpAddress"
+    NETWORK_ID_INFO = "NetworkId"
+    GATEWAY_INFO = "Gateway"
+    MAC_ADDRESS_INFO = "MacAddress"
+    IP_PREFIX_LEN_INFO = "IPPrefixLen"
+    HOSTNAME_INFO = "Hostname"
+
+
+class PYCR:
+    NAME = "pycr"
+    LEVEL = "level"
+    PYCR_NET_PREFIX = "pycr_net_"
+    CTF_MINIGAME = "ctf"
+    NON_IDS_ROUTER = "router1"
+
+
+class MANAGEMENT:
+    LIST_STOPPED = "list_stopped"
+    LIST_RUNNING = "list_running"
+    LIST_IMAGES = "list_images"
+    STOP_RUNNING = "stop_running"
+    RM_STOPPED = "rm_stopped"
+    RM_IMAGES = "rm_images"
+    START_STOPPED = "start_stopped"
+    LIST_NETWORKS = "list_networks"
+    CLEAN = "clean"
+    CLEAN_CONFIG = "clean_config"
+    GEN_CONFIG = "gen_config"
+    APPLY_CONFIG = "apply_config"
+    RUN = "run"
+    STOP = "stop"
+    START = "start"
+    TOPOLOGY = "topology"
+    USERS = "users"
+    FLAGS = "flags"
+    VULN = "vuln"
+    ALL = "all"
+    CLEAN_FS_CACHE = "clean_fs_cache"
+    TRAFFIC = "traffic"
+    CLEAN_ENVS = "clean_envs"
+
+
+class MAKEFILE:
+    PROJECT = "PROJECT"
+    NETWORK = "NETWORK"
+    MINIGAME = "MINIGAME"
+    CONTAINER = "CONTAINER"
+    VERSION = "VERSION"
+    LEVEL = "LEVEL"
+    DIR = "DIR"
+    CFG = "CFG"
+    FLAGSCFG = "FLAGSCFG"
+    TOPOLOGYCFG = "TOPOLOGYCFG"
+    USERSCFG = "USERSCFG"
+    VULNERABILITIESCFG = "VULNERABILITIESCFG"
+    IP = "IP"
+    SUFFIX = "SUFFIX"
+
+
+class VULNERABILITY_GENERATOR:
+    NAMES_SHORTLIST = ["admin", "test", "guest", "info", "adm", "mysql", "user", "administrator",
+                       "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser",
+                       "donald", "alan"]

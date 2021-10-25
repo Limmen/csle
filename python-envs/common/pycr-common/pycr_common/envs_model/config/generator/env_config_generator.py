@@ -18,6 +18,7 @@ from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.util.experiments_util import util
 from pycr_common.dao.container_config.container_env_config import ContainerEnvConfig
 from pycr_common.dao.container_config.created_env_config import CreatedEnvConfig
+import pycr_common.constants.constants as constants
 
 
 class EnvConfigGenerator:
@@ -35,13 +36,16 @@ class EnvConfigGenerator:
         :return: None
         """
         env_dirs = EnvConfigGenerator.get_env_dirs(path=path)
-        cmds = ["clean", "clean_config", "gen_config", "apply_config", "run", "stop", "start", "topology", "users",
-                "flags", "vuln", "all", "clean_fs_cache", "traffic"]
+        cmds = [constants.MANAGEMENT.CLEAN, constants.MANAGEMENT.CLEAN_CONFIG, constants.MANAGEMENT.GEN_CONFIG,
+                constants.MANAGEMENT.APPLY_CONFIG, constants.MANAGEMENT.RUN, constants.MANAGEMENT.STOP,
+                constants.MANAGEMENT.START, constants.MANAGEMENT.TOPOLOGY, constants.MANAGEMENT.USERS,
+                constants.MANAGEMENT.FLAGS, constants.MANAGEMENT.VULN, constants.MANAGEMENT.ALL,
+                constants.MANAGEMENT.CLEAN_FS_CACHE, constants.MANAGEMENT.TRAFFIC]
         if cmd in cmds:
             for dir in env_dirs:
                 cmd_full = "make " + cmd
                 subprocess.call(cmd_full, shell=True, cwd=dir)
-        elif cmd == "clean_envs":
+        elif cmd == constants.MANAGEMENT.CLEAN_ENVS:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
     @staticmethod
@@ -65,26 +69,28 @@ class EnvConfigGenerator:
             dir_name = "env_" + str(start_idx + i)
             dir_path = os.path.join(envs_dirs_path, dir_name)
             os.makedirs(dir_path)
-            env_path = os.path.join(envs_dirs_path, dir_name + "/")
+            env_path = os.path.join(envs_dirs_path, dir_name + constants.COMMANDS.SLASH_DELIM)
             shutil.copyfile(util.default_container_makefile_template_path(out_dir=util.default_output_dir()),
                             util.default_container_makefile_template_path(out_dir=env_path))
             shutil.copyfile(util.default_makefile_template_path(out_dir=util.default_output_dir()),
                             util.default_makefile_template_path(out_dir=env_path))
-            shutil.copyfile(os.path.join(envs_dirs_path, "./create_flags.py"),
-                            os.path.join(env_path, "./create_flags.py"))
-            shutil.copyfile(os.path.join(envs_dirs_path, "./create_topology.py"),
-                            os.path.join(env_path, "./create_topology.py"))
-            shutil.copyfile(os.path.join(envs_dirs_path, "./create_vuln.py"),
-                            os.path.join(env_path, "./create_vuln.py"))
-            shutil.copyfile(os.path.join(envs_dirs_path, "./create_users.py"),
-                            os.path.join(env_path, "./create_users.py"))
-            shutil.copyfile(os.path.join(envs_dirs_path, "./create_traffic_generators.py"),
-                            os.path.join(env_path, "./create_traffic_generators.py"))
+            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_FLAGS_SCRIPT),
+                            os.path.join(env_path, constants.DOCKER.CREATE_FLAGS_SCRIPT))
+            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_TOPOLOGY_SCRIPT),
+                            os.path.join(env_path, constants.DOCKER.CREATE_TOPOLOGY_SCRIPT))
+            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_VULN_SCRIPT),
+                            os.path.join(env_path, constants.DOCKER.CREATE_VULN_SCRIPT))
+            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_USERS_SCRIPT),
+                            os.path.join(env_path, constants.DOCKER.CREATE_USERS_SCRIPT))
+            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_TRAFFIC_GENERATORS_SCRIPT),
+                            os.path.join(env_path, constants.DOCKER.CREATE_TRAFFIC_GENERATORS_SCRIPT))
             container_env_config_c = container_env_config.copy()
             container_env_config_c.path = env_path
             gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(container_env_config_c)
             container_env_config.subnet_id_blacklist.add(subnet_id)
-            os.rename(envs_dirs_path + "/" + dir_name, envs_dirs_path + "/" + dir_name + "_" + gen_subnet_prefix)
+            os.rename(envs_dirs_path + constants.COMMANDS.SLASH_DELIM + dir_name, envs_dirs_path +
+                      constants.COMMANDS.SLASH_DELIM + dir_name + constants.COMMANDS.UNDERSCORE_DELIM
+                      + gen_subnet_prefix)
         return container_env_config.subnet_id_blacklist
 
     @staticmethod
@@ -147,7 +153,7 @@ class EnvConfigGenerator:
         container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
                                                         container_env_config.max_num_nodes)
         container_env_config.subnet_prefix = container_env_config.subnet_prefix + \
-                                             str(container_env_config.subnet_id) + "."
+                                             str(container_env_config.subnet_id) + constants.COMMANDS.DOT_DELIM
         container_env_config.num_flags = random.randint(container_env_config.min_num_flags,
                                                         min(container_env_config.max_num_flags,
                                                             container_env_config.num_nodes - 3))
@@ -175,7 +181,7 @@ class EnvConfigGenerator:
 
         :return: (network names, network ids)
         """
-        cmd = "docker network ls"
+        cmd = constants.DOCKER.LIST_NETWORKS_CMD
         stream = os.popen(cmd)
         networks = stream.read()
         networks = networks.split("\n")
@@ -194,7 +200,7 @@ class EnvConfigGenerator:
 
         :return: names of the running containers
         """
-        cmd = "docker ps -q"
+        cmd = constants.DOCKER.LIST_RUNNING_CONTAINERS_CMD
         stream = os.popen(cmd)
         running_containers = stream.read()
         running_containers = running_containers.split("\n")
@@ -213,7 +219,7 @@ class EnvConfigGenerator:
         networks_in_use = []
         network_ids_in_use = []
         for c in containers:
-            cmd = "docker inspect " + c + " -f '{{json .NetworkSettings.Networks }}'"
+            cmd = constants.DOCKER.INSPECT_CONTAINER_CONFIG_CMD + c + " -f '{{json .NetworkSettings.Networks }}'"
             stream = os.popen(cmd)
             network_info = stream.read()
             network_info = json.loads(network_info)
@@ -253,22 +259,27 @@ class EnvConfigGenerator:
             if not os.path.exists(c_dir):
                 os.makedirs(c_dir)
                 makefile_preamble = ""
-                makefile_preamble = makefile_preamble + "PROJECT=pycr\n"
-                makefile_preamble = makefile_preamble + "NETWORK=" + c.network + "\n"
-                makefile_preamble = makefile_preamble + "MINIGAME=" + c.minigame + "\n"
-                makefile_preamble = makefile_preamble + "CONTAINER=" + c.name + "\n"
-                makefile_preamble = makefile_preamble + "VERSION=" + c.version + "\n"
-                makefile_preamble = makefile_preamble + "LEVEL=" + c.level + "\n"
-                makefile_preamble = makefile_preamble + "DIR=" + path + "\n"
-                makefile_preamble = makefile_preamble + "CFG=" + path + "/containers.json\n"
-                makefile_preamble = makefile_preamble + "FLAGSCFG=" + path + "/flags.json\n"
-                makefile_preamble = makefile_preamble + "TOPOLOGYCFG=" + path + "/topology.json\n"
-                makefile_preamble = makefile_preamble + "USERSCFG=" + path + "/users.json\n"
-                makefile_preamble = makefile_preamble + "VULNERABILITIESCFG=" + path + "/vulnerabilities.json\n"
-                makefile_preamble = makefile_preamble + "IP=" + c.ip + "\n"
-                makefile_preamble = makefile_preamble + "SUFFIX=" + str(count) + "\n\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.PROJECT + "=pycr\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.NETWORK + "=" + c.network + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.MINIGAME + "=" + c.minigame + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.CONTAINER + "=" + c.name + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.VERSION + "=" + c.version + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.LEVEL + "=" + c.level + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.DIR + "=" + path + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.CFG + "=" + path + \
+                                    constants.DOCKER.CONTAINER_CONFIG_CFG_PATH + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.FLAGSCFG + "=" + path + \
+                                    constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.TOPOLOGYCFG + "=" + path + \
+                                    constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.USERSCFG + "=" + path + \
+                                    constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.VULNERABILITIESCFG + "=" \
+                                    + path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.IP + "=" + c.ip + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.SUFFIX + "=" + str(count) + "\n\n"
                 makefile_str = makefile_preamble + makefile_template_str
-                with io.open(c_dir + "/Makefile", 'w', encoding='utf-8') as f:
+                with io.open(c_dir + constants.DOCKER.MAKEFILE_PATH, 'w', encoding='utf-8') as f:
                     f.write(makefile_str)
 
         EnvConfigGenerator.create_makefile(container_names, path=path)
@@ -285,22 +296,22 @@ class EnvConfigGenerator:
         with io.open(util.default_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
             makefile_template_str = f.read()
 
-        makefile_template_str = makefile_template_str + "run:\n"
+        makefile_template_str = makefile_template_str + constants.MANAGEMENT.RUN + ":\n"
         for c in container_names:
             makefile_template_str = makefile_template_str + "	cd containers/" + c + "/ && $(MAKE) run\n"
 
         makefile_template_str = makefile_template_str + "\n\n"
-        makefile_template_str = makefile_template_str + "stop:\n"
+        makefile_template_str = makefile_template_str + constants.MANAGEMENT.STOP + ":\n"
         for c in container_names:
             makefile_template_str = makefile_template_str + "	cd containers/" + c + "/ && $(MAKE) stop\n"
 
         makefile_template_str = makefile_template_str + "\n\n"
-        makefile_template_str = makefile_template_str + "start:\n"
+        makefile_template_str = makefile_template_str + constants.MANAGEMENT.START + ":\n"
         for c in container_names:
             makefile_template_str = makefile_template_str + "	cd containers/" + c + "/ && $(MAKE) start\n"
 
         makefile_template_str = makefile_template_str + "\n\n"
-        makefile_template_str = makefile_template_str + "clean:\n"
+        makefile_template_str = makefile_template_str + constants.MANAGEMENT.CLEAN + ":\n"
         for c in container_names:
             makefile_template_str = makefile_template_str + "	cd containers/" + c + "/ && $(MAKE) clean\n"
         makefile_template_str = makefile_template_str + "\n\n"
@@ -376,7 +387,7 @@ class EnvConfigGenerator:
         env_dirs = EnvConfigGenerator.get_env_dirs(path)
         containers_configs = []
         for d in env_dirs:
-            containers_configs.append(util.read_containers_config(d + "/containers.json"))
+            containers_configs.append(util.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH))
         return containers_configs
 
     @staticmethod
@@ -392,7 +403,7 @@ class EnvConfigGenerator:
         env_dirs = EnvConfigGenerator.get_env_dirs(path)
         flags_config = []
         for d in env_dirs:
-            flags_config.append(util.read_containers_config(d + "/flags.json"))
+            flags_config.append(util.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH))
         return flags_config
 
     @staticmethod
@@ -444,4 +455,5 @@ class EnvConfigGenerator:
         else:
             pi_star = (-env.env_config.base_step_reward) * num_flags  # dont' know optimal cost, this is upper bound on optimality
         return pi_star
-    
+
+

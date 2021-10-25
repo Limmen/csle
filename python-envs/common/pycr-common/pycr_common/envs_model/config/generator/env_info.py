@@ -3,6 +3,8 @@ import docker
 from pycr_common.dao.env_info.running_env_container import RunningEnvContainer
 from pycr_common.dao.env_info.running_env import RunningEnv
 from pycr_common.util.experiments_util import util
+import pycr_common.constants.constants as constants
+
 
 class EnvInfo:
     """
@@ -17,7 +19,7 @@ class EnvInfo:
         :return: a list of environment DTOs
         """
         client1 = docker.from_env()
-        client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
+        client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
         networks = list(set(list(map(lambda x: x.net, parsed_containers))))
         parsed_envs = EnvInfo.parse_envs(networks=networks, containers=parsed_containers)
@@ -37,7 +39,6 @@ class EnvInfo:
         parsed_containers = EnvInfo.parse_containers(containers=containers, client2=client2)
         return parsed_containers
 
-
     @staticmethod
     def parse_stopped_containers(client1, client2) -> List[RunningEnvContainer]:
         """
@@ -48,7 +49,9 @@ class EnvInfo:
         :return: list of parsed containers
         """
         containers = client1.containers.list(all=True)
-        stopped_containers = list(filter(lambda x: x.status == "exited" or x.status == "created", containers))
+        stopped_containers = list(filter(lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                                   or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS,
+                                                    containers)))
         parsed_containers = EnvInfo.parse_containers(containers=stopped_containers, client2=client2)
         return parsed_containers
 
@@ -65,10 +68,10 @@ class EnvInfo:
         parsed_envs = []
         for net in networks:
             net_containers = list(filter(lambda x: x.net == net, containers))
-            subnet_prefix = ".".join(net_containers[0].ip.rsplit(".")[0:-1])
-            subnet_mask = subnet_prefix + "/" + str(net_containers[0].ip_prefix_len)
+            subnet_prefix = constants.COMMANDS.DOT_DELIM.join(net_containers[0].ip.rsplit(constants.COMMANDS.DOT_DELIM)[0:-1])
+            subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(net_containers[0].ip_prefix_len)
             minigame = net_containers[0].minigame
-            id = net.split("_")[-1]
+            id = net.split(constants.COMMANDS.UNDERSCORE_DELIM)[-1]
 
             containers_config = None
             users_config = None
@@ -139,7 +142,7 @@ class EnvInfo:
                 container_name_2 = name_parts[2]
                 level = name_parts[3]
                 inspect_info = client2.inspect_container(c.id)
-                net = list(inspect_info["NetworkSettings"]["Networks"].keys())[0]
+                net = list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())[0]
                 labels = c.labels
                 containers_config_path = None
                 dir_path = None
@@ -148,31 +151,37 @@ class EnvInfo:
                 users_config_path = None
                 vulnerabilities_config_path = None
                 traffic_config_path = None
-                if "containers_cfg" in labels:
-                    containers_config_path = labels["containers_cfg"]
-                if "dir" in labels:
-                    dir_path = labels["dir"]
-                if "flags_cfg" in labels:
-                    flags_config_path = labels["flags_cfg"]
-                if "topology_cfg" in labels:
-                    topology_config_path = labels["topology_cfg"]
-                if "users_cfg" in labels:
-                    users_config_path = labels["users_cfg"]
-                if "vulnerabilities_cfg" in labels:
-                    vulnerabilities_config_path = labels["vulnerabilities_cfg"]
-                if "traffic_cfg" in labels:
-                    traffic_config_path = labels["traffic_cfg"]
+                if constants.DOCKER.CONTAINER_CONFIG_CFG in labels:
+                    containers_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_CFG]
+                if constants.DOCKER.CONTAINER_CONFIG_DIR in labels:
+                    dir_path = labels[constants.DOCKER.CONTAINER_CONFIG_DIR]
+                if constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG in labels:
+                    flags_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG]
+                if constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG in labels:
+                    topology_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG]
+                if constants.DOCKER.CONTAINER_CONFIG_USERS_CFG in labels:
+                    users_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_USERS_CFG]
+                if constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG in labels:
+                    vulnerabilities_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG]
+                if constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG in labels:
+                    traffic_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG]
                 parsed_c = RunningEnvContainer(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
-                    created=inspect_info["Created"],
-                    ip=inspect_info["NetworkSettings"]["Networks"][net]["IPAddress"],
-                    network_id=inspect_info["NetworkSettings"]["Networks"][net]["NetworkID"],
-                    gateway=inspect_info["NetworkSettings"]["Networks"][net]["Gateway"],
-                    mac=inspect_info["NetworkSettings"]["Networks"][net]["MacAddress"],
-                    ip_prefix_len=inspect_info["NetworkSettings"]["Networks"][net]["IPPrefixLen"],
-                    minigame=minigame, name2=container_name_2, level=level, hostname=inspect_info["Config"]["Hostname"],
-                    image_name=inspect_info["Config"]["Image"],
+                    created=inspect_info[constants.DOCKER.CREATED_INFO],
+                    ip=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.IP_ADDRESS_INFO],
+                    network_id=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.NETWORK_ID_INFO],
+                    gateway=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.GATEWAY_INFO],
+                    mac=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.MAC_ADDRESS_INFO],
+                    ip_prefix_len=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.IP_PREFIX_LEN_INFO],
+                    minigame=minigame, name2=container_name_2, level=level,
+                    hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
+                    image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],
                     net=net, dir=dir_path, containers_config_path=containers_config_path,
                     users_config_path=users_config_path, flags_config_path=flags_config_path,
                     vulnerabilities_config_path=vulnerabilities_config_path, topology_config_path=topology_config_path,

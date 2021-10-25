@@ -11,25 +11,38 @@ from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from pycr_common.util.experiments_util import util
+import pycr_common.constants.constants as constants
+
 
 class VulnerabilityGenerator:
-
-
-    def __init__(self):
-        pass
+    """
+    A Utility Class for generating vulnerability configuration files
+    """
 
 
     @staticmethod
-    def shortlist():
-        names_shortlist = ["admin", "test", "guest", "info", "adm", "mysql", "user", "administrator",
-                           "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser",
-                           "donald", "alan"]
-        return names_shortlist
+    def shortlist() -> List[str]:
+        """
+        :return: a list of shortlist usernames for password vulnerabilities
+        """
+        return constants.VULNERABILITY_GENERATOR.NAMES_SHORTLIST
 
 
     @staticmethod
     def generate(topology: Topology, gateways : dict, agent_ip : str, router_ip: str, subnet_prefix :str, num_flags,
                  access_vuln_types : List[VulnType]) -> VulnerabilitiesConfig:
+        """
+        Utility function for generating a vulnerability configuration for an emulation
+
+        :param topology: the topology of the emulation
+        :param gateways: the gateways of the emulation
+        :param agent_ip: the ip of the agent container
+        :param router_ip: the ip of the gateway container
+        :param subnet_prefix: the prefix of of the subnet
+        :param num_flags: the number of flags
+        :param access_vuln_types: the vulnerability types that yield shell access
+        :return: The created vulnerabilities config
+        """
         vulnerabilities = []
         vulnerable_nodes = set()
 
@@ -96,6 +109,12 @@ class VulnerabilityGenerator:
 
     @staticmethod
     def pw_vuln(node: NodeFirewallConfig) -> PwVulnerabilityConfig:
+        """
+        Utility function for creating a password vulnerability config object
+
+        :param node: the node to create the vulnerability on
+        :return: the created vulnerability
+        """
         pw_shortlist = VulnerabilityGenerator.shortlist()
         pw_idx = random.randint(0, len(pw_shortlist)-1)
         u = pw_shortlist[pw_idx]
@@ -105,7 +124,14 @@ class VulnerabilityGenerator:
 
 
     @staticmethod
-    def create_vulns(vuln_cfg: VulnerabilitiesConfig, emulation_config: EmulationConfig):
+    def create_vulns(vuln_cfg: VulnerabilitiesConfig, emulation_config: EmulationConfig) -> None:
+        """
+        Utility function for connecting to a running emulation and creating vulnerabilities
+
+        :param vuln_cfg: the vulnerability config
+        :param emulation_config: the emulation config
+        :return: None
+        """
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=vuln.node_ip)

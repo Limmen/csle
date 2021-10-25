@@ -5,6 +5,7 @@ from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.util.experiments_util import util
 from pycr_common.envs_model.config.generator.container_generator import ContainerGenerator
 from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+import pycr_common.constants.constants as constants
 
 
 class ContainerManager:
@@ -21,7 +22,7 @@ class ContainerManager:
         """
         client1 = docker.from_env()
         containers = client1.containers.list()
-        containers = list(filter(lambda x: "pycr" in x.name, containers))
+        containers = list(filter(lambda x: constants.OS.KALI in x.name, containers))
         for c in containers:
             print("Stopping container: {}".format(c.name))
             c.stop()
@@ -35,9 +36,11 @@ class ContainerManager:
         """
         client1 = docker.from_env()
         containers = client1.containers.list(all=True)
-        containers = list(filter(lambda x: "pycr" in x.name and x.status == "exited" or x.status == "created", containers))
+        containers = list(filter(lambda x: (constants.PYCR.NAME in x.name
+                                           and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS, containers)))
         for c in containers:
-            print("Removing container: {}".format(c.name))
+            print(f"Removing container: {c.name}")
             c.remove()
 
     @staticmethod
@@ -49,20 +52,27 @@ class ContainerManager:
         """
         client1 = docker.from_env()
         images = client1.images.list()
-        images = list(filter(lambda x: "pycr" in ",".join(x.attrs["RepoTags"]), images))
-        non_base_images = list(filter(lambda x: "base" not in ",".join(x.attrs["RepoTags"]), images))
-        base_images = list(filter(lambda x: "base" in ",".join(x.attrs["RepoTags"]), images))
-        non_os_base_images = list(filter(lambda x: not ("ubuntu" in ",".join(x.attrs["RepoTags"]) or "kali" in ",".join(x.attrs["RepoTags"])), base_images))
-        os_base_images = list(filter(lambda x: "ubuntu" in ",".join(x.attrs["RepoTags"]) or "kali" in ",".join(x.attrs["RepoTags"]), base_images))
+        images = list(filter(lambda x: constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
+        non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
+                                                not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+        base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
+                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+        non_os_base_images = list(filter(lambda x: not
+        (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+         or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
+                                         base_images))
+        os_base_images = list(filter(lambda x: constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+                                               or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]),
+                                     base_images))
         for img in non_base_images:
-            print("Removing image: {}".format(img.attrs["RepoTags"]))
-            client1.images.remove(image=img.attrs["RepoTags"][0], force=True)
+            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in non_os_base_images:
-            print("Removing image: {}".format(img.attrs["RepoTags"]))
-            client1.images.remove(image=img.attrs["RepoTags"][0], force=True)
+            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in os_base_images:
-            print("Removing image: {}".format(img.attrs["RepoTags"]))
-            client1.images.remove(image=img.attrs["RepoTags"][0], force=True)
+            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
 
     @staticmethod
     def list_all_images() -> List[str]:
@@ -73,8 +83,8 @@ class ContainerManager:
         """
         client1 = docker.from_env()
         images = client1.images.list()
-        images = list(filter(lambda x: "pycr" in ",".join(x.attrs["RepoTags"]), images))
-        images_names = list(map(lambda x: x.attrs["RepoTags"][0], images))
+        images = list(filter(lambda x: constants.PYCR.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
+        images_names = list(map(lambda x: x.attrs[constants.DOCKER.REPO_TAGS][0], images))
         return images_names
 
     @staticmethod
@@ -99,24 +109,32 @@ class ContainerManager:
         if path == None:
             path = util.default_output_dir()
         client1 = docker.from_env()
-        project = "pycr"
+        project = constants.PYCR.NAME
         ContainerGenerator.write_containers_config(containers_config=containers_config, path=path)
         for idx, c in enumerate(containers_config.containers):
             container = c.name
             version = c.version
-            image = project + "/" + container + ":" + version
+            image = project + constants.COMMANDS.SLASH_DELIM + container + constants.COMMANDS.COLON_DELIM + version
             suffix = str(idx)
-            name = project + "-" + c.minigame + "-" + container + suffix + "-level" + c.level
+            name = project + constants.COMMANDS.DASH_DELIM + c.minigame + constants.COMMANDS.DASH_DELIM + container \
+                   + suffix + constants.COMMANDS.DASH_DELIM + constants.PYCR.LEVEL + c.level
             labels = {}
-            labels["dir"]=path
-            labels["containers_cfg"]=path + "/containers.json"
-            labels["flags_cfg"] = path + "/flags.json"
-            labels["topology_cfg"] = path + "/topology.json"
-            labels["users_cfg"] = path + "/users.json"
-            labels["vulnerabilities_cfg"] = path + "/vulnerabilities.json"
+            labels[constants.DOCKER.CONTAINER_CONFIG_DIR]=path
+            labels[constants.DOCKER.CONTAINER_CONFIG_CFG]=path + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH
+            labels[constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG] = \
+                path + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH
+            labels[constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG] = \
+                path + constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH
+            labels[constants.DOCKER.CONTAINER_CONFIG_USERS_CFG] = \
+                path + constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH
+            labels[constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG] = \
+                path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH
+            labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG] = \
+                path + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH
             print("Running container: {}".format(name))
-            client1.containers.run(image=image, name=name, detach=True, tty=True, network=c.network, labels=labels,
-                                   publish_all_ports=True, cap_add=["NET_ADMIN"])
+            client1.containers.run(image=image, name=name, hostname=name,
+                                   detach=True, tty=True, network=c.network, labels=labels,
+                                   publish_all_ports=True, cap_add=[constants.DOCKER.NET_ADMIN])
 
     @staticmethod
     def start_all_stopped_containers() -> None:
@@ -127,7 +145,9 @@ class ContainerManager:
         """
         client1 = docker.from_env()
         containers = client1.containers.list(all=True)
-        containers = list(filter(lambda x: "pycr" in x.name and x.status == "exited" or x.status == "created", containers))
+        containers = list(filter(lambda x: (constants.PYCR.NAME in x.name
+                                           and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS, containers)))
         for c in containers:
             print("Starting container: {}".format(c.name))
             c.start()
@@ -153,7 +173,7 @@ class ContainerManager:
         :return: a list of the stopped containers
         """
         client1 = docker.from_env()
-        client2 = docker.APIClient(base_url='unix://var/run/docker.sock')
+        client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_stopped_containers = EnvInfo.parse_stopped_containers(client1=client1, client2=client2)
         container_names = list(map(lambda x: x.name, parsed_stopped_containers))
         return container_names
@@ -164,27 +184,27 @@ class ContainerManager:
         Runs a container management command
 
         :param cmd: the command to run
-        :return:
+        :return: None
         """
 
-        if cmd == "list_stopped":
+        if cmd == constants.MANAGEMENT.LIST_STOPPED:
             names = ContainerManager.list_all_stopped_containers()
             print(names)
-        elif cmd == "list_running":
+        elif cmd == constants.MANAGEMENT.LIST_RUNNING:
             names = ContainerManager.list_all_running_containers()
             print(names)
-        elif cmd == "list_images":
+        elif cmd == constants.MANAGEMENT.LIST_IMAGES:
             names = ContainerManager.list_all_images()
             print(names)
-        elif cmd == "stop_running":
+        elif cmd == constants.MANAGEMENT.STOP_RUNNING:
             ContainerManager.stop_all_running_containers()
-        elif cmd == "rm_stopped":
+        elif cmd == constants.MANAGEMENT.RM_STOPPED:
             ContainerManager.rm_all_stopped_containers()
-        elif cmd == "rm_images":
+        elif cmd == constants.MANAGEMENT.RM_IMAGES:
             ContainerManager.rm_all_images()
-        elif cmd == "start_stopped":
+        elif cmd == constants.MANAGEMENT.START_STOPPED:
             ContainerManager.start_all_stopped_containers()
-        elif cmd == "list_networks":
+        elif cmd == constants.MANAGEMENT.LIST_NETWORKS:
             networks = ContainerManager.list_all_networks()
             print(networks)
         else:

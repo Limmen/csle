@@ -10,9 +10,19 @@ from pycr_common.util.experiments_util import util
 
 
 class TopologyGenerator:
+    """
+    A Utility Class for generating topology configuration files
+    """
 
     @staticmethod
     def generate(num_nodes: int, subnet_prefix : str) -> Topology:
+        """
+        Generates a topology configuration
+
+        :param num_nodes: the number of nodes in the topology
+        :param subnet_prefix: the prefix of the subnet
+        :return: The created topology
+        """
         if num_nodes < 3:
             raise ValueError("At least three nodes are required to create a topology")
         agent_ip_suffix = TopologyGenerator.__generate_random_ip(blacklist=[])
@@ -113,6 +123,12 @@ class TopologyGenerator:
 
     @staticmethod
     def __generate_random_ip(blacklist: List) -> int:
+        """
+        Utility function for generating a random IP address that is not in the given blacklist
+
+        :param blacklist: a list of blacklisted IP address
+        :return: The ip (last byte)
+        """
         done = False
         ip_suffix = -1
         while not done:
@@ -122,7 +138,14 @@ class TopologyGenerator:
         return ip_suffix
 
     @staticmethod
-    def create_topology(topology: Topology, emulation_config: EmulationConfig):
+    def create_topology(topology: Topology, emulation_config: EmulationConfig) -> None:
+        """
+        Utility function for connecting to a running emulation and creating the configuration
+
+        :param topology: the topology configuration
+        :param emulation_config: the emulation configuration
+        :return: None
+        """
         for node in topology.node_configs:
             print("node:{}".format(node.ip))
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)

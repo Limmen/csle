@@ -11,6 +11,9 @@ from pycr_common.util.experiments_util import util
 
 
 class TrafficGenerator:
+    """
+    A Utility Class for generating traffic generation configuration files
+    """
 
     @staticmethod
     def generate(topology: Topology, containers_config: ContainersConfig, agent_container_names : List[str],
