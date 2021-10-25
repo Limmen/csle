@@ -1,5 +1,5 @@
 import argparse
-from gym_pycr_ctf.envs_model.config.generator.container_manager import ContainerManager
+from pycr_common.envs_model.config.generator.container_manager import ContainerManager
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Parse flags for command to apply to the containers')
