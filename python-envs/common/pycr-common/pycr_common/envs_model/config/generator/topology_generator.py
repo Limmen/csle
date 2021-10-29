@@ -147,15 +147,8 @@ class TopologyGenerator:
         :param emulation_config: the emulation configuration
         :return: None
         """
-        etc_hosts_file = "127.0.0.1 localhost\n"
-        etc_hosts_file = etc_hosts_file + "::1 localhost ip6-localhost ip6-loopback\n"
-        etc_hosts_file = etc_hosts_file + "fe00::0 ip6-localnet\n"
-        etc_hosts_file = etc_hosts_file + "ff00::0 ip6-mcastprefix\n"
-        etc_hosts_file = etc_hosts_file + "ff02::1 ip6-allnodes\n"
-        etc_hosts_file = etc_hosts_file + "ff02::2 ip6-allrouters\n"
         for node in topology.node_configs:
             print("node:{}".format(node.ip))
-            etc_hosts_file = etc_hosts_file + node.ip + " " + node.hostname + "\n"
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
             print("connected")
 
@@ -172,16 +165,23 @@ class TopologyGenerator:
             cmd="sudo iptables -F"
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            node_specific_etc_hosts = etc_hosts_file
+            # Setup /etc/hosts
+            cmd= "echo '127.0.0.1 localhost' | sudo tee /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            cmd = "echo '::1 localhost ip6-localhost ip6-loopback' | sudo tee -a /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            cmd = "echo 'fe00::0 ip6-localnet' | sudo tee -a /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            cmd = "echo 'ff00::0 ip6-mcastprefix' | sudo tee -a /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            cmd = "echo 'ff02::1 ip6-allnodes' | sudo tee -a /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            cmd = "echo 'ff02::2 ip6-allrouters' | sudo tee -a /etc/hosts"
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             for node2 in topology.node_configs:
-                if node2.ip != node.ip:
-                    cmd = "sudo echo " + node2.ip + " " + node2.hostname + " >> /etc/hosts"
+                    cmd = "echo '" + node2.ip + " " + node2.hostname + "' | sudo tee -a /etc/hosts"
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                     print("cmd:{}".format(cmd))
-
-                    # node_specific_etc_hosts = node_specific_etc_hosts + node.ip + " " + node.hostname + "\n"
-
-
 
             for output_node in node.output_accept:
                 cmd = "sudo iptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
