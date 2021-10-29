@@ -6,7 +6,7 @@ from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.config.generator.topology_generator import TopologyGenerator
 
 def default_topology() -> Topology:
-    node_1 = NodeFirewallConfig(ip="172.18.4.10",
+    node_1 = NodeFirewallConfig(ip="172.18.4.10", hostname="router2",
                            output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79",
                                                 "172.18.4.191", "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                            input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79",
@@ -17,7 +17,7 @@ def default_topology() -> Topology:
                            default_input = "DROP", default_output = "DROP", default_forward="DROP",
                            default_gw=None
                            )
-    node_2 = NodeFirewallConfig(ip="172.18.4.2",
+    node_2 = NodeFirewallConfig(ip="172.18.4.2", hostname="ssh1",
                        output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
                                           "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                        input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
@@ -25,14 +25,14 @@ def default_topology() -> Topology:
                        forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set(),
                        default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                        )
-    node_3 = NodeFirewallConfig(ip="172.18.4.3",
+    node_3 = NodeFirewallConfig(ip="172.18.4.3", hostname="telnet1",
                            output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
                                          "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                            input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
                                              "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                             default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_4 = NodeFirewallConfig(ip="172.18.4.21",
+    node_4 = NodeFirewallConfig(ip="172.18.4.21", hostname="honeypot1",
                            output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21",
                                                 "172.18.4.79", "172.18.4.191", "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                            input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
@@ -40,7 +40,7 @@ def default_topology() -> Topology:
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                            default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                            )
-    node_5 = NodeFirewallConfig(ip="172.18.4.79",
+    node_5 = NodeFirewallConfig(ip="172.18.4.79", hostname="ftp1",
                            output_accept=set(
                                ["172.18.4.2", "172.18.4.3", "172.18.4.21", "172.18.4.79", "172.18.4.191",
                                 "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
@@ -48,14 +48,14 @@ def default_topology() -> Topology:
                                              "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                            default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_6 = NodeFirewallConfig(ip="172.18.4.191",
+    node_6 = NodeFirewallConfig(ip="172.18.4.191", hostname="hacker_kali1",
                        output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21",
                                           "172.18.4.79", "172.18.4.191", "172.18.4.10", "172.18.4.1"]),
                        input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21",
                                          "172.18.4.79", "172.18.4.191", "172.18.4.10", "172.18.4.1"]),
                        forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                        default_input="DROP", default_output="DROP", default_forward="DROP", default_gw="172.18.4.10")
-    node_7 = NodeFirewallConfig(ip="172.18.4.254",
+    node_7 = NodeFirewallConfig(ip="172.18.4.254", hostname="client1",
                                 output_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21",
                                                    "172.18.4.79", "172.18.4.10", "172.18.4.1", "172.18.4.254"]),
                                 input_accept=set(["172.18.4.2", "172.18.4.3", "172.18.4.21",

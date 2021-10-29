@@ -1,23 +1,23 @@
 # `pycr`: The Python Cyber Range for Self-Learning Cyber Security Systems
 
-`pycr` is a platform for evaluating and developing reinforcement learning agents 
-for on control problems in cyber security. It can be considered as a cyber range 
-specifically designed for reinforcement learning agents. Everything from 
+`pycr` is a platform for evaluating and developing reinforcement learning agents
+for on control problems in cyber security. It can be considered as a cyber range
+specifically designed for reinforcement learning agents. Everything from
 network emulation, to simulation and implementation of network commands have been
-co-designed to provide an environment where it is possible to train and evaluate 
+co-designed to provide an environment where it is possible to train and evaluate
 reinforcement learning agents on practical problems in cyber security.
 
-The platform can be used to implement different use cases. Each use case consist of an 
-emulated infrastructure (used for evaluation), and a MDP/POMDP interface for training agents. 
-For example, the platform can be used to study the use case of intrusion prevention and 
-train a reinforcement learning agent to prevent network intrusions by attackers in real-time.  
+The platform can be used to implement different use cases. Each use case consist of an
+emulated infrastructure (used for evaluation), and a MDP/POMDP interface for training agents.
+For example, the platform can be used to study the use case of intrusion prevention and
+train a reinforcement learning agent to prevent network intrusions by attackers in real-time.
 
 
 <p align="center">
     <a href="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green">
         <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-green" /></a>
     <a href="https://img.shields.io/badge/version-0.0.1-blue">
-        <img src="https://img.shields.io/badge/version-0.0.1-blue" /></a>               
+        <img src="https://img.shields.io/badge/version-0.0.1-blue" /></a>
 </p>
 
 ## Outline
@@ -30,7 +30,7 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
  * [Author &amp; Maintainer](#author--maintainer)
  * [Copyright and license](#copyright-and-license)
  * [Disclaimer](#disclaimer)
-    
+
 
 ## Architecture
 
@@ -59,7 +59,7 @@ them in the emulation system.
     - [x] CTF challenges
     - [ ] Malware challenges
     - [ ] DoS challenges
-    - [ ] Web hacking challenges  
+    - [ ] Web hacking challenges
 
 - **Open-AI Gym Environment**
      - [x] GUI rendering
@@ -69,12 +69,12 @@ them in the emulation system.
      - [x] Manual-mode
      - [x] Emulation+Simulation-model (using system identification)
      - [x] Support for massively parallel training with distributed emulation/simulation environments
-     
+
 - **Learning Process**
      - [x] Attacker training
      - [x] Defender training
-     - [x] Self-play                    
-   
+     - [x] Self-play
+
 - **Reinforcement Learning Algorithms**
      - [x] PPO baseline
      - [x] DQN baseline
@@ -84,7 +84,7 @@ them in the emulation system.
      - [ ] MuZero baseline
      - [ ] Value Prediction Network baseline
      - [ ] Bayesian REINFORCE
-     - [ ] Monte-Carlo Tree Search                    
+     - [ ] Monte-Carlo Tree Search
 
 - **System Identification**
      - [x] Custom system identifification algorithm to learn model of emulation
@@ -110,7 +110,7 @@ For basic documentation, see the README.md files inside each sub-directory,
 For API documentation follow the links inside each python project's README:
 
 - [pycr-common](./python-envs/common/pycr-common/README.md).
-- [gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD). 
+- [gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD).
 
 ### Technical Documentation
 For technical documentation see: TODO
@@ -135,7 +135,7 @@ Creative Commons
 
 ## Publications
 
-- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (https://arxiv.org/abs/2009.08120)**
+- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (CNSM 2020) (preprint: https://arxiv.org/abs/2009.08120, proceedings: https://ieeexplore.ieee.org/document/9269092)**
 ```
 @INPROCEEDINGS{Hamm2011:Finding,
 AUTHOR="Kim Hammar and Rolf Stadler",
@@ -165,15 +165,19 @@ evaluations we show that our method is superior to two baseline methods but
 that policy convergence in self-play remains a challenge."
 }
 ```
-- **Learning Intrusion Prevention Policies through Optimal Stopping (https://arxiv.org/abs/2106.07160)**
+- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (preprint: https://arxiv.org/abs/2106.07160, proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
 ``` bash
-@misc{hammar2021learning,
-      title={Learning Intrusion Prevention Policies through Optimal Stopping},
-      author={Kim Hammar and Rolf Stadler},
-      year={2021},
-      eprint={2106.07160},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI}
+@INPROCEEDINGS{hammar_stadler_cnsm_21,
+AUTHOR="Kim Hammar and Rolf Stadler",
+TITLE="Learning Intrusion Prevention Policies through Optimal Stopping",
+BOOKTITLE="International Conference on Network and Service Management (CNSM 2021)",
+ADDRESS="Izmir, Turkey",
+DAYS=1,
+YEAR=2021,
+note={\url{http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf}},
+KEYWORDS="Network Security, automation, optimal stopping, reinforcement learning, Markov Decision Processes",
+ABSTRACT="We study automated intrusion prevention using reinforcement learning. In a novel approach, we formulate the problem of intrusion prevention as an optimal stopping problem. This formulation allows us insight into the structure of the optimal policies, which turn out to be threshold based. Since the computation of the optimal defender policy using dynamic programming is not feasible for practical cases, we approximate the optimal policy through reinforcement learning in a simulation environment. To define the dynamics of the simulation, we emulate the target infrastructure and collect measurements. Our evaluations show that the learned policies are close to optimal and that they indeed can be expressed using thresholds."
+}
 ```
 
 ## See also
@@ -183,9 +187,9 @@ that policy convergence in self-play remains a challenge."
 
 ## Disclaimer
 
-All code and software in this repository is for Educational purpose ONLY. 
-Do not use it without permission. 
-The usual disclaimer applies, especially the fact that me (Kim Hammar) is not liable for any damages caused by direct or indirect use of the information or functionality provided by these programs. 
-The author or any Internet provider bears NO responsibility for content or misuse of these programs or any derivatives thereof. 
-By using these programs you accept the fact that any damage (dataloss, system crash, system compromise, etc.) 
+All code and software in this repository is for Educational purpose ONLY.
+Do not use it without permission.
+The usual disclaimer applies, especially the fact that me (Kim Hammar) is not liable for any damages caused by direct or indirect use of the information or functionality provided by these programs.
+The author or any Internet provider bears NO responsibility for content or misuse of these programs or any derivatives thereof.
+By using these programs you accept the fact that any damage (dataloss, system crash, system compromise, etc.)
 caused by the use of these programs is not Kim Hammar's responsibility.

@@ -7,6 +7,7 @@ from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from pycr_common.envs_model.config.generator.generator_util import GeneratorUtil
 from pycr_common.util.experiments_util import util
+import pycr_common.constants.constants as constants
 
 
 class TopologyGenerator:
@@ -146,8 +147,15 @@ class TopologyGenerator:
         :param emulation_config: the emulation configuration
         :return: None
         """
+        etc_hosts_file = "127.0.0.1 localhost\n"
+        etc_hosts_file = etc_hosts_file + "::1 localhost ip6-localhost ip6-loopback\n"
+        etc_hosts_file = etc_hosts_file + "fe00::0 ip6-localnet\n"
+        etc_hosts_file = etc_hosts_file + "ff00::0 ip6-mcastprefix\n"
+        etc_hosts_file = etc_hosts_file + "ff02::1 ip6-allnodes\n"
+        etc_hosts_file = etc_hosts_file + "ff02::2 ip6-allrouters\n"
         for node in topology.node_configs:
             print("node:{}".format(node.ip))
+            etc_hosts_file = etc_hosts_file + node.ip + " " + node.hostname + "\n"
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
             print("connected")
 
@@ -163,6 +171,15 @@ class TopologyGenerator:
 
             cmd="sudo iptables -F"
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+
+            node_specific_etc_hosts = etc_hosts_file
+            for node2 in topology.node_configs:
+                if node2.ip != node.ip:
+                    cmd = "sudo echo " + node.ip + " " + node.hostname + "\n" + " > /etc/hosts"
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+
+                    # node_specific_etc_hosts = node_specific_etc_hosts + node.ip + " " + node.hostname + "\n"
+
 
 
             for output_node in node.output_accept:
@@ -210,7 +227,14 @@ class TopologyGenerator:
             cmd = "sudo iptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             cmd = "sudo arptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)\
+
+            # temp_file_name = "/home/" + constants.PYCR_ADMIN.USER + "/hosts"
+            # EmulationUtil.write_remote_file(
+            #     conn=emulation_config.agent_conn, file_name=temp_file_name,
+            #     contents=etc_hosts_file, write_mode="w")
+            # EmulationUtil.execute_ssh_cmd(cmd="sudo mv " + temp_file_name + " /etc/hosts",
+            #                               conn=emulation_config.agent_conn)
 
             GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 

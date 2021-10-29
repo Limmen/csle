@@ -594,3 +594,24 @@ class EmulationUtil:
         except Exception as e:
             print("Custom connection setup failed:{}".format(str(e)))
             return None
+
+
+    @staticmethod
+    def write_remote_file(conn, file_name : str, contents : str , write_mode : str ="w") -> None:
+        """
+        Utility function for writing contents to a file
+
+        :param conn: the SSH connection to use for writing
+        :param file_name: the file name
+        :param contents: the contents of the file
+        :param write_mode: the write mode
+        :return: None
+        """
+        sftp_client = conn.open_sftp()
+        remote_file = sftp_client.file(file_name, mode=write_mode)
+        try:
+            remote_file.write(contents)
+        except Exception as e:
+            print("exception writing file:{}".format(str(e)))
+        finally:
+            remote_file.close()

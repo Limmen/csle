@@ -13,7 +13,7 @@ def default_containers_config():
                             ip="172.18.6.191"),
         NodeContainerConfig(name="honeypot1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
                             ip="172.18.6.21"),
-        NodeContainerConfig(name="router1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
+        NodeContainerConfig(name="router2", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
                             ip="172.18.6.10"),
         NodeContainerConfig(name="ssh1", network="pycr_net_6", minigame="ctf", version="0.0.1", level="6",
                             ip="172.18.6.2"),

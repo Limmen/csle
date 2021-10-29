@@ -8,7 +8,8 @@ def default_containers_config():
     containers = [
         NodeContainerConfig(name="client1", network="pycr_net_2", minigame="ctf", version="0.0.1", level="2",
                             ip="172.18.2.254"),
-        NodeContainerConfig(name="ftp1", network="pycr_net_2", minigame="ctf", version="0.0.1", level="2", ip="172.18.2.79"),
+        NodeContainerConfig(name="ftp1", network="pycr_net_2", minigame="ctf", version="0.0.1", level="2",
+                            ip="172.18.2.79"),
         NodeContainerConfig(name="hacker_kali1", network="pycr_net_2", minigame="ctf", version="0.0.1", level="2",
                             ip="172.18.2.191"),
         NodeContainerConfig(name="honeypot1", network="pycr_net_2", minigame="ctf", version="0.0.1", level="2",
