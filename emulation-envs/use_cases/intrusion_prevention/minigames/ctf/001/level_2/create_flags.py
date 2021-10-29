@@ -4,6 +4,8 @@ from pycr_common.dao.container_config.node_flags_config import NodeFlagsConfig
 from pycr_common.util.experiments_util import util
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.config.generator.flags_generator import FlagsGenerator
+import pycr_common.constants.constants as constants
+
 
 def default_flags() -> FlagsConfig:
     flags = [
@@ -21,6 +23,6 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_flags_path()):
         FlagsGenerator.write_flags_config(default_flags())
     flags_config = util.read_flags_config(util.default_flags_path())
-    emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="pycr_admin",
-                                     agent_pw="pycr@admin-pw_191", server_connection=False)
+    emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username=constants.PYCR_ADMIN.USER,
+                                     agent_pw=constants.PYCR_ADMIN.PW, server_connection=False)
     FlagsGenerator.create_flags(flags_config=flags_config, emulation_config=emulation_config)

@@ -38,7 +38,7 @@ class ContainerManager:
         containers = client1.containers.list(all=True)
         containers = list(filter(lambda x: (constants.PYCR.NAME in x.name
                                            and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS, containers)))
+                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
             print(f"Removing container: {c.name}")
             c.remove()
@@ -147,7 +147,7 @@ class ContainerManager:
         containers = client1.containers.list(all=True)
         containers = list(filter(lambda x: (constants.PYCR.NAME in x.name
                                            and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS, containers)))
+                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
             print("Starting container: {}".format(c.name))
             c.start()

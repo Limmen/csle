@@ -5,6 +5,8 @@ from pycr_common.util.experiments_util import util
 from pycr_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
 from pycr_common.dao.container_config.vulnerability_type import VulnType
 from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+import pycr_common.constants.constants as constants
+
 
 def default_vulns():
     vulns = [
@@ -35,6 +37,6 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_vulnerabilities_path()):
         VulnerabilityGenerator.write_vuln_config(default_vulns())
     vuln_config = util.read_vulns_config(util.default_vulnerabilities_path())
-    emulation_config = EmulationConfig(agent_ip="172.18.6.191", agent_username="pycr_admin",
-                                     agent_pw="pycr@admin-pw_191", server_connection=False)
+    emulation_config = EmulationConfig(agent_ip="172.18.6.191", agent_username=constants.PYCR_ADMIN.USER,
+                                     agent_pw=constants.PYCR_ADMIN.PW, server_connection=False)
     VulnerabilityGenerator.create_vulns(vuln_cfg=vuln_config, emulation_config=emulation_config)

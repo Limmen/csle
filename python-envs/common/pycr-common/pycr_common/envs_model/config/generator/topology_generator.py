@@ -175,8 +175,9 @@ class TopologyGenerator:
             node_specific_etc_hosts = etc_hosts_file
             for node2 in topology.node_configs:
                 if node2.ip != node.ip:
-                    cmd = "sudo echo " + node.ip + " " + node.hostname + "\n" + " > /etc/hosts"
+                    cmd = "sudo echo " + node2.ip + " " + node2.hostname + " >> /etc/hosts"
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                    print("cmd:{}".format(cmd))
 
                     # node_specific_etc_hosts = node_specific_etc_hosts + node.ip + " " + node.hostname + "\n"
 

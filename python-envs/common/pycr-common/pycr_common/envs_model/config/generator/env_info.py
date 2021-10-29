@@ -50,8 +50,8 @@ class EnvInfo:
         """
         containers = client1.containers.list(all=True)
         stopped_containers = list(filter(lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                                   or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS,
-                                                    containers)))
+                                                   or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS),
+                                                    containers))
         parsed_containers = EnvInfo.parse_containers(containers=stopped_containers, client2=client2)
         return parsed_containers
 
