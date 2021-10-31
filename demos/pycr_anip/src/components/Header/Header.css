@@ -5,3 +5,12 @@
 .subtitle {
     font-style: italic;
 }
+
+.jumbotron {
+    height:50px;
+}
+
+.title {
+    margin-top: -30px !important;
+    margin-bottom: 0px !important;
+}

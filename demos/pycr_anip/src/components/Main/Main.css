@@ -1,5 +1,9 @@
 .Main {}
 
+.metricsLineChartsRow {
+    margin-top:50px !important;
+}
+
 .layoutflow {
     flex-grow: 1;
     position: relative;

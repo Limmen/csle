@@ -2,14 +2,12 @@ import React from 'react';
 import './Header.css';
 
 const Header = () => (
-  <div className="Header">
-      <div className="jumbotron">
-          <h1 className="text-center">PyCr ANIP: Automated Network Intrusion Prevention </h1>
-          <span className="subtitle">PyCr is a Cyber Range for Reinforcement Learning Agents</span>
-      </div>
-  </div>
+    <div className="Header">
+        <div className="p-5 mb-4 bg-light rounded-3 jumbotron">
+                <h3 className="display-9 align-content-center fw-bold  title">Intrusion Prevention through Optimal Stopping</h3>
+        </div>
+    </div>
 );
-
 Header.propTypes = {};
 
 Header.defaultProps = {};
