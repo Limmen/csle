@@ -1,0 +1,46 @@
+.Header {
+    margin-bottom: 0px;
+}
+
+.timestepLabel {
+    margin-right:20px;
+}
+
+.stopsRemainingLabel {
+    margin-left:20px;
+}
+
+.timeStepControls{
+    position:absolute !important;
+    text-align: left !important;
+    float:left !important;
+    font-weight: bolder;
+    margin-top:35px;
+}
+
+.navtabsheader {
+    margin-top: 20px;
+    display: inline;
+}
+
+.navtabheader {
+    margin-left: 50px;
+}
+
+.navtablabel {
+    font-weight: bolder;
+    color: black !important;
+}
+
+.subtitle {
+    font-style: italic;
+}
+
+.jumbotron {
+    height:127px;
+}
+
+.title {
+    margin-top: -30px !important;
+    margin-bottom: 0px !important;
+}

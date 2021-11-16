@@ -1,0 +1,20 @@
+.client {
+    display: inline-block;
+}
+
+.clientPopulation {
+    display: inline-block;
+}
+
+.column {
+    float: left;
+    width: 27%;
+    padding: 2px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
