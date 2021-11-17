@@ -8,6 +8,8 @@ const SevereAlertsChart = (props) => {
     const [animationDuration, setAnimationDuration] = useState(0);
     const [animation, setAnimation] = useState(false);
 
+    const animiationDurationFactor = 50000
+
     const onSliderChange = (value) => {
         setAnimationDuration(value)
         if(value > 0) {
@@ -57,13 +59,13 @@ const SevereAlertsChart = (props) => {
                         <Legend verticalAlign="top" height={36}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts ΣΔx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts ΣΔy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts ΣΔz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -88,13 +90,13 @@ const SevereAlertsChart = (props) => {
                         <Legend verticalAlign="top" height={36}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -155,13 +157,13 @@ const SevereAlertsChart = (props) => {
                         <Legend verticalAlign="top" height={36}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -189,10 +191,10 @@ const SevereAlertsChart = (props) => {
                               animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )

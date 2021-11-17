@@ -6,7 +6,7 @@ const DefenderDefaultPage = () => {
 
     return (
         <div className="DefaultView">
-            <Navigate to="/defender/network" replace={true} />
+            <Navigate to="/dashboard/defender/network" replace={true} />
         </div>
     );
 }

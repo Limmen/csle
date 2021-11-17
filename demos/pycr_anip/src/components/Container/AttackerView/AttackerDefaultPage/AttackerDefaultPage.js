@@ -6,7 +6,7 @@ const AttackerDefaultPage = () => {
 
     return (
         <div className="AttackerDefaultPage">
-            <Navigate to="/attacker/network" replace={true} />
+            <Navigate to="/dashboard/attacker/network" replace={true} />
         </div>
     );
 }

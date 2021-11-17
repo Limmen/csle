@@ -8,6 +8,8 @@ const AttackerMetricsChart = (props) => {
     const [animationDuration, setAnimationDuration] = useState(0);
     const [animation, setAnimation] = useState(false);
 
+    const animiationDurationFactor = 50000
+
     const onSliderChange = (value) => {
         setAnimationDuration(value)
         if(value > 0) {
@@ -64,10 +66,10 @@ const AttackerMetricsChart = (props) => {
                         <Legend verticalAlign="top" height={36}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes ΣΔx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Compromised nodes ΣΔy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -90,15 +92,12 @@ const AttackerMetricsChart = (props) => {
                         </YAxis>
                         <Tooltip />
                         <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
+                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes ΣΔx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
+                        <Line animation={animation} type="monotone" dataKey="Compromised nodes ΣΔy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -158,10 +157,10 @@ const AttackerMetricsChart = (props) => {
                         <Legend verticalAlign="top" height={36}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes Δx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Compromised nodes Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -184,15 +183,12 @@ const AttackerMetricsChart = (props) => {
                         </YAxis>
                         <Tooltip />
                         <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
+                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes Δx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
+                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
+                        <Line animation={animation} type="monotone" dataKey="Compromised nodes Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
+                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )

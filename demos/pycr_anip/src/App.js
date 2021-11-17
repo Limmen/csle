@@ -131,7 +131,7 @@ function App() {
                 <div className="col-sm-12">
                     <BrowserRouter>
                         <Routes>
-                            <Route path="/"
+                            <Route path="/dashboard"
                                    element={<Container
                                        t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                        activeTrace={activeTrace} traces={traces}
