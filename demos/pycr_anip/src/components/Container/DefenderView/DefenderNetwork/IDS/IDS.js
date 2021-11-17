@@ -6,7 +6,7 @@ import ids from './ids-0.png';
 const IDS = ({ data }) => {
     return (
         <div className="ids">
-            <div>{data.text}</div>
+            <p className="idsLabel">{data.text}</p>
             <Handle type="target" position="top" style={{ borderRadius: 0 }} />
             <img src={ids} className="ibm_tower" alt="ids" width="100%" height="100%"/>
             <Handle type="source" position="bottom" style={{ borderRadius: 0 }} />
