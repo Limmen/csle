@@ -2,6 +2,7 @@ import React from 'react';
 import {Handle} from 'react-flow-renderer';
 import './ApplicationServer.css';
 import ibm_tower from './ibm_tower_small.png';
+// import ibm_tower from './ibm_tower_small_compromised.png';
 
 const ApplicationServer = ({ data }) => {
     return (
