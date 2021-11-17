@@ -2,3 +2,9 @@
     font-weight: bolder;
     margin-bottom: 30px;
 }
+
+.traceDropdown {
+    display: inline-block;
+    margin-top:-10px;
+    margin-right:10px;
+}

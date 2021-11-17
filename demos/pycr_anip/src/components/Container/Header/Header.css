@@ -2,6 +2,15 @@
     margin-bottom: 0px;
 }
 
+.shortCutT {
+    font-weight: bold;
+}
+
+.mdp {
+    margin-top: -40px;
+    margin-left: -60px;
+}
+
 .timestepLabel {
     margin-right:20px;
 }
@@ -15,11 +24,12 @@
     text-align: left !important;
     float:left !important;
     font-weight: bolder;
-    margin-top:35px;
+    margin-top:80px;
+    margin-left:-30px;
 }
 
 .navtabsheader {
-    margin-top: 20px;
+    margin-top: 50px;
     display: inline;
 }
 
@@ -37,7 +47,7 @@
 }
 
 .jumbotron {
-    height:127px;
+    height:160px;
 }
 
 .title {

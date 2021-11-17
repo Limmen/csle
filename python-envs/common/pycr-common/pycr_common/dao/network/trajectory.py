@@ -101,7 +101,7 @@ class Trajectory:
     @staticmethod
     def load_trajectories(trajectories_save_dir, trajectories_file : str = None) -> List["Trajectory"]:
         """
-        Utility function for loading a list of trajectories from a json file
+        Utility function for loading and parsing a list of trajectories from a json file
 
         :param trajectories_save_dir: the directory where to load the trajectories from
         :param trajectories_file: (optional) a custom name of the trajectories file
@@ -116,6 +116,26 @@ class Trajectory:
                 trajectories  = d["trajectories"]
                 trajectories = list(map(lambda x: Trajectory.from_dict(x), trajectories))
                 return trajectories
+        else:
+            print("Warning: Could not read trajectories file, path does not exist:{}".format(path))
+            return []
+
+    @staticmethod
+    def load_trajectories_json(trajectories_save_dir, trajectories_file: str = None) -> List["Trajectory"]:
+        """
+        Utility function for loading a trajectories from a json file
+
+        :param trajectories_save_dir: the directory where to load the trajectories from
+        :param trajectories_file: (optional) a custom name of the trajectories file
+        :return: a list of the loaded trajectories
+        """
+        if trajectories_file is None:
+            trajectories_file = constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
+        path = trajectories_save_dir + "/" + trajectories_file
+        if os.path.exists(path):
+            with open(path, 'r') as fp:
+                d = json.load(fp)
+                return d
         else:
             print("Warning: Could not read trajectories file, path does not exist:{}".format(path))
             return []

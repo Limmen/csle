@@ -18,17 +18,22 @@ const AttackerView = () => {
                                  className="nav-link pillslabel" activeClassName="active" id="v-pills-home-tab" data-toggle="pill">
                             Activity Log
                         </NavLink>
-                        <NavLink to={`reconstate`} activeClassName="active" role="tab" aria-controls="v-pills-home" aria-selected="true"
+                        <NavLink to={`metrics`} activeClassName="active" role="tab" aria-controls="v-pills-home" aria-selected="true"
                                  className="nav-link pillslabel" id="v-pills-home-tab" data-toggle="pill">
-                            Reconnaissance State
+                            Metrics
+                        </NavLink>
+                        <NavLink to={`policy`} activeClassName="active" role="tab" aria-controls="v-pills-home" aria-selected="true"
+                                 className="nav-link pillslabel" id="v-pills-home-tab" data-toggle="pill">
+                            Attacker Policy
                         </NavLink>
                     </div>
                 </div>
-                <div className="col-sm-10">
+                <div className="col-sm-8">
                     <div className="row">
                         <Outlet/>
                     </div>
                 </div>
+                <div className="col-sm-2"></div>
             </div>
         </div>
     );

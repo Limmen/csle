@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import './SevereAlertsChart.css';
+import './AttackerMetricsChart.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 import Slider from 'rc-slider';
 
 
-const SevereAlertsChart = (props) => {
+const AttackerMetricsChart = (props) => {
     const [animationDuration, setAnimationDuration] = useState(0);
     const [animation, setAnimation] = useState(false);
 
@@ -17,7 +17,7 @@ const SevereAlertsChart = (props) => {
         }
     };
 
-    const AlertsLineChart = (props) => {
+    const AttackerMetricsLineChart = (props) => {
         const width = 500
         const height = 200
         const margin = {
@@ -28,15 +28,22 @@ const SevereAlertsChart = (props) => {
         }
 
         if (props.traces.length > 0) {
-            const data = props.traces[props.activeTrace].defender_observations
-                .filter((prob, index) => index <= props.t).map((defenderObs, index) => {
-                    return {
-                        t: index + 1,
-                        "Severe Alerts ΣΔx": defenderObs[0],
-                        "Warning Alerts ΣΔy": defenderObs[1],
-                        "Login Attempts ΣΔz": defenderObs[2]
+            const filteredFoundNodes = props.traces[props.activeTrace].attacker_number_of_found_nodes
+                .filter((prob, index) => index <= props.t)
+            const filteredCompromisedNodes = props.traces[props.activeTrace].attacker_number_of_compromised_nodes
+                .filter((prob, index) => index <= props.t)
+            var data = []
+            for (let i = 0; i < filteredCompromisedNodes.length; i++) {
+                var accumulatedFoundNodes = filteredFoundNodes[i]
+                var accumulatedCompromisedNodes = filteredCompromisedNodes[i]
+                data.push(
+                    {
+                        t: i + 1,
+                        "Found nodes ΣΔx": accumulatedFoundNodes,
+                        "Compromised nodes ΣΔy": accumulatedCompromisedNodes,
                     }
-                })
+                )
+            }
 
             return (
                 <ResponsiveContainer width='100%' height={300}>
@@ -55,14 +62,11 @@ const SevereAlertsChart = (props) => {
                         </YAxis>
                         <Tooltip />
                         <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts ΣΔx"
+                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes ΣΔx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
                               animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts ΣΔy"
+                        <Line animation={animation} type="monotone" dataKey="Compromised nodes ΣΔy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts ΣΔz"
-                              stroke="#742911" animationEasing={'linear'}
                               animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
@@ -114,24 +118,23 @@ const SevereAlertsChart = (props) => {
         }
 
         if (props.traces.length > 0) {
-            const filteredData = props.traces[props.activeTrace].defender_observations
+            const filteredFoundNodes = props.traces[props.activeTrace].attacker_number_of_found_nodes
+                .filter((prob, index) => index <= props.t)
+            const filteredCompromisedNodes = props.traces[props.activeTrace].attacker_number_of_compromised_nodes
                 .filter((prob, index) => index <= props.t)
             var data = []
-            for (let i = 0; i < filteredData.length; i++) {
-                var deltaX = filteredData[i][0]
-                var deltaY = filteredData[i][1]
-                var deltaZ = filteredData[i][2]
+            for (let i = 0; i < filteredCompromisedNodes.length; i++) {
+                var deltaFoundNodes = filteredFoundNodes[i]
+                var deltaCompromisedNodes = filteredCompromisedNodes[i]
                 if (i > 0) {
-                    deltaX = filteredData[i][0] - filteredData[i-1][0]
-                    deltaY = filteredData[i][1] - filteredData[i-1][1]
-                    deltaZ = filteredData[i][2] - filteredData[i-1][2]
+                    deltaFoundNodes = filteredFoundNodes[i] - filteredFoundNodes[i-1]
+                    deltaCompromisedNodes = filteredCompromisedNodes[i] - filteredCompromisedNodes[i-1]
                 }
                 data.push(
                     {
                             t: i + 1,
-                            "Severe Alerts Δx": deltaX,
-                            "Warning Alerts Δy": deltaY,
-                            "Login Attempts Δz": deltaZ
+                            "Found nodes Δx": deltaFoundNodes,
+                            "Compromised nodes Δy": deltaCompromisedNodes,
                         }
                 )
             }
@@ -153,14 +156,11 @@ const SevereAlertsChart = (props) => {
                         </YAxis>
                         <Tooltip />
                         <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
+                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Found nodes Δx"
                               stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
                               animationEasing={'linear'} animationDuration={(1000-(animationDuration/100)*10000)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
+                        <Line animation={animation} type="monotone" dataKey="Compromised nodes Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
                               animationDuration={(1000-(animationDuration/100)*10000)} isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
@@ -202,14 +202,14 @@ const SevereAlertsChart = (props) => {
     return (
         <div className="SevereAlertsChart">
             <h5 className="line-chart-title">
-                Observations o = (Δx, Δy, Δz)
+                 Δ Metrics
             </h5>
             <DeltaAlertsLineChart traces={props.traces} activeTrace={props.activeTrace} t={props.t}/>
 
             <h5 className="line-chart-title alertsChart">
-                Accumulated Observations Σ o = (Σ Δx, Σ Δy, Σ Δz)
+                Accumulated Metrics ΣΔ
             </h5>
-            <AlertsLineChart traces={props.traces} activeTrace={props.activeTrace} t={props.t}/>
+            <AttackerMetricsLineChart traces={props.traces} activeTrace={props.activeTrace} t={props.t}/>
             <div className="row">
                 <div className="col-sm-2">
                     <span className="defenderPolicyPlotSliderLabel">Animation:</span>
@@ -247,6 +247,6 @@ const SevereAlertsChart = (props) => {
     );
 }
 
-SevereAlertsChart.propTypes = {};
-SevereAlertsChart.defaultProps = {};
-export default SevereAlertsChart;
+AttackerMetricsChart.propTypes = {};
+AttackerMetricsChart.defaultProps = {};
+export default AttackerMetricsChart;

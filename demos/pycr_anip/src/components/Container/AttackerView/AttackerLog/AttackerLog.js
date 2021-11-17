@@ -1,13 +1,37 @@
 import React from 'react';
 import './AttackerLog.css';
 
-const AttackerLog = () => {
-    const log = [{"t": 1, "delta_x": 14, "delta_y": 27, "delta_z": 12, "reward": 5},
-        {"t": 2, "delta_x": 134, "delta_y": 2, "delta_z": 61, "reward": 8},
-        {"t": 3, "delta_x": 15, "delta_y": 22, "delta_z": 234, "reward": 12},
-        {"t": 4, "delta_x": 21, "delta_y": 92, "delta_z": 55, "reward": 14},
-        {"t": 5, "delta_x": 79, "delta_y": 21, "delta_z": 41, "reward": 19}
-    ]
+const AttackerLog = (props) => {
+
+    const LogTable = (props) => {
+        if (props.traces.length > 0){
+            const filteredObservations = props.traces[props.activeTrace].attacker_observations.filter((attackerObs, index) => index <= props.t)
+            const filteredRewards = props.traces[props.activeTrace].attacker_rewards.filter((attackerReward, index) => index <= props.t)
+            const filteredActions = props.traces[props.activeTrace].attacker_actions
+                .filter((attackerAction, index) => index <= props.t).map((attackerAction, index) => {
+                    if (attackerAction === -1) {
+                        return props.traces[props.activeTrace].attacker_continue_action
+                    } else {
+                        return attackerAction
+                    }
+                })
+            const filteredNumHostsFound = props.traces[props.activeTrace].attacker_number_of_found_nodes.filter((attackerAction, index) => index <= props.t)
+            const filteredNumHostsCompromised = props.traces[props.activeTrace].attacker_number_of_compromised_nodes.filter((attackerAction, index) => index <= props.t)
+            return (<tbody>
+            {filteredObservations.map((attackerObs, index) =>
+                <tr key={index}>
+                    <td>{index+1}</td>
+                    <td>{filteredNumHostsFound[index]}</td>
+                    <td>{filteredNumHostsCompromised[index]}</td>
+                    <td>{filteredRewards[index]}</td>
+                    <td>{props.traces[props.activeTrace].attacker_action_descriptions[filteredActions[index]].command}</td>
+                </tr>
+            ).reverse()}
+            </tbody>);
+        } else {
+            return(<tbody></tbody>);
+        }
+    }
 
     return (
         <div className="AttackerLog">
@@ -19,23 +43,13 @@ const AttackerLog = () => {
                         <thead>
                         <tr>
                             <th>Time-step t</th>
-                            <th>Severe IDS alerts Δx</th>
-                            <th>Warning IDS alerts Δy</th>
-                            <th>Login attempts Δz</th>
+                            <th># Found Hosts Total</th>
+                            <th># Compromised Hosts Total</th>
                             <th>Reward</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {log.map((logEntry, index) =>
-                            <tr>
-                                <td>{logEntry.t}</td>
-                                <td>{logEntry.delta_x}</td>
-                                <td>{logEntry.delta_y}</td>
-                                <td>{logEntry.delta_z}</td>
-                                <td>{logEntry.reward}</td>
-                            </tr>
-                        )}
-                        </tbody>
+                        <LogTable traces={props.traces} activeTrace={props.activeTrace} t={props.t}/>
                     </table>
                 </div>
                 <div className="col-sm-1"></div>
@@ -47,9 +61,3 @@ const AttackerLog = () => {
 AttackerLog.propTypes = {};
 AttackerLog.defaultProps = {};
 export default AttackerLog;
-
-//<LoginAttemptsChart/>
-//<WarningAlertsChart/>
-//<SevereAlertsChart/>
-//<AccumulatedMetricsChart/>
-//<DefenderPolicyChart/>

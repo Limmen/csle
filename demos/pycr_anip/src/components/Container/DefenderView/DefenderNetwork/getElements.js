@@ -23,19 +23,19 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
     const appServerBaseX=gatewayBaseX
 
     return [
-        {
-            id: 'attacker',
-            type: 'attacker',
-            className: "nodrag",
-            data: {label: 'attacker', text:'Attacker'},
-            position: {x: attackerBaseX, y: attackerBaseY}
-        },
+        // {
+        //     id: 'attacker',
+        //     type: 'attacker',
+        //     className: "nodrag",
+        //     data: {label: 'attacker', text:'Attacker'},
+        //     position: {x: attackerBaseX, y: attackerBaseY}
+        // },
         {
             id: 'client',
             type: 'client',
             className: "nodrag",
             data: {label: 'client1', text:'Client population'},
-            position: {x: clientBaseX, y: clientBaseY}
+            position: {x: gatewayBaseX, y: clientBaseY}
         },
         {
             id: 'gateway',
@@ -342,7 +342,7 @@ const getEdges = (edgeType = 'smoothstep') => {
     return [
 
         //Defender and Attacker to Gateway
-        {id: 'e_attacker_gateway', source: 'attacker', className: "nodrag", target: 'gateway', type: edgeType, animated: true},
+        //{id: 'e_attacker_gateway', source: 'attacker', className: "nodrag", target: 'gateway', type: edgeType, animated: true},
         {id: 'e_client_gateway', source: 'client', className: "nodrag", target: 'gateway', type: edgeType, animated: true},
 
         //Gateway to first layer

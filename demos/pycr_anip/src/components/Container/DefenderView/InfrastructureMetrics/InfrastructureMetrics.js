@@ -1,11 +1,9 @@
 import React from 'react';
 import './InfrastructureMetrics.css';
 import SevereAlertsChart from "./SevereAlertsChart/SevereAlertsChart"
-import WarningAlertsChart from "./WarningAlertsChart/WarningAlertsChart"
-import LoginAttemptsChart from "./LoginAttemptsChart/LoginAttemptsChart"
-import AccumulatedMetricsChart from "./AccumulatedMetricsChart/AccumulatedMetricsChart"
 
-const InfrastructureMetrics = () => {
+const InfrastructureMetrics = (props) => {
+
     return (
         <div className="Defender">
             <div className="row justify-content-center">
@@ -13,29 +11,7 @@ const InfrastructureMetrics = () => {
 
                 </div>
                 <div className="col-sm-10">
-                    <LoginAttemptsChart/>
-                </div>
-                <div className="col-sm-1">
-
-                </div>
-            </div>
-            <div className="row justify-content-center">
-                <div className="col-sm-1">
-
-                </div>
-                <div className="col-sm-10">
-                    <SevereAlertsChart/>
-                </div>
-                <div className="col-sm-1">
-
-                </div>
-            </div>
-            <div className="row justify-content-center">
-                <div className="col-sm-1">
-
-                </div>
-                <div className="col-sm-10">
-                    <WarningAlertsChart/>
+                    <SevereAlertsChart className="alertsChart" traces={props.traces} activeTrace={props.activeTrace} t={props.t} />
                 </div>
                 <div className="col-sm-1">
 
@@ -51,6 +27,6 @@ export default InfrastructureMetrics;
 
 //<LoginAttemptsChart/>
 //<WarningAlertsChart/>
-//<SevereAlertsChart/>
+//<AttackerMetricsCharts/>
 //<AccumulatedMetricsChart/>
 //<DefenderPolicyChart/>

@@ -28,11 +28,12 @@ const DefenderView = () => {
                             </NavLink>
                         </div>
                 </div>
-                <div className="col-sm-10">
+                <div className="col-sm-8">
                     <div className="row">
                         <Outlet/>
                     </div>
                 </div>
+                <div className="col-sm-2"></div>
             </div>
         </div>
     );
@@ -44,6 +45,6 @@ export default DefenderView;
 
 //<LoginAttemptsChart/>
 //<WarningAlertsChart/>
-//<SevereAlertsChart/>
+//<AttackerMetricsCharts/>
 //<AccumulatedMetricsChart/>
 //<DefenderPolicyChart/>
