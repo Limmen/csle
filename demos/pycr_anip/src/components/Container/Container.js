@@ -13,7 +13,7 @@ const Container = (props) => {
                     setActiveTrace={props.setActiveTrace} lastT={props.lastT}
                     firstT={props.firstT}
             />
-            <div className="row contentRow">
+            <div className="row">
                 <div className="col-sm-12">
                     <Outlet/>
                 </div>

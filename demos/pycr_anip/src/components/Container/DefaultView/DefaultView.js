@@ -6,7 +6,7 @@ const DefaultView = () => {
 
     return (
         <div className="DefaultView">
-            <Navigate to="/dashboard/defender" replace={true} />
+            <Navigate to="/" replace={true} />
         </div>
     );
 }
