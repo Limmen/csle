@@ -22,7 +22,7 @@ const DefenderPolicy = (props) => {
     }
 
     return (
-        <div className="Defender">
+        <div className="DefenderPolicy">
             <div className="row justify-content-center">
                 <div className="col-sm-1">
                 </div>

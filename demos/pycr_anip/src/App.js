@@ -15,6 +15,7 @@ import NotFound from "./components/NotFound/NotFound";
 import DefenderPolicy from "./components/Container/DefenderView/DefenderPolicy/DefenderPolicy";
 import AttackerPolicy from "./components/Container/AttackerView/AttackerPolicy/AttackerPolicy";
 import AttackerMetrics from "./components/Container/AttackerView/AttackerMetrics/AttackerMetrics";
+import Demo from "./components/Demo/Demo";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
 
@@ -111,6 +112,9 @@ function App() {
     }
 
     const decrementT = () => {
+        if (tracesRef.current[activeTraceRef.current].defender_actions[tRef.current] == 0) {
+            setLRef(lRef.current + 1)
+        }
         if (tRef.current > 0) {
             setTRef(tRef.current - 1)
         }
@@ -131,6 +135,17 @@ function App() {
                 <div className="col-sm-12">
                     <BrowserRouter>
                         <Routes>
+                            <Route path="/"
+                                   element={<Demo
+                                       t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                       activeTrace={activeTrace} traces={traces}
+                                       setActiveTrace={setActiveTraceRef}
+                                       lastT={lastT} firstT={firstT}
+                                       defenderPolicies={defenderPolicies}
+                                       activeDefenderPolicy={activeDefenderPolicy}
+                                       setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                   />}>
+                            </Route>
                             <Route path="/dashboard"
                                    element={<Container
                                        t={t} l={l} incrementT={incrementT} decrementT={decrementT}

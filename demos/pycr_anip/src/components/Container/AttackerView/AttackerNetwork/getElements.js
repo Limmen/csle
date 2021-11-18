@@ -95,7 +95,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX, y: appServerBaseY},
             isHidden : false
         },
-
         {
             id: 'n7',
             type: 'applicationServer',
@@ -104,7 +103,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX +appServerHorizontalPadding*1, y: appServerBaseY},
             isHidden : false
         },
-
         {
             id: 'n8',
             type: 'applicationServer',
@@ -116,6 +114,14 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
         {
             id: 'n9',
             type: 'applicationServer',
+            className: "nodrag",
+            data: {label: 'N9', text:'N9'},
+            position: {x: appServerBaseX +appServerHorizontalPadding*3, y: appServerBaseY},
+            isHidden : false
+        },
+        {
+            id: 'n9_compromised',
+            type: 'applicationServerCompromised',
             className: "nodrag",
             data: {label: 'N9', text:'N9'},
             position: {x: appServerBaseX +appServerHorizontalPadding*3, y: appServerBaseY},
@@ -137,7 +143,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX +appServerHorizontalPadding*5, y: appServerBaseY},
             isHidden : false
         },
-
         {
             id: 'switch1',
             type: 'switch',
@@ -146,7 +151,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX-appServerHorizontalPadding*4, y: appServerBaseY+appServerVerticalPadding},
             isHidden : false
         },
-
         {
             id: 'n12',
             type: 'applicationServer',
@@ -187,7 +191,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX-appServerHorizontalPadding*2.5, y: appServerBaseY+appServerVerticalPadding*2.7},
             isHidden : false
         },
-
         {
             id: 'switch2',
             type: 'switch',
@@ -205,7 +208,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*2, y: appServerBaseY+appServerVerticalPadding*1.15},
             isHidden : false
         },
-
         {
             id: 'n17',
             type: 'applicationServer',
@@ -224,6 +226,7 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             isHidden : false
         },
 
+
         {
             id: 'n19',
             type: 'applicationServer',
@@ -232,7 +235,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*3.5, y: appServerBaseY+appServerVerticalPadding*1},
             isHidden : false
         },
-
         {
             id: 'n20',
             type: 'applicationServer',
@@ -250,7 +252,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*3.5, y: appServerBaseY+appServerVerticalPadding*2},
             isHidden : false
         },
-
         {
             id: 'n22',
             type: 'applicationServer',
@@ -277,7 +278,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*4.5, y: appServerBaseY+appServerVerticalPadding*3},
             isHidden : false
         },
-
         {
             id: 'switch4',
             type: 'switch',
@@ -295,7 +295,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX-appServerHorizontalPadding*0, y: appServerBaseY+appServerVerticalPadding*3.95},
             isHidden : false
         },
-
         {
             id: 'n26',
             type: 'applicationServer',
@@ -304,7 +303,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*1, y: appServerBaseY+appServerVerticalPadding*3.95},
             isHidden : false
         },
-
         {
             id: 'n27',
             type: 'applicationServer',
@@ -364,7 +362,6 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             position: {x: appServerBaseX+appServerHorizontalPadding*4.5, y: appServerBaseY+appServerVerticalPadding*5},
             isHidden : false
         },
-
         {
             id: 'defender',
             type: 'defender',
