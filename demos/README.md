@@ -1,4 +1,4 @@
-# PyCR Management Scripts
+# PyCR Demos
 
 This directory includes apps and scripts for demonstrating self-learning systems for cyber security that have been
 built using `pycr`.  
