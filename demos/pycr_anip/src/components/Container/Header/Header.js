@@ -52,9 +52,9 @@ const Header = (props) => {
                     </nav>
                     <ul className="nav nav-tabs justify-content-center navtabsheader">
                         <li className="nav-item navtabheader">
-                            <NavLink className="nav-link navtablabel" to={"defender"}
-                                     activeClassName="active"> Defender's
-                                View</NavLink>
+                            <NavLink className="nav-link navtablabel" to={"defender"}  activeClassName="active">
+                                Defender's  View
+                            </NavLink>
                         </li>
                         <li className="nav-item navtabheader">
                             <NavLink className="nav-link navtablabel" to={"attacker"}
