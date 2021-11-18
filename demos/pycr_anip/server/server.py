@@ -4,9 +4,26 @@ from waitress import serve
 
 app = Flask(__name__, static_url_path='', static_folder='../build/')
 
+
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
+
+
+@app.route('/demo')
+def demo():
+    return app.send_static_file('index.html')
+
+
+@app.route('/log')
+def log():
+    return app.send_static_file('index.html')
+
+
+@app.route('/config')
+def config():
+    return app.send_static_file('index.html')
+
 
 @app.route('/trajectories')
 def trajectories():
