@@ -17,7 +17,7 @@
     "react-flow-renderer": "^9.6.9",
     "react-pro-sidebar": "^0.7.1",
     "react-router-dom": "^6.0.2",
-    "react-scripts": "^0.9.5",
+    "react-scripts": "4.0.3",
     "react-tech-tree": "^0.8.5",
     "recharts": "^2.1.6",
     "web-vitals": "^1.1.2"
@@ -28,10 +28,20 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
+  "devDependencies": {
+    "@babel/preset-flow": "^7.16.0"
+  },
+  "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }
