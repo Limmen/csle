@@ -181,7 +181,6 @@ class TopologyGenerator:
             for node2 in topology.node_configs:
                     cmd = "echo '" + node2.ip + " " + node2.hostname + "' | sudo tee -a /etc/hosts"
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
-                    print("cmd:{}".format(cmd))
 
             for output_node in node.output_accept:
                 cmd = "sudo iptables -A OUTPUT -d {} -j ACCEPT".format(output_node)

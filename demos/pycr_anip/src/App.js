@@ -3,14 +3,24 @@ import './App.css';
 import Container from "./components/Container/Container";
 import NotFound from "./components/Container/NotFound/NotFound";
 import Demo from "./components/Container/Demo/Demo";
-import InfrastructureConfiguration
-    from "./components/Container/InfrastructureConfiguration/InfrastructureConfiguration";
+import DockerContainerConfigurations
+    from "./components/Container/DockerContainerConfigurations/DockerContainerConfigurations";
 import AttackerActionSpaceConfig
     from "./components/Container/AttackerActionSpaceConfig/AttackerActionSpaceConfig";
 import AttackerStaticPolicyConfig
     from "./components/Container/AttackerStaticPolicyConfig/AttackerStaticPolicyConfig";
 import DefenderActionSpaceConfig
     from "./components/Container/DefenderActionSpaceConfig/DefenderActionSpaceConfig";
+import VulnerabilitiesConfig
+    from "./components/Container/VulnerabilitiesConfig/VulnerabilitiesConfig";
+import FlagsConfig
+    from "./components/Container/FlagsConfig/FlagsConfig";
+import FirewallsConfig
+    from "./components/Container/FirewallsConfig/FirewallsConfig";
+import UsersConfig
+    from "./components/Container/UsersConfig/UsersConfig";
+import TrafficConfig
+    from "./components/Container/TrafficConfig/TrafficConfig";
 import DefenderLog from "./components/Container/DefenderLog/DefenderLog";
 import AttackerLog from "./components/Container/AttackerLog/AttackerLog";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
@@ -199,7 +209,7 @@ function App() {
                                     setActiveDefenderPolicy={setActiveDefenderPolicy}
                                 />}>
                                 </Route>
-                                <Route path="config/infrastructure/config" element={<InfrastructureConfiguration
+                                <Route path="config/defender/actionspace" element={<DefenderActionSpaceConfig
                                     t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                     activeTrace={activeTrace} traces={traces}
                                     setActiveTrace={setActiveTraceRef}
@@ -209,7 +219,57 @@ function App() {
                                     setActiveDefenderPolicy={setActiveDefenderPolicy}
                                 />}>
                                 </Route>
-                                <Route path="config/defender/actionspace" element={<DefenderActionSpaceConfig
+                                <Route path="config/infrastructure/containers" element={<DockerContainerConfigurations
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/vulnerabilities" element={<VulnerabilitiesConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/flags" element={<FlagsConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/firewalls" element={<FirewallsConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/users" element={<UsersConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/clients" element={<TrafficConfig
                                     t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                     activeTrace={activeTrace} traces={traces}
                                     setActiveTrace={setActiveTraceRef}

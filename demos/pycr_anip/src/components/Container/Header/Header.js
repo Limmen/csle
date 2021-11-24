@@ -113,8 +113,23 @@ const Header = (props) => {
                                     <LinkContainer to="config/defender/actionspace">
                                         <NavDropdown.Item eventKey={2.3}>Defender action space</NavDropdown.Item>
                                     </LinkContainer>
-                                    <LinkContainer to="config/infrastructure/config">
-                                        <NavDropdown.Item eventKey={2.4}>Infrastructure configuration</NavDropdown.Item>
+                                    <LinkContainer to="config/infrastructure/containers">
+                                        <NavDropdown.Item eventKey={2.4}>Containers</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/vulnerabilities">
+                                        <NavDropdown.Item eventKey={2.5}>Container Vulnerabilities</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/flags">
+                                        <NavDropdown.Item eventKey={2.6}>Container Flags</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/firewalls">
+                                        <NavDropdown.Item eventKey={2.7}>Container Firewalls</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/users">
+                                        <NavDropdown.Item eventKey={2.8}>Container Users</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/clients">
+                                        <NavDropdown.Item eventKey={2.9}>Client Population</NavDropdown.Item>
                                     </LinkContainer>
                                 </NavDropdown>
                             </Nav>
