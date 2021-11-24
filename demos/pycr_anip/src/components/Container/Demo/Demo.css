@@ -12,9 +12,17 @@
 }
 
 .defenderPolicyPlotSlider {
-    margin-top:7px;
+    margin-top:30px;
 }
 
 .defenderPolicyPlotSliderLabel {
-    margin-top:0px;
+    margin-top:22px;
+}
+
+.noIntrusion {
+    color: darkgreen;
+}
+
+.intrusion {
+    color: darkred;
 }

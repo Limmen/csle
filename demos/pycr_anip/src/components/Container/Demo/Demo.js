@@ -10,10 +10,13 @@ import {
     Label,
     Legend, Line,
     LineChart,
+    BarChart,
+    Bar,
     ResponsiveContainer,
     Tooltip,
     XAxis,
-    YAxis
+    YAxis,
+    ReferenceLine
 } from "recharts";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -70,11 +73,23 @@ const Demo = (props) => {
         }
     }
 
+    const IntrusionStarted = (props) => {
+        if (props.traces.length > 0) {
+            if (props.t >= props.traces[props.activeTrace].intrusion_start_index) {
+                return (<span className="intrusion">Yes</span>)
+            } else {
+                return (<span className="noIntrusion">No</span>)
+            }
+        } else {
+            return (<span className="noIntrusion">No</span>)
+        }
+    }
+
     const AttackerActions = (props) => {
         if (props.traces.length > 0) {
             var attackerActions = []
             for (let i = 0; i < props.traces[props.activeTrace].attacker_actions.length; i++) {
-                if (i <= Math.max((props.t),0) && i >= Math.max((props.t-3),0)) {
+                if (i <= Math.max((props.t), 0) && i >= Math.max((props.t - 3), 0)) {
                     var a = 372
                     if (props.traces[props.activeTrace].attacker_actions[i] !== -1) {
                         a = props.traces[props.activeTrace].attacker_actions[i]
@@ -99,9 +114,11 @@ const Demo = (props) => {
     }
 
 
-    const [animationDuration, setAnimationDuration] = useState(0);
+    const [animationDuration, setAnimationDuration] = useState(100);
     const [animation, setAnimation] = useState(false);
     const animiationDurationFactor = 50000
+    const fullDomain = false
+    const fullRange = true
 
     const onSliderChange = (value) => {
         setAnimationDuration(value)
@@ -112,7 +129,7 @@ const Demo = (props) => {
         }
     };
 
-    const PolicyAreaChart = (props) => {
+    const PolicyAndBeliefAreaChart = (props) => {
         const width = 500
         const height = 200
         const margin = {
@@ -122,13 +139,31 @@ const Demo = (props) => {
             bottom: 25
         }
         if (props.traces.length > 0) {
-            const data = props.traces[props.activeTrace].defender_stop_probabilities
-                .filter((prob, index) => index <= props.t).map((prob, index) => {
-                    return {
-                        t: index + 1,
-                        StoppingProbability: prob
-                    }
+            const data = []
+            const probs = []
+            const beliefs = []
+            const ticks = []
+            var yMax = 1
+            for (let i = 0; i <= props.t; i++) {
+                data.push({
+                    t: i + 1,
+                    "Stopping Probability": props.traces[props.activeTrace].defender_stop_probabilities[i],
+                    Belief: props.traces[props.activeTrace].defender_beliefs[i]
                 })
+                probs.push(props.traces[props.activeTrace].defender_stop_probabilities[i])
+                beliefs.push(props.traces[props.activeTrace].defender_beliefs[i])
+                ticks.push(i+1)
+                yMax = Math.min(yMax, Math.max(props.traces[props.activeTrace].defender_stop_probabilities[i],
+                    props.traces[props.activeTrace].defender_beliefs[i]))
+            }
+            var domain = [0, Math.max(1, data.length)]
+            if (fullDomain) {
+                domain = [1, props.traces[props.activeTrace].defender_stop_probabilities.length]
+            }
+            var range = [0, 1]
+            if (!fullRange) {
+                range = [0, yMax]
+            }
             return (
                 <ResponsiveContainer width='100%' height={300}>
                     <AreaChart
@@ -149,15 +184,29 @@ const Demo = (props) => {
                             </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number" domain={[1, data.length]}>
+                        <XAxis dataKey="t" type="number" domain={domain} ticks={ticks}>
                             <Label value="Time-step t" offset={-20} position="insideBottom"/>
                         </XAxis>
-                        <YAxis type="number">
+                        <YAxis type="number" domain={range}>
                             <Label angle={270} value="Probability" offset={0} position="insideLeft"/>
                         </YAxis>
                         <Tooltip/>
-                        <Area type="monotone" dataKey="StoppingProbability" stroke="#8884d8" fill="#82ca9d"
+                        <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
+                                       stroke="black" label={{
+                            position: 'insideTopRight',
+                            value: 'Intrusion started', fill: 'black',
+                            fontSize: 14, marginTop: "10px"
+                        }} strokeDasharray="3 3"/>
+                        <ReferenceLine y={0.5}
+                                       stroke="black" strokeDasharray="5 5 " />
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <Area type="monotone" dataKey="Stopping Probability" stroke="#8884d8"
                               isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
+                              animationEasing={'linear'}
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
+
+                        <Area type="monotone" dataKey="Belief" stroke="#82ca9d" fill="#82ca9d"
+                              isAnimationActive={animation} fillOpacity={1} fill="url(#colorPv)"
                               animationEasing={'linear'}
                               animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
                     </AreaChart>
@@ -192,7 +241,7 @@ const Demo = (props) => {
                             <Label angle={270} value="Probability" offset={0} position="insideLeft"/>
                         </YAxis>
                         <Tooltip/>
-                        <Area type="monotone" dataKey="StoppingProbability" stroke="#8884d8" fill="#82ca9d"
+                        <Area type="monotone" dataKey="Stopping Probability" stroke="#8884d8" fill="#82ca9d"
                               isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
                               animationEasing={'linear'}
                               animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
@@ -217,6 +266,7 @@ const Demo = (props) => {
             const filteredData = props.traces[props.activeTrace].defender_observations
                 .filter((prob, index) => index <= props.t)
             var data = []
+            var ticks = []
             for (let i = 0; i < filteredData.length; i++) {
                 var deltaX = filteredData[i][0]
                 var deltaY = filteredData[i][1]
@@ -234,39 +284,46 @@ const Demo = (props) => {
                         "Login Attempts Δz": deltaZ
                     }
                 )
+                ticks.push(i+1)
             }
-
+            var domain = [0, Math.max(1, data.length)]
+            if (fullDomain) {
+                domain = [1, props.traces[props.activeTrace].defender_observations.length]
+            }
             return (
                 <ResponsiveContainer width='100%' height={300}>
-                    <LineChart
+                    <BarChart
                         width={width}
                         height={height}
                         data={data}
                         margin={margin}
                     >
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number" domain={[1, data.length]}>
+                        <XAxis dataKey="t" type="number" domain={domain}
+                               ticks={ticks}
+                        >
                             <Label value="Time-step t" offset={-20} position="insideBottom"/>
                         </XAxis>
                         <YAxis type="number">
                             <Label angle={270} value="Value" offset={0} position="insideLeft"/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone"
-                              dataKey="Severe Alerts Δx"
-                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
-                              animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
-                              stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                    </LineChart>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
+                                       stroke="black" label={{ position: 'insideTopRight',
+                            value: 'Intrusion started', fill: 'black',
+                            fontSize: 14, marginTop:"10px"}} strokeDasharray="3 3"
+                         />
+                        <Bar dataKey="Severe Alerts Δx" fill="#8884d8" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                        <Bar dataKey="Warning Alerts Δy" fill="#82ca9d" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                        <Bar dataKey="Login Attempts Δz" fill="#742911" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                    </BarChart>
                 </ResponsiveContainer>
             )
 
@@ -287,7 +344,7 @@ const Demo = (props) => {
                             <Label angle={270} value="Value" offset={0} position="insideLeft"/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" height={36}/>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
                         <Line isAnimationActive={animation} animation={animation} type="monotone"
                               dataKey="Severe Alerts Δx"
                               stroke="#8884d8" addDot={false} activeDot={{r: 8}}
@@ -318,8 +375,10 @@ const Demo = (props) => {
         }
 
         if (props.traces.length > 0) {
+            const ticks = []
             const data = props.traces[props.activeTrace].defender_observations
                 .filter((prob, index) => index <= props.t).map((defenderObs, index) => {
+                    ticks.push(index+1)
                     return {
                         t: index + 1,
                         "Severe Alerts ΣΔx": defenderObs[0],
@@ -327,6 +386,10 @@ const Demo = (props) => {
                         "Login Attempts ΣΔz": defenderObs[2]
                     }
                 })
+            var domain = [0, Math.max(1, data.length)]
+            if (fullDomain) {
+                domain = [1, props.traces[props.activeTrace].defender_observations.length]
+            }
 
             return (
                 <ResponsiveContainer width='100%' height={300}>
@@ -336,24 +399,34 @@ const Demo = (props) => {
                         data={data}
                         margin={margin}
                     >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="t" type="number" domain={[1, data.length]}>
-                            <Label value="Time-step t" offset={-20} position="insideBottom" />
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="t" type="number" domain={domain} ticks={ticks}>
+                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft" />
+                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
                         </YAxis>
-                        <Tooltip />
-                        <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts ΣΔx"
-                              stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
+                        <Tooltip/>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
+                                       stroke="black" label={{
+                            position: 'insideTopRight',
+                            value: 'Intrusion started', fill: 'black',
+                            fontSize: 14, marginTop: "10px"
+                        }} strokeDasharray="3 3" />
+                        <Line isAnimationActive={animation} animation={animation} type="monotone"
+                              dataKey="Severe Alerts ΣΔx"
+                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
+                              animationEasing={'linear'}
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts ΣΔy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                              isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts ΣΔz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                              isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -367,24 +440,28 @@ const Demo = (props) => {
                         data={[]}
                         margin={margin}
                     >
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number">
-                            <Label value="Time-step t" offset={-20} position="insideBottom" />
+                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft" />
+                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
                         </YAxis>
-                        <Tooltip />
-                        <Legend verticalAlign="top" height={36}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone" dataKey="Severe Alerts Δx"
-                              stroke="#8884d8" addDot={false} activeDot={{ r: 8 }}
-                              animationEasing={'linear'} animationDuration={((1-(animationDuration/100))*animiationDurationFactor)}/>
+                        <Tooltip/>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <Line isAnimationActive={animation} animation={animation} type="monotone"
+                              dataKey="Severe Alerts Δx"
+                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
+                              animationEasing={'linear'}
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                              isAnimationActive={animation}/>
                         <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
                               stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1-(animationDuration/100))*animiationDurationFactor)} isAnimationActive={animation}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                              isAnimationActive={animation}/>
                     </LineChart>
                 </ResponsiveContainer>
             )
@@ -397,12 +474,6 @@ const Demo = (props) => {
     if (props.traces.length > 0) {
         attacker_found_nodes = props.traces[props.activeTrace].attacker_found_nodes[props.t]
         attacker_compromised_nodes = props.traces[props.activeTrace].attacker_compromised_nodes[props.t]
-        // for (let i = 0; i < props.traces[props.activeTrace].attacker_found_nodes[props.t].length; i++) {
-        //     attacker_found_nodes.push(props.traces[props.activeTrace].attacker_found_nodes[props.t][i])
-        // }
-        // for (let i = 0; i < props.traces[props.activeTrace].attacker_compromised_nodes[props.t].length; i++) {
-        //     attacker_compromised_nodes.push(props.traces[props.activeTrace].attacker_compromised_nodes[props.t][i])
-        // }
         if (props.traces[props.activeTrace].attacker_actions[props.t] !== props.traces[props.activeTrace].attacker_continue_action
             && props.traces[props.activeTrace].attacker_actions[props.t] !== -1) {
             if (!attacker_found_nodes.includes("attacker")) {
@@ -476,15 +547,17 @@ const Demo = (props) => {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="DefenderPolicy row justify-content-center card">
-                            <div className="card-header cardHeader"><h4>Stopping probability πΘ(stop|h)</h4></div>
+                            <div className="card-header cardHeader"><h4>Stopping probability πΘ(stop|h) and Belief
+                                b(1)</h4></div>
                             <div className="card-body">
-                                <PolicyAreaChart traces={props.traces} activeTrace={props.activeTrace} t={props.t}/>
+                                <PolicyAndBeliefAreaChart traces={props.traces} activeTrace={props.activeTrace}
+                                                          t={props.t}/>
                             </div>
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <span className="defenderPolicyPlotSliderLabel">Evolution speed:</span>
+                            <div className="row evolutionRow">
+                                <div className="col-sm-4">
+                                    <p className="defenderPolicyPlotSliderLabel">Evolution speed:</p>
                                 </div>
-                                <div className="col-sm-2">
+                                <div className="col-sm-4">
                                     <Slider
                                         className="defenderPolicyPlotSlider"
                                         min={0}
@@ -508,11 +581,11 @@ const Demo = (props) => {
                                 <DeltaAlertsLineChart traces={props.traces} activeTrace={props.activeTrace}
                                                       t={props.t}/>
                             </div>
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <span className="defenderPolicyPlotSliderLabel">Evolution speed:</span>
+                            <div className="row evolutionRow">
+                                <div className="col-sm-4">
+                                    <p className="defenderPolicyPlotSliderLabel">Evolution speed:</p>
                                 </div>
-                                <div className="col-sm-2">
+                                <div className="col-sm-4">
                                     <Slider
                                         className="defenderPolicyPlotSlider"
                                         min={0}
@@ -534,13 +607,13 @@ const Demo = (props) => {
                             </div>
                             <div className="card-body">
                                 <AggregatedAlertsLineChart traces={props.traces} activeTrace={props.activeTrace}
-                                                      t={props.t}/>
+                                                           t={props.t}/>
                             </div>
-                            <div className="row">
-                                <div className="col-sm-2">
-                                    <span className="defenderPolicyPlotSliderLabel">Evolution speed:</span>
+                            <div className="row evolutionRow">
+                                <div className="col-sm-4">
+                                    <p className="defenderPolicyPlotSliderLabel">Evolution speed:</p>
                                 </div>
-                                <div className="col-sm-2">
+                                <div className="col-sm-4">
                                     <Slider
                                         className="defenderPolicyPlotSlider"
                                         min={0}
@@ -580,12 +653,15 @@ const Demo = (props) => {
                                     </div>
                                 </div>
                                 <div className="col-sm-3">
+                                    <h6 className="intrusionStateInfo">Intrusion started:
+                                        <IntrusionStarted traces={props.traces} activeTrace={props.activeTrace}
+                                                          l={props.l} t={props.t}/></h6>
                                     <h6>Defensive measures:</h6>
                                     <DefensiveMeasures traces={props.traces} activeTrace={props.activeTrace} l={props.l}
                                                        t={props.t}/>
                                     <h6 className="intrusionStateInfo">Last 4 attacker actions:</h6>
                                     <AttackerActions traces={props.traces} activeTrace={props.activeTrace} l={props.l}
-                                                       t={props.t}/>
+                                                     t={props.t}/>
                                     <h6 className="intrusionStateInfo"># Compromised nodes:{numCompromised(props)}</h6>
                                 </div>
                             </div>
