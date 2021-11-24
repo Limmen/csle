@@ -159,7 +159,7 @@ const Demo = (props) => {
                         <Area type="monotone" dataKey="StoppingProbability" stroke="#8884d8" fill="#82ca9d"
                               isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
                               animationEasing={'linear'}
-                              animationDuration={(1 - (animationDuration / 100) * animiationDurationFactor)}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
                     </AreaChart>
                 </ResponsiveContainer>
             )
@@ -195,7 +195,7 @@ const Demo = (props) => {
                         <Area type="monotone" dataKey="StoppingProbability" stroke="#8884d8" fill="#82ca9d"
                               isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
                               animationEasing={'linear'}
-                              animationDuration={(1000 - (animationDuration / 100) * 10000)}/>
+                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
                     </AreaChart>
                 </ResponsiveContainer>
             )
@@ -292,7 +292,7 @@ const Demo = (props) => {
                               dataKey="Severe Alerts Δx"
                               stroke="#8884d8" addDot={false} activeDot={{r: 8}}
                               animationEasing={'linear'}
-                              animationDuration={(1000 - (animationDuration / 100) * 10000)}/>
+                              animationDuration={(1 - (animationDuration / 100) * animiationDurationFactor)}/>
                         <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
                               animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}

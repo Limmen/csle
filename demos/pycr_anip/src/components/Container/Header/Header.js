@@ -1,12 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Header.css';
 import {NavLink} from "react-router-dom";
 import Glyphicon from '@strongdm/glyphicon'
-import {Dropdown} from "react-bootstrap"
+import {Dropdown, NavDropdown, Nav} from "react-bootstrap"
 import TraceDropdownElement from "./TraceDropdownElement/TraceDropdownElement";
 import mdp from "./pycr_101_s1.png"
+import {LinkContainer} from 'react-router-bootstrap';
 
 const Header = (props) => {
+
+    const [activeNavKey, setActiveNavKey] = useState(0);
+
+    const handleSelect = (key) => {
+        setActiveNavKey(Math.trunc(key))
+    }
+
+    const handleSelectNonNavBar = (key) => {
+        setActiveNavKey(0)
+    }
 
     const NextStop = (props) => {
         if (props.traces.length > 0) {
@@ -55,34 +66,58 @@ const Header = (props) => {
                         <button type="submit" className="btn" onClick={props.lastT} className="shortCutT">
                             T∅
                         </button>
-
+                    </h6>
+                    <h6 className="timeStepControls2">
                         <span className="stopsRemainingLabel">Stops remaining: {props.l}</span>
+                    </h6>
+                    <h6 className="timeStepControls3">
                         <span className="nextStopLabel">Next stop: <code>{NextStop(props)}</code></span>
                     </h6>
                 </div>
                 <div className="col-sm-8 p-5 mb-4 bg-light rounded-3 jumbotron">
                     <h3 className="display-9 align-content-center fw-bold  title">
-                        Intrusion Prevention through Optimal  Stopping
+                        Intrusion Prevention through Optimal Stopping
                     </h3>
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     </nav>
                     <ul className="nav nav-tabs justify-content-center navtabsheader">
                         <li className="nav-item navtabheader">
-                            <NavLink className="nav-link navtablabel" to={"demo"}  activeClassName="active">
-                                Demo
-                            </NavLink>
+                                <NavLink className="nav-link navtablabel" to={"demo"} activeClassName="active"
+                                         onClick={handleSelectNonNavBar}>
+                                    Demo
+                                </NavLink>
                         </li>
-                        <li className="nav-item navtabheader">
-                            <NavLink className="nav-link navtablabel" to={"log"}
-                                     activeClassName="active">
-                                ActivityLog
-                            </NavLink>
+                        <li className="nav-item dropdown navtabheader">
+                            <Nav activeKey={activeNavKey} onSelect={handleSelect}>
+                                <NavDropdown className="navdropdownheader" title="Logs" id="basic-nav-dropdown"
+                                             activeClassName="active" eventKey={3} active={activeNavKey == 3}>
+                                    <LinkContainer to="log/attacker">
+                                        <NavDropdown.Item eventKey={3.1}>Attacker log</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="log/defender">
+                                        <NavDropdown.Item eventKey={3.2}>Defender log</NavDropdown.Item>
+                                    </LinkContainer>
+                                </NavDropdown>
+                            </Nav>
                         </li>
-                        <li className="nav-item navtabheader">
-                            <NavLink className="nav-link navtablabel" to={"config"}
-                                     activeClassName="active">
-                                Infrastructure Configuration
-                            </NavLink>
+                        <li className="nav-item dropdown navtabheader">
+                            <Nav activeKey={activeNavKey} onSelect={handleSelect}>
+                                <NavDropdown className="navdropdownheader" title="Configurations" id="basic-nav-dropdown"
+                                             activeClassName="active" eventKey={2} active={activeNavKey == 2}>
+                                    <LinkContainer to="config/attacker/actionspace">
+                                        <NavDropdown.Item eventKey={2.1}>Attacker action space</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/attacker/staticpolicy">
+                                        <NavDropdown.Item eventKey={2.2}>Attacker static policy</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/defender/actionspace">
+                                        <NavDropdown.Item eventKey={2.3}>Defender action space</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="config/infrastructure/config">
+                                        <NavDropdown.Item eventKey={2.4}>Infrastructure configuration</NavDropdown.Item>
+                                    </LinkContainer>
+                                </NavDropdown>
+                            </Nav>
                         </li>
                     </ul>
                 </div>

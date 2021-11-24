@@ -3,8 +3,16 @@ import './App.css';
 import Container from "./components/Container/Container";
 import NotFound from "./components/Container/NotFound/NotFound";
 import Demo from "./components/Container/Demo/Demo";
-import InfrastructureConfiguration from "./components/Container/InfrastructureConfiguration/InfrastructureConfiguration";
-import ActivityLog from "./components/Container/ActivityLog/ActivityLog";
+import InfrastructureConfiguration
+    from "./components/Container/InfrastructureConfiguration/InfrastructureConfiguration";
+import AttackerActionSpaceConfig
+    from "./components/Container/AttackerActionSpaceConfig/AttackerActionSpaceConfig";
+import AttackerStaticPolicyConfig
+    from "./components/Container/AttackerStaticPolicyConfig/AttackerStaticPolicyConfig";
+import DefenderActionSpaceConfig
+    from "./components/Container/DefenderActionSpaceConfig/DefenderActionSpaceConfig";
+import DefenderLog from "./components/Container/DefenderLog/DefenderLog";
+import AttackerLog from "./components/Container/AttackerLog/AttackerLog";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
 
@@ -91,7 +99,7 @@ function App() {
         if (tRef.current >= tracesRef.current[activeTraceRef.current].defender_actions.length - 1) {
             setTRef(tracesRef.current[activeTraceRef.current].defender_actions.length - 1)
         } else {
-            while(tRef.current < tracesRef.current[activeTraceRef.current].defender_actions.length - 1){
+            while (tRef.current < tracesRef.current[activeTraceRef.current].defender_actions.length - 1) {
                 if (tracesRef.current[activeTraceRef.current].defender_actions[tRef.current + 1] == 0 && lRef.current > 0) {
                     setLRef(lRef.current - 1)
                 }
@@ -110,10 +118,10 @@ function App() {
     }
 
     const handleKeyPress = (event) => {
-        if(event.key === 'ArrowLeft'){
+        if (event.key === 'ArrowLeft') {
             decrementT()
         }
-        if(event.key === 'ArrowRight'){
+        if (event.key === 'ArrowRight') {
             incrementT()
         }
     }
@@ -151,7 +159,7 @@ function App() {
                                     setActiveDefenderPolicy={setActiveDefenderPolicy}
                                 />}>
                                 </Route>
-                                <Route path="log" element={<ActivityLog
+                                <Route path="log/defender" element={<DefenderLog
                                     t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                     activeTrace={activeTrace} traces={traces}
                                     setActiveTrace={setActiveTraceRef}
@@ -161,7 +169,47 @@ function App() {
                                     setActiveDefenderPolicy={setActiveDefenderPolicy}
                                 />}>
                                 </Route>
-                                <Route path="config" element={<InfrastructureConfiguration
+                                <Route path="log/attacker" element={<AttackerLog
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/attacker/actionspace" element={<AttackerActionSpaceConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/attacker/staticpolicy" element={<AttackerStaticPolicyConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/infrastructure/config" element={<InfrastructureConfiguration
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="config/defender/actionspace" element={<DefenderActionSpaceConfig
                                     t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                     activeTrace={activeTrace} traces={traces}
                                     setActiveTrace={setActiveTraceRef}

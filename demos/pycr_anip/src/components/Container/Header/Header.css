@@ -1,3 +1,7 @@
+
+.navdropdownlink {
+    font-weight: normal;
+}
 .Header {
     margin-bottom: 0px;
 }
@@ -24,16 +28,40 @@
 }
 
 .timeStepControls{
-    position:absolute !important;
-    text-align: left !important;
-    float:left !important;
-    font-weight: bolder;
-    margin-top:75px;
+    position: absolute;
+    float:left;
     margin-left:-30px;
+    margin-top:5px;
+    font-weight: bolder;
+}
+
+.timeStepControls2{
+    position: absolute;
+    float:left;
+    margin-left:-50px;
+    margin-top:50px;
+    font-weight: bolder;
+}
+
+.timeStepControls3{
+    position: absolute;
+    float:left;
+    margin-left:-50px;
+    margin-top:80px;
+    font-weight: bolder;
 }
 
 .navtabsheader {
     margin-top: 50px;
+}
+
+.navdropdownheader {
+    font-weight: bolder;
+    color: black !important;
+}
+
+#basic-nav-dropdown {
+    color: black
 }
 
 .navtabheader {

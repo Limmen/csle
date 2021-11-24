@@ -5,9 +5,6 @@ const InfrastructureConfiguration = (props) => {
 
     return (
         <div className="InfrastructureConfiguration">
-            <div className="row">
-                TODO
-            </div>
         </div>
     );
 }
