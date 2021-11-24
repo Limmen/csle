@@ -653,10 +653,10 @@ const Demo = (props) => {
                                     </div>
                                 </div>
                                 <div className="col-sm-3">
-                                    <h6 className="intrusionStateInfo">Intrusion started:
+                                    <h6>Intrusion started:
                                         <IntrusionStarted traces={props.traces} activeTrace={props.activeTrace}
                                                           l={props.l} t={props.t}/></h6>
-                                    <h6>Defensive measures:</h6>
+                                    <h6 className="intrusionStateInfo">Defensive measures:</h6>
                                     <DefensiveMeasures traces={props.traces} activeTrace={props.activeTrace} l={props.l}
                                                        t={props.t}/>
                                     <h6 className="intrusionStateInfo">Last 4 attacker actions:</h6>
