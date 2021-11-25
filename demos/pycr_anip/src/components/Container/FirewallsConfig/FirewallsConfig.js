@@ -87,7 +87,7 @@ const FirewallsConfig = (props) => {
                                     <th>Default gateway</th>
                                     <th>Default forward</th>
                                     <th>Default input</th>
-                                    <th>Default accept</th>
+                                    <th>Default output</th>
                                     <th>Forward accept</th>
                                     <th>Forward drop</th>
                                     <th>Input accept</th>

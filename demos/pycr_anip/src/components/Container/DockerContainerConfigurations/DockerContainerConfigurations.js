@@ -12,7 +12,7 @@ const DockerContainerConfigurations = (props) => {
                         <td>{container.ip}</td>
                         <td>{container.level}</td>
                         <td>{container.minigame}</td>
-                        <td>{container.image}</td>
+                        <td>{container.name}</td>
                         <td>{container.network}</td>
                         <td>{container.version}</td>
                     </tr>
