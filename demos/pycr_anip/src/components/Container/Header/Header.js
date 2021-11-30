@@ -87,6 +87,17 @@ const Header = (props) => {
                                     Demo
                                 </NavLink>
                         </li>
+                        <li className="nav-item navtabheader">
+                            <NavDropdown className="navdropdownheader" title="Training" id="basic-nav-dropdown"
+                                         activeClassName="active" eventKey={4} active={activeNavKey == 4}>
+                                <LinkContainer to="training/attacker">
+                                    <NavDropdown.Item eventKey={4.1}>Attacker Training</NavDropdown.Item>
+                                </LinkContainer>
+                                <LinkContainer to="training/defender">
+                                    <NavDropdown.Item eventKey={4.2}>Defender Training</NavDropdown.Item>
+                                </LinkContainer>
+                            </NavDropdown>
+                        </li>
                         <li className="nav-item dropdown navtabheader">
                             <Nav activeKey={activeNavKey} onSelect={handleSelect}>
                                 <NavDropdown className="navdropdownheader" title="Logs" id="basic-nav-dropdown"

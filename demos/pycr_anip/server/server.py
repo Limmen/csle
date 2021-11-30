@@ -73,6 +73,18 @@ def config_infra_users():
 def config_infra_clients():
     return app.send_static_file('index.html')
 
+@app.route('/training')
+def training():
+    return app.send_static_file('index.html')
+
+@app.route('/training/defender')
+def training_defender():
+    return app.send_static_file('index.html')
+
+@app.route('/training/attacker')
+def training_attacker():
+    return app.send_static_file('index.html')
+
 @app.route('/trajectories')
 def trajectories():
     taus: dict = Trajectory.load_trajectories_json(

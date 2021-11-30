@@ -117,7 +117,7 @@ const Demo = (props) => {
     const [animationDuration, setAnimationDuration] = useState(100);
     const [animation, setAnimation] = useState(false);
     const animiationDurationFactor = 50000
-    const fullDomain = false
+    const fullDomain = true
     const fullRange = true
 
     const onSliderChange = (value) => {
@@ -194,7 +194,7 @@ const Demo = (props) => {
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
                                        stroke="black" label={{
                             position: 'insideTopRight',
-                            value: 'Intrusion started', fill: 'black',
+                            value: 'Intrusion starts', fill: 'black',
                             fontSize: 14, marginTop: "10px"
                         }} strokeDasharray="3 3"/>
                         <ReferenceLine y={0.5}
@@ -215,38 +215,7 @@ const Demo = (props) => {
 
         } else {
             return (
-                <ResponsiveContainer width='100%' height={300}>
-                    <AreaChart
-                        width={width}
-                        height={height}
-                        data={[]}
-                        syncId="anyId"
-                        margin={margin}
-                    >
-                        <defs>
-                            <linearGradient id="colorProb" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                            </linearGradient>
-                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number">
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
-                        </XAxis>
-                        <YAxis type="number" domain={[0, 1]}>
-                            <Label angle={270} value="Probability" offset={0} position="insideLeft"/>
-                        </YAxis>
-                        <Tooltip/>
-                        <Area type="monotone" dataKey="Stopping Probability" stroke="#8884d8" fill="#82ca9d"
-                              isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
-                              animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
-                    </AreaChart>
-                </ResponsiveContainer>
+                <div></div>
             )
         }
     }
@@ -311,7 +280,7 @@ const Demo = (props) => {
                         <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
                                        stroke="black" label={{ position: 'insideTopRight',
-                            value: 'Intrusion started', fill: 'black',
+                            value: 'Intrusion starts', fill: 'black',
                             fontSize: 14, marginTop:"10px"}} strokeDasharray="3 3"
                          />
                         <Bar dataKey="Severe Alerts Δx" fill="#8884d8" stroke="black" animationEasing={'linear'}
@@ -329,37 +298,7 @@ const Demo = (props) => {
 
         } else {
             return (
-                <ResponsiveContainer width='100%' height={300}>
-                    <LineChart
-                        width={width}
-                        height={height}
-                        data={[]}
-                        margin={margin}
-                    >
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number">
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
-                        </XAxis>
-                        <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
-                        </YAxis>
-                        <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone"
-                              dataKey="Severe Alerts Δx"
-                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
-                              animationEasing={'linear'}
-                              animationDuration={(1 - (animationDuration / 100) * animiationDurationFactor)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
-                              stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                    </LineChart>
-                </ResponsiveContainer>
+                <div></div>
             )
         }
     }
@@ -393,14 +332,16 @@ const Demo = (props) => {
 
             return (
                 <ResponsiveContainer width='100%' height={300}>
-                    <LineChart
+                    <BarChart
                         width={width}
                         height={height}
                         data={data}
                         margin={margin}
                     >
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number" domain={domain} ticks={ticks}>
+                        <XAxis dataKey="t" type="number" domain={domain}
+                               ticks={ticks}
+                        >
                             <Label value="Time-step t" offset={-20} position="insideBottom"/>
                         </XAxis>
                         <YAxis type="number">
@@ -409,61 +350,26 @@ const Demo = (props) => {
                         <Tooltip/>
                         <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
-                                       stroke="black" label={{
-                            position: 'insideTopRight',
-                            value: 'Intrusion started', fill: 'black',
-                            fontSize: 14, marginTop: "10px"
-                        }} strokeDasharray="3 3" />
-                        <Line isAnimationActive={animation} animation={animation} type="monotone"
-                              dataKey="Severe Alerts ΣΔx"
-                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
-                              animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts ΣΔy"
-                              stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts ΣΔz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                    </LineChart>
+                                       stroke="black" label={{ position: 'insideTopRight',
+                            value: 'Intrusion starts', fill: 'black',
+                            fontSize: 14, marginTop:"10px"}} strokeDasharray="3 3"
+                        />
+                        <Bar dataKey="Severe Alerts ΣΔx" fill="#8884d8" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                        <Bar dataKey="Warning Alerts ΣΔy" fill="#82ca9d" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                        <Bar dataKey="Login Attempts ΣΔz" fill="#742911" stroke="black" animationEasing={'linear'}
+                             animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
+                        />
+                    </BarChart>
                 </ResponsiveContainer>
             )
 
         } else {
             return (
-                <ResponsiveContainer width='100%' height={300}>
-                    <LineChart
-                        width={width}
-                        height={height}
-                        data={[]}
-                        margin={margin}
-                    >
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="t" type="number">
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
-                        </XAxis>
-                        <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
-                        </YAxis>
-                        <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
-                        <Line isAnimationActive={animation} animation={animation} type="monotone"
-                              dataKey="Severe Alerts Δx"
-                              stroke="#8884d8" addDot={false} activeDot={{r: 8}}
-                              animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
-                        <Line animation={animation} type="monotone" dataKey="Warning Alerts Δy"
-                              stroke="#82ca9d" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                        <Line animation={animation} type="monotone" dataKey="Login Attempts Δz"
-                              stroke="#742911" animationEasing={'linear'}
-                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
-                              isAnimationActive={animation}/>
-                    </LineChart>
-                </ResponsiveContainer>
+                <div></div>
             )
         }
     }

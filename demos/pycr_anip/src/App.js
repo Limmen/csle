@@ -23,6 +23,8 @@ import TrafficConfig
     from "./components/Container/TrafficConfig/TrafficConfig";
 import DefenderLog from "./components/Container/DefenderLog/DefenderLog";
 import AttackerLog from "./components/Container/AttackerLog/AttackerLog";
+import DefenderTraining from "./components/Container/DefenderTraining/DefenderTraining";
+import AttackerTraining from "./components/Container/AttackerTraining/AttackerTraining";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
 
@@ -270,6 +272,26 @@ function App() {
                                 />}>
                                 </Route>
                                 <Route path="config/infrastructure/clients" element={<TrafficConfig
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="training/defender" element={<DefenderTraining
+                                    t={t} l={l} incrementT={incrementT} decrementT={decrementT}
+                                    activeTrace={activeTrace} traces={traces}
+                                    setActiveTrace={setActiveTraceRef}
+                                    lastT={lastT} firstT={firstT}
+                                    defenderPolicies={defenderPolicies}
+                                    activeDefenderPolicy={activeDefenderPolicy}
+                                    setActiveDefenderPolicy={setActiveDefenderPolicy}
+                                />}>
+                                </Route>
+                                <Route path="training/attacker" element={<AttackerTraining
                                     t={t} l={l} incrementT={incrementT} decrementT={decrementT}
                                     activeTrace={activeTrace} traces={traces}
                                     setActiveTrace={setActiveTraceRef}
