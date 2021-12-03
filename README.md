@@ -135,7 +135,7 @@ Creative Commons
 
 ## Publications
 
-- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (CNSM 2020) (preprint: https://arxiv.org/abs/2009.08120, proceedings: https://ieeexplore.ieee.org/document/9269092)**
+- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (CNSM 2020) (preprint: https://arxiv.org/abs/2009.08120, proceedings: https://ieeexplore.ieee.org/document/9269092, IFIP Open Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2020/index.html)**
 ```
 @INPROCEEDINGS{Hamm2011:Finding,
 AUTHOR="Kim Hammar and Rolf Stadler",
@@ -165,7 +165,7 @@ evaluations we show that our method is superior to two baseline methods but
 that policy convergence in self-play remains a challenge."
 }
 ```
-- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (preprint: https://arxiv.org/abs/2106.07160, proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
+- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (preprint: https://arxiv.org/abs/2106.07160, IEEE Proceedings: https://ieeexplore.ieee.org/document/9615542, IFIP Open Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
 ``` bash
 @INPROCEEDINGS{hammar_stadler_cnsm_21,
 AUTHOR="Kim Hammar and Rolf Stadler",
@@ -180,11 +180,11 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
-- **Intrusion Prevention through Optimal Stopping (https://arxiv.org/abs/2111.00289)**
+- **Intrusion Prevention through Optimal Stopping (Preprint: https://arxiv.org/abs/2111.00289)**
 
 ```bash
 @misc{hammar2021intrusion,
-      title={Intrusion Prevention through Optimal Stopping}, 
+      title={Intrusion Prevention through Optimal Stopping},
       author={Kim Hammar and Rolf Stadler},
       year={2021},
       eprint={2111.00289},
