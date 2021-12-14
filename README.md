@@ -197,6 +197,7 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 
 - [gym-idsgame](https://github.com/Limmen/gym-idsgame)
 - [gym-optimal-intrusion-response](https://github.com/Limmen/gym-optimal-intrusion-response)
+- [awesome-rl-for-cybersecurity](https://github.com/Limmen/awesome-rl-for-cybersecurity)
 
 ## Disclaimer
 
