@@ -115,6 +115,121 @@ train defender policies using reinforcement learning. It exposes an OpenAI-gym i
      - [x] A Dashboard for Inspecting Automated Intrusion Prevention Policies     
 
 ## Installation
+
+1. Install Docker (see ([README](./emulation-envs/README.MD)) for more information) 
+
+```bash
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+2. Install base images (see ([README](./emulation-envs/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
+```bash
+cd emulation-envs/base_images
+make build
+```
+
+3. Install derived images (see ([README](./emulation-envs/derived_images/README.MD)) for more information)
+```bash
+cd emulation-envs/derived_images
+make build
+```
+
+4. Install `pycr_common` (see ([README](./python-envs/common/pycr-common/README.md)) for more information)
+```bash
+cd python-envs/common/pycr-common/
+pip install -e .
+```
+
+5. Install `gym_pycr_ctf` (see ([README](./python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/README.MD)) for more information)
+```bash
+cd python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/
+pip install -e .
+```
+
+6. Create Docker networks (see ([README](./emulation-envs/networks/README.MD)) for more information)
+```bash
+cd emulation-envs/networks
+python create_networks.py -n 40
+```
+(Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
+
+## Create an Emulation
+
+After doing the installation steps an emulation can be created by using the following steps. 
+
+There are three ways to create an emulation: use a pre-configured emulation, use a random emulation, or configure your own emulation. 
+
+### Start a pre-configured emulation
+
+1. Select a pre-configured emulation from [use_cases](./emulation-envs/use_cases/), for example ([ctf_001_level_1](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1))
+2. Change directory:
+```bash
+cd emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1
+```
+3. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+```bash
+make run
+```
+
+4. Apply network/users/vulnerability/flags configuration to the emulation:
+```bash
+make apply_config
+```
+
+5. (Optional) Start traffic generators:
+```bash
+make traffic
+```
+
+6. Stopping the emulation
+To stop the emulation, run:
+```bash
+make stop
+```
+
+To delete the emulation, run:
+```bash
+make clean
+```
+
+### Start a random emulation
+
+1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/random)
+2. Generate a random configuration:
+```bash
+make gen_config
+``` 
+3. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+```bash
+make run
+```
+
+4. Apply network/users/vulnerability/flags configuration to the emulation:
+```bash
+make apply_config
+```
+
+5. (Optional) Start traffic generators:
+```bash
+make traffic
+```
+
+6. Stopping the emulation
+To stop the emulation, run:
+```bash
+make stop
+```
+
+To delete the emulation, run:
+```bash
+make clean
+``` 
+
+### Configure your own emulation
+
 TODO
 
 ## Quickstart
