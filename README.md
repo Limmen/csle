@@ -43,7 +43,7 @@ Second, we develop a **simulation system** where MDP/POMDP/Markov Game episodes 
 policies are incrementally learned. 
 Finally, the policies are extracted and evaluated in the emulation system, 
 and can also be implemented in the target infrastructure. 
-In short, the emulation system is used to provide the statistics needed to simulate the POMDP 
+In short, the emulation system is used to provide the statistics needed to simulate the MDP/POMDP/Markov Game 
 and to evaluate policies, whereas the simulation system is used to learn policies.
 
 
