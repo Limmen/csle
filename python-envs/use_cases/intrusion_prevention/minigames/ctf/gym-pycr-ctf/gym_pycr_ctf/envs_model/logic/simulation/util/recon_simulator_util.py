@@ -4,7 +4,7 @@ from pycr_common.dao.observation.common.port_observation_state import PortObserv
 from pycr_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from pycr_common.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -18,7 +18,7 @@ class ReconSimulatorUtil:
     """
 
     @staticmethod
-    def simulate_port_vuln_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float,
+    def simulate_port_vuln_scan_helper(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig, miss_p: float,
                                        protocol=TransportProtocol.TCP, vuln_scan : bool = False) \
             -> Tuple[EnvState, float, bool]:
         """
@@ -118,7 +118,7 @@ class ReconSimulatorUtil:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_host_scan_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, miss_p: float, os=False) -> \
+    def simulate_host_scan_helper(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig, miss_p: float, os=False) -> \
             Tuple[EnvState, float, bool]:
         """
         Helper method for simulating a host-scan (i.e non-port scan) action

@@ -4,7 +4,7 @@ from pycr_common.dao.action.attacker.base_attacker_action_config import BaseAtta
 from pycr_common.dao.action.defender.base_defender_action_config import BaseDefenderActionConfig
 
 
-class BaseEnvConfig(ABC):
+class BasePyCREnvConfig(ABC):
     """
     Abstract class representing the configuration of a PyCR environment
     """

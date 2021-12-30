@@ -3,7 +3,7 @@ from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_base import PyCrCTFRandomBase
 from gym_pycr_ctf.envs_model.config.random.pycr_ctf_random_v1 import PyCrCTFRandomV1
@@ -14,7 +14,7 @@ class PyCRCTFRandomManyEmulation1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_configs: List[ContainersConfig], flags_configs: List[FlagsConfig], idx : int,
                  num_nodes : int = -1):
         if num_nodes == -1:
@@ -64,7 +64,7 @@ class PyCRCTFRandomManyEmulationWithCosts1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_configs: List[ContainersConfig], flags_configs: List[FlagsConfig], idx : int,
                  num_nodes : int = -1):
         if num_nodes == -1:

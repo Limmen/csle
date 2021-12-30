@@ -15,7 +15,7 @@ from pycr_common.envs_model.logic.exploration.random_exploration_policy import R
 from pycr_common.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from pycr_common.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -35,7 +35,7 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
     Abstract OpenAI Gym Env for the PyCr CTF minigame
     """
 
-    def __init__(self, env_config : EnvConfig, rs = None):
+    def __init__(self, env_config : PyCREnvConfig, rs = None):
         self.env_config = env_config
         if util.is_network_conf_incomplete(env_config.network_conf) and self.env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Must provide a simulation model to run in simulation mode")
@@ -594,7 +594,7 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
             action, env_config=self.env_config, env_state=self.env_state), attacker_total_actions))
 
     @staticmethod
-    def is_defense_action_legal(defense_action_id: int, env_config: EnvConfig, env_state: EnvState) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: PyCREnvConfig, env_state: EnvState) -> bool:
         """
         Checks if a given defense action is legal in the current state of the environment
 
@@ -608,7 +608,7 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
                                                env_state=env_state)
 
     @staticmethod
-    def is_attack_action_legal(attack_action_id : int, env_config: EnvConfig, env_state: EnvState, m_selection: bool = False,
+    def is_attack_action_legal(attack_action_id : int, env_config: PyCREnvConfig, env_state: EnvState, m_selection: bool = False,
                                m_action: bool = False, m_index : int = None) -> bool:
         """
         Checks if a given attack action is legal in the current state of the environment

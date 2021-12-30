@@ -11,7 +11,7 @@ from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_randomization_space import P
 from pycr_common.envs_model.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
 from pycr_common.dao.network.flag import Flag
 from pycr_common.envs_model.logic.domain_randomization.pycr_domain_randomizer import PyCRDomainRandomizer
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_node_randomizer import PyCrCTFNodeRandomizer
 from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_randomization_space_config import PyCRCTFRandomizationSpaceConfig
 from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_node_randomizer_config import PyCRCTFNodeRandomizerConfig
@@ -92,8 +92,8 @@ class PyCrCTFPyCRDomainRandomizer(PyCRDomainRandomizer):
 
 
     @staticmethod
-    def randomize(subnet_prefix: str, network_ids: List, r_space: PyCrCTFRandomizationSpace, env_config: EnvConfig) \
-            -> Tuple[NetworkConfig, EnvConfig]:
+    def randomize(subnet_prefix: str, network_ids: List, r_space: PyCrCTFRandomizationSpace, env_config: PyCREnvConfig) \
+            -> Tuple[NetworkConfig, PyCREnvConfig]:
         """
         Randomizes a given MDP using a specified randomization space
 

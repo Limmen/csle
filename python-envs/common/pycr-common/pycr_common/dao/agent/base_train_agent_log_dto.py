@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.dao.agent.base_rollout_data_dto import BaseRolloutDataDTO
 from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.agents.config.agent_config import AgentConfig
@@ -24,7 +24,7 @@ class BaseTrainAgentLogDTO(ABC):
 
     @abstractmethod
     def eval_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
-                    env_conf: BaseEnvConfig, i: int) -> None:
+                    env_conf: BasePyCREnvConfig, i: int) -> None:
         """
         A method for updating the DTO with more data during evaluation
 
@@ -40,7 +40,7 @@ class BaseTrainAgentLogDTO(ABC):
 
     @abstractmethod
     def eval_2_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
-                    env_conf: BaseEnvConfig, i: int) -> None:
+                      env_conf: BasePyCREnvConfig, i: int) -> None:
         """
         A method for updating the DTO during evaluation in the dedicate evaluation environment
 

@@ -1,6 +1,6 @@
 from typing import Tuple
 import datetime
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 import pycr_common.constants.constants as constants
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
@@ -98,7 +98,7 @@ class ReadLogsUtil:
         return len(successful_logins)
 
     @staticmethod
-    def read_ids_data(env_config: EnvConfig, episode_last_alert_ts : datetime) \
+    def read_ids_data(env_config: PyCREnvConfig, episode_last_alert_ts : datetime) \
             -> Tuple[int, int, int, int, int, int, int, int]:
         """
         Measures metrics from the ids

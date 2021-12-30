@@ -7,7 +7,7 @@ import time
 from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from pycr_common.dao.network.base_env_state import BaseEnvState
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.agents.config.agent_config import AgentConfig
 
 
@@ -16,7 +16,7 @@ class PPOAttackerBotAgent:
     Class implementing an attack policy that acts greedily according to a given policy network
     """
 
-    def __init__(self, pg_config: AgentConfig, env_config: BaseEnvConfig, model_path: str = None,
+    def __init__(self, pg_config: AgentConfig, env_config: BasePyCREnvConfig, model_path: str = None,
                  env: BasePyCREnv = None):
         """
         Constructor, initializes the policy

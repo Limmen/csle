@@ -34,7 +34,7 @@ from pycr_common.agents.openai_baselines.common.vec_env import DummyVecEnv, VecE
 from pycr_common.agents.openai_baselines.common.policies import BasePolicy, get_policy_from_name
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.dao.network.base_env_state import BaseEnvState
 from pycr_common.dao.experiment.base_experiment_result import BaseExperimentResult
 from pycr_common.agents.util.log_util import LogUtil
@@ -384,8 +384,8 @@ class BaseAlgorithm(ABC):
             state: Optional[np.ndarray] = None,
             mask: Optional[np.ndarray] = None,
             deterministic: bool = False,
-            env_config : BaseEnvConfig = None,
-            env_configs: List[BaseEnvConfig] = None,
+            env_config : BasePyCREnvConfig = None,
+            env_configs: List[BasePyCREnvConfig] = None,
             env_state : BaseEnvState = None,
             infos = None,
             env_idx: int = None,

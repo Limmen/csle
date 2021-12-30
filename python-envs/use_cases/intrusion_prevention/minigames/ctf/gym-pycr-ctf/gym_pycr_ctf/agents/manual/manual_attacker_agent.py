@@ -6,7 +6,7 @@ try:
     from gym_pycr_ctf.rendering.frames.main_frame import MainFrame
 except:
     pass
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
 from pycr_common.dao.agent.agent_type import AgentType
 import numpy as np
@@ -17,7 +17,7 @@ class ManualAttackerAgent:
     Class representing a manual attacker agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv, render: bool = False,
+    def __init__(self, env_config: PyCREnvConfig, env: PyCRCTFEnv, render: bool = False,
                  defender_opponent: AgentType = None):
         """
         Sets up the GUI with the manual attacker

@@ -3,7 +3,7 @@ from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from pycr_common.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 from pycr_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_base import PyCrCTFLevel9Base
 from gym_pycr_ctf.envs_model.config.level_9.pycr_ctf_level_9_v1 import PyCrCTFLevel9V1
@@ -21,7 +21,7 @@ class PyCRCTFLevel9GeneratedSim1Env(PyCRCTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel9Base.emulation_config()
@@ -77,7 +77,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts1Env(PyCRCTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel9Base.emulation_config()
@@ -117,7 +117,7 @@ class PyCRCTFLevel9GeneratedSim2Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -156,7 +156,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts2Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -194,7 +194,7 @@ class PyCRCTFLevel9GeneratedSim3Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -232,7 +232,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts3Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -271,7 +271,7 @@ class PyCRCTFLevel9GeneratedSim4Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -310,7 +310,7 @@ class PyCRCTFLevel9GeneratedSimWithCosts4Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -352,7 +352,7 @@ class PyCRCTFLevel9GeneratedSim5Env(PyCRCTFEnv):
     An extension of V1 but allows the attacker to peform "no-op" actions and is intended for playing with defender agent.
     Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel9Base.emulation_config()
@@ -477,7 +477,7 @@ class PyCRCTFLevel9GeneratedSim6Env(PyCRCTFEnv):
 
     An extension of V5 which allows the defender to take multiple stop actions
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel9Base.emulation_config()

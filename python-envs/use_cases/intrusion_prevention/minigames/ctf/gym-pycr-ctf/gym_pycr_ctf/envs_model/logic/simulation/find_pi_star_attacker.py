@@ -1,6 +1,6 @@
 from typing import Tuple
 from pycr_common.dao.network.env_mode import EnvMode
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
@@ -12,7 +12,7 @@ class FindPiStarAttacker:
     """
 
     @staticmethod
-    def brute_force(env_config: EnvConfig, env) -> Tuple[list, float]:
+    def brute_force(env_config: PyCREnvConfig, env) -> Tuple[list, float]:
         """
         Attempts to compute the optimal policy for the attacker using brute-force search
 
@@ -214,7 +214,7 @@ class FindPiStarAttacker:
 
 
     @staticmethod
-    def update_pi_star(env_config: EnvConfig, env: "PyCRCTFEnv") -> EnvConfig:
+    def update_pi_star(env_config: PyCREnvConfig, env: "PyCRCTFEnv") -> PyCREnvConfig:
         """
         Update information about the attacker's optimal policy
 

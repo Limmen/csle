@@ -4,7 +4,7 @@ import math
 from pycr_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_pycr_ctf.envs_model.util.env_util import EnvUtil
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 
 
@@ -14,7 +14,7 @@ class StoppingBaselinesUtil:
     """
 
     @staticmethod
-    def compute_baseline_metrics(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def compute_baseline_metrics(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Updates metrics of the stopping (defender) baselines
 
@@ -31,7 +31,7 @@ class StoppingBaselinesUtil:
 
 
     @staticmethod
-    def snort_severe_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def snort_severe_baseline(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Updates metrics of the Snort severe baseline
 
@@ -84,7 +84,7 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_severe_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def snort_warning_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def snort_warning_baseline(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Updates metrics of the Snort warning baseline
 
@@ -137,7 +137,7 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_warning_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def snort_critical_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def snort_critical_baseline(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Updates the metrics of the Snort critical baseline
 
@@ -190,7 +190,7 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.snort_critical_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def var_log_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def var_log_baseline(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Computes metrics of the var_log baseline
 
@@ -245,7 +245,7 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.var_log_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def step_baseline(s: EnvState, s_prime: EnvState, env_config: EnvConfig) -> None:
+    def step_baseline(s: EnvState, s_prime: EnvState, env_config: PyCREnvConfig) -> None:
         """
         Updates metrics of the step_baseline
 
@@ -298,7 +298,7 @@ class StoppingBaselinesUtil:
                     s_prime.defender_obs_state.step_baseline_reward += env_config.defender_intrusion_reward
 
     @staticmethod
-    def simulate_end_of_episode_performance(s_prime: EnvState, env_config: EnvConfig, done: bool,
+    def simulate_end_of_episode_performance(s_prime: EnvState, env_config: PyCREnvConfig, done: bool,
                                             attacker_opponent: CustomAttackerBotAgent, env : "PyCRCTFEnv",
                                             s: EnvState) -> Tuple[float, List[int], int, int]:
         """
@@ -331,7 +331,7 @@ class StoppingBaselinesUtil:
 
 
     @staticmethod
-    def simulate_baselines_vs_opponent(attacker_opponent : CustomAttackerBotAgent, env_config: EnvConfig,
+    def simulate_baselines_vs_opponent(attacker_opponent : CustomAttackerBotAgent, env_config: PyCREnvConfig,
                                        env : "PyCRCTFEnv", s: EnvState) -> EnvState:
         """
         Simulates the end of the episode using a static attacker policy and the defender baselines

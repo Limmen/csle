@@ -2,7 +2,7 @@ from typing import Tuple, List, Union
 from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
 import time
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -30,7 +30,7 @@ class NmapUtil:
     """
 
     @staticmethod
-    def check_nmap_action_cache(a: AttackerAction, env_config: EnvConfig, conn=None, dir: str = None,
+    def check_nmap_action_cache(a: AttackerAction, env_config: PyCREnvConfig, conn=None, dir: str = None,
                                 machine_ip: str = None):
         """
         Checks if an nmap action is cached or not
@@ -72,7 +72,7 @@ class NmapUtil:
         return None
 
     @staticmethod
-    def check_nmap_action_cache_interactive(a: AttackerAction, env_config: EnvConfig):
+    def check_nmap_action_cache_interactive(a: AttackerAction, env_config: PyCREnvConfig):
         """
         Checks if an NMAP action is cached or ot using an interactive shell
 
@@ -103,7 +103,7 @@ class NmapUtil:
         return None
 
     @staticmethod
-    def parse_nmap_scan(file_name: str, env_config: EnvConfig, conn=None, dir: str = None) -> ET.Element:
+    def parse_nmap_scan(file_name: str, env_config: PyCREnvConfig, conn=None, dir: str = None) -> ET.Element:
         """
         Parses an XML file containing the result of an nmap scan
 
@@ -126,7 +126,7 @@ class NmapUtil:
         return xml_data
 
     @staticmethod
-    def parse_nmap_scan_interactive(file_name: str, env_config: EnvConfig) -> ET.Element:
+    def parse_nmap_scan_interactive(file_name: str, env_config: PyCREnvConfig) -> ET.Element:
         """
         Parses an XML file with the result of an nmap scan using an interactive shell
 
@@ -516,7 +516,7 @@ class NmapUtil:
         return credentials
 
     @staticmethod
-    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) \
             -> Tuple[EnvState, float, bool]:
         """
         Merges a NMAP scan result with an existing observation state
@@ -558,7 +558,7 @@ class NmapUtil:
         return s_prime, reward, done
 
     @staticmethod
-    def nmap_scan_action_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, masscan: bool = False) \
+    def nmap_scan_action_helper(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
         """
         Helper function for executing a NMAP scan action on the emulation. Implements caching.
@@ -775,7 +775,7 @@ class NmapUtil:
         return scan_result_1
 
     @staticmethod
-    def nmap_pivot_scan_action_helper(s: EnvState, a: AttackerAction, env_config: EnvConfig, partial_result:
+    def nmap_pivot_scan_action_helper(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig, partial_result:
     NmapScanResult, masscan: bool = False) \
             -> Tuple[EnvState, float, bool]:
         done = False

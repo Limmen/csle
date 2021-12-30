@@ -3,7 +3,7 @@ A general bot defense agent for the PyCR environment that acts randomly
 """
 import numpy as np
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.dao.network.base_env_state import BaseEnvState
 
 
@@ -12,7 +12,7 @@ class RandomDefenderBotAgent:
     Class implementing an defense policy that acts randomly
     """
 
-    def __init__(self, env_config: BaseEnvConfig, env: BasePyCREnv = None):
+    def __init__(self, env_config: BasePyCREnvConfig, env: BasePyCREnv = None):
         """
         Constructor, initializes the policy
 

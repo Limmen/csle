@@ -5,7 +5,7 @@ import math
 import pycr_common.constants.constants as constants
 from pycr_common.dao.network.trajectory import Trajectory
 from pycr_common.envs_model.util.base_eval_util import BaseEvalUtil
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 
 
@@ -492,7 +492,7 @@ class EvalUtil(BaseEvalUtil):
         return False
 
     @staticmethod
-    def merge_observations(obs_prior_to_intrusion, tau: Trajectory, env_config: EnvConfig) -> Tuple[List[int], List[List[int]]]:
+    def merge_observations(obs_prior_to_intrusion, tau: Trajectory, env_config: PyCREnvConfig) -> Tuple[List[int], List[List[int]]]:
         """
         Merges observations sampled before the intrusion started with observations sampled afterwards
 
@@ -530,7 +530,7 @@ class EvalUtil(BaseEvalUtil):
         return obs, obs_intrusion
 
     @staticmethod
-    def find_stopping_indexes(actions, env_config : EnvConfig) -> int:
+    def find_stopping_indexes(actions, env_config : PyCREnvConfig) -> int:
         """
         Find the stopping idx of the model
 
@@ -582,7 +582,7 @@ class EvalUtil(BaseEvalUtil):
         return r, early_stopping, succ_intrusion, caught_attacker, uncaught_intrusion_steps, stopping_indexes
 
     @staticmethod
-    def compute_steps(actions, env_config: EnvConfig) -> int:
+    def compute_steps(actions, env_config: PyCREnvConfig) -> int:
         """
         Utility function for computing the steps in the environment of a sequence of actions of the defender
 
@@ -623,7 +623,7 @@ class EvalUtil(BaseEvalUtil):
 
 
     @staticmethod
-    def compute_stopping_times(actions, env_config: EnvConfig) -> int:
+    def compute_stopping_times(actions, env_config: PyCREnvConfig) -> int:
         """
         Utility function for computing the stopping times in the environment of a sequence of actions of the defender
 
@@ -635,7 +635,7 @@ class EvalUtil(BaseEvalUtil):
         return stopping_indexes
 
     @staticmethod
-    def compute_info_metrics(actions, trajectory: Trajectory, env_config : EnvConfig) -> int:
+    def compute_info_metrics(actions, trajectory: Trajectory, env_config : PyCREnvConfig) -> int:
         flags = 0
         flags_percentage = 0
         #episode_caught = 0

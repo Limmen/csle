@@ -4,7 +4,7 @@ import numpy as np
 import torch as th
 from torch.nn import functional as F
 
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from pycr_common.agents.openai_baselines.common.off_policy_algorithm import OffPolicyAlgorithm
@@ -190,8 +190,8 @@ class DQN(OffPolicyAlgorithm):
         state: Optional[np.ndarray] = None,
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
-        env_config : EnvConfig = None,
-        env_configs: List[EnvConfig] = None,
+        env_config : PyCREnvConfig = None,
+        env_configs: List[PyCREnvConfig] = None,
         env_state : EnvState = None,
         infos = None,
         env_idx: int = None,

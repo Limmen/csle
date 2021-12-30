@@ -16,7 +16,7 @@ from stable_baselines3.common.utils import get_device
 import pycr_common.constants.constants as constants
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 from pycr_common.dao.network.base_env_state import BaseEnvState
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, \
     FlattenExtractor, MlpExtractor, NatureCNN, create_mlp
 from pycr_common.agents.config.agent_config import AgentConfig
@@ -202,7 +202,7 @@ class BasePolicy(BaseModel):
 
     @abstractmethod
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: BaseEnvState = None,
-                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
+                 env_config: BasePyCREnvConfig = None, m_index : int = None) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.
 
@@ -220,8 +220,8 @@ class BasePolicy(BaseModel):
         state: Optional[np.ndarray] = None,
         mask: Optional[np.ndarray] = None,
         deterministic: bool = False,
-        env_config: BaseEnvConfig = None,
-        env_configs: BaseEnvConfig = None,
+        env_config: BasePyCREnvConfig = None,
+        env_configs: BasePyCREnvConfig = None,
         env_state: BaseEnvState = None,
         env_idx: int = None,
         m_index: int = None,
@@ -537,8 +537,8 @@ class ActorCriticPolicy(BasePolicy):
 
 
     def _predict(self, observation: th.Tensor, deterministic: bool = False, env_state: BaseEnvState = None,
-                 env_config: BaseEnvConfig = None, m_index : int = None, env = None, infos = None,
-                 env_configs: List[BaseEnvConfig] = None, env_idx: int = None, mask_actions: bool = True,
+                 env_config: BasePyCREnvConfig = None, m_index : int = None, env = None, infos = None,
+                 env_configs: List[BasePyCREnvConfig] = None, env_idx: int = None, mask_actions: bool = True,
                  attacker : bool = True) -> th.Tensor:
         """
         Get the action according to the policy for a given observation.

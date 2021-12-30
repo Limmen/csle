@@ -3,7 +3,7 @@ A general bot attack agent for the PyCr environment that acts according to a cus
 """
 from typing import List, Tuple
 import numpy as np
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 
 
 class CustomAttackerBotAgent:
@@ -11,7 +11,7 @@ class CustomAttackerBotAgent:
     Class implementing an attack policy that acts according to a custom pre-defined policy
     """
 
-    def __init__(self, env_config: BaseEnvConfig, env, strategy: List[int], random_start : bool = False,
+    def __init__(self, env_config: BasePyCREnvConfig, env, strategy: List[int], random_start : bool = False,
                  start_p : float = 0.2, continue_action : int = 372):
         """
         Constructor, initializes the policy

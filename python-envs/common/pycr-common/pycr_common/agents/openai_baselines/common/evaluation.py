@@ -10,7 +10,7 @@ if typing.TYPE_CHECKING:
 import pycr_common.constants.constants as constants
 from pycr_common.agents.openai_baselines.common.vec_env import VecEnv
 from pycr_common.agents.config.agent_config import AgentConfig
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.agents.openai_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from pycr_common.agents.openai_baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from pycr_common.dao.agent.train_mode import TrainMode
@@ -210,8 +210,8 @@ def quick_evaluate_policy(attacker_model: "BaseAlgorithm", defender_model: "Base
                           n_eval_episodes_train : int=10, n_eval_episodes_eval2 : int=10,
                           deterministic : bool= True, attacker_agent_config : AgentConfig = None,
                           defender_agent_config : AgentConfig = None,
-                          env_config: BaseEnvConfig = None, env_configs : List[BaseEnvConfig] = None,
-                          eval_env_config: BaseEnvConfig = None, eval_envs_configs: List[BaseEnvConfig] = None,
+                          env_config: BasePyCREnvConfig = None, env_configs : List[BasePyCREnvConfig] = None,
+                          eval_env_config: BasePyCREnvConfig = None, eval_envs_configs: List[BasePyCREnvConfig] = None,
                           train_mode: TrainMode = TrainMode.TRAIN_ATTACKER,
                           train_dto : BaseTrainAgentLogDTO = None
                           ):

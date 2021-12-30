@@ -3,7 +3,7 @@ import time
 import paramiko
 import telnetlib
 from ftplib import FTP
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -24,7 +24,7 @@ class ConnectionUtil:
 
     @staticmethod
     def login_service_helper(s: EnvState, a: AttackerAction, alive_check, service_name: str,
-                             env_config: EnvConfig) -> Tuple[EnvState, NetworkOutcome, bool]:
+                             env_config: PyCREnvConfig) -> Tuple[EnvState, NetworkOutcome, bool]:
         """
         Helper function for logging in to a network service in the emulation
 
@@ -221,7 +221,7 @@ class ConnectionUtil:
         return s_prime, net_outcome, False
 
     @staticmethod
-    def _ssh_setup_connection(a: AttackerAction, env_config: EnvConfig,
+    def _ssh_setup_connection(a: AttackerAction, env_config: PyCREnvConfig,
                               credentials: List[Credential], proxy_connections: List[ConnectionObservationState],
                               s: EnvState) -> ConnectionSetupDTO:
         """
@@ -279,7 +279,7 @@ class ConnectionUtil:
         return connection_setup_dto
 
     @staticmethod
-    def _ssh_finalize_connection(target_machine: AttackerMachineObservationState, env_config: EnvConfig,
+    def _ssh_finalize_connection(target_machine: AttackerMachineObservationState, env_config: PyCREnvConfig,
                                  connection_setup_dto: ConnectionSetupDTO, i: int) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
@@ -316,7 +316,7 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _telnet_setup_connection(a: AttackerAction, env_config: EnvConfig,
+    def _telnet_setup_connection(a: AttackerAction, env_config: PyCREnvConfig,
                                  credentials: List[Credential], proxy_connections: List,
                                  s: EnvState) -> ConnectionSetupDTO:
         """
@@ -384,7 +384,7 @@ class ConnectionUtil:
         return connection_setup_dto
 
     @staticmethod
-    def _telnet_finalize_connection(target_machine: AttackerMachineObservationState, i: int,env_config: EnvConfig,
+    def _telnet_finalize_connection(target_machine: AttackerMachineObservationState, i: int, env_config: PyCREnvConfig,
                                     connection_setup_dto: ConnectionSetupDTO) -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
@@ -421,7 +421,7 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _ftp_setup_connection(a: AttackerAction, env_config: EnvConfig,
+    def _ftp_setup_connection(a: AttackerAction, env_config: PyCREnvConfig,
                               credentials: List[Credential], proxy_connections: List,
                               s: EnvState) -> ConnectionSetupDTO:
         """
@@ -521,7 +521,7 @@ class ConnectionUtil:
 
 
     @staticmethod
-    def find_jump_host_connection(ip, s: EnvState, env_config: EnvConfig) -> ConnectionObservationState:
+    def find_jump_host_connection(ip, s: EnvState, env_config: PyCREnvConfig) -> ConnectionObservationState:
         """
         Utility function for finding a jump-host from the set of compromised machines to reach a target IP
 

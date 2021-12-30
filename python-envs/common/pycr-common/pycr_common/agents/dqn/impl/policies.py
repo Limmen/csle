@@ -8,7 +8,7 @@ from pycr_common.agents.openai_baselines.common.policies import BasePolicy, regi
 from pycr_common.agents.openai_baselines.common.torch_layers import BaseFeaturesExtractor, FlattenExtractor, \
     NatureCNN, create_mlp
 from pycr_common.agents.config.agent_config import AgentConfig
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.dao.network.base_env_state import BaseEnvState
 from pycr_common.dao.envs.base_pycr_env import BasePyCREnv
 
@@ -64,7 +64,7 @@ class QNetwork(BasePolicy):
         return self.q_net(self.extract_features(obs))
 
     def _predict(self, observation: th.Tensor, deterministic: bool = True, env_state: BaseEnvState = None,
-                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
+                 env_config: BasePyCREnvConfig = None, m_index : int = None) -> th.Tensor:
         q_values = self.forward(observation)
 
         # Masking legal actions
@@ -182,7 +182,7 @@ class DQNPolicy(BasePolicy):
         return self._predict(obs, deterministic=deterministic)
 
     def _predict(self, obs: th.Tensor, deterministic: bool = True, env_state: BaseEnvState = None,
-                env_config: BaseEnvConfig = None, m_index : int = None) -> th.Tensor:
+                 env_config: BasePyCREnvConfig = None, m_index : int = None) -> th.Tensor:
         return self.q_net._predict(obs, deterministic=deterministic, env_config=env_config, env_state=env_state)
 
     def _get_data(self) -> Dict[str, Any]:

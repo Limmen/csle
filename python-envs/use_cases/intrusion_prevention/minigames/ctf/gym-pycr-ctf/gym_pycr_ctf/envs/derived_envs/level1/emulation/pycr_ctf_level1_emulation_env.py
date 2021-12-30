@@ -1,6 +1,6 @@
 from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_base import PyCrCTFLevel1Base
 from gym_pycr_ctf.envs_model.config.level_1.pycr_ctf_level_1_v1 import PyCrCTFLevel1V1
@@ -15,7 +15,7 @@ class PyCRCTFLevel1EmulationBaseEnv(PyCRCTFEnv):
     """
     Base version with all set of actions
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -43,7 +43,7 @@ class PyCRCTFLevel1Emulation1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -73,7 +73,7 @@ class PyCRCTFLevel1EmulationNoCache1Env(PyCRCTFEnv):
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     No cache
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -102,7 +102,7 @@ class PyCRCTFLevel1EmulationWithCosts1Env(PyCRCTFEnv):
     """
     Uses a minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -131,7 +131,7 @@ class PyCRCTFLevel1Emulation2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -161,7 +161,7 @@ class PyCRCTFLevel1EmulationWithCosts2Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -191,7 +191,7 @@ class PyCRCTFLevel1Emulation3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -221,7 +221,7 @@ class PyCRCTFLevel1EmulationWithCosts3Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -251,7 +251,7 @@ class PyCRCTFLevel1Emulation4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:
@@ -281,7 +281,7 @@ class PyCRCTFLevel1EmulationWithCosts4Env(PyCRCTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel1Base.render_conf()
             if emulation_config is None:

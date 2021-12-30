@@ -1,5 +1,5 @@
 import math
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 
 
 class FindPiStarDefender:
@@ -54,7 +54,7 @@ class FindPiStarDefender:
         return reward
 
     @staticmethod
-    def update_pi_star(env_config: EnvConfig) -> EnvConfig:
+    def update_pi_star(env_config: PyCREnvConfig) -> PyCREnvConfig:
         """
         Update information about the attacker's optimal policy
 

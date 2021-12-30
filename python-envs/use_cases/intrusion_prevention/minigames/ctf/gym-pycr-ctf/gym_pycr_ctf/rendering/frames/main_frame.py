@@ -9,7 +9,7 @@ from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
 from pycr_common.rendering.frames.pycr_base_frame import PyCRBaseFrame
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_pycr_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_pycr_ctf.envs import PyCRCTFEnv
@@ -22,7 +22,7 @@ class MainFrame(PyCRBaseFrame):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EnvConfig, init_state : AttackerAgentState, env: PyCRCTFEnv = None):
+    def __init__(self, env_config: PyCREnvConfig, init_state : AttackerAgentState, env: PyCRCTFEnv = None):
         """
         Initialize frame
         :param env_config: trhe environment config

@@ -5,7 +5,7 @@ from pycr_common.dao.state_representation.state_type import StateType
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.dao.network.flag import Flag
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
@@ -138,7 +138,7 @@ class PyCrCTFRandomV3:
                    attacker_action_conf: AttackerActionConfig,
                    defender_action_conf: DefenderActionConfig,
                    render_conf: RenderConfig,
-                   emulation_config: EmulationConfig, num_nodes: int) -> EnvConfig:
+                   emulation_config: EmulationConfig, num_nodes: int) -> PyCREnvConfig:
         """
         Generates the environment configuration
 
@@ -160,15 +160,15 @@ class PyCrCTFRandomV3:
 
         network_conf = NetworkConfig(subnet_mask=containers_config.subnet_mask, nodes=[], adj_matrix=[],
                                      flags_lookup=flags_lookup)
-        env_config = EnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
-                               defender_action_conf=defender_action_conf,
-                               attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
-                               attacker_num_sh_obs=3, num_nodes=num_nodes, render_config=render_conf,
-                               env_mode=EnvMode.SIMULATION,
-                               emulation_config=emulation_config,
-                               simulate_detection=True, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=containers_config.agent_ip, state_type=StateType.BASE,
-                               router_ip=containers_config.router_ip)
+        env_config = PyCREnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+                                   defender_action_conf=defender_action_conf,
+                                   attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
+                                   attacker_num_sh_obs=3, num_nodes=num_nodes, render_config=render_conf,
+                                   env_mode=EnvMode.SIMULATION,
+                                   emulation_config=emulation_config,
+                                   simulate_detection=True, detection_reward=10, base_detection_p=0.05,
+                                   hacker_ip=containers_config.agent_ip, state_type=StateType.BASE,
+                                   router_ip=containers_config.router_ip)
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00

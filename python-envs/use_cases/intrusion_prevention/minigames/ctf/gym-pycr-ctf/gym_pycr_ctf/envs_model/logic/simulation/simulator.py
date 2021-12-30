@@ -1,6 +1,6 @@
 from typing import Tuple
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 from gym_pycr_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
@@ -21,7 +21,7 @@ class Simulator:
     real actions in the emulation environment.
     """
     @staticmethod
-    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a state transition in the MDP or Markov Game
 
@@ -45,7 +45,7 @@ class Simulator:
             raise ValueError("Action type:{} not recognized".format(attacker_action.type))
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: PyCREnvConfig,
                             attacker_action : AttackerAction = None) -> Tuple[
         EnvState, int, bool]:
         """
@@ -70,7 +70,7 @@ class Simulator:
 
 
     @staticmethod
-    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a reconnaissance action
 
@@ -129,7 +129,7 @@ class Simulator:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs an exploit action
 
@@ -185,7 +185,7 @@ class Simulator:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a post-exploit action
 
@@ -215,7 +215,7 @@ class Simulator:
 
 
     @staticmethod
-    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: EnvConfig) \
+    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) \
             -> Tuple[EnvState, float, bool]:
         """
         Implements transition of a stopping action of the attacker
@@ -234,7 +234,7 @@ class Simulator:
 
     @staticmethod
     def defender_stopping_action(s: EnvState, defender_action: DefenderAction, attacker_action: DefenderAction,
-                                env_config: EnvConfig) -> Tuple[
+                                 env_config: PyCREnvConfig) -> Tuple[
         EnvState, int, bool]:
         """
         Implements transition of a stopping action of the defender
@@ -256,7 +256,7 @@ class Simulator:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(defender_action.id, defender_action.name))
 
     @staticmethod
-    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: PyCREnvConfig,
                                      attacker_action: AttackerAction) -> Tuple[EnvState, int, bool]:
         """
         Implements transition of state update for the defender

@@ -2,7 +2,7 @@ from typing import Tuple, List
 import time
 import datetime
 import paramiko
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from pycr_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 import pycr_common.constants.constants as constants
@@ -48,7 +48,7 @@ class EmulationUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: AttackerAction, env_config: EnvConfig, ip: str = None,
+    def write_estimated_cost(total_time, action: AttackerAction, env_config: PyCREnvConfig, ip: str = None,
                              user: str = None, service: str = None, conn=None, dir: str = None,
                              machine_ip: str = None) -> None:
         """
@@ -92,7 +92,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: EnvConfig, ip: str = None,
+    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: PyCREnvConfig, ip: str = None,
                               user: str = None, service: str = None, conn=None, dir: str = None,
                               machine_ip: str = None) -> None:
         """
@@ -137,7 +137,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_file_system_scan_cache(action: AttackerAction, env_config: EnvConfig, service: str, user: str, files: List[str],
+    def write_file_system_scan_cache(action: AttackerAction, env_config: PyCREnvConfig, service: str, user: str, files: List[str],
                                      ip: str, root: bool = False) \
             -> None:
         """
@@ -165,7 +165,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_user_command_cache(action: AttackerAction, env_config: EnvConfig, user: str, result: str,
+    def write_user_command_cache(action: AttackerAction, env_config: PyCREnvConfig, user: str, result: str,
                                  ip: str, jumphost: str = None) -> None:
         """
         Caches the result of a user command action
@@ -192,7 +192,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def execute_cmd_interactive(a: AttackerAction, env_config: EnvConfig) -> None:
+    def execute_cmd_interactive(a: AttackerAction, env_config: PyCREnvConfig) -> None:
         """
         Executes an action on the emulation using an interactive shell (non synchronous)
 
@@ -216,7 +216,7 @@ class EmulationUtil:
         channel.send(cmd + "\n")
 
     @staticmethod
-    def read_result_interactive(env_config: EnvConfig) -> str:
+    def read_result_interactive(env_config: PyCREnvConfig) -> str:
         """
         Reads the result of an action executed in interactive mode
 
@@ -226,7 +226,7 @@ class EmulationUtil:
         return EmulationUtil.read_result_interactive_channel(env_config=env_config, channel=env_config.emulation_config.agent_channel)
 
     @staticmethod
-    def read_result_interactive_channel(env_config: EnvConfig, channel) -> str:
+    def read_result_interactive_channel(env_config: PyCREnvConfig, channel) -> str:
         """
         Reads the result of an action executed in interactive mode
 
@@ -242,7 +242,7 @@ class EmulationUtil:
         return output_str
 
     @staticmethod
-    def check_filesystem_action_cache(a: AttackerAction, env_config: EnvConfig, ip: str, service: str, user: str,
+    def check_filesystem_action_cache(a: AttackerAction, env_config: PyCREnvConfig, ip: str, service: str, user: str,
                                       root: bool = False):
         """
         Checks if a filesystem action is cached or not
@@ -274,7 +274,7 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def check_user_action_cache(a: AttackerAction, env_config: EnvConfig, ip: str, user: str, jumphost: str = None):
+    def check_user_action_cache(a: AttackerAction, env_config: PyCREnvConfig, ip: str, user: str, jumphost: str = None):
         """
         Checks if a user-specific action is cached or not
 
@@ -307,7 +307,7 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def parse_file_scan_file(file_name: str, env_config: EnvConfig) -> List[str]:
+    def parse_file_scan_file(file_name: str, env_config: PyCREnvConfig) -> List[str]:
         """
         Parses a file containing cached results of a file scan on a server
 
@@ -327,7 +327,7 @@ class EmulationUtil:
         return files
 
     @staticmethod
-    def parse_user_command_file(file_name: str, env_config: EnvConfig, conn, jumphost: str = None) -> List[str]:
+    def parse_user_command_file(file_name: str, env_config: PyCREnvConfig, conn, jumphost: str = None) -> List[str]:
         """
         Parses a file containing cached results of a user command file on a server
 
@@ -347,7 +347,7 @@ class EmulationUtil:
         return result
 
     @staticmethod
-    def delete_cache_file(file_name: str, env_config: EnvConfig) -> Tuple[bytes, bytes, float]:
+    def delete_cache_file(file_name: str, env_config: PyCREnvConfig) -> Tuple[bytes, bytes, float]:
         """
         Deletes the file that contains the cached result of some operation
 
@@ -378,7 +378,7 @@ class EmulationUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(c: ConnectionObservationState, env_config: EnvConfig, telnet: bool = False) \
+    def _list_all_users(c: ConnectionObservationState, env_config: PyCREnvConfig, telnet: bool = False) \
             -> List:
         """
         List all users on a machine
@@ -480,7 +480,7 @@ class EmulationUtil:
             return False
 
     @staticmethod
-    def get_latest_alert_ts(env_config: EnvConfig) -> float:
+    def get_latest_alert_ts(env_config: PyCREnvConfig) -> float:
         """
         Gets the latest timestamp in the snort alerts log
 
@@ -521,7 +521,7 @@ class EmulationUtil:
             return alerts[0].timestamp
 
     @staticmethod
-    def check_ids_alerts(env_config: EnvConfig) -> List[IdsAlert]:
+    def check_ids_alerts(env_config: PyCREnvConfig) -> List[IdsAlert]:
         """
         Reads alerts from the IDS alerts log
 
@@ -541,7 +541,7 @@ class EmulationUtil:
         return alerts
 
     @staticmethod
-    def check_ids_fast_log(env_config: EnvConfig) -> List[IdsAlert]:
+    def check_ids_fast_log(env_config: PyCREnvConfig) -> List[IdsAlert]:
         """
         Reads alerts from the IDS fast-log
 

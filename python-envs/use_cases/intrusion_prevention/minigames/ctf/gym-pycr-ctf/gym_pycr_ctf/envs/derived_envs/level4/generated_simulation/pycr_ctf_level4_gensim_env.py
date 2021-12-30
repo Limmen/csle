@@ -1,7 +1,7 @@
 from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_base import PyCrCTFLevel4Base
 from gym_pycr_ctf.envs_model.config.level_4.pycr_ctf_level_4_v1 import PyCrCTFLevel4V1
@@ -17,7 +17,7 @@ class PyCRCTFLevel4GeneratedSim1Env(PyCRCTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel4Base.emulation_config()
@@ -56,7 +56,7 @@ class PyCRCTFLevel4GeneratedSimWithCosts1Env(PyCRCTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel4Base.emulation_config()
@@ -95,7 +95,7 @@ class PyCRCTFLevel4GeneratedSim2Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -133,7 +133,7 @@ class PyCRCTFLevel4GeneratedSimWithCosts2Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -171,7 +171,7 @@ class PyCRCTFLevel4GeneratedSim3Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -209,7 +209,7 @@ class PyCRCTFLevel4GeneratedSimWithCosts3Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -247,7 +247,7 @@ class PyCRCTFLevel4GeneratedSim4Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -285,7 +285,7 @@ class PyCRCTFLevel4GeneratedSimWithCosts4Env(PyCRCTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = PyCrCTFLevel4Base.render_conf()
             if emulation_config is None:
@@ -324,7 +324,7 @@ class PyCRCTFLevel4GeneratedSim5Env(PyCRCTFEnv):
     An extension to V1 to allow the attacker to take the "continue" action.
     Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = PyCrCTFLevel4Base.emulation_config()

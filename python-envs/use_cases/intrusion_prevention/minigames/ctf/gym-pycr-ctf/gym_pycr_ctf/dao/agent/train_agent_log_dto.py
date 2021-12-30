@@ -6,7 +6,7 @@ from pycr_common.dao.agent.train_mode import TrainMode
 from pycr_common.agents.config.agent_config import AgentConfig
 from pycr_common.agents.config.agent_config import AgentConfig
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
 from gym_pycr_ctf.dao.agent.attacker_train_agent_log_dto_avg import AttackerTrainAgentLogDTOAvg
 from gym_pycr_ctf.dao.agent.defender_train_agent_log_dto_avg import DefenderTrainAgentLogDTOAvg
@@ -1488,7 +1488,7 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_2_optimal_fourth_stop_step = saved_log_dto.eval_2_optimal_fourth_stop_step
         self.eval_2_optimal_defender_episode_steps = saved_log_dto.eval_2_optimal_defender_episode_steps
 
-    def eval_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i: int) -> int:
+    def eval_update_env_specific_metrics(self, env_config : PyCREnvConfig, infos : dict, i: int) -> int:
         """
         Utility function for updating env-specific eval metrics
 
@@ -1528,7 +1528,7 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         else:
             self.eval_env_specific_flags_percentage[agent_ip].append(infos["flags"] / num_flags)
 
-    def eval_2_update_env_specific_metrics(self, env_config : EnvConfig, infos : dict, i : int) -> None:
+    def eval_2_update_env_specific_metrics(self, env_config : PyCREnvConfig, infos : dict, i : int) -> None:
         """
         Updates env-specific eval 2 metrics
 
@@ -1572,7 +1572,7 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
 
 
     def eval_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
-                    env_conf: EnvConfig, i: int) -> None:
+                    env_conf: PyCREnvConfig, i: int) -> None:
         """
         Updates the eval metrics of the DTO with new data
 
@@ -1700,7 +1700,7 @@ class TrainAgentLogDTO(BaseTrainAgentLogDTO):
         self.eval_update_env_specific_metrics(env_conf, _info, i)
 
     def eval_2_update(self, attacker_episode_reward, defender_episode_reward, _info: dict, episode_length: int,
-                      env_conf: EnvConfig, i: int) -> None:
+                      env_conf: PyCREnvConfig, i: int) -> None:
         """
         Updates the eval2 metrics of the DTO with data from an evaluation episode
 

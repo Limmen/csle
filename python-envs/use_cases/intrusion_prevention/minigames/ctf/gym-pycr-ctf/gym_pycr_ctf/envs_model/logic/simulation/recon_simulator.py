@@ -3,7 +3,7 @@ from pycr_common.dao.network.transport_protocol import TransportProtocol
 from gym_pycr_ctf.envs_model.logic.simulation.util.simulator_util import SimulatorUtil
 from gym_pycr_ctf.envs_model.logic.simulation.util.recon_simulator_util import ReconSimulatorUtil
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
 
@@ -13,7 +13,7 @@ class ReconSimulator:
     """
 
     @staticmethod
-    def simulate_tcp_syn_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_syn_stealth_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP SYN Stealth Scan action
 
@@ -33,7 +33,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_ping_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_ping_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a Ping Scan action
 
@@ -53,7 +53,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_udp_port_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_udp_port_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a UDP port scan action
 
@@ -73,7 +73,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_con_non_stealth_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_con_non_stealth_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP CON Scan (non-stealth) action
 
@@ -93,7 +93,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_fin_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_fin_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP FIN Scan action
 
@@ -113,7 +113,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_null_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_null_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP NULL Scan action
 
@@ -133,7 +133,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_tcp_xmas_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_xmas_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a TCP XMAS Scan action
 
@@ -153,7 +153,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_os_detection_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_os_detection_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs an OS Detection scan action
 
@@ -172,7 +172,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_vulscan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_vulscan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a nmap vulnerability scan using "vulscan" action
 
@@ -193,7 +193,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_nmap_vulners(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_nmap_vulners(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a nmap vulnerability scan using "vulners" action
 
@@ -214,7 +214,7 @@ class ReconSimulator:
         return s_prime, reward, done
 
     @staticmethod
-    def simulate_nikto_web_host_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_nikto_web_host_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a Nikto web host scan
 
@@ -226,7 +226,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_masscan_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_masscan_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a masscan host scan
 
@@ -238,7 +238,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_firewalk_scan(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_firewalk_scan(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a firewalk scan
 
@@ -250,7 +250,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_http_enum(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_http_enum(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a http enum scan
 
@@ -262,7 +262,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_http_grep(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_http_grep(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a http grep scan
 
@@ -274,7 +274,7 @@ class ReconSimulator:
         return s, 0, False
 
     @staticmethod
-    def simulate_finger(s: EnvState, a: AttackerAction, env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+    def simulate_finger(s: EnvState, a: AttackerAction, env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Simulates a finger scan
 

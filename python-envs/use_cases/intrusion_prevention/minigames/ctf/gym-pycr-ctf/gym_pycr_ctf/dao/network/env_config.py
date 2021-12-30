@@ -9,13 +9,13 @@ from pycr_common.dao.action_results.nikto_scan_cache import NiktoScanCache
 from pycr_common.dao.state_representation.state_type import StateType
 from pycr_common.dao.action_results.user_command_cache import UserCommandCache
 from pycr_common.dao.action_results.action_alerts import ActionAlerts
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
 
 
-class EnvConfig(BaseEnvConfig):
+class PyCREnvConfig(BasePyCREnvConfig):
     """
     Class containing the complete configuration of a pycr-ctf env
     """
@@ -48,7 +48,7 @@ class EnvConfig(BaseEnvConfig):
         :param base_detection_p: base detection probability for simulation
         :param manual_play: boolean flag whether manual play is used
         """
-        super(EnvConfig, self).__init__(
+        super(PyCREnvConfig, self).__init__(
             attacker_action_conf=attacker_action_conf, defender_action_conf=defender_action_conf,
             manual_play=manual_play, attacker_exploration_filter_illegal=True)
         self.network_conf = network_conf
@@ -279,11 +279,11 @@ class EnvConfig(BaseEnvConfig):
         self.defender_max_costs = max_costs
 
 
-    def copy(self) -> "EnvConfig":
+    def copy(self) -> "PyCREnvConfig":
         """
         :return: a copy of the environment configuration
         """
-        env_config = EnvConfig(
+        env_config = PyCREnvConfig(
             network_conf=self.network_conf, attacker_action_conf=self.attacker_action_conf,
             defender_action_conf=self.defender_action_conf,
             attacker_num_ports_obs=self.attacker_num_ports_obs,

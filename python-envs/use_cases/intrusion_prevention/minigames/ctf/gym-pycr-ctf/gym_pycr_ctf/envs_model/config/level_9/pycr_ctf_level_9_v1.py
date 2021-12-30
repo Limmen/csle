@@ -2,7 +2,7 @@ from pycr_common.dao.network.network_config import NetworkConfig
 from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.dao.state_representation.state_type import StateType
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.render.render_config import RenderConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_pycr_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
@@ -119,7 +119,7 @@ class PyCrCTFLevel9V1:
     def env_config(network_conf : NetworkConfig, attacker_action_conf: AttackerActionConfig,
                    defender_action_conf: DefenderActionConfig,
                    emulation_config: EmulationConfig,
-                   render_conf: RenderConfig) -> EnvConfig:
+                   render_conf: RenderConfig) -> PyCREnvConfig:
         """
         Generates the environment configuration
 
@@ -130,15 +130,15 @@ class PyCrCTFLevel9V1:
         :param render_conf: the render config
         :return: The complete environment config
         """
-        env_config = EnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
-                               defender_action_conf=defender_action_conf,
-                               attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
-                               attacker_num_sh_obs=3, num_nodes = PyCrCTFLevel9Base.num_nodes(),
-                               render_config=render_conf, env_mode=EnvMode.EMULATION,
-                               emulation_config=emulation_config,
-                               simulate_detection=False, detection_reward=10, base_detection_p=0.05,
-                               hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.BASIC,
-                               router_ip=PyCrCTFLevel9Base.router_ip())
+        env_config = PyCREnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+                                   defender_action_conf=defender_action_conf,
+                                   attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
+                                   attacker_num_sh_obs=3, num_nodes = PyCrCTFLevel9Base.num_nodes(),
+                                   render_config=render_conf, env_mode=EnvMode.EMULATION,
+                                   emulation_config=emulation_config,
+                                   simulate_detection=False, detection_reward=10, base_detection_p=0.05,
+                                   hacker_ip=PyCrCTFLevel9Base.hacker_ip(), state_type=StateType.BASIC,
+                                   router_ip=PyCrCTFLevel9Base.router_ip())
         env_config.ping_scan_miss_p = 0.00
         env_config.udp_port_scan_miss_p = 0.00
         env_config.syn_stealth_scan_miss_p = 0.00

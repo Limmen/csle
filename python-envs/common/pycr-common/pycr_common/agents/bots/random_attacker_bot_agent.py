@@ -2,7 +2,7 @@
 A general bot attack agent for the PyCR environment that acts randomly
 """
 import numpy as np
-from pycr_common.dao.network.base_env_config import BaseEnvConfig
+from pycr_common.dao.network.base_env_config import BasePyCREnvConfig
 from pycr_common.dao.network.base_env_state import BaseEnvState
 
 
@@ -11,7 +11,7 @@ class RandomAttackerBotAgent:
     Class implementing an attack policy that acts randomly
     """
 
-    def __init__(self, env_config: BaseEnvConfig, env):
+    def __init__(self, env_config: BasePyCREnvConfig, env):
         """
         Constructor, initializes the policy
 

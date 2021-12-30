@@ -5,7 +5,7 @@ try:
     from pycr_common.rendering.viewer import Viewer
 except:
     pass
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs import PyCRCTFEnv
 import numpy as np
 import torch
@@ -16,7 +16,7 @@ class ManualDefenderAgent:
     Class representing a manual defender agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: EnvConfig, env: PyCRCTFEnv, render: bool = False, model = None):
+    def __init__(self, env_config: PyCREnvConfig, env: PyCRCTFEnv, render: bool = False, model = None):
         """
         Sets up manual defender environment
 

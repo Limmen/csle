@@ -1,6 +1,6 @@
 from pycr_common.dao.network.env_mode import EnvMode
 from pycr_common.dao.network.emulation_config import EmulationConfig
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_base import PyCrCTFMultiSimBase
 from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_v1 import PyCrCTFMultiSimV1
@@ -12,7 +12,7 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: EnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: PyCREnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  idx: int = -1, dr_max_num_nodes : int = 10, dr_min_num_nodes : int  = 4, dr_max_num_flags = 3,
                  dr_min_num_flags : int = 1, dr_min_num_users :int = 2, dr_max_num_users : int = 5):
         if env_config is None:

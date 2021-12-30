@@ -2,7 +2,7 @@ from typing import Tuple
 import numpy as np
 import gym
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 
 class DefenderStateRepresentation:
     """
@@ -29,7 +29,7 @@ class DefenderStateRepresentation:
     @staticmethod
     def base_representation(
             num_machines : int, obs_state :DefenderObservationState, os_lookup: dict, ids: bool = False,
-            multiple_stopping : bool = False, env_config: EnvConfig = None) \
+            multiple_stopping : bool = False, env_config: PyCREnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Base observation representation, includes all available information for the defender.
@@ -148,7 +148,7 @@ class DefenderStateRepresentation:
     @staticmethod
     def essential_representation(
             num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
-            multiple_stopping : bool = False, env_config: EnvConfig = None) \
+            multiple_stopping : bool = False, env_config: PyCREnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Essential  observation representation, includes only the essential information for the defender
@@ -249,7 +249,7 @@ class DefenderStateRepresentation:
     @staticmethod
     def compact_representation(
             num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
-            multiple_stopping : bool = False, env_config: EnvConfig = None) \
+            multiple_stopping : bool = False, env_config: PyCREnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Compact representation for the defender, includes a small compact set of features.
@@ -322,7 +322,7 @@ class DefenderStateRepresentation:
     @staticmethod
     def simple_representation(
             num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
-            multiple_stopping : bool = False, env_config: EnvConfig = None) \
+            multiple_stopping : bool = False, env_config: PyCREnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Simple representation for the defender, includes a small set of features.
@@ -380,7 +380,7 @@ class DefenderStateRepresentation:
     @staticmethod
     def core_representation(
             num_machines: int, obs_state: DefenderObservationState, os_lookup: dict, ids: bool = False,
-            multiple_stopping : bool = False, env_config: EnvConfig = None) \
+            multiple_stopping : bool = False, env_config: PyCREnvConfig = None) \
             -> Tuple[np.ndarray, np.ndarray]:
         """
         Core representation for the defender, includes only IDS features

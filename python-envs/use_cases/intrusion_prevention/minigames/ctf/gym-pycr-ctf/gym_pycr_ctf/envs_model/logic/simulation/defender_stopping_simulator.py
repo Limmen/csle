@@ -1,7 +1,7 @@
 from typing import Tuple
 import math
 from gym_pycr_ctf.dao.network.env_state import EnvState
-from gym_pycr_ctf.dao.network.env_config import EnvConfig
+from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 
@@ -14,7 +14,7 @@ class DefenderStoppingSimulator:
 
     @staticmethod
     def stop_monitor(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                     env_config: EnvConfig) -> Tuple[EnvState, float, bool]:
+                     env_config: PyCREnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -75,7 +75,7 @@ class DefenderStoppingSimulator:
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, defender_action: DefenderAction, env_config: EnvConfig,
+    def continue_monitor(s: EnvState, defender_action: DefenderAction, env_config: PyCREnvConfig,
                          attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
