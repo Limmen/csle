@@ -34,7 +34,7 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
 
 ## Architecture
 
-The method using in `pycr` for learning and validating policies includes two systems. 
+The method used in `pycr` for learning and validating policies includes two systems. 
 First, we develop an **emulation system** where key functional components of 
 the target infrastructure are replicated. In this system, we run attack scenarios and defender responses. 
 These runs produce system metrics and logs that we use to estimate empirical distributions 
