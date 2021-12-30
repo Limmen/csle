@@ -109,6 +109,10 @@ train defender policies using reinforcement learning. It exposes an OpenAI-gym i
      - [x] Custom system identifification algorithm to learn model of emulation
      - [x] Custom domain randomization algorithm
      - [ ] Function approximation
+     
+- **Demonstrations**
+      
+     - [x] A Dashboard for Inspecting Automated Intrusion Prevention Policies     
 
 ## Installation
 TODO
@@ -122,6 +126,7 @@ For basic documentation, see the README.md files inside each sub-directory,
 
 - **Emulation Environments** ([emulation-envs](./emulation-envs)).
 - **Python Environments** ([python-envs](./python-envs)).
+- **Demonstrations** ([demos](./demos)).
 - **Notebooks** ([notebooks](./notebooks)).
 - **Documentation** ([docs](./docs)).
 
