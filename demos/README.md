@@ -14,7 +14,7 @@ A webapp demonstrating automated intrusion prevention through optimal stopping
 ## Architecture
 
 <p align="center">
-<img src="pycr_anip/docs/arch.png" width="600">
+<img src="pycr_anip/docs/arch.png" width="400">
 </p>
 
 ## Useful scripts
