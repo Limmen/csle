@@ -156,9 +156,13 @@ python create_networks.py -n 40
 ```
 (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
 
-## Create an Emulation
+## Quickstart
+TODO
+
+## Create an Emulation 
 
 After doing the installation steps an emulation can be created by using the following steps. 
+(For more detailed information on how to manage emulations, see [README](./emulation-envs/README.MD)) 
 
 There are three ways to create an emulation: use a pre-configured emulation, use a random emulation, or configure your own emulation. 
 
@@ -234,7 +238,12 @@ make clean
 
 TODO
 
-## Quickstart
+## Create a Simulation
+
+TODO
+
+## Create and run an Experiment
+
 TODO
 
 ## Documentation
