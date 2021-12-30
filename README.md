@@ -184,13 +184,12 @@ make apply_config
 make traffic
 ```
 
-6. Stopping the emulation
-To stop the emulation, run:
+6. To stop the emulation, run:
 ```bash
 make stop
 ```
 
-To delete the emulation, run:
+7. To delete the emulation, run:
 ```bash
 make clean
 ```
@@ -198,32 +197,35 @@ make clean
 ### Start a random emulation
 
 1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/random)
-2. Generate a random configuration:
+2. Change directory:
+```bash
+cd emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/random
+```
+3. Generate a random configuration:
 ```bash
 make gen_config
 ``` 
-3. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+4. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
 ```bash
 make run
 ```
 
-4. Apply network/users/vulnerability/flags configuration to the emulation:
+5. Apply network/users/vulnerability/flags configuration to the emulation:
 ```bash
 make apply_config
 ```
 
-5. (Optional) Start traffic generators:
+6. (Optional) Start traffic generators:
 ```bash
 make traffic
 ```
 
-6. Stopping the emulation
-To stop the emulation, run:
+7. To stop the emulation, run:
 ```bash
 make stop
 ```
 
-To delete the emulation, run:
+8. To delete the emulation, run:
 ```bash
 make clean
 ``` 
