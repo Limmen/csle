@@ -585,6 +585,8 @@ class FILE_PATTERNS:
     ALERTS_FILE_SUFFIX = "_alerts.txt"
     TXT_FILE_SUFFIX = ".txt"
     XML_FILE_SUFFIX = ".xm"
+    CSV_SUFFIX = ".csv"
+    LOG_SUFFIX = ".log"
 
 
 class NIKTO:
@@ -928,6 +930,7 @@ class DOCKER:
     LIST_NETWORKS_CMD = "docker network ls"
     LIST_RUNNING_CONTAINERS_CMD = "docker ps -q"
     INSPECT_CONTAINER_CONFIG_CMD = "docker inspect"
+    MAKEFILE = "Makefile"
     MAKEFILE_PATH = "/Makefile"
     NETWORK_SETTINGS = "NetworkSettings"
     NETWORKS = "Networks"
@@ -940,6 +943,9 @@ class DOCKER:
     MAC_ADDRESS_INFO = "MacAddress"
     IP_PREFIX_LEN_INFO = "IPPrefixLen"
     HOSTNAME_INFO = "Hostname"
+    CONTAINERS_DIR = "containers"
+    CONTAINER_MAKEFILE_TEMPLATE = "Container_Makefile_template"
+    MAKEFILE_TEMPLATE = "Makefile_template"
 
 
 class PYCR:
@@ -997,3 +1003,16 @@ class VULNERABILITY_GENERATOR:
     NAMES_SHORTLIST = ["admin", "test", "guest", "info", "adm", "mysql", "user", "administrator",
                        "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser",
                        "donald", "alan"]
+
+
+class EXPERIMENT:
+    RESULTS_DIR = "results"
+    DATA_DIR = "data"
+    VIDEOS_DIR = "videos"
+    GIFS_DIR = "gifs"
+    TENSORBOARD_DIR = "tensorboard"
+    ENV_DATA_DIR = "env_data"
+    LOG_DIR = "logs"
+    HYPERPARAMETERS_DIR = "hyperparameters"
+    PLOTS_DIR = "plots"
+    CONFIG_FILE_PATH = "/config.json"

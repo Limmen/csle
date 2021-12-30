@@ -6,95 +6,71 @@ from pycr_common.dao.network.node_type import NodeType
 from pycr_common.dao.container_config.vulnerability_type import VulnType
 from pycr_common.dao.network.flag import Flag
 from pycr_common.dao.network.credential import Credential
-from pycr_common.dao.domain_randomization.randomization_space import RandomizationSpace
 from pycr_common.dao.network.network_service import NetworkService
 from pycr_common.dao.network.vulnerability import Vulnerability
 from pycr_common.dao.container_config.node_users_config import NodeUsersConfig
 from pycr_common.dao.container_config.node_flags_config import NodeFlagsConfig
 from pycr_common.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
+from pycr_common.envs_model.logic.domain_randomization.pycr_node_randomizer import PyCRNodeRandomizer
+from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_node_randomizer_config import PyCRCTFNodeRandomizerConfig
 
 
-class NodeRandomizer:
+class PyCrCTFNodeRandomizer(PyCRNodeRandomizer):
     """
     Utility class for randomizing a given node in the infrastructure
     """
 
     @staticmethod
-    def randomize(ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
-                  flags_config: NodeFlagsConfig, vulns_config: NodeVulnerabilityConfig,
-                  r_space: RandomizationSpace,
-                  router: bool = False, agent: bool = False, gateway: bool = False) -> Node:
+    def randomize(config: PyCRCTFNodeRandomizerConfig) -> Node:
         """
         Randomizes a node configuration using the specified parameters and configuration space
 
-        :param ip: the ip of the node
-        :param reachable: the list of reachable nodes
-        :param id: the id of the node
-        :param users_config: the configuration of the users
-        :param flags_config: the configuration of the flags
-        :param vulns_config: the configuration of the vulnerabilities
-        :param r_space: the randomization space
-        :param router: the router
-        :param agent: the agent
-        :param gateway: the gateway
+        :param config: the config of the node randomization
         :return: the randomized node
         """
-        id = id
-        ip_id = int(ip.rsplit(".", 1)[-1])
-        node = NodeRandomizer.randomize_server(ip=ip, reachable=reachable, id=id, users_config=users_config,
-                                               flags_config=flags_config, vulns_config=vulns_config, r_space=r_space,
-                                               gateway=gateway, router = router)
-        if agent:
+        node = PyCrCTFNodeRandomizer.randomize_server(config=config)
+        if config.agent:
             node.type == NodeType.HACKER
-        if router:
+        if config.router:
             node.type == NodeType.ROUTER
         return node
 
     @staticmethod
-    def randomize_server(ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
-                         flags_config: NodeFlagsConfig, vulns_config: NodeVulnerabilityConfig,
-                         r_space: RandomizationSpace,
-                         gateway: bool = False, router: bool = False) -> Node:
+    def randomize_server(config: PyCRCTFNodeRandomizerConfig) -> Node:
         """
         Randomizes a server node according to the specified parameters and randomization space
 
-        :param ip: the ip of the node
-        :param reachable: the list of reachable nodes
-        :param id: the id of the node
-        :param users_config: the users configuration of the node
-        :param flags_config: the flags configuration of the node
-        :param vulns_config: the vulnerability configuration of the node
-        :param r_space: the randomization space
-        :param gateway: the gateway
-        :param router: the router
+        :param config: the config of the node randomization
         :return: The randomized node
         """
         type = NodeType.SERVER
-        flags = NodeRandomizer.parse_flags(flags_conf=flags_config)
-        vulns, n_serv, creds, n_roots = NodeRandomizer.generate_required_vulns(vuln_conf=vulns_config, gateway=gateway)
-        if not router:
+        flags = PyCrCTFNodeRandomizer.parse_flags(flags_conf=config.flags_config)
+        vulns, n_serv, creds, n_roots = PyCrCTFNodeRandomizer.generate_required_vulns(vuln_conf=config.vulns_config,
+                                                                                      gateway=config.gateway)
+        if not config.router:
             vulns_blacklist = constants.EXPLOIT_VULNERABILITES.WEAK_PW_VULNS + constants.EXPLOIT_VULNERABILITES.CVE_VULNS
             vulns_blacklist = vulns_blacklist + list(map(lambda x: x.name, vulns))
-            num_vulns = random.randint(0, len(r_space.vulnerabilities)-1)
-            r_vulns = NodeRandomizer.random_vulnerabilities(vulns=r_space.vulnerabilities, num_vulns=num_vulns,
-                                                            blacklist_vulnerabilities=vulns_blacklist)
+            num_vulns = random.randint(0, len(config.r_space.vulnerabilities)-1)
+            r_vulns = PyCrCTFNodeRandomizer.random_vulnerabilities(vulns=config.r_space.vulnerabilities,
+                                                                   num_vulns=num_vulns,
+                                                                   blacklist_vulnerabilities=vulns_blacklist)
             vulns =  vulns + r_vulns
-        num_services = random.randint(0, len(r_space.services) - 1)
-        services = NodeRandomizer.random_services(services=r_space.services, num_services=num_services,
-                                                  blacklist_services=list(map(lambda x: x.name, n_serv)))
+        num_services = random.randint(0, len(config.r_space.services) - 1)
+        services = PyCrCTFNodeRandomizer.random_services(services=config.r_space.services, num_services=num_services,
+                                                         blacklist_services=list(map(lambda x: x.name, n_serv)))
         services = services + n_serv
-        os = NodeRandomizer.random_os(os=r_space.os)
-        credentials, root_usernames = NodeRandomizer.parse_credentials(users_conf=users_config)
+        os = PyCrCTFNodeRandomizer.random_os(os=config.r_space.os)
+        credentials, root_usernames = PyCrCTFNodeRandomizer.parse_credentials(users_conf=config.users_config)
         credentials = credentials + creds
         root_usernames = root_usernames + n_roots
         level = 3
         visible = False
         firewall = False
-        node = Node(ip=ip, ip_id=int(ip.rsplit(".", 1)[-1]), id=id,
+        node = Node(ip=config.ip, ip_id=int(config.ip.rsplit(".", 1)[-1]), id=config.id,
                     type=type, os=os,
                     flags=flags, level=level, vulnerabilities=vulns, services=services,
                     credentials=credentials, root_usernames=root_usernames, visible=visible,
-                    reachable_nodes=reachable, firewall=firewall)
+                    reachable_nodes=config.reachable, firewall=firewall)
         return node
 
     @staticmethod

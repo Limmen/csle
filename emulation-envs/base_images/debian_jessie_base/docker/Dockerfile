@@ -18,7 +18,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        wget openjdk-7-jre-headless &&\
          DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 build-essential gcc make \
          php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev irssi irssi-scripts screen postgresql-client-common \
-         snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute
+         snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat
 
 RUN apt-get install -y openssl libssl-dev -t jessie-backports
 
@@ -90,7 +90,7 @@ RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomca
 ADD docker/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 
 # Setup TeamSpeak 3 Server
-RUN wget https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
+RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 
@@ -191,6 +191,11 @@ RUN chmod 777 /irc_login_test.sh
 # Pengine Exploit
 ADD docker/pengine_exploit.sh /pengine_exploit.sh
 RUN chmod 777 /pengine_exploit.sh
+
+# Setup Sysstat
+RUN mv /etc/default/sysstat /etc/default/sysstat.bak
+ADD docker/sysstat /etc/default/sysstat
+RUN service sysstat restart
 
 # Add Tini
 ENV TINI_VERSION v0.19.0

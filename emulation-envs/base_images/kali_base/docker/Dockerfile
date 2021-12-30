@@ -12,7 +12,7 @@ RUN apt-get update --fix-missing
 RUN apt-get -y install apt-utils openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 netcat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp postgresql-client smbclient tcpdump netcat traceroute
+                       snmp postgresql-client smbclient tcpdump netcat traceroute sysstat
 
 #RUN apt-get -y install man-db
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10
@@ -137,6 +137,11 @@ RUN chmod 777 /irc_login_test.sh
 # Pengine Exploit
 ADD docker/pengine_exploit.sh /pengine_exploit.sh
 RUN chmod 777 /pengine_exploit.sh
+
+# Setup Sysstat
+RUN mv /etc/default/sysstat /etc/default/sysstat.bak
+ADD docker/sysstat /etc/default/sysstat
+RUN service sysstat restart
 
 # Add Tini
 ENV TINI_VERSION v0.19.0

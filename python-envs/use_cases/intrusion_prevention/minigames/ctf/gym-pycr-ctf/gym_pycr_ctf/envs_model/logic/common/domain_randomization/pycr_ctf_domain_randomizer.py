@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import random
 import numpy as np
 from pycr_common.dao.network.network_config import NetworkConfig
@@ -7,56 +7,45 @@ from pycr_common.envs_model.config.generator.vuln_generator import Vulnerability
 from pycr_common.envs_model.config.generator.users_generator import UsersGenerator
 from pycr_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from pycr_common.dao.container_config.vulnerability_type import VulnType
-from pycr_common.dao.domain_randomization.randomization_space import RandomizationSpace
+from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_randomization_space import PyCrCTFRandomizationSpace
 from pycr_common.envs_model.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
 from pycr_common.dao.network.flag import Flag
+from pycr_common.envs_model.logic.domain_randomization.pycr_domain_randomizer import PyCRDomainRandomizer
 from gym_pycr_ctf.dao.network.env_config import EnvConfig
-from gym_pycr_ctf.envs_model.logic.common.node_randomizer import NodeRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_node_randomizer import PyCrCTFNodeRandomizer
+from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_randomization_space_config import PyCRCTFRandomizationSpaceConfig
+from gym_pycr_ctf.dao.domain_randomization.pycr_ctf_node_randomizer_config import PyCRCTFNodeRandomizerConfig
 
-class DomainRandomizer:
+
+class PyCrCTFPyCRDomainRandomizer(PyCRDomainRandomizer):
     """
     Utility class for domain randomization to improve generalization performance
     """
 
     @staticmethod
-    def generate_randomization_space(network_confs: List[NetworkConfig], min_num_nodes : int=4,
-                                     max_num_nodes : int=4, min_num_flags : int = 1, max_num_flags : int = 1,
-                                     min_num_users: int = 1, max_num_users : int = 1,
-                                     services = None, vulnerabilities = None, os = None,
-                                     use_base_randomization: bool = False) -> RandomizationSpace:
+    def generate_randomization_space(config: PyCRCTFRandomizationSpaceConfig) -> PyCrCTFRandomizationSpace:
         """
         Creates a randomization space according to the given parameters
 
-        :param network_confs: the network configurations of the environment
-        :param min_num_nodes: the minimum number of nodes in a sampled MDP
-        :param max_num_nodes: the maximum number of nodes in a sampled MDP
-        :param min_num_flags: the minimum number of flags in a sampled MDP
-        :param max_num_flags: the maximum number of flags in a sampled MDP
-        :param min_num_users: the minimum number of users in a sampled MDP
-        :param max_num_users: the maximum number of users in a sampled MDP
-        :param services: the list of possible services to include in the sampled MDP
-        :param vulnerabilities: the list of possible vulnerabilities to include in the sampled MDP
-        :param os: the list of possible operating systems to include in the sampled MDP
-        :param use_base_randomization: boolean flag whether to use a base set of services/vulnerabilities
+        :param config: the randomization space config
         :return: the created randomization space
         """
-        if services is None:
-            services = set()
-        if vulnerabilities is None:
-            vulnerabilities = set()
-        if os is None:
+        services = set()
+        vulnerabilities = set()
+        os = set()
+        if config.os is None:
             os = set()
-        if use_base_randomization:
+        if config.use_base_randomization:
             services = services.union(set(BaseRandomizationSpace.base_services()))
             os = os.union(BaseRandomizationSpace.base_os())
             vulnerabilities = vulnerabilities.union(BaseRandomizationSpace.base_vulns())
-        min_num_nodes = min_num_nodes
-        max_num_nodes = max_num_nodes
-        min_num_flags=min_num_flags
-        max_num_flags=max_num_flags
-        min_num_users=min_num_users
-        max_num_users=max_num_users
-        for nc in network_confs:
+        min_num_nodes = config.min_num_nodes
+        max_num_nodes = config.max_num_nodes
+        min_num_flags=config.min_num_flags
+        max_num_flags=config.max_num_flags
+        min_num_users=config.min_num_users
+        max_num_users=config.max_num_users
+        for nc in config.network_confs:
             node_services = set()
             node_vulns = set()
             for node in nc.nodes:
@@ -94,15 +83,17 @@ class DomainRandomizer:
                 v.credentials = []
                 filtered_vulnerabilities.append(v)
                 vulnerabilities_names.add(v.name)
-        r_space = RandomizationSpace(services=filtered_services, vulnerabilities=filtered_vulnerabilities, os=os,
-                                     min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
-                                     min_num_flags=min_num_flags, max_num_flags=max_num_flags,
-                                     min_num_users=min_num_users, max_num_users=max_num_users)
+        r_space = PyCrCTFRandomizationSpace(PyCRCTFRandomizationSpaceConfig(
+            services=filtered_services, vulnerabilities=filtered_vulnerabilities, os=os,
+            min_num_nodes=min_num_nodes, max_num_nodes=max_num_nodes,
+            min_num_flags=min_num_flags, max_num_flags=max_num_flags,
+            min_num_users=min_num_users, max_num_users=max_num_users, network_confs=config.network_confs))
         return r_space
 
+
     @staticmethod
-    def randomize(subnet_prefix: str, network_ids: List, r_space: RandomizationSpace, env_config: EnvConfig) \
-            -> NetworkConfig:
+    def randomize(subnet_prefix: str, network_ids: List, r_space: PyCrCTFRandomizationSpace, env_config: EnvConfig) \
+            -> Tuple[NetworkConfig, EnvConfig]:
         """
         Randomizes a given MDP using a specified randomization space
 
@@ -158,8 +149,10 @@ class DomainRandomizer:
             agent = (node.ip == agent_ip)
             if agent:
                 agent_reachable=reachable
-            n = NodeRandomizer.randomize(ip=node.ip, id=id, reachable=reachable, router=router, agent=agent, r_space=r_space,
-                                     users_config=users, flags_config=flags, vulns_config=vulns, gateway=gateway)
+            node_randomize_config = PyCRCTFNodeRandomizerConfig(
+                ip=node.ip, id=id, reachable=reachable, router=router, agent=agent, r_space=r_space,
+                users_config=users, flags_config=flags, vulns_config=vulns, gateway=gateway)
+            n = PyCrCTFNodeRandomizer.randomize(config=node_randomize_config)
             randomized_nodes.append(n)
 
         flags_lookup = {}
@@ -186,9 +179,3 @@ class DomainRandomizer:
                 a.ip = subnet_mask
         return randomized_network_conf, env_config
 
-
-
-if __name__ == '__main__':
-    DomainRandomizer.randomize(network_conf=None, min_num_nodes=5, max_num_nodes=10, min_num_flags=1, max_num_flags=5,
-                               min_num_users=3, max_num_users=5, subnet_prefix="172.18.",
-                               network_ids=list(range(1,254)))

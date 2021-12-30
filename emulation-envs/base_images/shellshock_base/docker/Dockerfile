@@ -18,7 +18,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
         dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
         wget apache2 irssi irssi-scripts screen openssh-server snmp mongodb-clients postgresql-client smbclient \
-        fail2ban rsyslog netcat traceroute
+        fail2ban rsyslog netcat traceroute sysstat
 
 RUN apt-get install -y openssl libssl-dev -t wheezy-backports
 
@@ -177,6 +177,11 @@ RUN chmod 777 /irc_login_test.sh
 # Pengine Exploit
 ADD docker/pengine_exploit.sh /pengine_exploit.sh
 RUN chmod 777 /pengine_exploit.sh
+
+# Setup Sysstat
+RUN mv /etc/default/sysstat /etc/default/sysstat.bak
+ADD docker/sysstat /etc/default/sysstat
+RUN service sysstat restart
 
 # Add Tini
 ENV TINI_VERSION v0.19.0

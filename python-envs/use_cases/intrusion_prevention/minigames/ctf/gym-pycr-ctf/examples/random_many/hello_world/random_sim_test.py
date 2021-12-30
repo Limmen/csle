@@ -2,7 +2,7 @@ from pycr_common.dao.network.emulation_config import EmulationConfig
 import gym
 import numpy as np
 from pycr_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_domain_randomizer import PyCrCTFPyCRDomainRandomizer
 from pycr_common.dao.network.network_config import NetworkConfig
 
 def test_env(env_name : str, num_steps : int):
@@ -46,7 +46,7 @@ def test_env(env_name : str, num_steps : int):
     actions = np.array(list(range(num_actions)))
     print("num actions:{}".format(num_actions))
     tot_rew = 0
-    randomization_space = DomainRandomizer.generate_randomization_space([env.env_config.network_conf])
+    randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space([env.env_config.network_conf])
     for i in range(num_steps):
         #rint(i)
         legal_actions = list(filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), actions))
@@ -58,10 +58,10 @@ def test_env(env_name : str, num_steps : int):
         if done or (i >900 and i % 1000 == 0):
             print("env done")
             tot_rew = 0
-            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
-                                                                             network_ids=list(range(1, 254)),
-                                                                             r_space=randomization_space,
-                                                                             env_config=env.env_config)
+            randomized_network_conf, env_config = PyCrCTFPyCRDomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                                        network_ids=list(range(1, 254)),
+                                                                                        r_space=randomization_space,
+                                                                                        env_config=env.env_config)
             randomized_network_conf.save("./test.pkl")
             net = NetworkConfig.load("./test.pkl")
             print("loaded net:{}".format(net))

@@ -23,7 +23,7 @@ from pycr_common.dao.agent.train_mode import TrainMode
 from gym_pycr_ctf.dao.experiment.experiment_result import ExperimentResult
 from gym_pycr_ctf.util.experiments_util.simulator import Simulator
 from gym_pycr_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
-from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_domain_randomizer import PyCrCTFPyCRDomainRandomizer
 from gym_pycr_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 from gym_pycr_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
 from gym_pycr_ctf.envs_model.util.eval_util import EvalUtil
@@ -130,7 +130,7 @@ class Runner:
             if isinstance(env, DummyVecEnv):
                 pass
             elif isinstance(env, SubprocVecEnv):
-                randomization_space = DomainRandomizer.generate_randomization_space(
+                randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space(
                     env.network_confs, max_num_nodes = cfg.dr_max_num_nodes,
                 min_num_nodes = cfg.dr_min_num_nodes, max_num_flags=cfg.dr_max_num_flags,
                 min_num_flags=cfg.dr_min_num_flags, min_num_users=cfg.dr_min_num_users,
@@ -228,7 +228,7 @@ class Runner:
                        checkpoint_dir=config.env_checkpoint_dir)
 
         if config.simulation_config.domain_randomization:
-            randomization_space = DomainRandomizer.generate_randomization_space(
+            randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space(
                 [], max_num_nodes=config.simulation_config.dr_max_num_nodes,
                 min_num_nodes=config.simulation_config.dr_min_num_nodes,
                 max_num_flags=config.simulation_config.dr_max_num_flags,
@@ -263,7 +263,7 @@ class Runner:
         env = gym.make(config.env_name, env_config=config.env_config, emulation_config=config.emulation_config,
                        checkpoint_dir=config.env_checkpoint_dir)
         if config.simulation_config.domain_randomization:
-            randomization_space = DomainRandomizer.generate_randomization_space(
+            randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space(
                 [], max_num_nodes=config.simulation_config.dr_max_num_nodes,
                 min_num_nodes=config.simulation_config.dr_min_num_nodes,
                 max_num_flags=config.simulation_config.dr_max_num_flags,
@@ -351,7 +351,7 @@ class Runner:
             else:
                 cfg = config.defender_agent_config
             if cfg.domain_randomization:
-                randomization_space = DomainRandomizer.generate_randomization_space(
+                randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space(
                     [], max_num_nodes=config.attacker_agent_config.dr_max_num_nodes,
                     min_num_nodes=cfg.dr_min_num_nodes,
                     max_num_flags=cfg.dr_max_num_flags,

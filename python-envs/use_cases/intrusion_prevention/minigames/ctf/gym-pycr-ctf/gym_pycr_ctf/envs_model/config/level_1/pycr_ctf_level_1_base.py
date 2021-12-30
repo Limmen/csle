@@ -25,6 +25,7 @@ from gym_pycr_ctf.dao.action.defender.defender_action_id import DefenderActionId
 from gym_pycr_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 from gym_pycr_ctf.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
 
+
 class PyCrCTFLevel1Base:
     """
     Base configuration of level 1 of the PyCrCTF environment. (Mainly used when running in simulation mode

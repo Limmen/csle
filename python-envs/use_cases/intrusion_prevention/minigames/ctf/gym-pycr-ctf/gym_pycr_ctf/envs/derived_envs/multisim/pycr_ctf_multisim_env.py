@@ -4,7 +4,7 @@ from gym_pycr_ctf.dao.network.env_config import EnvConfig
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv
 from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_base import PyCrCTFMultiSimBase
 from gym_pycr_ctf.envs_model.config.multi_sim.pycr_ctf_multisim_v1 import PyCrCTFMultiSimV1
-from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_domain_randomizer import PyCrCTFPyCRDomainRandomizer
 
 
 # -------- Version 1 emulation ------------
@@ -17,7 +17,7 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
                  dr_min_num_flags : int = 1, dr_min_num_users :int = 2, dr_max_num_users : int = 5):
         if env_config is None:
             render_config = PyCrCTFMultiSimBase.render_conf(num_nodes=dr_max_num_nodes)
-            randomization_space = DomainRandomizer.generate_randomization_space(
+            randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space(
                 [], max_num_nodes=dr_max_num_nodes,
                 min_num_nodes=dr_min_num_nodes, max_num_flags=dr_max_num_flags,
                 min_num_flags=dr_min_num_flags, min_num_users=dr_min_num_users,
@@ -45,8 +45,8 @@ class PyCRCTFMultiSim1Env(PyCRCTFEnv):
             env_config.max_episode_length = 200
             env_config.compute_pi_star_attacker = True
             env_config.use_upper_bound_pi_star_attacker = True
-            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
-                                                                             network_ids=list(range(1, 254)),
-                                                                             r_space=self.randomization_space,
-                                                                             env_config=env_config)
+            randomized_network_conf, env_config = PyCrCTFPyCRDomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                                        network_ids=list(range(1, 254)),
+                                                                                        r_space=self.randomization_space,
+                                                                                        env_config=env_config)
         super(PyCRCTFMultiSim1Env, self).__init__(env_config=env_config, rs=randomization_space)

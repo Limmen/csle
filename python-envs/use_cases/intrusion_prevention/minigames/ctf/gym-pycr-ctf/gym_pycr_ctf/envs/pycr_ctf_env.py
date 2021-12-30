@@ -22,7 +22,7 @@ from gym_pycr_ctf.envs_model.logic.emulation.system_id.simulation_generator impo
 from gym_pycr_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_pycr_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_pycr_ctf.envs_model.logic.common.domain_randomizer import DomainRandomizer
+from gym_pycr_ctf.envs_model.logic.common.domain_randomization.pycr_ctf_domain_randomizer import PyCrCTFPyCRDomainRandomizer
 from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_attacker import FindPiStarAttacker
 from gym_pycr_ctf.envs_model.logic.simulation.find_pi_star_defender import FindPiStarDefender
 from gym_pycr_ctf.envs_model.logic.common.stopping_baselines_util import StoppingBaselinesUtil
@@ -466,10 +466,10 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
 
         if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
                 and self.env_config.domain_randomization and self.randomization_space is not None:
-            randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
-                                                                             network_ids=list(range(1, 254)),
-                                                                             r_space=self.randomization_space,
-                                                                             env_config=self.env_config)
+            randomized_network_conf, env_config = PyCrCTFPyCRDomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                                        network_ids=list(range(1, 254)),
+                                                                                        r_space=self.randomization_space,
+                                                                                        env_config=self.env_config)
             self.env_config = env_config
             if self.env_config.compute_pi_star_attacker:
                 if not self.env_config.use_upper_bound_pi_star_attacker:
@@ -584,10 +584,10 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
         return arr
 
     def randomize(self):
-        randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
-                                                                         network_ids=list(range(1, 254)),
-                                                                         r_space=self.randomization_space,
-                                                                         env_config=self.env_config)
+        randomized_network_conf, env_config = PyCrCTFPyCRDomainRandomizer.randomize(subnet_prefix="172.18.",
+                                                                                    network_ids=list(range(1, 254)),
+                                                                                    r_space=self.randomization_space,
+                                                                                    env_config=self.env_config)
         self.env_config = env_config
         attacker_total_actions = list(range(self.attacker_num_actions))
         self.attacker_initial_illegal_actions = list(filter(lambda action: not PyCRCTFEnv.is_attack_action_legal(
@@ -754,7 +754,7 @@ class PyCRCTFEnv(BasePyCREnv, metaclass=ABCMeta):
         )
         self.env_state.attacker_obs_state = obs_state
         self.env_config.env_mode = EnvMode.SIMULATION
-        self.randomization_space = DomainRandomizer.generate_randomization_space([self.env_config.network_conf])
+        self.randomization_space = PyCrCTFPyCRDomainRandomizer.generate_randomization_space([self.env_config.network_conf])
         self.env_config.emulation_config.connect_agent()
 
         if self.env_config.defender_update_state:

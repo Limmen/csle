@@ -21,6 +21,21 @@ from pycr_common.dao.container_config.flags_config import FlagsConfig
 from pycr_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.traffic_config import TrafficConfig
+import pycr_common.constants.constants as constants
+
+
+def get_subdir(output_dir: str, results_dir: str, subdir: str, seed: int) -> str:
+    """
+    Utility function to construct the subdir string from a given results dir, subdir, and random seed
+
+    :param output_dir: the base output directory
+    :param results_dir: the base results dir
+    :param subdir: the subdirectory (e.g. logs, data, tensorboard, etc)
+    :param seed: the random seed
+    :return: the directory path
+    """
+    return output_dir + constants.COMMANDS.SLASH_DELIM + results_dir + constants.COMMANDS.SLASH_DELIM + subdir \
+           + constants.COMMANDS.SLASH_DELIM + str(seed) + constants.COMMANDS.SLASH_DELIM
 
 
 def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") -> Tuple[str, str]:
@@ -35,24 +50,36 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
     from gym_pycr_ctf.runner.runner import Runner
     time_str = str(time.time())
     create_artifact_dirs(config.output_dir, random_seed)
-    logger = setup_logger(title, config.output_dir + "/results/logs/" +
-                               str(random_seed) + "/",
-                               time_str=time_str)
+
+    # Setup experiment logger
+    logger = setup_experiment_logger(title, get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.LOG_DIR, random_seed),
+                                     time_str=time_str)
+
+    # Setup experiment directories
     if config.attacker_agent_config is not None:
-        config.attacker_agent_config.save_dir = default_output_dir() + "/results/data/" + str(random_seed) + "/"
-        config.attacker_agent_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
-        config.attacker_agent_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
-        config.attacker_agent_config.tensorboard_dir = default_output_dir() + "/results/tensorboard/" \
-                                                 + str(random_seed) + "/"
-        config.env_checkpoint_dir = default_output_dir() + "/results/env_data/" + str(random_seed) + "/"
+        config.attacker_agent_config.save_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.DATA_DIR, random_seed)
+        config.attacker_agent_config.video_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.VIDEOS_DIR, random_seed)
+        config.attacker_agent_config.gif_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.GIFS_DIR, random_seed)
+        config.attacker_agent_config.tensorboard_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.TENSORBOARD_DIR, random_seed)
+        config.env_checkpoint_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.ENV_DATA_DIR, random_seed)
         config.attacker_agent_config.logger = logger
         config.attacker_agent_config.random_seed = random_seed
         config.attacker_agent_config.to_csv(
-            config.output_dir + "/results/hyperparameters/" + str(random_seed) + "/" + time_str + ".csv")
+            config.output_dir + get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed)
+            + time_str + constants.FILE_PATTERNS.CSV_SUFFIX)
 
     if config.simulation_config is not None:
-        config.simulation_config.gif_dir = default_output_dir() + "/results/gifs/" + str(random_seed) + "/"
-        config.simulation_config.video_dir = default_output_dir() + "/results/videos/" + str(random_seed) + "/"
+        config.simulation_config.gif_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.GIFS_DIR, random_seed)
+        config.simulation_config.video_dir = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.VIDEOS_DIR, random_seed)
 
 
     config.logger = logger
@@ -63,10 +90,14 @@ def run_experiment(config: ClientConfig, random_seed: int, title :str = "v0") ->
             or config.mode == RunnerMode.SIMULATE.value:
         train_result, eval_result = Runner.run(config)
         if len(train_result.avg_episode_steps) > 0:
-            train_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_train" + ".csv"
+            train_csv_path = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.DATA_DIR, random_seed) \
+                             + time_str + "_train" + constants.FILE_PATTERNS.CSV_SUFFIX
             train_result.to_csv(train_csv_path)
         if len(eval_result.avg_episode_steps) > 0:
-            eval_csv_path = config.output_dir + "/results/data/" + str(random_seed) + "/" + time_str + "_eval" + ".csv"
+            eval_csv_path = get_subdir(config.output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.DATA_DIR, random_seed) \
+                            + time_str + "_eval" + constants.FILE_PATTERNS.CSV_SUFFIX
             eval_result.to_csv(eval_csv_path)
         return train_csv_path, eval_csv_path
     else:
@@ -81,23 +112,37 @@ def create_artifact_dirs(output_dir: str, random_seed : int) -> None:
     :param random_seed: the random seed of the experiment
     :return: None
     """
-    if not os.path.exists(output_dir + "/results/logs/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/logs/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/plots/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/plots/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/data/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/data/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/hyperparameters/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/hyperparameters/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/gifs/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/gifs/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/tensorboard/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/tensorboard/" + str(random_seed) + "/")
-    if not os.path.exists(output_dir + "/results/env_data/" + str(random_seed) + "/"):
-        os.makedirs(output_dir + "/results/env_data/" + str(random_seed) + "/")
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.LOG_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.LOG_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.PLOTS_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.PLOTS_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.DATA_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.DATA_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.GIFS_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.GIFS_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.TENSORBOARD_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.TENSORBOARD_DIR, random_seed))
+    if not os.path.exists(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.ENV_DATA_DIR, random_seed)):
+        os.makedirs(get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                       constants.EXPERIMENT.ENV_DATA_DIR, random_seed))
 
 
-def setup_logger(name: str, logdir: str, time_str = None):
+def setup_experiment_logger(name: str, logdir: str, time_str = None):
     """
     Configures the logger for writing log-data of experiments
 
@@ -118,7 +163,8 @@ def setup_logger(name: str, logdir: str, time_str = None):
     # log to file
     if time_str is None:
         time_str = str(time.time())
-    fh = logging.FileHandler(logdir + "/" + time_str + "_" + name + ".log", mode="w")
+    fh = logging.FileHandler(logdir + constants.COMMANDS.SLASH_DELIM + time_str + constants.COMMANDS.UNDERSCORE_DELIM
+                             + name + constants.FILE_PATTERNS.LOG_SUFFIX, mode="w")
     fh.setLevel(logging.INFO)
     fh.setFormatter(formatter)
 
@@ -151,6 +197,7 @@ def write_topology_file(topology: Topology, path: str) -> None:
     json_str = json.dumps(json.loads(jsonpickle.encode(topology)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
+
 
 def write_users_config_file(users_config: UsersConfig, path: str) -> None:
     """
@@ -348,9 +395,10 @@ def default_config_path(out_dir : str = None) -> str:
     :return: the default path to configuration file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './config.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM +
+                                   constants.EXPERIMENT.CONFIG_FILE_PATH)
     else:
-        config_path = os.path.join(out_dir, './config.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM + constants.EXPERIMENT.CONFIG_FILE_PATH)
     return config_path
 
 
@@ -360,9 +408,11 @@ def default_topology_path(out_dir : str = None) -> str:
     :return: the default path to topology file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './topology.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './topology.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH)
     return config_path
 
 
@@ -372,9 +422,11 @@ def default_users_path(out_dir : str = None) -> str:
     :return: the default path to users file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './users.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './users.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH)
     return config_path
 
 
@@ -384,9 +436,11 @@ def default_flags_path(out_dir : str = None) -> str:
     :return: the default path to flags file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './flags.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './flags.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH)
     return config_path
 
 
@@ -396,9 +450,11 @@ def default_vulnerabilities_path(out_dir : str = None) -> str:
     :return: the default path to vuln file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './vulnerabilities.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './vulnerabilities.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH)
     return config_path
 
 
@@ -408,9 +464,11 @@ def default_containers_path(out_dir : str = None) -> str:
     :return: the default path to containers config file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './containers.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './containers.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH)
     return config_path
 
 def default_traffic_path(out_dir : str = None) -> str:
@@ -419,9 +477,11 @@ def default_traffic_path(out_dir : str = None) -> str:
     :return: the default path to traffic config file
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './traffic.json')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH)
     else:
-        config_path = os.path.join(out_dir, './traffic.json')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH)
     return config_path
 
 
@@ -431,9 +491,11 @@ def default_containers_folders_path(out_dir : str = None) -> str:
     :return: the default path to container folders
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './containers')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM
+                                   + constants.DOCKER.CONTAINERS_DIR)
     else:
-        config_path = os.path.join(out_dir, 'containers')
+        config_path = os.path.join(out_dir, constants.DOCKER.CONTAINERS_DIR)
     return config_path
 
 
@@ -443,9 +505,11 @@ def default_container_makefile_template_path(out_dir : str = None) -> str:
     :return: the default path to makefile tempalte
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './Container_Makefile_template')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM +
+                                   constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE)
     else:
-        config_path = os.path.join(out_dir, 'Container_Makefile_template')
+        config_path = os.path.join(out_dir, constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE)
     return config_path
 
 
@@ -455,9 +519,12 @@ def default_makefile_template_path(out_dir : str = None) -> str:
     :return: the default path to makefile tempalte
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './Makefile_template')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM
+                                   + constants.DOCKER.MAKEFILE_TEMPLATE)
     else:
-        config_path = os.path.join(out_dir, './Makefile_template')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM + constants.DOCKER.MAKEFILE_TEMPLATE)
     return config_path
 
 
@@ -467,9 +534,12 @@ def default_makefile_path(out_dir : str = None) -> str:
     :return: the default path to makefile tempalte
     """
     if out_dir is None:
-        config_path = os.path.join(default_output_dir(), './Makefile')
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM +
+                                   constants.DOCKER.Makefile)
     else:
-        config_path = os.path.join(out_dir, './Makefile')
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.COMMANDS.SLASH_DELIM + constants.DOCKER.MAKEFILE)
     return config_path
 
 
