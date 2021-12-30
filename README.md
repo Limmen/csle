@@ -8,7 +8,7 @@ co-designed to provide an environment where it is possible to train and evaluate
 reinforcement learning agents on practical problems in cyber security.
 
 The platform can be used to implement different use cases. Each use case consist of an
-emulated infrastructure (used for evaluation), and a MDP/POMDP interface for training agents.
+emulated infrastructure (used for evaluation), and a MDP/POMDP/Markov Game interface for training agents.
 For example, the platform can be used to study the use case of intrusion prevention and
 train a reinforcement learning agent to prevent network intrusions by attackers in real-time.
 
@@ -34,19 +34,37 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
 
 ## Architecture
 
-`pycr` is built around three systems:
-the target system, an emulation system, and a simulation system. First, the target
-infrastructure is emulated by selectively replicating functionality of the
-infrastructure in a virtualization environment. Second, the
-measurements from the emulation are used to estimate a simulation
-model. The estimated model is then used to simulate intrusion
-prevention episodes and learn policies through reinforcement
-learning. Finally, to evaluate the learned policies, they are executed
-them in the emulation system.
+The method using in `pycr` for learning and validating policies includes two systems. 
+First, we develop an **emulation system** where key functional components of 
+the target infrastructure are replicated. In this system, we run attack scenarios and defender responses. 
+These runs produce system metrics and logs that we use to estimate empirical distributions 
+of infrastructure metrics, which are needed to simulate MDP/POMDP/Markov Game episodes. 
+Second, we develop a **simulation system** where MDP/POMDP/Markov Game episodes are executed and 
+policies are incrementally learned. 
+Finally, the policies are extracted and evaluated in the emulation system, 
+and can also be implemented in the target infrastructure. 
+In short, the emulation system is used to provide the statistics needed to simulate the POMDP 
+and to evaluate policies, whereas the simulation system is used to learn policies.
+
 
 <p align="center">
 <img src="docs/arch.png" width="600">
 </p>
+
+### Emulation System
+
+The emulation system executes on a cluster of machines that runs a virtualization layer provided by 
+Docker containers and virtual links. 
+The system emulates the clients, the attacker, the defender, as well as physical components of the 
+target infrastructure (e.g application servers and gateways). 
+Physical entities are emulated and software functions are executed in Docker containers of the emulation system. 
+The software functions replicate important components of the target infrastructure, 
+such as, web servers, databases, and an IDS.
+
+### Simulation System
+
+The simulation system implements a MDP/POMDP/Markov Game that can be used to 
+train defender policies using reinforcement learning. It exposes an OpenAI-gym interface.
 
 ## Features
 
