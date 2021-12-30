@@ -128,7 +128,7 @@ class EnvInfo:
     @staticmethod
     def parse_containers(containers, client2) -> List[RunningEnvContainer]:
         """
-        Queries docker to get a list of running pycr containers
+        Queries docker to get a list of running or stopped pycr containers
 
         :param containers: list of containers to parse
         :param client2: docker client
@@ -165,6 +165,7 @@ class EnvInfo:
                     vulnerabilities_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG]
                 if constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG in labels:
                     traffic_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG]
+
                 parsed_c = RunningEnvContainer(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
