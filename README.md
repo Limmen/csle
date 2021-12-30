@@ -1,4 +1,5 @@
-# `pycr`: The Python Cyber Range for Self-Learning Cyber Security Systems
+# `pycr`: A PYthon Cyber Range for reinforcement learning agents.  
+## A research platform to develop self-learning systems for cyber security 
 
 `pycr` is a platform for evaluating and developing reinforcement learning agents
 for on control problems in cyber security. It can be considered as a cyber range
