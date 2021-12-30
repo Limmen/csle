@@ -1,6 +1,6 @@
 from typing import List
 import docker
-from pycr_common.dao.env_info.running_env_container import RunningEnvContainer
+from pycr_common.dao.env_info.env_container import EnvContainer
 from pycr_common.dao.env_info.running_env import RunningEnv
 from pycr_common.util.experiments_util import util
 import pycr_common.constants.constants as constants
@@ -27,7 +27,7 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_running_containers(client1, client2) -> List[RunningEnvContainer]:
+    def parse_running_containers(client1, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of all running containers
 
@@ -40,7 +40,7 @@ class EnvInfo:
         return parsed_containers
 
     @staticmethod
-    def parse_stopped_containers(client1, client2) -> List[RunningEnvContainer]:
+    def parse_stopped_containers(client1, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of all stopped pycr containers
 
@@ -57,7 +57,7 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_envs(networks: List[str], containers: List[RunningEnvContainer]) -> List[RunningEnv]:
+    def parse_envs(networks: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
         """
         Queries docker to get a list of all active emulation environments
 
@@ -126,7 +126,7 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_containers(containers, client2) -> List[RunningEnvContainer]:
+    def parse_containers(containers, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of running or stopped pycr containers
 
@@ -166,7 +166,7 @@ class EnvInfo:
                 if constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG in labels:
                     traffic_config_path = labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG]
 
-                parsed_c = RunningEnvContainer(
+                parsed_c = EnvContainer(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
                     created=inspect_info[constants.DOCKER.CREATED_INFO],
@@ -186,7 +186,7 @@ class EnvInfo:
                     net=net, dir=dir_path, containers_config_path=containers_config_path,
                     users_config_path=users_config_path, flags_config_path=flags_config_path,
                     vulnerabilities_config_path=vulnerabilities_config_path, topology_config_path=topology_config_path,
-                    traffic_config_path=traffic_config_path
+                    traffic_config_path=traffic_config_path, container_handle=c
                 )
                 parsed_containers.append(parsed_c)
         return parsed_containers

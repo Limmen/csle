@@ -1,20 +1,7 @@
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
-from pycr_common.agents.policy_gradient.ppo_baseline.impl.ppo.ppo import PPO
 from gym_pycr_ctf.envs.pycr_ctf_env import PyCRCTFEnv # register envs
 import gym
-
-
-def initialize_models(self) -> None:
-    """
-    Initialize models
-
-    :return: None
-    """
-    # Initialize models
-    model = PPO.load(env=self.env, load_path=self.agent_config.load_path, device=self.device,
-                          agent_config=self.agent_config)
-    return model
 
 
 def system_id():

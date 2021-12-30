@@ -3,6 +3,7 @@ import numpy as np
 from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.dao.network.trajectory import Trajectory
 
+
 def test_env(env_name : str, num_trajectories : int):
     # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,

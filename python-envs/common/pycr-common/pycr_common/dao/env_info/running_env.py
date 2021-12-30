@@ -1,7 +1,7 @@
 from typing import List
 import jsonpickle
 import json
-from pycr_common.dao.env_info.running_env_container import RunningEnvContainer
+from pycr_common.dao.env_info.env_container import EnvContainer
 from pycr_common.dao.container_config.containers_config import ContainersConfig
 from pycr_common.dao.container_config.users_config import UsersConfig
 from pycr_common.dao.container_config.flags_config import FlagsConfig
@@ -15,7 +15,7 @@ class RunningEnv:
     DTO Object representing a running environment
     """
 
-    def __init__(self, containers: List[RunningEnvContainer], name: str, subnet_prefix: str, minigame :str, id: int,
+    def __init__(self, containers: List[EnvContainer], name: str, subnet_prefix: str, minigame :str, id: int,
                  subnet_mask : str, level: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig, vulnerabilities_config: VulnerabilitiesConfig,
                  topology_config: Topology, traffic_config: TrafficConfig):

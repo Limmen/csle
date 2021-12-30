@@ -1,7 +1,7 @@
 
-class RunningEnvContainer:
+class EnvContainer:
     """
-    DTO Object representing a running Docker container
+    DTO Object representing a running or stopped Docker container
     """
 
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
@@ -9,7 +9,7 @@ class RunningEnvContainer:
                  minigame : str, name2: str, level: str, hostname: str, image_name : str, net: str,
                  dir: str, containers_config_path : str, users_config_path : str, flags_config_path : str,
                  vulnerabilities_config_path : str, topology_config_path: str,
-                 traffic_config_path: str):
+                 traffic_config_path: str, container_handle):
         """
         Intializes the DTO
 
@@ -38,6 +38,7 @@ class RunningEnvContainer:
         :param vulnerabilities_config_path: the vulnerabilities configuration path of the container
         :param topology_config_path: the topology configuration path of the container
         :param traffic_config_path: the traffic configuration path of the container
+        :param container_handle: the py-docker container handle
         """
         self.name = name
         self.status = status
@@ -64,6 +65,7 @@ class RunningEnvContainer:
         self.vulnerabilities_config_path = vulnerabilities_config_path
         self.topology_config_path = topology_config_path
         self.traffic_config_path = traffic_config_path
+        self.container_handle = container_handle
 
     def to_dict(self) -> dict:
         """
@@ -95,3 +97,18 @@ class RunningEnvContainer:
         d["topology_config_path"] = self.topology_config_path
         d["traffic_config_path"] = self.traffic_config_path
         return d
+
+
+    def __str__(self):
+        """
+        :return: a string representation of the object
+        """
+        return f"name: {self.name}, status: {self.status}, short_id: {self.short_id}, " \
+               f"image_short_id: {self.image_short_id}, image_tags: {self.image_tags}, id: {self.id}, " \
+               f"created: {self.created}, ip: {self.ip}, network_id: {self.network_id}, gateway: {self.gateway}," \
+               f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, minigame: {self.minigame}, name2: {self.name2}," \
+               f"level: {self.level}, hostname: {self.hostname}, image_name: {self.image_name}, net: {self.net}, " \
+               f"dir: {self.dir}, containers_config_path: {self.containers_config_path}, " \
+               f"users_config_path: {self.users_config_path}, flags_config_path: {self.flags_config_path}, " \
+               f"vulnerabilities_config_path: {self.vulnerabilities_config_path}, " \
+               f"topology_config:path: {self.topology_config_path}, traffic_config_path: {self.traffic_config_path}"

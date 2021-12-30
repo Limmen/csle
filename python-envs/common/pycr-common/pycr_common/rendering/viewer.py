@@ -60,7 +60,6 @@ class Viewer():
         :return: None
         """
         self.mainframe.env_config.manual_play = True
-        self.mainframe.__init__(env_config=self.mainframe.env_config, init_state=self.mainframe.init_state, env=env)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         pyglet.clock.schedule_interval(self.mainframe.update, 1 / 10.)
