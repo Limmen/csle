@@ -2,6 +2,7 @@ from typing import List, Tuple
 import numpy as np
 from pycr_common.dao.state_representation.state_type import StateType
 from pycr_common.dao.network.base_env_state import BaseEnvState
+from pycr_common.envs_model.logic.emulation.util.common.docker_stats_thread import DockerStatsThread
 from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
@@ -72,6 +73,10 @@ class EnvState(BaseEnvState):
         self.defender_observation_space = None
 
         self.setup_defender_spaces()
+
+        jumphost_ip = env_config.emulation_config.server_ip if env_config.emulation_config.server_connection else None
+        self.docker_stats_thread = DockerStatsThread(jumphost_ip=jumphost_ip)
+        self.docker_stats_thread.start()
 
     def get_attacker_observation(self) -> Tuple[np.ndarray, np.ndarray]:
         """
