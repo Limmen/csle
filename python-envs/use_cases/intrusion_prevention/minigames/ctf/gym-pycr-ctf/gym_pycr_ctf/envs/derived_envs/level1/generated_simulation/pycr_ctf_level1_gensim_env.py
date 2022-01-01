@@ -35,6 +35,7 @@ class PyCRCTFLevel1GeneratedSim1Env(PyCRCTFEnv):
             env_config.attacker_cost_coefficient = 0
             env_config.save_trajectories = False
             env_config.simulate_detection = False
+            env_config.defender_update_state = True
             env_config.env_mode = EnvMode.GENERATED_SIMULATION
             env_config.checkpoint_dir = checkpoint_dir
             env_config.checkpoint_freq = 1000

@@ -99,7 +99,7 @@ class ReadLogsUtil:
 
     @staticmethod
     def read_ids_data(env_config: PyCREnvConfig, episode_last_alert_ts : datetime) \
-            -> Tuple[int, int, int, int, int, int, int, int]:
+            -> Tuple[int, int, int, int]:
         """
         Measures metrics from the ids
 

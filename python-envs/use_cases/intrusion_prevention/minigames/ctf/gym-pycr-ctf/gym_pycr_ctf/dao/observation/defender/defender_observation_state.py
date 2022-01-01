@@ -115,6 +115,24 @@ class DefenderObservationState:
         self.var_log_baseline_stops_remaining = self.maximum_number_of_stops
         self.step_baseline_stops_remaining = self.maximum_number_of_stops
 
+        self.num_pids = 0
+        self.num_pids_recent = 0
+        self.cpu_percent = 0.0
+        self.cpu_percent_recent = 0.0
+        self.mem_current = 0.0
+        self.mem_current_recent = 0.0
+        self.mem_total = 0.0
+        self.mem_total_recent = 0.0
+        self.mem_percent = 0.0
+        self.mem_percent_recent = 0.0
+        self.blk_read = 0
+        self.blk_read_recent = 0
+        self.blk_write = 0
+        self.blk_write_recent = 0
+        self.net_rx = 0
+        self.net_rx_recent = 0
+        self.net_tx = 0
+        self.net_tx_recent = 0
 
     def sort_machines(self) -> None:
         """
@@ -232,6 +250,24 @@ class DefenderObservationState:
         c.num_alerts_total_all_stops = self.num_alerts_total_all_stops
         c.num_login_attempts_total = self.num_login_attempts_total
         c.num_login_attempts_total_all_stops = self.num_login_attempts_total_all_stops
+        c.num_pids = self.num_pids
+        c.num_pids_recent = self.num_pids_recent
+        c.cpu_percent = self.cpu_percent
+        c.cpu_percent_recent = self.cpu_percent_recent
+        c.mem_current = self.mem_current
+        c.mem_current_recent = self.mem_current_recent
+        c.mem_total = self.mem_total
+        c.mem_total_recent = self.mem_total_recent
+        c.mem_percent = self.mem_percent
+        c.mem_percent_recent = self.mem_percent_recent
+        c.blk_read = self.blk_read
+        c.blk_read_recent = self.blk_read_recent
+        c.blk_write = self.blk_write
+        c.blk_write_recent = self.blk_write_recent
+        c.net_rx = self.net_rx
+        c.net_rx_recent = self.net_rx_recent
+        c.net_tx = self.net_tx
+        c.net_tx_recent = self.net_tx_recent
 
         for m in self.machines:
             c.machines.append(m.copy())
@@ -307,59 +343,66 @@ class DefenderObservationState:
         """
         :return: a string representation of the object
         """
-        return  "# alerts recent:{}, # severe alerts recent: {}, # warning alerts recent: {}, " \
-                "sum priority recent:{}, # alerts total:{} # severe alerts total: {}, " \
-                "# warning alerts total: {}, sum priority total: {}, caught_attacker:{}," \
-                "stopped:{}, step:{}, snort_severe_baseline_reward:{}, snort_warning_baseline_reward:{}," \
-                "snort_severe_baseline_stopped:{}, snort_warning_baseline_stopped:{}," \
-                "snort_critical_baseline_reward:{}, snort_critical_baseline_stopped:{}," \
-                "var_log_baseline_reward:{}, var_log_baseline_stopped:{}, last_alert_ts:{}," \
-                "snort_severe_baseline_step:{}, snort_warning_baseline_step:{}, snort_critical_baseline_step:{}," \
-                "var_log_baseline_step:{}, step_baseline_reward:{}, step_baseline_step:{}, step_baseline_stopped:{}," \
-                "number_of_stops_remaining:{}, first_stop_step:{}, second_stop_step:{}," \
-                "third_stop_step:{}, fourth_stop_step:{}, maximum_number_of:stops:{}," \
-                "snort_severe_baseline_first_stop_step:{}, snort_warning_baseline_first_stop_step:{}, " \
-                "snort_critical_baseline_first_stop_step:{}, var_log_baseline_first_stop_step:{}, " \
-                "step_baseline_first_stop_step:{}, snort_severe_baseline_second_stop_step:{}, " \
-                "snort_warning_baseline_second_stop_step:{}, snort_critical_baseline_second_stop_step:{}," \
-                "var_log_baseline_second_stop_step:{}, step_baseline_second_stop_step:{}, " \
-                "snort_severe_baseline_third_stop_step:{}, snort_warning_baseline_third_stop_step:{}, " \
-                "snort_critical_baseline_third_stop_step:{}, var_log_baseline_third_stop_step:{}, " \
-                "step_baseline_third_stop_step:{}, " \
-                "snort_severe_baseline_fourth_stop_step:{}, snort_warning_baseline_fourth_stop_step:{}, " \
-                "snort_critical_baseline_fourth_stop_step:{}, var_log_baseline_fourth_stop_step:{}, " \
-                "step_baseline_fourth_stop_step:{}, snort_severe_baseline_stops_remaining:{}, " \
-                "snort_warning_baseline_stops_remaining:{}, snort_critical_baseline_stops_remaining:{}, " \
-                "var_log_baseline_stops_remaining:{},step_baseline_stops_remaining:{}," \
-                "num_severe_alerts_total_all_stops:{},num_warning_alerts_total_all_stops:{}, " \
-                "num_login_attempts_total_all_stops:{},num_alerts_total_all_stops:{}," \
-                "num_login_attempts_total:{}".format(
-            self.num_alerts_recent, self.num_severe_alerts_recent, self.num_warning_alerts_recent,
-            self.sum_priority_alerts_recent, self.num_alerts_total, self.num_severe_alerts_total,
-            self.num_warning_alerts_total, self.sum_priority_alerts_total,
-            self.caught_attacker, self.stopped, self.step, self.snort_severe_baseline_reward,
-            self.snort_warning_baseline_reward, self.snort_severe_baseline_stopped,
-            self.snort_warning_baseline_stopped, self.snort_critical_baseline_reward,
-            self.snort_critical_baseline_stopped, self.var_log_baseline_reward, self.var_log_baseline_stopped,
-            self.last_alert_ts, self.snort_severe_baseline_step, self.snort_warning_baseline_step,
-            self.snort_critical_baseline_step, self.var_log_baseline_step, self.step_baseline_reward,
-            self.step_baseline_step, self.step_baseline_stopped, self.stops_remaining, self.first_stop_step,
-            self.second_stop_step, self.third_stop_step, self.fourth_stop_step, self.maximum_number_of_stops,
-            self.snort_severe_baseline_first_stop_step, self.snort_warning_baseline_first_stop_step,
-            self.snort_critical_baseline_first_stop_step, self.var_log_baseline_first_stop_step,
-            self.step_baseline_first_stop_step,
-            self.snort_severe_baseline_second_stop_step, self.snort_warning_baseline_second_stop_step,
-            self.snort_critical_baseline_second_stop_step, self.var_log_baseline_second_stop_step,
-            self.step_baseline_second_stop_step,
-            self.snort_severe_baseline_third_stop_step, self.snort_warning_baseline_third_stop_step,
-            self.snort_critical_baseline_third_stop_step, self.var_log_baseline_third_stop_step,
-            self.step_baseline_third_stop_step,
-            self.snort_severe_baseline_fourth_stop_step, self.snort_warning_baseline_fourth_stop_step,
-            self.snort_critical_baseline_fourth_stop_step, self.var_log_baseline_fourth_stop_step,
-            self.step_baseline_fourth_stop_step,
-            self.snort_severe_baseline_stops_remaining, self.snort_warning_baseline_stops_remaining,
-            self.snort_critical_baseline_fourth_stop_step, self.var_log_baseline_stops_remaining,
-            self.step_baseline_stops_remaining,
-            self.num_severe_alerts_total_all_stops, self.num_warning_alerts_total_all_stops,
-            self.num_login_attempts_total_all_stops, self.num_alerts_total_all_stops, self.num_login_attempts_total
-        ) + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+        return  f"# alerts recent:{self.num_alerts_recent}, # severe alerts recent: {self.num_severe_alerts_recent}, " \
+                f"# warning alerts recent: {self.num_warning_alerts_recent}, " \
+                f"sum priority recent:{self.sum_priority_alerts_recent}, # alerts total:{self.num_alerts_total} " \
+                f"# severe alerts total: {self.num_severe_alerts_total}, " \
+                f"# warning alerts total: {self.num_warning_alerts_total}, " \
+                f"sum priority total: {self.sum_priority_alerts_total}, caught_attacker:{self.caught_attacker}," \
+                f"stopped:{self.stopped}, step:{self.step}, " \
+                f"snort_severe_baseline_reward:{self.snort_severe_baseline_reward}, " \
+                f"snort_warning_baseline_reward:{self.snort_warning_baseline_reward}," \
+                f"snort_severe_baseline_stopped:{self.snort_severe_baseline_stopped}, " \
+                f"snort_warning_baseline_stopped:{self.snort_warning_baseline_stopped}," \
+                f"snort_critical_baseline_reward:{self.snort_critical_baseline_reward}, " \
+                f"snort_critical_baseline_stopped:{self.snort_critical_baseline_stopped}," \
+                f"var_log_baseline_reward:{self.var_log_baseline_reward}, " \
+                f"var_log_baseline_stopped:{self.var_log_baseline_stopped}, last_alert_ts:{self.last_alert_ts}," \
+                f"snort_severe_baseline_step:{self.snort_severe_baseline_step}, " \
+                f"snort_warning_baseline_step:{self.snort_warning_baseline_step}, " \
+                f"snort_critical_baseline_step:{self.snort_critical_baseline_step}," \
+                f"var_log_baseline_step:{self.var_log_baseline_step}, step_baseline_reward:{self.step_baseline_reward}, " \
+                f"step_baseline_step:{self.step_baseline_step}, step_baseline_stopped:{self.step_baseline_stopped}," \
+                f"number_of_stops_remaining:{self.stops_remaining}, first_stop_step:{self.first_stop_step}, " \
+                f"second_stop_step:{self.second_stop_step}," \
+                f"third_stop_step:{self.third_stop_step}, fourth_stop_step:{self.fourth_stop_step}, " \
+                f"maximum_number_of:stops:{self.maximum_number_of_stops}," \
+                f"snort_severe_baseline_first_stop_step:{self.snort_severe_baseline_first_stop_step}, " \
+                f"snort_warning_baseline_first_stop_step:{self.snort_warning_baseline_first_stop_step}, " \
+                f"snort_critical_baseline_first_stop_step:{self.snort_critical_baseline_first_stop_step}, " \
+                f"var_log_baseline_first_stop_step:{self.var_log_baseline_first_stop_step}, " \
+                f"step_baseline_first_stop_step:{self.step_baseline_first_stop_step}, " \
+                f"snort_severe_baseline_second_stop_step:{self.snort_severe_baseline_second_stop_step}, " \
+                f"snort_warning_baseline_second_stop_step:{self.snort_warning_baseline_second_stop_step}, " \
+                f"snort_critical_baseline_second_stop_step:{self.snort_critical_baseline_second_stop_step}," \
+                f"var_log_baseline_second_stop_step:{self.var_log_baseline_second_stop_step}, " \
+                f"step_baseline_second_stop_step:{self.step_baseline_second_stop_step}, " \
+                f"snort_severe_baseline_third_stop_step:{self.snort_severe_baseline_third_stop_step}, " \
+                f"snort_warning_baseline_third_stop_step:{self.snort_warning_baseline_third_stop_step}, " \
+                f"snort_critical_baseline_third_stop_step:{self.snort_critical_baseline_third_stop_step}, " \
+                f"var_log_baseline_third_stop_step:{self.var_log_baseline_third_stop_step}, " \
+                f"step_baseline_third_stop_step:{self.step_baseline_third_stop_step}, " \
+                f"snort_severe_baseline_fourth_stop_step:{self.snort_severe_baseline_fourth_stop_step}, " \
+                f"snort_warning_baseline_fourth_stop_step:{self.snort_warning_baseline_fourth_stop_step}, " \
+                f"snort_critical_baseline_fourth_stop_step:{self.snort_critical_baseline_fourth_stop_step}, " \
+                f"var_log_baseline_fourth_stop_step:{self.var_log_baseline_fourth_stop_step}, " \
+                f"step_baseline_fourth_stop_step:{self.step_baseline_fourth_stop_step}, " \
+                f"snort_severe_baseline_stops_remaining:{self.snort_severe_baseline_stops_remaining}, " \
+                f"snort_warning_baseline_stops_remaining:{self.snort_warning_baseline_stops_remaining}, " \
+                f"snort_critical_baseline_stops_remaining:{self.snort_critical_baseline_stops_remaining}, " \
+                f"var_log_baseline_stops_remaining:{self.var_log_baseline_stops_remaining}," \
+                f"step_baseline_stops_remaining:{self.step_baseline_stops_remaining}," \
+                f"num_severe_alerts_total_all_stops:{self.num_severe_alerts_total_all_stops}," \
+                f"num_warning_alerts_total_all_stops:{self.num_warning_alerts_total_all_stops}, " \
+                f"num_login_attempts_total_all_stops:{self.num_login_attempts_total_all_stops}," \
+                f"num_alerts_total_all_stops:{self.num_alerts_total_all_stops}," \
+                f"num_login_attempts_total:{self.num_login_attempts_total}, " \
+                f"num_pids:{self.num_pids}, num_pids_recent:{self.num_pids_recent}, cpu_percent:{self.cpu_percent}," \
+                f"cpu_percent_recent:{self.cpu_percent_recent}, mem_current:{self.mem_current}, " \
+                f"mem_current_recent:{self.mem_current_recent}, mem_total:{self.mem_total}, " \
+                f"mem_total_recent:{self.mem_total_recent}, mem_percent:{self.mem_percent}, " \
+                f"mem_percent_recent:{self.mem_percent_recent}, blk_read:{self.blk_read}, " \
+                f"blk_read_recent:{self.blk_read_recent}, blk_write:{self.blk_write}, " \
+                f"blk_write_recent:{self.blk_write_recent}, net_rx:{self.net_rx}, net_rx_recent:{self.net_rx_recent}," \
+                f"net_tx:{self.net_tx}, net_tx_recent:{self.net_tx_recent}" \
+                + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

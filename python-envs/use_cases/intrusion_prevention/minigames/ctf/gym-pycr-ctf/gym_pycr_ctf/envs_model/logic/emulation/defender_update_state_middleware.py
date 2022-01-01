@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 import pycr_common.constants.constants as constants
 from pycr_common.envs_model.logic.emulation.util.defender.read_logs_util import ReadLogsUtil
 from pycr_common.envs_model.logic.emulation.util.defender.shell_util import ShellUtil
@@ -9,6 +9,7 @@ from gym_pycr_ctf.dao.network.env_state import EnvState
 from gym_pycr_ctf.dao.network.env_config import PyCREnvConfig
 from gym_pycr_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_pycr_ctf.dao.action.attacker.attacker_action import AttackerAction
+from gym_pycr_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
 from gym_pycr_ctf.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
 
 
@@ -31,6 +32,9 @@ class DefenderUpdateStateMiddleware:
         """
         s_prime = s
 
+        aggregated_stats, avg_stats_dict = s_prime.docker_stats_thread.compute_averages()
+        DefenderUpdateStateMiddleware.__update_docker_stats(s_prime.defender_obs_state, aggregated_stats)
+
         # Measure IDS
         if env_config.ids_router:
 
@@ -52,15 +56,13 @@ class DefenderUpdateStateMiddleware:
                                                                   num_new_warning_alerts
             s_prime.defender_obs_state.sum_priority_alerts_total = s_prime.defender_obs_state.sum_priority_alerts_total + \
                                                                    num_new_priority
-            s_prime.defender_obs_state.num_login_attempts_total = sum(list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
-
-            s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total_all_stops + \
-                                                          num_new_alerts
-            s_prime.defender_obs_state.num_severe_alerts_total = s_prime.defender_obs_state.num_severe_alerts_total_all_stops + \
-                                                                 num_new_severe_alerts
-            s_prime.defender_obs_state.num_warning_alerts_total_all_stops = s_prime.defender_obs_state.num_warning_alerts_total_all_stops + \
+            s_prime.defender_obs_state.num_login_attempts_total = sum(list(map(lambda x: x.num_failed_login_attempts,
+                                                                               s_prime.defender_obs_state.machines)))
+            s_prime.defender_obs_state.num_warning_alerts_total_all_stops = \
+                s_prime.defender_obs_state.num_warning_alerts_total_all_stops + \
                                                                   num_new_warning_alerts
-            s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = s_prime.defender_obs_state.sum_priority_alerts_total_all_stops + \
+            s_prime.defender_obs_state.sum_priority_alerts_total_all_stops = \
+                s_prime.defender_obs_state.sum_priority_alerts_total_all_stops + \
                                                                    num_new_priority
             s_prime.defender_obs_state.num_login_attempts_total_all_stops = sum(
                 list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
@@ -112,12 +114,16 @@ class DefenderUpdateStateMiddleware:
                     m.num_users_recent = num_users - m.num_users
                     m.num_users = num_users
 
-                m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
-                m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
+                if m.ip in avg_stats_dict:
+                    DefenderUpdateStateMiddleware.__update_docker_stats(m, avg_stats_dict[m.ip])
+
+                    m.failed_auth_last_ts = ReadLogsUtil.read_latest_ts_auth(emulation_config=m.emulation_config)
+                    m.login_last_ts = ReadLogsUtil.read_latest_ts_login(emulation_config=m.emulation_config)
 
         s_prime.defender_obs_state.step = s_prime.defender_obs_state.step + 1
 
-        s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
+        if env_config.ids_router:
+            s_prime.defender_obs_state.last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
         return s_prime, 0, False
 
@@ -135,6 +141,9 @@ class DefenderUpdateStateMiddleware:
         """
         s_prime = s
 
+        aggregated_stats, avg_stats_dict = s_prime.docker_stats_thread.compute_averages()
+        DefenderUpdateStateMiddleware.__update_docker_stats(s_prime.defender_obs_state, aggregated_stats)
+
         s_prime.defender_obs_state.adj_matrix = env_config.network_conf.adj_matrix
 
         # Measure Node specific features
@@ -148,8 +157,8 @@ class DefenderUpdateStateMiddleware:
                 (node_connections, ec) = s_prime.defender_cached_ssh_connections[node.ip]
                 node_conn = node_connections[0]
             else:
-                ec = env_config.emulation_config.copy(ip=node.ip, username=constants.PYCR_ADMIN.user,
-                                                      pw=constants.PYCR_ADMIN.pw)
+                ec = env_config.emulation_config.copy(ip=node.ip, username=constants.PYCR_ADMIN.USER,
+                                                      pw=constants.PYCR_ADMIN.PW)
                 ec.connect_agent()
                 node_conn = ConnectionObservationState(
                     conn=ec.agent_conn, username=ec.agent_username, root=True, port=22,
@@ -181,6 +190,9 @@ class DefenderUpdateStateMiddleware:
             d_obs.num_logged_in_users_recent = 0
             d_obs.num_login_events_recent = 0
             d_obs.num_processes_recent = 0
+
+            if d_obs.ip in avg_stats_dict:
+                DefenderUpdateStateMiddleware.__update_docker_stats(d_obs, avg_stats_dict[d_obs.ip])
 
             s_prime.defender_obs_state.machines.append(d_obs)
 
@@ -401,3 +413,36 @@ class DefenderUpdateStateMiddleware:
         s_prime.defender_obs_state.step_baseline_stops_remaining = s_prime.defender_obs_state.maximum_number_of_stops
 
         return s_prime, 0, False
+
+    @staticmethod
+    def __update_docker_stats(state_obj: Union[DefenderObservationState, DefenderMachineObservationState], stats_obj) \
+            -> None:
+        """
+        Helper method for updating docker stats states
+
+        :param state_obj: the state object to update
+        :param stats_obj: the stats object to use for the update
+        :return: None
+        """
+        state_obj.num_pids_recent = stats_obj.pids - state_obj.num_pids
+        state_obj.num_pids = stats_obj.pids
+        state_obj.cpu_percent_recent = stats_obj.cpu_percent - \
+                                                        state_obj.cpu_percent
+        state_obj.cpu_percent = stats_obj.cpu_percent
+        state_obj.mem_current_recent = stats_obj.mem_current \
+                                                        - state_obj.mem_current
+        state_obj.mem_current = stats_obj.mem_current
+        state_obj.mem_total_recent = stats_obj.mem_total - state_obj.mem_total
+        state_obj.mem_total = stats_obj.mem_total
+        state_obj.mem_percent_recent = stats_obj.mem_percent \
+                                                        - state_obj.mem_percent
+        state_obj.mem_percent = stats_obj.mem_percent
+        state_obj.blk_read_recent = stats_obj.blk_read \
+                                                     - state_obj.blk_read_recent
+        state_obj.blk_read = stats_obj.blk_read
+        state_obj.blk_write_recent = stats_obj.blk_write - state_obj.blk_write
+        state_obj.blk_write = stats_obj.blk_write
+        state_obj.net_rx_recent = stats_obj.net_rx - state_obj.net_rx
+        state_obj.net_rx = stats_obj.net_rx
+        state_obj.net_tx_recent = stats_obj.net_tx - state_obj.net_tx
+        state_obj.net_tx = stats_obj.net_tx

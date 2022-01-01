@@ -1,6 +1,8 @@
+from typing import Tuple, Union
 import pycr_common.constants.constants as constants
 from pycr_common.dao.env_info.env_container import EnvContainer
 from pycr_common.dao.env_info.docker_stats import DockerStats
+
 
 class DockerStatsUtil:
 
@@ -26,7 +28,8 @@ class DockerStatsUtil:
         return cpu_percent
 
     @staticmethod
-    def calculate_cpu_percent2(stats_dict: dict, previous_cpu :float, previous_system: float) -> float:
+    def calculate_cpu_percent2(stats_dict: dict, previous_cpu :float, previous_system: float) \
+            -> Tuple[Union[float, any], float, float]:
         """
         Calculates the CPU utilization percentage when precpu is broken in later versions of Docker
 
@@ -136,6 +139,7 @@ class DockerStatsUtil:
             constants.DOCKER_STATS.NET_RX: net_r,
             constants.DOCKER_STATS.NET_TX: net_w,
             constants.DOCKER_STATS.CONTAINER_NAME: container.name,
-            constants.DOCKER_STATS.CONTAINER_ID: container.id
+            constants.DOCKER_STATS.CONTAINER_ID: container.id,
+            constants.DOCKER_STATS.CONTAINER_IP: container.ip
         }
         return DockerStats.from_dict(parsed_stats_dict)

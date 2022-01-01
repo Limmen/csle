@@ -5,12 +5,12 @@ import gym
 
 
 def system_id():
-    # emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
-    #                                  server_connection=False, port_forward_next_port=9600)
-    emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.1.191",
-                                   agent_username="agent", agent_pw="agent", server_connection=True,
-                                   server_private_key_file="/home/kim/.ssh/id_rsa",
-                                   server_username="kim", port_forward_next_port=9600)
+    emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+                                     server_connection=False, port_forward_next_port=9600)
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.1.191",
+    #                                agent_username="agent", agent_pw="agent", server_connection=True,
+    #                                server_private_key_file="/home/kim/.ssh/id_rsa",
+    #                                server_username="kim", port_forward_next_port=9600)
     emulation_config.skip_exploration = False
     model_path_dir = "/home/kim/workspace/pycr/python-envs/use_cases/intrusion_prevention/" \
                      "minigames/ctf/gym-pycr-ctf/examples/difficulty_level_1/system_id"

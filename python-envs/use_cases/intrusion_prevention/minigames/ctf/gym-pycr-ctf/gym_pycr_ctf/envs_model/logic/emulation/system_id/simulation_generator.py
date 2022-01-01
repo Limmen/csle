@@ -81,11 +81,11 @@ class SimulationGenerator:
                 attack_action_dto = env_config.attacker_action_conf.actions[attacker_action]
                 logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attack_action_dto,
                                                                       s=env.env_state)
-                tb_dto = defender_dynamics_model.update_model(s=s, s_prime=s_prime,
-                                                     attacker_action_id=attack_action_dto.id,
-                                                     attacker_action_name= attack_action_dto.name,
-                                                     attacker_action_idx = action[0],
-                                                     logged_in_ips=logged_in_ips_str, t=step, idx=tau_index)
+                tb_dto = defender_dynamics_model.update_model(
+                    s=s, s_prime=s_prime, attacker_action_id=attack_action_dto.id,
+                    attacker_action_name= attack_action_dto.name,
+                    attacker_action_idx = action[0],
+                    logged_in_ips=logged_in_ips_str, t=step, idx=tau_index)
                 tb_dto.log_tensorboard(tensorboard_writer=tensorboard_writer)
                 log.append(tb_dto)
                 print(str(tb_dto))

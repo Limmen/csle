@@ -1,9 +1,10 @@
-from typing import List
+from typing import Tuple
 import threading
 import docker
-from pycr_common.dao.env_info.env_container import EnvContainer
+from collections import deque
 from pycr_common.envs_model.config.generator.env_info import EnvInfo
 from pycr_common.envs_model.logic.emulation.util.common.docker_stats_util import DockerStatsUtil
+from pycr_common.dao.env_info.docker_stats import DockerStats
 import pycr_common.constants.constants as constants
 
 
@@ -12,7 +13,13 @@ class DockerStatsThread(threading.Thread):
     Thread that collects performance statistics of Docker containers
     """
 
-    def __init__(self, jumphost_ip: str = None):
+    def __init__(self, jumphost_ip: str = None, stats_queue_maxsize = 100):
+        """
+        Initializes the thread
+
+        :param jumphost_ip: IP to the server where the docker daemon is running, if None assume localhost
+        :param stats_queue_maxsize: maximum size of the queue of stats objects
+        """
         threading.Thread.__init__(self)
         self.jumphost_ip = jumphost_ip
         if jumphost_ip is not None:
@@ -29,12 +36,45 @@ class DockerStatsThread(threading.Thread):
             stream = container.container_handle.stats(decode=True, stream=True)
             streams.append((stream, container))
         self.streams = streams
+        self.stats_queue_maxsize = stats_queue_maxsize
+        self.stats_queues = {}
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Main loop of the thread
+
+        :return: None
+        """
         while True:
             for stream, container in self.streams:
                 stats_dict = next(stream)
                 parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container)
-                print(parsed_stats)
+                if parsed_stats.container_ip not in self.stats_queues:
+                    self.stats_queues[parsed_stats.container_ip] = deque([], maxlen=self.stats_queue_maxsize)
+                self.stats_queues[parsed_stats.container_ip].append(parsed_stats)
+
+
+    def compute_averages(self) -> Tuple[DockerStats, dict]:
+        """
+        Compute averages and aggregates of the list of metrics
+        :return: the average and aggregate metrics
+        """
+        avg_stats = {}
+        avg_stats_l = []
+        for k,v in self.stats_queues.items():
+            avg_stat = DockerStats.compute_averages(list(v))
+            avg_stats[k] = avg_stat
+            avg_stats_l.append(avg_stat)
+        aggregated_stats = DockerStats.compute_averages(avg_stats_l)
+        aggregated_stats.pids = aggregated_stats.pids*len(avg_stats_l)
+        aggregated_stats.mem_current = aggregated_stats.mem_current * len(avg_stats_l)
+        aggregated_stats.mem_total = aggregated_stats.mem_total * len(avg_stats_l)
+        aggregated_stats.blk_read = aggregated_stats.blk_read * len(avg_stats_l)
+        aggregated_stats.blk_write = aggregated_stats.blk_write * len(avg_stats_l)
+        aggregated_stats.net_rx = aggregated_stats.net_rx * len(avg_stats_l)
+        aggregated_stats.net_tx = aggregated_stats.net_tx * len(avg_stats_l)
+        return aggregated_stats, avg_stats
+
+
 
 

@@ -1,10 +1,16 @@
+from typing import List
+from datetime import datetime
 import pycr_common.constants.constants as constants
 
-class DockerStats:
 
-    def __init__(self, pids: int, timestamp: str, cpu_percent: float, mem_current: float, mem_total: float,
-                 mem_percent: float, blk_read: int, blk_write: int, net_rx: int, net_tx: int, container_name: str,
-                 container_id):
+class DockerStats:
+    """
+    DTO class containing docker statistics
+    """
+
+    def __init__(self, pids: float, timestamp: str, cpu_percent: float, mem_current: float, mem_total: float,
+                 mem_percent: float, blk_read: float, blk_write: float, net_rx: float, net_tx: float, container_name: str,
+                 container_id :str, container_ip: str):
         """
         Class constructor, creates a DockerStats object
 
@@ -20,6 +26,7 @@ class DockerStats:
         :param net_tx: the number of sent network bytes
         :param container_name: the name of the container
         :param container_id: the id of the container
+        :param container_ip: the ip of the container
         """
         self.pids = pids
         self.timestamp = timestamp
@@ -33,6 +40,7 @@ class DockerStats:
         self.net_tx = net_tx
         self.container_name = container_name
         self.container_id = container_id
+        self.container_ip = container_ip
 
 
     @staticmethod
@@ -55,7 +63,8 @@ class DockerStats:
             net_rx=parsed_stats_dict[constants.DOCKER_STATS.NET_RX],
             net_tx=parsed_stats_dict[constants.DOCKER_STATS.NET_TX],
             container_name = parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_NAME],
-            container_id=parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_ID]
+            container_id=parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_ID],
+            container_ip= parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_IP]
         )
 
     def to_dict(self) -> dict:
@@ -74,9 +83,9 @@ class DockerStats:
             constants.DOCKER_STATS.NET_RX: self.net_rx,
             constants.DOCKER_STATS.NET_TX: self.net_tx,
             constants.DOCKER_STATS.CONTAINER_NAME: self.container_name,
-            constants.DOCKER_STATS.CONTAINER_ID: self.container_id
+            constants.DOCKER_STATS.CONTAINER_ID: self.container_id,
+            constants.DOCKER_STATS.CONTAINER_IP: self.container_ip
         }
-
 
     def __str__(self):
         """
@@ -85,4 +94,62 @@ class DockerStats:
         return f"pids: {self.pids}, timestamp: {self.timestamp}, cpu_percent: {self.cpu_percent}, " \
                f"mem_current: {self.mem_current}, mem_total: {self.mem_total}, mem_percent: {self.mem_percent}," \
                f"blk_read: {self.blk_read}, blk_write: {self.blk_write}, net_rx: {self.net_rx}, " \
-               f"net_tx: {self.net_tx}, container_name: {self.container_name}, container_id: {self.container_id}"
+               f"net_tx: {self.net_tx}, container_name: {self.container_name}, container_id: {self.container_id}," \
+               f"container_ip: {self.container_ip}"
+
+
+    @staticmethod
+    def compute_averages(stats_list : List["DockerStats"]) -> "DockerStats":
+        """
+        Compute average stats from a list
+
+        :param stats_list: the list to use to compute averages
+        :return: a new DockerStats object with the averages
+        """
+        if len(stats_list) == 0:
+            now = datetime.now()
+            ts = now.strftime("%m/%d/%Y, %H:%M:%S")
+            return DockerStats(pids=0.0, timestamp=ts, cpu_percent=0.0, mem_current=0.0, mem_total=0.0, mem_percent=0.0,
+                               blk_read=0.0, blk_write=0.0, net_rx=0.0, net_tx=0.0, container_name="-", container_id="-",
+                               container_ip="-")
+        sum_pids = 0
+        sum_cpu_percent = 0.0
+        sum_mem_current = 0.0
+        sum_mem_total = 0.0
+        sum_mem_percent = 0.0
+        sum_blk_read = 0.0
+        sum_blk_write = 0.0
+        sum_net_rx = 0.0
+        sum_net_tx = 0.0
+        for i in range(len(stats_list)):
+            sum_pids = sum_pids + stats_list[i].pids
+            sum_cpu_percent = sum_cpu_percent + stats_list[i].cpu_percent
+            sum_mem_current = sum_mem_current + stats_list[i].mem_current
+            sum_mem_total = sum_mem_total + stats_list[i].mem_total
+            sum_mem_percent = sum_mem_percent + stats_list[i].mem_percent
+            sum_blk_read = sum_blk_read + stats_list[i].blk_read
+            sum_blk_write = sum_blk_write + stats_list[i].blk_write
+            sum_net_rx = sum_net_rx + stats_list[i].net_rx
+            sum_net_tx = sum_net_tx + stats_list[i].net_tx
+
+        avg_pids = float(sum_pids/len(stats_list))
+        avg_cpu_percent = float(sum_cpu_percent / len(stats_list))
+        avg_mem_current = float(sum_mem_current / len(stats_list))
+        avg_mem_total = float(sum_mem_total / len(stats_list))
+        avg_mem_percent = float(sum_mem_percent / len(stats_list))
+        avg_blk_read = float(sum_blk_read / len(stats_list))
+        avg_blk_write = float(sum_blk_write / len(stats_list))
+        avg_net_rx = float(sum_net_rx / len(stats_list))
+        avg_net_tx = float(sum_net_tx / len(stats_list))
+
+        ts = stats_list[0].timestamp
+        container_name=stats_list[0].container_name
+        container_id = stats_list[0].container_id
+        container_ip = stats_list[0].container_ip
+
+        return DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
+                           mem_total=avg_mem_total, mem_percent=avg_mem_percent,
+                           blk_read=avg_blk_read, blk_write=avg_blk_write, net_rx=avg_net_rx, net_tx=avg_net_tx,
+                           container_name=container_name, container_id=container_id,
+                           container_ip=container_ip)
+

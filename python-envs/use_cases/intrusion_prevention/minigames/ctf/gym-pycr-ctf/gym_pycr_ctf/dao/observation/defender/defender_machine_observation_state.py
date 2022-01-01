@@ -37,6 +37,25 @@ class DefenderMachineObservationState:
         self.num_login_events_recent = 0
         self.num_processes_recent = 0
 
+        self.num_pids = 0
+        self.num_pids_recent = 0
+        self.cpu_percent = 0.0
+        self.cpu_percent_recent = 0.0
+        self.mem_current = 0.0
+        self.mem_current_recent = 0.0
+        self.mem_total = 0.0
+        self.mem_total_recent = 0.0
+        self.mem_percent = 0.0
+        self.mem_percent_recent = 0.0
+        self.blk_read = 0
+        self.blk_read_recent = 0
+        self.blk_write = 0
+        self.blk_write_recent = 0
+        self.net_rx = 0
+        self.net_rx_recent = 0
+        self.net_tx = 0
+        self.net_tx_recent = 0
+
 
         self.failed_auth_last_ts = datetime.datetime.now().timestamp()
         self.login_last_ts = datetime.datetime.now().timestamp()
@@ -45,19 +64,27 @@ class DefenderMachineObservationState:
         """
         :return: a string representation of the object
         """
-        return "ip:{},os:{},num_ports:{},num_ssh_connections:{}," \
-               "num_open_connections:{},num_failed_login_attempts:{},num_users:{}," \
-               "num_logged_in_users:{},num_login_events:{},num_processes:{}," \
-               "failed_auth_last_ts:{},login_last_ts:{},num_open_connections_recent:{}," \
-               "num_failed_login_attempts_recent:{},num_users_recent:{},num_logged_in_users_recent:{}," \
-               "num_login_events_recent:{},num_processes_recent:{}" \
-               "".format(self.ip, self.os, len(self.ports), len(self.ssh_connections),
-                         self.num_open_connections, self.num_failed_login_attempts,
-                         self.num_failed_login_attempts, self.num_users, self.num_logged_in_users,
-                         self.num_login_events, self.num_processes, self.failed_auth_last_ts,
-                         self.login_last_ts, self.num_open_connections_recent, self.num_failed_login_attempts_recent,
-                         self.num_users_recent, self.num_logged_in_users_recent, self.num_login_events_recent,
-                         self.num_processes_recent)
+        return f"ip:{self.ip},os:{self.os},num_ports:{len(self.ports)}," \
+               f"num_ssh_connections:{len(self.ssh_connections)}," \
+               f"num_open_connections:{self.num_open_connections}," \
+               f"num_failed_login_attempts:{self.num_failed_login_attempts},num_users:{self.num_users}," \
+               f"num_logged_in_users:{self.num_logged_in_users},num_login_events:{self.num_login_events}," \
+               f"num_processes:{self.num_processes}," \
+               f"failed_auth_last_ts:{self.failed_auth_last_ts},login_last_ts:{self.login_last_ts}," \
+               f"num_open_connections_recent:{self.num_open_connections_recent}," \
+               f"num_failed_login_attempts_recent:{self.num_failed_login_attempts_recent}," \
+               f"num_users_recent:{self.num_users_recent}," \
+               f"num_logged_in_users_recent:{self.num_logged_in_users_recent}," \
+               f"num_login_events_recent:{self.num_login_events_recent}," \
+               f"num_processes_recent:{self.num_processes_recent}, " \
+               f"num_pids:{self.num_pids}, cpu_percent:{self.cpu_percent}, mem_current:{self.mem_current}, " \
+               f"mem_total: {self.mem_total}, mem_percent: {self.mem_percent}, blk_read: {self.blk_read}," \
+               f"blk_write: {self.blk_write}, net_rx: {self.net_rx}, net_tx: {self.net_tx}," \
+               f"num_pids_recent: {self.num_pids_recent}, cpu_percent_recent:{self.cpu_percent_recent}, " \
+               f"mem_current_recent:{self.mem_current_recent}, mem_total_recent: {self.mem_total_recent}, " \
+               f"mem_percent_recent:{self.mem_percent_recent}, blk_read_recent:{self.blk_read_recent}," \
+               f"blk_write_recent:{self.blk_write_recent}, net_rx_recent:{self.net_rx_recent}, " \
+               f"net_tx_recent:{self.net_tx_recent}"
 
     def sort_ports(self) -> None:
         """
@@ -101,6 +128,24 @@ class DefenderMachineObservationState:
         m_copy.num_logged_in_users_recent = self.num_login_events_recent
         m_copy.num_login_events_recent = self.num_login_events_recent
         m_copy.num_processes_recent = self.num_processes_recent
+        m_copy.num_pids = self.num_pids
+        m_copy.num_pids_recent = self.num_pids_recent
+        m_copy.cpu_percent = self.cpu_percent
+        m_copy.cpu_percent_recent = self.cpu_percent_recent
+        m_copy.mem_current = self.mem_current
+        m_copy.mem_current_recent = self.mem_current_recent
+        m_copy.mem_total = self.mem_total
+        m_copy.mem_total_recent = self.mem_total_recent
+        m_copy.mem_percent = self.mem_percent
+        m_copy.mem_percent_recent = self.mem_percent_recent
+        m_copy.blk_read = self.blk_read
+        m_copy.blk_read_recent = self.blk_read_recent
+        m_copy.blk_write = self.blk_write
+        m_copy.blk_write_recent = self.blk_write_recent
+        m_copy.net_rx = self.net_rx
+        m_copy.net_rx_recent = self.net_rx_recent
+        m_copy.net_tx = self.net_tx
+        m_copy.net_tx_recent = self.net_tx_recent
         return m_copy
 
 

@@ -1053,3 +1053,4 @@ class DOCKER_STATS:
     CURRENT = "current"
     CONTAINER_NAME = "container_name"
     CONTAINER_ID = "container_id"
+    CONTAINER_IP = "container_ip"
