@@ -66,13 +66,13 @@ class DockerStatsThread(threading.Thread):
             avg_stats[k] = avg_stat
             avg_stats_l.append(avg_stat)
         aggregated_stats = DockerStats.compute_averages(avg_stats_l)
-        aggregated_stats.pids = aggregated_stats.pids*len(avg_stats_l)
-        aggregated_stats.mem_current = aggregated_stats.mem_current * len(avg_stats_l)
-        aggregated_stats.mem_total = aggregated_stats.mem_total * len(avg_stats_l)
-        aggregated_stats.blk_read = aggregated_stats.blk_read * len(avg_stats_l)
-        aggregated_stats.blk_write = aggregated_stats.blk_write * len(avg_stats_l)
-        aggregated_stats.net_rx = aggregated_stats.net_rx * len(avg_stats_l)
-        aggregated_stats.net_tx = aggregated_stats.net_tx * len(avg_stats_l)
+        aggregated_stats.pids = float("{:.1f}".format(aggregated_stats.pids*len(avg_stats_l)))
+        aggregated_stats.mem_current = float("{:.1f}".format(aggregated_stats.mem_current * len(avg_stats_l)))
+        aggregated_stats.mem_total = float("{:.1f}".format(aggregated_stats.mem_total * len(avg_stats_l)))
+        aggregated_stats.blk_read = float("{:.1f}".format(aggregated_stats.blk_read * len(avg_stats_l)))
+        aggregated_stats.blk_write = float("{:.1f}".format(aggregated_stats.blk_write * len(avg_stats_l)))
+        aggregated_stats.net_rx = float("{:.1f}".format(aggregated_stats.net_rx * len(avg_stats_l)))
+        aggregated_stats.net_tx = float("{:.1f}".format(aggregated_stats.net_tx * len(avg_stats_l)))
         return aggregated_stats, avg_stats
 
 

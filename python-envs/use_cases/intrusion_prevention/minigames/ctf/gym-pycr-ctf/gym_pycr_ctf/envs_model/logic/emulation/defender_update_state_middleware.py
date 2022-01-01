@@ -424,25 +424,25 @@ class DefenderUpdateStateMiddleware:
         :param stats_obj: the stats object to use for the update
         :return: None
         """
-        state_obj.num_pids_recent = stats_obj.pids - state_obj.num_pids
+        state_obj.num_pids_recent = float("{:.1f}".format(stats_obj.pids - state_obj.num_pids))
         state_obj.num_pids = stats_obj.pids
-        state_obj.cpu_percent_recent = stats_obj.cpu_percent - \
-                                                        state_obj.cpu_percent
+        state_obj.cpu_percent_recent = float("{:.1f}".format(stats_obj.cpu_percent - \
+                                                        state_obj.cpu_percent))
         state_obj.cpu_percent = stats_obj.cpu_percent
-        state_obj.mem_current_recent = stats_obj.mem_current \
-                                                        - state_obj.mem_current
+        state_obj.mem_current_recent = float("{:.1f}".format(stats_obj.mem_current \
+                                                        - state_obj.mem_current))
         state_obj.mem_current = stats_obj.mem_current
-        state_obj.mem_total_recent = stats_obj.mem_total - state_obj.mem_total
+        state_obj.mem_total_recent = float("{:.1f}".format(stats_obj.mem_total - state_obj.mem_total))
         state_obj.mem_total = stats_obj.mem_total
-        state_obj.mem_percent_recent = stats_obj.mem_percent \
-                                                        - state_obj.mem_percent
+        state_obj.mem_percent_recent = float("{:.1f}".format(stats_obj.mem_percent \
+                                                        - state_obj.mem_percent))
         state_obj.mem_percent = stats_obj.mem_percent
-        state_obj.blk_read_recent = stats_obj.blk_read \
-                                                     - state_obj.blk_read_recent
+        state_obj.blk_read_recent = float("{:.1f}".format(stats_obj.blk_read \
+                                                     - state_obj.blk_read_recent))
         state_obj.blk_read = stats_obj.blk_read
-        state_obj.blk_write_recent = stats_obj.blk_write - state_obj.blk_write
+        state_obj.blk_write_recent = float("{:.1f}".format(stats_obj.blk_write - state_obj.blk_write))
         state_obj.blk_write = stats_obj.blk_write
-        state_obj.net_rx_recent = stats_obj.net_rx - state_obj.net_rx
+        state_obj.net_rx_recent = float("{:.1f}".format(stats_obj.net_rx - state_obj.net_rx))
         state_obj.net_rx = stats_obj.net_rx
-        state_obj.net_tx_recent = stats_obj.net_tx - state_obj.net_tx
+        state_obj.net_tx_recent = float("{:.1f}".format(stats_obj.net_tx - state_obj.net_tx))
         state_obj.net_tx = stats_obj.net_tx

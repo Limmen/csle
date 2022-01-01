@@ -201,6 +201,259 @@ class DefenderDynamicsModel:
                                          values=(samples, empirical_probabilities))
                 self.norm_num_new_processes[(int(attack_id_str), logged_in_ips)] = dist
 
+        # Normalize num_new_pids
+        for attack_id_str, v1 in self.num_new_pids.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='num_new_pids_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_num_new_pids[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize cpu_percentage_change
+        for attack_id_str, v1 in self.cpu_percentage_change.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='cpu_percentage_change_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_cpu_percentage_change[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_mem_current
+        for attack_id_str, v1 in self.new_mem_current.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_mem_current_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_mem_current[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_mem_total
+        for attack_id_str, v1 in self.new_mem_total.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_mem_total_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_mem_total[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_mem_percent
+        for attack_id_str, v1 in self.new_mem_percent.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_mem_percent_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_mem_percent[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_blk_read
+        for attack_id_str, v1 in self.new_blk_read.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_blk_read_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_blk_read[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_blk_write
+        for attack_id_str, v1 in self.new_blk_write.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_blk_write_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_blk_write[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_net_rx
+        for attack_id_str, v1 in self.new_net_rx.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_net_rx_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_net_rx[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize new_net_tx
+        for attack_id_str, v1 in self.new_net_tx.items():
+            for logged_in_ips, v2 in v1.items():
+                samples = []
+                counts = []
+                for num_login_attempts_str, count in v2.items():
+                    samples.append(int(num_login_attempts_str))
+                    counts.append(count)
+                counts = np.array(counts)
+                samples = np.array(samples)
+                empirical_probabilities = counts / np.sum(counts)
+                dist = stats.rv_discrete(name='new_net_tx_emp_dist',
+                                         values=(samples, empirical_probabilities))
+                self.norm_new_net_tx[(int(attack_id_str), logged_in_ips)] = dist
+
+        # Normalize init_num_new_pids
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_num_new_pids.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_num_new_pids_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_num_new_pids = dist
+
+        # Normalize init_cpu_percentage_change
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_cpu_percentage_change.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_cpu_percentage_change_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_cpu_percentage_change = dist
+
+        # Normalize init_new_mem_current
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_mem_current.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_mem_current_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_mem_current = dist
+
+        # Normalize init_new_mem_total
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_mem_total.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_mem_total_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_mem_total = dist
+
+        # Normalize init_new_mem_percent
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_mem_percent.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_mem_percent_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_mem_percent = dist
+
+        # Normalize init_new_blk_read
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_blk_read.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_blk_read_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_blk_read = dist
+
+        # Normalize init_new_blk_write
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_blk_write.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_blk_write_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_blk_write = dist
+
+        # Normalize init_new_net_rx
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_net_rx.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_net_rx_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_net_rx = dist
+
+        # Normalize init_new_net_tx
+        samples = []
+        counts = []
+        for init_connections_str, count in self.init_new_net_tx.items():
+            samples.append(int(init_connections_str))
+            counts.append(count)
+        counts = np.array(counts)
+        samples = np.array(samples)
+        empirical_probabilities = counts / np.sum(counts)
+        dist = stats.rv_discrete(name='init_new_net_tx_users_emp_dist',
+                                 values=(samples, empirical_probabilities))
+        self.norm_init_new_net_tx = dist
+
+
         # Normalize machine specific distributions
         for machine_ip, v in self.machines_dynamics_model.items():
             v.normalize()

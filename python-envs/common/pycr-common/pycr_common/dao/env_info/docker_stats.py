@@ -132,15 +132,15 @@ class DockerStats:
             sum_net_rx = sum_net_rx + stats_list[i].net_rx
             sum_net_tx = sum_net_tx + stats_list[i].net_tx
 
-        avg_pids = float(sum_pids/len(stats_list))
-        avg_cpu_percent = float(sum_cpu_percent / len(stats_list))
-        avg_mem_current = float(sum_mem_current / len(stats_list))
-        avg_mem_total = float(sum_mem_total / len(stats_list))
-        avg_mem_percent = float(sum_mem_percent / len(stats_list))
-        avg_blk_read = float(sum_blk_read / len(stats_list))
-        avg_blk_write = float(sum_blk_write / len(stats_list))
-        avg_net_rx = float(sum_net_rx / len(stats_list))
-        avg_net_tx = float(sum_net_tx / len(stats_list))
+        avg_pids = float("{:.1f}".format(float(sum_pids/len(stats_list))))
+        avg_cpu_percent = float("{:.1f}".format(float(sum_cpu_percent / len(stats_list))))
+        avg_mem_current = float("{:.1f}".format(float(sum_mem_current / len(stats_list))))
+        avg_mem_total = float("{:.1f}".format(float(sum_mem_total / len(stats_list))))
+        avg_mem_percent = float("{:.1f}".format(float(sum_mem_percent / len(stats_list))))
+        avg_blk_read = float("{:.1f}".format(float(sum_blk_read / len(stats_list))))
+        avg_blk_write = float("{:.1f}".format(float(sum_blk_write / len(stats_list))))
+        avg_net_rx = float("{:.1f}".format(float(sum_net_rx / len(stats_list))))
+        avg_net_tx = float("{:.1f}".format(float(sum_net_tx / len(stats_list))))
 
         ts = stats_list[0].timestamp
         container_name=stats_list[0].container_name
