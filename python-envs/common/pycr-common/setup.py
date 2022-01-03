@@ -7,9 +7,10 @@ setup(name='pycr_common',
                         'sphinx-rtd-theme'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
-      description='Python Agent Cyber Range Common',
+      description='pycr is a platform for evaluating and developing reinforcement learning agents for '
+                  'control problems in cyber security; pycr-common contains the common functionality of pycr modules',
       license='Creative Commons Attribution-ShareAlike 4.0 International',
-      keywords='Reinforcement-Learning Cyber-Security',
+      keywords='Reinforcement-Learning Cyber-Security Markov-Games Markov-Decision-Processes',
       url='https://github.com/Limmen/pycr',
       download_url='https://github.com/Limmen/pycr/archive/0.0.1.tar.gz',
       classifiers=[
@@ -17,7 +18,6 @@ setup(name='pycr_common',
           'Intended Audience :: Developers',
           'Topic :: Software Development :: Build Tools',
           'License :: Creative Commons Attribution-ShareAlike 4.0 International',
-          'Programming Language :: Python :: 3.5',
-          'Programming Language :: Python :: 3.6'
+          'Programming Language :: Python :: 3.8'
   ]
 )

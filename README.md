@@ -2,7 +2,7 @@
 ## A research platform to develop self-learning systems for cyber security 
 
 `pycr` is a platform for evaluating and developing reinforcement learning agents
-for on control problems in cyber security. It can be considered as a cyber range
+for control problems in cyber security. It can be considered as a cyber range
 specifically designed for reinforcement learning agents. Everything from
 network emulation, to simulation and implementation of network commands have been
 co-designed to provide an environment where it is possible to train and evaluate
@@ -137,19 +137,30 @@ cd emulation-envs/derived_images
 make build
 ```
 
-4. Install `pycr_common` (see ([README](./python-envs/common/pycr-common/README.md)) for more information)
+4. Install Python 3.8 or higher:
+
+Using conda:
+```bash
+conda create -n py38 python=3.8
+```
+Using apt:
+```bash
+sudo apt install python3.8
+```
+
+5. Install `pycr_common` (see ([README](./python-envs/common/pycr-common/README.md)) for more information)
 ```bash
 cd python-envs/common/pycr-common/
 pip install -e .
 ```
 
-5. Install `gym_pycr_ctf` (see ([README](./python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/README.MD)) for more information)
+6. Install `gym_pycr_ctf` (see ([README](./python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/README.MD)) for more information)
 ```bash
 cd python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/
 pip install -e .
 ```
 
-6. Create Docker networks (see ([README](./emulation-envs/networks/README.MD)) for more information)
+7. Create Docker networks (see ([README](./emulation-envs/networks/README.MD)) for more information)
 ```bash
 cd emulation-envs/networks
 python create_networks.py -n 40

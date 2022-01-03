@@ -7,7 +7,8 @@ setup(name='gym_pycr_ctf',
                         'sphinx-rtd-theme', 'pycr-common', 'pyperclip'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
-      description='Python Agent Cyber Range CTF MiniGame',
+      description='pycr is a platform for evaluating and developing reinforcement learning agents for '
+                  'control problems in cyber security; gym-pycr-ctf implements a CTF minigame in pycr',
       license='Creative Commons Attribution-ShareAlike 4.0 International',
       keywords='Reinforcement-Learning Cyber-Security',
       url='https://github.com/Limmen/pycr',
@@ -17,7 +18,6 @@ setup(name='gym_pycr_ctf',
           'Intended Audience :: Developers',
           'Topic :: Software Development :: Build Tools',
           'License :: Creative Commons Attribution-ShareAlike 4.0 International',
-          'Programming Language :: Python :: 3.5',
-          'Programming Language :: Python :: 3.6'
+          'Programming Language :: Python :: 3.8'
   ]
 )
