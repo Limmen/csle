@@ -76,6 +76,8 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
 
     EnvConfigGenerator.generate_envs(num_envs=num_envs, container_env_config = container_env_config,
                                      cleanup_old_envs=True)
+
+# Generates the random environment configurations
 if __name__ == '__main__':
     generate_envs(20, min_num_users=1, max_num_users=3, min_num_flags=1, max_num_flags=4, min_num_nodes=6,
                   max_num_nodes=15, subnet_prefix="172.18.")

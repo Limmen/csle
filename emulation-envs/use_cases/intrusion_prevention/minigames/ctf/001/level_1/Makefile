@@ -3,7 +3,7 @@ all: run users topology vuln gen_containers_config flags traffic
 .PHONY: run
 
 # Runs all containers in the emulation
-run: gen_containers_config
+run: gen_containers_config docker_tc
 	cd containers/router1/ && $(MAKE) run
 	cd containers/ssh1/ && $(MAKE) run
 	cd containers/telnet1/ && $(MAKE) run
@@ -21,9 +21,10 @@ stop:
 	cd containers/ftp1/ && $(MAKE) stop
 	cd containers/hacker_kali1/ && $(MAKE) stop
 	cd containers/client1/ && $(MAKE) stop
+	docker stop docker-tc
 
 # Starts all containers in the emulation
-start:
+start docker_tc:
 	cd containers/router1/ && $(MAKE) start
 	cd containers/ssh1/ && $(MAKE) start
 	cd containers/telnet1/ && $(MAKE) start
@@ -42,6 +43,11 @@ clean:
 	cd containers/ftp1/ && $(MAKE) clean
 	cd containers/hacker_kali1/ && $(MAKE) clean
 	cd containers/client1/ && $(MAKE) clean
+	docker rm docker-tc
+
+# Tries to create the docker tc daemon if it is not already created
+docker_tc:
+	python create_docker_tc_daemon.py
 
 # Applies the config to a started emulation (assumes all containers are started)
 apply_config: users vuln flags topology gen_containers_config traffic

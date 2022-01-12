@@ -18,7 +18,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        wget openjdk-7-jre-headless &&\
          DEBIAN_FRONTEND=noninteractive apt-get install -y wget apache2 php5 build-essential gcc make \
          php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev irssi irssi-scripts screen postgresql-client-common \
-         snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2
+         snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
 
 RUN apt-get install -y openssl libssl-dev -t jessie-backports
 
