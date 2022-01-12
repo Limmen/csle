@@ -414,7 +414,7 @@ const Demo = (props) => {
     const [elements, setElements] = useState(rawElements);
     const [isHidden, setIsHidden] = useState(false);
     const [attackerFoundNodes, setAttackerFoundNodes] = useState(attacker_found_nodes);
-    const height = 850
+    const height = 900
     const nodeTypes = {
         applicationServer: ApplicationServer,
         gateway: Gateway,
