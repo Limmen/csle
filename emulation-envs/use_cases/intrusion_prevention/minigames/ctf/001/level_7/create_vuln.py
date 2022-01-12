@@ -11,7 +11,10 @@ from pycr_common.dao.container_config.vulnerabilities_config import Vulnerabilit
 import pycr_common.constants.constants as constants
 
 
-def default_vulns():
+def default_vulns() -> VulnerabilitiesConfig:
+    """
+    :return: the VulnerabilitiesConfig of the emulation
+    """
     vulns = [
         PwVulnerabilityConfig(node_ip="172.18.7.79", vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
                           root=True),
@@ -41,6 +44,7 @@ def default_vulns():
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config
 
+# Generates the vuln.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_vulnerabilities_path()):
         VulnerabilityGenerator.write_vuln_config(default_vulns())

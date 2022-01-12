@@ -8,6 +8,9 @@ import pycr_common.constants.constants as constants
 
 
 def default_flags() -> FlagsConfig:
+    """
+    :return: the FlagsConfig of the emulation
+    """
     flags = [
         NodeFlagsConfig(ip="172.18.8.79", flags = [("/tmp/flag3.txt", "flag3", "/tmp/", 3, False, 1)]),
         NodeFlagsConfig(ip="172.18.8.2", flags=[("/tmp/flag2.txt", "flag2", "/tmp/", 2, False, 1)]),
@@ -35,7 +38,7 @@ def default_flags() -> FlagsConfig:
     flags_config = FlagsConfig(flags=flags)
     return flags_config
 
-
+# Generates the flags.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_flags_path()):
         FlagsGenerator.write_flags_config(default_flags())

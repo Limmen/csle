@@ -5,6 +5,9 @@ from pycr_common.envs_model.config.generator.container_generator import Containe
 from pycr_common.util.experiments_util import util
 
 def default_containers_config():
+    """
+    :return: the ContainersConfig of the emulation
+    """
     containers = [
         NodeContainerConfig(name="client1", network="pycr_net_5", minigame="ctf", version="0.0.1", level="5",
                             ip="172.18.5.254"),
@@ -38,6 +41,7 @@ def default_containers_config():
                                       ids_enabled=True)
     return containers_cfg
 
+# Generates the containers.json configuration file
 if __name__ == '__main__':
     if os.path.exists(util.default_containers_path(out_dir=util.default_output_dir())):
         os.remove(util.default_containers_path(out_dir=util.default_output_dir()))

@@ -2,7 +2,10 @@ from pycr_common.envs_model.config.generator.env_config_generator import EnvConf
 from pycr_common.util.experiments_util import util
 from pycr_common.dao.container_config.container_env_config import ContainerEnvConfig
 
-def generate_config():
+def generate_config() -> None:
+    """
+    Creates the random environment configuration
+    """
     container_pool = [("ftp1", "0.0.1"), ("ftp2", "0.0.1"), ("honeypot1", "0.0.1"),
                       ("honeypot2", "0.0.1"),
                       ("ssh1", "0.0.1"), ("ssh2", "0.0.1"),
@@ -45,6 +48,7 @@ def generate_config():
     )
     EnvConfigGenerator.create_env(container_env_config)
 
+# Creates the environment configuration
 if __name__ == '__main__':
     config_exists = EnvConfigGenerator.config_exists(path=util.default_output_dir())
     if not config_exists:

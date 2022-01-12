@@ -8,6 +8,9 @@ import pycr_common.constants.constants as constants
 
 
 def default_topology() -> Topology:
+    """
+    :return: the Topology of the emulation
+    """
     node_1 = NodeFirewallConfig(ip="172.18.9.10", hostname="router2",
                                 output_accept=set(["172.18.9.2", "172.18.9.3", "172.18.9.21", "172.18.9.79",
                                                    "172.18.9.191", "172.18.9.10", "172.18.9.1", "172.18.9.254",
@@ -363,7 +366,7 @@ def default_topology() -> Topology:
     topology = Topology(node_configs=node_configs, subnetwork="172.18.9.0/24")
     return topology
 
-
+# Generates the topology.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_topology_path()):
         TopologyGenerator.write_topology(default_topology())

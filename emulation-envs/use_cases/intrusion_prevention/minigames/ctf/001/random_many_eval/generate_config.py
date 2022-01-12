@@ -4,7 +4,20 @@ from pycr_common.dao.container_config.container_env_config import ContainerEnvCo
 
 def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int = 5, min_num_flags: int = 1,
                  max_num_flags : int = 5, min_num_nodes : int = 4, max_num_nodes : int = 10,
-                 subnet_prefix: str = "172.18."):
+                 subnet_prefix: str = "172.18.") -> None:
+    """
+    Generates the random environment configurations
+
+    :param num_envs: the number of environments to generate
+    :param min_num_users: the minimum number of users per environment
+    :param max_num_users: the maximum number of users per environment
+    :param min_num_flags: the minimum number of flags per environment
+    :param max_num_flags: the maximum number of flags per environment
+    :param min_num_nodes: the minimum number of nodes per environment
+    :param max_num_nodes: the maximum number of nodes per environment
+    :param subnet_prefix: the subnet prefix of the environments networks
+    :return: None
+    """
     EnvConfigGenerator.cleanup_envs(path = util.default_output_dir())
 
     # container_pool = [("ftp1", "0.0.1"), ("ftp2", "0.0.1"), ("honeypot1", "0.0.1"),
@@ -63,6 +76,8 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
 
     EnvConfigGenerator.generate_envs(num_envs=num_envs, container_env_config = container_env_config,
                                      cleanup_old_envs=True)
+
+# Creates the random environment configurations
 if __name__ == '__main__':
     generate_envs(5, min_num_users=1, max_num_users=3, min_num_flags=1, max_num_flags=4, min_num_nodes=6,
                   max_num_nodes=15, subnet_prefix="172.18.")

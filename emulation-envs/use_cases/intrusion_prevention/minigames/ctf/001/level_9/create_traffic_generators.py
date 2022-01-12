@@ -8,6 +8,9 @@ import pycr_common.constants.constants as constants
 
 
 def default_traffic_generators() -> TrafficConfig:
+    """
+    :return: the TrafficConfig of the emulation
+    """
     traffic_generators = [
         NodeTrafficConfig(ip="172.18.9.254",
                           commands=[
@@ -1035,7 +1038,7 @@ def default_traffic_generators() -> TrafficConfig:
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators)
     return traffic_conf
 
-
+# Generates the traffic.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_traffic_path()):
         TrafficGenerator.write_traffic_config(default_traffic_generators())

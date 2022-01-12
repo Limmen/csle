@@ -4,7 +4,7 @@ from pycr_common.dao.network.emulation_config import EmulationConfig
 from pycr_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 import pycr_common.constants.constants as constants
 
-
+# Stops the traffic generators of the emulation
 if __name__ == '__main__':
     if not os.path.exists(util.default_traffic_path()):
         raise ValueError("You must first generate the traffic.json file")

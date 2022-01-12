@@ -8,6 +8,9 @@ import pycr_common.constants.constants as constants
 
 
 def default_users() -> UsersConfig:
+    """
+    :return: the UsersConfig of the emulation
+    """
     users = [
         NodeUsersConfig(ip="172.18.2.191", users=[
             ("agent", "agent", True)
@@ -43,6 +46,7 @@ def default_users() -> UsersConfig:
     users_conf = UsersConfig(users=users)
     return users_conf
 
+# Generates the users.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_users_path()):
         UsersGenerator.write_users_config(default_users())

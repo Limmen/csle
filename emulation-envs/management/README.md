@@ -34,6 +34,14 @@ A webapp for monitoring emulation environments created with PyCr
 ./run_node_exporter.sh # Installs node exporter
 ./run_prometheus.sh # Installs Prometheus
 
+sudo apt install ctop
+sudo npm install -g dockly
+ 
+ctop # Show docker statistics
+docker stats # Show docker statistics
+docker container top <ID> # top command for a single container
+dockly # command line interface for managing containers 
+
 make list_stopped # list stopped PyCR containers
 make list_running # list running PyCR containers
 make list_images # list images used by PyCR containers
@@ -64,6 +72,7 @@ kim       672934  0.0  0.0   5196  2432 pts/3    S+   11:21   0:00 grep --color=
 ef0578ab2195        grafana/grafana               "/run.sh"                24 minutes ago      Up 24 minutes       0.0.0.0:3000->3000/tcp                                                                           elegant_chatelet
 (base) kim@ubuntu:~/pycr/emulation-envs/management$ docker stop ef0578ab2195
 (base) kim@ubuntu:~/pycr/emulation-envs/management$ docker rm ef0578ab2195
+
 ```
 
 When importing Prometheus as a data source in Grafana, use

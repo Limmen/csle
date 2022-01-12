@@ -32,6 +32,7 @@ run:
 stop:
 	python make_cmd.py --c stop
 
+# Starts the container (assumes that it has previously been created and stopped)
 start:
 	python make_cmd.py --c start
 

@@ -4,7 +4,10 @@ from pycr_common.util.experiments_util import util
 import pycr_common.constants.constants as constants
 
 
-def apply_config():
+def apply_config() -> None:
+    """
+    Applies the flag config
+    """
     flags_config = util.read_flags_config(util.default_flags_path())
     containers_config = util.read_containers_config(util.default_containers_path())
 
@@ -13,5 +16,6 @@ def apply_config():
 
     FlagsGenerator.create_flags(flags_config=flags_config, emulation_config=emulation_config)
 
+# Applies teh flag config
 if __name__ == '__main__':
     apply_config()

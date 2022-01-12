@@ -14,7 +14,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        ssh openssh-server ftp snmpd snmp mailutils inspircd postgresql ntp fingerd mongodb-org \
                        vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git swi-prolog default-jdk sshpass iptables \
                        unzip nmap git lftp zip snort arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat
+                       snmp postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2
 RUN apt-get install -y xinetd
 RUN apt-get install -y inetutils-inetd
 

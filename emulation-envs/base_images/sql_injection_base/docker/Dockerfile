@@ -12,7 +12,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.pycr" | debconf-set-selec
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget openssl libssl-dev irssi irssi-scripts screen postgresql-client-common \
                        postgresql-client-common snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog \
-                       netcat traceroute sysstat
+                       netcat traceroute sysstat iproute2
 
 # Setup DVWA
 RUN mv /var/www/html/login.php /var/www/html/login_bak.php

@@ -4,7 +4,10 @@ from pycr_common.util.experiments_util import util
 import pycr_common.constants.constants as constants
 
 
-def apply_config():
+def apply_config() -> None:
+    """
+    Applies the vulnerabilities config
+    """
     vuln_config = util.read_vulns_config(util.default_vulnerabilities_path())
     containers_config = util.read_containers_config(util.default_containers_path())
 
