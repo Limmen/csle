@@ -124,7 +124,7 @@ TODO
 
 ## Installation
 
-1. **Install emulation system** 
+1. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
@@ -154,7 +154,7 @@ TODO
    - Install csle-emulation-cli
        - TODO
 
-3. **Install simulation system** 
+3. **Install the simulation system** 
    - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -177,7 +177,7 @@ TODO
      pip install -e .
      ```
 
-4. **Install policy validation system**
+4. **Install the policy validation system**
  - TODO
  
 
