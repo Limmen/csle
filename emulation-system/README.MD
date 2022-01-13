@@ -5,7 +5,6 @@ This directory contains scripts, configurations, and tools related to emulation 
 - **Base images** ([base images](./base_images)): this directory contains base Docker images for emulating computer infrastructures.
 - **Derived images** ([derived images](./derived_images)): this directory contains derived (from the base images) Docker images for emulating computer infrastructures.
 - **Networks** ([networks](./networks)): this directory contains scripts for creating virtual subnetworks of Linux containers.
-- **Management** ([management](./management)): this directory contains scripts and tools for managing emulated infrastructures (e.g. monitoring, starting, stopping, listing, etc.)
 - **Use Cases** ([use_cases](./use_cases)): this directory contains scripts and tools for starting/stopping specific emulation configurations
 - **Tests** ([tests](./tests)): this directory contains scripts and tools for starting/stopping test emulations
 

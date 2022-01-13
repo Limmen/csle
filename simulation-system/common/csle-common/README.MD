@@ -1,7 +1,7 @@
 # `csle-common`
 
 `csle-common` is a library with common functionality for all use-cases implemented in
-csle. 
+CSLE. 
 
 ## Requirements
 

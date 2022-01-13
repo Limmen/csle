@@ -269,28 +269,17 @@ TODO
 
 ## Documentation
 
-For basic documentation, see the README.md files inside each sub-directory,
+For documentation, see the README.md files inside each sub-directory,
 
-- **Emulation Environments** ([emulation-envs](./emulation-system)).
-- **Python Environments** ([python-envs](./simulation-system)).
-- **Demonstrations** ([demos](./demos)).
-- **Notebooks** ([notebooks](./notebooks)).
-- **Documentation** ([docs](./docs)).
-
-### API Documentation
-For API documentation follow the links inside each python project's README:
-
-- [csle-common](simulation-system/common/csle-common/README.md).
-- [gym-csle-ctf](simulation-system/minigames/network_intrusion/ctf/gym-csle-ctf/README.MD).
-
-### Technical Documentation
-For technical documentation see: TODO
-
-### Emulation Management
-
-Documentation on how to manage running emulations is available [here](emulation-system/management/README.md).
+- **Emulation System** ([emulation-system](./emulation-system)).
+- **Simulation System** ([simulation-system](./simulation-system)).
+- **Monitoring System** ([monitoring-system](./monitoring-system)).
+- **Policy Validation System** ([policy-validation-system](./policy-validation-system)).
+- **General Documentation** ([docs](./docs)).
 
 ## Video tutorial
+
+TODO
 
 ## Author & Maintainer
 

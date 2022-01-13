@@ -5,7 +5,6 @@ from csle_common.dao.domain_randomization.csle_node_randomizer_config import CSL
 
 class CSLENodeRandomizer(ABC):
 
-
     @staticmethod
     @abstractmethod
     def randomize(CSLENodeRandomizerConfig)-> Node:
