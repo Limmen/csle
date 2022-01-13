@@ -1,6 +1,6 @@
-# `csle_monitor` CSLE Monitor System
+# `csle_emulation_monitor` CSLE Emulation Monitor System
 
-A webapp for monitoring and managing emulation environments in CSLE. 
+A system for monitoring and managing emulation environments in CSLE. 
 
 ## GUI
 

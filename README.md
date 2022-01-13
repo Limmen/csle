@@ -1,5 +1,5 @@
 # `csle`: Cyber Security Learning Environment  
-## A research platform to develop self-learning systems for cyber security 
+## A research platform to develop self-learning systems for cyber security using reinforcement learning 
 
 `csle` is a platform for evaluating and developing reinforcement learning agents
 for control problems in cyber security. It can be considered as a cyber range
@@ -67,6 +67,10 @@ such as, web servers, databases, and an IDS.
 The simulation system implements a MDP/POMDP/Markov Game that can be used to 
 train defender policies using reinforcement learning. It exposes an OpenAI-gym interface.
 
+### Policy Validation System
+
+TODO
+
 ## Features
 
 - **Emulations**
@@ -116,55 +120,61 @@ train defender policies using reinforcement learning. It exposes an OpenAI-gym i
 
 ## Installation
 
-1. Install Docker (see ([README](emulation-system/README.MD)) for more information) 
+1. **Install emulation system** 
+    - Install Docker (see ([README](emulation-system/README.MD)) for more information)
+      ```bash
+      sudo apt-get update
+      sudo apt-get install docker-ce docker-ce-cli containerd.io
+      sudo groupadd docker
+      sudo usermod -aG docker $USER
+      ```
+    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
+      ```bash
+      cd emulation-system/base_images
+      make build
+      ```
+    - Install derived images (see ([README](emulation-system/derived_images/README.MD)) for more information)
+      ```bash
+      cd emulation-system/derived_images
+      make build
+      ```
+    - Create Docker networks (see ([README](emulation-system/networks/README.MD)) for more information)
+      ```bash
+      cd emulation-system/networks
+      python create_networks.py -n 40
+      ```
 
-```bash
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
-sudo groupadd docker
-sudo usermod -aG docker $USER
-```
+2. **Install the monitoring system**
+       - TODO
+   - Install csle-emulation-cli
+       - TODO
 
-2. Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
-```bash
-cd emulation-system/base_images
-make build
-```
+3. **Install simulation system** 
+   - Install Python 3.8 or higher:
+        - Using conda:
+          ```bash
+           conda create -n py38 python=3.8
+          ```
+        - Using apt:
+          ```bash
+           sudo apt install python3.8
+          ```
 
-3. Install derived images (see ([README](emulation-system/derived_images/README.MD)) for more information)
-```bash
-cd emulation-system/derived_images
-make build
-```
+   - Install `csle_common` (see ([README](simulation-system/common/csle-common/README.md)) for more information)
+     ```bash
+      cd simulation-system/common/csle-common/
+      pip install -e .
+     ```
 
-4. Install Python 3.8 or higher:
+   - Install `gym_csle_ctf` (see ([README](simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/README.MD)) for more information)
+     ```bash
+     cd simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/
+     pip install -e .
+     ```
 
-Using conda:
-```bash
-conda create -n py38 python=3.8
-```
-Using apt:
-```bash
-sudo apt install python3.8
-```
+4. **Install policy validation system**
+ - TODO
 
-5. Install `csle_common` (see ([README](simulation-system/common/csle-common/README.md)) for more information)
-```bash
-cd simulation-system/common/csle-common/
-pip install -e .
-```
-
-6. Install `gym_csle_ctf` (see ([README](simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/README.MD)) for more information)
-```bash
-cd simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/
-pip install -e .
-```
-
-7. Create Docker networks (see ([README](emulation-system/networks/README.MD)) for more information)
-```bash
-cd emulation-system/networks
-python create_networks.py -n 40
-```
 (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
 
 ## Quickstart

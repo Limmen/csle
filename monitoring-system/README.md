@@ -1,9 +1,12 @@
-# csle Management Scripts
+# CSLE Monitoring System
 
+This system builds on Grafana, Prometheus, Cadvisor, NodeExporter and the `csle_emulation_monitor` applicaton 
+
+## Contents
 This directory includes scripts for starting Grafana+Prometheus+Cadvisor+NodeExporter for monitoring running
 emulations as well as the host system. 
 
-The directory also includes a scripts for starting a custom web-app (`csle_monitor`) 
+The directory also includes a scripts for starting a custom web-app (`csle_emulation_monitor`) 
 for keeping track of the emulation configurations.
 
 ## Grafana
@@ -18,7 +21,7 @@ Grafana is used to monitor the performance of the emulation environments
 <img src="docs/grafana_2.png" width="1200">
 </p>
 
-## csle Monitor
+## CSLE Monitor
 A webapp for monitoring emulation environments created with csle
 
 <p align="center">
