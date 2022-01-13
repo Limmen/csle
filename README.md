@@ -147,6 +147,7 @@ TODO
       cd emulation-system/networks
       python create_networks.py -n 40
       ```
+      (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
 
 2. **Install the monitoring system**
        - TODO
@@ -178,8 +179,7 @@ TODO
 
 4. **Install policy validation system**
  - TODO
-
-(Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
+ 
 
 ## Quickstart
 TODO
