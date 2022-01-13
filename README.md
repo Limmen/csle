@@ -1,7 +1,7 @@
-# `pycr`: A PYthon Cyber Range for reinforcement learning agents.  
+# `csle`: Cyber Security Learning Environment  
 ## A research platform to develop self-learning systems for cyber security 
 
-`pycr` is a platform for evaluating and developing reinforcement learning agents
+`csle` is a platform for evaluating and developing reinforcement learning agents
 for control problems in cyber security. It can be considered as a cyber range
 specifically designed for reinforcement learning agents. Everything from
 network emulation, to simulation and implementation of network commands have been
@@ -23,7 +23,7 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
 
 ## Outline
 
- * [What is pycr?](#what-is-pycr)
+ * [What is csle?](#what-is-csle)
  * [Architecture](#architecture)
  * [Features](#features)
  * [Quickstart](#quickstart)
@@ -35,7 +35,7 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
 
 ## Architecture
 
-The method used in `pycr` for learning and validating policies includes two systems. 
+The method used in `csle` for learning and validating policies includes two systems. 
 First, we develop an **emulation system** where key functional components of 
 the target infrastructure are replicated. In this system, we run attack scenarios and defender responses. 
 These runs produce system metrics and logs that we use to estimate empirical distributions 
@@ -116,7 +116,7 @@ train defender policies using reinforcement learning. It exposes an OpenAI-gym i
 
 ## Installation
 
-1. Install Docker (see ([README](./emulation-envs/README.MD)) for more information) 
+1. Install Docker (see ([README](emulation-system/README.MD)) for more information) 
 
 ```bash
 sudo apt-get update
@@ -125,15 +125,15 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
-2. Install base images (see ([README](./emulation-envs/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
+2. Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
 ```bash
-cd emulation-envs/base_images
+cd emulation-system/base_images
 make build
 ```
 
-3. Install derived images (see ([README](./emulation-envs/derived_images/README.MD)) for more information)
+3. Install derived images (see ([README](emulation-system/derived_images/README.MD)) for more information)
 ```bash
-cd emulation-envs/derived_images
+cd emulation-system/derived_images
 make build
 ```
 
@@ -148,21 +148,21 @@ Using apt:
 sudo apt install python3.8
 ```
 
-5. Install `pycr_common` (see ([README](./python-envs/common/pycr-common/README.md)) for more information)
+5. Install `csle_common` (see ([README](simulation-system/common/csle-common/README.md)) for more information)
 ```bash
-cd python-envs/common/pycr-common/
+cd simulation-system/common/csle-common/
 pip install -e .
 ```
 
-6. Install `gym_pycr_ctf` (see ([README](./python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/README.MD)) for more information)
+6. Install `gym_csle_ctf` (see ([README](simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/README.MD)) for more information)
 ```bash
-cd python-envs/use_cases/intrusion_prevention/minigames/ctf/gym-pycr-ctf/
+cd simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/
 pip install -e .
 ```
 
-7. Create Docker networks (see ([README](./emulation-envs/networks/README.MD)) for more information)
+7. Create Docker networks (see ([README](emulation-system/networks/README.MD)) for more information)
 ```bash
-cd emulation-envs/networks
+cd emulation-system/networks
 python create_networks.py -n 40
 ```
 (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
@@ -173,18 +173,18 @@ TODO
 ## Create an Emulation 
 
 After doing the installation steps an emulation can be created by using the following steps. 
-(For more detailed information on how to manage emulations, see [README](./emulation-envs/README.MD)) 
+(For more detailed information on how to manage emulations, see [README](emulation-system/README.MD)) 
 
 There are three ways to create an emulation: use a pre-configured emulation, use a random emulation, or configure your own emulation. 
 
 ### Start a pre-configured emulation
 
-1. Select a pre-configured emulation from [use_cases](./emulation-envs/use_cases/), for example ([ctf_001_level_1](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1))
+1. Select a pre-configured emulation from [use_cases](emulation-system/use_cases/), for example ([ctf_001_level_1](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1))
 2. Change directory:
 ```bash
-cd emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1
+cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1
 ```
-3. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+3. Start the emulation (run the containers) (for more commands, see [README](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
 ```bash
 make run
 ```
@@ -211,16 +211,16 @@ make clean
 
 ### Start a random emulation
 
-1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/random)
+1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random)
 2. Change directory:
 ```bash
-cd emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/random
+cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random
 ```
 3. Generate a random configuration:
 ```bash
 make gen_config
 ``` 
-4. Start the emulation (run the containers) (for more commands, see [README](./emulation-envs/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+4. Start the emulation (run the containers) (for more commands, see [README](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
 ```bash
 make run
 ```
@@ -261,8 +261,8 @@ TODO
 
 For basic documentation, see the README.md files inside each sub-directory,
 
-- **Emulation Environments** ([emulation-envs](./emulation-envs)).
-- **Python Environments** ([python-envs](./python-envs)).
+- **Emulation Environments** ([emulation-envs](./emulation-system)).
+- **Python Environments** ([python-envs](./simulation-system)).
 - **Demonstrations** ([demos](./demos)).
 - **Notebooks** ([notebooks](./notebooks)).
 - **Documentation** ([docs](./docs)).
@@ -270,15 +270,15 @@ For basic documentation, see the README.md files inside each sub-directory,
 ### API Documentation
 For API documentation follow the links inside each python project's README:
 
-- [pycr-common](./python-envs/common/pycr-common/README.md).
-- [gym-pycr-ctf](./python-envs/minigames/network_intrusion/ctf/gym-pycr-ctf/README.MD).
+- [csle-common](simulation-system/common/csle-common/README.md).
+- [gym-csle-ctf](simulation-system/minigames/network_intrusion/ctf/gym-csle-ctf/README.MD).
 
 ### Technical Documentation
 For technical documentation see: TODO
 
 ### Emulation Management
 
-Documentation on how to manage running emulations is available [here](./emulation-envs/management/README.md).
+Documentation on how to manage running emulations is available [here](emulation-system/management/README.md).
 
 ## Video tutorial
 
