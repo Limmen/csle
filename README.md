@@ -124,7 +124,13 @@ TODO
 
 ## Installation
 
-1. **Install the emulation system** 
+### Install from source
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Limmen/clse
+```
+2. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
@@ -149,12 +155,12 @@ TODO
       ```
       (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
 
-2. **Install the monitoring system**
+3. **Install the monitoring system**
        - TODO
    - Install csle-emulation-cli
        - TODO
 
-3. **Install the simulation system** 
+4. **Install the simulation system** 
    - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -177,7 +183,7 @@ TODO
      pip install -e .
      ```
 
-4. **Install the policy validation system**
+5. **Install the policy validation system**
  - TODO
  
 
