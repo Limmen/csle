@@ -1,7 +1,7 @@
 PROJECT=csle
 NETWORK=csle_net_1
 MINIGAME=blank_container_test
-CONTAINER=blank1
+CONTAINER=blank_1
 VERSION=0.0.1
 LEVEL=1
 IP=172.18.1.3

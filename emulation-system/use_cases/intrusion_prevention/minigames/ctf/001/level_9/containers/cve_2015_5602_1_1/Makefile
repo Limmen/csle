@@ -21,11 +21,10 @@ all: run
 
 # Create and start the container
 run:
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --hostname=$(CONTAINER) \
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) --hostname=$(CONTAINER) \
 	--net $(NETWORK) --ip $(IP) --label dir=$(DIR) --label containers_cfg=$(CFG) --label flags_cfg=$(FLAGSCFG) \
-	--label topology_cfg=$(TOPOLOGYCFG) --label users_cfg=$(USERSCFG) \
-	--label vulnerabilities_cfg=$(VULNERABILITIESCFG) \
-	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true \
+	--label topology_cfg=$(TOPOLOGYCFG) --label users_cfg=$(USERSCFG) --label vulnerabilities_cfg=$(VULNERABILITIESCFG) \
+	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true --privileged -v /lib/modules:/lib/modules \
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
 

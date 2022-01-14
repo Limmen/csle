@@ -9,19 +9,19 @@ def default_containers_config() -> ContainersConfig:
     :return: the ContainersConfig of the emulation
     """
     containers = [
-        NodeContainerConfig(name="client1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="client_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.254"),
-        NodeContainerConfig(name="ftp1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="ftp_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.79"),
-        NodeContainerConfig(name="hacker_kali1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="hacker_kali_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.191"),
-        NodeContainerConfig(name="honeypot1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="honeypot_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.21"),
-        NodeContainerConfig(name="router2", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="router_2", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.10"),
-        NodeContainerConfig(name="ssh1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="ssh_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.2"),
-        NodeContainerConfig(name="telnet1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name="telnet_1", network="csle_net_4", minigame="ctf", version="0.0.1", level="4",
                             ip="172.18.4.3")
     ]
     containers_cfg = ContainersConfig(containers=containers, network="csle_net_4", agent_ip="172.18.4.191",

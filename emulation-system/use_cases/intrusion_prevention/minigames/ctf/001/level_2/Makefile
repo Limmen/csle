@@ -1,72 +1,72 @@
-all: run users topology vuln gen_containers_config flags traffic
+all: run users topology vuln gen_containers_config flags resources traffic
 
 # Runs all containers in the emulation
 run: gen_containers_config
-	cd containers/router1/ && $(MAKE) run
-	cd containers/ssh1/ && $(MAKE) run
-	cd containers/ssh2/ && $(MAKE) run
-	cd containers/ssh3/ && $(MAKE) run
-	cd containers/telnet1/ && $(MAKE) run
-	cd containers/telnet2/ && $(MAKE) run
-	cd containers/telnet3/ && $(MAKE) run
-	cd containers/honeypot1/ && $(MAKE) run
-	cd containers/honeypot2/ && $(MAKE) run
-	cd containers/ftp1/ && $(MAKE) run
-	cd containers/ftp2/ && $(MAKE) run
-	cd containers/hacker_kali1/ && $(MAKE) run
-	cd containers/client1/ && $(MAKE) run
+	cd containers/router_1_1/ && $(MAKE) run
+	cd containers/ssh_1_1/ && $(MAKE) run
+	cd containers/ssh_2_1/ && $(MAKE) run
+	cd containers/ssh_3_1/ && $(MAKE) run
+	cd containers/telnet_1_1/ && $(MAKE) run
+	cd containers/telnet_2_1/ && $(MAKE) run
+	cd containers/telnet_3_1/ && $(MAKE) run
+	cd containers/honeypot_1_1/ && $(MAKE) run
+	cd containers/honeypot_2_1/ && $(MAKE) run
+	cd containers/ftp_1_1/ && $(MAKE) run
+	cd containers/ftp_2_1/ && $(MAKE) run
+	cd containers/hacker_kali_1_1/ && $(MAKE) run
+	cd containers/client_1_1/ && $(MAKE) run
 
 # Stops all containers in the emulation
 stop:
-	cd containers/router1/ && $(MAKE) stop
-	cd containers/ssh1/ && $(MAKE) stop
-	cd containers/ssh2/ && $(MAKE) stop
-	cd containers/ssh3/ && $(MAKE) stop
-	cd containers/telnet1/ && $(MAKE) stop
-	cd containers/telnet2/ && $(MAKE) stop
-	cd containers/telnet3/ && $(MAKE) stop
-	cd containers/honeypot1/ && $(MAKE) stop
-	cd containers/honeypot2/ && $(MAKE) stop
-	cd containers/ftp1/ && $(MAKE) stop
-	cd containers/ftp2/ && $(MAKE) stop
-	cd containers/hacker_kali1/ && $(MAKE) stop
-	cd containers/client1/ && $(MAKE) stop
+	cd containers/router_1_1/ && $(MAKE) stop
+	cd containers/ssh_1_1/ && $(MAKE) stop
+	cd containers/ssh_2_1/ && $(MAKE) stop
+	cd containers/ssh_3_1/ && $(MAKE) stop
+	cd containers/telnet_1_1/ && $(MAKE) stop
+	cd containers/telnet_2_1/ && $(MAKE) stop
+	cd containers/telnet_3_1/ && $(MAKE) stop
+	cd containers/honeypot_1_1/ && $(MAKE) stop
+	cd containers/honeypot_2_1/ && $(MAKE) stop
+	cd containers/ftp_1_1/ && $(MAKE) stop
+	cd containers/ftp_2_1/ && $(MAKE) stop
+	cd containers/hacker_kali_1_1/ && $(MAKE) stop
+	cd containers/client_1_1/ && $(MAKE) stop
 
 # Starts all containers in the emulation
 start:
-	cd containers/router1/ && $(MAKE) start
-	cd containers/ssh1/ && $(MAKE) start
-	cd containers/ssh2/ && $(MAKE) start
-	cd containers/ssh3/ && $(MAKE) start
-	cd containers/telnet1/ && $(MAKE) start
-	cd containers/telnet2/ && $(MAKE) start
-	cd containers/telnet3/ && $(MAKE) start
-	cd containers/honeypot1/ && $(MAKE) start
-	cd containers/honeypot2/ && $(MAKE) start
-	cd containers/ftp1/ && $(MAKE) start
-	cd containers/ftp2/ && $(MAKE) start
-	cd containers/hacker_kali1/ && $(MAKE) start
-	cd containers/client1/ && $(MAKE) start
+	cd containers/router_1_1/ && $(MAKE) start
+	cd containers/ssh_1_1/ && $(MAKE) start
+	cd containers/ssh_2_1/ && $(MAKE) start
+	cd containers/ssh_3_1/ && $(MAKE) start
+	cd containers/telnet_1_1/ && $(MAKE) start
+	cd containers/telnet_2_1/ && $(MAKE) start
+	cd containers/telnet_3_1/ && $(MAKE) start
+	cd containers/honeypot_1_1/ && $(MAKE) start
+	cd containers/honeypot_2_1/ && $(MAKE) start
+	cd containers/ftp_1_1/ && $(MAKE) start
+	cd containers/ftp_2_1/ && $(MAKE) start
+	cd containers/hacker_kali_1_1/ && $(MAKE) start
+	cd containers/client_1_1/ && $(MAKE) start
 	python create_topology.py
 
 # Stops and removes all containers in the emulation
 clean:
-	cd containers/router1/ && $(MAKE) clean
-	cd containers/ssh1/ && $(MAKE) clean
-	cd containers/ssh2/ && $(MAKE) clean
-	cd containers/ssh3/ && $(MAKE) clean
-	cd containers/telnet1/ && $(MAKE) clean
-	cd containers/telnet2/ && $(MAKE) clean
-	cd containers/telnet3/ && $(MAKE) clean
-	cd containers/honeypot1/ && $(MAKE) clean
-	cd containers/honeypot2/ && $(MAKE) clean
-	cd containers/ftp1/ && $(MAKE) clean
-	cd containers/ftp2/ && $(MAKE) clean
-	cd containers/hacker_kali1/ && $(MAKE) clean
-	cd containers/client1/ && $(MAKE) clean
+	cd containers/router_1_1/ && $(MAKE) clean
+	cd containers/ssh_1_1/ && $(MAKE) clean
+	cd containers/ssh_2_1/ && $(MAKE) clean
+	cd containers/ssh_3_1/ && $(MAKE) clean
+	cd containers/telnet_1_1/ && $(MAKE) clean
+	cd containers/telnet_2_1/ && $(MAKE) clean
+	cd containers/telnet_3_1/ && $(MAKE) clean
+	cd containers/honeypot_1_1/ && $(MAKE) clean
+	cd containers/honeypot_2_1/ && $(MAKE) clean
+	cd containers/ftp_1_1/ && $(MAKE) clean
+	cd containers/ftp_2_1/ && $(MAKE) clean
+	cd containers/hacker_kali_1_1/ && $(MAKE) clean
+	cd containers/client_1_1/ && $(MAKE) clean
 
 # Applies the config to a started emulation (assumes all containers are started)
-apply_config: users vuln flags topology gen_containers_config traffic
+apply_config: users vuln flags topology gen_containers_config traffic resources
 
 # Applies the topology config to a started emulation (assumes all containers are started)
 topology: create_topology.py
@@ -88,6 +88,10 @@ vuln: create_vuln.py
 gen_containers_config: gen_containers_config.py
 	python gen_containers_config.py
 
+# Applies the resource constraints config to a started emulation (assumes all containers are started)
+resources: create_resource_constraints.py
+	python create_resource_constraints.py
+
 # Cleans the cache of operations in the emulation
 clean_fs_cache:
 	python clean_fs_cache.py
@@ -96,9 +100,21 @@ clean_fs_cache:
 traffic: create_traffic_generators.py
 	python create_traffic_generators.py
 
-# Stops the traffoc generators in the emulation
+# Stops the traffic generators in the emulation
 stop_traffic: stop_traffic_generators.py
 	python stop_traffic_generators.py
+
+# Start iperf container on the Docker host
+start_iperf_container:
+	docker run --name=iperf3 -d --restart=unless-stopped -p 5201:5201/tcp -p 5201:5201/udp mlabbe/iperf3
+
+# Start iperf container on the Docker host
+stop_iperf_container:
+	docker stop iperf3
+
+# Start iperf container on the Docker host
+rm_iperf_container:
+	docker rm iperf3
 
 # Cleans all configuration files
 clean_config:
@@ -109,3 +125,4 @@ clean_config:
 	rm -rf ./topology.json
 	rm -rf ./containers.json
 	rm -rf ./traffic.json
+	rm -rf ./resources.json

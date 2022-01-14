@@ -4,7 +4,7 @@ FROM csle/debian_jessie_base:0.0.1
 USER root
 
 # configure vuln application
-RUN wget ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.5.tar.gz && \
+RUN wget --no-check-certificate ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.5.tar.gz && \
     tar xfz proftpd-1.3.5.tar.gz && \
     cd proftpd-1.3.5 && \
     ./configure --with-modules=mod_copy && \

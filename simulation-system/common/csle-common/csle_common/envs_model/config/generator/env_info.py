@@ -18,37 +18,37 @@ class EnvInfo:
 
         :return: a list of environment DTOs
         """
-        client1 = docker.from_env()
+        client_1 = docker.from_env()
         client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-        parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
+        parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
         networks = list(set(list(map(lambda x: x.net, parsed_containers))))
         parsed_envs = EnvInfo.parse_envs(networks=networks, containers=parsed_containers)
         return parsed_envs
 
 
     @staticmethod
-    def parse_running_containers(client1, client2) -> List[EnvContainer]:
+    def parse_running_containers(client_1, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of all running containers
 
-        :param client1: docker client 1
+        :param client_1: docker client 1
         :param client2:  docker client 2
         :return: list of parsed running containers
         """
-        containers = client1.containers.list()
+        containers = client_1.containers.list()
         parsed_containers = EnvInfo.parse_containers(containers=containers, client2=client2)
         return parsed_containers
 
     @staticmethod
-    def parse_stopped_containers(client1, client2) -> List[EnvContainer]:
+    def parse_stopped_containers(client_1, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of all stopped csle containers
 
-        :param client1: docker client 1
+        :param client_1: docker client 1
         :param client2: docker client 2
         :return: list of parsed containers
         """
-        containers = client1.containers.list(all=True)
+        containers = client_1.containers.list(all=True)
         stopped_containers = list(filter(lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
                                                    or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS),
                                                     containers))

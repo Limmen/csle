@@ -707,24 +707,24 @@ class TRAFFIC_COMMANDS:
     Constants related to traffic commands
     """
     DEFAULT_COMMANDS = {
-        "ftp1": ["timeout 5 ftp {} > /dev/null 2>&1",
+        "ftp_1": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 curl {}:8080 > /dev/null 2>&1"],
-        "ssh1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "ssh_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 curl {}:80 > /dev/null 2>&1"],
-        "telnet1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "telnet_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {} > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "honeypot1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "honeypot_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                       "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
                       "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
                       "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        "samba1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "samba_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                    "(sleep 2; echo testcsleuser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
-        "shellshock1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "shellshock_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                         "timeout 5 curl {} > /dev/null 2>&1",
                         "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1"],
-        "sql_injection1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "sql_injection_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                            "timeout 5 curl {}/login.php > /dev/null 2>&1",
                            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"],
         "cve_2010_0426_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
@@ -737,25 +737,25 @@ class TRAFFIC_COMMANDS:
         "cve_2015_5602_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         "cve_2015_10033_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                              "timeout 5 curl {} > /dev/null 2>&1"],
-        "honeypot2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "honeypot_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                       "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
                       "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
                       "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        "ssh2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "ssh_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
-        "ssh3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "ssh_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
                  ],
-        "telnet2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "telnet_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {}:8080 > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "telnet3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "telnet_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {}:8080 > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "ftp2": ["timeout 5 ftp {} > /dev/null 2>&1",
+        "ftp_2": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "client1_subnet": [
+        "client_1_subnet": [
             "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap -sP " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
@@ -767,11 +767,11 @@ class TRAFFIC_COMMANDS:
             "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1"
         ],
-        "client1_host": [
+        "client_1_host": [
             "ping {} > /dev/null 2>&1",
             "traceroute {} > /dev/null 2>&1"
         ],
-        "pengine_exploit1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        "pengine_exploit_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
         "timeout 5 curl {}:4000 > /dev/null 2>&1",
                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
                                   --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' {}"
@@ -950,12 +950,12 @@ class DOCKER:
     MAKEFILE_TEMPLATE = "Makefile_template"
 
 
-class csle:
+class CSLE:
     NAME = "csle"
     LEVEL = "level"
     csle_NET_PREFIX = "csle_net_"
     CTF_MINIGAME = "ctf"
-    NON_IDS_ROUTER = "router1"
+    NON_IDS_ROUTER = "router_1"
 
 
 class MANAGEMENT:

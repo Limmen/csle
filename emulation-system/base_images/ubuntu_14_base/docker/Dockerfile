@@ -35,7 +35,7 @@ ADD docker/vsftpd.conf /etc/vsftpd.conf
 RUN git clone https://github.com/Limmen/erl_pengine
 
 # Cassandra
-RUN wget http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
+RUN wget --no-check-certificate http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
     tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
     mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
 ADD docker/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
@@ -65,7 +65,7 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
 RUN mkdir -p /data/db
 
 # Setup Tomcat
-RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
+RUN wget --no-check-certificate https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
     tar xvzf apache-tomcat-8.0.1.tar.gz &&\
     mv apache-tomcat-8.0.1 /usr/local/tomcat &&\
     mv /usr/local/tomcat/conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml.bak
@@ -77,11 +77,11 @@ RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/se
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 
 # Cockroach DB
-RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
+RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup Kafka
-RUN wget https://archive.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz &&\
+RUN wget --no-check-certificate https://archive.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz &&\
     tar xzf kafka_2.13-2.4.0.tgz &&\
     mv kafka_2.13-2.4.0 /usr/local/kafka
 
@@ -107,7 +107,7 @@ RUN chmod 644 /etc/xinetd.d/telnet &&\
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN wget \
+RUN wget --no-check-certificate \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
@@ -148,11 +148,11 @@ RUN pip install flask &&\
     pip install waitress
 
 # Setup glassfish
-RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
+RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
     unzip latest-glassfish.zip
 
 # Setup Snort
-RUN wget https://www.snort.org/downloads/community/snort3-community-rules.tar.gz -O community-rules.tar.gz &&\
+RUN wget --no-check-certificate https://www.snort.org/downloads/community/snort3-community-rules.tar.gz -O community-rules.tar.gz &&\
     tar -xvzf community-rules.tar.gz -C /etc/snort/rules &&\
     mkdir /var/snort &&\
     chmod 777 /var/snort &&\

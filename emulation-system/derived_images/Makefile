@@ -1,55 +1,55 @@
 all: build
 
 build:
-	cd ftp1/ && $(MAKE) build
-	cd ftp2/ && $(MAKE) build
-	cd hacker_kali1/ && $(MAKE) build
-	cd honeypot1/ && $(MAKE) build
-	cd honeypot2/ && $(MAKE) build
-	cd ssh1/ && $(MAKE) build
-	cd ssh2/ && $(MAKE) build
-	cd ssh3/ && $(MAKE) build
-	cd telnet1/ && $(MAKE) build
-	cd telnet2/ && $(MAKE) build
-	cd telnet3/ && $(MAKE) build
-	cd router1/ && $(MAKE) build
-	cd router2/ && $(MAKE) build
-	cd samba1/ && $(MAKE) build
-	cd samba2/ && $(MAKE) build
-	cd shellshock1/ && $(MAKE) build
-	cd sql_injection1/ && $(MAKE) build
+	cd ftp_1/ && $(MAKE) build
+	cd ftp_2/ && $(MAKE) build
+	cd hacker_kali_1/ && $(MAKE) build
+	cd honeypot_1/ && $(MAKE) build
+	cd honeypot_2/ && $(MAKE) build
+	cd ssh_1/ && $(MAKE) build
+	cd ssh_2/ && $(MAKE) build
+	cd ssh_3/ && $(MAKE) build
+	cd telnet_1/ && $(MAKE) build
+	cd telnet_2/ && $(MAKE) build
+	cd telnet_3/ && $(MAKE) build
+	cd router_1/ && $(MAKE) build
+	cd router_2/ && $(MAKE) build
+	cd samba_1/ && $(MAKE) build
+	cd samba_2/ && $(MAKE) build
+	cd shellshock_1/ && $(MAKE) build
+	cd sql_injection_1/ && $(MAKE) build
 	cd cve_2015_3306_1/ && $(MAKE) build
 	cd cve_2015_1427_1/ && $(MAKE) build
 	cd cve_2016_10033_1/ && $(MAKE) build
 	cd cve_2010_0426_1/ && $(MAKE) build
 	cd cve_2015_5602_1/ && $(MAKE) build
-	cd client1/ && $(MAKE) build
-	cd blank1/ && $(MAKE) build
-	cd pengine_exploit1/ && $(MAKE) build
+	cd client_1/ && $(MAKE) build
+	cd blank_1/ && $(MAKE) build
+	cd pengine_exploit_1/ && $(MAKE) build
 
 rm-image:
-	cd ftp1/ && $(MAKE) rm-image
-	cd ftp2/ && $(MAKE) rm-image
-	cd hacker_kali1/ && $(MAKE) rm-image
-	cd honeypot1/ && $(MAKE) rm-image
-	cd honeypot2/ && $(MAKE) rm-image
-	cd ssh1/ && $(MAKE) rm-image
-	cd ssh2/ && $(MAKE) rm-image
-	cd ssh3/ && $(MAKE) rm-image
-	cd telnet1/ && $(MAKE) rm-image
-	cd telnet2/ && $(MAKE) rm-image
-	cd telnet3/ && $(MAKE) rm-image
-	cd router1/ && $(MAKE) rm-image
-	cd router2/ && $(MAKE) rm-image
-	cd samba1/ && $(MAKE) rm-image
-	cd samba2/ && $(MAKE) rm-image
-	cd shellshock1/ && $(MAKE) rm-image
-	cd sql_injection1/ && $(MAKE) rm-image
+	cd ftp_1/ && $(MAKE) rm-image
+	cd ftp_2/ && $(MAKE) rm-image
+	cd hacker_kali_1/ && $(MAKE) rm-image
+	cd honeypot_1/ && $(MAKE) rm-image
+	cd honeypot_2/ && $(MAKE) rm-image
+	cd ssh_1/ && $(MAKE) rm-image
+	cd ssh_2/ && $(MAKE) rm-image
+	cd ssh_3/ && $(MAKE) rm-image
+	cd telnet_1/ && $(MAKE) rm-image
+	cd telnet_2/ && $(MAKE) rm-image
+	cd telnet_3/ && $(MAKE) rm-image
+	cd router_1/ && $(MAKE) rm-image
+	cd router_2/ && $(MAKE) rm-image
+	cd samba_1/ && $(MAKE) rm-image
+	cd samba_2/ && $(MAKE) rm-image
+	cd shellshock_1/ && $(MAKE) rm-image
+	cd sql_injection_1/ && $(MAKE) rm-image
 	cd cve_2015_3306_1/ && $(MAKE) rm-image
 	cd cve_2015_1427_1/ && $(MAKE) rm-image
 	cd cve_2016_10033_1/ && $(MAKE) rm-image
 	cd cve_2010_0426_1/ && $(MAKE) rm-image
 	cd cve_2015_5602_1/ && $(MAKE) rm-image
-	cd client1/ && $(MAKE) rm-image
-	cd blank1/ && $(MAKE) rm-image
-	cd pengine_exploit1/ && $(MAKE) rm-image
+	cd client_1/ && $(MAKE) rm-image
+	cd blank_1/ && $(MAKE) rm-image
+	cd pengine_exploit_1/ && $(MAKE) rm-image

@@ -10,7 +10,21 @@ attacker.
 - IDS: No
 - Traffic generation: No
 - Number of flags: 3
-- Vulnerabilities: SSH, FTP, Telnet servers that can be compromised using dictionary attacks 
+- Vulnerabilities: SSH, FTP, Telnet servers that can be compromised using dictionary attacks
+- Resources: 1 CPU 4GB RAM/Container, 1gbit/1gbit links between servers, 
+100mbit/100mbit links between clients/attacker and servers
+- Traffic shaping:
+0.02% bursty packet loss according to the Gillbert-Elliot model between servers, and
+2% bursty packet loss according to the Gillbert-Elliot model between external clients/attacker and servers,
+pareto delay distribution with 0.1ms delay with 0.025ms jitter and 25% correlation between servers,
+pareto delay distribution with 2ms delay with 0.5ms jitter and 25% correlation between servers and external clients/attacker,
+0.0025% packet out-of-order probability between servers with 25% correlation, 
+2% out-of-order probability between external clients/attacker and server with 25% correlation,
+0.00001% packet duplication on all links with 25% correlation,
+0.00001% packet corruption between servers and 0.02% packet corruption between external attacker/clients and the servers with 25% correlation
+
+
+
 
 ## Architecture
 <p align="center">

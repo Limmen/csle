@@ -15,49 +15,127 @@ def default_resource_constraints() -> ResourcesConfig:
     :return: generates the ResourcesConfig
     """
     node_resources_configurations = [
-        NodeResourcesConfig(ip="172.18.1.191", num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip="172.18.1.191", container_name="csle-ctf-hacker_kali_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
                             network_config=NodeNetworkConfig(
-                                limit_packets_queue=30000, transmission_delay_ms=0.1,
-                                transmission_delay_jitter_ms=0.01, transmission_delay_correlation_percentage=25,
-                                transmission_delay_distribution=PacketDelayDistributionType.NORMAL,
-                                packet_loss_type=PacketLossType.GEMODEL, packet_loss_rate_random_percentage=3,
-                                packet_loss_random_correlation_percentage=25,
-                                loss_state_markov_chain_p13=0.1, loss_state_markov_chain_p31=0.1,
-                                loss_state_markov_chain_p23=0.1, loss_state_markov_chain_p32=0.1,
-                                loss_state_markov_chain_p14=0.1, loss_gemodel_p=0.1, loss_gemodel_r=0.1,
-                                loss_gemodel_k=0.1, packet_corrupt_percentage=0.1,
-                                packet_corrupt_correlation_percentage=0.0, packet_duplicate_percentage=0.0,
-                                packet_duplicate_correlation_percentage=0.0, packet_reorder_percentage=0.0,
-                                packet_reorder_correlation_percentage=0.0,
-                                ingress_rate_limit_mbit=100, ingress_packet_overhead_bytes=0,
-                                ingress_cell_overhead_bytes=0
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=2,
+                                packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.02, loss_gemodel_r=0.97,
+                                loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=100, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.1.21", users=[
-            ("admin", "admin31151x", True),
-            ("test", "qwerty", True),
-            ("oracle", "abc123", False)
-        ]),
-        NodeResourcesConfig(ip="172.18.1.10", users=[
-            ("admin", "admin1235912", True),
-            ("jessica", "water", False)
-        ]),
-        NodeResourcesConfig(ip="172.18.1.2", users=[
-            ("admin", "test32121", True),
-            ("user1", "123123", True)
-        ]),
-        NodeResourcesConfig(ip="172.18.1.3", users=[
-            ("john", "doe", True),
-            ("vagrant", "test_pw1", False)
-        ])
+        NodeResourcesConfig(ip="172.18.1.254", container_name="csle-ctf-client_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=2,
+                                packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.02, loss_gemodel_r=0.97,
+                                loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=100, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            )),
+        NodeResourcesConfig(ip="172.18.1.21", container_name="csle-ctf-honeypot_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=0.1,
+                                packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                                loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=1000, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            )),
+        NodeResourcesConfig(ip="172.18.1.10", container_name="csle-ctf-router_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=0.1,
+                                packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                                loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=1000, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            )),
+        NodeResourcesConfig(ip="172.18.1.2", container_name="csle-ctf-ssh_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=0.1,
+                                packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                                loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=1000, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            )),
+        NodeResourcesConfig(ip="172.18.1.3", container_name="csle-ctf-telnet_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=0.1,
+                                packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                                loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=1000, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            )),
+        NodeResourcesConfig(ip="172.18.1.79", container_name="csle-ctf-ftp_1_1-level1",
+                            num_cpus = 1, available_memory_gb = 4,
+                            network_config=NodeNetworkConfig(
+                                interface="eth0",
+                                limit_packets_queue=30000, packet_delay_ms=0.1,
+                                packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                                packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                                packet_loss_type=PacketLossType.GEMODEL,
+                                loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                                loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                                packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                                packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                                rate_limit_mbit=1000, packet_overhead_bytes=0,
+                                cell_overhead_bytes=0
+                            ))
     ]
-    users_conf = ResourcesConfig(node_resources_configurations=node_resources_configurations)
-    return users_conf
+    resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
+    return resources_config
 
 
 # Generates the resources.json configuration file
 if __name__ == '__main__':
     if not os.path.exists(util.default_resources_path()):
-        ResourceConstraintsGenerator.write_resources_config_file(default_resource_constraints())
+        ResourceConstraintsGenerator.write_resources_config(resources_config=default_resource_constraints())
     resources_config = util.read_resources_config(util.default_resources_path())
     emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username=constants.csle_ADMIN.USER,
                                      agent_pw=constants.csle_ADMIN.PW, server_connection=False)

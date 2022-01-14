@@ -18,7 +18,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.csle" | debconf-set-selec
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
         dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
         wget apache2 irssi irssi-scripts screen openssh-server snmp mongodb-clients postgresql-client smbclient \
-        fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
+        fail2ban rsyslog netcat traceroute sysstat iproute2
 
 RUN apt-get install -y openssl libssl-dev -t wheezy-backports
 
@@ -52,7 +52,7 @@ ADD docker/vsftpd.conf /etc/vsftpd.conf
 RUN git clone https://github.com/Limmen/erl_pengine
 
 # Cassandra
-RUN wget http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
+RUN wget --no-check-certificate http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
     tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
     mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
 ADD docker/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
@@ -82,11 +82,11 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
 #RUN git clone https://github.com/nmap/nmap
 #RUN cd nmap && ./configure && make && make install
 
-RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
+RUN wget --no-check-certificate https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
      ./configure && make && make install
 
 # Cockroach DB
-RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
+RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup SNMP
@@ -107,11 +107,12 @@ RUN chmod 644 /etc/xinetd.d/telnet &&\
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+
+RUN wget --no-check-certificate \
+    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
     && mkdir /root/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh
+    && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
 
 # make non-activate conda commands available
 ENV PATH=$CONDA_DIR/bin:$PATH
@@ -136,12 +137,15 @@ RUN gcc -c -fpic bindshell-samba.c &&\
     chmod 777 /libbindshell-samba.so &&\
     chmod 777 /bindshell-samba.o &&\
     conda create --name samba python=2.7 -y
+
+# TODO Solve this
 # Make subsequent RUN commands use the samba env
-SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
-#RUN conda activate samba
-RUN pip install pycrypto==2.6 &&\
-    pip install git+git://github.com/opsxcq/impacket.git &&\
-    pip install pyasn1
+#SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
+
+# Install pycrpto, pyasn and impacket
+#RUN pip install pycrypto==2.6 &&\
+#    pip install git+git://github.com/opsxcq/impacket.git &&\
+#    pip install pyasn1
 
 # CVE-2015-3306 Exploit
 ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py

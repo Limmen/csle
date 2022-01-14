@@ -41,8 +41,8 @@ class ContainerGenerator:
         :return: a containers configuration
         """
 
-        network = constants.csle.csle_NET_PREFIX + str(subnet_id)
-        minigame = constants.csle.CTF_MINIGAME
+        network = constants.CSLE.csle_NET_PREFIX + str(subnet_id)
+        minigame = constants.CSLE.CTF_MINIGAME
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))
         container_configs = []
@@ -55,7 +55,7 @@ class ContainerGenerator:
                 container = agent_containers[random.randint(0, len(agent_containers)-1)]
             elif ip == router_ip:
                 container = router_containers[random.randint(0, len(router_containers) - 1)]
-                if container[0] == constants.csle.NON_IDS_ROUTER:
+                if container[0] == constants.CSLE.NON_IDS_ROUTER:
                     ids_enabled = False
             else:
                 gw_node = False

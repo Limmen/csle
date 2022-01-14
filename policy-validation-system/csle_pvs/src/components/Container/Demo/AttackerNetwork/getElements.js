@@ -35,7 +35,7 @@ const getNodes = (base_position = {x: 0, y: 0}) => {
             id: 'client',
             type: 'client',
             className: "nodrag",
-            data: {label: 'client1', text:'Client population'},
+            data: {label: 'client_1', text:'Client population'},
             position: {x: clientBaseX, y: clientBaseY},
             isHidden : false
         },

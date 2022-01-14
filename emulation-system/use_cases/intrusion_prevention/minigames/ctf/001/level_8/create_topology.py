@@ -11,7 +11,7 @@ def default_topology() -> Topology:
     """
     :return: the Topology of the emulation
     """
-    node_1 = NodeFirewallConfig(ip="172.18.8.10", hostname="router2",
+    node_1 = NodeFirewallConfig(ip="172.18.8.10", hostname="router_2_1",
                            output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79",
                                               "172.18.8.191", "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.19",
                                               "172.18.8.31",
@@ -44,7 +44,7 @@ def default_topology() -> Topology:
                            default_input = "DROP", default_output = "DROP", default_forward="DROP",
                            default_gw=None
                            )
-    node_2 = NodeFirewallConfig(ip="172.18.8.2", hostname="ssh1",
+    node_2 = NodeFirewallConfig(ip="172.18.8.2", hostname="ssh_1_1",
                        output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                           "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.19", "172.18.8.31",
                                           "172.18.8.42",
@@ -58,7 +58,7 @@ def default_topology() -> Topology:
                        forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set(),
                        default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                        )
-    node_3 = NodeFirewallConfig(ip="172.18.8.3", hostname="telnet1",
+    node_3 = NodeFirewallConfig(ip="172.18.8.3", hostname="telnet_1_1",
                            output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                               "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.19", "172.18.8.31",
                                               "172.18.8.42",
@@ -71,7 +71,7 @@ def default_topology() -> Topology:
                                              "172.18.8.11"]),
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                             default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_4 = NodeFirewallConfig(ip="172.18.8.21", hostname="honeypot1_1",
+    node_4 = NodeFirewallConfig(ip="172.18.8.21", hostname="honeypot_1_1",
                            output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21",
                                                 "172.18.8.79", "172.18.8.191", "172.18.8.10", "172.18.8.1",
                                               "172.18.8.254",
@@ -85,7 +85,7 @@ def default_topology() -> Topology:
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                            default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                            )
-    node_5 = NodeFirewallConfig(ip="172.18.8.79", hostname="ftp1",
+    node_5 = NodeFirewallConfig(ip="172.18.8.79", hostname="ftp_1_1",
                            output_accept=set(
                                ["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                 "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.19", "172.18.8.31",
@@ -97,7 +97,7 @@ def default_topology() -> Topology:
                                              "172.18.8.11", "172.18.8.51"]),
                            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                            default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_6 = NodeFirewallConfig(ip="172.18.8.19", hostname="samba1_1",
+    node_6 = NodeFirewallConfig(ip="172.18.8.19", hostname="samba_1_1",
                                 output_accept=set(
                                     ["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                      "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.79", "172.18.8.31",
@@ -111,7 +111,7 @@ def default_topology() -> Topology:
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
                                 default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_7 = NodeFirewallConfig(ip="172.18.8.31", hostname="shellshock1_1",
+    node_7 = NodeFirewallConfig(ip="172.18.8.31", hostname="shellshock_1_1",
                                 output_accept=set(
                                     ["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                      "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.79", "172.18.8.42",
@@ -125,7 +125,7 @@ def default_topology() -> Topology:
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
                                 default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_8 = NodeFirewallConfig(ip="172.18.8.42", hostname="sql_injection1_1",
+    node_8 = NodeFirewallConfig(ip="172.18.8.42", hostname="sql_injection_1_1",
                                 output_accept=set(
                                     ["172.18.8.2", "172.18.8.3", "172.18.8.21", "172.18.8.79", "172.18.8.191",
                                      "172.18.8.10", "172.18.8.1", "172.18.8.254", "172.18.8.79", "172.18.8.37",
@@ -206,7 +206,7 @@ def default_topology() -> Topology:
                                  forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                  routes=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None)
-    node_14 = NodeFirewallConfig(ip="172.18.8.51", hostname="ssh1_2",
+    node_14 = NodeFirewallConfig(ip="172.18.8.51", hostname="ssh_1_2",
                                  output_accept=set(
                                      ["172.18.8.79", "172.18.8.1", "172.18.8.254", "172.18.8.82"]),
                                  input_accept=set(
@@ -215,7 +215,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_15 = NodeFirewallConfig(ip="172.18.8.52", hostname="ssh1_3",
+    node_15 = NodeFirewallConfig(ip="172.18.8.52", hostname="ssh_1_3",
                                 output_accept=set(
                                     ["172.18.8.2", "172.18.8.1", "172.18.8.254", "172.18.8.54"]),
                                 input_accept=set(
@@ -224,7 +224,7 @@ def default_topology() -> Topology:
                                 forward_drop=set(),
                                 default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                 )
-    node_16 = NodeFirewallConfig(ip="172.18.8.53", hostname="honeypot1_2",
+    node_16 = NodeFirewallConfig(ip="172.18.8.53", hostname="honeypot_1_2",
                                  output_accept=set(
                                      ["172.18.8.82", "172.18.8.1", "172.18.8.254"]),
                                  input_accept=set(
@@ -233,7 +233,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_17 = NodeFirewallConfig(ip="172.18.8.54", hostname="samba1_2",
+    node_17 = NodeFirewallConfig(ip="172.18.8.54", hostname="samba_1_2",
                                  output_accept=set(
                                      ["172.18.8.52", "172.18.8.1", "172.18.8.254", "172.18.8.55"]),
                                  input_accept=set(
@@ -242,7 +242,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_18 = NodeFirewallConfig(ip="172.18.8.55", hostname="shellshock1_2",
+    node_18 = NodeFirewallConfig(ip="172.18.8.55", hostname="shellshock_1_2",
                                  output_accept=set(
                                      ["172.18.8.54", "172.18.8.1", "172.18.8.254", "172.18.8.56"]),
                                  input_accept=set(
@@ -251,7 +251,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_19 = NodeFirewallConfig(ip="172.18.8.56", hostname="sql_injection1_2",
+    node_19 = NodeFirewallConfig(ip="172.18.8.56", hostname="sql_injection_1_2",
                                  output_accept=set(
                                      ["172.18.8.55", "172.18.8.1", "172.18.8.254", "172.18.8.57"]),
                                  input_accept=set(
@@ -305,7 +305,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_25 = NodeFirewallConfig(ip="172.18.8.62", hostname="ssh1_4",
+    node_25 = NodeFirewallConfig(ip="172.18.8.62", hostname="ssh_1_4",
                                  output_accept=set(
                                      ["172.18.8.61", "172.18.8.1", "172.18.8.254"]),
                                  input_accept=set(
@@ -314,7 +314,7 @@ def default_topology() -> Topology:
                                  forward_drop=set(),
                                  default_input="DROP", default_output="DROP", default_forward="DROP", default_gw=None
                                  )
-    node_26 = NodeFirewallConfig(ip="172.18.8.191", hostname="hacker_kali1",
+    node_26 = NodeFirewallConfig(ip="172.18.8.191", hostname="hacker_kali_1_1",
                        output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21",
                                           "172.18.8.79", "172.18.8.191", "172.18.8.10", "172.18.8.1"
                                           "172.18.8.19", "172.18.8.31", "172.18.8.42", "172.18.8.37", "172.18.8.82",
@@ -334,7 +334,7 @@ def default_topology() -> Topology:
                                          ]),
                        forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
                        default_input="DROP", default_output="DROP", default_forward="DROP", default_gw="172.18.8.10")
-    node_27 = NodeFirewallConfig(ip="172.18.8.254", hostname="client1",
+    node_27 = NodeFirewallConfig(ip="172.18.8.254", hostname="client_1_1",
                                  output_accept=set(["172.18.8.2", "172.18.8.3", "172.18.8.21",
                                                     "172.18.8.79", "172.18.8.10", "172.18.8.1",
                                                     "172.18.8.254",

@@ -33,7 +33,7 @@ clean_fs_cache:
 traffic: create_traffic_generators.py
 	python create_traffic_generators.py
 
-# Stops the traffoc generators in the emulation
+# Stops the traffic generators in the emulation
 stop_traffic: stop_traffic_generators.py
 	python stop_traffic_generators.py
 

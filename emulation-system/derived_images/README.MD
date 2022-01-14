@@ -27,83 +27,83 @@ generate containers for emulating various network infrastructures.
      - OS: Debian:Jessie. 
      - Inherits from `cve_2010_0426_1`.
      - Services: ssh, apache2, SMTPD
-- `hacker_kali1` ([hacker_kali1](./hacker_kali1)): a Kali image, used to generate containers with tools for penetration testing. 
+- `hacker_kali_1` ([hacker_kali_1](./hacker_kali_1)): a Kali image, used to generate containers with tools for penetration testing. 
      - OS: Kali (Latest). 
      - Inherits from `kali_base`.
      - Services: ssh
-- `samba1` ([samba1](./samba1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy. 
+- `samba_1` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy. 
      - OS: Debian:Jessie. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba
-- `samba2` ([samba1](./samba1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server. 
+- `samba_2` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server. 
      - OS: Debian:Jessie. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba, telnet     
-- `shellshock1` ([shellshock1](./shellshock1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy. 
+- `shellshock_1` ([shellshock_1](./shellshock_1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy. 
      - OS: Debian:Wheezy. 
      - Inherits from `shellshock_base`.
      - Services: ssh, SNMP, apache2
-- `sql_injection1` ([sql_injection1](./sql_injection1)): an image with a webapp that is vulnerable to SQL injections. 
+- `sql_injection_1` ([sql_injection_1](./sql_injection_1)): an image with a webapp that is vulnerable to SQL injections. 
      - OS: Debian:9.2. 
      - Inherits from `sql_injection_base`.
      - Services: IRC, apache2, ssh
-- `ftp1` ([ftp1](./ftp1)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ftp_1` ([ftp_1](./ftp_1)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:14. 
      - Inherits from `ubuntu_14_base`.
      - Services: VSFTPD, MongoDB, SMTP, tomcat, teamspeak3, ssh
-- `ftp2` ([ftp2](./ftp2)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ftp_2` ([ftp_2](./ftp_2)): an image with a FTP server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:14. 
      - Inherits from `ubuntu_14_base`.
      - Services: VSFTPD, ssh, DNS
-- `ssh1` ([ssh1](./ssh1)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_1` ([ssh_1](./ssh_1)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, erl_pengine webapp, DNS
-- `ssh2` ([ssh2](./ssh2)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_2` ([ssh_2](./ssh_2)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, DNS, NTP
-- `ssh3` ([ssh3](./ssh3)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
+- `ssh_3` ([ssh_3](./ssh_3)): an image with a SSH server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ssh_base`.
      - Services: ssh, IRC, RethinkDB
-- `telnet1` ([telnet1](./telnet1)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_1` ([telnet_1](./telnet_1)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Flask server, telnet
-- `telnet2` ([telnet2](./telnet2)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_2` ([telnet_2](./telnet_2)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, telnet, CockroachDB
-- `telnet3` ([telnet3](./telnet3)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
+- `telnet_3` ([telnet_3](./telnet_3)): an image with a Telnet server that can be used to generate containers vulnerable to brute-force attacks. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Glassfish, telnet
-- `honeypot1` ([honeypot1](./honeypot1)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
+- `honeypot_1` ([honeypot_1](./honeypot_1)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, IRC, SNMP, SMTP, PostgreSQL, NTP
-- `honeypot2` ([honeypot2](./honeypot2)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
+- `honeypot_2` ([honeypot_2](./honeypot_2)): an image with a set of arbitrary network services that can be used to generate honeypot containers. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, SNMP, PostgreSQL, IRC, NTP
-- `router1` ([router1](./router1)): an image without any particular services that can be used to generate containers acting as gateways. 
+- `router_1` ([router_1](./router_1)): an image without any particular services that can be used to generate containers acting as gateways. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh
-- `router2` ([router2](./router1)): an image with the Snort IDS that can be used to generate containers acting as gateways. 
+- `router_2` ([router_2](./router_1)): an image with the Snort IDS that can be used to generate containers acting as gateways. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh, Snort
-- `client1` ([client1](./client1)): an image without any particular services that can be used to generate containers acting as clients. 
+- `client_1` ([client_1](./client_1)): an image without any particular services that can be used to generate containers acting as clients. 
      - OS: Ubuntu:20. 
      - Inherits from `ubuntu_20_base`.
      - Services: ssh
- - `blank1` ([blank1](./blank1)): a blank image for testing purposes 
+ - `blank_1` ([blank_1](./blank_1)): a blank image for testing purposes 
      - OS: Ubuntu:20. 
      - Inherits from `blank_ubuntu_20`.
      - Services: None
-- `pengine_exploit1` ([pengine_exploit1](./pengine_exploit1)): an image with a vulnerable Prolog SLD Pengine Server 
+- `pengine_exploit_1` ([pengine_exploit_1](./pengine_exploit_1)): an image with a vulnerable Prolog SLD Pengine Server 
      - OS: Ubuntu:20. 
      - Inherits from `pengine_exploit_base`.
      - Services: Pengine server, SSH
@@ -115,31 +115,31 @@ make rm-image # Delete all base images
 make build # Build all base images
 make all # Build all base images
 
-make samba1 # Build samba1
-make shellshock1 # Build shellshock1
-make sql_injection1 # Build sql_injection1
+make samba_1 # Build samba_1
+make shellshock_1 # Build shellshock_1
+make sql_injection_1 # Build sql_injection_1
 make debian_jessie_base # Build debian_jessie_1
 make cve_2015_3306_1 # Build cve_2015_3306_1
 make cve_2015_1427_1 # Build cve_2015_1427_1
 make cve_2016_10033_1 # Build cve_2016_10033_1
 make cve_2010_0426_1 # Build cve_2010_0426_1
 make cve_2015_5602_1 # Build cve_2010_0426_1
-make ftp1 # Build ftp1
-make ftp2 # Build ftp2
-make hacker_kali1 # Build hacker_kali1
-make honeypot1 # Build honeypot1
-make honeypot2 # Build honeypot2
-make router1 # Build router1
-make router2 # Build router2
-make ssh1 # Build ssh1
-make ssh2 # Build ssh2
-make ssh3 # Build ssh3
-make telnet1 # Build telnet1
-make telnet2 # Build telnet2
-make telnet3 # Build telnet3
-make client1 # Build client1
-make blank1 # Build blank1
-make pengine_exploit1 # Build pengine_exploit1
+make ftp_1 # Build ftp_1
+make ftp_2 # Build ftp_2
+make hacker_kali_1 # Build hacker_kali_1
+make honeypot_1 # Build honeypot_1
+make honeypot_2 # Build honeypot_2
+make router_1 # Build router_1
+make router_2 # Build router_2
+make ssh_1 # Build ssh_1
+make ssh_2 # Build ssh_2
+make ssh_3 # Build ssh_3
+make telnet_1 # Build telnet_1
+make telnet_2 # Build telnet_2
+make telnet_3 # Build telnet_3
+make client_1 # Build client_1
+make blank_1 # Build blank_1
+make pengine_exploit_1 # Build pengine_exploit_1
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

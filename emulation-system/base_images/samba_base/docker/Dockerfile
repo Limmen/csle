@@ -37,7 +37,7 @@ ADD docker/vsftpd.conf /etc/vsftpd.conf
 RUN git clone https://github.com/Limmen/erl_pengine
 
 # Cassandra
-RUN wget http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
+RUN wget --no-check-certificate http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
     tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
     mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
 ADD docker/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
@@ -67,11 +67,11 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
 #RUN git clone https://github.com/nmap/nmap
 #RUN cd nmap && ./configure && make && make install
 
-RUN wget https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
+RUN wget --no-check-certificate https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
      ./configure && make && make install
 
 # Setup Tomcat
-RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
+RUN wget --no-check-certificate https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.1/bin/apache-tomcat-8.0.1.tar.gz &&\
     tar xvzf apache-tomcat-8.0.1.tar.gz &&\
     mv apache-tomcat-8.0.1 /usr/local/tomcat &&\
     mv /usr/local/tomcat/conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml.bak
@@ -83,7 +83,7 @@ RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/se
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
 
 # Cockroach DB
-RUN wget https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
+RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1.8.linux-amd64.tgz &&\
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup SNMP
@@ -104,7 +104,7 @@ RUN chmod 644 /etc/xinetd.d/telnet &&\
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN wget \
+RUN wget --no-check-certificate \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
@@ -146,7 +146,7 @@ RUN pip install flask &&\
     pip install waitress
 
 # Setup glassfish
-RUN wget http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
+RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
     unzip latest-glassfish.zip
 
 # DWVA WebApp Exploit

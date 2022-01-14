@@ -20,9 +20,9 @@ class ContainerManager:
 
         :return: None
         """
-        client1 = docker.from_env()
-        containers = client1.containers.list()
-        containers = list(filter(lambda x: constants.OS.KALI in x.name, containers))
+        client_1 = docker.from_env()
+        containers = client_1.containers.list()
+        containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
         for c in containers:
             print("Stopping container: {}".format(c.name))
             c.stop()
@@ -34,11 +34,11 @@ class ContainerManager:
 
         :return: None
         """
-        client1 = docker.from_env()
-        containers = client1.containers.list(all=True)
-        containers = list(filter(lambda x: (constants.csle.NAME in x.name
-                                           and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
+        client_1 = docker.from_env()
+        containers = client_1.containers.list(all=True)
+        containers = list(filter(lambda x: (constants.CSLE.NAME in x.name
+                                            and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                            or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
             print(f"Removing container: {c.name}")
             c.remove()
@@ -50,8 +50,8 @@ class ContainerManager:
 
         :return: None
         """
-        client1 = docker.from_env()
-        images = client1.images.list()
+        client_1 = docker.from_env()
+        images = client_1.images.list()
         images = list(filter(lambda x: constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
         non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
@@ -66,13 +66,13 @@ class ContainerManager:
                                      base_images))
         for img in non_base_images:
             print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
-            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+            client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in non_os_base_images:
             print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
-            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+            client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in os_base_images:
             print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
-            client1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+            client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
 
     @staticmethod
     def list_all_images() -> List[str]:
@@ -81,9 +81,9 @@ class ContainerManager:
 
         :return: a list of the csle images
         """
-        client1 = docker.from_env()
-        images = client1.images.list()
-        images = list(filter(lambda x: constants.csle.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
+        client_1 = docker.from_env()
+        images = client_1.images.list()
+        images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
         images_names = list(map(lambda x: x.attrs[constants.DOCKER.REPO_TAGS][0], images))
         return images_names
 
@@ -108,8 +108,8 @@ class ContainerManager:
         """
         if path == None:
             path = util.default_output_dir()
-        client1 = docker.from_env()
-        project = constants.csle.NAME
+        client_1 = docker.from_env()
+        project = constants.CSLE.NAME
         ContainerGenerator.write_containers_config(containers_config=containers_config, path=path)
         for idx, c in enumerate(containers_config.containers):
             container = c.name
@@ -117,7 +117,7 @@ class ContainerManager:
             image = project + constants.COMMANDS.SLASH_DELIM + container + constants.COMMANDS.COLON_DELIM + version
             suffix = str(idx)
             name = project + constants.COMMANDS.DASH_DELIM + c.minigame + constants.COMMANDS.DASH_DELIM + container \
-                   + suffix + constants.COMMANDS.DASH_DELIM + constants.csle.LEVEL + c.level
+                   + suffix + constants.COMMANDS.DASH_DELIM + constants.CSLE.LEVEL + c.level
             labels = {}
             labels[constants.DOCKER.CONTAINER_CONFIG_DIR]=path
             labels[constants.DOCKER.CONTAINER_CONFIG_CFG]=path + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH
@@ -132,7 +132,7 @@ class ContainerManager:
             labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG] = \
                 path + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH
             print("Running container: {}".format(name))
-            client1.containers.run(image=image, name=name, hostname=name,
+            client_1.containers.run(image=image, name=name, hostname=name,
                                    detach=True, tty=True, network=c.network, labels=labels,
                                    publish_all_ports=True, cap_add=[constants.DOCKER.NET_ADMIN])
 
@@ -143,11 +143,11 @@ class ContainerManager:
 
         :return: None
         """
-        client1 = docker.from_env()
-        containers = client1.containers.list(all=True)
-        containers = list(filter(lambda x: (constants.csle.NAME in x.name
-                                           and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                           or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
+        client_1 = docker.from_env()
+        containers = client_1.containers.list(all=True)
+        containers = list(filter(lambda x: (constants.CSLE.NAME in x.name
+                                            and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                            or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
             print("Starting container: {}".format(c.name))
             c.start()
@@ -172,9 +172,9 @@ class ContainerManager:
 
         :return: a list of the stopped containers
         """
-        client1 = docker.from_env()
+        client_1 = docker.from_env()
         client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-        parsed_stopped_containers = EnvInfo.parse_stopped_containers(client1=client1, client2=client2)
+        parsed_stopped_containers = EnvInfo.parse_stopped_containers(client_1=client_1, client2=client2)
         container_names = list(map(lambda x: x.name, parsed_stopped_containers))
         return container_names
 

@@ -117,9 +117,9 @@ def parse_stats(x):
 
 
 def docker_stats2():
-    client1 = docker.from_env()
+    client_1 = docker.from_env()
     client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-    parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
+    parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
     streams = []
     for pc in parsed_containers:
         stream=pc.container_handle.stats(decode=True, stream=True)
@@ -144,9 +144,9 @@ def docker_stats2():
             #     print(f"cont: {pc.name}, CPU:{cpu}")
 
 def docker_stats():
-    client1 = docker.from_env()
+    client_1 = docker.from_env()
     client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-    parsed_containers = EnvInfo.parse_running_containers(client1=client1, client2=client2)
+    parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
     for pc in parsed_containers:
         stream=pc.container_handle.stats(decode=True, stream=True)
         for i in stream:

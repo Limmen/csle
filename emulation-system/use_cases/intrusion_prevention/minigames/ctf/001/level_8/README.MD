@@ -44,12 +44,12 @@ make cve_2015_5602_1_1 # Run 1st container with the CVE-2015-5602 vulnerability
 make cve_2015_5602_1_2 # Run 2nd container with the CVE-2015-5602 vulnerability
 make cve_2016_10033_1_1 # Run 1st container with the CVE-2016-10033 vulnerability
 make cve_2016_10033_1_2 # Run 2nd container with the CVE-2016-10033 vulnerability
-make samba1_1 # Run 1st container with th SambaCry vulnerability
-make samba1_2 # Run 2nd container with th SambaCry vulnerability
-make shellshock1_1 # Run 1st container with the Shellshock vulnerability
-make shellshock1_2 # Run 2nd container with the Shellshock vulnerability
-make sql_injection1_1 # Run 1st container with a SQL Injection vulnerability
-make sql_injection1_2 # Run 2nd container with a SQL Injection vulnerability 
+make samba_1_1 # Run 1st container with th SambaCry vulnerability
+make samba_1_2 # Run 2nd container with th SambaCry vulnerability
+make shellshock_1_1 # Run 1st container with the Shellshock vulnerability
+make shellshock_1_2 # Run 2nd container with the Shellshock vulnerability
+make sql_injection_1_1 # Run 1st container with a SQL Injection vulnerability
+make sql_injection_1_2 # Run 2nd container with a SQL Injection vulnerability 
 make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
 make traffic # create traffic generators and start them on each node
@@ -60,7 +60,9 @@ docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
 docker container prune # remove stopped containers
-sudo useradd -rm -d /home/csle_admin -s /bin/bash -g root -G sudo -p "$(openssl passwd -1 'csle@admin-pw_191')" csle_admin   
+sudo useradd -rm -d /home/csle_admin -s /bin/bash -g root -G sudo -p "$(openssl passwd -1 'csle@admin-pw_191')" csle_admin
+docker run --name=iperf3 -d --restart=unless-stopped -p 5201:5201/tcp -p 5201:5201/udp mlabbe/iperf3 # Start the iperf server on the host
+iperf3 -R -c <SERVER> # network performance, where <SERVER> is the IP where the iperf server is running e.g. the host 172.31.212.92   
 ```
 
 ## Author & Maintainer

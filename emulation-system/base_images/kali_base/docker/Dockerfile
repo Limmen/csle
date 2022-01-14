@@ -52,13 +52,13 @@ ADD docker/sudoers /etc/sudoers
 
 # 1. Download nmap-services
 # 2. Download CVEs
-RUN wget https://raw.githubusercontent.com/nmap/nmap/master/nmap-services &&\
-    wget https://cve.mitre.org/data/downloads/allitems.csv
+RUN wget --no-check-certificate https://raw.githubusercontent.com/nmap/nmap/master/nmap-services &&\
+    wget --no-check-certificate https://cve.mitre.org/data/downloads/allitems.csv
 
 # Conda
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
-RUN wget \
+RUN wget --no-check-certificate \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \

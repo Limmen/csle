@@ -23,13 +23,13 @@ class DockerStatsThread(threading.Thread):
         threading.Thread.__init__(self)
         self.jumphost_ip = jumphost_ip
         if jumphost_ip is not None:
-            self.client1 = docker.DockerClient(base_url=constants.DOCKER.SSH_PREFIX + jumphost_ip)
+            self.client_1 = docker.DockerClient(base_url=constants.DOCKER.SSH_PREFIX + jumphost_ip)
             self.client2 = docker.APIClient(base_url=constants.DOCKER.SSH_PREFIX + jumphost_ip)
         else:
-            self.client1 = docker.from_env()
+            self.client_1 = docker.from_env()
             self.client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
 
-        self.containers = EnvInfo.parse_running_containers(client1=self.client1, client2=self.client2)
+        self.containers = EnvInfo.parse_running_containers(client_1=self.client_1, client2=self.client2)
 
         streams = []
         for container in self.containers:

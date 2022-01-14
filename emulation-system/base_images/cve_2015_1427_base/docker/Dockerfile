@@ -4,7 +4,7 @@ FROM csle/debian_jessie_base:0.0.1
 USER root
 
 # configure vuln application
-RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.2.tar.gz && \
+RUN wget --no-check-certificate https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.2.tar.gz && \
     tar xfz elasticsearch-1.4.2.tar.gz && \
     mv elasticsearch-1.4.2 elasticsearch
 ADD docker/main.sh /main.sh
