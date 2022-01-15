@@ -88,7 +88,7 @@ def training_attacker():
 @app.route('/trajectories')
 def trajectories():
     taus: dict = Trajectory.load_trajectories_json(
-        trajectories_save_dir="/",
+        trajectories_save_dir="./",
         trajectories_file="one_tau.json")
     response = jsonify(taus)
     response.headers.add("Access-Control-Allow-Origin", "*")

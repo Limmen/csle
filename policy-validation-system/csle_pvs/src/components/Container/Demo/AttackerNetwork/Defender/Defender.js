@@ -14,7 +14,7 @@ const Defender = ({ data }) => {
         <div style={defenderStyles}>
             <Handle type="target" position="top" style={{ borderRadius: 0 }} />
             <img src={laptop} className="defender" alt="defender" width="100%" height="100%"/>
-            <div>{data.text}</div>
+            <div className="largeFont">{data.text}</div>
         </div>
     );
 };

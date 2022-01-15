@@ -12,7 +12,7 @@ const attackerStyles = {
 const Attacker = ({ data }) => {
     return (
         <div style={attackerStyles}>
-            <div>{data.text}</div>
+            <div className="largeFont">{data.text}</div>
             <img src={hacker} className="attacker" alt="attacker" width="25%" height="25%"/>
             <Handle type="source" position="bottom" style={{ borderRadius: 0 }} />
         </div>

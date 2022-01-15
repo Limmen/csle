@@ -8,8 +8,7 @@ import {
     AreaChart,
     CartesianGrid,
     Label,
-    Legend, Line,
-    LineChart,
+    Legend,
     BarChart,
     Bar,
     ResponsiveContainer,
@@ -147,7 +146,7 @@ const Demo = (props) => {
             for (let i = 0; i <= props.t; i++) {
                 data.push({
                     t: i + 1,
-                    "Stopping Probability": props.traces[props.activeTrace].defender_stop_probabilities[i],
+                    "Probability of next defensive action": props.traces[props.activeTrace].defender_stop_probabilities[i],
                     Belief: props.traces[props.activeTrace].defender_beliefs[i]
                 })
                 probs.push(props.traces[props.activeTrace].defender_stop_probabilities[i])
@@ -185,22 +184,22 @@ const Demo = (props) => {
                         </defs>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain} ticks={ticks}>
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
+                            <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number" domain={range}>
-                            <Label angle={270} value="Probability" offset={0} position="insideLeft"/>
+                            <Label angle={270} value="Probability" offset={0} position="insideLeft" className="largeFont"/>
                         </YAxis>
                         <Tooltip/>
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
                                        stroke="black" label={{
                             position: 'insideTopRight',
                             value: 'Intrusion starts', fill: 'black',
-                            fontSize: 14, marginTop: "10px"
+                            fontSize: 22, marginTop: "10px"
                         }} strokeDasharray="3 3"/>
                         <ReferenceLine y={0.5}
                                        stroke="black" strokeDasharray="5 5 " />
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
-                        <Area type="monotone" dataKey="Stopping Probability" stroke="#8884d8"
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative',fontSize:'22px'}} className="largeFont"/>
+                        <Area type="monotone" dataKey="Probability of next defensive action" stroke="#8884d8"
                               isAnimationActive={animation} fillOpacity={1} fill="url(#colorProb)"
                               animationEasing={'linear'}
                               animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}/>
@@ -271,17 +270,17 @@ const Demo = (props) => {
                         <XAxis dataKey="t" type="number" domain={domain}
                                ticks={ticks}
                         >
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
+                            <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
+                            <Label angle={270} value="Value" offset={0} position="insideLeft" className="largeFont"/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize:'22px'}} className="largeFont"/>
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
                                        stroke="black" label={{ position: 'insideTopRight',
                             value: 'Intrusion starts', fill: 'black',
-                            fontSize: 14, marginTop:"10px"}} strokeDasharray="3 3"
+                            fontSize: 22, marginTop:"10px"}} strokeDasharray="3 3"
                          />
                         <Bar dataKey="Severe Alerts Δx" fill="#8884d8" stroke="black" animationEasing={'linear'}
                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
@@ -342,17 +341,17 @@ const Demo = (props) => {
                         <XAxis dataKey="t" type="number" domain={domain}
                                ticks={ticks}
                         >
-                            <Label value="Time-step t" offset={-20} position="insideBottom"/>
+                            <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="Value" offset={0} position="insideLeft"/>
+                            <Label angle={270} value="Value" offset={0} position="insideLeft" className="largeFont"/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative'}}/>
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize:'22px'}} className="largeFont"/>
                         <ReferenceLine x={props.traces[props.activeTrace].intrusion_start_index}
                                        stroke="black" label={{ position: 'insideTopRight',
                             value: 'Intrusion starts', fill: 'black',
-                            fontSize: 14, marginTop:"10px"}} strokeDasharray="3 3"
+                            fontSize: 22, marginTop:"10px"}} strokeDasharray="3 3"
                         />
                         <Bar dataKey="Severe Alerts ΣΔx" fill="#8884d8" stroke="black" animationEasing={'linear'}
                              animationDuration={((1 - (animationDuration / 100)) * animiationDurationFactor)}
@@ -452,9 +451,10 @@ const Demo = (props) => {
             <div className="row contentRow policyRow">
                 <div className="col-sm-6">
                     <div className="row">
-                        <div className="DefenderPolicy row justify-content-center card">
-                            <div className="card-header cardHeader"><h4>Stopping probability πΘ(stop|h) and Belief
-                                b(1)</h4></div>
+                        <div className="DefenderPolicy row justify-content-center card demoCard">
+                            <div className="card-header cardHeader"><h4>
+                                Probability of defensive action πΘ(a|h) and belief about intrusion b(1)
+                            </h4></div>
                             <div className="card-body">
                                 <PolicyAndBeliefAreaChart traces={props.traces} activeTrace={props.activeTrace}
                                                           t={props.t}/>
@@ -481,7 +481,7 @@ const Demo = (props) => {
                     <div className="row">
                         <div className="DefenderObservations row justify-content-center card">
                             <div className="card-header cardHeader">
-                                <h4>Observations o = (Δx, Δy, Δz)</h4>
+                                <h4>Measured infrastructure metrics (Δx, Δy, Δz)</h4>
                             </div>
                             <div className="card-body">
                                 <DeltaAlertsLineChart traces={props.traces} activeTrace={props.activeTrace}
@@ -506,40 +506,42 @@ const Demo = (props) => {
                         </div>
                     </div>
                     <h4 className="deltaAlertsRow"></h4>
-                    <div className="row">
-                        <div className="DefenderAggregatedObservations row justify-content-center card">
-                            <div className="card-header cardHeader">
-                                <h4>Accumulated Observations Σ o = (Σ Δx, Σ Δy, Σ Δz)</h4>
-                            </div>
-                            <div className="card-body">
-                                <AggregatedAlertsLineChart traces={props.traces} activeTrace={props.activeTrace}
-                                                           t={props.t}/>
-                            </div>
-                            <div className="row evolutionRow">
-                                <div className="col-sm-4">
-                                    <p className="defenderPolicyPlotSliderLabel">Evolution speed:</p>
-                                </div>
-                                <div className="col-sm-4">
-                                    <Slider
-                                        className="defenderPolicyPlotSlider"
-                                        min={0}
-                                        max={100}
-                                        value={animationDuration}
-                                        onChange={onSliderChange}
-                                    />
-                                </div>
-                                <div className="col-sm-8">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/*<div className="row">*/}
+                    {/*     <div className="DefenderAggregatedObservations row justify-content-center card"> */}
+                    {/*        <div className="card-header cardHeader"> */}
+                    {/*            <h4>Accumulated Observations Σ o = (Σ Δx, Σ Δy, Σ Δz)</h4> */}
+                    {/*         </div>  */}
+                    {/*        <div className="card-body">*/}
+                    {/*            <AggregatedAlertsLineChart traces={props.traces} activeTrace={props.activeTrace}*/}
+                    {/*                                       t={props.t}/>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="row evolutionRow">*/}
+                    {/*            <div className="col-sm-4">*/}
+                    {/*                 <p className="defenderPolicyPlotSliderLabel">Evolution speed:</p> */}
+                    {/*            </div> */}
+                    {/*             <div className="col-sm-4"> */}
+                    {/*                <Slider*/}
+                    {/*                    className="defenderPolicyPlotSlider"*/}
+                    {/*                    min={0}*/}
+                    {/*                    max={100}*/}
+                    {/*                    value={animationDuration}*/}
+                    {/*                    onChange={onSliderChange}*/}
+                    {/*                />*/}
+                    {/*            </div>*/}
+                    {/*            <div className="col-sm-8">*/}
+                    {/*            </div>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
                 <div className="col-sm-6">
                     <div className="DefenderObservations row justify-content-center card">
-                        <div className="card-header cardHeader"><h4>Intrusion State</h4></div>
+                        <div className="card-header cardHeader"><h4>
+                            State of the IT-Infrastructure and the Attacker's View
+                        </h4></div>
                         <div className="card-body">
                             <div className="row">
-                                <div className="Network col-sm-9">
+                                <div className="Network col-sm-12">
                                     {/*<h4 className="attackerNetworkTitle"> IT Infrastructure Status </h4>*/}
                                     <div className="layoutflow">
                                         <ReactFlowProvider>
@@ -558,18 +560,18 @@ const Demo = (props) => {
                                         </ReactFlowProvider>
                                     </div>
                                 </div>
-                                <div className="col-sm-3">
-                                    <h6>Intrusion started:
-                                        <IntrusionStarted traces={props.traces} activeTrace={props.activeTrace}
-                                                          l={props.l} t={props.t}/></h6>
-                                    <h6 className="intrusionStateInfo">Defensive measures:</h6>
-                                    <DefensiveMeasures traces={props.traces} activeTrace={props.activeTrace} l={props.l}
-                                                       t={props.t}/>
-                                    <h6 className="intrusionStateInfo">Last 4 attacker actions:</h6>
-                                    <AttackerActions traces={props.traces} activeTrace={props.activeTrace} l={props.l}
-                                                     t={props.t}/>
-                                    <h6 className="intrusionStateInfo"># Compromised nodes:{numCompromised(props)}</h6>
-                                </div>
+                                {/*<div className="col-sm-3">*/}
+                                {/*    <h6>Intrusion started:*/}
+                                {/*        <IntrusionStarted traces={props.traces} activeTrace={props.activeTrace}*/}
+                                {/*                          l={props.l} t={props.t}/></h6>*/}
+                                {/*    <h6 className="intrusionStateInfo">Defensive measures:</h6>*/}
+                                {/*    <DefensiveMeasures traces={props.traces} activeTrace={props.activeTrace} l={props.l}*/}
+                                {/*                       t={props.t}/>*/}
+                                {/*    <h6 className="intrusionStateInfo">Last 4 attacker actions:</h6>*/}
+                                {/*    <AttackerActions traces={props.traces} activeTrace={props.activeTrace} l={props.l}*/}
+                                {/*                     t={props.t}/>*/}
+                                {/*    <h6 className="intrusionStateInfo"># Compromised nodes:{numCompromised(props)}</h6>*/}
+                                {/*</div>*/}
                             </div>
                         </div>
                     </div>

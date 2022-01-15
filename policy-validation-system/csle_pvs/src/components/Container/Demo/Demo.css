@@ -1,4 +1,6 @@
-
+.demoCard {
+    margin-top:0px
+}
 .deltaAlertsRow {
     margin-top: 20px
 }
@@ -17,6 +19,7 @@
 
 .defenderPolicyPlotSliderLabel {
     margin-top:22px;
+    font-size:22px;
 }
 
 .noIntrusion {
@@ -25,4 +28,12 @@
 
 .intrusion {
     color: darkred;
+}
+
+.largeFont {
+    font-size: 22px;
+}
+
+.labelTest {
+    font-size: 22px;
 }
