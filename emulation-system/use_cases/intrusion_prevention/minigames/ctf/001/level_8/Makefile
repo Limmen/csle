@@ -9,7 +9,7 @@ run: gen_containers_config
 	cd containers/telnet_1_1/ && $(MAKE) run
 	cd containers/honeypot_1_1/ && $(MAKE) run
 	cd containers/ftp_1_1/ && $(MAKE) run
-	cd containers/hacker_kali_1/ && $(MAKE) run
+	cd containers/hacker_kali_1_1/ && $(MAKE) run
 	cd containers/samba_1_1/ && $(MAKE) run
 	cd containers/shellshock_1_1/ && $(MAKE) run
 	cd containers/sql_injection_1_1/ && $(MAKE) run

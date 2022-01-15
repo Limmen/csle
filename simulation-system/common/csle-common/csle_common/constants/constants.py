@@ -443,7 +443,7 @@ class SAMBA:
     ALREADY_EXISTS = "already exists"
     ERROR = "Error"
     AUTH_OK = "Authentication ok"
-    VERIFYING = "Veryfying"
+    VERIFYING = "Verifying"
     VULNERABILITY_NAME = "cve-2017-7494"
 
 

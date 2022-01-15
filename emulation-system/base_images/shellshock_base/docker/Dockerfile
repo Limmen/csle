@@ -79,9 +79,6 @@ RUN git clone https://github.com/Limmen/nmap-vulners &&\
     nmap --script-updatedb
 
 ## Install NMAP manually since the version in wheezy repos is too old
-#RUN git clone https://github.com/nmap/nmap
-#RUN cd nmap && ./configure && make && make install
-
 RUN wget --no-check-certificate https://nmap.org/dist/nmap-7.90.tar.bz2 && tar xvf nmap-7.90.tar.bz2 && cd ./nmap-7.90/ &&\
      ./configure && make && make install
 
@@ -135,46 +132,16 @@ RUN gcc -c -fpic bindshell-samba.c &&\
     chmod 777 /bindshell-samba.c &&\
     chmod 777 /bindshell-samba.h &&\
     chmod 777 /libbindshell-samba.so &&\
-    chmod 777 /bindshell-samba.o
+    conda create --clone base --name samba -y
 
 # TODO Solve this
-#https://www.youtube.com/watch?v=IsHBOpbAMQg
-# https://stackoverflow.com/questions/48591455/glibc-2-14-not-found-what-should-i-do-if-i-am-not-root
-# deb http://ftp.be.debian.org/debian/ wheezy main
-  #deb-src http://ftp.be.debian.org/debian/ wheezy main
-  #
-  # https://gist.github.com/michaelchughes/85287f1c6f6440c060c3d86b4e7d764b
-  #deb http://security.debian.org/ wheezy/updates main
-  #deb-src http://security.debian.org/ wheezy/updates main
-  #
-  ## wheezy-updates, previously known as 'volatile'
-  #deb http://ftp.be.debian.org/debian/ wheezy-updates main
-  #deb-src http://ftp.be.debian.org/debian/ wheezy-updates main
-  #
-  ## debian 7 wheezy
-  #deb http://http.debian.net/debian/ wheezy main contrib non-free
-  #
-  ## add backport repository
-  #deb http://download.virtualbox.org/virtualbox/debian squeeze contrib non-free
-  #deb http://ftp.debian.org/debian/ wheezy-backports main
-  #
-  ## Testing repository - main, contrib and non-free branches
-  #deb http://http.us.debian.org/debian testing main non-free contrib
-  #deb-src http://http.us.debian.org/debian testing main non-free contrib
-  #
-  ## Testing security updates repository
-  #deb http://security.debian.org/ testing/updates main contrib non-free
-  #deb-src http://security.debian.org/ testing/updates main contrib non-free
-  # sudo apt-get update
-# sudo apt-get install libc6
-#RUN conda create --name samba python=2.7 -y
 # Make subsequent RUN commands use the samba env
-#SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 
-# Install pycrpto, pyasn and impacket
-#RUN pip install pycrypto==2.6 &&\
-#    pip install git+git://github.com/opsxcq/impacket.git &&\
-#    pip install pyasn1
+## Install pycrypto, pyasn and impacket
+RUN pip install pycrypto==2.6 &&\
+    pip install git+git://github.com/Limmen/impacket.git &&\
+    pip install pyasn1
 
 # CVE-2015-3306 Exploit
 ADD docker/cve_2015_3306_exploit.py /cve_2015_3306_exploit.py

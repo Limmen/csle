@@ -27,7 +27,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=100, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -43,7 +43,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.98, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.02,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=100, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -59,7 +59,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -75,7 +75,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -91,7 +91,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -107,7 +107,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -123,7 +123,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -139,7 +139,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -155,7 +155,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -171,7 +171,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -187,7 +187,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -203,7 +203,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
@@ -219,7 +219,7 @@ def default_resource_constraints() -> ResourcesConfig:
                                 loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
                                 packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                                 packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5, packet_reorder_gap=5,
+                                packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
