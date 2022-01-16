@@ -179,6 +179,50 @@ class ContainerManager:
         return container_names
 
     @staticmethod
+    def create_network(name: str, subnetmask: str, driver: str = "bridge") -> None:
+        """
+        Creates a network
+
+        :param name: the name of the network to create
+        :param subnetmask: the subnetmask of the network to create
+        :param driver: the driver of the network to create
+        :return: None
+        """
+        client_1 = docker.from_env()
+        ipam_pool = docker.types.IPAMPool(
+            subnet=subnetmask
+        )
+        ipam_config = docker.types.IPAMConfig(
+            pool_configs=[ipam_pool]
+        )
+        try:
+            client_1.networks.create(
+                name,
+                driver=driver,
+                ipam=ipam_config
+            )
+        except:
+            pass
+
+
+    @staticmethod
+    def remove_network(name: str) -> None:
+        """
+        Removes a network
+
+        :param name: the name of the network to remove
+        :return: None
+        """
+        client_1 = docker.from_env()
+        networks = client_1.networks.list()
+        for net in networks:
+            if net.name == name:
+                try:
+                    net.remove()
+                except:
+                    pass
+
+    @staticmethod
     def run_command(cmd: str) -> None:
         """
         Runs a container management command

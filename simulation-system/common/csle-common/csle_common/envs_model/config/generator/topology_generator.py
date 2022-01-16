@@ -154,15 +154,15 @@ class TopologyGenerator:
             for route in node.routes:
                 target, gw = route
                 cmd = "sudo route add {} gw {}".format(target, gw)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             if node.default_gw is not None:
                 cmd = "sudo route add -net {} netmask 255.255.255.0 gw {}".format(topology.subnetwork.replace("/24", ""),
                                                                                   node.default_gw)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             cmd="sudo iptables -F"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             # Setup /etc/hosts
             cmd = "echo '" + node.ip + " " + node.hostname + "' | sudo tee /etc/hosts"
@@ -184,59 +184,54 @@ class TopologyGenerator:
                     cmd = "echo '" + node2.ip + " " + node2.hostname + "' | sudo tee -a /etc/hosts"
                     o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
+            # Setup iptables and arptables
+
             for output_node in node.output_accept:
                 cmd = "sudo iptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
                 cmd = "sudo arptables -A OUTPUT -d {} -j ACCEPT".format(output_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             for input_node in node.input_accept:
                 cmd = "sudo iptables -A INPUT -s {} -j ACCEPT".format(input_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
                 cmd = "sudo arptables -A INPUT -s {} -j ACCEPT".format(input_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             for forward_node in node.forward_accept:
                 cmd = "sudo iptables -A FORWARD -d {} -j ACCEPT".format(forward_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             for output_node in node.output_drop:
-                cmd = "sudo iptables -A OUTPUT -d {} -j DROP".format(output_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                cmd = "sudo iptables -A OUTPUT -d {} -j DROP".format(output_node, wait_for_completion=True)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
                 cmd = "sudo arptables -A OUTPUT -d {} -j DROP".format(output_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             for input_node in node.input_drop:
                 cmd = "sudo iptables -A INPUT -s {} -j DROP".format(input_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
                 cmd = "sudo arptables -A INPUT -s {} -j DROP".format(input_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             for forward_node in node.forward_drop:
                 cmd = "sudo iptables -A FORWARD -d {} -j DROP".format(forward_node)
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             cmd = "sudo iptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
-            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
             cmd = "sudo arptables -A OUTPUT -d {} -j {}".format(topology.subnetwork, node.default_output)
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             cmd = "sudo iptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
             cmd = "sudo arptables -A INPUT -d {} -j {}".format(topology.subnetwork, node.default_input)
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             cmd = "sudo iptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
             cmd = "sudo arptables -A FORWARD -d {} -j {}".format(topology.subnetwork, node.default_forward)
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)\
-
-            # temp_file_name = "/home/" + constants.csle_ADMIN.USER + "/hosts"
-            # EmulationUtil.write_remote_file(
-            #     conn=emulation_config.agent_conn, file_name=temp_file_name,
-            #     contents=etc_hosts_file, write_mode="w")
-            # EmulationUtil.execute_ssh_cmd(cmd="sudo mv " + temp_file_name + " /etc/hosts",
-            #                               conn=emulation_config.agent_conn)
+            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 

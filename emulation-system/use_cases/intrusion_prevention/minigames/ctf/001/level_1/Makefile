@@ -1,9 +1,9 @@
-all: run users topology vuln gen_containers_config flags resources traffic
+all: networks run users topology vuln gen_containers_config flags resources traffic
 
 .PHONY: run
 
 # Runs all containers in the emulation
-run: gen_containers_config
+run: networks gen_containers_config
 	cd containers/router_1_1/ && $(MAKE) run
 	cd containers/ssh_1_1/ && $(MAKE) run
 	cd containers/telnet_1_1/ && $(MAKE) run
@@ -93,6 +93,10 @@ stop_iperf_container:
 # Start iperf container on the Docker host
 rm_iperf_container:
 	docker rm iperf3
+
+# Create docker networks
+networks:
+	python create_networks.py
 
 # Cleans all configuration files
 clean_config:

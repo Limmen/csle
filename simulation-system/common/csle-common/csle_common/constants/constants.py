@@ -953,7 +953,11 @@ class DOCKER:
 class CSLE:
     NAME = "csle"
     LEVEL = "level"
-    csle_NET_PREFIX = "csle_net_"
+    CSLE_INTERNAL_NET_PREFIX = "csle_internal_net_"
+    CSLE_EXTERNAL_NET_PREFIX = "csle_external_net_"
+    CSLE_SUBNETMASK = ".0/24"
+    CSLE_INTERNAL_SUBNETMASK_PREFIX = "172.18."
+    CSLE_EXTERNAL_SUBNETMASK_PREFIX = "192.169."
     CTF_MINIGAME = "ctf"
     NON_IDS_ROUTER = "router_1"
 

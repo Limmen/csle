@@ -188,8 +188,16 @@ class EnvConfigGenerator:
         networks = list(map(lambda x: x.split(), networks))
         networks = list(filter(lambda x: len(x) > 1, networks))
         networks = list(map(lambda x: x[1], networks))
-        networks = list(filter(lambda x: re.match(r"csle_net_\d", x), networks))
-        network_ids = list(map(lambda x: int(x.replace("csle_net_", "")), networks))
+        internal_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_INTERNAL_NET_PREFIX), x),
+                                        networks))
+        external_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX), x),
+                                        networks))
+        internal_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_INTERNAL_NET_PREFIX, "")),
+                                        internal_networks))
+        external_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX, "")),
+                                        external_networks))
+        network_ids = internal_network_ids + external_network_ids
+        networks = internal_networks + external_networks
         return networks, network_ids
 
 
@@ -224,9 +232,9 @@ class EnvConfigGenerator:
             network_info = stream.read()
             network_info = json.loads(network_info)
             for k in network_info.keys():
-                if re.match(r"csle_net_\d", k):
+                if re.match(r"csle_internal_net_\d", k):
                    networks_in_use.append(k)
-                   network_ids_in_use.append(int(k.replace("csle_net_", "")))
+                   network_ids_in_use.append(int(k.replace("csle_internal_net_", "")))
 
         return networks_in_use, network_ids_in_use
 

@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_8
+NETWORK=csle_internal_net_8
 MINIGAME=ctf
 CONTAINER=samba_1
 VERSION=0.0.1

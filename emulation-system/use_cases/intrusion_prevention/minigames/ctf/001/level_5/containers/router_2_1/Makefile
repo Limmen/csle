@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_5
+NETWORK=csle_internal_net_5
 MINIGAME=ctf
 CONTAINER=router_2
 VERSION=0.0.1

@@ -1,3 +1,4 @@
+import sys
 from typing import Tuple, List
 import time
 import datetime
@@ -15,13 +16,14 @@ class EmulationUtil:
     """
 
     @staticmethod
-    def execute_ssh_cmd(cmd: str, conn) -> Tuple[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd: str, conn, wait_for_completion :bool = True) -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the emulation over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning
 
         :param cmd: the command to execute
         :param conn: the ssh connection
+        :param wait_for_completion: boolean flag whether to wait for completion or not
         :return: outdata, errdata, total_time
         """
         transport_conn = conn.get_transport()
@@ -41,7 +43,7 @@ class EmulationUtil:
                 errdata += session.recv_stderr(1000)
 
             # Check for completion
-            if session.exit_status_ready():
+            if session.exit_status_ready() or not wait_for_completion:
                 break
         end = time.time()
         total_time = end - start

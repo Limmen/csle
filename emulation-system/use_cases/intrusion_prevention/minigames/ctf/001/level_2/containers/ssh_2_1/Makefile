@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_2
+NETWORK=csle_internal_net_2
 MINIGAME=ctf
 CONTAINER=ssh_2
 VERSION=0.0.1

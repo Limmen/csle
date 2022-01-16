@@ -1,10 +1,11 @@
 PROJECT=csle
-NETWORK=csle_net_1
+NETWORK=csle_external_net_1
 MINIGAME=ctf
 CONTAINER=client_1
 VERSION=0.0.1
 LEVEL=1
-IP=172.18.1.254
+IP=192.169.1.2
+IP_PREFIX=192.169.1.
 DIR=$(CURDIR)/../../
 CFG=$(CURDIR)/../../containers.json
 FLAGSCFG=$(CURDIR)/../../flags.json
@@ -27,6 +28,8 @@ run:
 	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true --privileged -v /lib/modules:/lib/modules \
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
+	python create_client_interfaces.py --container $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) \
+	--network $(NETWORK) --ip $(IP_PREFIX)
 
 # Start a bash session inside the container (assumes that the container is already started)
 shell:

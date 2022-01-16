@@ -1,5 +1,7 @@
-import subprocess
 import argparse
+import csle_common.constants.constants as constants
+from csle_common.envs_model.config.generator.container_manager import ContainerManager
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Parse flags for which networks to create')
@@ -9,19 +11,28 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def create_delete_networks(num_networks : int, create = True):
-    subnet_mask_prefix = "172.18."
-    subnetmask_suffix = ".0/24"
-    network_name_base = "csle_net_"
 
-    for i in range(num_networks):
-        subnet_mask = subnet_mask_prefix + str(i) + subnetmask_suffix
-        network_name= network_name_base + str(i)
+def create_delete_networks(num_networks : int, create = True):
+    internal_subnet_mask_prefix = constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX
+    external_subnet_mask_prefix = constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX
+    subnetmask_suffix = constants.CSLE.CSLE_SUBNETMASK
+    internal_network_name_base = constants.CSLE.CSLE_INTERNAL_NET_PREFIX
+    external_network_name_base = constants.CSLE.CSLE_EXTERNAL_NET_PREFIX
+
+    for i in range(1, num_networks+1):
+        internal_subnet_mask = internal_subnet_mask_prefix + str(i) + subnetmask_suffix
+        internal_network_name= internal_network_name_base + str(i)
+        external_subnet_mask = external_subnet_mask_prefix + str(i) + subnetmask_suffix
+        external_network_name= external_network_name_base + str(i)
         if create:
-            cmd = "docker network create --subnet={} {} || echo 'network already created'".format(subnet_mask, network_name)
+            ContainerManager.create_network(name=internal_network_name, subnetmask=internal_subnet_mask)
         else:
-            cmd = "docker network rm {}".format(network_name)
-        subprocess.Popen(cmd, shell=True)
+            ContainerManager.remove_network(name=internal_network_name)
+
+        if create:
+            ContainerManager.create_network(name=external_network_name, subnetmask=external_subnet_mask)
+        else:
+            ContainerManager.remove_network(name=external_network_name)
 
 
 if __name__ == '__main__':

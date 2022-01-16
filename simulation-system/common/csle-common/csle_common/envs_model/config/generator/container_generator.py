@@ -41,7 +41,7 @@ class ContainerGenerator:
         :return: a containers configuration
         """
 
-        network = constants.CSLE.csle_NET_PREFIX + str(subnet_id)
+        network = constants.CSLE.CSLE_INTERNAL_NET_PREFIX + str(subnet_id)
         minigame = constants.CSLE.CTF_MINIGAME
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))

@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_10
+NETWORK=csle_internal_net_10
 MINIGAME=ctf
 CONTAINER=sql_injection_1
 VERSION=0.0.1

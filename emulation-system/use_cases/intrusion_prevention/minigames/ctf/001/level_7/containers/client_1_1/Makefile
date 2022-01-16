@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_7
+NETWORK=csle_internal_net_7
 MINIGAME=ctf
 CONTAINER=client_1
 VERSION=0.0.1

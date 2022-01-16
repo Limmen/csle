@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_1
+NETWORK=csle_internal_net_1
 MINIGAME=blank_container_test
 CONTAINER=blank_1
 VERSION=0.0.1

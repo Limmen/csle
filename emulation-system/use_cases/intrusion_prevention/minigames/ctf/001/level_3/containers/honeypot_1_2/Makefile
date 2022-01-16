@@ -1,5 +1,5 @@
 PROJECT=csle
-NETWORK=csle_net_3
+NETWORK=csle_internal_net_3
 MINIGAME=ctf
 CONTAINER=honeypot_1
 VERSION=0.0.1

@@ -1,10 +1,12 @@
 PROJECT=csle
-NETWORK=csle_net_1
+INTERNAL_NETWORK=csle_internal_net_1
+EXTERNAL_NETWORK=csle_external_net_1
 MINIGAME=ctf
 CONTAINER=router_1
 VERSION=0.0.1
 LEVEL=1
-IP=172.18.1.10
+INTERNAL_IP=172.18.1.10
+EXTERNAL_IP=192.169.1.10
 DIR=$(CURDIR)/../../
 CFG=$(CURDIR)/../../containers.json
 FLAGSCFG=$(CURDIR)/../../flags.json
@@ -23,11 +25,15 @@ all: run
 # Create and start the container
 run:
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) --hostname=$(CONTAINER) \
-	--net $(NETWORK) --ip $(IP) --label dir=$(DIR) --label containers_cfg=$(CFG) --label flags_cfg=$(FLAGSCFG) \
+	--net $(INTERNAL_NETWORK) --ip $(INTERNAL_IP) --label dir=$(DIR) \
+	--label containers_cfg=$(CFG) --label flags_cfg=$(FLAGSCFG) \
 	--label topology_cfg=$(TOPOLOGYCFG) --label users_cfg=$(USERSCFG) --label vulnerabilities_cfg=$(VULNERABILITIESCFG) \
 	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true --privileged -v /lib/modules:/lib/modules \
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
+	docker network connect --ip $(EXTERNAL_IP) $(EXTERNAL_NETWORK) \
+	$(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
+
 
 # Start a bash session inside the container (assumes that the container is already started)
 shell:
