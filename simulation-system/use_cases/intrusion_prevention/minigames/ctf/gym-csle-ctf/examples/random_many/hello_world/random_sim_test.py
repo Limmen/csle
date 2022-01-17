@@ -6,11 +6,11 @@ from gym_csle_ctf.envs_model.logic.common.domain_randomization.csle_ctf_domain_r
 from csle_common.dao.network.network_config import NetworkConfig
 
 def test_env(env_name : str, num_steps : int):
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
@@ -58,7 +58,7 @@ def test_env(env_name : str, num_steps : int):
         if done or (i >900 and i % 1000 == 0):
             print("env done")
             tot_rew = 0
-            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix="172.18.",
+            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}",
                                                                                         network_ids=list(range(1, 254)),
                                                                                         r_space=randomization_space,
                                                                                         env_config=env.env_config)

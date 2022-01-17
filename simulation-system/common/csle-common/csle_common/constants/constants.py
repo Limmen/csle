@@ -38,6 +38,20 @@ class RENDERING:
                    (51,51,255), (255, 229, 204)]
 
 
+class FIREWALL:
+    """
+    Firewall string constants
+    """
+    DROP = "DROP"
+
+
+class NETWORKING:
+    """
+    Networking string constants
+    """
+    ETH0 = "eth0"
+
+
 class SERVICES:
     """
     Services constants
@@ -955,9 +969,13 @@ class CSLE:
     LEVEL = "level"
     CSLE_INTERNAL_NET_PREFIX = "csle_internal_net_"
     CSLE_EXTERNAL_NET_PREFIX = "csle_external_net_"
-    CSLE_SUBNETMASK = ".0/24"
+    CSLE_INTERNAL_NETWORKS_RANGE = "172.18.0.0/16"
+    CSLE_EXTERNAL_NETWORKS_RANGE = "100.100.0.0/14"
+    CSLE_EXTERNAL_SECOND_OCTET_VALUES = ["100", "101", "102", "103"]
+    CSLE_EXTERNAL_THIRD_OCTET_VALUES = list(map(lambda x: str(x), list(range(1,255))))
+    CSLE_SUBNETMASK = "{constants.CSLE.CSLE_SUBNETMASK}"
     CSLE_INTERNAL_SUBNETMASK_PREFIX = "172.18."
-    CSLE_EXTERNAL_SUBNETMASK_PREFIX = "192.169."
+    CSLE_EXTERNAL_SUBNETMASK_PREFIX = "100."
     CTF_MINIGAME = "ctf"
     NON_IDS_ROUTER = "router_1"
 
@@ -969,6 +987,7 @@ class MANAGEMENT:
     STOP_RUNNING = "stop_running"
     RM_STOPPED = "rm_stopped"
     RM_IMAGES = "rm_images"
+    RM_NETWORKS = "rm_networks"
     START_STOPPED = "start_stopped"
     LIST_NETWORKS = "list_networks"
     CLEAN = "clean"

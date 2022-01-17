@@ -47,6 +47,8 @@ make net # Create Docker sub-network
 make rm-net # Remove Docker sub-network
 make traffic # create traffic generators and start them on each node
 make stop_traffic # stop traffic_generators that are running on each node
+make netowrks # create the docker networks required by the emulation
+make rm_networks # remove the docker networks required by the emulation
 python run.py --build # build all containers with custom config
 python run.py --run # run all containers with custom config
 docker container ls --all # list all running containers

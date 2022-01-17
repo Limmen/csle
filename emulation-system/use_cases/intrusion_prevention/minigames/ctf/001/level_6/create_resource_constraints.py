@@ -10,15 +10,17 @@ from csle_common.envs_model.config.generator.resource_constraints_generator impo
 import csle_common.constants.constants as constants
 
 
-def default_resource_constraints() -> ResourcesConfig:
+def default_resource_constraints(network_id: int) -> ResourcesConfig:
     """
+    :param network_id: the network id
     :return: generates the ResourcesConfig
     """
     node_resources_configurations = [
-        NodeResourcesConfig(ip="172.18.6.10", container_name="csle-ctf-router_2_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
+                            container_name="csle-ctf-router_2_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -31,10 +33,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.2", container_name="csle-ctf-ssh_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+                            container_name="csle-ctf-ssh_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -47,10 +50,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.3", container_name="csle-ctf-telnet_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+                            container_name="csle-ctf-telnet_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -63,10 +67,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.21", container_name="csle-ctf-honeypot_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
+                            container_name="csle-ctf-honeypot_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -79,10 +84,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.79", container_name="csle-ctf-ftp_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+                            container_name="csle-ctf-ftp_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -95,10 +101,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.191", container_name="csle-ctf-hacker_kali_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                            container_name="csle-ctf-hacker_kali_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=2,
                                 packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -111,10 +118,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=100, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.54", container_name="csle-ctf-ssh_2_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54",
+                            container_name="csle-ctf-ssh_2_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -127,10 +135,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.74", container_name="csle-ctf-ssh_3_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74",
+                            container_name="csle-ctf-ssh_3_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -143,10 +152,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.61", container_name="csle-ctf-telnet_2_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
+                            container_name="csle-ctf-telnet_2_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -159,10 +169,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.62", container_name="csle-ctf-telnet_3_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62",
+                            container_name="csle-ctf-telnet_3_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -175,10 +186,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.101", container_name="csle-ctf-honeypot_2_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.101",
+                            container_name="csle-ctf-honeypot_2_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -191,10 +203,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.7", container_name="csle-ctf-ftp_2_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7",
+                            container_name="csle-ctf-ftp_2_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -207,10 +220,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.4", container_name="csle-ctf-honeypot_1_2-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.4",
+                            container_name="csle-ctf-honeypot_1_2-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -223,10 +237,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.5", container_name="csle-ctf-honeypot_1_3-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.5",
+                            container_name="csle-ctf-honeypot_1_3-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -239,10 +254,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.6", container_name="csle-ctf-honeypot_1_4-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.6",
+                            container_name="csle-ctf-honeypot_1_4-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -255,10 +271,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.8", container_name="csle-ctf-honeypot_1_5-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.8",
+                            container_name="csle-ctf-honeypot_1_5-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -271,10 +288,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.9", container_name="csle-ctf-honeypot_1_6-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.9",
+                            container_name="csle-ctf-honeypot_1_6-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -287,10 +305,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.178", container_name="csle-ctf-honeypot_1_7-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.178",
+                            container_name="csle-ctf-honeypot_1_7-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -303,10 +322,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.11", container_name="csle-ctf-honeypot_2_2-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
+                            container_name="csle-ctf-honeypot_2_2-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -319,10 +339,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.12", container_name="csle-ctf-honeypot_2_3-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.12",
+                            container_name="csle-ctf-honeypot_2_3-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -335,10 +356,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.13", container_name="csle-ctf-honeypot_2_4-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.13",
+                            container_name="csle-ctf-honeypot_2_4-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -351,10 +373,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.14", container_name="csle-ctf-honeypot_2_5-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.14",
+                            container_name="csle-ctf-honeypot_2_5-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -367,10 +390,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.15", container_name="csle-ctf-honeypot_2_6-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.15",
+                            container_name="csle-ctf-honeypot_2_6-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -383,10 +407,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.16", container_name="csle-ctf-honeypot_2_7-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.16",
+                            container_name="csle-ctf-honeypot_2_7-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -399,10 +424,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.17", container_name="csle-ctf-honeypot_2_8-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.17",
+                            container_name="csle-ctf-honeypot_2_8-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -415,10 +441,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.18", container_name="csle-ctf-honeypot_2_9-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.18",
+                            container_name="csle-ctf-honeypot_2_9-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -431,10 +458,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.19", container_name="csle-ctf-honeypot_2_10-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
+                            container_name="csle-ctf-honeypot_2_10-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -447,10 +475,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.20", container_name="csle-ctf-honeypot_2_11-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.20",
+                            container_name="csle-ctf-honeypot_2_11-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -463,10 +492,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.22", container_name="csle-ctf-honeypot_2_12-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.22",
+                            container_name="csle-ctf-honeypot_2_12-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -479,10 +509,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.23", container_name="csle-ctf-honeypot_2_13-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.23",
+                            container_name="csle-ctf-honeypot_2_13-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -495,10 +526,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.24", container_name="csle-ctf-honeypot_2_14-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.24",
+                            container_name="csle-ctf-honeypot_2_14-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -511,10 +543,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.25", container_name="csle-ctf-honeypot_2_15-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.25",
+                            container_name="csle-ctf-honeypot_2_15-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -527,10 +560,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.28", container_name="csle-ctf-honeypot_2_16-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.28",
+                            container_name="csle-ctf-honeypot_2_16-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -543,10 +577,11 @@ def default_resource_constraints() -> ResourcesConfig:
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
                             )),
-        NodeResourcesConfig(ip="172.18.6.254", container_name="csle-ctf-client_1_1-level6",
-                            num_cpus = 1, available_memory_gb = 4,
+        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
+                            container_name="csle-ctf-client_1_1-level6",
+                            num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
-                                interface="eth0",
+                                interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=2,
                                 packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
                                 packet_delay_distribution=PacketDelayDistributionType.PARETO,
@@ -566,10 +601,13 @@ def default_resource_constraints() -> ResourcesConfig:
 
 # Generates the resources.json configuration file
 if __name__ == '__main__':
+    network_id = 6
     if not os.path.exists(util.default_resources_path()):
-        ResourceConstraintsGenerator.write_resources_config(resources_config=default_resource_constraints())
+        ResourceConstraintsGenerator.write_resources_config(
+            resources_config=default_resource_constraints(network_id=network_id))
     resources_config = util.read_resources_config(util.default_resources_path())
-    emulation_config = EmulationConfig(agent_ip="172.18.6.191", agent_username=constants.csle_ADMIN.USER,
-                                     agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                                       agent_username=constants.csle_ADMIN.USER,
+                                       agent_pw=constants.csle_ADMIN.PW, server_connection=False)
     ResourceConstraintsGenerator.apply_resource_constraints(resources_config=resources_config,
                                                             emulation_config=emulation_config)

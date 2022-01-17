@@ -41,14 +41,14 @@ def default_config() -> ClientConfig:
                                )
     env_name = "csle-ctf-level-2-emulation-v3"
     #env_name = "csle-ctf-level-2-emulation-costs-v3"
-    emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False, warmup=True, warmup_iterations=1000,
                                      port_forward_next_port = 4000)
-    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")

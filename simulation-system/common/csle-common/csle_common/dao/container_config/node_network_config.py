@@ -3,6 +3,7 @@ Network configuration of a container in the emulation
 """
 from csle_common.dao.container_config.packet_loss_type import PacketLossType
 from csle_common.dao.container_config.packet_delay_distribution_type import PacketDelayDistributionType
+import csle_common.constants.constants as constants
 
 
 class NodeNetworkConfig:
@@ -10,7 +11,7 @@ class NodeNetworkConfig:
     A DTO object representing the network configuration of a specific container in an emulation environment
     """
 
-    def __init__(self, interface: str = "eth0",
+    def __init__(self, interface: str = constants.NETWORKING.ETH0,
                  limit_packets_queue: int = 30000, packet_delay_ms: float = 0.1,
                  packet_delay_jitter_ms: float = 0.025,
                  packet_delay_correlation_percentage: float = 25,

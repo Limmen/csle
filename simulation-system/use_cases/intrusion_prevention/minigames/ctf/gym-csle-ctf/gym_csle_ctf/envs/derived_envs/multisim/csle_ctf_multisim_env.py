@@ -25,10 +25,10 @@ class CSLECTFMultiSim1Env(CSLECTFEnv):
                 use_base_randomization=True)
             self.randomization_space = randomization_space
             attacker_action_conf = CSLECTFMultiSimV1.attacker_actions_conf(num_nodes=dr_max_num_nodes - 1,
-                                                                  subnet_mask="172.18.2.0/24",
-                                                                  hacker_ip="172.18.2.191")
+                                                                  subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK}",
+                                                                  hacker_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191")
             defender_action_conf = CSLECTFMultiSimV1.defender_actions_conf(
-                num_nodes=dr_max_num_nodes - 1, subnet_mask="172.18.2.0/24")
+                num_nodes=dr_max_num_nodes - 1, subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK}")
             env_config = CSLECTFMultiSimV1.env_config(attacker_action_conf=attacker_action_conf,
                                                       defender_action_conf=defender_action_conf,
                                                       emulation_config=emulation_config, render_conf=render_config,
@@ -45,7 +45,7 @@ class CSLECTFMultiSim1Env(CSLECTFEnv):
             env_config.max_episode_length = 200
             env_config.compute_pi_star_attacker = True
             env_config.use_upper_bound_pi_star_attacker = True
-            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix="172.18.",
+            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}",
                                                                                         network_ids=list(range(1, 254)),
                                                                                         r_space=self.randomization_space,
                                                                                         env_config=env_config)

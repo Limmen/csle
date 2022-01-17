@@ -53,6 +53,7 @@ make rm_stopped # remove stopped csle containers
 make rm_images # remove images used by csle containers
 make start_stopped # start stopped csle containers
 make clean_docker # clean docker (delete unused networks, containers, images, cache, etc.)
+make rm_networks # delete all networks
 
 ps -aux | grep prometheus
 kim       473648 30.6  0.2 3384316 1604780 pts/4 Sl   10:58   6:41 ./prometheus/prometheus --config.file=prometheus/prometheus.yml --storage.tsdb.retention.size=10GB --storage.tsdb.retention.time=5d

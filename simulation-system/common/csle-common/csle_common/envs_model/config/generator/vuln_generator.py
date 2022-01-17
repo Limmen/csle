@@ -199,8 +199,8 @@ class VulnerabilityGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology, agent_ip, router_ip = TopologyGenerator.generate(num_nodes=10, subnet_prefix="172.18.2.")
-    vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip, subnet_prefix="172.18.2.",
+    adj_matrix, gws, topology, agent_ip, router_ip = TopologyGenerator.generate(num_nodes=10, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
+    vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.",
                                     num_flags = 3, access_vuln_types=[VulnType.WEAK_PW])
     print(vulnerabilities)
 

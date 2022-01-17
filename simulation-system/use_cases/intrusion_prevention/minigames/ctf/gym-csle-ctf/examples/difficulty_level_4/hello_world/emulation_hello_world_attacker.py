@@ -4,15 +4,15 @@ import sys
 from csle_common.dao.network.emulation_config import EmulationConfig
 
 def test_env(env_name : str, num_steps : int):
-    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}4.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")
-    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.4.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}4.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
-    emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username="agent", agent_pw="agent",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}4.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False)
     # emulation_config.save_dynamics_model_dir = "/home/kim/csle/simulation-system/use_cases/intrusion_prevention/minigames/ctf/" \
     #                                            "gym-csle-ctf/examples/difficulty_level_4/hello_world/"

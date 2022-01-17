@@ -18,7 +18,7 @@ def initialize_model(env, load_path, device, agent_config) -> None:
 
 
 def model_test():
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191",
     #                                    agent_username="agent", agent_pw="agent", server_connection=True,
     #                                    server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                    server_username="kim", port_forward_next_port=3000)

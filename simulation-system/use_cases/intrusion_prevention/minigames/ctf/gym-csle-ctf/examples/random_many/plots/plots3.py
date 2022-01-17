@@ -715,7 +715,7 @@ if __name__ == '__main__':
                        base_path=base_path, suffix="emulation_20")
 
     base_path = "/Users/kimham/workspace/csle/simulation-system/minigames/network_intrusion/ctf/gym-csle-ctf/examples/random_many/training/v1/emulation_1/ppo_baseline/results/data/"
-    ips = ["172.18.28.151", "172.18.33.23"]
+    ips = [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}28.151", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}33.23"]
     avg_train_steps_data_v1_emulation_1, avg_train_steps_means_v1_emulation_1, avg_train_steps_stds_v1_emulation_1, avg_eval_steps_data_v1_emulation_1, \
     avg_eval_steps_means_v1_emulation_1, avg_eval_steps_stds_v1_emulation_1, \
     avg_train_rewards_data_v1_emulation_1, avg_train_rewards_means_v1_emulation_1, avg_train_rewards_stds_v1_emulation_1, avg_eval_rewards_data_v1_emulation_1, \

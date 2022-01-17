@@ -97,5 +97,5 @@ class UsersGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix="172.18.2.")
-    users_conf = UsersGenerator.generate(5, topology, "172.18.2.191")
+    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
+    users_conf = UsersGenerator.generate(5, topology, f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191")

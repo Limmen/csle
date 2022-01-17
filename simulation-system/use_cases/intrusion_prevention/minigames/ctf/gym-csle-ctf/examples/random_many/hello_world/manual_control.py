@@ -4,11 +4,11 @@ from csle_common.envs_model.config.generator.env_config_generator import EnvConf
 import gym
 
 def manual_control():
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")
-    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.1.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim")
@@ -49,7 +49,7 @@ def manual_control():
 
     env.reset()
     # randomization_space = DomainRandomizer.generate_randomization_space([env.env_config.network_conf])
-    # randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix="172.18.",
+    # randomized_network_conf, env_config = DomainRandomizer.randomize(subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}",
     #                                                                  network_ids=list(range(1, 254)),
     #                                                                  r_space=randomization_space,
     #                                                                  env_config=env.env_config)

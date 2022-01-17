@@ -44,7 +44,7 @@ def generate_config() -> None:
         sql_injection_vuln_compatible_containers=sql_injection_vuln_compatible_containers,
         priv_esc_vuln_compatible_containers=priv_esc_vuln_compatible_containers,
         agent_containers=agent_containers, router_containers=router_containers,
-        path=util.default_output_dir(), subnet_id_blacklist=set(), subnet_prefix="172.18."
+        path=util.default_output_dir(), subnet_id_blacklist=set(), subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
     )
     EnvConfigGenerator.create_env(container_env_config)
 

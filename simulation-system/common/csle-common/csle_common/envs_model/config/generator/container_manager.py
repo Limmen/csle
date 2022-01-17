@@ -52,7 +52,7 @@ class ContainerManager:
         """
         client_1 = docker.from_env()
         images = client_1.images.list()
-        images = list(filter(lambda x: constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
+        images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
         non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
         base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
@@ -179,13 +179,23 @@ class ContainerManager:
         return container_names
 
     @staticmethod
-    def create_network(name: str, subnetmask: str, driver: str = "bridge") -> None:
+    def get_network_references():
+        """
+        :return: a list of Docker network references
+        """
+        client_1 = docker.from_env()
+        networks = client_1.networks.list()
+        return networks
+
+    @staticmethod
+    def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names : List = None) -> None:
         """
         Creates a network
 
         :param name: the name of the network to create
         :param subnetmask: the subnetmask of the network to create
         :param driver: the driver of the network to create
+        :param existing_network_names: list of network names, if not None, check if network exists befeore creating
         :return: None
         """
         client_1 = docker.from_env()
@@ -195,14 +205,19 @@ class ContainerManager:
         ipam_config = docker.types.IPAMConfig(
             pool_configs=[ipam_pool]
         )
-        try:
-            client_1.networks.create(
-                name,
-                driver=driver,
-                ipam=ipam_config
-            )
-        except:
-            pass
+        network_names = []
+        if existing_network_names is not None:
+            network_names = network_names
+        if name not in network_names:
+            try:
+                print(f"Creating network: {name}, subnetmask: {subnetmask}")
+                client_1.networks.create(
+                    name,
+                    driver=driver,
+                    ipam=ipam_config
+                )
+            except:
+                pass
 
 
     @staticmethod
@@ -217,10 +232,44 @@ class ContainerManager:
         networks = client_1.networks.list()
         for net in networks:
             if net.name == name:
+                print(f"Removing network: {net.name}")
                 try:
                     net.remove()
                 except:
                     pass
+
+    @staticmethod
+    def remove_networks(names: List[str]) -> None:
+        """
+        Removes a network
+
+        :param name: the name of the network to remove
+        :return: None
+        """
+        client_1 = docker.from_env()
+        networks = client_1.networks.list()
+        for net in networks:
+            if net.name in names:
+                print(f"Removing network: {net.name}")
+                try:
+                    net.remove()
+                except:
+                    pass
+
+
+    @staticmethod
+    def rm_all_networks() -> None:
+        """
+        A utility function for removing all csle networks
+
+        :return: None
+        """
+        client_1 = docker.from_env()
+        networks = client_1.networks.list()
+        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        for net in networks:
+            print(f"Removing network:{net.name}")
+            ContainerManager.remove_network(name = net.name)
 
     @staticmethod
     def run_command(cmd: str) -> None:
@@ -251,9 +300,7 @@ class ContainerManager:
         elif cmd == constants.MANAGEMENT.LIST_NETWORKS:
             networks = ContainerManager.list_all_networks()
             print(networks)
+        elif cmd == constants.MANAGEMENT.RM_NETWORKS:
+            ContainerManager.rm_all_networks()
         else:
             raise ValueError("Command: {} not recognized".format(cmd))
-
-
-if __name__ == '__main__':
-    ContainerManager.rm_all_images()

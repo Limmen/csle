@@ -149,7 +149,7 @@ class csleEnvConfig(BaseCSLEEnvConfig):
 
         self.ip_to_machine_id_mapping = {}
         self.save_trajectories = False
-        self.blacklist_ips = ["172.18.1.1"]
+        self.blacklist_ips = [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.1"]
         self.state_type = state_type
 
         self.attacker_ssh_retry_find_flag = 5

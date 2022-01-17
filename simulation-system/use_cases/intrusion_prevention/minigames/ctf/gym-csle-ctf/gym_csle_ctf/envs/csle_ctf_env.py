@@ -466,7 +466,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
 
         if not soft and self.env_config.env_mode == EnvMode.SIMULATION \
                 and self.env_config.domain_randomization and self.randomization_space is not None:
-            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix="172.18.",
+            randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}",
                                                                                         network_ids=list(range(1, 254)),
                                                                                         r_space=self.randomization_space,
                                                                                         env_config=self.env_config)
@@ -584,7 +584,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
         return arr
 
     def randomize(self):
-        randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix="172.18.",
+        randomized_network_conf, env_config = CSLECTFCSLEDomainRandomizer.randomize(subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}",
                                                                                     network_ids=list(range(1, 254)),
                                                                                     r_space=self.randomization_space,
                                                                                     env_config=self.env_config)

@@ -39,7 +39,7 @@ class CSLECTFLevel3Base:
         """
         :return: the subnet mask
         """
-        subnet_mask = "172.18.3.0/24"
+        subnet_mask = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3{constants.CSLE.CSLE_SUBNETMASK}"
         return subnet_mask
 
     @staticmethod
@@ -54,7 +54,7 @@ class CSLECTFLevel3Base:
         """
         :return: the hacker's ip
         """
-        hacker_ip = "172.18.3.191"
+        hacker_ip = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.191"
         return hacker_ip
 
     @staticmethod
@@ -62,7 +62,7 @@ class CSLECTFLevel3Base:
         """
         :return: the agent's default gw
         """
-        router_ip = "172.18.3.10"
+        router_ip = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.10"
         return router_ip
 
     @staticmethod
@@ -71,16 +71,16 @@ class CSLECTFLevel3Base:
         :return: dict with the flags
         """
         flags_lookup = {}
-        flags_lookup[("172.18.3.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
-        flags_lookup[("172.18.3.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True,
                                                            score=1)
-        flags_lookup[("172.18.3.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False,
                                                            score=1)
-        flags_lookup[("172.18.3.54", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.54", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False,
                                                            score=1)
-        flags_lookup[("172.18.3.61", "/root/flag5")] = Flag(name="flag5", path="/root", id=5, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.61", "/root/flag5")] = Flag(name="flag5", path="/root", id=5, requires_root=True,
                                                            score=1)
-        flags_lookup[("172.18.3.7", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.7", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False,
                                                             score=1)
         return flags_lookup
 
@@ -101,15 +101,15 @@ class CSLECTFLevel3Base:
                                      adj_matrix=adj_matrix,
                                      flags_lookup = CSLECTFLevel3Base.flags_lookup(),
                                      agent_reachable=agent_reachable,
-                                     vulnerable_nodes = set(["172.18.3.3", "172.18.3.79", "172.18.3.2",
-                                          "172.18.3.54", "172.18.3.74", "172.18.3.61",
-                                          "172.18.3.62", "172.18.3.7"])
+                                     vulnerable_nodes = set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.2",
+                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.54", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.74", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.61",
+                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.7"])
                                      )
         return network_conf
 
     @staticmethod
     def agent_reachable() -> set():
-        reachable = set(["172.18.3.10", "172.18.3.2", "172.18.3.3", "172.18.3.21", "172.18.3.79"])
+        reachable = set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.79"])
         return reachable
 
     @staticmethod
@@ -117,7 +117,7 @@ class CSLECTFLevel3Base:
         """
         :return: the default emulation config
         """
-        emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.3.191",
+        emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.191",
                                          agent_username="agent", agent_pw="agent", server_connection=True,
                                          server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
                                          server_username="kim")
@@ -298,7 +298,7 @@ class CSLECTFLevel3Base:
         env_config.os_scan_miss_p = 0.0
         env_config.vulners_miss_p = 0.0
         env_config.num_flags = 6
-        env_config.blacklist_ips = ["172.18.3.1", "172.18.3.254"]
+        env_config.blacklist_ips = [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.1", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.254"]
 
         env_config.max_episode_length = 10000
         env_config.ids_router = False

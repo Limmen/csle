@@ -209,7 +209,7 @@ class CSLECTFLevel10V4:
         env_config.os_scan_miss_p = 0.00
         env_config.vulners_miss_p = 0.00
         env_config.num_flags = 11
-        env_config.blacklist_ips = ["172.18.10.1", "172.18.10.254"]
+        env_config.blacklist_ips = [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.1", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.254"]
 
         env_config.attacker_shell_access_found_reward_mult = 1
         env_config.attacker_new_tools_installed_reward_mult = 1

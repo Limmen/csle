@@ -9,7 +9,7 @@ RUN echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-or
 RUN apt-get update
 RUN echo "postfix postfix/mailname string ctf_minigame.csle" | debconf-set-selections &&\
     echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
-    echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
+    echo "snort snort/address_range string 172.18.1{constants.CSLE.CSLE_SUBNETMASK}" | debconf-set-selections &&\
     apt-get install -y --force-yes lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop telnet telnetd \
                        ssh openssh-server ftp snmpd snmp mailutils inspircd postgresql ntp fingerd mongodb-org \
                        vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git swi-prolog default-jdk sshpass iptables \

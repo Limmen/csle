@@ -34,6 +34,8 @@ list_images:
 list_networks:
 	python manage_containers.py --c list_networks
 
+
+
 stop_running:
 	python manage_containers.py --c stop_running
 
@@ -42,6 +44,9 @@ rm_stopped:
 
 rm_images:
 	python manage_containers.py --c rm_images
+
+rm_networks:
+	python manage_containers.py --c rm_networks
 
 start_stopped:
 	python manage_containers.py --c start_stopped

@@ -95,8 +95,12 @@ rm_iperf_container:
 	docker rm iperf3
 
 # Create docker networks
-networks:
+networks: create_networks.py
 	python create_networks.py
+
+# Delete docker networks
+rm_networks: delete_networks.py
+	python delete_networks.py
 
 # Cleans all configuration files
 clean_config:

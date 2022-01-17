@@ -45,7 +45,7 @@ def default_config() -> ClientConfig:
                                )
     # env_name = "csle-ctf-level-1-emulation-v1"
     env_name = "csle-ctf-level-1-emulation-costs-v1"
-    emulation_config = EmulationConfig(agent_ip="172.18.1.191", agent_username="agent", agent_pw="agent",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191", agent_username="agent", agent_pw="agent",
                                      server_connection=False, warmup=True, warmup_iterations=500,
                                      port_forward_next_port=3000)
     client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,

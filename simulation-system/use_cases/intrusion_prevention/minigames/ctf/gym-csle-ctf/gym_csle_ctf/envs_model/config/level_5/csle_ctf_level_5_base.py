@@ -37,17 +37,17 @@ class CSLECTFLevel5Base:
 
         :return: list of node configs
         """
-        nodes = [Node(ip="172.18.5.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                  "172.18.5.191", "172.18.5.10"]),
+        nodes = [Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                  f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10"]),
                       os="linux", vulnerabilities=[], credentials=[
                 Credential(username="admin", pw="admin1235912"),
                 Credential(username="jessica", pw="water")
             ], firewall=True,
                       root_usernames=["admin"]),
-                 Node(ip="172.18.5.2", ip_id=2, id=2, type=NodeType.SERVER,
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.54"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", ip_id=2, id=2, type=NodeType.SERVER,
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.54"]),
                       flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
@@ -106,9 +106,9 @@ class CSLECTFLevel5Base:
                                         port=53, protocol=TransportProtocol.TCP)
                       ]
                       ),
-                 Node(ip="172.18.5.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.74", "172.18.5.61"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61"]),
                       flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
@@ -140,9 +140,9 @@ class CSLECTFLevel5Base:
                                        port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME)
                      ]
                       ),
-                 Node(ip="172.18.5.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10"]),
                       credentials=[
                           Credential(username="admin", pw="admin31151x"),
                           Credential(username="test", pw="qwerty"),
@@ -161,9 +161,9 @@ class CSLECTFLevel5Base:
                           NetworkService(protocol=TransportProtocol.UDP, port=161, name="snmp", credentials=[])
                       ],
                       vulnerabilities=[]),
-                 Node(ip="172.18.5.79", ip_id=79, id=5, type=NodeType.SERVER,
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79", ip_id=79, id=5, type=NodeType.SERVER,
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10"]),
                       flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
@@ -201,9 +201,9 @@ class CSLECTFLevel5Base:
                                         port=21, protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
                       ]
                       ),
-                 Node(ip="172.18.5.54", ip_id=54, id=6, type=NodeType.SERVER,
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.54"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.54", ip_id=54, id=6, type=NodeType.SERVER,
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.54"]),
                       flags=[Flag(name="flag4", path="/tmp", id=4, requires_root=False, score=1)], level=4, os="linux",
                       credentials=[
                           Credential(username="vagrant", pw="vagrant"),
@@ -257,10 +257,10 @@ class CSLECTFLevel5Base:
                       ]
                       ),
 
-                 Node(ip="172.18.5.74", ip_id=74, id=7, type=NodeType.SERVER,
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.61", "172.18.5.74",
-                                       "172.18.5.101", "172.18.5.62"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74", ip_id=74, id=7, type=NodeType.SERVER,
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62"]),
                       flags=[], level=4, os="linux",
                       credentials=[
                           Credential(username="administrator", pw="administrator"),
@@ -290,9 +290,9 @@ class CSLECTFLevel5Base:
                       ]
                       ),
 
-                 Node(ip="172.18.5.61", ip_id=61, id=8, type=NodeType.SERVER, os="linux",
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.61", "172.18.5.74"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", ip_id=61, id=8, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74"]),
                       flags=[Flag(name="flag5", path="/root", id=5, requires_root=True, score=1)], level=4,
                       credentials=[
                           Credential(username="adm", pw="adm")
@@ -314,10 +314,10 @@ class CSLECTFLevel5Base:
                      ]
                       ),
 
-                 Node(ip="172.18.5.62", ip_id=62, id=9, type=NodeType.SERVER, os="linux",
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.61", "172.18.5.74",
-                                       "172.18.5.101", "172.18.5.62", "172.18.5.7"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62", ip_id=62, id=9, type=NodeType.SERVER, os="linux",
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.7"]),
                       flags=[], level=5,
                       credentials=[
                           Credential(username="guest", pw="guest")
@@ -342,10 +342,10 @@ class CSLECTFLevel5Base:
                      ]
                       ),
 
-                 Node(ip="172.18.5.101", ip_id=101, id=10, type=NodeType.SERVER, flags=[], level=5, os="linux",
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.61", "172.18.5.74",
-                                       "172.18.5.101", "172.18.5.62"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.101", ip_id=101, id=10, type=NodeType.SERVER, flags=[], level=5, os="linux",
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62"]),
                       credentials=[
                           Credential(username="zidane", pw="1b12ha9")
                       ],
@@ -359,10 +359,10 @@ class CSLECTFLevel5Base:
                       ],
                       vulnerabilities=[]),
 
-                 Node(ip="172.18.5.7", ip_id=7, id=11, type=NodeType.SERVER,
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10", "172.18.5.61", "172.18.5.74",
-                                       "172.18.5.101", "172.18.5.62", "172.18.5.7"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.7", ip_id=7, id=11, type=NodeType.SERVER,
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.7"]),
                       flags=[Flag(name="flag6", path="/tmp", id=6, requires_root=False, score=1)], level=6,
                       os="linux",
                       credentials=[
@@ -399,9 +399,9 @@ class CSLECTFLevel5Base:
                       ]
                       ),
 
-                 Node(ip="172.18.5.191", ip_id=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
-                      reachable_nodes=set(["172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79",
-                                       "172.18.5.191", "172.18.5.10"]),
+                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", ip_id=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
+                      reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79",
+                                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10"]),
                       os="linux", vulnerabilities=[],
                       credentials=[
                           Credential(username="agent", pw="agent")
@@ -439,7 +439,7 @@ class CSLECTFLevel5Base:
         """
         :return: the subnet mask
         """
-        subnet_mask = "172.18.5.0/24"
+        subnet_mask = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5{constants.CSLE.CSLE_SUBNETMASK}"
         return subnet_mask
 
     @staticmethod
@@ -454,7 +454,7 @@ class CSLECTFLevel5Base:
         """
         :return: the subnet mask
         """
-        hacker_ip = "172.18.5.191"
+        hacker_ip = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191"
         return hacker_ip
 
     @staticmethod
@@ -462,7 +462,7 @@ class CSLECTFLevel5Base:
         """
         :return: the agent's default gw
         """
-        router_ip = "172.18.5.10"
+        router_ip = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10"
         return router_ip
 
     @staticmethod
@@ -471,16 +471,16 @@ class CSLECTFLevel5Base:
         :return: dict with the flags
         """
         flags_lookup = {}
-        flags_lookup[("172.18.5.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
-        flags_lookup[("172.18.5.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True,
                                                            score=1)
-        flags_lookup[("172.18.5.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False,
                                                            score=1)
-        flags_lookup[("172.18.5.54", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.54", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False,
                                                            score=1)
-        flags_lookup[("172.18.5.61", "/root/flag5")] = Flag(name="flag5", path="/root", id=5, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61", "/root/flag5")] = Flag(name="flag5", path="/root", id=5, requires_root=True,
                                                            score=1)
-        flags_lookup[("172.18.5.7", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.7", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False,
                                                             score=1)
         return flags_lookup
 
@@ -501,14 +501,14 @@ class CSLECTFLevel5Base:
                                      adj_matrix=adj_matrix,
                                      flags_lookup = CSLECTFLevel5Base.flags_lookup(),
                                      agent_reachable=agent_reachable,
-                                     vulnerable_nodes=set(["172.18.5.3", "172.18.5.79", "172.18.5.2",
-                                                           "172.18.5.54", "172.18.5.74", "172.18.5.61",
-                                                           "172.18.5.62", "172.18.5.7"]))
+                                     vulnerable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2",
+                                                           f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.54", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.74", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.61",
+                                                           f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.7"]))
         return network_conf
 
     @staticmethod
     def agent_reachable() -> set():
-        reachable = set(["172.18.5.10", "172.18.5.2", "172.18.5.3", "172.18.5.21", "172.18.5.79"])
+        reachable = set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.79"])
         return reachable
 
     @staticmethod
@@ -516,7 +516,7 @@ class CSLECTFLevel5Base:
         """
         :return: the default emulation config
         """
-        emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip="172.18.5.191",
+        emulation_config = EmulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.191",
                                          agent_username="agent", agent_pw="agent", server_connection=True,
                                          server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
                                          server_username="kim")
@@ -694,6 +694,6 @@ class CSLECTFLevel5Base:
         env_config.os_scan_miss_p = 0.0
         env_config.vulners_miss_p = 0.0
         env_config.num_flags = 6
-        env_config.blacklist_ips = ["172.18.5.1", "172.18.5.254"]
+        env_config.blacklist_ips = [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.1", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}5.254"]
         env_config.ids_router = True
         return env_config

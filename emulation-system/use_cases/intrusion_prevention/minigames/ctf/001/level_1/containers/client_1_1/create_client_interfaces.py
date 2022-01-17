@@ -16,7 +16,7 @@ def create_client_interfaces(container: str, ip_prefix: str, network: str):
     network_prefix = "csle_external_net_"
     for i in range(3,250):
         net = network_prefix + str(i)
-        ContainerManager.create_network(name=net, subnetmask=ip_prefix + str(i) + ".0/24")
+        ContainerManager.create_network(name=net, subnetmask=ip_prefix + str(i) + "{constants.CSLE.CSLE_SUBNETMASK}")
         ip = ip_prefix + str(i) + ".254"
         cmd = f"docker network connect --ip {ip} {net} {container}"
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)

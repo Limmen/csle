@@ -232,9 +232,9 @@ class EnvConfigGenerator:
             network_info = stream.read()
             network_info = json.loads(network_info)
             for k in network_info.keys():
-                if re.match(r"csle_internal_net_\d", k):
+                if re.match(rf"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_\d", k):
                    networks_in_use.append(k)
-                   network_ids_in_use.append(int(k.replace("csle_internal_net_", "")))
+                   network_ids_in_use.append(int(k.replace(f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_", "")))
 
         return networks_in_use, network_ids_in_use
 

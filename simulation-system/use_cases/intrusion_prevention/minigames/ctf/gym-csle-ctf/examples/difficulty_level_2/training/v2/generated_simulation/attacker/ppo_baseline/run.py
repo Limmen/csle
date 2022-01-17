@@ -46,11 +46,11 @@ def default_config() -> ClientConfig:
     env_name = "csle-ctf-level-2-generated-sim-costs-v2"
     eval_env_name = "csle-ctf-level-2-emulation-costs-v2"
 
-    # eval_emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip="172.18.2.191",
+    # eval_emulation_config = emulationConfig(server_ip="172.31.212.91", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")
-    eval_emulation_config = EmulationConfig(agent_ip="172.18.2.191", agent_username="agent", agent_pw="agent",
+    eval_emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", agent_username="agent", agent_pw="agent",
                                           server_connection=False, port_forward_next_port=3800)
 
     client_config = ClientConfig(env_name=env_name, attacker_agent_config=agent_config,

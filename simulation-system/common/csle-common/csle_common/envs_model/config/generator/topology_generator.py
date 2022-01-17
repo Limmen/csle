@@ -111,7 +111,7 @@ class TopologyGenerator:
 
             node_cfg = NodeFirewallConfig(ip=ip, output_accept=output_accept, input_accept=input_accept,
                                forward_accept=forward_accept, output_drop=set(), input_drop=set(), forward_drop=set(),
-                               routes=set(), default_input="DROP", default_output="DROP", default_forward="DROP",
+                               routes=set(), default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP, default_forward=constants.FIREWALL.DROP,
                                default_gw=default_gw)
             node_fw_configs.append(node_cfg)
 
@@ -249,7 +249,7 @@ class TopologyGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix="172.18.2.")
+    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
     print(adj_matrix)
     print(gws)
     print(topology)

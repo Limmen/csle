@@ -70,7 +70,7 @@ from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from csle_common.dao.network.emulation_config import EmulationConfig
 
 # Specify configuration to connect to the emulation
-emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False)
 
 # Create gym interface
@@ -114,7 +114,7 @@ from csle_common.dao.network.emulation_config import EmulationConfig
 from gym_csle_ctf.agents.manual.manual_attacker_agent import ManualAttackerAgent
 
 # Specify configuration for connecting to the emulation
-emulation_config = EmulationConfig(agent_ip="172.18.7.191", agent_username="agent", agent_pw="agent",
+emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}7.191", agent_username="agent", agent_pw="agent",
                                    port_forward_next_port=4600,
                                    server_connection=True, warmup=False, warmup_iterations=500,
                                    server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",

@@ -4,25 +4,25 @@ import gym
 
 
 def manual_control():
-    # emulation_config = emulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    # emulation_config = emulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim")
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191",
     #                                  agent_username="agent", agent_pw="agent", server_connection=True,
     #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                  server_username="kim", port_forward_next_port=8120)
-    # emulation_config = EmulationConfig(agent_ip="172.18.9.192", agent_username="agent", agent_pw="agent",
+    # emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.192", agent_username="agent", agent_pw="agent",
     #                                port_forward_next_port=4600,
     #                                server_connection=True, warmup=False, warmup_iterations=500,
     #                                server_private_key_file="/Users/kimham/.ssh/csle_id_rsa",
     #                                server_username="kim", server_ip="172.31.212.92"
     #                                )
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.9.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191",
     #                                  agent_username="agent", agent_pw="agent", server_connection=True,
     #                                  server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                  server_username="kim", port_forward_next_port=3600)
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191", agent_username="agent", agent_pw="agent",
                                    server_connection=False, port_forward_next_port=3600)
 
     # emulation_config.save_dynamics_model_dir = "/home/kim/csle/simulation-system/use_cases/intrusion_prevention/minigames/ctf/" \

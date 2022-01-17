@@ -7,28 +7,29 @@ from csle_common.envs_model.config.generator.users_generator import UsersGenerat
 import csle_common.constants.constants as constants
 
 
-def default_users() -> UsersConfig:
+def default_users(network_id) -> UsersConfig:
     """
+    :param network_id: the network id
     :return: the UsersConfig of the emulation
     """
     users = [
-        NodeUsersConfig(ip="172.18.4.191", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191", users=[
             ("agent", "agent", True)
         ]),
-        NodeUsersConfig(ip="172.18.4.21", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21", users=[
             ("admin", "admin31151x", True),
             ("test", "qwerty", True),
             ("oracle", "abc123", False)
         ]),
-        NodeUsersConfig(ip="172.18.4.10", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10", users=[
             ("admin", "admin1235912", True),
             ("jessica", "water", False)
         ]),
-        NodeUsersConfig(ip="172.18.4.2", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2", users=[
             ("admin", "test32121", True),
             ("user1", "123123", True)
         ]),
-        NodeUsersConfig(ip="172.18.4.3", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3", users=[
             ("john", "doe", True),
             ("vagrant", "test_pw1", False)
         ])
@@ -36,11 +37,14 @@ def default_users() -> UsersConfig:
     users_conf = UsersConfig(users=users)
     return users_conf
 
+
 # Generates the users.json configuration file
 if __name__ == '__main__':
+    network_id = 4
     if not os.path.exists(util.default_users_path()):
-        UsersGenerator.write_users_config(default_users())
+        UsersGenerator.write_users_config(default_users(network_id=network_id))
     users_config = util.read_users_config(util.default_users_path())
-    emulation_config = EmulationConfig(agent_ip="172.18.4.191", agent_username=constants.csle_ADMIN.USER,
-                                     agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                                       agent_username=constants.csle_ADMIN.USER,
+                                       agent_pw=constants.csle_ADMIN.PW, server_connection=False)
     UsersGenerator.create_users(users_config=users_config, emulation_config=emulation_config)

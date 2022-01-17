@@ -45,15 +45,15 @@ def default_config() -> ClientConfig:
     env_name = "csle-ctf-level-9-emulation-v5"
     eval_env_name = "csle-ctf-level-9-emulation-v5"
 
-    emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191", agent_username="agent", agent_pw="agent",
                                        server_connection=False, port_forward_next_port=4000)
-    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.4.191",
+    # emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}4.191",
     #                                         agent_username="agent", agent_pw="agent", server_connection=True,
     #                                         server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                         server_username="kim", port_forward_next_port=4000)
-    eval_emulation_config = EmulationConfig(agent_ip="172.18.9.191", agent_username="agent", agent_pw="agent",
+    eval_emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9.191", agent_username="agent", agent_pw="agent",
                                             server_connection=False, port_forward_next_port=5000)
-    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip="172.18.4.191",
+    # eval_emulation_config = EmulationConfig(server_ip="172.31.212.92", agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}4.191",
     #                                agent_username="agent", agent_pw="agent", server_connection=True,
     #                                server_private_key_file="/home/kim/.ssh/id_rsa",
     #                                server_username="kim", port_forward_next_port=5000)
