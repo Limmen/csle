@@ -1,9 +1,9 @@
-all: run users topology vuln gen_containers_config flags resources traffic
+all: run users topology vuln create_containers_config flags resources traffic
 
 .PHONY: run
 
 # Runs all containers in the emulation
-run: gen_containers_config
+run: create_containers_config
 	cd containers/router_2_1/ && $(MAKE) run
 	cd containers/ssh_1_1/ && $(MAKE) run
 	cd containers/telnet_1_1/ && $(MAKE) run
@@ -125,7 +125,7 @@ clean:
 
 
 # Applies the config to a started emulation (assumes all containers are started)
-apply_config: users vuln flags topology gen_containers_config resources traffic
+apply_config: users vuln flags topology create_containers_config resources traffic
 
 # Applies the topology config to a started emulation (assumes all containers are started)
 topology: create_topology.py
@@ -144,8 +144,8 @@ vuln: create_vuln.py
 	python create_vuln.py
 
 # Generates the container configuration
-gen_containers_config: gen_containers_config.py
-	python gen_containers_config.py
+create_containers_config: create_containers_config.py
+	python create_containers_config.py
 
 # Applies the resource constraints config to a started emulation (assumes all containers are started)
 resources: create_resource_constraints.py

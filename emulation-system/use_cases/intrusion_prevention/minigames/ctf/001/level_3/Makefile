@@ -169,7 +169,7 @@ vuln: create_vuln.py
 	python create_vuln.py
 
 # Generates the container configuration
-gen_containers_config: gen_containers_config.py
+gen_containers_config: create_containers_config.py
 	python gen_containers_config.py
 
 # Applies the resource constraints config to a started emulation (assumes all containers are started)

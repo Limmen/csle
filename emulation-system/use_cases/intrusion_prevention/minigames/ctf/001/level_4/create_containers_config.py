@@ -6,34 +6,43 @@ from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 
 
-def default_containers_config(network_id: int = 4) -> ContainersConfig:
+def default_containers_config(network_id: int = 4, level: str = "4", version: str = "0.0.1") -> ContainersConfig:
     """
+    :param version: the version of the containers to use
+    :param level: the level parameter of the emulation
     :param network_id: the network id
     :return: the ContainersConfig of the emulation
     """
     containers = [
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version, level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
-                            minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version, level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1",
-                            level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version,
+                            level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1",
-                            level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version,
+                            level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version, level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version, level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}", network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
-                            minigame="ctf", version="0.0.1", level="4",
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
+                            network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_{network_id}",
+                            minigame={constants.CSLE.CTF_MINIGAME}, version=version, level=level,
                             ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3")
     ]
     containers_cfg = ContainersConfig(containers=containers, network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_4",
@@ -49,7 +58,9 @@ def default_containers_config(network_id: int = 4) -> ContainersConfig:
 # Generates the containers.json configuration file
 if __name__ == '__main__':
     network_id = 4
+    version = "0.0.1"
+    level = 4
     if os.path.exists(util.default_containers_path(out_dir=util.default_output_dir())):
         os.remove(util.default_containers_path(out_dir=util.default_output_dir()))
-    containers_cfg = default_containers_config(network_id=network_id)
+    containers_cfg = default_containers_config(network_id=network_id, level=level, version=version)
     ContainerGenerator.write_containers_config(containers_cfg, path=util.default_output_dir())

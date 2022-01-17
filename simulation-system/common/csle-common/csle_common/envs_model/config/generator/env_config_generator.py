@@ -240,12 +240,14 @@ class EnvConfigGenerator:
 
 
     @staticmethod
-    def create_container_dirs(container_config: ContainersConfig, path: str = None) -> None:
+    def create_container_dirs(container_config: ContainersConfig, path: str = None,
+                              create_folder_makefile: bool = True) -> None:
         """
         Utility function for creating the container directories with the start scripts
 
         :param container_config: the configuration of the containers
         :param path: the path where to create the directories
+        :param create_folder_makefile: a boolean flag indicating whether to create a Makefile for the folder or not
         :return: None
         """
         containers_folders_dir = util.default_containers_folders_path(out_dir=path)
@@ -290,7 +292,8 @@ class EnvConfigGenerator:
                 with io.open(c_dir + constants.DOCKER.MAKEFILE_PATH, 'w', encoding='utf-8') as f:
                     f.write(makefile_str)
 
-        EnvConfigGenerator.create_makefile(container_names, path=path)
+        if create_folder_makefile:
+            EnvConfigGenerator.create_makefile(container_names, path=path)
 
     @staticmethod
     def create_makefile(container_names, path: str = None) -> None:

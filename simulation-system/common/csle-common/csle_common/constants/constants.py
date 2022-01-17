@@ -788,7 +788,7 @@ class TRAFFIC_COMMANDS:
             "ping {} > /dev/null 2>&1",
             "traceroute {} > /dev/null 2>&1"
         ],
-        f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"pengine_exploit_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
         "timeout 5 curl {}:4000 > /dev/null 2>&1",
                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
                                   --data $'{\"application\": \"pengine_sandbox\", \"ask\": "
