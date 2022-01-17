@@ -11,6 +11,6 @@ if __name__ == '__main__':
         raise ValueError("You must first generate the traffic.json file")
     traffic_config = util.read_users_config(util.default_traffic_path())
     emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                                       agent_username=constants.csle_ADMIN.USERn,
-                                       agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+                                       agent_username=constants.CSLE_ADMIN.USERn,
+                                       agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     TrafficGenerator.stop_traffic_generators(traffic_config=traffic_config, emulation_config=emulation_config)

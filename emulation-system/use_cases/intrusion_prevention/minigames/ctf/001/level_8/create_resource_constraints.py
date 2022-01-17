@@ -17,7 +17,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
     """
     node_resources_configurations = [
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                            container_name="csle-ctf-hacker_kali_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -34,7 +35,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
-                            container_name="csle-ctf-client_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CLIENT_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -51,7 +53,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                            container_name="csle-ctf-honeypot_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -68,7 +71,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                            container_name="csle-ctf-router_2_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -85,7 +89,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                            container_name="csle-ctf-ssh_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -102,7 +107,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                            container_name="csle-ctf-telnet_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.TELNET_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -119,7 +125,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                            container_name="csle-ctf-ftp_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.FTP_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -136,7 +143,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
-                            container_name="csle-ctf-samba_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SAMBA_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -153,7 +161,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.31",
-                            container_name="csle-ctf-shellshock_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -170,7 +179,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.42",
-                            container_name="csle-ctf-sql_injection_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -187,7 +197,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.37",
-                            container_name="csle-ctf-cve_2015_3306_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -204,7 +215,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.82",
-                            container_name="csle-ctf-cve_2015_1427_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -221,7 +233,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.75",
-                            container_name="csle-ctf-cve_2016_10033_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -238,7 +251,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.71",
-                            container_name="csle-ctf-cve_2010_0426_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2010_0426_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -255,7 +269,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
-                            container_name="csle-ctf-cve_2015_5602_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -272,7 +287,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.51",
-                            container_name="csle-ctf-ssh_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SSH_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -289,7 +305,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.52",
-                            container_name="csle-ctf-ssh_1_3-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SSH_1}_3-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -306,7 +323,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.53",
-                            container_name="csle-ctf-honeypot_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -323,7 +341,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54",
-                            container_name="csle-ctf-samba_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SAMBA_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -340,7 +359,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.55",
-                            container_name="csle-ctf-shellshock_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -357,7 +377,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.56",
-                            container_name="csle-ctf-sql_injection_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -374,7 +395,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.57",
-                            container_name="csle-ctf-cve_2015_3306_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -391,7 +413,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.58",
-                            container_name="csle-ctf-cve_2015_1427_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -408,7 +431,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.59",
-                            container_name="csle-ctf-cve_2016_10033_1_2-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}_2-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -425,7 +449,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
-                            container_name="csle-ctf-cve_2015_5602_1_1-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}_1-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -442,7 +467,8 @@ def default_resource_constraints(network_id: int = 8) -> ResourcesConfig:
                                 cell_overhead_bytes=0
                             )),
         NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62",
-                            container_name="csle-ctf-ssh_1_4-level8",
+                            container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                                           f"{constants.CONTAINER_IMAGES.SSH_1}_4-{constants.CSLE.LEVEL}8",
                             num_cpus=1, available_memory_gb=4,
                             network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
@@ -472,7 +498,7 @@ if __name__ == '__main__':
             resources_config=default_resource_constraints(network_id=network_id))
     resources_config = util.read_resources_config(util.default_resources_path())
     emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                                       agent_username=constants.csle_ADMIN.USER,
-                                       agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+                                       agent_username=constants.CSLE_ADMIN.USER,
+                                       agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     ResourceConstraintsGenerator.apply_resource_constraints(resources_config=resources_config,
                                                             emulation_config=emulation_config)

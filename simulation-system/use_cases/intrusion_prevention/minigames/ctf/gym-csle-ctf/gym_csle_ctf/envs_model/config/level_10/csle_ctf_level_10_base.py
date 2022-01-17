@@ -50,7 +50,7 @@ class CSLECTFLevel10Base:
                  set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.10",
                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82",
                       f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104"]),
-                      flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
+                      flags=[Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
                           Credential(username="puppet", pw="puppet"),
@@ -111,7 +111,7 @@ class CSLECTFLevel10Base:
                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37",
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11",
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104"]),
-                      flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
+                      flags=[Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
                           Credential(username="john", pw="doe"),
@@ -171,7 +171,7 @@ class CSLECTFLevel10Base:
                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37",
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11",
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104"]),
-                      flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
+                      flags=[Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
                           Credential(username="l_hopital", pw="l_hopital"),
@@ -210,7 +210,7 @@ class CSLECTFLevel10Base:
                       ]
                       ),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", ip_id=19, id=6, type=NodeType.SERVER,
-                      flags=[Flag(name="flag4", path="/tmp", id=4, requires_root=False, score=1)],
+                      flags=[Flag(name="flag4", path=f"/{constants.COMMANDS.TMP_DIR}", id=4, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="karl", pw="gustaf"),
@@ -239,7 +239,7 @@ class CSLECTFLevel10Base:
                                         protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", ip_id=31, id=7, type=NodeType.SERVER,
-                      flags=[Flag(name="flag5", path="/tmp", id=5, requires_root=False, score=1)],
+                      flags=[Flag(name="flag5", path=f"/{constants.COMMANDS.TMP_DIR}", id=5, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="stefan", pw="zweig")
@@ -265,7 +265,7 @@ class CSLECTFLevel10Base:
                                         protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", ip_id=42, id=8, type=NodeType.SERVER,
-                      flags=[Flag(name="flag6", path="/tmp", id=6, requires_root=False, score=1)],
+                      flags=[Flag(name="flag6", path=f"/{constants.COMMANDS.TMP_DIR}", id=6, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="roy", pw="neruda"),
@@ -290,7 +290,7 @@ class CSLECTFLevel10Base:
                                         port=80, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37", ip_id=37, id=9, type=NodeType.SERVER,
-                      flags=[Flag(name="flag7", path="/tmp", id=7, requires_root=False, score=1)],
+                      flags=[Flag(name="flag7", path=f"/{constants.COMMANDS.TMP_DIR}", id=7, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="john", pw="conway"),
@@ -317,7 +317,7 @@ class CSLECTFLevel10Base:
                                         port=21, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82", ip_id=82, id=10, type=NodeType.SERVER,
-                      flags=[Flag(name="flag8", path="/tmp", id=8, requires_root=False, score=1)],
+                      flags=[Flag(name="flag8", path=f"/{constants.COMMANDS.TMP_DIR}", id=8, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="john", pw="nash"),
@@ -344,7 +344,7 @@ class CSLECTFLevel10Base:
                                         port=21, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", ip_id=75, id=11, type=NodeType.SERVER,
-                      flags=[Flag(name="flag9", path="/tmp", id=9, requires_root=False, score=1)],
+                      flags=[Flag(name="flag9", path=f"/{constants.COMMANDS.TMP_DIR}", id=9, requires_root=False, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="larry", pw="samuelson"),
@@ -369,7 +369,7 @@ class CSLECTFLevel10Base:
                                         port=constants.CVE_2016_10033.PORT, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", ip_id=71, id=11, type=NodeType.SERVER,
-                      flags=[Flag(name="flag10", path="/root", id=10, requires_root=True, score=1)],
+                      flags=[Flag(name="flag10", path=f"/{constants.COMMANDS.ROOT_DIR}", id=10, requires_root=True, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="robbins", pw="monro"),
@@ -403,7 +403,7 @@ class CSLECTFLevel10Base:
                                         ], port=None, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11", ip_id=11, id=12, type=NodeType.SERVER,
-                      flags=[Flag(name="flag11", path="/root", id=11, requires_root=True, score=1)],
+                      flags=[Flag(name="flag11", path=f"/{constants.COMMANDS.ROOT_DIR}", id=11, requires_root=True, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="rich", pw="sutton"),
@@ -436,7 +436,7 @@ class CSLECTFLevel10Base:
                                         ], port=None, protocol=TransportProtocol.TCP)
                       ]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104", ip_id=104, id=13, type=NodeType.SERVER,
-                      flags=[Flag(name="flag12", path="/root", id=12, requires_root=True, score=1)],
+                      flags=[Flag(name="flag12", path=f"/{constants.COMMANDS.ROOT_DIR}", id=12, requires_root=True, score=1)],
                       level=3, os="linux",
                       credentials=[
                           Credential(username="abraham", pw="wald"),
@@ -537,18 +537,18 @@ class CSLECTFLevel10Base:
         :return: dict with the flags
         """
         flags_lookup = {}
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", "/tmp/flag5")] = Flag(name="flag5", path="/tmp", id=5, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37", "/tmp/flag7")] = Flag(name="flag7", path="/tmp", id=7, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82", "/tmp/flag8")] = Flag(name="flag8", path="/tmp", id=8, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", "/tmp/flag9")] = Flag(name="flag9", path="/tmp", id=9, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", "/root/flag10")] = Flag(name="flag10", path="/root", id=10, requires_root=True, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11", "/root/flag11")] = Flag(name="flag11", path="/root", id=11, requires_root=True, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104", "/root/flag12")] = Flag(name="flag12", path="/root", id=12, requires_root=True, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.2", f"/{constants.COMMANDS.TMP_DIR}/flag2")] = Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.3", f"/{constants.COMMANDS.ROOT_DIR}/flag1")] = Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.79", f"/{constants.COMMANDS.TMP_DIR}/flag3")] = Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.19", f"/{constants.COMMANDS.TMP_DIR}/flag4")] = Flag(name="flag4", path=f"/{constants.COMMANDS.TMP_DIR}", id=4, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.31", f"/{constants.COMMANDS.TMP_DIR}/flag5")] = Flag(name="flag5", path=f"/{constants.COMMANDS.TMP_DIR}", id=5, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.42", f"/{constants.COMMANDS.TMP_DIR}/flag6")] = Flag(name="flag6", path=f"/{constants.COMMANDS.TMP_DIR}", id=6, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.37", f"/{constants.COMMANDS.TMP_DIR}/flag7")] = Flag(name="flag7", path=f"/{constants.COMMANDS.TMP_DIR}", id=7, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.82", f"/{constants.COMMANDS.TMP_DIR}/flag8")] = Flag(name="flag8", path=f"/{constants.COMMANDS.TMP_DIR}", id=8, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.75", f"/{constants.COMMANDS.TMP_DIR}/flag9")] = Flag(name="flag9", path=f"/{constants.COMMANDS.TMP_DIR}", id=9, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.71", f"/{constants.COMMANDS.ROOT_DIR}/flag10")] = Flag(name="flag10", path=f"/{constants.COMMANDS.ROOT_DIR}", id=10, requires_root=True, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.11", f"/{constants.COMMANDS.ROOT_DIR}/flag11")] = Flag(name="flag11", path=f"/{constants.COMMANDS.ROOT_DIR}", id=11, requires_root=True, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}10.104", f"/{constants.COMMANDS.ROOT_DIR}/flag12")] = Flag(name="flag12", path=f"/{constants.COMMANDS.ROOT_DIR}", id=12, requires_root=True, score=1)
         return flags_lookup
 
     @staticmethod

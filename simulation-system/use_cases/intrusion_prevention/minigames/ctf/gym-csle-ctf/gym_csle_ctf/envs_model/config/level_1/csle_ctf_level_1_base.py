@@ -47,7 +47,7 @@ class CSLECTFLevel1Base:
                       root_usernames=["admin"]),
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", ip_id=2, id=2, type=NodeType.SERVER, reachable_nodes =
                  set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.10"]),
-                      flags=[Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)], level=3, os="linux",
+                      flags=[Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)], level=3, os="linux",
                       credentials=[
                           Credential(username="admin", pw="test32121"),
                           Credential(username="puppet", pw="puppet"),
@@ -106,7 +106,7 @@ class CSLECTFLevel1Base:
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
                       reachable_nodes = set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.10"]),
-                      flags=[Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)], level=3,
+                      flags=[Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True, score=1)], level=3,
                       credentials=[
                           Credential(username="admin", pw="admin"),
                           Credential(username="john", pw="doe"),
@@ -159,7 +159,7 @@ class CSLECTFLevel1Base:
                  Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", ip_id=79, id=5, type=NodeType.SERVER,
                       reachable_nodes = set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.191",
                                          f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.10"]),
-                      flags=[Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)], level=3,
+                      flags=[Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False, score=1)], level=3,
                       os="linux",
                       credentials=[
                           Credential(username="l_hopital", pw="l_hopital"),
@@ -259,9 +259,9 @@ class CSLECTFLevel1Base:
         :return: dict with the flags
         """
         flags_lookup = {}
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.2", f"/{constants.COMMANDS.TMP_DIR}/flag2")] = Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.3", f"/{constants.COMMANDS.ROOT_DIR}/flag1")] = Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}1.79", f"/{constants.COMMANDS.TMP_DIR}/flag3")] = Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False, score=1)
         return flags_lookup
 
     @staticmethod

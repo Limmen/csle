@@ -20,47 +20,47 @@ def generate_envs(num_envs : int, min_num_users : int = 1, max_num_users : int =
     """
     EnvConfigGenerator.cleanup_envs(path = util.default_output_dir())
 
-    # container_pool = [("ftp_1", "0.0.1"), ("ftp_2", "0.0.1"), ("honeypot_1", "0.0.1"),
-    #                   ("honeypot_2", "0.0.1"),
-    #                   ("ssh_1", "0.0.1"), ("ssh_2", "0.0.1"),
-    #                   ("ssh_3", "0.0.1"), ("telnet_1", "0.0.1"), ("telnet_2", "0.0.1"), ("telnet_3", "0.0.1"),
-    #                   ("cve_2015_1427_1", "0.0.1"), ("cve_2015_3306_1", "0.0.1"), ("cve_2016_10033_1", "0.0.1"),
-    #                   ("samba_1", "0.0.1"), ("sql_injection_1", "0.0.1"), ("shellshock_1", "0.0.1"),
-    #                   ("cve_2010_0426_1", "0.0.1"), ("cve_2015_5602_1", "0.0.1")
+    # container_pool = [(f"{constants.CONTAINER_IMAGES.FTP_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.FTP_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.HONEYPOT_1}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.HONEYPOT_2}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.SSH_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.SSH_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.SAMBA_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1"),
+    #                   (f"{constants.CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")
     #                   ]
-    container_pool = [("ftp_1", "0.0.1"), ("ftp_2", "0.0.1"), ("honeypot_1", "0.0.1"),
-                      ("honeypot_2", "0.0.1"),
-                      ("ssh_1", "0.0.1"), ("ssh_2", "0.0.1"),
-                      ("ssh_3", "0.0.1"), ("telnet_1", "0.0.1"), ("telnet_2", "0.0.1"), ("telnet_3", "0.0.1"),
+    container_pool = [(f"{constants.CONTAINER_IMAGES.FTP_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.FTP_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.HONEYPOT_1}", "0.0.1"),
+                      (f"{constants.CONTAINER_IMAGES.HONEYPOT_2}", "0.0.1"),
+                      (f"{constants.CONTAINER_IMAGES.SSH_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                      (f"{constants.CONTAINER_IMAGES.SSH_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
                       ]
 
-    # gw_vuln_compatible_containers = [("ssh_1", "0.0.1"), ("ssh_2", "0.0.1"), ("ssh_3", "0.0.1"), ("telnet_1", "0.0.1"),
-    #                                  ("telnet_2", "0.0.1"), ("telnet_3", "0.0.1"),
-    #                                  ("cve_2015_1427_1", "0.0.1"), ("cve_2015_3306_1", "0.0.1"),
-    #                                  ("cve_2016_10033_1", "0.0.1"),
-    #                                  ("samba_1", "0.0.1"), ("sql_injection_1", "0.0.1"),
-    #                                  ("shellshock_1", "0.0.1")
+    # gw_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.SSH_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+    #                                  (f"{constants.CONTAINER_IMAGES.TELNET_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+    #                                  (f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+    #                                  (f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+    #                                  (f"{constants.CONTAINER_IMAGES.SAMBA_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+    #                                  (f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
     #                                  ]
-    gw_vuln_compatible_containers = [("ssh_1", "0.0.1"), ("ssh_2", "0.0.1"), ("ssh_3", "0.0.1"), ("telnet_1", "0.0.1"),
-                                     ("telnet_2", "0.0.1"), ("telnet_3", "0.0.1")]
+    gw_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.SSH_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                                     (f"{constants.CONTAINER_IMAGES.TELNET_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_3}", "0.0.1")]
 
-    pw_vuln_compatible_containers = [("ssh_1", "0.0.1"), ("ssh_2", "0.0.1"), ("ssh_3", "0.0.1"), ("telnet_1", "0.0.1"),
-                                     ("telnet_2", "0.0.1"), ("telnet_3", "0.0.1"), ("ftp_1", "0.0.1"), ("ftp_2", "0.0.1")
+    pw_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.SSH_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SSH_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                                     (f"{constants.CONTAINER_IMAGES.TELNET_2}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.TELNET_3}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.FTP_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.FTP_2}", "0.0.1")
                                      ]
-    # rce_vuln_compatible_containers = [("cve_2015_1427_1", "0.0.1"), ("cve_2015_3306_1", "0.0.1"),
-    #                                   ("cve_2016_10033_1", "0.0.1"),
-    #                                   ("samba_1", "0.0.1"), ("sql_injection_1", "0.0.1"),
-    #                                   ("shellshock_1", "0.0.1")
+    # rce_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+    #                                   (f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+    #                                   (f"{constants.CONTAINER_IMAGES.SAMBA_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+    #                                   (f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
     #                                   ]
     rce_vuln_compatible_containers = []
-    # sql_injection_vuln_compatible_containers = [("sql_injection_1", "0.0.1")]
+    # sql_injection_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1")]
     sql_injection_vuln_compatible_containers = []
-    # priv_esc_vuln_compatible_containers = [("cve_2010_0426_1", "0.0.1"), ("cve_2015_5602_1", "0.0.1")]
+    # priv_esc_vuln_compatible_containers = [(f"{constants.CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")]
     priv_esc_vuln_compatible_containers = []
 
-    agent_containers = [(("hacker_kali_1", "0.0.1"))]
-    #router_containers = [("router_1", "0.0.1"), ("router_2", "0.0.1")]
-    router_containers = [("router_2", "0.0.1")]
+    agent_containers = [((f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}", "0.0.1"))]
+    #router_containers = [(f"{constants.CONTAINER_IMAGES.ROUTER_1}", "0.0.1"), (f"{constants.CONTAINER_IMAGES.ROUTER_2}", "0.0.1")]
+    router_containers = [(f"{constants.CONTAINER_IMAGES.ROUTER_2}", "0.0.1")]
 
     container_env_config = ContainerEnvConfig(
         min_num_users=min_num_users, max_num_users=max_num_users, min_num_flags=min_num_flags,

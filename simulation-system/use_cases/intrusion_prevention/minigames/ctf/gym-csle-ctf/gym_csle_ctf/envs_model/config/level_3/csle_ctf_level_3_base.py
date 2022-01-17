@@ -71,16 +71,16 @@ class CSLECTFLevel3Base:
         :return: dict with the flags
         """
         flags_lookup = {}
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.2", "/tmp/flag2")] = Flag(name="flag2", path="/tmp", id=2, requires_root=False, score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.3", "/root/flag1")] = Flag(name="flag1", path="/root", id=1, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.2", f"/{constants.COMMANDS.TMP_DIR}/flag2")] = Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.3", f"/{constants.COMMANDS.ROOT_DIR}/flag1")] = Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True,
                                                            score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.79", "/tmp/flag3")] = Flag(name="flag3", path="/tmp", id=3, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.79", f"/{constants.COMMANDS.TMP_DIR}/flag3")] = Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False,
                                                            score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.54", "/tmp/flag4")] = Flag(name="flag4", path="/tmp", id=4, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.54", f"/{constants.COMMANDS.TMP_DIR}/flag4")] = Flag(name="flag4", path=f"/{constants.COMMANDS.TMP_DIR}", id=4, requires_root=False,
                                                            score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.61", "/root/flag5")] = Flag(name="flag5", path="/root", id=5, requires_root=True,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.61", f"/{constants.COMMANDS.ROOT_DIR}/flag5")] = Flag(name="flag5", path=f"/{constants.COMMANDS.ROOT_DIR}", id=5, requires_root=True,
                                                            score=1)
-        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.7", "/tmp/flag6")] = Flag(name="flag6", path="/tmp", id=6, requires_root=False,
+        flags_lookup[(f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}3.7", f"/{constants.COMMANDS.TMP_DIR}/flag6")] = Flag(name="flag6", path=f"/{constants.COMMANDS.TMP_DIR}", id=6, requires_root=False,
                                                             score=1)
         return flags_lookup
 

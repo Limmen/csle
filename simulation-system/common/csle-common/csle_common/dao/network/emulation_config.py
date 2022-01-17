@@ -106,8 +106,8 @@ class EmulationConfig:
                                                      timeout=3)
         router_conn = paramiko.SSHClient()
         router_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        router_conn.connect(self.ids_router_ip, username=constants.csle_ADMIN.USER,
-                            password=constants.csle_ADMIN.PW,
+        router_conn.connect(self.ids_router_ip, username=constants.CSLE_ADMIN.USER,
+                            password=constants.CSLE_ADMIN.PW,
                             sock=relay_channel, timeout=3)
         self.router_conn = router_conn
         print("Router host connected successfully")

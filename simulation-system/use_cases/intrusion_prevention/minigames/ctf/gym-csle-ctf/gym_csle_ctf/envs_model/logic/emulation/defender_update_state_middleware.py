@@ -157,8 +157,8 @@ class DefenderUpdateStateMiddleware:
                 (node_connections, ec) = s_prime.defender_cached_ssh_connections[node.ip]
                 node_conn = node_connections[0]
             else:
-                ec = env_config.emulation_config.copy(ip=node.ip, username=constants.csle_ADMIN.USER,
-                                                      pw=constants.csle_ADMIN.PW)
+                ec = env_config.emulation_config.copy(ip=node.ip, username=constants.CSLE_ADMIN.USER,
+                                                      pw=constants.CSLE_ADMIN.PW)
                 ec.connect_agent()
                 node_conn = ConnectionObservationState(
                     conn=ec.agent_conn, username=ec.agent_username, root=True, port=22,

@@ -43,6 +43,7 @@ class FIREWALL:
     Firewall string constants
     """
     DROP = "DROP"
+    ACCEPT = "ACCEPT"
 
 
 class NETWORKING:
@@ -557,6 +558,7 @@ class COMMON:
     SERVICES_FILE = "/nmap-services"
     DEFAULT_RECV_SIZE = 5000
     LARGE_RECV_SIZE = 1000000
+    FLAG_FILENAME_PREFIX = "flag"
 
 
 class COMMANDS:
@@ -582,6 +584,7 @@ class COMMANDS:
     RM_F = "rm -f"
     SPACE_DELIM = " "
     TMP_DIR = "tmp"
+    ROOT_DIR = "root"
     HOME_DIR = "home"
     SUDO_RM_RF = "sudo rm -rf"
     SUDO_TOUCH = "sudo touch"
@@ -721,55 +724,55 @@ class TRAFFIC_COMMANDS:
     Constants related to traffic commands
     """
     DEFAULT_COMMANDS = {
-        "ftp_1": ["timeout 5 ftp {} > /dev/null 2>&1",
+        f"ftp_1": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 curl {}:8080 > /dev/null 2>&1"],
-        "ssh_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"ssh_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 curl {}:80 > /dev/null 2>&1"],
-        "telnet_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"telnet_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {} > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "honeypot_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"honeypot_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                       "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
                       "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
                       "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        "samba_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"samba_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                    "(sleep 2; echo testcsleuser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
-        "shellshock_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"shellshock_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                         "timeout 5 curl {} > /dev/null 2>&1",
                         "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1"],
-        "sql_injection_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"sql_injection_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                            "timeout 5 curl {}/login.php > /dev/null 2>&1",
                            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"],
-        "cve_2010_0426_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"cve_2010_0426_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                             "timeout 5 curl {}:8080 > /dev/null 2>&1"],
-        "cve_2015_1427_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"cve_2015_1427_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                             "snmpwalk -v2c {} -c csle_ctf1234"],
-        "cve_2015_3306_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"cve_2015_3306_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                             "snmpwalk -v2c {} -c csle_ctf1234",
                             "timeout 5 curl {} > /dev/null 2>&1"],
-        "cve_2015_5602_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        f"cve_2015_5602_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         "cve_2015_10033_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                              "timeout 5 curl {} > /dev/null 2>&1"],
-        "honeypot_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"honeypot_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                       "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
                       "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
                       "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        "ssh_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"ssh_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
-        "ssh_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"ssh_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
                  ],
-        "telnet_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"telnet_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {}:8080 > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "telnet_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"telnet_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                     "timeout 5 curl {}:8080 > /dev/null 2>&1",
                     "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "ftp_2": ["timeout 5 ftp {} > /dev/null 2>&1",
+        f"ftp_2": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        "client_1_subnet": [
+        f"client_1_subnet": [
             "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap -sP " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
@@ -781,21 +784,25 @@ class TRAFFIC_COMMANDS:
             "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
             "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1"
         ],
-        "client_1_host": [
+        f"client_1_host": [
             "ping {} > /dev/null 2>&1",
             "traceroute {} > /dev/null 2>&1"
         ],
-        "pengine_exploit_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+        f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
         "timeout 5 curl {}:4000 > /dev/null 2>&1",
                              "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
-                                  --data $'{\"application\": \"pengine_sandbox\", \"ask\": \"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", \"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' {}"
+                                  --data $'{\"application\": \"pengine_sandbox\", \"ask\": "
+                             "\"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", "
+                             "\"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],"
+                             "[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],"
+                             "[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' {}"
                              ]
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
 
 
-class csle_ADMIN:
+class CSLE_ADMIN:
     """
     Constants related to the csle admin account
     """
@@ -1078,3 +1085,33 @@ class DOCKER_STATS:
     CONTAINER_NAME = "container_name"
     CONTAINER_ID = "container_id"
     CONTAINER_IP = "container_ip"
+
+
+class CONTAINER_IMAGES:
+    """
+    String constants representing container images names 
+    """
+    SSH_1 = "ssh_1"
+    ROUTER_2="router_2"
+    SAMBA_2 = "samba_2"
+    HONEYPOT_1 = "honeypot_1"
+    FTP_1 = "ftp_1"
+    HACKER_KALI_1 ="hacker_kali_1"
+    SHELLSHOCK_1 = "shellshock_1"
+    SQL_INJECTION_1 = "sql_injection_1"
+    CVE_2010_0426_1 = "cve_2010_0426_1"
+    CVE_2015_1427_1 = "cve_2015_1427_1"
+    HONEYPOT_2 = "honeypot_2"
+    SAMBA_1 = "samba_1"
+    CVE_2015_3306_1 = "cve_2015_3306_1"
+    CVE_2015_5602_1 = "cve_2015_5602_1"
+    CVE_2016_10033_1 = "cve_2016_10033_1"
+    CLIENT_1 = "client_1"
+    ROUTER_1 = "router_1"
+    TELNET_1 = "telnet_1"
+    SSH_2 = "ssh_2"
+    SSH_3 = "ssh_3"
+    TELNET_2 = "telnet_2"
+    TELNET_3 = "telnet_3"
+    FTP_2 = "ftp_2"
+    PENGINE_EXPLOIT_1 = "pengine_exploit_1"

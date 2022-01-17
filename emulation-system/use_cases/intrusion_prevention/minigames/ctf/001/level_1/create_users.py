@@ -44,6 +44,6 @@ if __name__ == '__main__':
         UsersGenerator.write_users_config(default_users(network_id=network_id))
     users_config = util.read_users_config(util.default_users_path())
     emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                                       agent_username=constants.csle_ADMIN.USER,
-                                     agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+                                       agent_username=constants.CSLE_ADMIN.USER,
+                                       agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     UsersGenerator.create_users(users_config=users_config, emulation_config=emulation_config)

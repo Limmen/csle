@@ -11,8 +11,8 @@ def apply_config() -> None:
     flags_config = util.read_flags_config(util.default_flags_path())
     containers_config = util.read_containers_config(util.default_containers_path())
 
-    emulation_config = EmulationConfig(agent_ip=containers_config.agent_ip, agent_username=constants.csle_ADMIN.USER,
-                                     agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+    emulation_config = EmulationConfig(agent_ip=containers_config.agent_ip, agent_username=constants.CSLE_ADMIN.USER,
+                                       agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
 
     FlagsGenerator.create_flags(flags_config=flags_config, emulation_config=emulation_config)
 

@@ -56,8 +56,8 @@ RUN wget --no-check-certificate https://raw.githubusercontent.com/nmap/nmap/mast
     wget --no-check-certificate https://cve.mitre.org/data/downloads/allitems.csv
 
 # Conda
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
+ENV PATH=f"/{constants.COMMANDS.ROOT_DIR}/miniconda3/bin:${PATH}"
+ARG PATH=f"/{constants.COMMANDS.ROOT_DIR}/miniconda3/bin:${PATH}"
 RUN wget --no-check-certificate \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir /root/.conda \

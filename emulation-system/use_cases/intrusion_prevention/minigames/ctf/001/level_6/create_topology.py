@@ -13,7 +13,7 @@ def default_topology(network_id: int = 6) -> Topology:
     :return: the Topology of the emulation
     """
     node_1 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                                hostname="router_2_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.ROUTER_2}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -62,7 +62,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 default_forward=constants.FIREWALL.DROP, default_gw=None)
 
     node_2 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                                hostname="ssh_1_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.SSH_1}_1",
                                 output_accept=set(
                                     [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                      f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
@@ -95,10 +95,10 @@ def default_topology(network_id: int = 6) -> Topology:
                                             (f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74",
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3")]),
                                 default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward="ACCEPT", default_gw=None)
+                                default_forward=constants.FIREWALL.ACCEPT, default_gw=None)
 
     node_3 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                                hostname="telnet_1_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.TELNET_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -130,12 +130,12 @@ def default_topology(network_id: int = 6) -> Topology:
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74"), (
                                             f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.101",
                                             f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74")]),
-                                default_input="ACCEPT", default_output=constants.FIREWALL.DROP,
-                                default_forward="ACCEPT",
+                                default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.DROP,
+                                default_forward=constants.FIREWALL.ACCEPT,
                                 default_gw=None)
 
     node_4 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                                hostname="honeypot_1_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -174,7 +174,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 )
 
     node_5 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                                hostname="ftp_1_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.FTP_1}_1",
                                 output_accept=set(
                                     [f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                      f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
@@ -212,7 +212,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 default_forward=constants.FIREWALL.DROP, default_gw=None)
 
     node_6 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                                hostname="hacker_kali_1_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -234,7 +234,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
 
     node_7 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54",
-                                hostname="ssh_2_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.SSH_2}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -280,7 +280,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 )
 
     node_8 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74",
-                                hostname="ssh_3_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.SSH_3}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -329,11 +329,11 @@ def default_topology(network_id: int = 6) -> Topology:
                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62")
                                 ]),
                                 default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward="ACCEPT",
+                                default_forward=constants.FIREWALL.ACCEPT,
                                 default_gw=None)
 
     node_9 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
-                                hostname="telnet_2_1",
+                                hostname=f"{constants.CONTAINER_IMAGES.TELNET_2}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -384,7 +384,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                 default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3")
 
     node_10 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62",
-                                 hostname="telnet_3_1",
+                                 hostname=f"{constants.CONTAINER_IMAGES.TELNET_3}_1",
                                  output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -436,10 +436,10 @@ def default_topology(network_id: int = 6) -> Topology:
                                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74")]),
                                  forward_drop=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7"]),
                                  default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                 default_forward="ACCEPT", default_gw=None)
+                                 default_forward=constants.FIREWALL.ACCEPT, default_gw=None)
 
     node_11 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.101",
-                                 hostname="honeypot_2_1",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_1",
                                  output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -465,7 +465,7 @@ def default_topology(network_id: int = 6) -> Topology:
                                  default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74")
 
     node_12 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7",
-                                 hostname="ftp_2_1",
+                                 hostname=f"{constants.CONTAINER_IMAGES.FTP_2}_1",
                                  output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -490,154 +490,154 @@ def default_topology(network_id: int = 6) -> Topology:
                                  default_forward=constants.FIREWALL.DROP,
                                  default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62")
     node_13 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.4",
-                                 hostname="honeypot_1_2",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_2",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_14 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.5",
-                                 hostname="honeypot_1_3",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_3",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_15 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.6",
-                                 hostname="honeypot_1_4",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_4",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_16 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.8",
-                                 hostname="honeypot_1_5",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_5",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_17 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.9",
-                                 hostname="honeypot_1_6",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_6",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_18 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.178",
-                                 hostname="honeypot_1_7",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_7",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_19 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
-                                 hostname="honeypot_2_2",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_2",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_20 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.12",
-                                 hostname="honeypot_2_3",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_3",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_21 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.13",
-                                 hostname="honeypot_2_4",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_4",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_22 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.14",
-                                 hostname="honeypot_2_5",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_5",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_23 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.15",
-                                 hostname="honeypot_2_6",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_6",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_24 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.16",
-                                 hostname="honeypot_2_7",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_7",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_25 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.17",
-                                 output_accept=set(), hostname="honeypot_2_8",
+                                 output_accept=set(), hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_8",
                                  input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_26 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.18",
-                                 hostname="honeypot_2_9",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_9",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_27 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
-                                 hostname="honeypot_2_10",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_10",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_28 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.20",
-                                 hostname="honeypot_2_11",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_11",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_29 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.22",
-                                 hostname="honeypot_2_12",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_12",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_30 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.23",
-                                 hostname="honeypot_2_13",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_13",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_31 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.24",
-                                 hostname="honeypot_2_14",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_14",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_32 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.25",
-                                 hostname="honeypot_2_15",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_15",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_33 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.28",
-                                 hostname="honeypot_2_16",
+                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_16",
                                  output_accept=set(), input_accept=set(), forward_accept=set(),
                                  output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(), default_input="ACCEPT", default_output="ACCEPT",
-                                 default_forward="ACCEPT",
+                                 routes=set(), default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                                 default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
     node_34 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
-                                 hostname="client_1_1",
+                                 hostname=f"{constants.CONTAINER_IMAGES.CLIENT_1}_1",
                                  output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -673,6 +673,6 @@ if __name__ == '__main__':
         TopologyGenerator.write_topology(default_topology(network_id=network_id))
     topology = util.read_topology(util.default_topology_path())
     emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                                       agent_username=constants.csle_ADMIN.USER,
-                                       agent_pw=constants.csle_ADMIN.PW, server_connection=False)
+                                       agent_username=constants.CSLE_ADMIN.USER,
+                                       agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     TopologyGenerator.create_topology(topology=topology, emulation_config=emulation_config)
