@@ -13,7 +13,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
     :return: the TrafficConfig of the emulation
     """
     traffic_generators = [
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
+        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                           commands=[
                               # f"timeout 120 sudo nmap -sS -p- --min-rate 100000 --max-retries 1 -T5 -n {
                               # constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9{constants.CSLE.CSLE_SUBNETMASK} >
@@ -73,49 +73,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10"
                           ], client=True
                           ),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.253",
-                          commands=[
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.21 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.21 -c "
-                              f"csle_ctf1234 > /dev/null 2>&1"
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.21 -p 5432 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.21 > /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.79 > /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.21 > "
-                              f"/dev/null 2>&1"
-                          ],
-                          jumphosts=[],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10"
-                          ], client=True
-                          ),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.252",
-                          commands=[
-                              f"timeout 5 ftp {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.79 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.79 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.79:8080 > /dev/null "
-                              f"2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.2 > /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.3 > /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.2 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}.9.3 > "
-                              f"/dev/null 2>&1"
-                          ],
-                          jumphosts=[],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10"
-                          ], client=True
-                          ),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                           commands=[],
                           jumphosts=[
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
@@ -203,7 +161,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                              f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.4",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.5",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.6",
@@ -252,7 +210,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                              f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54"
                           ],
@@ -293,7 +251,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                              f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.101",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61"
@@ -326,7 +284,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                              f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
                           ],
                           target_hosts=[
@@ -358,7 +316,7 @@ def default_traffic_generators(network_id: int = 9) -> TrafficConfig:
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                              f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                              f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                               f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10"
                           ],
                           target_hosts=[
@@ -1991,7 +1949,7 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_traffic_path()):
         TrafficGenerator.write_traffic_config(default_traffic_generators(network_id=network_id))
     traffic_config = util.read_users_config(util.default_traffic_path())
-    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                                        agent_username=constants.CSLE_ADMIN.USER,
                                        agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     TrafficGenerator.create_traffic_scripts(traffic_config=traffic_config, emulation_config=emulation_config,

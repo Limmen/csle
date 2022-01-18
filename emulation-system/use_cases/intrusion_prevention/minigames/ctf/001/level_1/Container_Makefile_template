@@ -3,7 +3,7 @@ all: run
 # Create and start the container
 run:
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) \
-	--hostname=$(CONTAINER) \
+	--hostname=$(CONTAINER)$(SUFFIX) \
 	--label dir=$(DIR) --label containers_cfg=$(CFG) \
 	--label flags_cfg=$(FLAGSCFG) \
 	--network=none \

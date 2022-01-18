@@ -51,6 +51,7 @@ class NETWORKING:
     Networking string constants
     """
     ETH0 = "eth0"
+    ETH1 = "eth1"
 
 
 class SERVICES:

@@ -233,7 +233,7 @@ def default_topology(network_id: int = 9) -> Topology:
                                 default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
                                 default_forward=constants.FIREWALL.DROP, default_gw=None)
 
-    node_6 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+    node_6 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                                 hostname=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
@@ -703,7 +703,7 @@ def default_topology(network_id: int = 9) -> Topology:
                                  default_output=constants.FIREWALL.ACCEPT,
                                  default_forward=constants.FIREWALL.ACCEPT,
                                  default_gw=None)
-    node_34 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
+    node_34 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                                  hostname=f"{constants.CONTAINER_IMAGES.CLIENT_1}_1",
                                  output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
@@ -726,56 +726,10 @@ def default_topology(network_id: int = 9) -> Topology:
                                  default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
                                  default_forward=constants.FIREWALL.DROP,
                                  default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
-    node_35 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.253",
-                                 hostname=f"{constants.CONTAINER_IMAGES.CLIENT_1}_2",
-                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.1",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
-                                                    f"{network_id}.253"]),
-                                 input_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.1",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
-                                                   f"{network_id}.253"]),
-                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(),
-                                 default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                 default_forward=constants.FIREWALL.DROP,
-                                 default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
-    node_36 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.252",
-                                 hostname=f"{constants.CONTAINER_IMAGES.CLIENT_1}_3",
-                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.1",
-                                                    f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
-                                                    f"{network_id}.252"]),
-                                 input_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.1",
-                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
-                                                   f"{network_id}.252"]),
-                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
-                                 routes=set(),
-                                 default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                 default_forward=constants.FIREWALL.DROP,
-                                 default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11,
                     node_12, node_13, node_14, node_15, node_16, node_17, node_18, node_19, node_20, node_20,
                     node_21, node_22, node_23, node_24, node_25, node_26, node_27, node_28, node_29, node_30,
-                    node_31, node_32, node_33, node_34, node_35, node_36]
+                    node_31, node_32, node_33, node_34]
     topology = Topology(node_configs=node_configs,
                         subnetwork=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK}")
     return topology

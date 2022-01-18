@@ -13,7 +13,7 @@ def default_users(network_id: int = 1) -> UsersConfig:
     :return: generates the UsersConfig
     """
     users = [
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191", users=[
             ("agent", "agent", True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21", users=[
