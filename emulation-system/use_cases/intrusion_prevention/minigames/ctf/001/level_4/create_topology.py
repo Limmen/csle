@@ -40,9 +40,9 @@ def default_topology(network_id: int = 4) -> Topology:
                                                     f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}"
                                                     f"{network_id}.254"]),
                                 output_drop=set(), input_drop=set(), forward_drop=set(), routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP,
-                                default_gw=None
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP,
+                                default_internal_gw=None
                                 )
     node_2 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                                 hostname=f"{constants.CONTAINER_IMAGES.SSH_1}_1",
@@ -65,8 +65,8 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(),
                                 forward_drop=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP, default_gw=None
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP, default_internal_gw=None
                                 )
     node_3 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                                 hostname=f"{constants.CONTAINER_IMAGES.TELNET_1}_1",
@@ -89,8 +89,8 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP, default_gw=None)
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP, default_internal_gw=None)
     node_4 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
                                 hostname=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
@@ -112,8 +112,8 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP, default_gw=None
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP, default_internal_gw=None
                                 )
     node_5 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                                 hostname=f"{constants.CONTAINER_IMAGES.FTP_1}_1",
@@ -136,8 +136,8 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP, default_gw=None)
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP, default_internal_gw=None)
     node_6 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                                 hostname=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
@@ -156,9 +156,9 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.1"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP,
-                                default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP,
+                                default_internal_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
     node_7 = NodeFirewallConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                                 hostname=f"{constants.CONTAINER_IMAGES.CLIENT_1}_1",
                                 output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
@@ -177,12 +177,12 @@ def default_topology(network_id: int = 4) -> Topology:
                                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254"]),
                                 forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
                                 routes=set(),
-                                default_input=constants.FIREWALL.DROP, default_output=constants.FIREWALL.DROP,
-                                default_forward=constants.FIREWALL.DROP,
-                                default_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
+                                default_internal_input=constants.FIREWALL.DROP, default_internal_output=constants.FIREWALL.DROP,
+                                default_internal_forward=constants.FIREWALL.DROP,
+                                default_internal_gw=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10")
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7]
     topology = Topology(node_configs=node_configs,
-                        subnetwork=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK}")
+                        subnetwork=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}")
     return topology
 
 

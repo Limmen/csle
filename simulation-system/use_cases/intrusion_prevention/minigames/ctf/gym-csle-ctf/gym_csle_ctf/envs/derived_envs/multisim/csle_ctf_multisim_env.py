@@ -25,10 +25,10 @@ class CSLECTFMultiSim1Env(CSLECTFEnv):
                 use_base_randomization=True)
             self.randomization_space = randomization_space
             attacker_action_conf = CSLECTFMultiSimV1.attacker_actions_conf(num_nodes=dr_max_num_nodes - 1,
-                                                                  subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK}",
-                                                                  hacker_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191")
+                                                                           subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
+                                                                           hacker_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191")
             defender_action_conf = CSLECTFMultiSimV1.defender_actions_conf(
-                num_nodes=dr_max_num_nodes - 1, subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK}")
+                num_nodes=dr_max_num_nodes - 1, subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}")
             env_config = CSLECTFMultiSimV1.env_config(attacker_action_conf=attacker_action_conf,
                                                       defender_action_conf=defender_action_conf,
                                                       emulation_config=emulation_config, render_conf=render_config,

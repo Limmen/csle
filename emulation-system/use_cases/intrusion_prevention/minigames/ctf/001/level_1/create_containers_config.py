@@ -95,11 +95,11 @@ def default_containers_config(network_id: int = 1, level: str = "1", version: st
         containers=containers, internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
         agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
         router_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-        internal_subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK}",
+        internal_subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
         internal_subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.",
         ids_enabled=False,
         external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-        external_subnet_mask=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK}",
+        external_subnet_mask=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
         external_subnet_prefix=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}."
     )
     return containers_cfg

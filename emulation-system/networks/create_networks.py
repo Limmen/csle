@@ -15,7 +15,7 @@ def parse_args():
 def create_delete_networks(num_networks : int, create = True):
     internal_subnet_mask_prefix = constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX
     external_subnet_mask_prefix = constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX
-    subnetmask_suffix = constants.CSLE.CSLE_SUBNETMASK
+    subnetmask_suffix = constants.CSLE.CSLE_SUBNETMASK_SUFFIX
     internal_network_name_base = constants.CSLE.CSLE_INTERNAL_NET_PREFIX
     external_network_name_base = constants.CSLE.CSLE_EXTERNAL_NET_PREFIX
 

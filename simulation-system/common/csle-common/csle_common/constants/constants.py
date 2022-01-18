@@ -592,6 +592,27 @@ class COMMANDS:
     ECHO = "echo"
     LS_HOME = "ls /home/"
     RM_F_HOME = "rm -f home/"
+    SUDO_ADD_ROUTE = "sudo route add"
+    NETMASK = "netmask"
+    CLEAR_IPTABLES = "sudo iptables -F"
+    IPTABLES_APPEND_INPUT = "sudo iptables -A INPUT"
+    IPTABLES_APPEND_OUTPUT = "sudo iptables -A OUTPUT"
+    IPTABLES_APPEND_FORWARD = "sudo iptables -A FORWARD"
+    ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
+    ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
+    ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
+
+class ETC_HOSTS:
+    """
+    Constants related to /etc/hosts configuration
+    """
+    DEFAULT_HOST_LINE_1 = "'127.0.0.1 localhost'"
+    DEFAULT_HOST_LINE_2 = ":':1 localhost ip6-localhost ip6-loopback'"
+    DEFAULT_HOST_LINE_3 = "'fe00::0 ip6-localnet'"
+    DEFAULT_HOST_LINE_4 = "'ff00::0 ip6-mcastprefix'"
+    DEFAULT_HOST_LINE_5 = "'ff02::1 ip6-allnodes'"
+    DEFAULT_HOST_LINE_6 = "''ff02::2 ip6-allrouters''"
+    APPEND_TO_ETC_HOSTS ="sudo tee -a /etc/hosts"
 
 
 class FILE_PATTERNS:
@@ -981,7 +1002,8 @@ class CSLE:
     CSLE_EXTERNAL_NET_PREFIX = "csle_external_net_"
     CSLE_INTERNAL_NETWORKS_RANGE = "172.18.0.0/16"
     CSLE_EXTERNAL_NETWORKS_RANGE = "100.100.0.0/14"
-    CSLE_SUBNETMASK = ".0/24"
+    CSLE_SUBNETMASK_SUFFIX = ".0/24"
+    CSLE_SUBNETMASK_DIGITS = "255.255.255.0"
     CSLE_INTERNAL_SUBNETMASK_PREFIX = "172.18."
     CSLE_EXTERNAL_SUBNETMASK_PREFIX = "100.101."
     CTF_MINIGAME = "ctf"

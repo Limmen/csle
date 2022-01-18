@@ -13,11 +13,11 @@ def create_network(network_id : int = 1) -> None:
     networks = list(map(lambda x: x.name, networks))
     ContainerManager.create_network(name=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
                                     subnetmask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}"
-                                               f"{constants.CSLE.CSLE_SUBNETMASK}",
+                                               f"{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
                                     existing_network_names=networks)
     ContainerManager.create_network(name=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
                                     subnetmask=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}"
-                                               f"{constants.CSLE.CSLE_SUBNETMASK}",
+                                               f"{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
                                     existing_network_names=networks)
 
 

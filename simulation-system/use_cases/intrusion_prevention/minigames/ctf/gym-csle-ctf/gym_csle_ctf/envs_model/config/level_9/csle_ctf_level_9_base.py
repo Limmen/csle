@@ -39,7 +39,7 @@ class CSLECTFLevel9Base:
         """
         :return: the subnet mask
         """
-        subnet_mask = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9{constants.CSLE.CSLE_SUBNETMASK}"
+        subnet_mask = f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}9{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}"
         return subnet_mask
 
     @staticmethod
