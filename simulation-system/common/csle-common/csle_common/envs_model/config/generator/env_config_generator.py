@@ -190,11 +190,11 @@ class EnvConfigGenerator:
         networks = list(map(lambda x: x.split(), networks))
         networks = list(filter(lambda x: len(x) > 1, networks))
         networks = list(map(lambda x: x[1], networks))
-        internal_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_INTERNAL_NET_PREFIX), x),
+        internal_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x),
                                         networks))
         external_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX), x),
                                         networks))
-        internal_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_INTERNAL_NET_PREFIX, "")),
+        internal_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
                                         internal_networks))
         external_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX, "")),
                                         external_networks))
@@ -234,9 +234,9 @@ class EnvConfigGenerator:
             network_info = stream.read()
             network_info = json.loads(network_info)
             for k in network_info.keys():
-                if re.match(rf"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_\d", k):
+                if re.match(rf"{constants.CSLE.CSLE_NETWORK_PREFIX}_\d", k):
                    networks_in_use.append(k)
-                   network_ids_in_use.append(int(k.replace(f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_", "")))
+                   network_ids_in_use.append(int(k.replace(f"{constants.CSLE.CSLE_NETWORK_PREFIX}_", "")))
 
         return networks_in_use, network_ids_in_use
 
@@ -264,13 +264,17 @@ class EnvConfigGenerator:
         counts = {}
         container_names = []
         for c in container_config.containers:
+            ips = c.get_ips()
             container_resources : NodeResourcesConfig = None
             for r in resources_config.node_resources_configurations:
-                if r.internal_ip == c.internal_ip:
-                    container_resources : NodeResourcesConfig = r
-                    break
+                for ip_net_resources in r.ips_and_network_configs:
+                    ip, net_resources = ip_net_resources
+                    if ip in ips:
+                        container_resources : NodeResourcesConfig = r
+                        break
             if container_resources is None:
-                raise ValueError(f"Container resources not found for container:{c.internal_ip}, resources:{resources_config}")
+                raise ValueError(f"Container resources not found for container with ips:{ips}, "
+                                 f"resources:{resources_config}")
             count = 1
             if c.name in counts:
                 count = counts[c.name] + 1
@@ -281,7 +285,6 @@ class EnvConfigGenerator:
                 os.makedirs(c_dir)
                 makefile_preamble = ""
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.PROJECT + "=csle\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.INTERNAL_NETWORK + "=" + c.internal_network + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.MINIGAME + "=" + c.minigame + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.CONTAINER + "=" + c.name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VERSION + "=" + c.version + "\n"
@@ -297,7 +300,6 @@ class EnvConfigGenerator:
                                     constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VULNERABILITIESCFG + "=" \
                                     + path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.INTERNAL_IP + "=" + c.internal_ip + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.RESTART_POLICY + "="+ c.restart_policy + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.NUM_CPUS + "=" + \
                                     str(container_resources.num_cpus) + "\n"

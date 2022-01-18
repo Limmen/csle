@@ -13,23 +13,23 @@ def default_users(network_id: int = 1) -> UsersConfig:
     :return: generates the UsersConfig
     """
     users = [
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191", users=[
             ("agent", "agent", True)
         ]),
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21", users=[
             ("admin", "admin31151x", True),
             ("test", "qwerty", True),
             ("oracle", "abc123", False)
         ]),
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10", users=[
             ("admin", "admin1235912", True),
             ("jessica", "water", False)
         ]),
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2", users=[
             ("admin", "test32121", True),
             ("user1", "123123", True)
         ]),
-        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3", users=[
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3", users=[
             ("john", "doe", True),
             ("vagrant", "test_pw1", False)
         ])
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_users_path()):
         UsersGenerator.write_users_config(default_users(network_id=network_id))
     users_config = util.read_users_config(util.default_users_path())
-    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                        agent_username=constants.CSLE_ADMIN.USER,
                                        agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     UsersGenerator.create_users(users_config=users_config, emulation_config=emulation_config)

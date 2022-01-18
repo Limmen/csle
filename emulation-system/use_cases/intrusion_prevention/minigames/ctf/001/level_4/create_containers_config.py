@@ -15,7 +15,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
     """
     containers = [
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
@@ -25,7 +25,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_internal_net=False,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
@@ -34,7 +34,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_external_net=False,
                             connected_to_internal_net=True),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version,
                             level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
@@ -45,7 +45,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_internal_net=False,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version,
                             level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
@@ -56,7 +56,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
@@ -66,7 +66,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
@@ -76,7 +76,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
-                            internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}",
+                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
                             minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
@@ -87,7 +87,7 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
                             suffix="_1")
     ]
     containers_cfg = ContainersConfig(
-        containers=containers, internal_network=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}_4",
+        containers=containers, internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}_4",
         agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
         router_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
         internal_subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}"

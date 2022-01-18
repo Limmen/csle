@@ -33,22 +33,12 @@ def connect_networks() -> None:
         # Wait a few seconds before connecting
         time.sleep(2)
 
-        # Poissbly connect to internal network
-        if c.connected_to_internal_net:
-            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c.internal_ip} {c.internal_network} " \
+        for ip_net in c.ips_and_networks:
+            ip, net = ip_net
+            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
-            print(f"connecting container {container_name}"
-                  f" to network {c.internal_network} with ip:{c.internal_ip}")
+            print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
-        # Possibly connect to external network
-        if c.connected_to_external_net:
-            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c.external_ip} {c.external_network} " \
-                  f"{container_name}"
-            print(f"connecting container {container_name} "
-                  f"to network {c.external_network} with ip:{c.external_ip}")
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-
 
 # Connect containers to networks
 if __name__ == '__main__':

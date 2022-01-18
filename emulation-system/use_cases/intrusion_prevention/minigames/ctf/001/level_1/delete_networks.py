@@ -1,18 +1,33 @@
+import os
+from csle_common.util.experiments_util import util
+import create_containers_config
+from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
-import csle_common.constants.constants as constants
 
 
-def delete_networks(network_id : int = 1) -> None:
+def delete_networks(network_id : int = 1, level="1", version = "0.0.1") -> None:
     """
     Deletes the docker networks
 
     :param network_id: the id of the internal network for this emulation
     :return: None
     """
-    ContainerManager.remove_network(name=f"{constants.CSLE.CSLE_INTERNAL_NET_PREFIX}{network_id}")
-    ContainerManager.remove_network(name=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}")
+    if not os.path.exists(util.default_containers_path()):
+        containers_cfg = create_containers_config.default_containers_config(
+            network_id=network_id, level=level, version=version)
+        ContainerGenerator.write_containers_config(containers_cfg, path=util.default_output_dir())
+
+    containers_config = util.read_containers_config(util.default_containers_path())
+
+    for c in containers_config.containers:
+        for ip_net in c.ips_and_networks:
+            ip, net = ip_net
+            ContainerManager.remove_network(name=net.name)
 
 
 # Deletes the docker networks
 if __name__ == '__main__':
-    delete_networks(network_id=1)
+    network_id = 1
+    level = "1"
+    version = "0.0.1"
+    delete_networks(network_id=network_id, level=level, version=version)

@@ -14,19 +14,19 @@ def default_vulns(network_id : int = 1) -> VulnerabilitiesConfig:
     :return: the vulnerability config
     """
     vulns = [
-        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
                               root=True),
-        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="euler", pw="euler",
                               root=False),
-        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
                               root=True),
-        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                               vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
                               root=False),
-        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                               vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True)
     ]
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_vulnerabilities_path()):
         VulnerabilityGenerator.write_vuln_config(default_vulns(network_id=network_id))
     vuln_config = util.read_vulns_config(util.default_vulnerabilities_path())
-    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                        agent_username=constants.CSLE_ADMIN.USER,
                                        agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     VulnerabilityGenerator.create_vulns(vuln_cfg=vuln_config, emulation_config=emulation_config)

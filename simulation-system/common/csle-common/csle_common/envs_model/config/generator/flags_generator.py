@@ -46,7 +46,7 @@ class FlagsGenerator:
             flag_name = "flag" + str(i)
             filename = flag_name + constants.FILE_PATTERNS.TXT_FILE_SUFFIX
             flags = [(flag_dir + filename, flag_name, flag_dir, i, True, 1)]
-            flag_cfg = NodeFlagsConfig(ip=vulnerabilities[i].node_internal_ip, flags=flags)
+            flag_cfg = NodeFlagsConfig(ip=vulnerabilities[i].ip, flags=flags)
             flag_cfgs.append(flag_cfg)
 
         fl_cfg = FlagsConfig(flags = flag_cfgs)

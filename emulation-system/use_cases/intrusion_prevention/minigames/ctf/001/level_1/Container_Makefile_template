@@ -13,16 +13,6 @@ run:
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
 
-# Connect to external network
-connect_external:
-	docker network connect --ip $(EXTERNAL_IP) $(EXTERNAL_NETWORK) \
-	$(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
-
-# Connect internal network
-connect_internal:
-	docker network connect --ip $(INTERNAL_IP) $(INTERNAL_NETWORK) \
-	$(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
-
 # Start a bash session inside the container (assumes that the container is already started)
 shell:
 	docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash

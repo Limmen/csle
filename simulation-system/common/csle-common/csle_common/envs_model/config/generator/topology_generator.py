@@ -151,35 +151,29 @@ class TopologyGenerator:
         """
         print("Creating topology")
         for node in topology.node_configs:
-            print("Connecting to node:{}".format(node.ip))
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
+            ips = node.get_ips()
+            ip = ips[0]
+            print("Connecting to node:{}".format(ip))
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=ip)
 
             for route in node.routes:
                 target, gw = route
                 cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} {target} gw {gw}"
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
-            # Set default internal gw
-            if node.default_internal_gw is not None:
-                cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
-                      f"-net {node.internal_subnetwork_mask.replace('/24', '')} " \
-                      f"{constants.COMMANDS.NETMASK} {constants.CSLE.CSLE_SUBNETMASK_DIGITS} " \
-                      f"gw {node.default_internal_gw}"
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-
-            # Set default external gw
-            if node.default_external_gw is not None:
-                cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
-                      f"-net {node.external_subnetwork_mask.replace('/24', '')} " \
-                      f"{constants.COMMANDS.NETMASK} {constants.CSLE.CSLE_SUBNETMASK_DIGITS} " \
-                      f"gw {node.default_external_gw}"
-                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+            for default_network_fw_config in node.ips_gw_default_policy_networks:
+                if default_network_fw_config.default_gw is not None:
+                    cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
+                          f"-net {default_network_fw_config.network.subnet_mask.replace('/24', '')} " \
+                          f"{constants.COMMANDS.NETMASK} {constants.CSLE.CSLE_EDGE_BITMASK} " \
+                          f"gw {default_network_fw_config.default_gw}"
+                    EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             cmd = constants.COMMANDS.CLEAR_IPTABLES
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             # Setup /etc/hosts
-            cmd = f"{constants.COMMANDS.ECHO} '" + node.ip + " " + \
+            cmd = f"{constants.COMMANDS.ECHO} '" + ip + " " + \
                   node.hostname + f"' | {constants.ETC_HOSTS.APPEND_TO_ETC_HOSTS}"
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             cmd = f"{constants.COMMANDS.ECHO} " \
@@ -201,13 +195,13 @@ class TopologyGenerator:
                   f"| {constants.ETC_HOSTS.APPEND_TO_ETC_HOSTS}"
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             for node2 in topology.node_configs:
-                if node2.ip != node.ip:
-                    cmd = f"{constants.COMMANDS.ECHO} '" + node2.ip + " " + node2.hostname \
+                ips2 = node.get_ips()
+                if ip not in ips2:
+                    cmd = f"{constants.COMMANDS.ECHO} '" + ips2[0] + " " + node2.hostname \
                           + f"' | {constants.ETC_HOSTS.APPEND_TO_ETC_HOSTS}"
                     o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Setup iptables and arptables
-
             for output_node in node.output_accept:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d {output_node} -j {constants.FIREWALL.ACCEPT}"
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
@@ -240,49 +234,33 @@ class TopologyGenerator:
                 cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d {forward_node} -j {constants.FIREWALL.DROP}"
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
-            # Default rules on internal network
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_output}"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_output}"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+            for default_network_fw_config in node.ips_gw_default_policy_networks:
+                cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_output}"
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+                cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_output}"
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_input}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_input}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+                cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_input}"
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+                cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_input}"
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_forward}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_FORWARD} -d {node.internal_subnetwork_mask} -j " \
-                  f"{node.default_internal_forward}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-
-            # Default rules on external network
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_OUTPUT} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_output}"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_OUTPUT} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_output}"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_INPUT} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_input}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_INPUT} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_input}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-
-            cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_forward}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
-            cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_FORWARD} -d {node.external_subnetwork_mask} -j " \
-                  f"{node.default_external_forward}"
-            EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+                cmd = f"{constants.COMMANDS.IPTABLES_APPEND_FORWARD} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_input}"
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
+                cmd = f"{constants.COMMANDS.ARPTABLES_APPEND_FORWARD} -d " \
+                      f"{default_network_fw_config.network.subnet_mask} -j " \
+                      f"{default_network_fw_config.default_input}"
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
             GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
 

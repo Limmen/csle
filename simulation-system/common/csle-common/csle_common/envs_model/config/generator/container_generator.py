@@ -41,7 +41,7 @@ class ContainerGenerator:
         :return: a containers configuration
         """
 
-        network = constants.CSLE.CSLE_INTERNAL_NET_PREFIX + str(subnet_id)
+        network = constants.CSLE.CSLE_NETWORK_PREFIX + str(subnet_id)
         minigame = constants.CSLE.CTF_MINIGAME
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))
@@ -64,7 +64,7 @@ class ContainerGenerator:
                 if ip_suffix in gateways.values():
                     gw_node = True
                 for v in vulnerabilities:
-                    if v.node_internal_ip == ip:
+                    if v.ip == ip:
                         vuln_node = True
 
                 if not gw_node and not vuln_node:

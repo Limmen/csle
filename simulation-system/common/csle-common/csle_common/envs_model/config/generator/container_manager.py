@@ -5,6 +5,7 @@ from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.util.experiments_util import util
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from csle_common.dao.container_config.container_network import ContainerNetwork
 import csle_common.constants.constants as constants
 
 
@@ -186,6 +187,17 @@ class ContainerManager:
         client_1 = docker.from_env()
         networks = client_1.networks.list()
         return networks
+
+    @staticmethod
+    def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names = None) -> None:
+        """
+        Creates a network from a given DTO representing the network
+
+        :param existing_network_names: list of network names, if not None, check if network exists befeore creating
+        :return: None
+        """
+        ContainerManager.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
+                                        existing_network_names=existing_network_names)
 
     @staticmethod
     def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names : List = None) -> None:

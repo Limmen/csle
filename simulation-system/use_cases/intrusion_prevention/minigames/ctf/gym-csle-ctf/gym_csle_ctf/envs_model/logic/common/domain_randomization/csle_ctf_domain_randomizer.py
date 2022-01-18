@@ -143,7 +143,7 @@ class CSLECTFCSLEDomainRandomizer(CSLEDomainRandomizer):
                     flags = flags_users
             vulns = None
             for vulns_users in vulnerabilities.vulnerabilities:
-                if vulns_users.node_internal_ip == node.internal_ip:
+                if vulns_users.ip == node.internal_ip:
                     vulns = vulns_users
             router = (node.internal_ip == router_ip)
             agent = (node.internal_ip == agent_ip)
