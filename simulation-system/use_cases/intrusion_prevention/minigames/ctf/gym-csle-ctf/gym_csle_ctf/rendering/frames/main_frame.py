@@ -97,7 +97,7 @@ class MainFrame(csleBaseFrame):
         self.gui_queue_reset.append((lbl, self.env_config.hacker_ip, (self.width/2+20,self.height-35)))
 
         # Draw subnet Mask
-        batch_label(str(self.env_config.network_conf.subnet_mask), self.width / 2 + 175,
+        batch_label(str(self.env_config.network_conf.internal_subnet_mask), self.width / 2 + 175,
                     self.height - 20, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         # Draw C_Reward label
@@ -261,11 +261,11 @@ class MainFrame(csleBaseFrame):
         if self.env_config.network_conf.nodes is not None and len(self.env_config.network_conf.nodes) > 0 \
             and self.env_config.network_conf.adj_matrix is not None and len(self.env_config.network_conf.adj_matrix) > 0:
             for n1 in self.env_config.network_conf.nodes:
-                machine = self.state.get_machine(n1.ip)
+                machine = self.state.get_machine(n1.internal_ip)
                 if machine is not None:
                     for n2 in self.env_config.network_conf.nodes:
                         if self.env_config.network_conf.adj_matrix[n1.id-1][n2.id-1] == 1:
-                            machine.reachable.add(n2.ip)
+                            machine.reachable.add(n2.internal_ip)
                     if machine.ip == self.env_config.router_ip:
                         machine.reachable.add(self.env_config.hacker_ip)
                         machine.reachable.add(self.env_config.router_ip)
@@ -700,20 +700,20 @@ class MainFrame(csleBaseFrame):
 
         for x in self.state.attacker_obs_state.machines:
             machine = self.node_ip_to_node[x.ip]
-            if machine.ip == self.env_config.hacker_ip:
+            if machine.internal_ip == self.env_config.hacker_ip:
                 continue
-            coords = self.node_ip_to_coords[machine.ip]
-            if machine.ip == self.env_config.router_ip:
+            coords = self.node_ip_to_coords[machine.internal_ip]
+            if machine.internal_ip == self.env_config.router_ip:
                 color = constants.RENDERING.BLUE_PURPLE
             else:
                 color = constants.RENDERING.BLACK
             if x.logged_in:
                 color = constants.RENDERING.GREEN
             create_circle_fill(coords[0], coords[1], 3, self.batch, self.first_foreground, color)
-            lbl = self.node_ip_to_ip_lbl[machine.ip]
-            lbl.text = "." + str(machine.ip.rsplit(".", 1)[-1])
-            if machine.ip in self.node_ip_to_links:
-                for link in self.node_ip_to_links[machine.ip]:
+            lbl = self.node_ip_to_ip_lbl[machine.internal_ip]
+            lbl.text = "." + str(machine.internal_ip.rsplit(".", 1)[-1])
+            if machine.internal_ip in self.node_ip_to_links:
+                for link in self.node_ip_to_links[machine.internal_ip]:
                     if (link[0], link[1], link[2], link[3]) not in drawn_links and (link[2], link[3], link[0], link[1]) \
                             not in drawn_links:
                         batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.BLACK, self.batch,
@@ -722,14 +722,14 @@ class MainFrame(csleBaseFrame):
                         drawn_links.add((link[0], link[1], link[2], link[3]))
                         drawn_links.add((link[2], link[3], link[0], link[1]))
             if self.env_config.render_config.render_adj_matrix:
-                self.adj_matrix_columns[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
-                self.adj_matrix_rows[self.node_ip_to_idx[machine.ip]].text = "." + machine.ip.rsplit(".", 1)[-1]
+                self.adj_matrix_columns[self.node_ip_to_idx[machine.internal_ip]].text = "." + machine.internal_ip.rsplit(".", 1)[-1]
+                self.adj_matrix_rows[self.node_ip_to_idx[machine.internal_ip]].text = "." + machine.internal_ip.rsplit(".", 1)[-1]
                 reachable = machine.reachable.copy()
-                if machine.ip == self.env_config.router_ip:
+                if machine.internal_ip == self.env_config.router_ip:
                     reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
                 for machine2 in reachable:
-                    if machine.ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
-                        self.adj_matrix_labels[self.node_ip_to_idx[machine.ip]][self.node_ip_to_idx[machine2]].text = "1"
+                    if machine.internal_ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
+                        self.adj_matrix_labels[self.node_ip_to_idx[machine.internal_ip]][self.node_ip_to_idx[machine2]].text = "1"
             # if m.ip in self.firewall_sprites:
             #     fw_sprite = self.firewall_sprites[m.ip]
             #     fw_sprite.visible = True
@@ -815,11 +815,11 @@ class MainFrame(csleBaseFrame):
                     and self.env_config.network_conf.adj_matrix is not None and len(
                 self.env_config.network_conf.adj_matrix) > 0:
                 for n1 in self.env_config.network_conf.nodes:
-                    machine = self.state.get_machine(n1.ip)
+                    machine = self.state.get_machine(n1.internal_ip)
                     if machine is not None:
                         for n2 in self.env_config.network_conf.nodes:
                             if self.env_config.network_conf.adj_matrix[n1.id - 1][n2.id - 1] == 1:
-                                machine.reachable.add(n2.ip)
+                                machine.reachable.add(n2.internal_ip)
                         if machine.ip == self.env_config.router_ip:
                             machine.reachable.add(self.env_config.hacker_ip)
                             machine.reachable.add(self.env_config.router_ip)
@@ -835,7 +835,7 @@ class MainFrame(csleBaseFrame):
                 if machine2 not in self.node_ip_to_node:
                     continue
                 machine2 = self.node_ip_to_node[machine2]
-                coords2 = self.node_ip_to_coords[machine2.ip]
+                coords2 = self.node_ip_to_coords[machine2.internal_ip]
 
                 color = constants.RENDERING.WHITE
                 node2_links = []
@@ -854,10 +854,10 @@ class MainFrame(csleBaseFrame):
                     machine1_links.append(links[2])
                 node2_links.append(links[2])
 
-                if machine2.ip not in self.node_ip_to_links:
-                    self.node_ip_to_links[machine2.ip] = node2_links
+                if machine2.internal_ip not in self.node_ip_to_links:
+                    self.node_ip_to_links[machine2.internal_ip] = node2_links
                 else:
-                    self.node_ip_to_links[machine2.ip] = self.node_ip_to_links[machine2.ip] + node2_links
+                    self.node_ip_to_links[machine2.internal_ip] = self.node_ip_to_links[machine2.internal_ip] + node2_links
 
             if machine.ip not in self.node_ip_to_links:
                 self.node_ip_to_links[machine.ip] = machine1_links

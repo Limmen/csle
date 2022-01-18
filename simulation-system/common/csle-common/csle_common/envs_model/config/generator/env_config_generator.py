@@ -14,6 +14,8 @@ from csle_common.envs_model.config.generator.users_generator import UsersGenerat
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 from csle_common.dao.container_config.containers_config import ContainersConfig
+from csle_common.dao.container_config.resources_config import ResourcesConfig
+from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.util.experiments_util import util
 from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
@@ -240,12 +242,14 @@ class EnvConfigGenerator:
 
 
     @staticmethod
-    def create_container_dirs(container_config: ContainersConfig, path: str = None,
+    def create_container_dirs(container_config: ContainersConfig, resources_config: ResourcesConfig,
+                              path: str = None,
                               create_folder_makefile: bool = True) -> None:
         """
         Utility function for creating the container directories with the start scripts
 
         :param container_config: the configuration of the containers
+        :param resources_config: the resources config of the containers
         :param path: the path where to create the directories
         :param create_folder_makefile: a boolean flag indicating whether to create a Makefile for the folder or not
         :return: None
@@ -260,6 +264,13 @@ class EnvConfigGenerator:
         counts = {}
         container_names = []
         for c in container_config.containers:
+            container_resources : NodeResourcesConfig = None
+            for r in resources_config.node_resources_configurations:
+                if r.internal_ip == c.internal_ip:
+                    container_resources : NodeResourcesConfig = r
+                    break
+            if container_resources is None:
+                raise ValueError(f"Container resources not found for container:{c.internal_ip}, resources:{resources_config}")
             count = 1
             if c.name in counts:
                 count = counts[c.name] + 1
@@ -270,7 +281,7 @@ class EnvConfigGenerator:
                 os.makedirs(c_dir)
                 makefile_preamble = ""
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.PROJECT + "=csle\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.NETWORK + "=" + c.network + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.INTERNAL_NETWORK + "=" + c.internal_network + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.MINIGAME + "=" + c.minigame + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.CONTAINER + "=" + c.name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VERSION + "=" + c.version + "\n"
@@ -286,8 +297,14 @@ class EnvConfigGenerator:
                                     constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VULNERABILITIESCFG + "=" \
                                     + path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.IP + "=" + c.ip + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.SUFFIX + "=" + str(count) + "\n\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.INTERNAL_IP + "=" + c.internal_ip + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.RESTART_POLICY + "="+ c.restart_policy + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.NUM_CPUS + "=" + \
+                                    str(container_resources.num_cpus) + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.MEMORY + "=" + \
+                                    str(container_resources.available_memory_gb) + "G\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.SUFFIX + "=_" + str(count) + "\n\n"
+
                 makefile_str = makefile_preamble + makefile_template_str
                 with io.open(c_dir + constants.DOCKER.MAKEFILE_PATH, 'w', encoding='utf-8') as f:
                     f.write(makefile_str)

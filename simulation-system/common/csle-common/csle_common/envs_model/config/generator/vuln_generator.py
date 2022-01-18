@@ -119,7 +119,7 @@ class VulnerabilityGenerator:
         pw_idx = random.randint(0, len(pw_shortlist)-1)
         u = pw_shortlist[pw_idx]
         pw = pw_shortlist[pw_idx]
-        vuln_config = PwVulnerabilityConfig(node_ip = node.ip, vuln_type=VulnType.WEAK_PW, username=u, pw=pw, root=True)
+        vuln_config = PwVulnerabilityConfig(node_internal_ip= node.ip, vuln_type=VulnType.WEAK_PW, username=u, pw=pw, root=True)
         return vuln_config
 
 
@@ -134,7 +134,7 @@ class VulnerabilityGenerator:
         """
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=vuln.node_ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=vuln.node_internal_ip)
             if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION or \
                     vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
                 cmd = "ls /home"

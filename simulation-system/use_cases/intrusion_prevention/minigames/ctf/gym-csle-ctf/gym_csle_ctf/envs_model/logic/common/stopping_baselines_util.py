@@ -357,7 +357,7 @@ class StoppingBaselinesUtil:
 
             # Prepare action for execution
             attack_action = env_config.attacker_action_conf.actions[attacker_action_id]
-            attack_action.ip = s.attacker_obs_state.get_action_ip(attack_action)
+            attack_action.internal_ip = s.attacker_obs_state.get_action_ip(attack_action)
 
             # Step in the environment
             s_prime, attacker_reward, done = TransitionOperator.attacker_transition(

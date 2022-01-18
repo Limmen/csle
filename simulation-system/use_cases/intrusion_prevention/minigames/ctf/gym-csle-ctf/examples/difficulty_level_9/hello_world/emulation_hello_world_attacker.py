@@ -47,7 +47,7 @@ def test_env(env_name : str, num_steps : int):
                     "cve_2010_0426_tried:{},cve_2015_5602_tried:{}"
                     "fs_searched:{},untried_cred:{},logged_in:{},"
                     "tools:{},backdoor:{},flags found:{}".format(
-                        m.ip, m.shell_access, m.telnet_brute_tried, m.ssh_brute_tried, m.ftp_brute_tried,
+                        m.internal_ip, m.shell_access, m.telnet_brute_tried, m.ssh_brute_tried, m.ftp_brute_tried,
                         m.sambacry_tried, m.shellshock_tried, m.dvwa_sql_injection_tried,
                         m.cve_2015_3306_tried, m.cve_2015_1427_tried,
                         m.cve_2016_10033_tried, m.cve_2010_0426_tried, m.cve_2015_5602_tried,

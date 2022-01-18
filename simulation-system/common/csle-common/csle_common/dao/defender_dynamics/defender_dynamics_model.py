@@ -1118,90 +1118,90 @@ class DefenderDynamicsModel:
 
         # Update dynamics of all nodes
         for i in range(len(s_prime.defender_obs_state.machines)):
-            if s_prime.defender_obs_state.machines[i].ip not in self.machines_dynamics_model or \
-                    self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip] is None:
-                self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip] = DefenderMachineDynamicsModel()
+            if s_prime.defender_obs_state.machines[i].internal_ip not in self.machines_dynamics_model or \
+                    self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip] is None:
+                self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip] = DefenderMachineDynamicsModel()
 
             num_new_open_connections = s_prime.defender_obs_state.machines[i].num_open_connections \
                                        - s.defender_obs_state.machines[i].num_open_connections
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_open_connection_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_open_connection_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_open_connections=num_new_open_connections)
             num_new_open_connections_total += num_new_open_connections
 
             num_new_failed_login_attempts = s_prime.defender_obs_state.machines[i].num_failed_login_attempts_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_failed_login_attempt_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_failed_login_attempt_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_failed_login_attempts=num_new_failed_login_attempts)
             num_new_failed_login_attempts_total += num_new_failed_login_attempts
 
             num_new_users = s_prime.defender_obs_state.machines[i].num_users_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_user_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_users=num_new_users)
             num_new_users_total += num_new_users
 
             num_new_logged_in_users = s_prime.defender_obs_state.machines[i].num_logged_in_users_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_logged_in_user_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_logged_in_user_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_logged_in_users=num_new_logged_in_users)
             num_new_logged_in_users_total += num_new_logged_in_users
 
             num_new_login_events = s_prime.defender_obs_state.machines[i].num_login_events_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_login_event_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_login_event_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_login_events=num_new_login_events)
             num_new_login_events_total += num_new_login_events
 
             num_new_processes = s_prime.defender_obs_state.machines[i].num_processes_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_processes_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_processes_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 num_new_processes=num_new_processes)
             num_new_processes_total += num_new_processes
 
             # Update Docker stats Dynamics
             num_new_pids_machine = s_prime.defender_obs_state.machines[i].num_pids_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_pids_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_pids_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                          num_new_pids=num_new_pids_machine)
 
             cpu_percent_change_machine = s_prime.defender_obs_state.machines[i].cpu_percent_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_cpu_percent_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_cpu_percent_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                                 cpu_percent_change=cpu_percent_change_machine)
 
             new_mem_current_change_machine = s_prime.defender_obs_state.machines[i].mem_current_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_mem_current_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_mem_current_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                                 new_mem_current=new_mem_current_change_machine)
 
             new_mem_total_change_machine = s_prime.defender_obs_state.machines[i].mem_total_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_mem_total_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_mem_total_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                               new_mem_total_change=new_mem_total_change_machine)
 
             new_mem_percent_change_machine = s_prime.defender_obs_state.machines[i].mem_percent_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_mem_percent_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_mem_percent_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                                 new_mem_percent_change=new_mem_percent_change_machine)
 
             new_blk_read_change_machine = s_prime.defender_obs_state.machines[i].blk_read_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_blk_read_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_blk_read_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                              new_blk_read_change=new_blk_read_change_machine)
 
             new_blk_write_change_machine = s_prime.defender_obs_state.machines[i].blk_write_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_blk_write_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_blk_write_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                               new_blk_write_change=new_blk_write_change_machine)
 
             new_net_rx_change_machine = s_prime.defender_obs_state.machines[i].net_rx_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_net_rx_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_net_rx_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                                            new_net_rx_change=new_net_rx_change_machine)
 
             new_net_tx_change_machine = s_prime.defender_obs_state.machines[i].net_rx_recent
-            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].ip].add_new_net_tx_transition(
+            self.machines_dynamics_model[s_prime.defender_obs_state.machines[i].internal_ip].add_new_net_tx_transition(
                 attacker_action_id=attacker_action_id, logged_in_ips=logged_in_ips,
                 new_net_tx_change=new_net_tx_change_machine)
 
@@ -1262,44 +1262,44 @@ class DefenderDynamicsModel:
 
         # Update initial state dynamics of all nodes
         for i in range(len(init_state.defender_obs_state.machines)):
-            if init_state.defender_obs_state.machines[i].ip not in self.machines_dynamics_model or \
-                    self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip] is None:
-                self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip] = DefenderMachineDynamicsModel()
+            if init_state.defender_obs_state.machines[i].internal_ip not in self.machines_dynamics_model or \
+                    self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip] is None:
+                self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip] = DefenderMachineDynamicsModel()
 
             init_connections = init_state.defender_obs_state.machines[i].num_open_connections
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_connections(
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_connections(
                 init_open_connections=init_connections)
 
             init_users = init_state.defender_obs_state.machines[i].num_users
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_users(
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_users(
                 init_users=init_users)
 
             init_logged_in_users = init_state.defender_obs_state.machines[i].num_logged_in_users
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_logged_in_users(
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_logged_in_users(
                 init_logged_in_users=init_logged_in_users)
 
             init_processes = init_state.defender_obs_state.machines[i].num_processes
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_processes(
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_processes(
                 init_processes=init_processes)
 
             init_pids = init_state.defender_obs_state.machines[i].num_pids
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_pids(init_pids=init_pids)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_pids(init_pids=init_pids)
             init_cpu_percentage = init_state.defender_obs_state.machines[i].cpu_percent
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_cpu_percentage(init_cpu_percentage=init_cpu_percentage)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_cpu_percentage(init_cpu_percentage=init_cpu_percentage)
             init_mem_current = init_state.defender_obs_state.machines[i].mem_current
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_mem_current(init_mem_current=init_mem_current)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_mem_current(init_mem_current=init_mem_current)
             init_mem_total = init_state.defender_obs_state.machines[i].mem_total
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_mem_total(init_mem_total=init_mem_total)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_mem_total(init_mem_total=init_mem_total)
             init_mem_percent = init_state.defender_obs_state.machines[i].mem_percent
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_mem_percent(init_mem_percent=init_mem_percent)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_mem_percent(init_mem_percent=init_mem_percent)
             init_blk_read = init_state.defender_obs_state.machines[i].blk_read
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_blk_read(init_blk_read=init_blk_read)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_blk_read(init_blk_read=init_blk_read)
             init_blk_write = init_state.defender_obs_state.machines[i].blk_write
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_blk_write(init_blk_write=init_blk_write)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_blk_write(init_blk_write=init_blk_write)
             init_net_rx = init_state.defender_obs_state.machines[i].net_rx
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_net_rx(init_net_rx=init_net_rx)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_net_rx(init_net_rx=init_net_rx)
             init_net_tx = init_state.defender_obs_state.machines[i].net_tx
-            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].ip].add_new_init_net_tx(init_net_tx=init_net_tx)
+            self.machines_dynamics_model[init_state.defender_obs_state.machines[i].internal_ip].add_new_init_net_tx(init_net_tx=init_net_tx)
 
 
 

@@ -93,8 +93,8 @@ class DefenderBeliefStateSimulator:
         # Update machines state
         for m in s_prime.defender_obs_state.machines:
 
-            if m.ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
-                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
+            if m.internal_ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
+                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.internal_ip]
 
                 num_new_open_connections = 0
                 num_new_failed_login_attempts = 0

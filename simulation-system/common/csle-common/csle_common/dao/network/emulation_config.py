@@ -300,7 +300,7 @@ class EmulationConfig:
                     remote_file = sftp_client.open(file, mode="r")
                     cost_str = remote_file.read()
                     cost = round(float(cost_str),1)
-                    action_costs.service_add_cost(action_id=a.id, ip=a.ip, cost=cost)
+                    action_costs.service_add_cost(action_id=a.id, ip=a.internal_ip, cost=cost)
                     a.cost = cost
                 except Exception as e:
                     print("{}".format(str(e)))
@@ -416,7 +416,7 @@ class EmulationConfig:
                     a = action_lookup_d_val[(int(id), int(idx))]
                     ip = parts[2]
                     if ip == "alerts.txt":
-                        ip = a.ip
+                        ip = a.internal_ip
                     remote_file = sftp_client.open(file, mode="r")
                     alerts_str = remote_file.read().decode()
                     alerts_parts = alerts_str.split(",")

@@ -332,8 +332,8 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
-            if proxy_conn.ip != env_config.hacker_ip:
-                m = s.get_attacker_machine(proxy_conn.ip)
+            if proxy_conn.internal_ip != env_config.hacker_ip:
+                m = s.get_attacker_machine(proxy_conn.internal_ip)
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
@@ -343,7 +343,7 @@ class ConnectionUtil:
                 if cr.service == constants.TELNET.SERVICE_NAME:
                     try:
                         forward_port = env_config.get_port_forward_port()
-                        agent_addr = (proxy_conn.ip, cr.port)
+                        agent_addr = (proxy_conn.internal_ip, cr.port)
                         target_addr = (a.ip, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
@@ -437,8 +437,8 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
-            if proxy_conn.ip != env_config.hacker_ip:
-                m = s.get_attacker_machine(proxy_conn.ip)
+            if proxy_conn.internal_ip != env_config.hacker_ip:
+                m = s.get_attacker_machine(proxy_conn.internal_ip)
                 if m is None or a.ip not in m.reachable or m.ip == a.ip:
                     continue
             else:
@@ -448,7 +448,7 @@ class ConnectionUtil:
                 if cr.service == constants.FTP.SERVICE_NAME:
                     try:
                         forward_port = env_config.get_port_forward_port()
-                        agent_addr = (proxy_conn.ip, cr.port)
+                        agent_addr = (proxy_conn.internal_ip, cr.port)
                         target_addr = (a.ip, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,

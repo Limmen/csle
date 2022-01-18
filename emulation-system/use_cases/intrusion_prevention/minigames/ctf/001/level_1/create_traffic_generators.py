@@ -13,7 +13,7 @@ def default_traffic_generators(network_id: int = 1) -> TrafficConfig:
     :return: the traffic configuration
     """
     traffic_generators = [
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}1.254",
+        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                           commands=[
                               # "timeout 120 sudo nmap -sS -p- --min-rate 100000 --max-retries 1 -T5 -n 172.18.1{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
                               # "timeout 120 sudo nmap -sP --min-rate 100000 --max-retries 1 -T5 -n 172.18.1{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",

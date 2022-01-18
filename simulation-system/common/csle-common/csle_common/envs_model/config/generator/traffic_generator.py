@@ -44,7 +44,7 @@ class TrafficGenerator:
                     targethosts_dict[node.ip].append(k)
 
         for container in containers_config.containers:
-            containers_dict[container.ip] = container.name
+            containers_dict[container.internal_ip] = container.name
 
         node_traffic_configs = []
         for node in topology.node_configs:

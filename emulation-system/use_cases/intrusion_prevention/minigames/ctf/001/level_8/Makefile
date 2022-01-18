@@ -1,9 +1,9 @@
-all: run users topology vuln create_containers_config flags resources traffic
+all: networks run users topology vuln create_containers_config flags resources traffic
 
 .PHONY: run
 
 # Runs all containers in the emulation
-run: create_containers_config
+run: networks create_containers_config
 	cd containers/router_2_1/ && $(MAKE) run
 	cd containers/ssh_1_1/ && $(MAKE) run
 	cd containers/telnet_1_1/ && $(MAKE) run
@@ -122,10 +122,11 @@ clean:
 	cd containers/cve_2010_0426_1_2/ && $(MAKE) clean
 	cd containers/cve_2015_5602_1_2/ && $(MAKE) clean
 	cd containers/client_1_1/ && $(MAKE) clean
+	python delete_networks.py
 
 
 # Applies the config to a started emulation (assumes all containers are started)
-apply_config: users vuln flags topology create_containers_config resources traffic
+apply_config: connect users vuln flags topology create_containers_config resources traffic container_scripts
 
 # Applies the topology config to a started emulation (assumes all containers are started)
 topology: create_topology.py
@@ -175,6 +176,22 @@ stop_iperf_container:
 rm_iperf_container:
 	docker rm iperf3
 
+# Create docker networks
+networks: create_networks.py
+	python create_networks.py
+
+# Delete docker networks
+rm_networks: delete_networks.py
+	python delete_networks.py
+
+# Create container scripts
+container_scripts: create_container_directories.py
+	python create_container_directories.py
+
+# Connect containers to networks
+connect: connect_containers.py
+	python connect_containers.py
+
 # Cleans all configuration files
 clean_config:
 	rm -rf ./users.json
@@ -185,3 +202,4 @@ clean_config:
 	rm -rf ./containers.json
 	rm -rf ./traffic.json
 	rm -rf ./resources.json
+	rm -rf ./containers

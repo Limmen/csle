@@ -13,7 +13,8 @@ def default_topology(network_id: int = 1) -> Topology:
     :return: the Topology configuration
     """
     node_1 = NodeFirewallConfig(
-        ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10", hostname=f"{constants.CONTAINER_IMAGES.ROUTER_1}_1",
+        ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
+        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_1}_1",
         output_accept=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                            f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                            f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",

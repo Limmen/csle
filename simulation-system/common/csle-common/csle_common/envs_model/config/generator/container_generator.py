@@ -64,7 +64,7 @@ class ContainerGenerator:
                 if ip_suffix in gateways.values():
                     gw_node = True
                 for v in vulnerabilities:
-                    if v.node_ip == ip:
+                    if v.node_internal_ip == ip:
                         vuln_node = True
 
                 if not gw_node and not vuln_node:
@@ -77,13 +77,13 @@ class ContainerGenerator:
                     raise AssertionError("Invalid container config")
 
             container_name, container_version = container
-            container_cfg = NodeContainerConfig(name=container_name, network=network, version=container_version,
-                                            level=level, ip=ip, minigame = minigame)
+            container_cfg = NodeContainerConfig(name=container_name, internal_network=network, version=container_version,
+                                                level=level, internal_ip=ip, minigame = minigame)
             container_configs.append(container_cfg)
 
         subnet_mask = subnet_prefix + "0/24"
-        containers_cfg = ContainersConfig(containers=container_configs, network=network, agent_ip=agent_ip,
-                                          router_ip=router_ip, subnet_mask=subnet_mask, subnet_prefix=subnet_prefix,
+        containers_cfg = ContainersConfig(containers=container_configs, internal_network=network, agent_ip=agent_ip,
+                                          router_ip=router_ip, internal_subnet_mask=subnet_mask, internal_subnet_prefix=subnet_prefix,
                                           ids_enabled=ids_enabled, vulnerable_nodes=vulnerable_nodes)
         return containers_cfg
 

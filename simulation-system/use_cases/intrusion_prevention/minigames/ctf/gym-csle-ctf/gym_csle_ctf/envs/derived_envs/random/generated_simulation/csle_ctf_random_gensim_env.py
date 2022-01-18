@@ -28,10 +28,10 @@ class CSLECTFRandomGeneratedSim1Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV1.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV1.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -76,10 +76,10 @@ class CSLECTFRandomGeneratedSimWithCosts1Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV1.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV1.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -117,10 +117,10 @@ class CSLECTFRandomGeneratedSim2Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV2.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV2.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV2.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -158,10 +158,10 @@ class CSLECTFRandomGeneratedSimWithCosts2Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV2.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV2.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV2.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -199,10 +199,10 @@ class CSLECTFRandomGeneratedSim3Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV3.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV3.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV3.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -240,10 +240,10 @@ class CSLECTFRandomGeneratedSimWithCosts3Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV3.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV3.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV3.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -282,10 +282,10 @@ class CSLECTFRandomGeneratedSim4Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV4.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV4.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV4.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,
@@ -324,10 +324,10 @@ class CSLECTFRandomGeneratedSimWithCosts4Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV4.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV4.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask)
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask)
             env_config = CSLECTFRandomV4.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,

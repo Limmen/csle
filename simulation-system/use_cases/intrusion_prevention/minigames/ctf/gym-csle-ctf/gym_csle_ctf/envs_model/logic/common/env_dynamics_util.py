@@ -727,7 +727,7 @@ class EnvDynamicsUtil:
         machines = s.attacker_obs_state.machines
         if s.defender_obs_state.caught_attacker and not full_ip_str:
             machines = []
-        logged_in_ips = list(map(lambda x: x.ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
+        logged_in_ips = list(map(lambda x: x.internal_ip + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
                                  filter(lambda x: x.logged_in, machines)))
         logged_in_ips.append(hacker_ip)

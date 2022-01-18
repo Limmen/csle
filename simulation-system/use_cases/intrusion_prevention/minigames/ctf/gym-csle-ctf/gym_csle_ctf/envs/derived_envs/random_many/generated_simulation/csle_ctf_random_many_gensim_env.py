@@ -29,10 +29,10 @@ class CSLECTFRandomManyGeneratedSim1Env(CSLECTFEnv):
             emulation_config.ids_router = containers_config.ids_enabled
             emulation_config.ids_router_ip = containers_config.router_ip
             attacker_action_conf = CSLECTFRandomV1.attacker_actions_conf(num_nodes=num_nodes - 1,
-                                                                subnet_mask=containers_config.subnet_mask,
-                                                                hacker_ip=containers_config.agent_ip)
+                                                                         subnet_mask=containers_config.internal_subnet_mask,
+                                                                         hacker_ip=containers_config.agent_ip)
             defender_action_conf = CSLECTFRandomV1.defender_actions_conf(
-                num_nodes=num_nodes - 1, subnet_mask=containers_config.subnet_mask, )
+                num_nodes=num_nodes - 1, subnet_mask=containers_config.internal_subnet_mask, )
             env_config = CSLECTFRandomV1.env_config(containers_config=containers_config,
                                                     flags_config=flags_config,
                                                     attacker_action_conf=attacker_action_conf,

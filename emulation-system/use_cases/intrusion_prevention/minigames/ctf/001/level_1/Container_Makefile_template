@@ -2,13 +2,26 @@ all: run
 
 # Create and start the container
 run:
-	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)-level$(LEVEL) --hostname=$(CONTAINER) \
-	--net $(NETWORK) --ip $(IP) --label dir=$(DIR) --label containers_cfg=$(CFG) --label flags_cfg=$(FLAGSCFG) \
+	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) \
+	--hostname=$(CONTAINER) \
+	--label dir=$(DIR) --label containers_cfg=$(CFG) \
+	--label flags_cfg=$(FLAGSCFG) \
+	--network=none \
 	--label topology_cfg=$(TOPOLOGYCFG) --label users_cfg=$(USERSCFG) \
 	--label vulnerabilities_cfg=$(VULNERABILITIESCFG) \
 	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true \
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
+
+# Connect to external network
+connect_external:
+	docker network connect --ip $(EXTERNAL_IP) $(EXTERNAL_NETWORK) \
+	$(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
+
+# Connect internal network
+connect_internal:
+	docker network connect --ip $(INTERNAL_IP) $(INTERNAL_NETWORK) \
+	$(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)
 
 # Start a bash session inside the container (assumes that the container is already started)
 shell:

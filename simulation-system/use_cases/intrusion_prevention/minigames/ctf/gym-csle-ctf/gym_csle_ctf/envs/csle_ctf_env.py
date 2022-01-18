@@ -308,7 +308,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
         # Prepare action for execution
         attack_action = self.env_config.attacker_action_conf.actions[attacker_action_id]
 
-        attack_action.ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
+        attack_action.internal_ip = self.env_state.attacker_obs_state.get_action_ip(attack_action)
         self.env_state.attacker_obs_state.cost += attack_action.cost
         self.env_state.attacker_obs_state.cost_norm += EnvDynamicsUtil.normalize_action_costs(
             action=attack_action, env_config=self.env_config)
@@ -380,7 +380,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
         if defender_action_id > len(self.env_config.defender_action_conf.actions) - 1:
             raise ValueError("Action ID: {} not recognized".format(defender_action_id))
         defense_action = self.env_config.defender_action_conf.actions[defender_action_id]
-        defense_action.ip = self.env_state.defender_obs_state.get_action_ip(defense_action)
+        defense_action.internal_ip = self.env_state.defender_obs_state.get_action_ip(defense_action)
 
         # Step in the environment
         s_prime, defender_reward, done = TransitionOperator.defender_transition(

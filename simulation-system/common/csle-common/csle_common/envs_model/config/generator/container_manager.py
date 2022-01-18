@@ -133,8 +133,8 @@ class ContainerManager:
                 path + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH
             print("Running container: {}".format(name))
             client_1.containers.run(image=image, name=name, hostname=name,
-                                   detach=True, tty=True, network=c.network, labels=labels,
-                                   publish_all_ports=True, cap_add=[constants.DOCKER.NET_ADMIN])
+                                    detach=True, tty=True, network=c.internal_network, labels=labels,
+                                    publish_all_ports=True, cap_add=[constants.DOCKER.NET_ADMIN])
 
     @staticmethod
     def start_all_stopped_containers() -> None:
@@ -203,21 +203,18 @@ class ContainerManager:
             subnet=subnetmask
         )
         ipam_config = docker.types.IPAMConfig(
-            pool_configs=[ipam_pool]
+            pool_configs=[ipam_pool],
         )
         network_names = []
         if existing_network_names is not None:
-            network_names = network_names
+            network_names = existing_network_names
         if name not in network_names:
-            try:
-                print(f"Creating network: {name}, subnetmask: {subnetmask}")
-                client_1.networks.create(
-                    name,
-                    driver=driver,
-                    ipam=ipam_config
-                )
-            except:
-                pass
+            print(f"Creating network: {name}, subnetmask: {subnetmask}")
+            client_1.networks.create(
+                name,
+                driver=driver,
+                ipam=ipam_config
+            )
 
 
     @staticmethod

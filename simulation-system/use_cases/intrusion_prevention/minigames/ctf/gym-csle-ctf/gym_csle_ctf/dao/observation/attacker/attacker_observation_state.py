@@ -74,7 +74,7 @@ class AttackerObservationState:
 
         :return: None
         """
-        self.machines = sorted(self.machines, key=lambda x: int(x.ip.rsplit(".", 1)[-1]), reverse=False)
+        self.machines = sorted(self.machines, key=lambda x: int(x.internal_ip.rsplit(".", 1)[-1]), reverse=False)
 
     def cleanup(self) -> None:
         """
@@ -94,7 +94,7 @@ class AttackerObservationState:
         """
         if a.index == -1:
             self.sort_machines()
-            ips = list(map(lambda x: x.ip, self.machines))
+            ips = list(map(lambda x: x.internal_ip, self.machines))
             ips_str = "_".join(ips)
             return ips_str
         if a.index < len(self.machines) and a.index < self.num_machines:

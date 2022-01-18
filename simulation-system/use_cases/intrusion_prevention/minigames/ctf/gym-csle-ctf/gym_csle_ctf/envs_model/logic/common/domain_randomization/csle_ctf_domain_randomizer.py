@@ -123,7 +123,7 @@ class CSLECTFCSLEDomainRandomizer(CSLEDomainRandomizer):
             ids_router = True
         for node in topology.node_configs:
             reachable = set()
-            ip_id = int(node.ip.rsplit(".", 1)[-1])
+            ip_id = int(node.internal_ip.rsplit(".", 1)[-1])
             id = node_id_d[ip_id]
             gateway = False
             if ip_id in gws.values():
@@ -135,22 +135,22 @@ class CSLECTFCSLEDomainRandomizer(CSLEDomainRandomizer):
                     reachable.add(node_ip)
             users = None
             for node_users in users_config.users:
-                if node_users.ip == node.ip:
+                if node_users.internal_ip == node.internal_ip:
                     users = node_users
             flags = None
             for flags_users in flags_config.flags:
-                if flags_users.ip == node.ip:
+                if flags_users.ip == node.internal_ip:
                     flags = flags_users
             vulns = None
             for vulns_users in vulnerabilities.vulnerabilities:
-                if vulns_users.node_ip == node.ip:
+                if vulns_users.node_internal_ip == node.internal_ip:
                     vulns = vulns_users
-            router = (node.ip == router_ip)
-            agent = (node.ip == agent_ip)
+            router = (node.internal_ip == router_ip)
+            agent = (node.internal_ip == agent_ip)
             if agent:
                 agent_reachable=reachable
             node_randomize_config = CSLECTFNodeRandomizerConfig(
-                ip=node.ip, id=id, reachable=reachable, router=router, agent=agent, r_space=r_space,
+                ip=node.internal_ip, id=id, reachable=reachable, router=router, agent=agent, r_space=r_space,
                 users_config=users, flags_config=flags, vulns_config=vulns, gateway=gateway)
             n = CSLECTFNodeRandomizer.randomize(config=node_randomize_config)
             randomized_nodes.append(n)
@@ -176,6 +176,6 @@ class CSLECTFCSLEDomainRandomizer(CSLEDomainRandomizer):
         env_config.blacklist_ips = [subnet_prefix + ".1"]
         for a in env_config.attacker_action_conf.actions:
             if a.subnet:
-                a.ip = subnet_mask
+                a.internal_ip = subnet_mask
         return randomized_network_conf, env_config
 

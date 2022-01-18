@@ -42,9 +42,9 @@ class GeneratorUtil:
         :return: None
         """
         for c in containers_config.containers:
-            emulation_config = EmulationConfig(agent_ip=c.ip, agent_username=constants.CSLE_ADMIN.USER,
+            emulation_config = EmulationConfig(agent_ip=c.internal_ip, agent_username=constants.CSLE_ADMIN.USER,
                                                agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.internal_ip)
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=constants.COMMANDS.LS_HOME, conn=emulation_config.agent_conn)
             home_dirs = outdata.decode("utf-8").split("\n")
             home_dirs = list(filter(lambda x: x != "", home_dirs))
@@ -67,9 +67,9 @@ class GeneratorUtil:
         """
         for c in containers_config.containers:
             print("Downloading cache from container:{}".format(c.name))
-            emulation_config = EmulationConfig(agent_ip=c.ip, agent_username=constants.CSLE_ADMIN.USER,
+            emulation_config = EmulationConfig(agent_ip=c.internal_ip, agent_username=constants.CSLE_ADMIN.USER,
                                                agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.ip)
+            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.internal_ip)
             filename = c.name + "_cache.zip"
             o,e, _ = EmulationUtil.execute_ssh_cmd(cmd="zip -r " + filename + " /home/ '*.xml' '*.txt'", conn=emulation_config.agent_conn)
             filepath = "/home/csle_admin/"+ filename
@@ -88,9 +88,9 @@ class GeneratorUtil:
             print("Uploading cache for container:{}".format(c.name))
             local_filename = c.name + "_cache.zip"
             if os.path.exists(local_filename):
-                emulation_config = EmulationConfig(agent_ip=c.ip, agent_username=constants.CSLE_ADMIN.USER,
+                emulation_config = EmulationConfig(agent_ip=c.internal_ip, agent_username=constants.CSLE_ADMIN.USER,
                                                    agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-                GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.ip)
+                GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.internal_ip)
                 scp_client = SCPClient(emulation_config.agent_conn.get_transport())
                 remote_filename = "/home/csle_admin/" + local_filename
                 scp_client.put(local_filename, remote_filename)

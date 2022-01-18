@@ -128,7 +128,7 @@ class CSLECTFRandomV1:
                 flags_lookup[(fl.ip, fl.flags[0][0].replace(".txt", ""))] = Flag(name=fl.flags[0][1], path=fl.flags[0][2],
                                                              id=fl.flags[0][3],
                                                              requires_root=fl.flags[0][4], score=fl.flags[0][5])
-        network_conf = NetworkConfig(subnet_mask=containers_config.subnet_mask, nodes=[], adj_matrix=[],
+        network_conf = NetworkConfig(subnet_mask=containers_config.internal_subnet_mask, nodes=[], adj_matrix=[],
                                      flags_lookup=flags_lookup, agent_reachable=set())
         env_config = csleEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
                                    defender_action_conf=defender_action_conf,
@@ -146,7 +146,7 @@ class CSLECTFRandomV1:
         env_config.os_scan_miss_p = 0.00
         env_config.vulners_miss_p = 0.00
         env_config.num_flags = len(flags_config.flags)
-        env_config.blacklist_ips = [containers_config.subnet_prefix + "1"]
+        env_config.blacklist_ips = [containers_config.internal_subnet_prefix + "1"]
 
         env_config.attacker_shell_access_found_reward_mult = 2
         env_config.attacker_new_tools_installed_reward_mult = 2

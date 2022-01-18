@@ -10,17 +10,18 @@ from csle_common.envs_model.config.generator.resource_constraints_generator impo
 import csle_common.constants.constants as constants
 
 
-def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
+def default_resource_constraints(network_id: int = 10, level: int = 10) -> ResourcesConfig:
     """
+    :param level: the level parameter of the emulation
     :param network_id: the network id
     :return: generates the ResourcesConfig
     """
     node_resources_configurations = [
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=2,
                                 packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
@@ -33,12 +34,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=100, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CLIENT_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CLIENT_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=2,
                                 packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
@@ -51,12 +54,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=100, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.HONEYPOT_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -69,12 +74,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -87,12 +94,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.SSH_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -105,12 +114,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.TELNET_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.TELNET_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -123,12 +134,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.FTP_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.FTP_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -141,12 +154,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.SAMBA_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.SAMBA_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -159,12 +174,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.31",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.19",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.31",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.SHELLSHOCK_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -177,12 +194,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.42",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.31",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.42",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.SQL_INJECTION_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -195,12 +214,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.37",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.42",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.37",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_3306_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -213,12 +234,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.82",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.37",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.82",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_1427_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -231,12 +254,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.75",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.82",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.75",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CVE_2016_10033_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -249,12 +274,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.71",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.75",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.71",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CVE_2010_0426_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CVE_2010_0426_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -267,12 +294,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.71",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.CVE_2015_5602_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -285,12 +314,14 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            )),
-        NodeResourcesConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.104",
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.11",
+                            external_network_config=None),
+        NodeResourcesConfig(internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.104",
                             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
-                                           f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}_1-{constants.CSLE.LEVEL}10",
+                                           f"{constants.CONTAINER_IMAGES.PENGINE_EXPLOIT_1}_1-{constants.CSLE.LEVEL}{level}",
                             num_cpus=1, available_memory_gb=4,
-                            network_config=NodeNetworkConfig(
+                            internal_network_config=NodeNetworkConfig(
                                 interface=constants.NETWORKING.ETH0,
                                 limit_packets_queue=30000, packet_delay_ms=0.1,
                                 packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
@@ -303,7 +334,9 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
                                 packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                                 rate_limit_mbit=1000, packet_overhead_bytes=0,
                                 cell_overhead_bytes=0
-                            ))
+                            ),
+                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.104",
+                            external_network_config=None)
     ]
     resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
     return resources_config
@@ -312,9 +345,10 @@ def default_resource_constraints(network_id: int = 10) -> ResourcesConfig:
 # Generates the resources.json configuration file
 if __name__ == '__main__':
     network_id = 10
+    level = 10
     if not os.path.exists(util.default_resources_path()):
         ResourceConstraintsGenerator.write_resources_config(
-            resources_config=default_resource_constraints(network_id=network_id))
+            resources_config=default_resource_constraints(network_id=network_id, level=level))
     resources_config = util.read_resources_config(util.default_resources_path())
     emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
                                        agent_username=constants.CSLE_ADMIN.USER,

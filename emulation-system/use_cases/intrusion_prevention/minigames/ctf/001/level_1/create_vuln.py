@@ -14,19 +14,19 @@ def default_vulns(network_id : int = 1) -> VulnerabilitiesConfig:
     :return: the vulnerability config
     """
     vulns = [
-        PwVulnerabilityConfig(node_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                               vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
-                          root=True),
-        PwVulnerabilityConfig(node_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+                              root=True),
+        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                               vuln_type=VulnType.WEAK_PW, username="euler", pw="euler",
                               root=False),
-        PwVulnerabilityConfig(node_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
                               vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
                               root=True),
-        PwVulnerabilityConfig(node_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
                               vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
                               root=False),
-        PwVulnerabilityConfig(node_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+        PwVulnerabilityConfig(node_internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
                               vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True)
     ]

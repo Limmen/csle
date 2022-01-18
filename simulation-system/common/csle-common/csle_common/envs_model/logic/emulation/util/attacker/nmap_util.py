@@ -571,7 +571,7 @@ class NmapUtil:
         # ALL action
         if a.index == -1:
             s.attacker_obs_state.sort_machines()
-            ips = list(map(lambda x: x.ip, s.attacker_obs_state.machines))
+            ips = list(map(lambda x: x.internal_ip, s.attacker_obs_state.machines))
             ips_str = "_".join(ips)
             cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + ips + ".xml"
             cache_id = (a.id, a.index, ips_str, a.subnet)
@@ -780,9 +780,9 @@ class NmapUtil:
             -> Tuple[EnvState, float, bool]:
         done = False
         hacker_ip = env_config.hacker_ip
-        logged_in_ips = list(map(lambda x: x.ip, filter(lambda x: x.logged_in and x.tools_installed \
-                                                                  and x.backdoor_installed,
-                                                        s.attacker_obs_state.machines)))
+        logged_in_ips = list(map(lambda x: x.internal_ip, filter(lambda x: x.logged_in and x.tools_installed \
+                                                                           and x.backdoor_installed,
+                                                                 s.attacker_obs_state.machines)))
         logged_in_ips.append(hacker_ip)
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
@@ -805,10 +805,10 @@ class NmapUtil:
                 if d:
                     done = d
                 for res in total_results:
-                    if res.ip == env_config.hacker_ip:
+                    if res.internal_ip == env_config.hacker_ip:
                         s_prime.attacker_obs_state.agent_reachable.update(res.reachable)
                     else:
-                        machine = s_prime.get_attacker_machine(res.ip)
+                        machine = s_prime.get_attacker_machine(res.internal_ip)
                         if machine is None:
                             pass
                         #     print("None m")
