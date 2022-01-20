@@ -451,6 +451,9 @@ const Demo = (props) => {
             <div className="row contentRow policyRow">
                 <div className="col-sm-6">
                     <div className="row">
+                        <h3 className="cardTitle">
+                            The Defender's View
+                        </h3>
                         <div className="DefenderPolicy row justify-content-center card demoCard">
                             <div className="card-header cardHeader"><h4>
                                 Probability of defensive action πΘ(a|h) and belief about intrusion b(1)
@@ -535,9 +538,12 @@ const Demo = (props) => {
                     {/*</div>*/}
                 </div>
                 <div className="col-sm-6">
+                    <h3 className="cardTitle">
+                        The Attacker's View
+                    </h3>
                     <div className="DefenderObservations row justify-content-center card">
                         <div className="card-header cardHeader"><h4>
-                            State of the IT-Infrastructure and the Attacker's View
+                            Intrusion state
                         </h4></div>
                         <div className="card-body">
                             <div className="row">

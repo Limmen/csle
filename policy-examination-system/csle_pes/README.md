@@ -1,6 +1,6 @@
-# `csle_pvs` CSLE Policy Validation System
+# `csle_evs` CSLE Policy Examination System
 
-A system for validating automated security policies
+A system for interactive examination of automated security policies
 
 ## Available Scripts
 

@@ -76,7 +76,7 @@ const Header = (props) => {
                 </div>
                 <div className="col-sm-8 p-5 mb-4 bg-light rounded-3 jumbotron">
                     <h3 className="display-9 align-content-center fw-bold  title">
-                        Policy-Validation System
+                        Policy Examination
                     </h3>
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     </nav>
