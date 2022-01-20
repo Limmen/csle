@@ -5,7 +5,7 @@ from csle_common.envs_model.config.generator.container_generator import Containe
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 
 
-def delete_networks(network_id : int = 1, level="1", version = "0.0.1") -> None:
+def delete_networks(network_id : int = 4, level="4", version = "0.0.1") -> None:
     """
     Deletes the docker networks
 
@@ -29,7 +29,7 @@ def delete_networks(network_id : int = 1, level="1", version = "0.0.1") -> None:
 
 # Deletes the docker networks
 if __name__ == '__main__':
-    network_id = 1
-    level = "1"
+    network_id = 4
+    level = "4"
     version = "0.0.1"
     delete_networks(network_id=network_id, level=level, version=version)

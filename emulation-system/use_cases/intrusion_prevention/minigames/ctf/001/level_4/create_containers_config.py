@@ -4,6 +4,7 @@ from csle_common.dao.container_config.node_container_config import NodeContainer
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
+from csle_common.dao.container_config.container_network import ContainerNetwork
 
 
 def default_containers_config(network_id: int = 4, level: str = "4", version: str = "0.0.1") -> ContainersConfig:
@@ -14,97 +15,138 @@ def default_containers_config(network_id: int = 4, level: str = "4", version: st
     :return: the ContainersConfig of the emulation
     """
     containers = [
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
-                            restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.254",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=True,
-                            connected_to_internal_net=False,
-                            suffix="_1"),
+        NodeContainerConfig(
+            name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
+            ips_and_networks = [
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
+                 ContainerNetwork(
+                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                 f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                 )),
+            ],
+            minigame=constants.CSLE.CTF_MINIGAME,
+            version=version, level=level, restart_policy=constants.DOCKER.ON_FAILURE_3, suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME,
+                            version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=False,
-                            connected_to_internal_net=True),
+                            suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version,
-                            level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=True,
-                            connected_to_internal_net=False,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version,
-                            level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME,
+                            version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.21",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=False,
-                            connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.10",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME,
+                            version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=True,
-                            connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME,
+                            version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=False,
-                            connected_to_internal_net=True,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
-                            internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}",
-                            minigame=constants.CSLE.CTF_MINIGAME, version=version, level=level,
-                            internal_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+                            ips_and_networks = [
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+                                 ))
+                            ],
+                            minigame=constants.CSLE.CTF_MINIGAME,
+                            version=version, level=level,
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            external_ip=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
-                            external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-                            connected_to_external_net=False,
-                            connected_to_internal_net=True,
                             suffix="_1")
     ]
     containers_cfg = ContainersConfig(
-        containers=containers, internal_network=f"{constants.CSLE.CSLE_NETWORK_PREFIX}_4",
-        agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
-        router_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.10",
-        internal_subnet_mask=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}"
-                             f"{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
-        internal_subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.",
-        ids_enabled=True,
-        external_network=f"{constants.CSLE.CSLE_EXTERNAL_NET_PREFIX}{network_id}",
-        external_subnet_mask=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK_SUFFIX}",
-        external_subnet_prefix=f"{constants.CSLE.CSLE_EXTERNAL_SUBNETMASK_PREFIX}{network_id}.")
+        containers=containers,
+        agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
+        router_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+        ids_enabled=False,
+        networks=[
+            ContainerNetwork(
+                name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
+                subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                            f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+            ),
+            ContainerNetwork(
+                name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+                subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                            f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+            )
+        ]
+    )
     return containers_cfg
 
 
 # Generates the containers.json configuration file
 if __name__ == '__main__':
     network_id = 4
+    level = "4"
     version = "0.0.1"
-    level = 4
     if os.path.exists(util.default_containers_path(out_dir=util.default_output_dir())):
         os.remove(util.default_containers_path(out_dir=util.default_output_dir()))
     containers_cfg = default_containers_config(network_id=network_id, level=level, version=version)

@@ -8,7 +8,7 @@ from csle_common.envs_model.config.generator.container_generator import Containe
 
 
 # Create container directories together with startup scripts
-def create_container_directories(level: int = 1, version: str = "0.0.1") -> None:
+def create_container_directories(level: int = 4, version: str = "0.0.1") -> None:
     """
     Creates the container directories and scripts
 
@@ -40,4 +40,4 @@ def create_container_directories(level: int = 1, version: str = "0.0.1") -> None
 
 # Create container directories together with startup scripts
 if __name__ == '__main__':
-    create_container_directories(level=1, version="0.0.1")
+    create_container_directories(level=4, version="0.0.1")

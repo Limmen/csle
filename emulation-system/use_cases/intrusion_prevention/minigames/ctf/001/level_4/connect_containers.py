@@ -7,7 +7,7 @@ from csle_common.envs_model.config.generator.container_generator import Containe
 import csle_common.constants.constants as constants
 
 
-def connect_networks(level: int = 1, version : str = "0.0.1") -> None:
+def connect_networks(level: int = 4, version : str = "0.0.1") -> None:
     """
     Connects running containers to networks
 
@@ -43,4 +43,4 @@ def connect_networks(level: int = 1, version : str = "0.0.1") -> None:
 
 # Connect containers to networks
 if __name__ == '__main__':
-    connect_networks(level=1, version="0.0.1")
+    connect_networks(level=4, version="0.0.1")
