@@ -35,14 +35,14 @@ start: container_scripts
 
 # Stops and removes all containers in the emulation
 clean: container_scripts
-	cd containers/router_1_1/ && $(MAKE) clean
-	cd containers/ssh_1_1/ && $(MAKE) clean
-	cd containers/telnet_1_1/ && $(MAKE) clean
-	cd containers/honeypot_1_1/ && $(MAKE) clean
-	cd containers/ftp_1_1/ && $(MAKE) clean
-	cd containers/hacker_kali_1_1/ && $(MAKE) clean
-	cd containers/client_1_1/ && $(MAKE) clean
-	python delete_networks.py
+	-cd containers/router_1_1/ && $(MAKE) clean
+	-cd containers/ssh_1_1/ && $(MAKE) clean
+	-cd containers/telnet_1_1/ && $(MAKE) clean
+	-cd containers/honeypot_1_1/ && $(MAKE) clean
+	-cd containers/ftp_1_1/ && $(MAKE) clean
+	-cd containers/hacker_kali_1_1/ && $(MAKE) clean
+	-cd containers/client_1_1/ && $(MAKE) clean
+	-python delete_networks.py
 
 # Applies the config to a started emulation (assumes all containers are started)
 apply_config: connect users vuln flags topology create_containers_config resources traffic container_scripts
