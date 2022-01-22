@@ -535,7 +535,7 @@ def default_resource_constraints(network_id: int = 3, level: int = 3) -> Resourc
                            f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_3-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
-                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.2",
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH0,
                      limit_packets_queue=30000, packet_delay_ms=0.1,

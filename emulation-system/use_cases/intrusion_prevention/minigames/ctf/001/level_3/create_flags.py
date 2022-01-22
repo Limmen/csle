@@ -62,7 +62,7 @@ if __name__ == '__main__':
         FlagsGenerator.write_flags_config(default_flags(network_id=network_id))
     flags_config = util.read_flags_config(util.default_flags_path())
     emulation_config = EmulationConfig(
-        agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+        agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
         agent_username=constants.CSLE_ADMIN.USER,
         agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     FlagsGenerator.create_flags(flags_config=flags_config, emulation_config=emulation_config)

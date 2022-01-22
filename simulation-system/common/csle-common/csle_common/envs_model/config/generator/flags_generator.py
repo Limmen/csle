@@ -63,6 +63,7 @@ class FlagsGenerator:
         :return: None
         """
         for flags_conf in flags_config.flags:
+            print(f"ip:{flags_conf.ip}")
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=flags_conf.ip)
 
             for flag in flags_conf.flags:

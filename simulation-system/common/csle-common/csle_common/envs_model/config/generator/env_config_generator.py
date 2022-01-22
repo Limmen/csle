@@ -261,7 +261,6 @@ class EnvConfigGenerator:
         with io.open(util.default_container_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
             makefile_template_str = f.read()
 
-        counts = {}
         container_names = []
         for c in container_config.containers:
             ips = c.get_ips()
@@ -275,12 +274,9 @@ class EnvConfigGenerator:
             if container_resources is None:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{resources_config}")
-            count = 1
-            if c.name in counts:
-                count = counts[c.name] + 1
-            counts[c.name] = count + 1
-            c_dir = containers_folders_dir + "/" + c.name + "_" + str(count)
-            container_names.append(c.name + "_" + str(count))
+
+            c_dir = containers_folders_dir + "/" + c.name + c.suffix
+            container_names.append(c.name + c.suffix)
             if not os.path.exists(c_dir):
                 os.makedirs(c_dir)
                 makefile_preamble = ""
@@ -305,7 +301,7 @@ class EnvConfigGenerator:
                                     str(container_resources.num_cpus) + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.MEMORY + "=" + \
                                     str(container_resources.available_memory_gb) + "G\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.SUFFIX + "=_" + str(count) + "\n\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.SUFFIX + "=" + c.suffix + "\n\n"
 
                 makefile_str = makefile_preamble + makefile_template_str
                 with io.open(c_dir + constants.DOCKER.MAKEFILE_PATH, 'w', encoding='utf-8') as f:
