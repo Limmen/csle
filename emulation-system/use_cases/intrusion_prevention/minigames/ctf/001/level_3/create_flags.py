@@ -14,42 +14,42 @@ def default_flags(network_id: int = 3) -> FlagsConfig:
     """
 
     flags = [
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                         flags=[(
-                               f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}3"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}3", f"/{constants.COMMANDS.TMP_DIR}/", 3, True,
-                               1)]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}3"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}3", f"/{constants.COMMANDS.TMP_DIR}/", 3, True,
+                            1)]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                         flags=[(
-                               f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}2"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}2", f"/{constants.COMMANDS.TMP_DIR}/", 2, True,
-                               1)]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}2"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}2", f"/{constants.COMMANDS.TMP_DIR}/", 2, True,
+                            1)]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                         flags=[(
-                               f"/{constants.COMMANDS.ROOT_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}1"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}1", f"/{constants.COMMANDS.ROOT_DIR}/", 1, True,
-                               1)]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54",
+                            f"/{constants.COMMANDS.ROOT_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}1"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}1", f"/{constants.COMMANDS.ROOT_DIR}/", 1, True,
+                            1)]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
                         flags=[(
-                               f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}4"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}4", f"/{constants.COMMANDS.TMP_DIR}/", 4, True,
-                               1)]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
+                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}4"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}4", f"/{constants.COMMANDS.TMP_DIR}/", 4, True,
+                            1)]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                         flags=[(
-                               f"/{constants.COMMANDS.ROOT_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}5"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}5", f"/{constants.COMMANDS.ROOT_DIR}/", 5, True,
-                               1)]),
-        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7",
+                            f"/{constants.COMMANDS.ROOT_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}5"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}5", f"/{constants.COMMANDS.ROOT_DIR}/", 5, True,
+                            1)]),
+        NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
                         flags=[(
-                               f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}6"
-                               f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                               f"{constants.COMMON.FLAG_FILENAME_PREFIX}6", f"/{constants.COMMANDS.TMP_DIR}/", 6, True,
-                               1)])
+                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}6"
+                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}6", f"/{constants.COMMANDS.TMP_DIR}/", 6, True,
+                            1)])
     ]
     flags_config = FlagsConfig(flags=flags)
     return flags_config

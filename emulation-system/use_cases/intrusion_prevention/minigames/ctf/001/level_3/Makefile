@@ -1,7 +1,7 @@
-all: networks run users topology vuln gen_containers_config flags traffic resources
+all: networks container_scripts run users topology vuln gen_containers_config flags traffic resources
 
 # Runs all containers in the emulation
-run: networks gen_containers_config
+run: networks container_scripts gen_containers_config
 	cd containers/router_1_1/ && $(MAKE) run
 	cd containers/ssh_1_1/ && $(MAKE) run
 	cd containers/ssh_2_1/ && $(MAKE) run
@@ -38,7 +38,7 @@ run: networks gen_containers_config
 	cd containers/client_1_1/ && $(MAKE) run
 
 # Stops all containers in the emulation
-stop:
+stop: container_scripts
 	cd containers/router_1_1/ && $(MAKE) stop
 	cd containers/ssh_1_1/ && $(MAKE) stop
 	cd containers/ssh_2_1/ && $(MAKE) stop
@@ -75,7 +75,7 @@ stop:
 	cd containers/client_1_1/ && $(MAKE) stop
 
 # Starts all containers in the emulation
-start:
+start: container_scripts
 	cd containers/router_1_1/ && $(MAKE) start
 	cd containers/ssh_1_1/ && $(MAKE) start
 	cd containers/ssh_2_1/ && $(MAKE) start
@@ -113,7 +113,7 @@ start:
 	python create_topology.py
 
 # Stops and removes all containers in the emulation
-clean: stop
+clean: container_scripts stop
 	cd containers/router_1_1/ && $(MAKE) clean
 	cd containers/ssh_1_1/ && $(MAKE) clean
 	cd containers/ssh_2_1/ && $(MAKE) clean

@@ -5,9 +5,9 @@ from csle_common.envs_model.config.generator.container_generator import Containe
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 
 
-def delete_networks(network_id : int = 2, level="2", version = "0.0.1") -> None:
+def create_networks(network_id : int = 3, level="3", version = "0.0.1") -> None:
     """
-    Deletes the docker networks
+    Creates the docker networks
 
     :param version: the version of the emulation
     :param level: the level parameter of the emulation
@@ -23,13 +23,15 @@ def delete_networks(network_id : int = 2, level="2", version = "0.0.1") -> None:
 
     for c in containers_config.containers:
         for ip_net in c.ips_and_networks:
+            networks = ContainerManager.get_network_references()
+            networks = list(map(lambda x: x.name, networks))
             ip, net = ip_net
-            ContainerManager.remove_network(name=net.name)
+            ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
 
 
-# Deletes the docker networks
+# Creates the docker networks
 if __name__ == '__main__':
-    network_id = 2
-    level = "2"
+    network_id = 3
+    level = "3"
     version = "0.0.1"
-    delete_networks(network_id=network_id, level=level, version=version)
+    create_networks(network_id=network_id, level=level, version=version)

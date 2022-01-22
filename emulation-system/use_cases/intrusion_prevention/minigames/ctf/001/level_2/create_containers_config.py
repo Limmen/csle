@@ -7,7 +7,7 @@ from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 
 
-def default_containers_config(network_id: int, level: str, version : str = "0.0.1") -> ContainersConfig:
+def default_containers_config(network_id: int = 2, level: str = "2", version : str = "0.0.1") -> ContainersConfig:
     """
     :param version: the version of the containers to use
     :param level: the level parameter of the emulation

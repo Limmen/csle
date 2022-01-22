@@ -52,6 +52,8 @@ class NETWORKING:
     """
     ETH0 = "eth0"
     ETH1 = "eth1"
+    ETH2 = "eth2"
+    ETH3 = "eth3"
 
 
 class SERVICES:
