@@ -13,7 +13,7 @@ def create_container_directories(level: int = 5, version: str = "0.0.1") -> None
     Creates the container directories and scripts
 
     :param level: the level parameter of the emulation
-    :param id: the version of the emulation
+    :param version: the version of the emulation
     :return: None
     """
     network_id = level

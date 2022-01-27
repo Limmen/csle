@@ -330,8 +330,7 @@ def default_resource_constraints(network_id: int = 7, level :int = 7) -> Resourc
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
-                 ))]),
-
+                 ))])
     ]
     resources_config = ResourcesConfig(node_resources_configurations=node_resources_configurations)
     return resources_config
