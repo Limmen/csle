@@ -1,83 +1,132 @@
+PROJECT=csle
+VERSION=0.0.1
+
 all: build
 
 # Targets for building all of the base images
 kali_base:
-	cd kali_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(PROJECT)/kali_base:$(VERSION)
 
 ubuntu_20_base:
-	cd ubuntu_20_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(PROJECT)/ubuntu_20_base:$(VERSION)
 
 ubuntu_14_base:
-	cd ubuntu_14_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(PROJECT)/ubuntu_14_base:$(VERSION)
 
 ssh_base:
-	cd ssh_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(PROJECT)/ssh_base:$(VERSION)
 
 samba_base:
-	cd samba_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(PROJECT)/samba_base:$(VERSION)
 
 shellshock_base:
-	cd shellshock_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(PROJECT)/shellshock_base:$(VERSION)
 
 sql_injection_base:
-	cd sql_injection_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(PROJECT)/sql_injection_base:$(VERSION)
 
 debian_jessie_base:
-	cd debian_jessie_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(PROJECT)/debian_jessie_base:$(VERSION)
 
 cve_2015_3306_base:
-	cd cve_2015_3306_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_base:$(VERSION)
 
 cve_2015_1427_base:
-	cd cve_2015_1427_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_base:$(VERSION)
 
 cve_2016_10033_base:
-	cd cve_2016_10033_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_base:$(VERSION)
 
 cve_2010_0426_base:
-	cd cve_2010_0426_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_base:$(VERSION)
 
 cve_2015_5602_base:
-	cd cve_2015_5602_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_base:$(VERSION)
 
 blank_ubuntu_20:
-	cd blank_ubuntu_20/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
 
 pengine_exploit_base:
-	cd pengine_exploit_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
+
+# Targets for removing all of the base images
+rm_kali_base:
+	-docker rmi $(PROJECT)kali_base:$(VERSION)
+
+rm_ubuntu_20_base:
+	-docker rmi $(PROJECT)ubuntu_20_base:$(VERSION)
+
+rm_ubuntu_14_base:
+	-docker rmi $(PROJECT)ubuntu_14_base:$(VERSION)
+
+rm_ssh_base:
+	-docker rmi $(PROJECT)ssh_base:$(VERSION)
+
+rm_samba_base:
+	-docker rmi $(PROJECT)samba_base:$(VERSION)
+
+rm_shellshock_base:
+	-docker rmi $(PROJECT)shellshock_base:$(VERSION)
+
+rm_sql_injection_base:
+	-docker rmi $(PROJECT)sql_injection_base:$(VERSION)
+
+rm_debian_jessie_base:
+	-docker rmi $(PROJECT)debian_jessie_base:$(VERSION)
+
+rm_cve_2015_3306_base:
+	-docker rmi $(PROJECT)cve_2015_3306_base:$(VERSION)
+
+rm_cve_2015_1427_base:
+	-docker rmi $(PROJECT)cve_2015_1427_base:$(VERSION)
+
+rm_cve_2016_10033_base:
+	-docker rmi $(PROJECT)cve_2016_10033_base:$(VERSION)
+
+rm_cve_2010_0426_base:
+	-docker rmi $(PROJECT)cve_2010_0426_base:$(VERSION)
+
+rm_cve_2015_5602_base:
+	-docker rmi $(PROJECT)cve_2015_5602_base:$(VERSION)
+
+rm_blank_ubuntu_20:
+	-docker rmi $(PROJECT)blank_ubuntu_20:$(VERSION)
+
+rm_pengine_exploit_base:
+	-docker rmi $(PROJECT)pengine_exploit_base:$(VERSION)
 
 # Build all of the base images sequentially
 build:
-	cd kali_base/ && $(MAKE) build
-	cd ubuntu_20_base/ && $(MAKE) build
-	cd ubuntu_14_base/ && $(MAKE) build
-	cd ssh_base/ && $(MAKE) build
-	cd samba_base/ && $(MAKE) build
-	cd shellshock_base/ && $(MAKE) build
-	cd sql_injection_base/ && $(MAKE) build
-	cd debian_jessie_base/ && $(MAKE) build
-	cd cve_2015_3306_base/ && $(MAKE) build
-	cd cve_2015_1427_base/ && $(MAKE) build
-	cd cve_2016_10033_base/ && $(MAKE) build
-	cd cve_2010_0426_base/ && $(MAKE) build
-	cd cve_2015_5602_base/ && $(MAKE) build
-	cd blank_ubuntu_20/ && $(MAKE) build
-	cd pengine_exploit_base/ && $(MAKE) build
+	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(PROJECT)/kali_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(PROJECT)/ubuntu_20_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(PROJECT)/ubuntu_14_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(PROJECT)/ssh_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(PROJECT)/samba_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(PROJECT)/shellshock_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/sql_injection_base/docker/Dockerfile -t $(PROJECT)/sql_injection_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/debian_jessie_base/docker/Dockerfile -t $(PROJECT)/debian_jessie_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_3306_base/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_1427_base/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2016_10033_base/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
+	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
 
 # Remove all base images
-rm-image:
-	cd kali_base/ && $(MAKE) rm-image
-	cd ubuntu_20_base/ && $(MAKE) rm-image
-	cd ubuntu_14_base/ && $(MAKE) rm-image
-	cd ssh_base/ && $(MAKE) rm-image
-	cd samba_base/ && $(MAKE) rm-image
-	cd shellshock_base/ && $(MAKE) rm-image
-	cd sql_injection_base/ && $(MAKE) rm-image
-	cd debian_jessie_base/ && $(MAKE) rm-image
-	cd cve_2015_3306_base/ && $(MAKE) rm-image
-	cd cve_2015_1427_base/ && $(MAKE) rm-image
-	cd cve_2016_10033_base/ && $(MAKE) rm-image
-	cd cve_2010_0426_base/ && $(MAKE) rm-image
-	cd cve_2015_5602_base/ && $(MAKE) rm-image
-	cd blank_ubuntu_20/ && $(MAKE) rm-image
-	cd pengine_exploit_base/ && $(MAKE) rm-image
+rm_image:
+	-docker rmi $(PROJECT)/kali_base:$(VERSION)
+	-docker rmi $(PROJECT)/ubuntu_20_base:$(VERSION)
+	-docker rmi $(PROJECT)/ubuntu_14_base:$(VERSION)
+	-docker rmi $(PROJECT)/ssh_base:$(VERSION)
+	-docker rmi $(PROJECT)/samba_base:$(VERSION)
+	-docker rmi $(PROJECT)/shellshock_base:$(VERSION)
+	-docker rmi $(PROJECT)/sql_injection_base:$(VERSION)
+	-docker rmi $(PROJECT)/debian_jessie_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_3306_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_1427_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2016_10033_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2010_0426_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_5602_base:$(VERSION)
+	-docker rmi $(PROJECT)/blank_ubuntu_20:$(VERSION)
+	-docker rmi $(PROJECT)/pengine_exploit_base:$(VERSION)

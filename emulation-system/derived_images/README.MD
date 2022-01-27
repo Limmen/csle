@@ -141,6 +141,32 @@ make client_1 # Build client_1
 make blank_1 # Build blank_1
 make pengine_exploit_1 # Build pengine_exploit_1
 
+make rm_samba_1 # Remove samba_1
+make rm_shellshock_1 # Remove shellshock_1
+make rm_sql_injection_1 # Remove sql_injection_1
+make rm_debian_jessie_base # Remove debian_jessie_1
+make rm_cve_2015_3306_1 # Remove cve_2015_3306_1
+make rm_cve_2015_1427_1 # Remove cve_2015_1427_1
+make rm_cve_2016_10033_1 # Remove cve_2016_10033_1
+make rm_cve_2010_0426_1 # Remove cve_2010_0426_1
+make rm_cve_2015_5602_1 # Remove cve_2010_0426_1
+make rm_ftp_1 # Remove ftp_1
+make rm_ftp_2 # Remove ftp_2
+make rm_hacker_kali_1 # Remove hacker_kali_1
+make rm_honeypot_1 # Remove honeypot_1
+make rm_honeypot_2 # Remove honeypot_2
+make rm_router_1 # Remove router_1
+make rm_router_2 # Remove router_2
+make rm_ssh_1 # Remove ssh_1
+make rm_ssh_2 # Remove ssh_2
+make rm_ssh_3 # Remove ssh_3
+make rm_telnet_1 # Remove telnet_1
+make rm_telnet_2 # Remove telnet_2
+make rm_telnet_3 # Remove telnet_3
+make rm_client_1 # Remove client_1
+make rm_blank_1 # Remove blank_1
+make rm_pengine_exploit_1 # Remove pengine_exploit_1
+
 docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers

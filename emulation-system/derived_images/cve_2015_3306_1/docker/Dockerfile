@@ -3,7 +3,7 @@ FROM csle/cve_2015_3306_base:0.0.1
 USER root
 
 # Add start script
-ADD docker/start.sh /start.sh
+ADD cve_2015_3306_1/docker/start.sh /start.sh
 RUN chmod 777 /start.sh
 
 # Override base image's entrypoint

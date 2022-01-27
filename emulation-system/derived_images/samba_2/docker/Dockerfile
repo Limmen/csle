@@ -3,7 +3,7 @@ FROM csle/samba_base:0.0.1
 USER root
 
 # Add start script
-ADD docker/start.sh /start.sh
+ADD samba_2/docker/start.sh /start.sh
 RUN chmod 777 /start.sh
 
 # Override base image's entrypoint

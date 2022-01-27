@@ -1,55 +1,213 @@
+PROJECT=csle
+VERSION=0.0.1
+
 all: build
 
-build:
-	cd ftp_1/ && $(MAKE) build
-	cd ftp_2/ && $(MAKE) build
-	cd hacker_kali_1/ && $(MAKE) build
-	cd honeypot_1/ && $(MAKE) build
-	cd honeypot_2/ && $(MAKE) build
-	cd ssh_1/ && $(MAKE) build
-	cd ssh_2/ && $(MAKE) build
-	cd ssh_3/ && $(MAKE) build
-	cd telnet_1/ && $(MAKE) build
-	cd telnet_2/ && $(MAKE) build
-	cd telnet_3/ && $(MAKE) build
-	cd router_1/ && $(MAKE) build
-	cd router_2/ && $(MAKE) build
-	cd samba_1/ && $(MAKE) build
-	cd samba_2/ && $(MAKE) build
-	cd shellshock_1/ && $(MAKE) build
-	cd sql_injection_1/ && $(MAKE) build
-	cd cve_2015_3306_1/ && $(MAKE) build
-	cd cve_2015_1427_1/ && $(MAKE) build
-	cd cve_2016_10033_1/ && $(MAKE) build
-	cd cve_2010_0426_1/ && $(MAKE) build
-	cd cve_2015_5602_1/ && $(MAKE) build
-	cd client_1/ && $(MAKE) build
-	cd blank_1/ && $(MAKE) build
-	cd pengine_exploit_1/ && $(MAKE) build
+# Targets for building all images
+ftp_1:
+	docker build . --no-cache -f ./ftp_1/docker/Dockerfile -t $(PROJECT)/ftp_1:$(VERSION)
 
-rm-image:
-	cd ftp_1/ && $(MAKE) rm-image
-	cd ftp_2/ && $(MAKE) rm-image
-	cd hacker_kali_1/ && $(MAKE) rm-image
-	cd honeypot_1/ && $(MAKE) rm-image
-	cd honeypot_2/ && $(MAKE) rm-image
-	cd ssh_1/ && $(MAKE) rm-image
-	cd ssh_2/ && $(MAKE) rm-image
-	cd ssh_3/ && $(MAKE) rm-image
-	cd telnet_1/ && $(MAKE) rm-image
-	cd telnet_2/ && $(MAKE) rm-image
-	cd telnet_3/ && $(MAKE) rm-image
-	cd router_1/ && $(MAKE) rm-image
-	cd router_2/ && $(MAKE) rm-image
-	cd samba_1/ && $(MAKE) rm-image
-	cd samba_2/ && $(MAKE) rm-image
-	cd shellshock_1/ && $(MAKE) rm-image
-	cd sql_injection_1/ && $(MAKE) rm-image
-	cd cve_2015_3306_1/ && $(MAKE) rm-image
-	cd cve_2015_1427_1/ && $(MAKE) rm-image
-	cd cve_2016_10033_1/ && $(MAKE) rm-image
-	cd cve_2010_0426_1/ && $(MAKE) rm-image
-	cd cve_2015_5602_1/ && $(MAKE) rm-image
-	cd client_1/ && $(MAKE) rm-image
-	cd blank_1/ && $(MAKE) rm-image
-	cd pengine_exploit_1/ && $(MAKE) rm-image
+ftp_2:
+	docker build . --no-cache -f ./ftp_2/docker/Dockerfile -t $(PROJECT)/ftp_2:$(VERSION)
+
+hacker_kali_1:
+	docker build . --no-cache -f ./hacker_kali_1/docker/Dockerfile -t $(PROJECT)/hacker_kali_1:$(VERSION)
+
+honeypot_1:
+	docker build . --no-cache -f ./honeypot_1/docker/Dockerfile -t $(PROJECT)/honeypot_1:$(VERSION)
+
+honeypot_2:
+	docker build . --no-cache -f ./honeypot_2/docker/Dockerfile -t $(PROJECT)/honeypot_2:$(VERSION)
+
+ssh_1:
+	docker build . --no-cache -f ./ssh_1/docker/Dockerfile -t $(PROJECT)/ssh_1:$(VERSION)
+
+ssh_2:
+	docker build . --no-cache -f ./ssh_2/docker/Dockerfile -t $(PROJECT)/ssh_2:$(VERSION)
+
+ssh_3:
+	docker build . --no-cache -f ./ssh_3/docker/Dockerfile -t $(PROJECT)/ssh_3:$(VERSION)
+
+telnet_1:
+	docker build . --no-cache -f ./telnet_1/docker/Dockerfile -t $(PROJECT)/telnet_1:$(VERSION)
+
+telnet_2:
+	docker build . --no-cache -f ./telnet_2/docker/Dockerfile -t $(PROJECT)/telnet_2:$(VERSION)
+
+telnet_3:
+	docker build . --no-cache -f ./telnet_3/docker/Dockerfile -t $(PROJECT)/telnet_3:$(VERSION)
+
+router_1:
+	docker build . --no-cache -f ./router_1/docker/Dockerfile -t $(PROJECT)/router_1:$(VERSION)
+
+router_2:
+	docker build . --no-cache -f ./router_2/docker/Dockerfile -t $(PROJECT)/router_2:$(VERSION)
+
+samba_1:
+	docker build . --no-cache -f ./samba_1/docker/Dockerfile -t $(PROJECT)/samba_1:$(VERSION)
+
+samba_2:
+	docker build . --no-cache -f ./samba_2/docker/Dockerfile -t $(PROJECT)/samba_2:$(VERSION)
+
+shellshock_1:
+	docker build . --no-cache -f ./shellshock_1/docker/Dockerfile -t $(PROJECT)/shellshock_1:$(VERSION)
+
+sql_injection_1:
+	docker build . --no-cache -f ./sql_injection_1/docker/Dockerfile -t $(PROJECT)/sql_injection_1:$(VERSION)
+
+cve_2015_3306_1:
+	docker build . --no-cache -f ./cve_2015_3306_1/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_1:$(VERSION)
+
+cve_2015_1427_1:
+	docker build . --no-cache -f ./cve_2015_1427_1/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_1:$(VERSION)
+
+cve_2016_10033_1:
+	docker build . --no-cache -f ./cve_2016_10033_1/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_1:$(VERSION)
+
+cve_2010_0426_1:
+	docker build . --no-cache -f ./cve_2010_0426_1/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_1:$(VERSION)
+
+cve_2015_5602_1:
+	docker build . --no-cache -f ./cve_2015_5602_1/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_1:$(VERSION)
+
+client_1:
+	docker build . --no-cache -f ./client_1/docker/Dockerfile -t $(PROJECT)/client_1:$(VERSION)
+
+blank_1:
+	docker build . --no-cache -f ./blank_1/docker/Dockerfile -t $(PROJECT)/blank_1:$(VERSION)
+
+pengine_exploit_1:
+	docker build . --no-cache -f ./pengine_exploit_1/docker/Dockerfile -t $(PROJECT)/pengine_exploit_1:$(VERSION)
+
+# Targets for removing all images
+
+rm_ftp_1:
+	-docker rmi $(PROJECT)/ftp_1:$(VERSION)
+
+rm_ftp_2:
+	-docker rmi $(PROJECT)/ftp_2:$(VERSION)
+
+rm_hacker_kali_1:
+	-docker rmi $(PROJECT)/hacker_kali_1:$(VERSION)
+
+rm_honeypot_1:
+	-docker rmi $(PROJECT)/honeypot_1:$(VERSION)
+
+rm_honeypot_2:
+	-docker rmi $(PROJECT)/honeypot_2:$(VERSION)
+
+rm_ssh_1:
+	-docker rmi $(PROJECT)/ssh_1:$(VERSION)
+
+rm_ssh_2:
+	-docker rmi $(PROJECT)/ssh_2:$(VERSION)
+
+rm_ssh_3:
+	-docker rmi $(PROJECT)/ssh_3:$(VERSION)
+
+rm_telnet_1:
+	-docker rmi $(PROJECT)/telnet_1:$(VERSION)
+
+rm_telnet_2:
+	-docker rmi $(PROJECT)/telnet_2:$(VERSION)
+
+rm_telnet_3:
+	-docker rmi $(PROJECT)/telnet_3:$(VERSION)
+
+rm_router_1:
+	-docker rmi $(PROJECT)/router_1:$(VERSION)
+
+rm_router_2:
+	-docker rmi $(PROJECT)/router_2:$(VERSION)
+
+rm_samba_1:
+	-docker rmi $(PROJECT)/samba_1:$(VERSION)
+
+rm_samba_2:
+	-docker rmi $(PROJECT)/samba_2:$(VERSION)
+
+rm_shellshock_1:
+	-docker rmi $(PROJECT)/shellshock_1:$(VERSION)
+
+rm_sql_injection_1:
+	-docker rmi $(PROJECT)/sql_injection_1:$(VERSION)
+
+rm_cve_2015_3306_1:
+	-docker rmi $(PROJECT)/cve_2015_3306_1:$(VERSION)
+
+rm_cve_2015_1427_1:
+	-docker rmi $(PROJECT)/cve_2015_1427_1:$(VERSION)
+
+rm_cve_2016_10033_1:
+	-docker rmi $(PROJECT)/cve_2016_10033_1:$(VERSION)
+
+rm_cve_2010_0426_1:
+	-docker rmi $(PROJECT)/cve_2010_0426_1:$(VERSION)
+
+rm_cve_2015_5602_1:
+	-docker rmi $(PROJECT)/cve_2015_5602_1:$(VERSION)
+
+rm_client_1:
+	-docker rmi $(PROJECT)/client_1:$(VERSION)
+
+rm_blank_1:
+	-docker rmi $(PROJECT)/blank_1:$(VERSION)
+
+rm_pengine_exploit_1:
+	-docker rmi $(PROJECT)/pengine_exploit_1:$(VERSION)
+
+# Building all images sequentially
+build:
+	docker build . --no-cache -f ./ftp_1/docker/Dockerfile -t $(PROJECT)/ftp_1:$(VERSION)
+	docker build . --no-cache -f ./ftp_2/docker/Dockerfile -t $(PROJECT)/ftp_2:$(VERSION)
+	docker build . --no-cache -f ./hacker_kali_1/docker/Dockerfile -t $(PROJECT)/hacker_kali_1:$(VERSION)
+	docker build . --no-cache -f ./honeypot_1/docker/Dockerfile -t $(PROJECT)/honeypot_1:$(VERSION)
+	docker build . --no-cache -f ./honeypot_2/docker/Dockerfile -t $(PROJECT)/honeypot_2:$(VERSION)
+	docker build . --no-cache -f ./ssh_1/docker/Dockerfile -t $(PROJECT)/ssh_1:$(VERSION)
+	docker build . --no-cache -f ./ssh_2/docker/Dockerfile -t $(PROJECT)/ssh_2:$(VERSION)
+	docker build . --no-cache -f ./ssh_3/docker/Dockerfile -t $(PROJECT)/ssh_3:$(VERSION)
+	docker build . --no-cache -f ./telnet_1/docker/Dockerfile -t $(PROJECT)/telnet_1:$(VERSION)
+	docker build . --no-cache -f ./telnet_2/docker/Dockerfile -t $(PROJECT)/telnet_2:$(VERSION)
+	docker build . --no-cache -f ./telnet_3/docker/Dockerfile -t $(PROJECT)/telnet_3:$(VERSION)
+	docker build . --no-cache -f ./router_1/docker/Dockerfile -t $(PROJECT)/router_1:$(VERSION)
+	docker build . --no-cache -f ./router_2/docker/Dockerfile -t $(PROJECT)/router_2:$(VERSION)
+	docker build . --no-cache -f ./samba_1/docker/Dockerfile -t $(PROJECT)/samba_1:$(VERSION)
+	docker build . --no-cache -f ./samba_2/docker/Dockerfile -t $(PROJECT)/samba_2:$(VERSION)
+	docker build . --no-cache -f ./shellshock_1/docker/Dockerfile -t $(PROJECT)/shellshock_1:$(VERSION)
+	docker build . --no-cache -f ./sql_injection_1/docker/Dockerfile -t $(PROJECT)/sql_injection_1:$(VERSION)
+	docker build . --no-cache -f ./cve_2015_3306_1/docker/Dockerfile -t $(PROJECT)/cve_2015_3306_1:$(VERSION)
+	docker build . --no-cache -f ./cve_2015_1427_1/docker/Dockerfile -t $(PROJECT)/cve_2015_1427_1:$(VERSION)
+	docker build . --no-cache -f ./cve_2016_10033_1/docker/Dockerfile -t $(PROJECT)/cve_2016_10033_1:$(VERSION)
+	docker build . --no-cache -f ./cve_2010_0426_1/docker/Dockerfile -t $(PROJECT)/cve_2010_0426_1:$(VERSION)
+	docker build . --no-cache -f ./cve_2015_5602_1/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_1:$(VERSION)
+	docker build . --no-cache -f ./client_1/docker/Dockerfile -t $(PROJECT)/client_1:$(VERSION)
+	docker build . --no-cache -f ./blank_1/docker/Dockerfile -t $(PROJECT)/blank_1:$(VERSION)
+	docker build . --no-cache -f ./pengine_exploit_1/docker/Dockerfile -t $(PROJECT)/pengine_exploit_1:$(VERSION)
+
+# Removing all images sequentially
+rm_image:
+	-docker rmi $(PROJECT)/ftp_1:$(VERSION)
+	-docker rmi $(PROJECT)/ftp_2:$(VERSION)
+	-docker rmi $(PROJECT)/hacker_kali_1:$(VERSION)
+	-docker rmi $(PROJECT)/honeypot_1:$(VERSION)
+	-docker rmi $(PROJECT)/honeypot_2:$(VERSION)
+	-docker rmi $(PROJECT)/ssh_1:$(VERSION)
+	-docker rmi $(PROJECT)/ssh_2:$(VERSION)
+	-docker rmi $(PROJECT)/ssh_3:$(VERSION)
+	-docker rmi $(PROJECT)/telnet_1:$(VERSION)
+	-docker rmi $(PROJECT)/telnet_2:$(VERSION)
+	-docker rmi $(PROJECT)/telnet_3:$(VERSION)
+	-docker rmi $(PROJECT)/router_1:$(VERSION)
+	-docker rmi $(PROJECT)/router_2:$(VERSION)
+	-docker rmi $(PROJECT)/samba_1:$(VERSION)
+	-docker rmi $(PROJECT)/samba_2:$(VERSION)
+	-docker rmi $(PROJECT)/shellshock_1:$(VERSION)
+	-docker rmi $(PROJECT)/sql_injection_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_3306_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_1427_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2016_10033_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2010_0426_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_5602_1:$(VERSION)
+	-docker rmi $(PROJECT)/client_1:$(VERSION)
+	-docker rmi $(PROJECT)/blank_1:$(VERSION)
+	-docker rmi $(PROJECT)/pengine_exploit_1:$(VERSION)
