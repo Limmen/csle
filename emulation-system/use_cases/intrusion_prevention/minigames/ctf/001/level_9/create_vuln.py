@@ -17,46 +17,46 @@ def default_vulns(network_id: int = 9) -> VulnerabilitiesConfig:
     :return: the VulnerabilitiesConfig of the emulation
     """
     vulns = [
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
                               root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="euler", pw="euler",
                               root=False),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.79",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                               vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
                               root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.2",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                               vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
                               root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.3",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                               vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
                               root=True),
-        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.54",
+        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
                                vuln_type=VulnType.RCE),
         SQLInjectionVulnerabilityConfig(
-            ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.74",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
             vuln_type=VulnType.SQL_INJECTION,
             username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                               vuln_type=VulnType.WEAK_PW, username="adm",
                               pw="adm", root=False),
-        PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.61",
+        PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                                    vuln_type=VulnType.PRIVILEGE_ESCALATION,
                                    username="alan", pw="alan", root=False, cve="2010-1427"),
-        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.62",
+        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
                                vuln_type=VulnType.RCE),
-        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.7",
+        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
                                vuln_type=VulnType.RCE),
-        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.178",
+        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178",
                                vuln_type=VulnType.RCE),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.25",
+        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
                               vuln_type=VulnType.WEAK_PW, username="donald", pw="donald",
                               root=False),
-        PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.25",
+        PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
                                    vuln_type=VulnType.PRIVILEGE_ESCALATION,
                                    username="donald", pw="donald", root=False, cve="2015-5602"),
-        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.28",
+        RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
                                vuln_type=VulnType.RCE)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     if not os.path.exists(util.default_vulnerabilities_path()):
         VulnerabilityGenerator.write_vuln_config(default_vulns(network_id=network_id))
     vuln_config = util.read_vulns_config(util.default_vulnerabilities_path())
-    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}{network_id}.191",
+    emulation_config = EmulationConfig(agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                        agent_username=constants.CSLE_ADMIN.USER,
                                        agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
     VulnerabilityGenerator.create_vulns(vuln_cfg=vuln_config, emulation_config=emulation_config)

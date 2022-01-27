@@ -38,39 +38,39 @@ run: networks container_scripts create_containers_config
 
 # Stops all containers in the emulation
 stop: container_scripts
-	cd containers/router_1_1/ && $(MAKE) stop
-	cd containers/ssh_1_1/ && $(MAKE) stop
-	cd containers/ssh_2_1/ && $(MAKE) stop
-	cd containers/ssh_3_1/ && $(MAKE) stop
-	cd containers/telnet_1_1/ && $(MAKE) stop
-	cd containers/telnet_2_1/ && $(MAKE) stop
-	cd containers/telnet_3_1/ && $(MAKE) stop
-	cd containers/honeypot_1_1/ && $(MAKE) stop
-	cd containers/honeypot_1_2/ && $(MAKE) stop
-	cd containers/honeypot_1_3/ && $(MAKE) stop
-	cd containers/honeypot_1_4/ && $(MAKE) stop
-	cd containers/honeypot_1_5/ && $(MAKE) stop
-	cd containers/honeypot_1_6/ && $(MAKE) stop
-	cd containers/honeypot_1_7/ && $(MAKE) stop
-	cd containers/honeypot_2_1/ && $(MAKE) stop
-	cd containers/honeypot_2_2/ && $(MAKE) stop
-	cd containers/honeypot_2_3/ && $(MAKE) stop
-	cd containers/honeypot_2_4/ && $(MAKE) stop
-	cd containers/honeypot_2_5/ && $(MAKE) stop
-	cd containers/honeypot_2_6/ && $(MAKE) stop
-	cd containers/honeypot_2_7/ && $(MAKE) stop
-	cd containers/honeypot_2_8/ && $(MAKE) stop
-	cd containers/honeypot_2_9/ && $(MAKE) stop
-	cd containers/honeypot_2_10/ && $(MAKE) stop
-	cd containers/honeypot_2_11/ && $(MAKE) stop
-	cd containers/honeypot_2_12/ && $(MAKE) stop
-	cd containers/honeypot_2_13/ && $(MAKE) stop
-	cd containers/honeypot_2_14/ && $(MAKE) stop
-	cd containers/honeypot_2_15/ && $(MAKE) stop
-	cd containers/ftp_1_1/ && $(MAKE) stop
-	cd containers/ftp_2_1/ && $(MAKE) stop
-	cd containers/hacker_kali_1_1/ && $(MAKE) stop
-	cd containers/client_1_1/ && $(MAKE) stop
+	-cd containers/router_1_1/ && $(MAKE) stop
+	-cd containers/ssh_1_1/ && $(MAKE) stop
+	-cd containers/ssh_2_1/ && $(MAKE) stop
+	-cd containers/ssh_3_1/ && $(MAKE) stop
+	-cd containers/telnet_1_1/ && $(MAKE) stop
+	-cd containers/telnet_2_1/ && $(MAKE) stop
+	-cd containers/telnet_3_1/ && $(MAKE) stop
+	-cd containers/honeypot_1_1/ && $(MAKE) stop
+	-cd containers/honeypot_1_2/ && $(MAKE) stop
+	-cd containers/honeypot_1_3/ && $(MAKE) stop
+	-cd containers/honeypot_1_4/ && $(MAKE) stop
+	-cd containers/honeypot_1_5/ && $(MAKE) stop
+	-cd containers/honeypot_1_6/ && $(MAKE) stop
+	-cd containers/honeypot_1_7/ && $(MAKE) stop
+	-cd containers/honeypot_2_1/ && $(MAKE) stop
+	-cd containers/honeypot_2_2/ && $(MAKE) stop
+	-cd containers/honeypot_2_3/ && $(MAKE) stop
+	-cd containers/honeypot_2_4/ && $(MAKE) stop
+	-cd containers/honeypot_2_5/ && $(MAKE) stop
+	-cd containers/honeypot_2_6/ && $(MAKE) stop
+	-cd containers/honeypot_2_7/ && $(MAKE) stop
+	-cd containers/honeypot_2_8/ && $(MAKE) stop
+	-cd containers/honeypot_2_9/ && $(MAKE) stop
+	-cd containers/honeypot_2_10/ && $(MAKE) stop
+	-cd containers/honeypot_2_11/ && $(MAKE) stop
+	-cd containers/honeypot_2_12/ && $(MAKE) stop
+	-cd containers/honeypot_2_13/ && $(MAKE) stop
+	-cd containers/honeypot_2_14/ && $(MAKE) stop
+	-cd containers/honeypot_2_15/ && $(MAKE) stop
+	-cd containers/ftp_1_1/ && $(MAKE) stop
+	-cd containers/ftp_2_1/ && $(MAKE) stop
+	-cd containers/hacker_kali_1_1/ && $(MAKE) stop
+	-cd containers/client_1_1/ && $(MAKE) stop
 
 # Starts all containers in the emulation
 start: container_scripts

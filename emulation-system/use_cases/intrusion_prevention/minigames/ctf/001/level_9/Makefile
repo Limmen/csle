@@ -1,7 +1,7 @@
-all: networks run users topology vuln flags create_containers_config resources traffic
+all: networks container_scripts run users topology vuln flags create_containers_config resources traffic
 
 # Runs all containers in the emulation
-run: networks create_containers_config
+run: networks container_scripts create_containers_config
 	cd containers/router_2_1/ && $(MAKE) run
 	cd containers/ssh_1_1/ && $(MAKE) run
 	cd containers/shellshock_1_1/ && $(MAKE) run
@@ -29,57 +29,51 @@ run: networks create_containers_config
 	cd containers/honeypot_2_11/ && $(MAKE) run
 	cd containers/honeypot_2_12/ && $(MAKE) run
 	cd containers/honeypot_2_13/ && $(MAKE) run
-	cd containers/honeypot_2_14/ && $(MAKE) run
 	cd containers/cve_2015_5602_1_1/ && $(MAKE) run
 	cd containers/cve_2016_10033_1_1/ && $(MAKE) run
 	cd containers/ftp_1_1/ && $(MAKE) run
 	cd containers/samba_1_1/ && $(MAKE) run
 	cd containers/hacker_kali_1_1/ && $(MAKE) run
 	cd containers/client_1_1/ && $(MAKE) run
-	cd containers/client_1_2/ && $(MAKE) run
-	cd containers/client_1_3/ && $(MAKE) run
 
 # Stops all containers in the emulation
-stop:
-	cd containers/router_2_1/ && $(MAKE) stop
-	cd containers/ssh_1_1/ && $(MAKE) stop
-	cd containers/shellshock_1_1/ && $(MAKE) stop
-	cd containers/sql_injection_1_1/ && $(MAKE) stop
-	cd containers/samba_2_1/ && $(MAKE) stop
-	cd containers/cve_2010_0426_1_1/ && $(MAKE) stop
-	cd containers/cve_2015_1427_1_1/ && $(MAKE) stop
-	cd containers/honeypot_1_1/ && $(MAKE) stop
-	cd containers/honeypot_1_2/ && $(MAKE) stop
-	cd containers/honeypot_1_3/ && $(MAKE) stop
-	cd containers/honeypot_1_4/ && $(MAKE) stop
-	cd containers/honeypot_1_5/ && $(MAKE) stop
-	cd containers/honeypot_1_6/ && $(MAKE) stop
-	cd containers/cve_2015_3306_1_1/ && $(MAKE) stop
-	cd containers/honeypot_2_1/ && $(MAKE) stop
-	cd containers/honeypot_2_2/ && $(MAKE) stop
-	cd containers/honeypot_2_3/ && $(MAKE) stop
-	cd containers/honeypot_2_4/ && $(MAKE) stop
-	cd containers/honeypot_2_5/ && $(MAKE) stop
-	cd containers/honeypot_2_6/ && $(MAKE) stop
-	cd containers/honeypot_2_7/ && $(MAKE) stop
-	cd containers/honeypot_2_8/ && $(MAKE) stop
-	cd containers/honeypot_2_9/ && $(MAKE) stop
-	cd containers/honeypot_2_10/ && $(MAKE) stop
-	cd containers/honeypot_2_11/ && $(MAKE) stop
-	cd containers/honeypot_2_12/ && $(MAKE) stop
-	cd containers/honeypot_2_13/ && $(MAKE) stop
-	cd containers/honeypot_2_14/ && $(MAKE) stop
-	cd containers/cve_2015_5602_1_1/ && $(MAKE) stop
-	cd containers/cve_2016_10033_1_1/ && $(MAKE) stop
-	cd containers/ftp_1_1/ && $(MAKE) stop
-	cd containers/samba_1_1/ && $(MAKE) stop
-	cd containers/hacker_kali_1_1/ && $(MAKE) stop
-	cd containers/client_1_1/ && $(MAKE) stop
-	cd containers/client_1_2/ && $(MAKE) stop
-	cd containers/client_1_3/ && $(MAKE) stop
+stop: container_scripts
+	-cd containers/router_2_1/ && $(MAKE) stop
+	-cd containers/ssh_1_1/ && $(MAKE) stop
+	-cd containers/shellshock_1_1/ && $(MAKE) stop
+	-cd containers/sql_injection_1_1/ && $(MAKE) stop
+	-cd containers/samba_2_1/ && $(MAKE) stop
+	-cd containers/cve_2010_0426_1_1/ && $(MAKE) stop
+	-cd containers/cve_2015_1427_1_1/ && $(MAKE) stop
+	-cd containers/honeypot_1_1/ && $(MAKE) stop
+	-cd containers/honeypot_1_2/ && $(MAKE) stop
+	-cd containers/honeypot_1_3/ && $(MAKE) stop
+	-cd containers/honeypot_1_4/ && $(MAKE) stop
+	-cd containers/honeypot_1_5/ && $(MAKE) stop
+	-cd containers/honeypot_1_6/ && $(MAKE) stop
+	-cd containers/cve_2015_3306_1_1/ && $(MAKE) stop
+	-cd containers/honeypot_2_1/ && $(MAKE) stop
+	-cd containers/honeypot_2_2/ && $(MAKE) stop
+	-cd containers/honeypot_2_3/ && $(MAKE) stop
+	-cd containers/honeypot_2_4/ && $(MAKE) stop
+	-cd containers/honeypot_2_5/ && $(MAKE) stop
+	-cd containers/honeypot_2_6/ && $(MAKE) stop
+	-cd containers/honeypot_2_7/ && $(MAKE) stop
+	-cd containers/honeypot_2_8/ && $(MAKE) stop
+	-cd containers/honeypot_2_9/ && $(MAKE) stop
+	-cd containers/honeypot_2_10/ && $(MAKE) stop
+	-cd containers/honeypot_2_11/ && $(MAKE) stop
+	-cd containers/honeypot_2_12/ && $(MAKE) stop
+	-cd containers/honeypot_2_13/ && $(MAKE) stop
+	-cd containers/cve_2015_5602_1_1/ && $(MAKE) stop
+	-cd containers/cve_2016_10033_1_1/ && $(MAKE) stop
+	-cd containers/ftp_1_1/ && $(MAKE) stop
+	-cd containers/samba_1_1/ && $(MAKE) stop
+	-cd containers/hacker_kali_1_1/ && $(MAKE) stop
+	-cd containers/client_1_1/ && $(MAKE) stop
 
 # Starts all containers in the emulation
-start:
+start: container_scripts
 	cd containers/router_2_1/ && $(MAKE) start
 	cd containers/ssh_1_1/ && $(MAKE) start
 	cd containers/shellshock_1_1/ && $(MAKE) start
@@ -107,56 +101,50 @@ start:
 	cd containers/honeypot_2_11/ && $(MAKE) start
 	cd containers/honeypot_2_12/ && $(MAKE) start
 	cd containers/honeypot_2_13/ && $(MAKE) start
-	cd containers/honeypot_2_14/ && $(MAKE) start
 	cd containers/cve_2015_5602_1_1/ && $(MAKE) start
 	cd containers/cve_2016_10033_1_1/ && $(MAKE) start
 	cd containers/ftp_1_1/ && $(MAKE) start
 	cd containers/samba_1_1/ && $(MAKE) start
 	cd containers/hacker_kali_1_1/ && $(MAKE) start
 	cd containers/client_1_1/ && $(MAKE) start
-	cd containers/client_1_2/ && $(MAKE) start
-	cd containers/client_1_3/ && $(MAKE) start
 	python create_topology.py
 
 # Stops and removes all containers in the emulation
-clean: stop
-	cd containers/router_2_1/ && $(MAKE) clean
-	cd containers/ssh_1_1/ && $(MAKE) clean
-	cd containers/shellshock_1_1/ && $(MAKE) clean
-	cd containers/sql_injection_1_1/ && $(MAKE) clean
-	cd containers/samba_2_1 && $(MAKE) clean
-	cd containers/cve_2010_0426_1_1/ && $(MAKE) clean
-	cd containers/cve_2015_1427_1_1/ && $(MAKE) clean
-	cd containers/honeypot_1_1/ && $(MAKE) clean
-	cd containers/honeypot_1_2/ && $(MAKE) clean
-	cd containers/honeypot_1_3/ && $(MAKE) clean
-	cd containers/honeypot_1_4/ && $(MAKE) clean
-	cd containers/honeypot_1_5/ && $(MAKE) clean
-	cd containers/honeypot_1_6/ && $(MAKE) clean
-	cd containers/cve_2015_3306_1_1/ && $(MAKE) clean
-	cd containers/honeypot_2_1/ && $(MAKE) clean
-	cd containers/honeypot_2_2/ && $(MAKE) clean
-	cd containers/honeypot_2_3/ && $(MAKE) clean
-	cd containers/honeypot_2_4/ && $(MAKE) clean
-	cd containers/honeypot_2_5/ && $(MAKE) clean
-	cd containers/honeypot_2_6/ && $(MAKE) clean
-	cd containers/honeypot_2_7/ && $(MAKE) clean
-	cd containers/honeypot_2_8/ && $(MAKE) clean
-	cd containers/honeypot_2_9/ && $(MAKE) clean
-	cd containers/honeypot_2_10/ && $(MAKE) clean
-	cd containers/honeypot_2_11/ && $(MAKE) clean
-	cd containers/honeypot_2_12/ && $(MAKE) clean
-	cd containers/honeypot_2_13/ && $(MAKE) clean
-	cd containers/honeypot_2_14/ && $(MAKE) clean
-	cd containers/cve_2015_5602_1_1/ && $(MAKE) clean
-	cd containers/cve_2016_10033_1_1/ && $(MAKE) clean
-	cd containers/ftp_1_1/ && $(MAKE) clean
-	cd containers/samba_1_1/ && $(MAKE) clean
-	cd containers/hacker_kali_1_1/ && $(MAKE) clean
-	cd containers/client_1_1/ && $(MAKE) clean
-	cd containers/client_1_2/ && $(MAKE) clean
-	cd containers/client_1_3/ && $(MAKE) clean
-	python delete_networks.py
+clean: container_scripts stop
+	-cd containers/router_2_1/ && $(MAKE) clean
+	-cd containers/ssh_1_1/ && $(MAKE) clean
+	-cd containers/shellshock_1_1/ && $(MAKE) clean
+	-cd containers/sql_injection_1_1/ && $(MAKE) clean
+	-cd containers/samba_2_1 && $(MAKE) clean
+	-cd containers/cve_2010_0426_1_1/ && $(MAKE) clean
+	-cd containers/cve_2015_1427_1_1/ && $(MAKE) clean
+	-cd containers/honeypot_1_1/ && $(MAKE) clean
+	-cd containers/honeypot_1_2/ && $(MAKE) clean
+	-cd containers/honeypot_1_3/ && $(MAKE) clean
+	-cd containers/honeypot_1_4/ && $(MAKE) clean
+	-cd containers/honeypot_1_5/ && $(MAKE) clean
+	-cd containers/honeypot_1_6/ && $(MAKE) clean
+	-cd containers/cve_2015_3306_1_1/ && $(MAKE) clean
+	-cd containers/honeypot_2_1/ && $(MAKE) clean
+	-cd containers/honeypot_2_2/ && $(MAKE) clean
+	-cd containers/honeypot_2_3/ && $(MAKE) clean
+	-cd containers/honeypot_2_4/ && $(MAKE) clean
+	-cd containers/honeypot_2_5/ && $(MAKE) clean
+	-cd containers/honeypot_2_6/ && $(MAKE) clean
+	-cd containers/honeypot_2_7/ && $(MAKE) clean
+	-cd containers/honeypot_2_8/ && $(MAKE) clean
+	-cd containers/honeypot_2_9/ && $(MAKE) clean
+	-cd containers/honeypot_2_10/ && $(MAKE) clean
+	-cd containers/honeypot_2_11/ && $(MAKE) clean
+	-cd containers/honeypot_2_12/ && $(MAKE) clean
+	-cd containers/honeypot_2_13/ && $(MAKE) clean
+	-cd containers/cve_2015_5602_1_1/ && $(MAKE) clean
+	-cd containers/cve_2016_10033_1_1/ && $(MAKE) clean
+	-cd containers/ftp_1_1/ && $(MAKE) clean
+	-cd containers/samba_1_1/ && $(MAKE) clean
+	-cd containers/hacker_kali_1_1/ && $(MAKE) clean
+	-cd containers/client_1_1/ && $(MAKE) clean
+	-python delete_networks.py
 
 # Applies the config to a started emulation (assumes all containers are started)
 apply_config: connect users vuln flags topology create_containers_config resources traffic container_scripts

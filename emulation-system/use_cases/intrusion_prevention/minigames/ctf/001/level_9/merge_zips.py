@@ -3,7 +3,6 @@ import os
 import re
 from csle_common.util.experiments_util import util
 
-# Utility script for merging zip files
 if __name__ == '__main__':
     zip_files_paths = []
     zip_files_names = []
