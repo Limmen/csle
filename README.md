@@ -130,6 +130,12 @@ TODO
 ```bash
 git clone https://github.com/Limmen/clse
 ```
+
+2 **Install PostgreSQL as a metadata store**
+```bash
+sudo apt-get install postgresql
+```
+
 2. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
@@ -148,12 +154,6 @@ git clone https://github.com/Limmen/clse
       cd emulation-system/derived_images
       make build
       ```
-    - Create Docker networks (see ([README](emulation-system/networks/README.MD)) for more information)
-      ```bash
-      cd emulation-system/networks
-      python create_networks.py -n 40
-      ```
-      (Replace 40 with how many sub-networks you want (depends on how many emulations you plan to create))
 
 3. **Install the monitoring system**
        - TODO
