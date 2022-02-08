@@ -22,47 +22,18 @@ attacker.
 ## Useful commands
 
 ```bash
-make rm-image # Delete all built images
-make build # Build all docker images
 make clean # Stop all running containers
 make run # Run all containers
-make router # Run router container
-make telnet # Run telnet container
-make ssh_1 # Run 1st ssh container
-make ssh_2 # Run 2nd ssh container
-make ssh_3 # Run 3st ssh container
-make ssh_4 # Run 4th ssh container
-make honeypot_1 # Run 1st honeypot container
-make honeypot_2 # Run 2nd honeypot container
-make cve_2010_0426_1_1 # Run 1st container with the CVE-2010-0426 vulnerability
-make cve_2010_0426_1_2 # Run 2nd container with the CVE-2010-0426 vulnerability
-make cve_2015_1427_1_1 # Run 1st container with the CVE-2015-1427 vulnerability
-make cve_2015_1427_1_2 # Run 2nd container with the CVE-2015-1427 vulnerability
-make cve_2015_3306_1_1 # Run 1st container with the CVE-2015-3306 vulnerability
-make cve_2015_3306_1_2 # Run 2nd container with the CVE-2015-3306 vulnerability
-make cve_2015_5602_1_1 # Run 1st container with the CVE-2015-5602 vulnerability
-make cve_2015_5602_1_2 # Run 2nd container with the CVE-2015-5602 vulnerability
-make cve_2016_10033_1_1 # Run 1st container with the CVE-2016-10033 vulnerability
-make cve_2016_10033_1_2 # Run 2nd container with the CVE-2016-10033 vulnerability
-make samba_1_1 # Run 1st container with th SambaCry vulnerability
-make samba_1_2 # Run 2nd container with th SambaCry vulnerability
-make shellshock_1_1 # Run 1st container with the Shellshock vulnerability
-make shellshock_1_2 # Run 2nd container with the Shellshock vulnerability
-make sql_injection_1_1 # Run 1st container with a SQL Injection vulnerability
-make sql_injection_1_2 # Run 2nd container with a SQL Injection vulnerability 
-make net # Create Docker sub-network
-make rm-net # Remove Docker sub-network
-make traffic # create traffic generators and start them on each node
-make stop_traffic # stop traffic_generators that are running on each node
-python run.py --build # build all containers with custom config
-python run.py --run # run all containers with custom config
+make clean # Stop and remove all containers
+make apply_config # Apply config to running containers
+make clean_config # Clean config files 
 docker container ls --all # list all running containers
 docker image ls --all # list all images
 docker system prune # remove unused images and containers
 docker container prune # remove stopped containers
 sudo useradd -rm -d /home/csle_admin -s /bin/bash -g root -G sudo -p "$(openssl passwd -1 'csle@admin-pw_191')" csle_admin
 docker run --name=iperf3 -d --restart=unless-stopped -p 5201:5201/tcp -p 5201:5201/udp mlabbe/iperf3 # Start the iperf server on the host
-iperf3 -c <SERVER> # network performance, where <SERVER> is the IP where the iperf server is running e.g. the host 172.31.212.92   
+iperf3 -R -c <SERVER> # network performance, where <SERVER> is the IP where the iperf server is running e.g. the host 172.31.212.92   
 ```
 
 ## Author & Maintainer

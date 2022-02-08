@@ -1,6 +1,7 @@
 from typing import List
 from csle_common.dao.container_config.node_container_config import NodeContainerConfig
 from csle_common.dao.container_config.container_network import ContainerNetwork
+import csle_common.constants.constants as constants
 
 
 class ContainersConfig:
@@ -27,6 +28,7 @@ class ContainersConfig:
         self.ids_enabled = ids_enabled
         self.vulnerable_nodes = vulnerable_nodes
         self.networks = networks
+
 
     def __str__(self) -> str:
         """

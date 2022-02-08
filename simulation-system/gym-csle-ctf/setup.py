@@ -4,7 +4,7 @@ setup(name='gym_csle_ctf',
       version='0.0.1',
       install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
                         'random_username', 'jsonpickle', 'Sphinx', 'sphinxcontrib-napoleon',
-                        'sphinx-rtd-theme', 'csle-common', 'pyperclip'],
+                        'sphinx-rtd-theme', 'csle-common', 'pyperclip', 'psycopg'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='csle is a platform for evaluating and developing reinforcement learning agents for '

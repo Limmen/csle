@@ -7,6 +7,7 @@ CSLE stores metadata in a PostgreSQL database. Follow the steps below to install
 Install postgresql:
 ```bash
 sudo apt-get install postgresql # install postgresql
+sudo apt-get install libpq-dev # install dependencies
 ```
 
 Set a password for the postgres user:

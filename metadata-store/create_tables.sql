@@ -17,13 +17,13 @@ GRANT ALL PRIVILEGES ON DATABASE csle TO csle;
 -- Create table that stores the emulations --
 CREATE TABLE IF NOT EXISTS emulations (
     emulation_id integer PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL
+    name TEXT UNIQUE NOT NULL
 );
 
 -- Create table that stores the running emulations --
 CREATE TABLE IF NOT EXISTS running_emulations (
     emulation_id integer references emulations(emulation_id),
-    dir TEXT NOT NULL
+    dir TEXT UNIQUE NOT NULL
 );
 
 -- Create table that stores the vuln configurations --

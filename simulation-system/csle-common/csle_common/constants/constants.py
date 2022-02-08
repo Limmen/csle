@@ -960,6 +960,7 @@ class DOCKER:
     CONTAINER_CONFIG_VULNERABILITIES_CFG = "vulnerabilities_cfg"
     CONTAINER_CONFIG_TRAFFIC_CFG = "traffic_cfg"
     CONTAINER_CONFIG_CFG_PATH = "/containers.json"
+    EMULATION_ENV_CFG_PATH = "/config.json"
     CONTAINER_CONFIG_FLAGS_CFG_PATH = "/flags.json"
     CONTAINER_CONFIG_TOPOLOGY_CFG_PATH = "/topology.json"
     CONTAINER_CONFIG_USERS_CFG_PATH = "/users.json"
@@ -1141,3 +1142,12 @@ class CONTAINER_IMAGES:
     TELNET_3 = "telnet_3"
     FTP_2 = "ftp_2"
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
+
+class METADATA_STORE:
+    """
+    String constants related to the metadata store
+    """
+    DBNAME="csle"
+    USER="csle"
+    PASSWORD="csle"
+    HOST="127.0.0.1"

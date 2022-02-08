@@ -4,12 +4,7 @@ all: run
 run:
 	docker container run -dt --name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) \
 	--hostname=$(CONTAINER)$(SUFFIX) \
-	--label dir=$(DIR) --label containers_cfg=$(CFG) \
-	--label flags_cfg=$(FLAGSCFG) \
-	--network=none \
-	--label topology_cfg=$(TOPOLOGYCFG) --label users_cfg=$(USERSCFG) \
-	--label vulnerabilities_cfg=$(VULNERABILITIESCFG) \
-	--label traffic_cfg=$(TRAFFICCFG) --publish-all=true \
+	--label dir=$(DIR) --label cfg=$(CFG) --network=none --publish-all=true \
 	--memory=$(MEMORY) --cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) \
 	--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)
 

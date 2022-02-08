@@ -136,6 +136,7 @@ git clone https://github.com/Limmen/clse
     - Installation:
       ```bash
       sudo apt-get install postgresql
+      sudo apt-get install libpq-dev 
       ```
     - Setup a password for the postgres user:
       ```bash
@@ -300,7 +301,8 @@ For documentation, see the README.md files inside each sub-directory,
 - **Emulation System** ([emulation-system](./emulation-system)).
 - **Simulation System** ([simulation-system](./simulation-system)).
 - **Monitoring System** ([monitoring-system](./monitoring-system)).
-- **Policy Validation System** ([policy-validation-system](./policy-validation-system)).
+- **Policy Examination System** ([policy-examination-system](./policy-examination-system)).
+- **Metadata store** ([metadata-store](./metadata-store)).
 - **General Documentation** ([docs](./docs)).
 
 ## Video tutorial
@@ -376,6 +378,16 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
       eprint={2111.00289},
       archivePrefix={arXiv},
       primaryClass={cs.LG}
+}
+```
+
+- **A System for Interactive Examination  of Learned Security Policies (Preprint: https://limmen.dev/assets/papers/NOMS22_Demo_Policy_Examination_System_Hammar_Stadler_28_Jan_2022.pdf)**
+
+```bash
+@misc{hammar2022policyexamination,
+      title={A System for Interactive Examination  of Learned Security Policies},
+      author={Kim Hammar and Rolf Stadler},
+      year={2022}
 }
 ```
 

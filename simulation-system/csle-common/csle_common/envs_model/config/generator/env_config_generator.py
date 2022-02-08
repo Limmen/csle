@@ -7,12 +7,8 @@ import re
 import json
 import subprocess
 from csle_common.dao.container_config.vulnerability_type import VulnType
-from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from csle_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
-from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
-from csle_common.envs_model.config.generator.users_generator import UsersGenerator
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
-from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
 from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
@@ -20,6 +16,14 @@ from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.util.experiments_util import util
 from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
 from csle_common.dao.container_config.created_env_config import CreatedEnvConfig
+from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
+from csle_common.envs_model.config.generator.container_manager import ContainerManager
+from csle_common.envs_model.config.generator.users_generator import UsersGenerator
+from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
+from csle_common.envs_model.config.generator.resource_constraints_generator import ResourceConstraintsGenerator
+from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 import csle_common.constants.constants as constants
 
 
@@ -144,7 +148,7 @@ class EnvConfigGenerator:
 
         EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
 
-        networks, network_ids = EnvConfigGenerator.list_docker_networks()
+        networks, network_ids = ContainerManager.list_docker_networks()
         running_containers = EnvConfigGenerator.list_running_containers()
         networks_in_use, network_ids_in_use = EnvConfigGenerator.find_networks_in_use(containers=running_containers)
 
@@ -175,32 +179,6 @@ class EnvConfigGenerator:
 
         EnvConfigGenerator.create_container_dirs(created_env_config.containers_config, path=container_env_config.path)
         return container_env_config.subnet_prefix, container_env_config.subnet_id
-
-    @staticmethod
-    def list_docker_networks() -> Tuple[List[str], List[int]]:
-        """
-        Lists the csle docker networks
-
-        :return: (network names, network ids)
-        """
-        cmd = constants.DOCKER.LIST_NETWORKS_CMD
-        stream = os.popen(cmd)
-        networks = stream.read()
-        networks = networks.split("\n")
-        networks = list(map(lambda x: x.split(), networks))
-        networks = list(filter(lambda x: len(x) > 1, networks))
-        networks = list(map(lambda x: x[1], networks))
-        internal_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x),
-                                        networks))
-        external_networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX), x),
-                                        networks))
-        internal_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
-                                        internal_networks))
-        external_network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_EXTERNAL_NET_PREFIX, "")),
-                                        external_networks))
-        network_ids = internal_network_ids + external_network_ids
-        networks = internal_networks + external_networks
-        return networks, network_ids
 
 
     @staticmethod
@@ -287,15 +265,7 @@ class EnvConfigGenerator:
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.LEVEL + "=" + c.level + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.DIR + "=" + path + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.CFG + "=" + path + \
-                                    constants.DOCKER.CONTAINER_CONFIG_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.FLAGSCFG + "=" + path + \
-                                    constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.TOPOLOGYCFG + "=" + path + \
-                                    constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.USERSCFG + "=" + path + \
-                                    constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH + "\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.VULNERABILITIESCFG + "=" \
-                                    + path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH + "\n"
+                                    constants.DOCKER.EMULATION_ENV_CFG_PATH + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.RESTART_POLICY + "="+ c.restart_policy + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.NUM_CPUS + "=" + \
                                     str(container_resources.num_cpus) + "\n"
@@ -481,5 +451,151 @@ class EnvConfigGenerator:
         else:
             pi_star = (-env.env_config.base_step_reward) * num_flags  # dont' know optimal cost, this is upper bound on optimality
         return pi_star
+
+
+    @staticmethod
+    def materialize_emulation_env_config(emulation_env_config: EmulationEnvConfig,
+                    path: str = "", create_folder_makefile: bool = False) -> None:
+        """
+        Materializes the configuration to disk in a JSON format and creates container directories
+
+        @param path: the path to materialize to
+        @param create_folder_makefile: whether to create the folder makefile or not
+        @return: None
+        """
+        if path == "":
+            path = util.default_emulation_config_path(out_dir=util.default_output_dir())
+        if not os.path.exists(path):
+            util.write_emulation_config_file(emulation_env_config, path)
+
+        container_dirs_path = util.default_containers_folders_path()
+        if not os.path.exists(container_dirs_path):
+            EnvConfigGenerator.create_container_dirs(emulation_env_config.containers_config,
+                                                     resources_config=emulation_env_config.resources_config,
+                                                     path=util.default_output_dir(),
+                                                     create_folder_makefile=create_folder_makefile)
+
+
+    @staticmethod
+    def read_emulation_env_config(path: str = "") -> EmulationEnvConfig:
+        """
+        Reads the emulation env configuration from a json file
+
+        @param path: the path to read
+        @return: the parsed object
+        """
+        if path == "":
+            path = util.default_emulation_config_path(out_dir=util.default_output_dir())
+        return util.read_emulation_env_config(path)
+
+    @staticmethod
+    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Applies the emulation env config
+
+        @param emulation_env_config: the config to apply
+        @return: None
+        """
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        print("-- Creating networks --")
+        ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
+
+        print("-- Connect containers to networks --")
+        ContainerManager.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
+
+        print("-- Creating users --")
+        UsersGenerator.create_users(users_config=emulation_env_config.users_config, emulation_config=emulation_config)
+
+        print("-- Creating flags --")
+        FlagsGenerator.create_flags(flags_config=emulation_env_config.flags_config, emulation_config=emulation_config)
+
+        print("-- Creating topology --")
+        TopologyGenerator.create_topology(topology=emulation_env_config.topology_config,
+                                          emulation_config=emulation_config)
+
+        print("-- Creating resource constraints --")
+        ResourceConstraintsGenerator.apply_resource_constraints(resources_config=emulation_env_config.resources_config,
+                                                                emulation_config=emulation_config)
+
+        print("-- Creating traffic generators --")
+        TrafficGenerator.create_traffic_scripts(traffic_config=emulation_env_config.traffic_config,
+                                                emulation_config=emulation_config, sleep_time=1)
+
+    @staticmethod
+    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Deletes the docker networks
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            for ip_net in c.ips_and_networks:
+                ip, net = ip_net
+                ContainerManager.remove_network(name=net.name)
+
+
+    @staticmethod
+    def run_containers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Run containers in the emulation env config
+
+        @param emulation_env_config: the config
+        @return: None
+        """
+        path = util.default_output_dir()
+        for c in emulation_env_config.containers_config.containers:
+            ips = c.get_ips()
+            container_resources : NodeResourcesConfig = None
+            for r in emulation_env_config.resources_config.node_resources_configurations:
+                for ip_net_resources in r.ips_and_network_configs:
+                    ip, net_resources = ip_net_resources
+                    if ip in ips:
+                        container_resources : NodeResourcesConfig = r
+                        break
+            if container_resources is None:
+                raise ValueError(f"Container resources not found for container with ips:{ips}, "
+                                 f"resources:{emulation_env_config.resources_config}")
+
+            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            print(f"Starting container:{name}")
+            cmd = f"docker container run -dt --name {name} " \
+                  f"--hostname={c.name}{c.suffix} --label dir={path} " \
+                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} --network=none --publish-all=true " \
+                  f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
+            subprocess.call(cmd, shell=True)
+
+
+    @staticmethod
+    def stop_containers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Stop containers in the emulation env config
+
+        @param emulation_env_config: the config
+        @return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            print(f"Stopping container:{name}")
+            cmd = f"docker stop {name}"
+            subprocess.call(cmd, shell=True)
+
+    @staticmethod
+    def rm_containers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Remove containers in the emulation env config
+
+        @param emulation_env_config: the config
+        @return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            print(f"Removing container:{name}")
+            cmd = f"docker rm {name}"
+            subprocess.call(cmd, shell=True)
+
 
 

@@ -1,10 +1,13 @@
-from typing import List
+from typing import List, Tuple
+import subprocess
+import time
 import docker
+import re
+import os
 from csle_common.envs_model.config.generator.env_info import EnvInfo
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.util.experiments_util import util
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
-from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.dao.container_config.container_network import ContainerNetwork
 import csle_common.constants.constants as constants
 
@@ -89,13 +92,33 @@ class ContainerManager:
         return images_names
 
     @staticmethod
+    def list_docker_networks() -> Tuple[List[str], List[int]]:
+        """
+        Lists the csle docker networks
+
+        :return: (network names, network ids)
+        """
+        cmd = constants.DOCKER.LIST_NETWORKS_CMD
+        stream = os.popen(cmd)
+        networks = stream.read()
+        networks = networks.split("\n")
+        networks = list(map(lambda x: x.split(), networks))
+        networks = list(filter(lambda x: len(x) > 1, networks))
+        networks = list(map(lambda x: x[1], networks))
+        networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x),
+                                        networks))
+        network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
+                               networks))
+        return networks, network_ids
+
+    @staticmethod
     def list_all_networks() -> List[str]:
         """
         A utility function for listing all csle networks
 
         :return: a list of the networks
         """
-        networks, network_ids = EnvConfigGenerator.list_docker_networks()
+        networks, network_ids = ContainerManager.list_docker_networks()
         return networks
 
     @staticmethod
@@ -187,6 +210,49 @@ class ContainerManager:
         client_1 = docker.from_env()
         networks = client_1.networks.list()
         return networks
+
+
+    @staticmethod
+    def create_networks(containers_config: ContainersConfig) -> None:
+        """
+        Creates docker networks for a given containers configuration
+
+        @param containers_config: the containers configuration
+        @return: None
+        """
+        for c in containers_config.containers:
+            for ip_net in c.ips_and_networks:
+                networks = ContainerManager.get_network_references()
+                networks = list(map(lambda x: x.name, networks))
+                ip, net = ip_net
+                ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
+
+
+    @staticmethod
+    def connect_containers_to_networks(containers_config: ContainersConfig) -> None:
+        """
+        Connects running containers to networks
+
+        @param containers_config: the containers configuration
+        @return: None
+        """
+        for c in containers_config.containers:
+            container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+                             f"{constants.CSLE.LEVEL}{c.level}"
+            # Disconnect from none
+            cmd = f"docker network disconnect none {container_name}"
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+            # Wait a few seconds before connecting
+            time.sleep(2)
+
+            for ip_net in c.ips_and_networks:
+                ip, net = ip_net
+                cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
+                      f"{container_name}"
+                print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
 
     @staticmethod
     def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names = None) -> None:

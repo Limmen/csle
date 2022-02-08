@@ -20,6 +20,7 @@ from csle_common.dao.container_config.users_config import UsersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
+from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
 import csle_common.constants.constants as constants
@@ -252,6 +253,19 @@ def write_containers_config_file(containers_cfg: ContainersConfig, path: str) ->
         f.write(json_str)
 
 
+def write_emulation_config_file(emulation_env_config: EmulationEnvConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param emulation_env_config: the emulation env config object
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(emulation_env_config)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
 def write_traffic_config_file(traffic_cfg: TrafficConfig, path: str) -> None:
     """
     Writes a traffic config object to a config file
@@ -280,7 +294,7 @@ def write_resources_config_file(resources_config: ResourcesConfig, path: str) ->
 
 def read_config(config_path) -> ClientConfig:
     """
-    Reads configuration of the experiment from a json file
+    Reads configuration from a json file
 
     :param config_path: the path to the configuration file
     :return: the configuration
@@ -293,7 +307,7 @@ def read_config(config_path) -> ClientConfig:
 
 def read_topology(topology_path) -> Topology:
     """
-    Reads topology of the experiment from a json file
+    Reads topology from a json file
 
     :param topology_path: the path to the topology file
     :return: the configuration
@@ -306,7 +320,7 @@ def read_topology(topology_path) -> Topology:
 
 def read_users_config(users_config_path) -> UsersConfig:
     """
-    Reads users_config of the experiment from a json file
+    Reads users_config from a json file
 
     :param users_config_path: the path to the users_config file
     :return: the configuration
@@ -319,15 +333,28 @@ def read_users_config(users_config_path) -> UsersConfig:
 
 def read_flags_config(flags_config_path) -> FlagsConfig:
     """
-    Reads flags_config of the experiment from a json file
+    Reads flags_config from a json file
 
-    :param flags_config_path: the path to the users_config file
+    :param flags_config_path: the path to the flags_config file
     :return: the configuration
     """
     with io.open(flags_config_path, 'r', encoding='utf-8') as f:
         json_str = f.read()
     flags_config: FlagsConfig = jsonpickle.decode(json_str)
     return flags_config
+
+
+def read_emulation_env_config(emulation_env_config_path) -> EmulationEnvConfig:
+    """
+    Reads emulation env config from a json file
+
+    :param emulation_env_config_path: the path to the emulation env config file
+    :return: the emulation env configuration
+    """
+    with io.open(emulation_env_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    emulation_env_config: EmulationEnvConfig = jsonpickle.decode(json_str)
+    return emulation_env_config
 
 
 def read_vulns_config(vulns_config_path) -> VulnerabilitiesConfig:
@@ -482,6 +509,20 @@ def default_vulnerabilities_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
                                    + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH)
+    return config_path
+
+
+def default_emulation_config_path(out_dir : str = None) -> str:
+    """
+    :param out_dir: directory to write
+    :return: the default path to containers config file
+    """
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.EMULATION_ENV_CFG_PATH)
+    else:
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.EMULATION_ENV_CFG_PATH)
     return config_path
 
 
