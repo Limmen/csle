@@ -183,7 +183,7 @@ def write_config_file(config: ClientConfig, path: str) -> None:
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -196,7 +196,7 @@ def write_topology_file(topology: Topology, path: str) -> None:
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(topology)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(topology, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -209,7 +209,7 @@ def write_users_config_file(users_config: UsersConfig, path: str) -> None:
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(users_config)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(users_config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -222,7 +222,7 @@ def write_flags_config_file(flags_config: FlagsConfig, path: str) -> None:
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(flags_config)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(flags_config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -235,7 +235,7 @@ def write_vulns_config_file(vulns_cfg: VulnerabilitiesConfig, path: str) -> None
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(vulns_cfg)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(vulns_cfg, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -248,7 +248,7 @@ def write_containers_config_file(containers_cfg: ContainersConfig, path: str) ->
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(containers_cfg)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(containers_cfg, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -261,7 +261,7 @@ def write_emulation_config_file(emulation_env_config: EmulationEnvConfig, path: 
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(emulation_env_config)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(emulation_env_config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -274,7 +274,7 @@ def write_traffic_config_file(traffic_cfg: TrafficConfig, path: str) -> None:
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(traffic_cfg)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(traffic_cfg, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -287,7 +287,7 @@ def write_resources_config_file(resources_config: ResourcesConfig, path: str) ->
     :param path: the path to write the file
     :return: None
     """
-    json_str = json.dumps(json.loads(jsonpickle.encode(resources_config)), indent=4, sort_keys=True)
+    json_str = json.dumps(json.loads(jsonpickle.encode(resources_config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
 
@@ -588,9 +588,9 @@ def default_container_makefile_template_path(out_dir : str = None) -> str:
     if out_dir is None:
         config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
                                    + constants.COMMANDS.SLASH_DELIM +
-                                   constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE)
+                                   constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_NAME)
     else:
-        config_path = os.path.join(out_dir, constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE)
+        config_path = os.path.join(out_dir, constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_NAME)
     return config_path
 
 

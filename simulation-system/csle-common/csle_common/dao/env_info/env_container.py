@@ -7,9 +7,7 @@ class EnvContainer:
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
                  minigame : str, name2: str, level: str, hostname: str, image_name : str, net: str,
-                 dir: str, containers_config_path : str, users_config_path : str, flags_config_path : str,
-                 vulnerabilities_config_path : str, topology_config_path: str,
-                 traffic_config_path: str, container_handle):
+                 dir: str, config_path : str, container_handle, emulation: str):
         """
         Intializes the DTO
 
@@ -32,13 +30,9 @@ class EnvContainer:
         :param image_name: the image name of the container
         :param net: the network of the container
         :param dir: the directory of the container
-        :param containers_config_path: the container configuration ṕath of the container
-        :param users_config_path: the users configuration path of the container
-        :param flags_config_path: the flags configuration path of the container
-        :param vulnerabilities_config_path: the vulnerabilities configuration path of the container
-        :param topology_config_path: the topology configuration path of the container
-        :param traffic_config_path: the traffic configuration path of the container
+        :param config_path: the container configuration ṕath of the container
         :param container_handle: the py-docker container handle
+        :param emulation: the emulation name
         """
         self.name = name
         self.status = status
@@ -59,13 +53,9 @@ class EnvContainer:
         self.image_name =image_name
         self.net = net
         self.dir=dir
-        self.containers_config_path = containers_config_path
-        self.users_config_path = users_config_path
-        self.flags_config_path = flags_config_path
-        self.vulnerabilities_config_path = vulnerabilities_config_path
-        self.topology_config_path = topology_config_path
-        self.traffic_config_path = traffic_config_path
+        self.config_path = config_path
         self.container_handle = container_handle
+        self.emulation = emulation
 
     def to_dict(self) -> dict:
         """
@@ -90,12 +80,8 @@ class EnvContainer:
         d["hostname"] = self.hostname
         d["image_name"] = self.image_name
         d["net"] = self.net
-        d["containers_config_path"] = self.containers_config_path
-        d["users_config_path"] = self.users_config_path
-        d["flags_config_path"] = self.flags_config_path
-        d["vulnerabilities_config_path"] = self.vulnerabilities_config_path
-        d["topology_config_path"] = self.topology_config_path
-        d["traffic_config_path"] = self.traffic_config_path
+        d["config_path"] = self.config_path
+        d["emulation"] = self.emulation
         return d
 
 
@@ -108,7 +94,4 @@ class EnvContainer:
                f"created: {self.created}, ip: {self.ip}, network_id: {self.network_id}, gateway: {self.gateway}," \
                f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, minigame: {self.minigame}, name2: {self.name2}," \
                f"level: {self.level}, hostname: {self.hostname}, image_name: {self.image_name}, net: {self.net}, " \
-               f"dir: {self.dir}, containers_config_path: {self.containers_config_path}, " \
-               f"users_config_path: {self.users_config_path}, flags_config_path: {self.flags_config_path}, " \
-               f"vulnerabilities_config_path: {self.vulnerabilities_config_path}, " \
-               f"topology_config:path: {self.topology_config_path}, traffic_config_path: {self.traffic_config_path}"
+               f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}"

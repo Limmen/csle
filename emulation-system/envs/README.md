@@ -13,3 +13,40 @@ This folder contains emulation environments.
      - [level_7](./network_intrusion/ctf/001/level_7)
      - [random](./network_intrusion/ctf/001/random)
      - [./random_many](./network_intrusion/ctf/001/random_many)
+
+## Useful commands:
+
+- Install all emulations:
+  ```bash
+  make install
+   ```
+
+- Uninstall all emulations:
+  ```bash
+  make uninstall
+   ```
+
+- Clean all emulations:
+  ```bash
+  make clean
+   ```
+
+- Stop all emulations:
+  ```bash
+  make stop
+   ```
+
+- Run all emulations (Warning: don't do this on a machine with limited resources):
+  ```bash
+  make run
+   ```
+
+- Clean the configuration of all emulations:
+  ```bash
+  make clean_config
+   ```
+
+- Apply the configuration of all emulations:
+  ```bash
+  make apply_config
+   ```

@@ -30,11 +30,11 @@ def default_config(name: str, network_id: int = 1, level: int = 1, version: str 
     """
     Returns the default configuration of the emulation environment
 
-    @param name: the name of the emulation
-    @param network_id: the network id of the emulation
-    @param level: the level of the emulation
-    @param version: the version of the emulation
-    @return: the emulation environment configuration
+    :param name: the name of the emulation
+    :param network_id: the network id of the emulation
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the emulation environment configuration
     """
     containers_cfg = default_containers_config(network_id=network_id, level=level, version=version)
     flags_cfg = default_flags_config(network_id=network_id)

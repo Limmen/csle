@@ -19,14 +19,14 @@ class EmulationEnvConfig:
         """
         Initializes the object
 
-        @param name: the name of the emulation
-        @param containers_config: the containers configuration
-        @param users_config: the users configuration
-        @param flags_config: the flags configuration
-        @param vuln_config: the vulnerabilities configuration
-        @param topology_config: the topology configuration
-        @param traffic_config: the traffic configuration
-        @param resources_config: the resources configuration
+        :param name: the name of the emulation
+        :param containers_config: the containers configuration
+        :param users_config: the users configuration
+        :param flags_config: the flags configuration
+        :param vuln_config: the vulnerabilities configuration
+        :param topology_config: the topology configuration
+        :param traffic_config: the traffic configuration
+        :param resources_config: the resources configuration
         """
         self.name = name
         self.containers_config = containers_config
@@ -40,7 +40,7 @@ class EmulationEnvConfig:
 
     def __str__(self) -> str:
         """
-        @return:  a string representation of the object
+        :return:  a string representation of the object
         """
         return f"name: {self.name}, containers_config: {self.containers_config}, users_config: {self.users_config}, " \
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \

@@ -33,11 +33,11 @@ def default_config(name: str, network_id: int = 7, level: int = 7, version: str 
     """
     Returns the default configuration of the emulation environment
 
-    @param name: the name of the emulation
-    @param network_id: the network id of the emulation
-    @param level: the level of the emulation
-    @param version: the version of the emulation
-    @return: the emulation environment configuration
+    :param name: the name of the emulation
+    :param network_id: the network id of the emulation
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the emulation environment configuration
     """
     containers_cfg = default_containers_config(network_id=network_id, level=level, version=version)
     flags_cfg = default_flags_config(network_id=network_id)
@@ -2632,7 +2632,7 @@ if __name__ == '__main__':
                         action="store_true")
     args = parser.parse_args()
     if not os.path.exists(util.default_emulation_config_path()):
-        config = default_config(name="csle-ctf-level1-001", network_id=7, level=7, version="0.0.1")
+        config = default_config(name="csle-ctf-level7-001", network_id=7, level=7, version="0.0.1")
         EnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=config)
     config = util.read_emulation_env_config(util.default_emulation_config_path())
 

@@ -153,9 +153,42 @@ git clone https://github.com/Limmen/clse
      sudo psql -U postgres -a -f metadata-store/create_tables.sql
      ```
 
-3. **Install the CLI tool**
+3. **Install the simulation system**
+    - Install Python 3.8 or higher:
+        - Using conda:
+          ```bash
+           conda create -n py38 python=3.8
+          ```
+        - Using apt:
+          ```bash
+           sudo apt install python3.8
+          ```
 
-4. **Install the emulation system** 
+    - Install `csle_common` (see ([README](simulation-system/csle-common/README.md)) for more information)
+      ```bash
+       cd simulation-system/csle-common/
+       pip install -e .
+      ```
+
+    - Install `gym_csle_ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
+      ```bash
+      cd simulation-system/gym-csle-ctf/
+      pip install -e .
+      ```
+
+
+4. **Install the CLI tool**
+    - Make the CLI tool executable:
+      ```bash
+      sudo chmod u+x bin/csle
+      ```
+    - Add the CLI tool to the $PATH environment variable
+      ```bash
+      export PATH=bin/:$PATH
+      ```
+    - To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/bin/$PATH`
+
+5. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
@@ -174,31 +207,8 @@ git clone https://github.com/Limmen/clse
       make build
       ```
 
-5. **Install the monitoring system**
+6. **Install the monitoring system**
        - TODO
-
-6. **Install the simulation system** 
-   - Install Python 3.8 or higher:
-        - Using conda:
-          ```bash
-           conda create -n py38 python=3.8
-          ```
-        - Using apt:
-          ```bash
-           sudo apt install python3.8
-          ```
-
-   - Install `csle_common` (see ([README](simulation-system/csle-common/README.md)) for more information)
-     ```bash
-      cd simulation-system/csle-common/
-      pip install -e .
-     ```
-
-   - Install `gym_csle_ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
-     ```bash
-     cd simulation-system/gym-csle-ctf/
-     pip install -e .
-     ```
 
 7. **Install the policy validation system**
  - TODO

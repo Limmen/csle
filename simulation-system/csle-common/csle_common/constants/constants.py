@@ -953,6 +953,8 @@ class DOCKER:
     REPO_TAGS = "RepoTags"
     BASE_CONTAINER_TYPE = "base"
     CONTAINER_CONFIG_DIR = "dir"
+    EMULATION = "emulation"
+    CFG = "cfg"
     CONTAINER_CONFIG_CFG = "containers_cfg"
     CONTAINER_CONFIG_FLAGS_CFG = "flags_cfg"
     CONTAINER_CONFIG_TOPOLOGY_CFG = "topology_cfg"
@@ -993,10 +995,22 @@ class DOCKER:
     IP_PREFIX_LEN_INFO = "IPPrefixLen"
     HOSTNAME_INFO = "Hostname"
     CONTAINERS_DIR = "containers"
-    CONTAINER_MAKEFILE_TEMPLATE = "Container_Makefile_template"
+    CONTAINER_MAKEFILE_TEMPLATE_NAME = "Container_Makefile_template"
     CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE="/../../../common/"
     MAKEFILE_TEMPLATE = "Makefile_template"
     ON_FAILURE_3 = "on-failure:3"
+    CONTAINER_MAKEFILE_TEMPLATE_STR = \
+        "\nall: run\n\nrun:\n\tdocker container run -dt " \
+        "--name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) " \
+        "--hostname=$(CONTAINER)$(SUFFIX) --label dir=$(DIR) --label cfg=$(CFG) --label emulation=$(EMULATION)" \
+        "--network=none --publish-all=true --memory=$(MEMORY) " \
+        "--cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) " \
+        "--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)\n\nshell:\n\t" \
+        "docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash\n\nstart:\n\t" \
+        "docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nstop:\n\t" \
+        "-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nclean: stop\n\t" \
+        "-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)"
+
 
 
 class CSLE:
@@ -1043,6 +1057,7 @@ class MAKEFILE:
     INTERNAL_NETWORK = "INTERNAL_NETWORK"
     EXTERNAL_NETWORK = "EXTERNAL_NETWORK"
     MINIGAME = "MINIGAME"
+    EMULATION = "EMULATION"
     CONTAINER = "CONTAINER"
     VERSION = "VERSION"
     LEVEL = "LEVEL"

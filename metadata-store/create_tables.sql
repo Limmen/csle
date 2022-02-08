@@ -23,11 +23,4 @@ CREATE TABLE IF NOT EXISTS emulations (
 GRANT ALL ON emulations TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulations_id_seq TO csle;
 
--- Create table that stores the running emulations --
-CREATE TABLE IF NOT EXISTS running_emulations (
-    emulation_id serial references emulations(id),
-    dir TEXT UNIQUE NOT NULL
-);
-
-GRANT ALL ON running_emulations TO csle;
 

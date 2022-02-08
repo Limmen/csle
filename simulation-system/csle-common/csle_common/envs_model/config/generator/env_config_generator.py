@@ -223,6 +223,7 @@ class EnvConfigGenerator:
 
     @staticmethod
     def create_container_dirs(container_config: ContainersConfig, resources_config: ResourcesConfig,
+                              emulation_name: str,
                               path: str = None,
                               create_folder_makefile: bool = True) -> None:
         """
@@ -232,16 +233,14 @@ class EnvConfigGenerator:
         :param resources_config: the resources config of the containers
         :param path: the path where to create the directories
         :param create_folder_makefile: a boolean flag indicating whether to create a Makefile for the folder or not
+        :param emulation_name: the name of the emulation
         :return: None
         """
         containers_folders_dir = util.default_containers_folders_path(out_dir=path)
         if not os.path.exists(containers_folders_dir):
             os.makedirs(containers_folders_dir)
 
-        makefile_template_path = path + constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE
-        with io.open(util.default_container_makefile_template_path(out_dir=makefile_template_path), 'r',
-                     encoding='utf-8') as f:
-            makefile_template_str = f.read()
+        makefile_template_str = constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_STR
 
         container_names = []
         for c in container_config.containers:
@@ -264,6 +263,7 @@ class EnvConfigGenerator:
                 makefile_preamble = ""
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.PROJECT + "=csle\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.MINIGAME + "=" + c.minigame + "\n"
+                makefile_preamble = makefile_preamble + constants.MAKEFILE.EMULATION + "=" + emulation_name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.CONTAINER + "=" + c.name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VERSION + "=" + c.version + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.LEVEL + "=" + c.level + "\n"
@@ -463,9 +463,9 @@ class EnvConfigGenerator:
         """
         Materializes the configuration to disk in a JSON format and creates container directories
 
-        @param path: the path to materialize to
-        @param create_folder_makefile: whether to create the folder makefile or not
-        @return: None
+        :param path: the path to materialize to
+        :param create_folder_makefile: whether to create the folder makefile or not
+        :return: None
         """
         if path == "":
             path = util.default_emulation_config_path(out_dir=util.default_output_dir())
@@ -477,7 +477,8 @@ class EnvConfigGenerator:
             EnvConfigGenerator.create_container_dirs(emulation_env_config.containers_config,
                                                      resources_config=emulation_env_config.resources_config,
                                                      path=util.default_output_dir(),
-                                                     create_folder_makefile=create_folder_makefile)
+                                                     create_folder_makefile=create_folder_makefile,
+                                                     emulation_name=emulation_env_config.name)
 
 
     @staticmethod
@@ -485,8 +486,8 @@ class EnvConfigGenerator:
         """
         Reads the emulation env configuration from a json file
 
-        @param path: the path to read
-        @return: the parsed object
+        :param path: the path to read
+        :return: the parsed object
         """
         if path == "":
             path = util.default_emulation_config_path(out_dir=util.default_output_dir())
@@ -497,8 +498,8 @@ class EnvConfigGenerator:
         """
         Applies the emulation env config
 
-        @param emulation_env_config: the config to apply
-        @return: None
+        :param emulation_env_config: the config to apply
+        :return: None
         """
         emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
                                            agent_username=constants.CSLE_ADMIN.USER,
@@ -546,8 +547,8 @@ class EnvConfigGenerator:
         """
         Run containers in the emulation env config
 
-        @param emulation_env_config: the config
-        @return: None
+        :param emulation_env_config: the config
+        :return: None
         """
         path = util.default_output_dir()
         for c in emulation_env_config.containers_config.containers:
@@ -567,7 +568,8 @@ class EnvConfigGenerator:
             print(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
-                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} --network=none --publish-all=true " \
+                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+                  f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
                   f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
@@ -578,8 +580,8 @@ class EnvConfigGenerator:
         """
         Stop containers in the emulation env config
 
-        @param emulation_env_config: the config
-        @return: None
+        :param emulation_env_config: the config
+        :return: None
         """
         for c in emulation_env_config.containers_config.containers:
             name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
@@ -592,8 +594,8 @@ class EnvConfigGenerator:
         """
         Remove containers in the emulation env config
 
-        @param emulation_env_config: the config
-        @return: None
+        :param emulation_env_config: the config
+        :return: None
         """
         for c in emulation_env_config.containers_config.containers:
             name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
@@ -607,8 +609,8 @@ class EnvConfigGenerator:
         """
         Installs the emulation configuration in the metastore
 
-        @param config: the config to install
-        @return: None
+        :param config: the config to install
+        :return: None
         """
         print(f"Installing emulation:{config.name} in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
@@ -629,8 +631,8 @@ class EnvConfigGenerator:
         """
         Uninstalls the emulation configuration in the metastore
 
-        @param config: the config to install
-        @return: None
+        :param config: the config to install
+        :return: None
         """
         print(f"Uninstalling emulation:{config.name} from the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "

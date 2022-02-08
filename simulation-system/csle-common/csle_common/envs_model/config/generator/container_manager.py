@@ -31,6 +31,24 @@ class ContainerManager:
             print("Stopping container: {}".format(c.name))
             c.stop()
 
+
+    @staticmethod
+    def stop_container(name: str) -> bool:
+        """
+        Utility function for stopping a specific container
+
+        :param name: the name of the container to stop
+        :return: True if stopped, False otherwise
+        """
+        client_1 = docker.from_env()
+        containers = client_1.containers.list()
+        containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
+        for c in containers:
+            if c.name == name:
+                c.stop()
+                return True
+        return False
+
     @staticmethod
     def rm_all_stopped_containers() -> None:
         """
@@ -46,6 +64,24 @@ class ContainerManager:
         for c in containers:
             print(f"Removing container: {c.name}")
             c.remove()
+
+
+    @staticmethod
+    def rm_container(container_name: str) -> bool:
+        """
+        Remove a specific container
+
+        :param container_name: the container to remove
+        :return: True if the container was removed and False otherwise
+        """
+        client_1 = docker.from_env()
+        containers = client_1.containers.list(all=True)
+        for c in containers:
+            if c.name == container_name:
+                c.remove()
+                return True
+        return False
+
 
     @staticmethod
     def rm_all_images() -> None:
@@ -77,6 +113,45 @@ class ContainerManager:
         for img in os_base_images:
             print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
             client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+
+
+    @staticmethod
+    def rm_image(name) -> bool:
+        """
+        A utility function for removing a specific image
+
+        :param name: the name of the image to remove
+        :return: True if the image was removed and False otherwise
+        """
+        client_1 = docker.from_env()
+        images = client_1.images.list()
+        images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
+        non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
+                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+        base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
+                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+        non_os_base_images = list(filter(lambda x: not
+        (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+         or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
+                                         base_images))
+        os_base_images = list(filter(lambda x: constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+                                               or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]),
+                                     base_images))
+        for img in non_base_images:
+            if img == name:
+                client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+                return True
+        for img in non_os_base_images:
+            if img == name:
+                client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+                return True
+        for img in os_base_images:
+            if img == name:
+                client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
+                return True
+
+        return False
+
 
     @staticmethod
     def list_all_images() -> List[str]:
@@ -134,7 +209,7 @@ class ContainerManager:
             path = util.default_output_dir()
         client_1 = docker.from_env()
         project = constants.CSLE.NAME
-        ContainerGenerator.write_containers_config(containers_config=containers_config, path=path)
+        ContainerGenerator.write_containers_config(containers_cfg=containers_config, path=path)
         for idx, c in enumerate(containers_config.containers):
             container = c.name
             version = c.version
@@ -177,6 +252,25 @@ class ContainerManager:
             c.start()
 
     @staticmethod
+    def start_container(name: str) -> bool:
+        """
+        Starts a stopped container with a specific name
+
+        :param name: the name of the stopped container to start
+        :return: True if started, False otherrwise
+        """
+        client_1 = docker.from_env()
+        containers = client_1.containers.list(all=True)
+        containers = list(filter(lambda x: (constants.CSLE.NAME in x.name
+                                            and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                                            or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
+        for c in containers:
+            if c.name == name:
+                c.start()
+                return True
+        return False
+
+    @staticmethod
     def list_all_running_containers() -> List[str]:
         """
         Lists all running csle containers
@@ -184,10 +278,18 @@ class ContainerManager:
         :return: a list of the names of the running containers
         """
         parsed_envs = EnvInfo.parse_env_infos()
-        container_names = []
+        container_name_image_ip = []
         for env in parsed_envs:
-            container_names = container_names + list(map(lambda x: x.name, env.containers))
-        return container_names
+            container_name_image_ip = container_name_image_ip + list(map(lambda x: (x.name, x.image_name, x.ip), env.containers))
+        return container_name_image_ip
+
+    @staticmethod
+    def list_running_emulations() -> List[str]:
+        parsed_envs = EnvInfo.parse_env_infos()
+        emulation_names = set()
+        for env in parsed_envs:
+            emulation_names.add(env.name)
+        return list(emulation_names)
 
     @staticmethod
     def list_all_stopped_containers() -> List[str]:
@@ -199,8 +301,8 @@ class ContainerManager:
         client_1 = docker.from_env()
         client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_stopped_containers = EnvInfo.parse_stopped_containers(client_1=client_1, client2=client2)
-        container_names = list(map(lambda x: x.name, parsed_stopped_containers))
-        return container_names
+        container_name_image_ips = list(map(lambda x: (x.name, x.image_name, x.ip), parsed_stopped_containers))
+        return container_name_image_ips
 
     @staticmethod
     def get_network_references():
@@ -217,8 +319,8 @@ class ContainerManager:
         """
         Creates docker networks for a given containers configuration
 
-        @param containers_config: the containers configuration
-        @return: None
+        :param containers_config: the containers configuration
+        :return: None
         """
         for c in containers_config.containers:
             for ip_net in c.ips_and_networks:
@@ -233,8 +335,8 @@ class ContainerManager:
         """
         Connects running containers to networks
 
-        @param containers_config: the containers configuration
-        @return: None
+        :param containers_config: the containers configuration
+        :return: None
         """
         for c in containers_config.containers:
             container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
@@ -345,6 +447,23 @@ class ContainerManager:
         for net in networks:
             print(f"Removing network:{net.name}")
             ContainerManager.remove_network(name = net.name)
+
+
+    @staticmethod
+    def rm_network(name) -> bool:
+        """
+        A utility function for removing a network with a specific name
+
+        :return: True if it was removed or False otherwise
+        """
+        client_1 = docker.from_env()
+        networks = client_1.networks.list()
+        networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
+        for net in networks:
+            if net == name:
+                ContainerManager.remove_network(name = net.name)
+                return True
+        return False
 
     @staticmethod
     def run_command(cmd: str) -> None:
