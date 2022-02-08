@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 from csle_common.envs_model.config.generator.env_info import EnvInfo
+from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
+from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from waitress import serve
 
 app = Flask(__name__, static_url_path='', static_folder='../build/')
@@ -13,6 +15,21 @@ def environments():
     envs = EnvInfo.parse_env_infos()
     envs_dicts = list(map(lambda x: x.to_dict(), envs))
     response = jsonify(envs_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/stopped_envs')
+def stopped_environments():
+    all_emulations = MetastoreFacade.list_emulations()
+    rc_emulations = ContainerManager.list_running_emulations()
+    stopped_emulations = []
+    running_emulations = []
+    for em in all_emulations:
+        if em[1] in rc_emulations:
+            running_emulations.append(em[2])
+        else:
+            stopped_emulations.append(em[2])
+    response = jsonify(stopped_emulations)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

@@ -42,3 +42,7 @@
     display: block;
     table-layout: auto;
 }
+
+.nonActiveTitle {
+    margin-top:40px
+}

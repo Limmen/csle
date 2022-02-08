@@ -3,7 +3,9 @@ import docker
 from csle_common.dao.env_info.env_container import EnvContainer
 from csle_common.dao.env_info.running_env import RunningEnv
 from csle_common.util.experiments_util import util
+from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 import csle_common.constants.constants as constants
+
 
 
 class EnvInfo:
@@ -78,6 +80,10 @@ class EnvInfo:
                     config = util.read_config(em_containers[0].config_path)
                 except:
                     pass
+            if config is None:
+                em_record = MetastoreFacade.get_emulation(name=em)
+                if em_record is not None:
+                    config = em_record[2]
 
             p_env = RunningEnv(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
                                subnet_mask=subnet_mask, level= em_containers[0].level, config=config)

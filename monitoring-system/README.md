@@ -30,8 +30,8 @@ A webapp for monitoring emulation environments created with csle
 
 ## Useful scripts
 ```bash
-./install.sh   # Installs prometheus, grafana, csleMonitor, NodeExporter, Dashboards, C_Advisor etc.
-./csle_emulation_monitor.sh  # Installs csleMonitor
+./install.sh   # Installs prometheus, grafana, csle_emulation_monitor, NodeExporter, Dashboards, C_Advisor etc.
+./csle_emulation_monitor.sh  # Installs csle_emulation_monitor
 ./run_c_advisor.sh # Installs C_Advisor
 ./run_grafana.sh  # Installs Grafana
 ./run_node_exporter.sh # Installs node exporter
@@ -39,21 +39,11 @@ A webapp for monitoring emulation environments created with csle
 
 sudo apt install ctop
 sudo npm install -g dockly
- 
 ctop # Show docker statistics
 docker stats # Show docker statistics
 docker container top <ID> # top command for a single container
 dockly # command line interface for managing containers 
 
-make list_stopped # list stopped csle containers
-make list_running # list running csle containers
-make list_images # list images used by csle containers
-make stop_running # stop running csle containers
-make rm_stopped # remove stopped csle containers
-make rm_images # remove images used by csle containers
-make start_stopped # start stopped csle containers
-make clean_docker # clean docker (delete unused networks, containers, images, cache, etc.)
-make rm_networks # delete all networks
 
 ps -aux | grep prometheus
 kim       473648 30.6  0.2 3384316 1604780 pts/4 Sl   10:58   6:41 ./prometheus/prometheus --config.file=prometheus/prometheus.yml --storage.tsdb.retention.size=10GB --storage.tsdb.retention.time=5d
