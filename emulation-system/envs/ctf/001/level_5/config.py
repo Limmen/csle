@@ -1707,11 +1707,20 @@ if __name__ == '__main__':
                         action="store_true")
     parser.add_argument("-a", "--apply", help="Boolean parameter, if true, apply config",
                         action="store_true")
+    parser.add_argument("-i", "--install", help="Boolean parameter, if true, install config",
+                        action="store_true")
+    parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
+                        action="store_true")
     args = parser.parse_args()
     if not os.path.exists(util.default_emulation_config_path()):
         config = default_config(name="csle-ctf-level1-001", network_id=5, level=5, version="0.0.1")
         EnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=config)
     config = util.read_emulation_env_config(util.default_emulation_config_path())
+
+    if args.install:
+        EnvConfigGenerator.install_emulation(config=config)
+    if args.uninstall:
+        EnvConfigGenerator.uninstall_emulation(config=config)
     if args.run:
         EnvConfigGenerator.run_containers(emulation_env_config=config)
     if args.stop:

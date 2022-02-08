@@ -4,8 +4,10 @@ import shutil
 import random
 import os
 import re
-import json
 import subprocess
+import psycopg
+import json
+import jsonpickle
 from csle_common.dao.container_config.vulnerability_type import VulnType
 from csle_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
@@ -236,7 +238,9 @@ class EnvConfigGenerator:
         if not os.path.exists(containers_folders_dir):
             os.makedirs(containers_folders_dir)
 
-        with io.open(util.default_container_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
+        makefile_template_path = path + constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE
+        with io.open(util.default_container_makefile_template_path(out_dir=makefile_template_path), 'r',
+                     encoding='utf-8') as f:
             makefile_template_str = f.read()
 
         container_names = []
@@ -596,6 +600,46 @@ class EnvConfigGenerator:
             print(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
+
+
+    @staticmethod
+    def install_emulation(config: EmulationEnvConfig) -> None:
+        """
+        Installs the emulation configuration in the metastore
+
+        @param config: the config to install
+        @return: None
+        """
+        print(f"Installing emulation:{config.name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                try:
+                    config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
+                    cur.execute("INSERT INTO emulations (name, config) VALUES (%s, %s)", (config.name, config_json_str))
+                    conn.commit()
+                    print(f"Emulation {config.name} installed successfully")
+                except psycopg.errors.UniqueViolation as e:
+                    print(f"Emulation {config.name} is already installed")
+
+
+    @staticmethod
+    def uninstall_emulation(config: EmulationEnvConfig) -> None:
+        """
+        Uninstalls the emulation configuration in the metastore
+
+        @param config: the config to install
+        @return: None
+        """
+        print(f"Uninstalling emulation:{config.name} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM emulations WHERE name = %s", (config.name,))
+                conn.commit()
+                print(f"Emulation {config.name} uninstalled successfully")
 
 
 

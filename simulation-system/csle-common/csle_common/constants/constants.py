@@ -994,6 +994,7 @@ class DOCKER:
     HOSTNAME_INFO = "Hostname"
     CONTAINERS_DIR = "containers"
     CONTAINER_MAKEFILE_TEMPLATE = "Container_Makefile_template"
+    CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE="/../../../common/"
     MAKEFILE_TEMPLATE = "Makefile_template"
     ON_FAILURE_3 = "on-failure:3"
 
