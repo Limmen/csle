@@ -1,4 +1,5 @@
-# `csle`: Cyber Security Learning Environment  
+# `csle`: Cyber Security Learning Environment
+
 ## A research platform to develop self-learning systems for cyber security using reinforcement learning 
 
 `csle` is a platform for evaluating and developing reinforcement learning agents
@@ -131,12 +132,29 @@ TODO
 git clone https://github.com/Limmen/clse
 ```
 
-2 **Install PostgreSQL as a metadata store**
-```bash
-sudo apt-get install postgresql
-```
+2. **Install PostgreSQL as a metadata store (see ([README](metadata-store/README.MD)) for more information)**
+    - Installation:
+      ```bash
+      sudo apt-get install postgresql
+      ```
+    - Setup a password for the postgres user:
+      ```bash
+      sudo -u postgres psql  # start psql session as admin user posgres
+      psql> \password postgres # set postgres password
+      ```
+    - Setup password authentication for user postgres:
+      1. Open file `/etc/postgresql/10/main/pg_hba.conf`
+      2. Change `peer` to `md5` on line: `local all postgres peer`
+      3. Save and close the file
+      4. Restart postgres with the command `sudo service postgresql restart`
+    - Create database and tables:
+     ```bash
+     sudo psql -U postgres -a -f metadata-store/create_tables.sql
+     ```
 
-2. **Install the emulation system** 
+3. **Install the CLI tool**
+
+4. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
@@ -155,12 +173,10 @@ sudo apt-get install postgresql
       make build
       ```
 
-3. **Install the monitoring system**
-       - TODO
-   - Install csle-emulation-cli
+5. **Install the monitoring system**
        - TODO
 
-4. **Install the simulation system** 
+6. **Install the simulation system** 
    - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -171,19 +187,19 @@ sudo apt-get install postgresql
            sudo apt install python3.8
           ```
 
-   - Install `csle_common` (see ([README](simulation-system/common/csle-common/README.md)) for more information)
+   - Install `csle_common` (see ([README](simulation-system/csle-common/README.md)) for more information)
      ```bash
-      cd simulation-system/common/csle-common/
+      cd simulation-system/csle-common/
       pip install -e .
      ```
 
-   - Install `gym_csle_ctf` (see ([README](simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/README.MD)) for more information)
+   - Install `gym_csle_ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
      ```bash
-     cd simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf/
+     cd simulation-system/gym-csle-ctf/
      pip install -e .
      ```
 
-5. **Install the policy validation system**
+7. **Install the policy validation system**
  - TODO
  
 
@@ -199,12 +215,12 @@ There are three ways to create an emulation: use a pre-configured emulation, use
 
 ### Start a pre-configured emulation
 
-1. Select a pre-configured emulation from [use_cases](emulation-system/use_cases/), for example ([ctf_001_level_1](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1))
+1. Select a pre-configured emulation from [use_cases](emulation-system/use_cases/), for example ([ctf_001_level_1](emulation-system/envs/ctf/001/level_1))
 2. Change directory:
 ```bash
 cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1
 ```
-3. Start the emulation (run the containers) (for more commands, see [README](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+3. Start the emulation (run the containers) (for more commands, see [README](emulation-system/envs/ctf/001/level_1/README.MD))
 ```bash
 make run
 ```
@@ -231,7 +247,7 @@ make clean
 
 ### Start a random emulation
 
-1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random)
+1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](emulation-system/envs/ctf/001/random)
 2. Change directory:
 ```bash
 cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random
@@ -240,7 +256,7 @@ cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random
 ```bash
 make gen_config
 ``` 
-4. Start the emulation (run the containers) (for more commands, see [README](emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1/README.MD))
+4. Start the emulation (run the containers) (for more commands, see [README](emulation-system/envs/ctf/001/level_1/README.MD))
 ```bash
 make run
 ```

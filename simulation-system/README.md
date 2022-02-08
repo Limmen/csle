@@ -6,11 +6,11 @@ The Python environments expose MDP/POMDP
 interfaces to emulated infrastructures that can be used to 
 optimize control policies.
 
-- **Common** ([common](./common)):
+- **csle-common** ([csle-common](./csle-common)):
     - Contains common functionality to all python environments
     
-- **Use cases** ([use cases](./use_cases)):
-    - Implements python interfaces to emulated infrastructures for different use cases        
+- **gym-csle-ctf** ([gym-csle-ctf](./gym-csle-ctf)):
+    - A gym environment for capture the flag challenges        
 
 ## Author & Maintainer
 
@@ -22,4 +22,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2021, Kim Hammar
+(C) 2022, Kim Hammar
