@@ -175,8 +175,7 @@ git clone https://github.com/Limmen/clse
       cd simulation-system/gym-csle-ctf/
       pip install -e .
       ```
-
-
+    
 4. **Install the CLI tool**
     - Make the CLI tool executable:
       ```bash
@@ -206,6 +205,11 @@ git clone https://github.com/Limmen/clse
       cd emulation-system/derived_images
       make build
       ```
+   - Install emulation envs (see ([README](emulation-system/envs/README.MD)) for more information)
+     ```bash
+     cd emulation-system/envs
+     make install
+     ```      
 
 6. **Install the monitoring system**
        - TODO
@@ -215,94 +219,63 @@ git clone https://github.com/Limmen/clse
  
 
 ## Quickstart
-TODO
 
-## Create an Emulation 
-
-After doing the installation steps an emulation can be created by using the following steps. 
-(For more detailed information on how to manage emulations, see [README](emulation-system/README.MD)) 
-
-There are three ways to create an emulation: use a pre-configured emulation, use a random emulation, or configure your own emulation. 
-
-### Start a pre-configured emulation
-
-1. Select a pre-configured emulation from [use_cases](emulation-system/use_cases/), for example ([ctf_001_level_1](emulation-system/envs/ctf/001/level_1))
-2. Change directory:
+To see the available commands, run:
 ```bash
-cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/level_1
-```
-3. Start the emulation (run the containers) (for more commands, see [README](emulation-system/envs/ctf/001/level_1/README.MD))
-```bash
-make run
+csle --help
 ```
 
-4. Apply network/users/vulnerability/flags configuration to the emulation:
+Examples:
+
+- List available containers, emulations, images, and networks:
 ```bash
-make apply_config
+csle ls --all
 ```
 
-5. (Optional) Start traffic generators:
+- List containers only
 ```bash
-make traffic
+csle ls containers --all
 ```
 
-6. To stop the emulation, run:
+- List running containers only
 ```bash
-make stop
+csle ls containers
 ```
 
-7. To delete the emulation, run:
+- List emulations
 ```bash
-make clean
+csle ls emulations --all
 ```
 
-### Start a random emulation
-
-1. Select a type of random emulation to  create, for example , for example ([ctf_001_random](emulation-system/envs/ctf/001/random)
-2. Change directory:
+- List running emulations
 ```bash
-cd emulation-system/use_cases/intrusion_prevention/minigames/ctf/001/random
-```
-3. Generate a random configuration:
-```bash
-make gen_config
-``` 
-4. Start the emulation (run the containers) (for more commands, see [README](emulation-system/envs/ctf/001/level_1/README.MD))
-```bash
-make run
+csle ls emulations --all
 ```
 
-5. Apply network/users/vulnerability/flags configuration to the emulation:
+- Inspect a specific emulation
 ```bash
-make apply_config
+csle em <emulation-name>
 ```
 
-6. (Optional) Start traffic generators:
+- Run/Stop/Clean a specific emulation
 ```bash
-make traffic
+csle em <emulation-name> run | stop | clean
 ```
 
-7. To stop the emulation, run:
+- Open a shell in a given container
 ```bash
-make stop
+csle shell <container-name>
 ```
 
-8. To delete the emulation, run:
+- Remove a container, image, network, or all
 ```bash
-make clean
-``` 
+csle rm <container-name> | <network-name> | <image-name> | all
+```
 
-### Configure your own emulation
-
-TODO
-
-## Create a Simulation
-
-TODO
-
-## Create and run an Experiment
-
-TODO
+- Start or stop a specific container
+```bash
+csle start | stop <container-name>
+```
 
 ## Documentation
 
