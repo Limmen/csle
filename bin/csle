@@ -249,6 +249,9 @@ def rm(entity : str) -> None:
         ContainerManager.rm_all_images()
     elif entity == "networks":
         ContainerManager.rm_all_networks()
+    else:
+        rm_name(name=entity)
+
 
 
 @click.argument('entity', default='all', type=str)
@@ -401,7 +404,20 @@ def rm_name(name: str) -> None:
     if not network_removed:
         image_removed = ContainerManager.rm_image(name)
     if not image_removed:
+        emulation_removed = remove_emulation(name=name)
+    if not emulation_removed:
         click.secho(f"name: {name} not recognized", fg="red", bold=True)
+
+
+def remove_emulation(name):
+    click.secho(f"Removing emulation {name}", fg="green", bold=True)
+    emulations = MetastoreFacade.list_emulations()
+    for emulation in emulations:
+        if emulation.name == name:
+            clean_emulation(emulation)
+            EnvConfigGenerator.uninstall_emulation(config=emulation)
+            return True
+    return False
 
 
 def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:

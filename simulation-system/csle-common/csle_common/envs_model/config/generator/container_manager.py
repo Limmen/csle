@@ -127,9 +127,9 @@ class ContainerManager:
         images = client_1.images.list()
         images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
         non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
-                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),images))
         base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
-                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images)))
+                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),images))
         non_os_base_images = list(filter(lambda x: not
         (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
          or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
