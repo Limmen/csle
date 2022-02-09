@@ -1167,3 +1167,63 @@ class METADATA_STORE:
     USER="csle"
     PASSWORD="csle"
     HOST="127.0.0.1"
+
+
+class CONTAINER_POOLS:
+    CONTAINER_POOL = [(f"{CONTAINER_IMAGES.FTP_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.FTP_2}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.HONEYPOT_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.HONEYPOT_2}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SSH_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")
+                      ]
+
+    GW_VULN_CONTAINERS = [(f"{CONTAINER_IMAGES.SSH_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
+                                     ]
+
+    PW_VULN_CONTAINERS = [(f"{CONTAINER_IMAGES.SSH_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.FTP_1}", "0.0.1"),
+                                     (f"{CONTAINER_IMAGES.FTP_2}", "0.0.1")
+                                     ]
+    RCE_CONTAINERS = [(f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
+                                      (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+                                      (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+                                      (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
+                                      (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+                                      (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
+                                      ]
+    SQL_INJECTION_CONTAINERS = [(f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1")]
+    PRIV_ESC_CONTAINERS = [(f"{CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"),
+                                           (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")]
+
+    AGENT_CONTAINERS = [((f"{CONTAINER_IMAGES.HACKER_KALI_1}", "0.0.1"))]
+    ROUTER_CONTAINERS = [(f"{CONTAINER_IMAGES.ROUTER_1}", "0.0.1"),
+                         (f"{CONTAINER_IMAGES.ROUTER_2}", "0.0.1")]

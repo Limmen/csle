@@ -1,6 +1,7 @@
 from typing import Set, List
 from csle_common.dao.container_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 
+
 class NodeFirewallConfig:
     """
     A DTO object representing a firewall configuration of a container in an emulation environment
@@ -63,7 +64,7 @@ class NodeFirewallConfig:
         """
         :return: a string representation of the object
         """
-        return f"ips_gw_default_policy_networks:{self.ips_gw_default_policy_networks}, " \
+        return f"ips_gw_default_policy_networks:{list(map(lambda x: str(x), self.ips_gw_default_policy_networks))}, " \
                f"output_accept:{self.output_accept}, " \
                f"input_accept:{self.input_accept}, forward_accept:{self.forward_accept}, " \
                f"output_drop:{self.output_drop}, " \

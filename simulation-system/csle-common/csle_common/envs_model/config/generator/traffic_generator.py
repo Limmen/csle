@@ -28,36 +28,36 @@ class TrafficGenerator:
         :param router_container_names: list of router container names
         :return: the created traffic configuration
         """
-        jumphosts_dict = {}
-        targethosts_dict = {}
-        containers_dict = {}
-
-        for node in topology.node_configs:
-            ip = node.ip
-            jumphosts = TrafficGenerator._find_jumphosts(topology=topology, ip=ip)
-            jumphosts_dict[ip] = jumphosts
-            targethosts_dict[ip] = []
-
-        for node in topology.node_configs:
-            for k,v in jumphosts_dict.items():
-                if node.ip in v:
-                    targethosts_dict[node.ip].append(k)
-
-        for container in containers_config.containers:
-            containers_dict[container.internal_ip] = container.name
+        # jumphosts_dict = {}
+        # targethosts_dict = {}
+        # containers_dict = {}
+        #
+        # for node in topology.node_configs:
+        #     ip = node.get_ips()[0]
+        #     jumphosts = TrafficGenerator._find_jumphosts(topology=topology, ip=ip)
+        #     jumphosts_dict[ip] = jumphosts
+        #     targethosts_dict[ip] = []
+        #
+        # for node in topology.node_configs:
+        #     for k,v in jumphosts_dict.items():
+        #         if node.ip in v:
+        #             targethosts_dict[node.ip].append(k)
+        #
+        # for container in containers_config.containers:
+        #     containers_dict[container.internal_ip] = container.name
 
         node_traffic_configs = []
         for node in topology.node_configs:
             commands = []
-            for target in targethosts_dict[node.ip]:
-                if containers_dict[target] not in agent_container_names \
-                        and containers_dict[target] not in router_container_names:
-                    template_commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[target]]
-                    for tc in template_commands:
-                        commands.append(tc.format(target))
+            # for target in targethosts_dict[node.ip]:
+            #     if containers_dict[target] not in agent_container_names \
+            #             and containers_dict[target] not in router_container_names:
+            #         template_commands = constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[containers_dict[target]]
+            #         for tc in template_commands:
+            #             commands.append(tc.format(target))
 
-            node_traffic_config = NodeTrafficConfig(ip=node.ip, jumphosts=targethosts_dict[node.ip],
-                                                    target_hosts=targethosts_dict[node.ip], commands=commands)
+            node_traffic_config = NodeTrafficConfig(ip=node.get_ips()[0],
+                                                    jumphosts=[], target_hosts=[], commands=commands)
             node_traffic_configs.append(node_traffic_config)
 
         traffic_config = TrafficConfig(node_traffic_configs = node_traffic_configs)

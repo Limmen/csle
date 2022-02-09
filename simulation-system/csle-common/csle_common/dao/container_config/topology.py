@@ -17,7 +17,6 @@ class Topology:
         self.node_configs = node_configs
         self.subnetwork_masks = subnetwork_masks
 
-
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

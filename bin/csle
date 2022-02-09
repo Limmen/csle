@@ -13,6 +13,7 @@ from csle_common.envs_model.config.generator.container_manager import ContainerM
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 
@@ -48,6 +49,42 @@ def shell(container: str) -> None:
     else:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=True)
 
+
+@click.argument('max_nodes', default=10, type=int)
+@click.argument('min_nodes', default=4, type=int)
+@click.argument('max_flags', default=5, type=int)
+@click.argument('min_flags', default=1, type=int)
+@click.argument('max_users', default=5, type=int)
+@click.argument('min_users', default=1, type=int)
+@click.argument('name', default="", type=str)
+@click.command(help="name min_users max_users min_flags max_flags min_nodes max_nodes")
+def gen(name: str, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
+        max_nodes: int) -> None:
+    if name == "":
+        click.secho(f"Please specify a name of the emulation to generate", fg="red", bold=True)
+        return
+
+    click.secho(f"Generating a random emulation configuration with {min_nodes}-{max_nodes} nodes, "
+                f"{min_users}-{max_users} users, and {min_flags}-{max_flags} flags",
+                fg="green", bold=True)
+    container_env_config = ContainerEnvConfig(
+        min_num_users=min_users, max_num_users=max_users, min_num_flags=min_flags,
+        max_num_flags=max_flags, min_num_nodes=min_nodes, max_num_nodes=max_nodes,
+        container_pool=constants.CONTAINER_POOLS.CONTAINER_POOL,
+        gw_vuln_compatible_containers=constants.CONTAINER_POOLS.GW_VULN_CONTAINERS,
+        pw_vuln_compatible_containers=constants.CONTAINER_POOLS.PW_VULN_CONTAINERS,
+        rce_vuln_compatible_containers=constants.CONTAINER_POOLS.RCE_CONTAINERS,
+        sql_injection_vuln_compatible_containers=constants.CONTAINER_POOLS.SQL_INJECTION_CONTAINERS,
+        priv_esc_vuln_compatible_containers=constants.CONTAINER_POOLS.PRIV_ESC_CONTAINERS,
+        agent_containers=constants.CONTAINER_POOLS.AGENT_CONTAINERS,
+        router_containers=constants.CONTAINER_POOLS.ROUTER_CONTAINERS,
+        path=util.default_output_dir(), subnet_id_blacklist=set(),
+        subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+    )
+    emulation_env_config = EnvConfigGenerator.create_env(container_env_config, name=name)
+    click.secho(f"Successfully created emulation with name: {emulation_env_config.name} and configuration:",
+                fg="green", bold=True)
+    print_emulation_config(emulation_env_config=emulation_env_config)
 
 @click.argument('path', default="")
 @click.argument('cmd', default="")
@@ -385,17 +422,18 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
     for vuln in emulation_env_config.vuln_config.vulnerabilities:
         click.secho(f"{vuln.vuln_type} {vuln.ip}", fg="blue", bold=True)
     click.secho(f"Resource constraints:", fg="yellow", bold=True)
-    for rc in emulation_env_config.resources_config.node_resources_configurations:
-        network_bandwidth = ""
-        for i, ip_net in enumerate(rc.ips_and_network_configs):
-            ip,net = ip_net
-            interface = net.interface
-            bandwidth=net.rate_limit_mbit
-            if i > 0:
-                network_bandwidth = network_bandwidth + ", "
-            network_bandwidth = network_bandwidth + f"{interface} {bandwidth}Mbit/s"
-        click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
-                    f"network:{network_bandwidth}", fg="blue", bold=True)
+    if emulation_env_config.resources_config is not None:
+        for rc in emulation_env_config.resources_config.node_resources_configurations:
+            network_bandwidth = ""
+            for i, ip_net in enumerate(rc.ips_and_network_configs):
+                ip,net = ip_net
+                interface = net.interface
+                bandwidth=net.rate_limit_mbit
+                if i > 0:
+                    network_bandwidth = network_bandwidth + ", "
+                network_bandwidth = network_bandwidth + f"{interface} {bandwidth}Mbit/s"
+            click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
+                        f"network:{network_bandwidth}", fg="blue", bold=True)
     click.secho(f"Flags:", fg="yellow", bold=True)
     for flag in emulation_env_config.flags_config.flags:
         click.secho(f"{flag.flags[0][0]} {flag.ip}", fg="blue", bold=True)
@@ -412,6 +450,7 @@ commands.add_command(stop)
 commands.add_command(start)
 commands.add_command(em)
 commands.add_command(shell)
+commands.add_command(gen)
 
 
 # Script entrypoint

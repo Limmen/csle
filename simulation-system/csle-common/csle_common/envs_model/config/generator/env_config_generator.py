@@ -17,7 +17,6 @@ from csle_common.dao.container_config.node_resources_config import NodeResources
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.util.experiments_util import util
 from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
-from csle_common.dao.container_config.created_env_config import CreatedEnvConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
@@ -103,25 +102,31 @@ class EnvConfigGenerator:
         return container_env_config.subnet_id_blacklist
 
     @staticmethod
-    def generate(container_env_config: ContainerEnvConfig) -> CreatedEnvConfig:
+    def generate(container_env_config: ContainerEnvConfig, name: str) -> EmulationEnvConfig:
         """
         Generates a new emulation environment (creates the artifacts)
 
         :param container_env_config: configuration of the new environment
+        :param name: the name of the emulation to create
         :return: the configuration of the generated emulation environment
         """
 
-        adj_matrix, gws, topology, agent_ip, router_ip, node_id_d, node_id_d_inv = \
+        topology, agent_ip, router_ip, vulnerable_nodes = \
             TopologyGenerator.generate(num_nodes=container_env_config.num_nodes,
-                                       subnet_prefix=container_env_config.subnet_prefix)
-        vulnerabilities, vulnerable_nodes = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip,
-                                                          subnet_prefix=container_env_config.subnet_prefix,
-                                                          num_flags=container_env_config.num_flags, access_vuln_types=[VulnType.WEAK_PW],
-                                                          router_ip=router_ip)
-        users = UsersGenerator.generate(max_num_users=container_env_config.max_num_users, topology=topology, agent_ip=agent_ip)
+                                       subnet_prefix=container_env_config.subnet_prefix,
+                                       subnet_id = container_env_config.subnet_id)
+        vulnerabilities = VulnerabilityGenerator.generate(
+            topology=topology, vulnerable_nodes = vulnerable_nodes, agent_ip=agent_ip,
+            subnet_prefix=container_env_config.subnet_prefix,
+            num_flags=container_env_config.num_flags, access_vuln_types=[VulnType.WEAK_PW],
+            router_ip=router_ip)
+
+        users = UsersGenerator.generate(max_num_users=container_env_config.max_num_users,
+                                        topology=topology, agent_ip=agent_ip)
         flags = FlagsGenerator.generate(vuln_cfg=vulnerabilities, num_flags=container_env_config.num_flags)
         containers = ContainerGenerator.generate(
-            topology=topology, vuln_cfg=vulnerabilities, gateways=gws, container_pool=container_env_config.container_pool,
+            topology=topology, vuln_cfg=vulnerabilities,
+            container_pool=container_env_config.container_pool,
             gw_vuln_compatible_containers=container_env_config.gw_vuln_compatible_containers,
             pw_vuln_compatible_containers=container_env_config.pw_vuln_compatible_containers,
             subnet_id=container_env_config.subnet_id, num_flags=container_env_config.num_flags,
@@ -135,10 +140,10 @@ class EnvConfigGenerator:
                                             agent_container_names=agent_container_names,
                                             router_container_names = gateway_container_names
                                             )
-        created_env_config = CreatedEnvConfig(
-            topology=topology, containers_config = containers, vuln_config=vulnerabilities,
-            users_config = users, flags_config = flags, traffic_config = traffic)
-        return created_env_config
+        emulation_env_config = EmulationEnvConfig(name=name,
+            topology_config=topology, containers_config = containers, vuln_config=vulnerabilities,
+            users_config = users, flags_config = flags, traffic_config = traffic, resources_config=None)
+        return emulation_env_config
 
     @staticmethod
     def get_free_network_ids(emulations: List[EmulationEnvConfig]) -> List[int]:
@@ -161,49 +166,28 @@ class EnvConfigGenerator:
         return free_network_ids
 
     @staticmethod
-    def create_env(container_env_config: ContainerEnvConfig) -> Tuple[str, id]:
+    def create_env(container_env_config: ContainerEnvConfig, name: str) -> EmulationEnvConfig:
         """
         Function that creates a new emulation environment given a configuration
 
         :param container_env_config: the configuration of the environment to create
-        :return: (subnet_prefix, subnet_id) of the created environment
+        :param name: the name of the emulation to create
+        :return: The configuration of the created emulation
         """
-
-        # EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
-
-        networks, network_ids = ContainerManager.list_docker_networks()
-        running_containers = EnvConfigGenerator.list_running_containers()
         emulations = MetastoreFacade.list_emulations()
         available_network_ids = EnvConfigGenerator.get_free_network_ids(emulations=emulations)
-        # networks_in_use, network_ids_in_use = EnvConfigGenerator.find_networks_in_use(containers=running_containers)
-        #
-        # available_network_ids = list(filter(lambda x: x != 0 and
-        #                                               (x not in network_ids_in_use and
-        #                                                x not in container_env_config.subnet_id_blacklist), network_ids))
         container_env_config.subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
         container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
                                                         container_env_config.max_num_nodes)
-        container_env_config.subnet_prefix = container_env_config.subnet_prefix + \
-                                             str(container_env_config.subnet_id) + constants.COMMANDS.DOT_DELIM
+        container_env_config.subnet_prefix = container_env_config.subnet_prefix + str(container_env_config.subnet_id)
         container_env_config.num_flags = random.randint(container_env_config.min_num_flags,
                                                         min(container_env_config.max_num_flags,
                                                             container_env_config.num_nodes - 3))
         container_env_config.num_users = random.randint(container_env_config.min_num_users,
                                                         container_env_config.max_num_users)
-
-        created_env_config = EnvConfigGenerator.generate(container_env_config)
-
-        UsersGenerator.write_users_config(created_env_config.users_config, path=container_env_config.path)
-        TopologyGenerator.write_topology(created_env_config.topology, path=container_env_config.path)
-        FlagsGenerator.write_flags_config(created_env_config.flags_config, path=container_env_config.path)
-        VulnerabilityGenerator.write_vuln_config(created_env_config.vuln_config,
-                                                 path=container_env_config.path)
-        ContainerGenerator.write_containers_config(created_env_config.containers_config,
-                                                   path=container_env_config.path)
-        TrafficGenerator.write_traffic_config(created_env_config.traffic_config, path=container_env_config.path)
-
-        EnvConfigGenerator.create_container_dirs(created_env_config.containers_config, path=container_env_config.path)
-        return container_env_config.subnet_prefix, container_env_config.subnet_id
+        emulation_env_config = EnvConfigGenerator.generate(container_env_config, name=name)
+        EnvConfigGenerator.install_emulation(config=emulation_env_config)
+        return emulation_env_config
 
 
     @staticmethod

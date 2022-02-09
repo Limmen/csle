@@ -11,6 +11,7 @@ from csle_common.dao.container_config.node_users_config import NodeUsersConfig
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.util.experiments_util import util
+import csle_common.constants.constants as constants
 
 
 class UsersGenerator:
@@ -40,7 +41,7 @@ class UsersGenerator:
                 if np.random.rand() < 0.4:
                     root = True
                 users.append((username, password, root))
-            user_cfg = NodeUsersConfig(ip = node.ip, users=users)
+            user_cfg = NodeUsersConfig(ip = node.get_ips()[0], users=users)
             user_configs.append(user_cfg)
 
         agent_user = ("agent", "agent", True)
@@ -97,5 +98,6 @@ class UsersGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
-    users_conf = UsersGenerator.generate(5, topology, f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191")
+    topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(
+        num_nodes=15, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2", subnet_id=2)
+    users_conf = UsersGenerator.generate(max_num_users=5, topology=topology, agent_ip=agent_ip)

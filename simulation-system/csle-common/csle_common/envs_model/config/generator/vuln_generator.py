@@ -29,13 +29,14 @@ class VulnerabilityGenerator:
 
 
     @staticmethod
-    def generate(topology: Topology, gateways : dict, agent_ip : str, router_ip: str, subnet_prefix :str, num_flags,
+    def generate(topology: Topology, vulnerable_nodes : List[NodeFirewallConfig], agent_ip : str,
+                 router_ip: str, subnet_prefix :str, num_flags,
                  access_vuln_types : List[VulnType]) -> VulnerabilitiesConfig:
         """
         Utility function for generating a vulnerability configuration for an emulation
 
         :param topology: the topology of the emulation
-        :param gateways: the gateways of the emulation
+        :param vulnerable_nodes: the gateways of the emulation
         :param agent_ip: the ip of the agent container
         :param router_ip: the ip of the gateway container
         :param subnet_prefix: the prefix of of the subnet
@@ -44,67 +45,67 @@ class VulnerabilityGenerator:
         :return: The created vulnerabilities config
         """
         vulnerabilities = []
-        vulnerable_nodes = set()
 
         # Start by creating necessary vulns
-        for gw in gateways.values():
-            ip = subnet_prefix + str(gw)
+        for vulnerable_node in vulnerable_nodes:
+            ip = subnet_prefix + str(vulnerable_node)
             if ip != agent_ip and ip != router_ip:
                 vuln_idx = random.randint(0,len(access_vuln_types)-1)
                 vuln_type = access_vuln_types[vuln_idx]
-                if vuln_type == VulnType.WEAK_PW:
-                    for node in topology.node_configs:
-                        if node.ip == ip and ip not in vulnerable_nodes:
-                            vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
-                            vulnerabilities.append(vuln_cfg)
-                            vulnerable_nodes.add(ip)
-                elif vuln_type == VulnType.RCE:
-                    raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
-                elif vuln_type == VulnType.SQL_INJECTION:
-                    raise NotImplementedError("Generation of SQL Injection Type Not implemented Yet")
-                elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
-                    raise NotImplementedError("Generation of Privilege Escalation Type Not implemented Yet")
-                else:
-                    raise ValueError("Unrecognized vulnerability type")
+                vuln_cfg = VulnerabilityGenerator.pw_vuln(vulnerable_node)
+                vulnerabilities.append(vuln_cfg)
+                # if vuln_type == VulnType.WEAK_PW:
+                #     vuln_cfg = VulnerabilityGenerator.pw_vuln(vulnerable_node)
+                # elif vuln_type == VulnType.RCE:
+                #     raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                # elif vuln_type == VulnType.SQL_INJECTION:
+                #     raise NotImplementedError("Generation of SQL Injection Type Not implemented Yet")
+                # elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                #     raise NotImplementedError("Generation of Privilege Escalation Type Not implemented Yet")
+                # else:
+                #     raise ValueError("Unrecognized vulnerability type")
 
         for node in topology.node_configs:
             # Create vuln necessary for flags
             if len(vulnerable_nodes) < num_flags:
-                if node.ip != agent_ip and node.ip != router_ip and node.ip not in vulnerable_nodes:
+                if agent_ip not in node.get_ips() and router_ip not in node.get_ips() and node not in vulnerable_nodes:
                     vuln_idx = random.randint(0, len(access_vuln_types) - 1)
                     vuln_type = access_vuln_types[vuln_idx]
-                    if vuln_type == VulnType.WEAK_PW:
-                        vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
-                        vulnerabilities.append(vuln_cfg)
-                        vulnerable_nodes.add(node.ip)
-                    elif vuln_type == VulnType.RCE:
-                        raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
-                    elif vuln_type == VulnType.SQL_INJECTION:
-                        raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
-                    elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
-                        raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
-                    else:
-                        raise ValueError("Unrecognized vulnerability type")
+                    vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
+                    vulnerabilities.append(vuln_cfg)
+                    # if vuln_type == VulnType.WEAK_PW:
+                    #     vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
+                    #     vulnerabilities.append(vuln_cfg)
+                    #     vulnerable_nodes.add(node.ip)
+                    # elif vuln_type == VulnType.RCE:
+                    #     raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                    # elif vuln_type == VulnType.SQL_INJECTION:
+                    #     raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
+                    # elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                    #     raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
+                    # else:
+                    #     raise ValueError("Unrecognized vulnerability type")
 
             # Randomly create vuln
-            if node.ip != agent_ip and node.ip != router_ip and node.ip not in vulnerable_nodes:
+            if agent_ip not in node.get_ips() and router_ip not in node.get_ips() and node not in vulnerable_nodes:
                 if np.random.rand() < 0.2:
                     vuln_idx = random.randint(0, len(access_vuln_types) - 1)
                     vuln_type = access_vuln_types[vuln_idx]
-                    if vuln_type == VulnType.WEAK_PW:
-                        vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
-                        vulnerabilities.append(vuln_cfg)
-                        vulnerable_nodes.add(node.ip)
-                    elif vuln_type == VulnType.RCE:
-                        raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
-                    elif vuln_type == VulnType.SQL_INJECTION:
-                        raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
-                    elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
-                        raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
-                    else:
-                        raise ValueError("Unrecognized vulnerability type")
+                    vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
+                    vulnerabilities.append(vuln_cfg)
+                    # if vuln_type == VulnType.WEAK_PW:
+                    #     vuln_cfg = VulnerabilityGenerator.pw_vuln(node)
+                    #     vulnerabilities.append(vuln_cfg)
+                    # elif vuln_type == VulnType.RCE:
+                    #     raise NotImplementedError("Generation of RCE Vuln Type Not implemented Yet")
+                    # elif vuln_type == VulnType.SQL_INJECTION:
+                    #     raise NotImplementedError("Generation of SQL Injection Vuln Type Not implemented Yet")
+                    # elif vuln_type == VulnType.PRIVILEGE_ESCALATION:
+                    #     raise NotImplementedError("Generation of Privilege Escalation Vuln Type Not implemented Yet")
+                    # else:
+                    #     raise ValueError("Unrecognized vulnerability type")
         vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
-        return vulns_cfg, vulnerable_nodes
+        return vulns_cfg
 
 
     @staticmethod
@@ -119,7 +120,7 @@ class VulnerabilityGenerator:
         pw_idx = random.randint(0, len(pw_shortlist)-1)
         u = pw_shortlist[pw_idx]
         pw = pw_shortlist[pw_idx]
-        vuln_config = PwVulnerabilityConfig(ip= node.ip, vuln_type=VulnType.WEAK_PW, username=u, pw=pw, root=True)
+        vuln_config = PwVulnerabilityConfig(ip= node.get_ips()[0], vuln_type=VulnType.WEAK_PW, username=u, pw=pw, root=True)
         return vuln_config
 
 
@@ -199,9 +200,12 @@ class VulnerabilityGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology, agent_ip, router_ip = TopologyGenerator.generate(num_nodes=10, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
-    vulnerabilities = VulnerabilityGenerator.generate(topology=topology, gateways=gws, agent_ip=agent_ip, subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.",
-                                    num_flags = 3, access_vuln_types=[VulnType.WEAK_PW])
+    topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(
+        num_nodes=15, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2", subnet_id=2)
+    vulnerabilities = VulnerabilityGenerator.generate(
+        topology=topology, vulnerable_nodes=vulnerable_nodes,
+        agent_ip=agent_ip, router_ip=router_ip, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2",
+        num_flags = 3, access_vuln_types=[VulnType.WEAK_PW])
     print(vulnerabilities)
 
 

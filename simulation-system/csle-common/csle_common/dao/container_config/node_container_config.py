@@ -29,12 +29,11 @@ class NodeContainerConfig:
         self.restart_policy = restart_policy
         self.suffix = suffix
 
-
     def get_ips(self) -> List[str]:
         """
         :return: a list of ips that this container has
         """
-        return list(map(lambda x: x[0], self.ips_and_networks))
+        return list(filter(lambda x: x is not None, map(lambda x: x[0], self.ips_and_networks)))
 
     def to_dict(self) -> dict:
         """

@@ -20,12 +20,14 @@ class ResourceConstraintsGenerator:
         :param emulation_config: the emulation configuration
         :return: None
         """
+        if resources_config is None:
+            return
         if emulation_config.server_connection:
             emulation_config.connect_server()
         for node_resource_config in resources_config.node_resources_configurations:
             ips = node_resource_config.get_ips()
             ip = ips[0]
-            print(f"appliying resource constraints on node:{ip}")
+            print(f"applying resource constraints on node:{ip}")
             GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=ip)
 
             for ip_and_net_config in node_resource_config.ips_and_network_configs:

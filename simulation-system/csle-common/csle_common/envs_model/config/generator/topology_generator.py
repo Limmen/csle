@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import random
 import numpy as np
 from csle_common.dao.container_config.topology import Topology
@@ -8,6 +8,8 @@ from csle_common.envs_model.logic.emulation.util.common.emulation_util import Em
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
+from csle_common.dao.container_config.container_network import ContainerNetwork
+from csle_common.dao.container_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 
 
 class TopologyGenerator:
@@ -16,7 +18,7 @@ class TopologyGenerator:
     """
 
     @staticmethod
-    def generate(num_nodes: int, subnet_prefix: str) -> Topology:
+    def generate(num_nodes: int, subnet_prefix: str, subnet_id: int) -> Tuple[Topology, str, str, List]:
         """
         Generates a topology configuration
 
@@ -26,103 +28,106 @@ class TopologyGenerator:
         """
         if num_nodes < 3:
             raise ValueError("At least three nodes are required to create a topology")
-        agent_ip_suffix = TopologyGenerator.__generate_random_ip(blacklist=[])
 
+        agent_ip_suffix = TopologyGenerator.__generate_random_ip(blacklist=[])
         nodes_ip_suffixes = [agent_ip_suffix]
+        router_ip_suffix = TopologyGenerator.__generate_random_ip(nodes_ip_suffixes)
+        nodes_ip_suffixes.append(router_ip_suffix)
         for i in range(num_nodes - 2):
             ip_suffix = TopologyGenerator.__generate_random_ip(nodes_ip_suffixes)
             nodes_ip_suffixes.append(ip_suffix)
 
-        node_id_d = {}
-        node_id_d_inv = {}
+        net_id = 1
+        client_net = ContainerNetwork(name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{subnet_id}_{net_id}",
+                               subnet_mask=f"{subnet_prefix}.{net_id}{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                               subnet_prefix=f"{subnet_prefix}.{net_id}")
+        net_id += 1
+        gw_net = ContainerNetwork(name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{subnet_id}_{net_id}",
+                                      subnet_mask=f"{subnet_prefix}.{net_id}{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                      subnet_prefix=f"{subnet_prefix}.{net_id}")
+
+        network_mappings = {}
+        network_mappings[client_net.name] = (client_net, [f"{client_net.subnet_prefix}.{agent_ip_suffix}"])
+        network_mappings[gw_net.name] = (gw_net, [f"{gw_net.subnet_prefix}.{router_ip_suffix}"])
+        net_to_attach_to = gw_net.name
+
+        subnetwork_masks = [client_net.subnet_mask, gw_net.subnet_mask]
+
+        node_configs = []
+        agent_cfg = NodeFirewallConfig(
+            ips_gw_default_policy_networks = [DefaultNetworkFirewallConfig(
+                ip=f"{client_net.subnet_prefix}.{agent_ip_suffix}",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP, network=client_net
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{gw_net.subnet_prefix}.{router_ip_suffix}",
+                default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP, network=gw_net
+            ),
+            ], hostname="", output_accept=set(), input_accept=set(),
+            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
+            routes=set())
+
+        router_cfg = NodeFirewallConfig(
+            ips_gw_default_policy_networks = [DefaultNetworkFirewallConfig(
+                ip=f"{client_net.subnet_prefix}.{router_ip_suffix}",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT, network=client_net
+            ),
+                DefaultNetworkFirewallConfig(
+                    ip=f"{gw_net.subnet_prefix}.{router_ip_suffix}",
+                    default_gw=None,
+                    default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                    default_forward=constants.FIREWALL.ACCEPT, network=gw_net
+                ),
+            ], hostname="", output_accept=set(), input_accept=set(),
+            forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
+            routes=set())
+        node_configs.append(agent_cfg)
+        node_configs.append(router_cfg)
+
+        vulnerable_nodes = []
+
         for i in range(len(nodes_ip_suffixes)):
-            node_id_d[nodes_ip_suffixes[i]] = i
-            node_id_d_inv[i] = nodes_ip_suffixes[i]
+            if nodes_ip_suffixes[i] != agent_ip_suffix and nodes_ip_suffixes[i] != router_ip_suffix:
+                network_mappings[net_to_attach_to] = (
+                    network_mappings[net_to_attach_to][0],network_mappings[net_to_attach_to][1] +
+                    [f"{network_mappings[net_to_attach_to][0].subnet_prefix}.{nodes_ip_suffixes[i]}"])
+                node_cfg = NodeFirewallConfig(
+                    ips_gw_default_policy_networks = [DefaultNetworkFirewallConfig(
+                        ip=f"{network_mappings[net_to_attach_to][0].subnet_prefix}.{nodes_ip_suffixes[i]}",
+                        default_gw=None,
+                        default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                        default_forward=constants.FIREWALL.DROP, network=network_mappings[net_to_attach_to][0]
+                    )], hostname="", output_accept=set(), input_accept=set(),
+                    forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
+                    routes=set())
+                if np.random.rand() < 0.3:
+                    net_id += 1
+                    new_net = ContainerNetwork(name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{subnet_id}_{net_id}",
+                                          subnet_mask=f"{subnet_prefix}.{net_id}{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                          subnet_prefix=f"{subnet_prefix}.{net_id}")
+                    node_cfg.ips_gw_default_policy_networks.append(DefaultNetworkFirewallConfig(
+                        ip=f"{new_net.subnet_prefix}.{nodes_ip_suffixes[i]}",
+                        default_gw=None,
+                        default_input=constants.FIREWALL.ACCEPT, default_output=constants.FIREWALL.ACCEPT,
+                        default_forward=constants.FIREWALL.DROP, network=new_net
+                    ))
+                    net_to_attach_to = new_net.name
+                    network_mappings[new_net.name] = (new_net, [f"{new_net.subnet_prefix}.{nodes_ip_suffixes[i]}"])
+                    subnetwork_masks.append(new_net.subnet_mask)
+                    vulnerable_nodes.append(node_cfg)
+                node_configs.append(node_cfg)
 
-        adj_matrix = np.zeros((len(nodes_ip_suffixes) + 1, len(nodes_ip_suffixes) + 1))
+        topology = Topology(node_configs=node_configs, subnetwork_masks=subnetwork_masks)
+        agent_ip = f"{client_net.subnet_prefix}.{agent_ip_suffix}"
+        router_ip = f"{client_net.subnet_prefix}.{router_ip_suffix}"
 
-        reachable = set()
-        reachable.add(agent_ip_suffix)
-
-        gateways = {}
-
-        # Attach all nodes to the topology randomly
-        for i in range(len(nodes_ip_suffixes)):
-            if nodes_ip_suffixes[i] not in reachable:
-                l = list(reachable)
-                attach = random.randint(0, len(l) - 1)
-                adj_matrix[node_id_d[l[attach]]][node_id_d[nodes_ip_suffixes[i]]] = 1
-                adj_matrix[node_id_d[nodes_ip_suffixes[i]]][node_id_d[l[attach]]] = 1
-                reachable.add(nodes_ip_suffixes[i])
-                gateways[nodes_ip_suffixes[i]] = l[attach]
-
-        # Create some random links
-        for i in range(adj_matrix.shape[0] - 1):
-            for j in range(adj_matrix.shape[1] - 1):
-                if j == i:
-                    adj_matrix[i][j] = 1
-                if np.random.rand() < 0.1:
-                    adj_matrix[i][j] = 1
-                    adj_matrix[j][i] = 1
-
-        router_ip_suffix = TopologyGenerator.__generate_random_ip(nodes_ip_suffixes)
-        adj_matrix[node_id_d[agent_ip_suffix]][-1] = 1
-        adj_matrix[-1][node_id_d[agent_ip_suffix]] = 1
-
-        # gw and agent same connections
-        adj_matrix[-1] = adj_matrix[node_id_d[agent_ip_suffix]]
-        for i in range(len(nodes_ip_suffixes)):
-            if not nodes_ip_suffixes[i] == agent_ip_suffix:
-                if adj_matrix[node_id_d[nodes_ip_suffixes[i]]][node_id_d[agent_ip_suffix]] == 1:
-                    adj_matrix[node_id_d[nodes_ip_suffixes[i]]][-1] = 1
-
-        gateways[agent_ip_suffix] = router_ip_suffix
-
-        nodes_ip_suffixes.append(router_ip_suffix)
-        node_id_d_inv[len(nodes_ip_suffixes) - 1] = router_ip_suffix
-        node_id_d[router_ip_suffix] = len(nodes_ip_suffixes) - 1
-
-        node_fw_configs = []
-        for i in range(len(nodes_ip_suffixes)):
-            ip = subnet_prefix + str(nodes_ip_suffixes[i])
-            net_gw = subnet_prefix + "1"
-            output_accept = set()
-            input_accept = set()
-            forward_accept = set()
-            output_accept.add(net_gw)
-            input_accept.add(net_gw)
-            forward_accept.add(net_gw)
-            output_drop = set()
-            input_drop = set()
-            forward_drop = set()
-            routes = set()
-            for j in range(adj_matrix.shape[1]):
-                if adj_matrix[i][j] == 1:
-                    input_accept.add(subnet_prefix + str(node_id_d_inv[j]))
-                    output_accept.add(subnet_prefix + str(node_id_d_inv[j]))
-                    forward_accept.add(subnet_prefix + str(node_id_d_inv[j]))
-                else:
-                    input_drop.add(subnet_prefix + str(node_id_d_inv[j]))
-                    output_drop.add(subnet_prefix + str(node_id_d_inv[j]))
-                    forward_drop.add(subnet_prefix + str(node_id_d_inv[j]))
-
-            default_gw = None
-            if nodes_ip_suffixes[i] == agent_ip_suffix:
-                default_gw = subnet_prefix + str(router_ip_suffix)
-
-            node_cfg = NodeFirewallConfig(
-                ip=ip, output_accept=output_accept, input_accept=input_accept,
-                forward_accept=forward_accept, output_drop=set(), input_drop=set(), forward_drop=set(),
-                routes=set(), default_internal_input=constants.FIREWALL.DROP,
-                default_internal_output=constants.FIREWALL.DROP, default_internal_forward=constants.FIREWALL.DROP,
-                default_internal_gw=default_gw)
-            node_fw_configs.append(node_cfg)
-
-        topology = Topology(node_configs=node_fw_configs, subnetwork=subnet_prefix + "0/24")
-        agent_ip = subnet_prefix + str(agent_ip_suffix)
-        router_ip = subnet_prefix + str(router_ip_suffix)
-
-        return adj_matrix, gateways, topology, agent_ip, router_ip, node_id_d, node_id_d_inv
+        return topology, agent_ip, router_ip, vulnerable_nodes
 
     @staticmethod
     def __generate_random_ip(blacklist: List) -> int:
@@ -277,8 +282,6 @@ class TopologyGenerator:
 
 
 if __name__ == '__main__':
-    adj_matrix, gws, topology = TopologyGenerator.generate(num_nodes=10,
-                                                           subnet_prefix=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.")
-    print(adj_matrix)
-    print(gws)
+    topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(
+        num_nodes=15, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2", subnet_id=2)
     print(topology)
