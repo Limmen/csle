@@ -1,4 +1,4 @@
-# Metadata-store
+# Metastore
 
 CSLE stores metadata in a PostgreSQL database. Follow the steps below to install PostgreSQL and setup the database.
 
@@ -26,8 +26,16 @@ Create database and tables:
 ```bash
 sudo psql -U postgres -a -f create_tables.sql
 ```
+Or by using the command:
+```bash
+make build
+```
+You can also reset the database with the command:
+```bash
+make clean
+```
 
-Useful psql commands: 
+Other useful psql commands: 
 ```bash
 sudo -u postgres psql  # start psql session as admin user posgres
 psql> \l # Lists databases

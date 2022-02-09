@@ -16,6 +16,7 @@ from csle_common.envs_model.config.generator.metastore_facade import MetastoreFa
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.util.experiments_util import util
+import csle_common.constants.constants as constants
 
 
 @click.group()
@@ -278,7 +279,7 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     :param running: boolean flag whether running containers should be listed
     :return: None
     """
-    click.secho("CSLE emulations:", fg="black", bold=True)
+    click.secho("CSLE emulations:", fg="magenta", bold=True)
     emulations = MetastoreFacade.list_emulations()
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
     if all or not stopped:
@@ -295,7 +296,7 @@ def list_networks() -> None:
 
     :return: None
     """
-    click.secho("CSLE networks:", fg="black", bold=True)
+    click.secho("CSLE networks:", fg="magenta", bold=True)
     networks = ContainerManager.list_all_networks()
     for net in networks:
         click.secho(net, fg="green", bold=True)
@@ -307,7 +308,7 @@ def list_all_containers() -> None:
 
     :return: None
     """
-    click.secho("CSLE Docker containers:", fg="black", bold=True)
+    click.secho("CSLE Docker containers:", fg="magenta", bold=True)
     running_containers = ContainerManager.list_all_running_containers()
     stopped_containers = ContainerManager.list_all_stopped_containers()
     containers = running_containers + stopped_containers
@@ -324,7 +325,7 @@ def list_running_containers() -> None:
 
     :return: None
     """
-    click.secho("CSLE running Docker containers:", fg="black", bold=True)
+    click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_running_containers()
     for c in containers:
         click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [running]", fg="green", bold=True)
@@ -336,7 +337,7 @@ def list_stopped_containers() -> None:
 
     :return: None
     """
-    click.secho("CSLE stopped Docker containers:", fg="black", bold=True)
+    click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_stopped_containers()
     for c in containers:
         click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [stopped]", fg="red", bold=True)
@@ -348,7 +349,7 @@ def list_images() -> None:
 
     :return: None
     """
-    click.secho("CSLE built Docker images:", fg="black", bold=True)
+    click.secho("CSLE built Docker images:", fg="magenta", bold=True)
     image_names=ContainerManager.list_all_images()
     for img in image_names:
         click.secho(img, fg="green", bold=True)
@@ -383,6 +384,9 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
     click.secho(f"Containers:", fg="yellow", bold=True)
     for c in emulation_env_config.containers_config.containers:
         click.secho(f"{c.name} {','.join(c.get_ips())}", fg="blue", bold=True)
+    click.secho(f"Admin login:", fg="yellow", bold=True)
+    click.secho(f"Username:{constants.CSLE_ADMIN.USER}", fg="blue", bold=True)
+    click.secho(f"Password:{constants.CSLE_ADMIN.PW}", fg="blue", bold=True)
     click.secho(f"Vulnerabilities:", fg="yellow", bold=True)
     for vuln in emulation_env_config.vuln_config.vulnerabilities:
         click.secho(f"{vuln.vuln_type} {vuln.ip}", fg="blue", bold=True)

@@ -11,6 +11,20 @@ This directory contains scripts, configurations, and tools related to emulation 
 </p>
 
 ## Installation
+To install all images and emulations, run:
+```bash
+make build
+```
+
+To remove all images and all emulations, run: 
+```bash
+make rm
+```
+
+For more detailed information about installation of images, see ([README](./base_images/README.MD)), 
+([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
+
+### Setup Docker
 
 The emulations are built around Docker containers and virtual networking. 
 A prerequisite is to have Docker installed:
@@ -39,6 +53,10 @@ Save and close the file.
 sudo update-grub
 ```
 4. The changes take effect when the system is rebooted.
+
+### Install Emulation System
+
+
 
 ## Author & Maintainer
 

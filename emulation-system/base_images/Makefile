@@ -51,49 +51,49 @@ pengine_exploit_base:
 
 # Targets for removing all of the base images
 rm_kali_base:
-	-docker rmi $(PROJECT)kali_base:$(VERSION)
+	-docker rmi $(PROJECT)/kali_base:$(VERSION)
 
 rm_ubuntu_20_base:
-	-docker rmi $(PROJECT)ubuntu_20_base:$(VERSION)
+	-docker rmi $(PROJECT)/ubuntu_20_base:$(VERSION)
 
 rm_ubuntu_14_base:
-	-docker rmi $(PROJECT)ubuntu_14_base:$(VERSION)
+	-docker rmi $(PROJECT)/ubuntu_14_base:$(VERSION)
 
 rm_ssh_base:
-	-docker rmi $(PROJECT)ssh_base:$(VERSION)
+	-docker rmi $(PROJECT)/ssh_base:$(VERSION)
 
 rm_samba_base:
-	-docker rmi $(PROJECT)samba_base:$(VERSION)
+	-docker rmi $(PROJECT)/samba_base:$(VERSION)
 
 rm_shellshock_base:
-	-docker rmi $(PROJECT)shellshock_base:$(VERSION)
+	-docker rmi $(PROJECT)/shellshock_base:$(VERSION)
 
 rm_sql_injection_base:
-	-docker rmi $(PROJECT)sql_injection_base:$(VERSION)
+	-docker rmi $(PROJECT)/sql_injection_base:$(VERSION)
 
 rm_debian_jessie_base:
-	-docker rmi $(PROJECT)debian_jessie_base:$(VERSION)
+	-docker rmi $(PROJECT)/debian_jessie_base:$(VERSION)
 
 rm_cve_2015_3306_base:
-	-docker rmi $(PROJECT)cve_2015_3306_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_3306_base:$(VERSION)
 
 rm_cve_2015_1427_base:
-	-docker rmi $(PROJECT)cve_2015_1427_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_1427_base:$(VERSION)
 
 rm_cve_2016_10033_base:
-	-docker rmi $(PROJECT)cve_2016_10033_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2016_10033_base:$(VERSION)
 
 rm_cve_2010_0426_base:
-	-docker rmi $(PROJECT)cve_2010_0426_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2010_0426_base:$(VERSION)
 
 rm_cve_2015_5602_base:
-	-docker rmi $(PROJECT)cve_2015_5602_base:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2015_5602_base:$(VERSION)
 
 rm_blank_ubuntu_20:
-	-docker rmi $(PROJECT)blank_ubuntu_20:$(VERSION)
+	-docker rmi $(PROJECT)/blank_ubuntu_20:$(VERSION)
 
 rm_pengine_exploit_base:
-	-docker rmi $(PROJECT)pengine_exploit_base:$(VERSION)
+	-docker rmi $(PROJECT)/pengine_exploit_base:$(VERSION)
 
 # Build all of the base images sequentially
 build:

@@ -68,13 +68,16 @@ such as, web servers, databases, and an IDS.
 The simulation system implements a MDP/POMDP/Markov Game that can be used to 
 train defender policies using reinforcement learning. It exposes an OpenAI-gym interface.
 
-### Policy Validation System
+### Policy Examination System
 
-TODO
+The policy examination system is a system for interactive examination of  learned security policies. It allows a user to traverse episodes of
+Markov decision processes in a controlled manner and to track the actions triggered by security policies. Similar to a software 
+debugger, a user can continue or or halt an episode at any time step and inspect parameters and probability distributions  
+of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge cases.
 
 ### Monitoring System
 
-TODO
+The monitoring system allows to track the execution of running emulations and their resource consumptions.
 
 ## Features
 
@@ -125,6 +128,8 @@ TODO
 
 ## Installation
 
+Follow the instructions below to install CSLE.
+
 ### Install from source
 
 1. **Clone the repository**
@@ -132,7 +137,7 @@ TODO
 git clone https://github.com/Limmen/clse
 ```
 
-2. **Install PostgreSQL as a metadata store (see ([README](metadata-store/README.MD)) for more information)**
+2. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
@@ -150,8 +155,17 @@ git clone https://github.com/Limmen/clse
       4. Restart postgres with the command `sudo service postgresql restart`
     - Create database and tables:
      ```bash
-     sudo psql -U postgres -a -f metadata-store/create_tables.sql
+     sudo psql -U postgres -a -f metastore/create_tables.sql
      ```
+     Alternatively:
+    ```bash
+     cd metastore; make build
+     ```
+   - To reset the metastore, run:
+    ```bash
+     cd metastore; make clean
+     ```
+   and then rebuild it with the commands above.
 
 3. **Install the simulation system**
     - Install Python 3.8 or higher:
@@ -181,9 +195,9 @@ git clone https://github.com/Limmen/clse
       ```bash
       sudo chmod u+x bin/csle
       ```
-    - Add the CLI tool to the $PATH environment variable
+    - Add the CLI tool to the $PATH environment variable (replace `/path/to` with the full path)
       ```bash
-      export PATH=bin/:$PATH
+      export PATH=/path/to/csle/bin/:$PATH
       ```
     - To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/bin/$PATH`
 
@@ -205,18 +219,64 @@ git clone https://github.com/Limmen/clse
       cd emulation-system/derived_images
       make build
       ```
-   - Install emulation envs (see ([README](emulation-system/envs/README.MD)) for more information)
-     ```bash
-     cd emulation-system/envs
-     make install
-     ```      
+    - Install emulation envs (see [README](emulation-system/envs/README.MD) for more information)
+      ```bash
+      cd emulation-system/envs
+      make install
+      ```
+    - Alternatively you can install everything at once (assuming you have already installed Docker and the metastore) 
+     by running the commands:
+      ```bash
+      cd emulation-system
+      make build
+      ```   
 
 6. **Install the monitoring system**
-       - TODO
+   - To build the webapp used in the monitoring system and in the policy examination system 
+   you need node.js and npm installed, to install node and npm execute:
+      ```bash
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
+      command -v nvm # Verify nvm installation
+      nvm install node # Install node
+      npm install -g npm # Update npm
+      node -v # Verify version of node
+      npm -v # Verify version of npm
+      ```
+   - Install the monitoring system and associated tools:
+    ```bash
+      cd monitoring-system
+      chmod u+x install.sh
+      ./install.sh
+    ```
+   - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
+    ```bash
+      cd monitoring-system
+      chmod u+x run_all.sh
+      ./run_all.sh
+    ```
+    
+7. **Install the policy examination system** 
+   - Build the policy examination system (assuming that node and npm is already installed) (for more instructions see [README](policy-examination-system/README.MD)):
+   ```bash
+   cd policy-examination-system
+   ./install_csle_pes.sh   
+   ```
+   - Start the policy examination system:
+   ```bash
+   cd policy-examination-system/csle_pvs/server
+   nohup python server.py &  
+   ```
 
-7. **Install the policy validation system**
- - TODO
- 
+## Uninstall
+
+```bash
+csle rm all
+csle em all clean
+pip uninstall gym-csle-ctf
+pip uninstall csle-common
+cd emulation-system && make rm
+cd metastore; make clean
+```
 
 ## Quickstart
 
@@ -285,7 +345,7 @@ For documentation, see the README.md files inside each sub-directory,
 - **Simulation System** ([simulation-system](./simulation-system)).
 - **Monitoring System** ([monitoring-system](./monitoring-system)).
 - **Policy Examination System** ([policy-examination-system](./policy-examination-system)).
-- **Metadata store** ([metadata-store](./metadata-store)).
+- **Metastore** ([metastore](./metastore)).
 - **General Documentation** ([docs](./docs)).
 
 ## Video tutorial
@@ -302,7 +362,7 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2021, Kim Hammar
+(C) 2022, Kim Hammar
 
 ## Publications
 

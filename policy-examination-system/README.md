@@ -16,9 +16,9 @@ A system for validating automated security policies
 
 Start the `csle_pvs` webapp:
 ```bash
-./install_csle_pvs.sh  # Installs the csle pvs webapp
+le_pvs.sh  # Installs the csle pes webapp
 cd csle_pvs/server
-nohup python server.py & # Deploys the csle pvs webbapp
+nohup python server.py & # Deploys the csle pes webbapp
 ```
 
 When everything is running, use the following command to setup tunnels:
