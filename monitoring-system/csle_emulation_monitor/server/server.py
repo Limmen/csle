@@ -25,11 +25,12 @@ def stopped_environments():
     stopped_emulations = []
     running_emulations = []
     for em in all_emulations:
-        if em[1] in rc_emulations:
-            running_emulations.append(em[2])
+        if em.name in rc_emulations:
+            running_emulations.append(em)
         else:
-            stopped_emulations.append(em[2])
-    response = jsonify(stopped_emulations)
+            stopped_emulations.append(em)
+    emulation_dicts = list(map(lambda x: x.to_dict(), stopped_emulations))
+    response = jsonify(emulation_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

@@ -23,6 +23,18 @@ class NodeTrafficConfig:
         self.target_hosts = target_hosts
         self.client = client
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["ip"] = self.ip
+        d["commands"] = self.commands
+        d["jumphosts"] = self.jumphosts
+        d["target_hosts"] = self.target_hosts
+        d["client"] = self.client
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

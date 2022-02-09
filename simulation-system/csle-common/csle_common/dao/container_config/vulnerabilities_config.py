@@ -15,6 +15,14 @@ class VulnerabilitiesConfig:
         """
         self.vulnerabilities = vulnerabilities
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["vulnerabilities"] = list(map(lambda x: x.to_dict(), self.vulnerabilities))
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

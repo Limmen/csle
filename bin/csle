@@ -8,8 +8,6 @@ To see options, run:
 """
 from typing import List, Tuple
 import click
-import jsonpickle
-import json
 import os
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
@@ -66,9 +64,7 @@ def em(name: str, cmd: str, path:str) -> None:
     """
     if name == "all":
         emulations = MetastoreFacade.list_emulations()
-        for em in emulations:
-            emulation_config_json_str = json.dumps(em[2], indent=4, sort_keys=True)
-            emulation_env_config: EmulationEnvConfig = jsonpickle.decode(emulation_config_json_str)
+        for emulation_env_config in emulations:
             if cmd == "":
                 print_emulation_config(emulation_env_config)
             elif cmd == "run":
@@ -82,12 +78,10 @@ def em(name: str, cmd: str, path:str) -> None:
             else:
                 click.secho(f"cmd: {cmd} not recognized", fg="red", bold=True)
     else:
-        emulation = MetastoreFacade.get_emulation(name=name)
-        if emulation is None:
+        emulation_env_config = MetastoreFacade.get_emulation(name=name)
+        if emulation_env_config is None:
             click.secho(f"emulation: {name} not recognized", fg="red", bold=True)
         else:
-            emulation_config_json_str = json.dumps(emulation[2], indent=4, sort_keys=True)
-            emulation_env_config: EmulationEnvConfig = jsonpickle.decode(emulation_config_json_str)
             if cmd == "":
                 print_emulation_config(emulation_env_config)
             elif cmd == "run":
@@ -114,7 +108,7 @@ def run_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
-def separate_running_and_stopped_emulations(emulations : List) -> Tuple[List, List]:
+def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig]) -> Tuple[List[str], List[str]]:
     """
     Partitions the set of emulations into a set of running emulations and a set of stopped emulations
 
@@ -125,10 +119,10 @@ def separate_running_and_stopped_emulations(emulations : List) -> Tuple[List, Li
     stopped_emulations = []
     running_emulations = []
     for em in emulations:
-        if em[1] in rc_emulations:
-            running_emulations.append(em[1])
+        if em.name in rc_emulations:
+            running_emulations.append(em.name)
         else:
-            stopped_emulations.append(em[1])
+            stopped_emulations.append(em.name)
     return running_emulations, stopped_emulations
 
 

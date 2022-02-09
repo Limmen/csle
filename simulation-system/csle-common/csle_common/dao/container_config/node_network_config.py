@@ -104,6 +104,42 @@ class NodeNetworkConfig:
         self.packet_overhead_bytes = packet_overhead_bytes
         self.cell_overhead_bytes = cell_overhead_bytes
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["interface"] = self.interface
+        d["limit_packets_queue"] = self.limit_packets_queue
+        d["packet_delay_ms"] = self.packet_delay_ms
+        d["packet_delay_jitter_ms"] = self.packet_delay_jitter_ms
+        d["packet_delay_correlation_percentage"] = self.packet_delay_correlation_percentage
+        d["packet_delay_distribution"] = self.packet_delay_distribution.name
+        d["packet_loss_type"] = self.packet_loss_type
+        d["packet_loss_rate_random_percentage"] = self.packet_loss_rate_random_percentage
+        d["packet_loss_random_correlation_percentage"] = self.packet_loss_random_correlation_percentage
+        d["loss_state_markov_chain_p13"] = self.loss_state_markov_chain_p13
+        d["loss_state_markov_chain_p31"] = self.loss_state_markov_chain_p31
+        d["loss_state_markov_chain_p32"] = self.loss_state_markov_chain_p32
+        d["loss_state_markov_chain_p23"] = self.loss_state_markov_chain_p23
+        d["loss_state_markov_chain_p14"] = self.loss_state_markov_chain_p14
+        d["loss_gemodel_p"] = self.loss_gemodel_p
+        d["loss_gemodel_r"] = self.loss_gemodel_r
+        d["loss_gemodel_h"] = self.loss_gemodel_h
+        d["loss_gemodel_k"] = self.loss_gemodel_k
+        d["packet_corrupt_percentage"] = self.packet_corrupt_percentage
+        d["packet_corrupt_correlation_percentage"] = self.packet_corrupt_correlation_percentage
+        d["packet_duplicate_percentage"] = self.packet_duplicate_percentage
+        d["packet_duplicate_correlation_percentage"] = self.packet_duplicate_correlation_percentage
+        d["packet_reorder_percentage"] = self.packet_reorder_percentage
+        d["packet_reorder_correlation_percentage"] = self.packet_reorder_correlation_percentage
+        d["packet_reorder_gap"] = self.packet_reorder_gap
+        d["rate_limit_mbit"] = self.rate_limit_mbit
+        d["packet_overhead_bytes"] = self.packet_overhead_bytes
+        d["cell_overhead_bytes"] = self.cell_overhead_bytes
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the DTO

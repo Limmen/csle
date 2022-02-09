@@ -36,6 +36,19 @@ class NodeContainerConfig:
         """
         return list(map(lambda x: x[0], self.ips_and_networks))
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["ips_and_networks"] = list(map(lambda x: (x[0], x[1].to_dict()), self.ips_and_networks))
+        d["version"] = self.version
+        d["minigame"] = self.minigame
+        d["restart_policy"] = self.restart_policy
+        d["suffix"] = self.suffix
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

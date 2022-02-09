@@ -29,6 +29,18 @@ class ContainersConfig:
         self.vulnerable_nodes = vulnerable_nodes
         self.networks = networks
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["agent_ip"] = self.agent_ip
+        d["router_ip"] = self.router_ip
+        d["networks"] = list(map(lambda x: x.to_dict(), self.networks))
+        d["ids_enabled"] = self.ids_enabled
+        d["vulnerable_nodes"] = self.vulnerable_nodes
+        d["containers"] = list(map(lambda x: x.to_dict(), self.containers))
+        return d
 
     def __str__(self) -> str:
         """

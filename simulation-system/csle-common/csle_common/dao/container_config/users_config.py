@@ -14,6 +14,15 @@ class UsersConfig:
         """
         self.users = users
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["users"] = list(map(lambda x: x.to_dict(), self.users))
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

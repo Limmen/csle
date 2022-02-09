@@ -31,6 +31,18 @@ class NodeResourcesConfig:
         return list(map(lambda x: x[0], self.ips_and_network_configs))
 
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["container_name"] = self.container_name
+        d["ips_gw_default_policy_networks"] = list(map(lambda x: (x[0], x[1].to_dict()), self.ips_and_network_configs))
+        d["num_cpus"] = self.num_cpus
+        d["available_memory_gb"] = self.available_memory_gb
+        return d
+
+
     def __str__(self) -> str:
         """
         :return: a string representation of the node's resources

@@ -77,8 +77,14 @@ class ContainerGenerator:
                     raise AssertionError("Invalid container config")
 
             container_name, container_version = container
-            container_cfg = NodeContainerConfig(name=container_name, internal_network=network, version=container_version,
-                                                level=level, internal_ip=ip, minigame = minigame)
+            suffix = 1
+            for c in container_configs:
+                if c.name == container_name:
+                    suffix += 1
+            container_cfg = NodeContainerConfig(name=container_name, internal_network=network,
+                                                version=container_version,
+                                                level=level, minigame = minigame, suffix=f"_{suffix}",
+                                                restart_policy=constants.DOCKER.ON_FAILURE_3)
             container_configs.append(container_cfg)
 
         subnet_mask = subnet_prefix + "0/24"

@@ -26,6 +26,7 @@ from csle_common.envs_model.config.generator.users_generator import UsersGenerat
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from csle_common.envs_model.config.generator.resource_constraints_generator import ResourceConstraintsGenerator
 from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
+from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 import csle_common.constants.constants as constants
 
 
@@ -102,7 +103,7 @@ class EnvConfigGenerator:
         return container_env_config.subnet_id_blacklist
 
     @staticmethod
-    def generate(container_env_config: ContainerEnvConfig) -> Tuple[CreatedEnvConfig]:
+    def generate(container_env_config: ContainerEnvConfig) -> CreatedEnvConfig:
         """
         Generates a new emulation environment (creates the artifacts)
 
@@ -140,6 +141,26 @@ class EnvConfigGenerator:
         return created_env_config
 
     @staticmethod
+    def get_free_network_ids(emulations: List[EmulationEnvConfig]) -> List[int]:
+        """
+        Returns a list of free network ids
+
+        :param emulations: list of installed emulations
+        :return: list of free network ids
+        """
+        network_ids = list(range(2,254))
+        occupied_network_ids = []
+        for em in emulations:
+            for net in em.containers_config.networks:
+                net_id = net.subnet_prefix.split(".")[-1]
+                occupied_network_ids.append(net_id)
+        free_network_ids = []
+        for nid in network_ids:
+            if nid not in occupied_network_ids:
+                free_network_ids.append(int(nid))
+        return free_network_ids
+
+    @staticmethod
     def create_env(container_env_config: ContainerEnvConfig) -> Tuple[str, id]:
         """
         Function that creates a new emulation environment given a configuration
@@ -148,15 +169,17 @@ class EnvConfigGenerator:
         :return: (subnet_prefix, subnet_id) of the created environment
         """
 
-        EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
+        # EnvConfigGenerator.cleanup_env_config(path=container_env_config.path)
 
         networks, network_ids = ContainerManager.list_docker_networks()
         running_containers = EnvConfigGenerator.list_running_containers()
-        networks_in_use, network_ids_in_use = EnvConfigGenerator.find_networks_in_use(containers=running_containers)
-
-        available_network_ids = list(filter(lambda x: x != 0 and
-                                                      (x not in network_ids_in_use and
-                                                       x not in container_env_config.subnet_id_blacklist), network_ids))
+        emulations = MetastoreFacade.list_emulations()
+        available_network_ids = EnvConfigGenerator.get_free_network_ids(emulations=emulations)
+        # networks_in_use, network_ids_in_use = EnvConfigGenerator.find_networks_in_use(containers=running_containers)
+        #
+        # available_network_ids = list(filter(lambda x: x != 0 and
+        #                                               (x not in network_ids_in_use and
+        #                                                x not in container_env_config.subnet_id_blacklist), network_ids))
         container_env_config.subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
         container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
                                                         container_env_config.max_num_nodes)

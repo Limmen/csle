@@ -16,6 +16,16 @@ class NodeUsersConfig:
         self.ip = ip
         self.users = users
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["ip"] = self.ip
+        d["users"] = self.users
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

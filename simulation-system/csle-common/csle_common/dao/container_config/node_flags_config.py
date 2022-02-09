@@ -17,6 +17,15 @@ class NodeFlagsConfig:
         # flags= [(name, path, id, root, score)]
         self.flags = flags
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["ip"] = self.ip
+        d["flags"] = self.flags
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

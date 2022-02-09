@@ -15,6 +15,15 @@ class ContainerNetwork:
         self.subnet_mask = subnet_mask
         self.subnet_prefix = subnet_prefix
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["subnet_mask"] = self.subnet_mask
+        d["subnet_prefix"] = self.subnet_prefix
+        return d
 
     def __str__(self):
         """

@@ -41,5 +41,5 @@ class RunningEnv:
         d["subnet_mask"] = self.subnet_mask
         d["num_containers"] = len(self.containers)
         d["level"] = self.level
-        d["config"] = self.config
+        d["config"] = self.config.to_dict()
         return d

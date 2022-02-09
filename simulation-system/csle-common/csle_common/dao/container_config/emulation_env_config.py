@@ -38,6 +38,23 @@ class EmulationEnvConfig:
         self.resources_config = resources_config
 
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["containers_config"] = self.containers_config.to_dict()
+        d["users_config"] = self.users_config.to_dict()
+        d["flags_config"] = self.flags_config.to_dict()
+        d["vuln_config"] = len(self.vuln_config.to_dict())
+        d["topology_config"] = self.topology_config.to_dict()
+        d["traffic_config"] = self.traffic_config.to_dict()
+        d["resources_config"] = self.resources_config.to_dict()
+        return d
+
+
     def __str__(self) -> str:
         """
         :return:  a string representation of the object

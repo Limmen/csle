@@ -17,6 +17,16 @@ class Topology:
         self.node_configs = node_configs
         self.subnetwork_masks = subnetwork_masks
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["subnetwork_masks"] = self.subnetwork_masks
+        d["node_configs"] = list(map(lambda x: x.to_dict(), self.node_configs))
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

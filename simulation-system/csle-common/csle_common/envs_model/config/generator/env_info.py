@@ -83,7 +83,7 @@ class EnvInfo:
             if config is None:
                 em_record = MetastoreFacade.get_emulation(name=em)
                 if em_record is not None:
-                    config = em_record[2]
+                    config = em_record
 
             p_env = RunningEnv(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
                                subnet_mask=subnet_mask, level= em_containers[0].level, config=config)

@@ -15,6 +15,14 @@ class FlagsConfig:
         """
         self.flags = flags
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["flags"] = list(map(lambda x: x.to_dict(), self.flags))
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

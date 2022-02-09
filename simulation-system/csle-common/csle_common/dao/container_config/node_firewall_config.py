@@ -43,6 +43,22 @@ class NodeFirewallConfig:
         """
         return list(filter(lambda x: x is not None, map(lambda x: x.ip, self.ips_gw_default_policy_networks)))
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["hostname"] = self.hostname
+        d["ips_gw_default_policy_networks"] = list(map(lambda x: x.to_dict(), self.ips_gw_default_policy_networks))
+        d["output_accept"] = self.output_accept
+        d["input_accept"] = self.input_accept
+        d["forward_accept"] = self.forward_accept
+        d["output_drop"] = self.output_drop
+        d["input_drop"] = self.input_drop
+        d["forward_drop"] = self.forward_drop
+        d["routes"] = self.routes
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

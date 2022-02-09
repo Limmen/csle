@@ -23,7 +23,18 @@ class DefaultNetworkFirewallConfig:
         self.default_forward = default_forward
         self.network = network
 
-
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["ip"] = self.ip
+        d["default_gw"] = self.default_gw
+        d["default_input"] = self.default_input
+        d["default_output"] = self.default_output
+        d["default_forward"] = self.default_forward
+        d["network"] = self.network
+        return d
 
     def __str__(self) -> str:
         """

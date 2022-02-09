@@ -15,6 +15,15 @@ class ResourcesConfig:
         """
         self.node_resources_configurations = node_resources_configurations
 
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["node_resources_configurations"] = list(map(lambda x: x.to_dict(), self.node_resources_configurations))
+        return d
+
     def __str__(self) -> str:
         """
         :return: a string representation of the DTO
