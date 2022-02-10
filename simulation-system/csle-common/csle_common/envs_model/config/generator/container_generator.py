@@ -48,6 +48,7 @@ class ContainerGenerator:
         vulnerabilities = vuln_cfg.vulnerabilities
         ids_enabled = True
 
+        networks = []
         for node in topology.node_configs:
 
             if agent_ip in node.get_ips():
@@ -74,7 +75,14 @@ class ContainerGenerator:
                     suffix += 1
             ips_and_networks = []
             for net_fw_config in node.ips_gw_default_policy_networks:
-                ips_and_networks.append((net_fw_config.ip, net_fw_config.network))
+                new_network = True
+                for net in networks:
+                    if net.subnet_prefix == net_fw_config.network.subnet_prefix:
+                        new_network == False
+                if new_network:
+                    networks.append(net_fw_config.network)
+                if net_fw_config.ip is not None:
+                    ips_and_networks.append((net_fw_config.ip, net_fw_config.network))
             node.hostname = f"{container_name}_{suffix}"
             container_cfg = NodeContainerConfig(name=container_name, ips_and_networks=ips_and_networks,
                                                 version=container_version,
@@ -84,7 +92,8 @@ class ContainerGenerator:
 
         containers_cfg = ContainersConfig(containers=container_configs, agent_ip=agent_ip,
                                           router_ip=router_ip, ids_enabled=ids_enabled,
-                                          vulnerable_nodes=vulnerable_nodes, networks = [])
+                                          vulnerable_nodes=list(map(lambda x: x.get_ips()[0], vulnerable_nodes)),
+                                          networks = networks)
         return containers_cfg
 
     @staticmethod

@@ -1,7 +1,7 @@
 from typing import List, Tuple, Set
 
 
-class ContainerEnvConfig:
+class EmulationEnvGenerationConfig:
     """
     A DTO representing the configuration of a dynamically created emulation environment
     """
@@ -17,7 +17,8 @@ class ContainerEnvConfig:
                  agent_containers : List[Tuple[str, str]] = None,
                  router_containers : List[Tuple[str, str]] = None,
                  path : str = "", subnet_id_blacklist : Set = None,
-                 subnet_prefix: str = "", subnet_id :int = -1, num_flags :int = -1, num_nodes : int = -1
+                 subnet_prefix: str = "", subnet_id :int = -1, num_flags :int = -1, num_nodes : int = -1,
+                 min_cpus: int =1, max_cpus : int = 1, min_mem_G: int = 4, max_mem_G: int = 4
                  ):
         """
         Initializes the object
@@ -42,6 +43,10 @@ class ContainerEnvConfig:
         :param subnet_id: the subnet id
         :param num_flags: the number of flags
         :param num_nodes: the number of nodes
+        :param min_cpus: the minimum number of CPUs per container
+        :param max_cpus: the maximum number of CPUs per container
+        :param min_mem_G: the minimum number of memory GB for each container
+        :param max_mem_G: the maximum number of memory GB for each container
         """
         self.min_num_users = min_num_users
         self.max_num_users = max_num_users
@@ -63,6 +68,10 @@ class ContainerEnvConfig:
         self.subnet_id = subnet_id
         self.num_flags = num_flags
         self.num_nodes = num_nodes
+        self.min_cpus = min_cpus
+        self.max_cpus = max_cpus
+        self.min_mem_G = min_mem_G
+        self.max_mem_G = max_mem_G
 
         if self.container_pool is None:
             self.container_pool = []
@@ -92,19 +101,21 @@ class ContainerEnvConfig:
                "pw_vuln_compatible_containers:{}, rce_vuln_compatible_containers:{}, " \
                "sql_injection_vuln_compatible_containers:{}, priv_esc_vuln_compatible_containers:{}" \
                "agent_containers:{},router_containers:{},path:{}," \
-               "subnet_id_blacklist:{}, subnet_prefix:{}, subnet_id:{}, num_flags:{}, num_nodes:{}".format(
+               "subnet_id_blacklist:{}, subnet_prefix:{}, subnet_id:{}, num_flags:{}, num_nodes:{}, min_cpus:{}, " \
+               "max_cpus:{}, min_mem_G:{}, max_mem_G:{}".format(
             self.min_num_users, self.max_num_users, self.min_num_flags, self.max_num_flags, self.min_num_nodes,
             self.max_num_nodes, self.container_pool, self.gw_vuln_compatible_containers,
             self.pw_vuln_compatible_containers, self.rce_vuln_compatible_containers,
             self.sql_injection_vuln_compatible_containers, self.priv_esc_vuln_compatible_containers,
             self.agent_containers, self.router_containers,
-            self.path, self.subnet_id_blacklist, self.subnet_prefix, self.subnet_id, self.num_flags, self.num_nodes)
+            self.path, self.subnet_id_blacklist, self.subnet_prefix, self.subnet_id, self.num_flags, self.num_nodes,
+            self.min_cpus, self.max_cpus, self.min_mem_G, self.max_mem_G)
 
-    def copy(self) -> "ContainerEnvConfig":
+    def copy(self) -> "EmulationEnvGenerationConfig":
         """
         :return: a copy of the object
         """
-        return ContainerEnvConfig(
+        return EmulationEnvGenerationConfig(
             min_num_users=self.min_num_users, max_num_users=self.max_num_users,  min_num_flags=self.min_num_flags,
             max_num_flags=self.max_num_flags, min_num_nodes=self.min_num_nodes, max_num_nodes=self.max_num_nodes,
             container_pool=self.container_pool, gw_vuln_compatible_containers=self.gw_vuln_compatible_containers,
@@ -115,5 +126,6 @@ class ContainerEnvConfig:
             agent_containers=self.agent_containers, router_containers=self.router_containers,
             path=self.path, subnet_id_blacklist=self.subnet_id_blacklist.copy(),
             subnet_prefix=self.subnet_prefix, subnet_id=self.subnet_id, num_flags=self.num_flags,
-            num_nodes=self.num_nodes
+            num_nodes=self.num_nodes, min_cpus=self.min_cpus, max_cpus=self.max_cpus,
+            min_mem_G=self.min_mem_G, max_mem_G=self.max_mem_G
         )

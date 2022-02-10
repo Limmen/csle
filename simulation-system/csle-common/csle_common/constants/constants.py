@@ -537,6 +537,7 @@ class DVWA_SQL_INJECTION:
     """
     SERVICE_NAME = "http"
     EXPLOIT_USER="pablo"
+    EXPLOIT_PW="0d107d09f5bbe40cade3de5c71e9e9b7"
     EXPLOIT_OUTPUT_FILENAME = "dvwa_sql_injection_result.txt"
     PORT=80
     VULNERABILITY_NAME="dvwa_sql_injection"
@@ -603,6 +604,7 @@ class COMMANDS:
     ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
     ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
+
 
 class ETC_HOSTS:
     """
@@ -712,6 +714,7 @@ class EXPLOIT_VULNERABILITES:
     PENGINE_EXPLOIT = "pengine-exploit"
     CVE_VULNS = [SAMBACRY_EXPLOIT, SHELLSHOCK_EXPLOIT, CVE_2015_3306, CVE_2015_1427, CVE_2016_10033, CVE_2010_0426,
                  CVE_2015_5602]
+    PRIVILEGE_ESC_VULNS = [CVE_2010_0426, CVE_2015_5602]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
 
@@ -950,7 +953,12 @@ class INFO_DICT:
 class DOCKER:
     CONTAINER_EXIT_STATUS = "exited"
     CONTAINER_CREATED_STATUS = "created"
+    IMAGE_CREATED = "Created"
+    IMAGE_OS = "Os"
+    IMAGE_SIZE = "Size"
+    IMAGE_ARCHITECTURE = "Architecture"
     REPO_TAGS = "RepoTags"
+    ENTRYPOINT = "Entrypoint"
     BASE_CONTAINER_TYPE = "base"
     CONTAINER_CONFIG_DIR = "dir"
     EMULATION = "emulation"

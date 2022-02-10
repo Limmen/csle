@@ -13,6 +13,9 @@ class MetastoreFacade:
 
     @staticmethod
     def list_emulations() -> List[EmulationEnvConfig]:
+        """
+        :return: A list of emulations in the metastore
+        """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
@@ -25,6 +28,12 @@ class MetastoreFacade:
 
     @staticmethod
     def get_emulation(name: str) -> Union[None, EmulationEnvConfig]:
+        """
+        Function for extracting the metadata of an emulation with a given name
+
+        :param name: the name of the emulation
+        :return: The emulation config or None if the emulation was not found
+        """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:

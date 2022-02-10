@@ -271,7 +271,8 @@ git clone https://github.com/Limmen/clse
 
 ```bash
 csle rm all
-csle em all clean
+csle clean emulations
+csle rm emulations
 pip uninstall gym-csle-ctf
 pip uninstall csle-common
 cd emulation-system && make rm
@@ -307,19 +308,19 @@ csle ls containers
 csle ls emulations --all
 ```
 
-- List running emulations
+- List running emulations only
 ```bash
-csle ls emulations --all
+csle ls emulations
 ```
 
-- Inspect a specific emulation
+- Inspect a specific emulation/container/image/network
 ```bash
-csle em <emulation-name>
+csle ls <name>
 ```
 
-- Run/Stop/Clean a specific emulation
+- Start/Stop/Clean a specific emulation/container
 ```bash
-csle em <emulation-name> run | stop | clean
+csle start| stop | clean <name>
 ```
 
 - Open a shell in a given container
@@ -327,14 +328,9 @@ csle em <emulation-name> run | stop | clean
 csle shell <container-name>
 ```
 
-- Remove a container, image, network, or all
+- Remove a container, image, network, emulation, or all
 ```bash
-csle rm <container-name> | <network-name> | <image-name> | all
-```
-
-- Start or stop a specific container
-```bash
-csle start | stop <container-name>
+csle rm <container-name> | <network-name> | <image-name> | <emulation-name> all
 ```
 
 ## Documentation

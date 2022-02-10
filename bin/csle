@@ -6,14 +6,15 @@ CSLE runner
 To see options, run:
 `csle --help`
 """
-from typing import List, Tuple
+from typing import List, Tuple, Union
 import click
 import os
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
+from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
+from csle_common.dao.container_config.container_network import ContainerNetwork
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 
@@ -21,12 +22,23 @@ import csle_common.constants.constants as constants
 @click.group()
 def commands() -> None:
     """
-    Represents a command group
-
-    :return: None
+    CSLE CLI Tool
     """
     pass
 
+
+@click.argument('path', default="")
+@click.argument('emulation', default="")
+@click.command(help="emulation path")
+def materialize(emulation: str, path: str) -> None:
+    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    if emulation_env_config is None:
+        click.secho(f"Emulation: {emulation} not found", fg="red", bold=True)
+    else:
+        if path != "":
+            materialize_emulation(emulation_env_config, path=path)
+        else:
+            click.secho(f"No path specified", fg="red", bold=True)
 
 @click.argument('container', default="")
 @click.command(help="container-name")
@@ -45,29 +57,33 @@ def shell(container: str) -> None:
             break
     if container_found:
         cmd = f"docker exec -it {container} /bin/bash"
-        click.secho(f"To open a shell in container:{container}, run: '{cmd}'", fg="green", bold=True)
+        click.secho(f"To open a shell in container:{container}, run: '{cmd}'", bold=False)
     else:
-        click.secho(f"Container: {container} not found among running containers", fg="red", bold=True)
+        click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
 
 
+@click.argument('max_mem', default=4, type=int)
+@click.argument('min_mem', default=4, type=int)
+@click.argument('max_cpus', default=1, type=int)
+@click.argument('min_cpus', default=1, type=int)
 @click.argument('max_nodes', default=10, type=int)
 @click.argument('min_nodes', default=4, type=int)
 @click.argument('max_flags', default=5, type=int)
 @click.argument('min_flags', default=1, type=int)
 @click.argument('max_users', default=5, type=int)
 @click.argument('min_users', default=1, type=int)
+@click.argument('num_envs', default=1, type=int)
 @click.argument('name', default="", type=str)
 @click.command(help="name min_users max_users min_flags max_flags min_nodes max_nodes")
-def gen(name: str, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
-        max_nodes: int) -> None:
+def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
+        max_nodes: int, min_cpus: int, max_cpus: int, min_mem: int, max_mem: int) -> None:
     if name == "":
-        click.secho(f"Please specify a name of the emulation to generate", fg="red", bold=True)
+        click.secho(f"Please specify a name of the emulation to generate", fg="red", bold=False)
         return
 
     click.secho(f"Generating a random emulation configuration with {min_nodes}-{max_nodes} nodes, "
-                f"{min_users}-{max_users} users, and {min_flags}-{max_flags} flags",
-                fg="green", bold=True)
-    container_env_config = ContainerEnvConfig(
+                f"{min_users}-{max_users} users, and {min_flags}-{max_flags} flags", bold=False)
+    container_env_config = EmulationEnvGenerationConfig(
         min_num_users=min_users, max_num_users=max_users, min_num_flags=min_flags,
         max_num_flags=max_flags, min_num_nodes=min_nodes, max_num_nodes=max_nodes,
         container_pool=constants.CONTAINER_POOLS.CONTAINER_POOL,
@@ -79,58 +95,14 @@ def gen(name: str, min_users: int, max_users: int, min_flags: int, max_flags: in
         agent_containers=constants.CONTAINER_POOLS.AGENT_CONTAINERS,
         router_containers=constants.CONTAINER_POOLS.ROUTER_CONTAINERS,
         path=util.default_output_dir(), subnet_id_blacklist=set(),
-        subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+        subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}", min_cpus=min_cpus, max_cpus=max_cpus,
+        min_mem_G=min_mem, max_mem_G=max_mem
     )
-    emulation_env_config = EnvConfigGenerator.create_env(container_env_config, name=name)
-    click.secho(f"Successfully created emulation with name: {emulation_env_config.name} and configuration:",
-                fg="green", bold=True)
-    print_emulation_config(emulation_env_config=emulation_env_config)
-
-@click.argument('path', default="")
-@click.argument('cmd', default="")
-@click.argument('name', default="")
-@click.command(help="emulation-name | all cmd path | ")
-def em(name: str, cmd: str, path:str) -> None:
-    """
-    Command for interacting with a given emulation
-
-    :param name: the name of the emulation
-    :param cmd: the command to run on the emulation
-    :param path: an optional path parameter that is used by some commands
-    :return: None
-    """
-    if name == "all":
-        emulations = MetastoreFacade.list_emulations()
-        for emulation_env_config in emulations:
-            if cmd == "":
-                print_emulation_config(emulation_env_config)
-            elif cmd == "run":
-                run_emulation(emulation_env_config)
-            elif cmd == "stop":
-                stop_emulation(emulation_env_config)
-            elif cmd == "clean":
-                clean_emulation(emulation_env_config)
-            elif cmd == "materialize":
-                materialize_emulation(emulation_env_config, path=path)
-            else:
-                click.secho(f"cmd: {cmd} not recognized", fg="red", bold=True)
-    else:
-        emulation_env_config = MetastoreFacade.get_emulation(name=name)
-        if emulation_env_config is None:
-            click.secho(f"emulation: {name} not recognized", fg="red", bold=True)
-        else:
-            if cmd == "":
-                print_emulation_config(emulation_env_config)
-            elif cmd == "run":
-                run_emulation(emulation_env_config)
-            elif cmd == "stop":
-                stop_emulation(emulation_env_config)
-            elif cmd == "clean":
-                clean_emulation(emulation_env_config)
-            elif cmd == "materialize":
-                materialize_emulation(emulation_env_config, path=path)
-            else:
-                click.secho(f"cmd: {cmd} not recognized", fg="red", bold=True)
+    created_emulations = EnvConfigGenerator.generate_envs(container_env_config, name=name, num_envs=num_envs)
+    for em in created_emulations:
+        click.secho(f"Successfully created emulation with name: {em.name} and configuration:",
+                    fg="green", bold=True)
+        print_emulation_config(emulation_env_config=em)
 
 
 def run_emulation(emulation_env_config: EmulationEnvConfig) -> None:
@@ -140,7 +112,7 @@ def run_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :param emulation_env_config: the config of the emulation to run
     :return: None
     """
-    click.secho(f"Starting emulation {emulation_env_config.name}", fg="green", bold=True)
+    click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.run_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config)
 
@@ -170,7 +142,7 @@ def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :param emulation_env_config: the configuration of the emulation to stop
     :return: None
     """
-    click.secho(f"Stopping emulation {emulation_env_config.name}", fg="green", bold=True)
+    click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
 
 
@@ -181,7 +153,7 @@ def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
-    click.secho(f"Cleaning emulation {emulation_env_config.name}", fg="green", bold=True)
+    click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.rm_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
@@ -195,8 +167,9 @@ def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -
     :param path: the path to materialize the emulation to
     :return: None
     """
-    path = os.path.join(util.default_output_dir(), path)
-    click.secho(f"Materialize emulation {emulation_env_config.name} to path:{path}", fg="green", bold=True)
+    path = os.path.join(os.getcwd(), path + constants.COMMANDS.SLASH_DELIM)
+    click.secho(f"Materialize emulation {emulation_env_config.name} to path:{path}{emulation_env_config.name}",
+                bold=False)
     EnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
@@ -211,10 +184,19 @@ def stop(entity: str) -> None:
     """
     if entity == "all":
         ContainerManager.stop_all_running_containers()
+        for emulation in MetastoreFacade.list_emulations():
+            stop_emulation(emulation_env_config=emulation)
     else:
         container_stopped = ContainerManager.stop_container(name=entity)
         if not container_stopped:
-            click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+            emulation = MetastoreFacade.get_emulation(name=entity)
+            if emulation is not None:
+                 stop_emulation(emulation)
+                 emulation_stopped = True
+            else:
+                emulation_stopped = False
+            if not emulation_stopped:
+                click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
 @click.argument('entity', default="")
@@ -228,10 +210,19 @@ def start(entity : str) -> None:
     """
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
+        for emulation in MetastoreFacade.list_emulations():
+            clean_emulation(emulation)
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
-            click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+            emulation_env_config = MetastoreFacade.get_emulation(name=entity)
+            if emulation_env_config is not None:
+                run_emulation(emulation_env_config)
+                emulation_started = True
+            else:
+                emulation_started =False
+            if not emulation_started:
+                click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
 @click.argument('entity', default="")
@@ -252,6 +243,28 @@ def rm(entity : str) -> None:
     else:
         rm_name(name=entity)
 
+@click.argument('entity', default="")
+@click.command(help="all | containers | emulations | name")
+def clean(entity : str) -> None:
+    """
+    Removes a container, a network, an image, all networks, all images, or all containers
+
+    :param entity: the container(s), network(s), or images(s) to remove
+    :return: None
+    """
+    if entity == "all":
+        ContainerManager.stop_all_running_containers()
+        ContainerManager.rm_all_stopped_containers()
+        for emulation in MetastoreFacade.list_emulations():
+            clean_emulation(emulation_env_config=emulation)
+    elif entity == "containers":
+        ContainerManager.stop_all_running_containers()
+        ContainerManager.rm_all_stopped_containers()
+    elif entity == "emulations":
+        for emulation in MetastoreFacade.list_emulations():
+            clean_emulation(emulation_env_config=emulation)
+    else:
+        clean_name(name=entity)
 
 
 @click.argument('entity', default='all', type=str)
@@ -285,8 +298,69 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     elif entity == "emulations":
         list_emulations(all=all, stopped=stopped)
     else:
-        click.secho(f"entity: {entity} is not recognized, valid values are: containers | networks | images | all",
-                    fg="red", bold=True)
+        container = get_running_container(name=entity)
+        if container is not None:
+            print_running_container(container=container)
+        else:
+            container = get_stopped_container(name=entity)
+            if container is not None:
+                print_stopped_container(container=container)
+            else:
+                emulation_env_config = MetastoreFacade.get_emulation(name=entity)
+                if emulation_env_config is not None:
+                    print_emulation_config(emulation_env_config=emulation_env_config)
+                else:
+                    net = get_network(name=entity)
+                    if net is not None:
+                        print_network(net=net)
+                    else:
+                        img = get_image(name=entity)
+                        if img is not None:
+                            print_img(img=img)
+                        else:
+                            click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+
+
+def print_running_container(container) -> None:
+    """
+    Utility function for printing information about a running container
+
+    :param container: the container to print
+    :return: None
+    """
+    click.secho(container[0] + f" image:{container[1]}, ip: {container[2]} {click.style('[running]', fg='green')}",
+                bold=False)
+
+
+def print_stopped_container(container) -> None:
+    """
+    Utiltiy function for printing information about a stopped container
+
+    :param container: the stopped container to print
+    :return: None
+    """
+    click.secho(container[0] + f" image:{container[1]}, ip: {container[2]} {click.style('[stopped]', fg='red')}",
+                bold=False)
+
+
+def print_network(net: ContainerNetwork) -> None:
+    """
+    Utility function for printing a given network
+
+    :param net: the network to print
+    :return: None
+    """
+    click.secho(f"name:{net.name}, subnet_mask:{net.subnet_mask}, subnet_prefix:{net.subnet_prefix}", bold=False)
+
+
+def print_img(img: Tuple[str, str, str, str, str]) -> None:
+    """
+    Utility function for printing a given Docker image
+
+    :param img: the image to print
+    :return: None
+    """
+    click.secho(f"name:{img[0]}, size:{img[4]}B", bold=False)
 
 
 def list_all(all: bool = False, running : bool = True, stopped: bool = False) -> None:
@@ -318,10 +392,10 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
     if all or not stopped:
         for em in running_emulations:
-            click.secho(em + " [running]", fg="green", bold=True)
+            click.secho(em + f" {click.style('[running]', fg='green')}", bold=False)
     if all or stopped:
         for em in stopped_emulations:
-            click.secho(em + " [stopped]", fg="red", bold=True)
+            click.secho(em + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_networks() -> None:
@@ -331,14 +405,61 @@ def list_networks() -> None:
     :return: None
     """
     click.secho("CSLE networks:", fg="magenta", bold=True)
-    networks = ContainerManager.list_all_networks()
-    for net in networks:
-        click.secho(net, fg="green", bold=True)
+    active_networks_names = ContainerManager.list_all_networks()
+    emulations = MetastoreFacade.list_emulations()
+    for em in emulations:
+        for net in em.containers_config.networks:
+            if net.name in active_networks_names:
+                print_network(net)
+
+
+def get_network(name: str) -> Union[None, ContainerNetwork]:
+    """
+    Utility function for getting a given network
+
+    :param name: the name of the network to get
+    :return: None if the network was not found and otherwise returns the network
+    """
+    active_networks_names = ContainerManager.list_all_networks()
+    emulations = MetastoreFacade.list_emulations()
+    for em in emulations:
+        for net in em.containers_config.networks:
+            if net.name == name and net.name in active_networks_names:
+                return net
+    return None
+
+
+def get_running_container(name: str) -> Union[None, Tuple[str, str, bool]]:
+    """
+    Utility function for getting a running container with a given name
+
+    :param name: the name of the container to get
+    :return: None if the container was not found and otherwise returns the container
+    """
+    running_containers = ContainerManager.list_all_running_containers()
+    for c in running_containers:
+        if name == c[0]:
+            return c
+    return None
+
+
+def get_stopped_container(name: str) -> Union[None, Tuple[str, str, bool]]:
+    """
+    Utility function for stopping a given container
+
+    :param name: the name of the container to stop
+    :return: None if the container was not found and true otherwise
+    """
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    for c in stopped_containers:
+        if name == c[0]:
+            return c
+    return None
 
 
 def list_all_containers() -> None:
     """
-    Listst all containers, both running and stopped
+    Lists all containers, both running and stopped
 
     :return: None
     """
@@ -348,9 +469,9 @@ def list_all_containers() -> None:
     containers = running_containers + stopped_containers
     for c in containers:
         if c in running_containers:
-            click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [running]", fg="green", bold=True)
+            print_running_container(c)
         else:
-            click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [stopped]", fg="red", bold=True)
+            print_stopped_container(c)
 
 
 def list_running_containers() -> None:
@@ -362,7 +483,7 @@ def list_running_containers() -> None:
     click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_running_containers()
     for c in containers:
-        click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [running]", fg="green", bold=True)
+        print_running_container(c)
 
 
 def list_stopped_containers() -> None:
@@ -374,7 +495,7 @@ def list_stopped_containers() -> None:
     click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_stopped_containers()
     for c in containers:
-        click.secho(c[0] + f" image:{c[1]}, ip: {c[2]} [stopped]", fg="red", bold=True)
+        print_stopped_container(c)
 
 
 def list_images() -> None:
@@ -386,31 +507,66 @@ def list_images() -> None:
     click.secho("CSLE built Docker images:", fg="magenta", bold=True)
     image_names=ContainerManager.list_all_images()
     for img in image_names:
-        click.secho(img, fg="green", bold=True)
+        print_img(img)
+
+
+def get_image(name: str) -> Union[None, Tuple[str,str,str,str,str]]:
+    """
+    Utility function for getting metadata of a docker image
+    :param name: the name of the image to get
+    :return: None or the image if it was found
+    """
+    image_names=ContainerManager.list_all_images()
+    for img in image_names:
+        if img == name:
+            return img
+    return None
 
 
 def rm_name(name: str) -> None:
     """
-    Removes a given container or image or network
+    Removes a given container or image or network or emulation
 
     :param name: the name of the image, network, or container to remove
     :return: None
     """
     container_removed = ContainerManager.rm_container(name)
-    network_removed = False
     if not container_removed:
         network_removed = ContainerManager.rm_network(name)
-    image_removed = False
-    if not network_removed:
-        image_removed = ContainerManager.rm_image(name)
-    if not image_removed:
-        emulation_removed = remove_emulation(name=name)
-    if not emulation_removed:
-        click.secho(f"name: {name} not recognized", fg="red", bold=True)
+        if not network_removed:
+            image_removed = ContainerManager.rm_image(name)
+            if not image_removed:
+                emulation_removed = remove_emulation(name=name)
+                if not emulation_removed:
+                    click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
-def remove_emulation(name):
-    click.secho(f"Removing emulation {name}", fg="green", bold=True)
+def clean_name(name: str) -> None:
+    """
+    Cleans a given container or emulation
+
+    :param name: the name of the container or emulation to clean
+    :return: None
+    """
+    container_stopped = ContainerManager.stop_container(name=name)
+    if container_stopped:
+        ContainerManager.rm_container(container_name=name)
+    else:
+        em = MetastoreFacade.get_emulation(name=name)
+        if em is not None:
+            clean_emulation(emulation_env_config=em)
+        else:
+            click.secho(f"name: {name} not recognized", fg="red", bold=True)
+
+
+def remove_emulation(name: str) -> bool:
+    """
+    Utility function for removing (uninstalling) an emulation
+
+    :param name: the name of the emulation to remove
+    :return: True if the emulation was removed, false otherwise
+    """
+    click.secho(f"Removing emulation {name}", bold=False)
     emulations = MetastoreFacade.list_emulations()
     for emulation in emulations:
         if emulation.name == name:
@@ -430,13 +586,13 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
     click.secho(f"Emulation name: {emulation_env_config.name}", fg="yellow", bold=True)
     click.secho(f"Containers:", fg="yellow", bold=True)
     for c in emulation_env_config.containers_config.containers:
-        click.secho(f"{c.name} {','.join(c.get_ips())}", fg="blue", bold=True)
+        click.secho(f"{c.name} {','.join(c.get_ips())}", bold=False)
     click.secho(f"Admin login:", fg="yellow", bold=True)
-    click.secho(f"Username:{constants.CSLE_ADMIN.USER}", fg="blue", bold=True)
-    click.secho(f"Password:{constants.CSLE_ADMIN.PW}", fg="blue", bold=True)
+    click.secho(f"Username:{constants.CSLE_ADMIN.USER}", bold=False)
+    click.secho(f"Password:{constants.CSLE_ADMIN.PW}", bold=False)
     click.secho(f"Vulnerabilities:", fg="yellow", bold=True)
     for vuln in emulation_env_config.vuln_config.vulnerabilities:
-        click.secho(f"{vuln.vuln_type} {vuln.ip}", fg="blue", bold=True)
+        click.secho(f"{vuln.vuln_type} {vuln.ip}", bold=False)
     click.secho(f"Resource constraints:", fg="yellow", bold=True)
     if emulation_env_config.resources_config is not None:
         for rc in emulation_env_config.resources_config.node_resources_configurations:
@@ -449,14 +605,14 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
                     network_bandwidth = network_bandwidth + ", "
                 network_bandwidth = network_bandwidth + f"{interface} {bandwidth}Mbit/s"
             click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
-                        f"network:{network_bandwidth}", fg="blue", bold=True)
+                        f"network:{network_bandwidth}", bold=False)
     click.secho(f"Flags:", fg="yellow", bold=True)
     for flag in emulation_env_config.flags_config.flags:
-        click.secho(f"{flag.flags[0][0]} {flag.ip}", fg="blue", bold=True)
+        click.secho(f"{flag.flags[0][0]} {flag.ip}", bold=False)
     click.secho(f"Users:", fg="yellow", bold=True)
     for user in emulation_env_config.users_config.users:
         users = ",".join(list(map(lambda x: x[0], user.users)))
-        click.secho(f"{users} {user.ip}", fg="blue", bold=True)
+        click.secho(f"{users} {user.ip}", bold=False)
 
 
 # Adds the commands to the group
@@ -464,9 +620,10 @@ commands.add_command(ls)
 commands.add_command(rm)
 commands.add_command(stop)
 commands.add_command(start)
-commands.add_command(em)
+commands.add_command(materialize)
 commands.add_command(shell)
 commands.add_command(gen)
+commands.add_command(clean)
 
 
 # Script entrypoint

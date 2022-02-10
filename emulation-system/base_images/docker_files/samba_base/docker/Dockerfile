@@ -44,7 +44,7 @@ ADD docker_files/common/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.y
 
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-ADD docker_files/common/sshd_config /etc/ssh/sshd_config
+ADD docker_files/common/sshd_config_14 /etc/ssh/sshd_config
 RUN service ssh start
 
 # Setup password-less sudo

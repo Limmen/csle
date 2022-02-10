@@ -296,7 +296,20 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
         containers=containers,
         agent_ip=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}.1.191",
         router_ip=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}.2.10",
-        ids_enabled=True,
+        ids_enabled=True, vulnerable_nodes=[
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104"
+        ],
         networks=[
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
@@ -2997,7 +3010,8 @@ def default_vulns_config(network_id : int) -> VulnerabilitiesConfig:
         SQLInjectionVulnerabilityConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42",
             vuln_type=VulnType.SQL_INJECTION,
-            username="pablo", pw="0d107d09f5bbe40cade3de5c71e9e9b7", root=True),
+            username=constants.DVWA_SQL_INJECTION.EXPLOIT_USER, pw=constants.DVWA_SQL_INJECTION.EXPLOIT_PW,
+            root=True),
         RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37",
                                vuln_type=VulnType.RCE),
         RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82",
@@ -3008,13 +3022,15 @@ def default_vulns_config(network_id : int) -> VulnerabilitiesConfig:
                               vuln_type=VulnType.WEAK_PW, username="alan", pw="alan", root=False),
         PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
                                    vuln_type=VulnType.PRIVILEGE_ESCALATION,
-                                   username="alan", pw="alan", root=False, cve="2010-1427"),
+                                   username="alan", pw="alan", root=False,
+                                   cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426),
         PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
                               vuln_type=VulnType.WEAK_PW, username="donald", pw="donald",
                               root=False),
         PrivEscVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11",
                                    vuln_type=VulnType.PRIVILEGE_ESCALATION,
-                                   username="donald", pw="donald", root=False, cve="2015-5602"),
+                                   username="donald", pw="donald", root=False,
+                                   cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602),
         RceVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.104",
                                vuln_type=VulnType.RCE)
     ]

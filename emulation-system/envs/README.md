@@ -11,8 +11,6 @@ This folder contains emulation environments.
      - [level_5](./network_intrusion/ctf/001/level_5)
      - [level_6](./network_intrusion/ctf/001/level_6)
      - [level_7](./network_intrusion/ctf/001/level_7)
-     - [random](./network_intrusion/ctf/001/random)
-     - [./random_many](./network_intrusion/ctf/001/random_many)
 
 ## Useful commands:
 

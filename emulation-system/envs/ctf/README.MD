@@ -17,9 +17,7 @@ There are several versions and difficulty levels of the minigame. Specifically:
      - *Level 7* [level_7](001/level_7): An infrastructure with 15 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
      - *Level 8* [level_8](001/level_8): An infrastructure with 26 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
      - *Level 9* [./level_9](001/level_9): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
-     - *Level 10* [./level_10](001/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks     
-     - *Random* [random](001/random): Generates a random infrastructure with a specified number of nodes and vulnerabilities
-     - *Many Random* [random_many](./001/random_many): Generates several random infrastructures with specified number of nodes and vulnerabilities                          
+     - *Level 10* [./level_10](001/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks           
     
   
 ## Author & Maintainer
@@ -32,4 +30,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2022, Kim Hammar

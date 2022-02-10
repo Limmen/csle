@@ -1,6 +1,14 @@
 PROJECT=csle
 VERSION=0.0.1
 
+.PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_14_base ssh_base samba_base \
+	shellshock_base sql_injection_base \
+	debian_jessie_base cve_2015_3306_base cve_2015_1427_base cve_2016_10033_base cve_2010_0426_base cve_2015_5602_base \
+	blank_ubuntu_20 pengine_exploit_base rm_kali_base rm_ubuntu_20_base rm_ubuntu_14_base rm_ssh_base rm_samba_base \
+	rm_shellshock_base rm_sql_injection_base rm_debian_jessie_base rm_cve_2015_3306_base rm_cve_2015_1427_base \
+	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base \
+	rm_blank_ubuntu_20 rm_pengine_exploit_base
+
 all: build
 
 # Targets for building all of the base images

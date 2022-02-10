@@ -154,7 +154,7 @@ class ContainerManager:
 
 
     @staticmethod
-    def list_all_images() -> List[str]:
+    def list_all_images() -> List[Tuple[str, str, str, str, str]]:
         """
         A utility function for listing all csle images
 
@@ -163,8 +163,11 @@ class ContainerManager:
         client_1 = docker.from_env()
         images = client_1.images.list()
         images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
-        images_names = list(map(lambda x: x.attrs[constants.DOCKER.REPO_TAGS][0], images))
-        return images_names
+        images_names_created_os_architecture_size = list(
+            map(lambda x: (x.attrs[constants.DOCKER.REPO_TAGS][0],
+                           x.attrs[constants.DOCKER.IMAGE_CREATED], x.attrs[constants.DOCKER.IMAGE_OS],
+                           x.attrs[constants.DOCKER.IMAGE_ARCHITECTURE], x.attrs[constants.DOCKER.IMAGE_SIZE]), images))
+        return images_names_created_os_architecture_size
 
     @staticmethod
     def list_docker_networks() -> Tuple[List[str], List[int]]:
@@ -271,7 +274,7 @@ class ContainerManager:
         return False
 
     @staticmethod
-    def list_all_running_containers() -> List[str]:
+    def list_all_running_containers() -> List[Tuple[str, str, str]]:
         """
         Lists all running csle containers
 
@@ -292,7 +295,7 @@ class ContainerManager:
         return list(emulation_names)
 
     @staticmethod
-    def list_all_stopped_containers() -> List[str]:
+    def list_all_stopped_containers() -> List[Tuple[str, str, str]]:
         """
         Stops all stopped csle containers
 

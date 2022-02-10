@@ -1,6 +1,16 @@
 PROJECT=csle
 VERSION=0.0.1
 
+.PHONY: all build rm_image \
+	ftp_1 ftp_2 hacker_kali_1 honeypot_1 honeypot_2 ssh_1 ssh_2 ssh_3 telnet_1 telnet_2 telnet_3 router_1 \
+	router_2 samba_1 samba_2 shellshock_1 sql_injection_1 cve_2015_3306_1 cve_2015_1427_1 cve_2016_10033_1 \
+	cve_2010_0426_1 cve_2015_5602_1 client_1 blank_1 pengine_exploit_1 rm_ftp_1 rm_ftp_2 rm_hacker_kali_1
+	rm_honeypot_1 \
+	rm_honeypot_2 rm_ssh_1 rm_ssh_2 rm_ssh_3 rm_telnet_1 rm_telnet_2 rm_telnet_3 rm_router_1 \
+	rm_router_2 rm_samba_1 rm_samba_2 rm_shellshock_1 rm_sql_injection_1 rm_cve_2015_3306_1 rm_cve_2015_1427_1 \
+	rm_cve_2016_10033_1 \
+	rm_cve_2010_0426_1 rm_cve_2015_5602_1 rm_client_1 rm_blank_1 rm_pengine_exploit_1
+
 all: build
 
 # Targets for building all images

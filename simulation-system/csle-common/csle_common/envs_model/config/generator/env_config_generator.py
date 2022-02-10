@@ -16,7 +16,7 @@ from csle_common.dao.container_config.resources_config import ResourcesConfig
 from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.util.experiments_util import util
-from csle_common.dao.container_config.container_env_config import ContainerEnvConfig
+from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
@@ -57,52 +57,27 @@ class EnvConfigGenerator:
             EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
 
     @staticmethod
-    def generate_envs(container_env_config: ContainerEnvConfig, num_envs: int,
-                 cleanup_old_envs : bool = True, start_idx : int = 0) -> Set:
+    def generate_envs(container_env_config: EmulationEnvGenerationConfig, num_envs: int, name: str,
+                      start_idx : int = 0) -> List[EmulationEnvConfig]:
         """
         Generates a <num_envs> number of emulation environments
 
         :param container_env_config: the environment configuration
         :param num_envs: the number of environments
-        :param cleanup_old_envs: boolean flag whether to clean up old environments or not
+        :param name: the name of the emulation environment to create
         :param start_idx: the start idx of the first environment to create
         :return: the blacklist of subnet ids
         """
-        if cleanup_old_envs:
-            EnvConfigGenerator.cleanup_envs(path=util.default_output_dir())
-
-        envs_dirs_path = container_env_config.path
-
+        created_emulations = []
         for i in range(num_envs):
-            dir_name = "env_" + str(start_idx + i)
-            dir_path = os.path.join(envs_dirs_path, dir_name)
-            os.makedirs(dir_path)
-            env_path = os.path.join(envs_dirs_path, dir_name + constants.COMMANDS.SLASH_DELIM)
-            shutil.copyfile(util.default_container_makefile_template_path(out_dir=util.default_output_dir()),
-                            util.default_container_makefile_template_path(out_dir=env_path))
-            shutil.copyfile(util.default_makefile_template_path(out_dir=util.default_output_dir()),
-                            util.default_makefile_template_path(out_dir=env_path))
-            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_FLAGS_SCRIPT),
-                            os.path.join(env_path, constants.DOCKER.CREATE_FLAGS_SCRIPT))
-            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_TOPOLOGY_SCRIPT),
-                            os.path.join(env_path, constants.DOCKER.CREATE_TOPOLOGY_SCRIPT))
-            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_VULN_SCRIPT),
-                            os.path.join(env_path, constants.DOCKER.CREATE_VULN_SCRIPT))
-            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_USERS_SCRIPT),
-                            os.path.join(env_path, constants.DOCKER.CREATE_USERS_SCRIPT))
-            shutil.copyfile(os.path.join(envs_dirs_path, constants.DOCKER.CREATE_TRAFFIC_GENERATORS_SCRIPT),
-                            os.path.join(env_path, constants.DOCKER.CREATE_TRAFFIC_GENERATORS_SCRIPT))
             container_env_config_c = container_env_config.copy()
-            container_env_config_c.path = env_path
-            gen_subnet_prefix, subnet_id = EnvConfigGenerator.create_env(container_env_config_c)
-            container_env_config.subnet_id_blacklist.add(subnet_id)
-            os.rename(envs_dirs_path + constants.COMMANDS.SLASH_DELIM + dir_name, envs_dirs_path +
-                      constants.COMMANDS.SLASH_DELIM + dir_name + constants.COMMANDS.UNDERSCORE_DELIM
-                      + gen_subnet_prefix)
-        return container_env_config.subnet_id_blacklist
+            em_name = f"{name}_{start_idx + i}"
+            created_emulation=  EnvConfigGenerator.create_env(container_env_config_c, name=em_name)
+            created_emulations.append(created_emulation)
+        return created_emulations
 
     @staticmethod
-    def generate(container_env_config: ContainerEnvConfig, name: str) -> EmulationEnvConfig:
+    def generate(container_env_config: EmulationEnvGenerationConfig, name: str) -> EmulationEnvConfig:
         """
         Generates a new emulation environment (creates the artifacts)
 
@@ -118,7 +93,8 @@ class EnvConfigGenerator:
         vulnerabilities = VulnerabilityGenerator.generate(
             topology=topology, vulnerable_nodes = vulnerable_nodes, agent_ip=agent_ip,
             subnet_prefix=container_env_config.subnet_prefix,
-            num_flags=container_env_config.num_flags, access_vuln_types=[VulnType.WEAK_PW],
+            num_flags=container_env_config.num_flags,
+            access_vuln_types=[VulnType.WEAK_PW, VulnType.RCE, VulnType.SQL_INJECTION, VulnType.PRIVILEGE_ESCALATION],
             router_ip=router_ip)
 
         users = UsersGenerator.generate(max_num_users=container_env_config.max_num_users,
@@ -133,6 +109,8 @@ class EnvConfigGenerator:
             agent_ip=agent_ip, router_ip=router_ip, agent_containers=container_env_config.agent_containers,
             router_containers=container_env_config.router_containers,
             subnet_prefix=container_env_config.subnet_prefix, vulnerable_nodes = vulnerable_nodes)
+        resources = ResourceConstraintsGenerator.generate(containers_config=containers, min_cpus=1, max_cpus=1,
+                                                          min_mem_G=1, max_mem_G=2)
 
         agent_container_names = list(map(lambda x: x[0], container_env_config.agent_containers))
         gateway_container_names = list(map(lambda x: x[0], container_env_config.router_containers))
@@ -142,7 +120,7 @@ class EnvConfigGenerator:
                                             )
         emulation_env_config = EmulationEnvConfig(name=name,
             topology_config=topology, containers_config = containers, vuln_config=vulnerabilities,
-            users_config = users, flags_config = flags, traffic_config = traffic, resources_config=None)
+            users_config = users, flags_config = flags, traffic_config = traffic, resources_config=resources)
         return emulation_env_config
 
     @staticmethod
@@ -166,7 +144,7 @@ class EnvConfigGenerator:
         return free_network_ids
 
     @staticmethod
-    def create_env(container_env_config: ContainerEnvConfig, name: str) -> EmulationEnvConfig:
+    def create_env(container_env_config: EmulationEnvGenerationConfig, name: str) -> EmulationEnvConfig:
         """
         Function that creates a new emulation environment given a configuration
 
@@ -189,7 +167,6 @@ class EnvConfigGenerator:
         EnvConfigGenerator.install_emulation(config=emulation_env_config)
         return emulation_env_config
 
-
     @staticmethod
     def list_running_containers() -> List[str]:
         """
@@ -204,9 +181,8 @@ class EnvConfigGenerator:
         running_containers = list(filter(lambda x: x!= "", running_containers))
         return running_containers
 
-
     @staticmethod
-    def find_networks_in_use(containers: List[str]) -> Tuple[List[str], List[str]]:
+    def find_networks_in_use(containers: List[str]) -> Tuple[List[str], List[int]]:
         """
         Utility function for querying Docker to see which networks are currently in use
 
@@ -226,7 +202,6 @@ class EnvConfigGenerator:
                    network_ids_in_use.append(int(k.replace(f"{constants.CSLE.CSLE_NETWORK_PREFIX}_", "")))
 
         return networks_in_use, network_ids_in_use
-
 
     @staticmethod
     def create_container_dirs(container_config: ContainersConfig, resources_config: ResourcesConfig,
@@ -474,16 +449,21 @@ class EnvConfigGenerator:
         :param create_folder_makefile: whether to create the folder makefile or not
         :return: None
         """
-        if path == "":
-            path = util.default_emulation_config_path(out_dir=util.default_output_dir())
-        if not os.path.exists(path):
-            util.write_emulation_config_file(emulation_env_config, path)
+        if not os.path.exists(path+emulation_env_config.name):
+            os.makedirs(path+emulation_env_config.name)
 
-        container_dirs_path = util.default_containers_folders_path()
+        if not os.path.exists(path + emulation_env_config.name + constants.COMMANDS.SLASH_DELIM + \
+                              constants.DOCKER.EMULATION_ENV_CFG_PATH):
+            util.write_emulation_config_file(emulation_env_config, path + emulation_env_config.name
+                                             + constants.COMMANDS.SLASH_DELIM + \
+                                             constants.DOCKER.EMULATION_ENV_CFG_PATH)
+
+        container_dirs_path = path + emulation_env_config.name + constants.COMMANDS.SLASH_DELIM + \
+                              constants.DOCKER.CONTAINERS_DIR
         if not os.path.exists(container_dirs_path):
             EnvConfigGenerator.create_container_dirs(emulation_env_config.containers_config,
                                                      resources_config=emulation_env_config.resources_config,
-                                                     path=util.default_output_dir(),
+                                                     path=path + emulation_env_config.name,
                                                      create_folder_makefile=create_folder_makefile,
                                                      emulation_name=emulation_env_config.name)
 
