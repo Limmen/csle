@@ -1,15 +1,17 @@
 # OS
-FROM kalilinux/kali-rolling
+FROM kalilinux/kali-last-release
 USER root
 
 # Install dependencies
-RUN apt-get update --fix-missing
-RUN apt-get -y install apt-utils openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
+RUN apt update --fix-missing && apt -y reinstall ca-certificates
+RUN apt-get -y install apt-utils  \
+                       openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
                        snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2 iperf3
 
 #RUN apt-get -y install man-db
+#&& DEBIAN_FRONTEND=noninteractive apt -yqq install kali-linux-headless
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10
 
 # Setup users
