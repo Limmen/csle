@@ -126,6 +126,7 @@ build:
 	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(PROJECT)/cve_2015_5602_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
 	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(PROJECT)/cve_2014_0160_base:$(VERSION)
 
 # Remove all base images
 rm_image:
