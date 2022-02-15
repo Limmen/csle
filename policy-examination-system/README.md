@@ -14,10 +14,10 @@ A system for validating automated security policies
 
 ## Useful scripts
 
-Start the `csle_pvs` webapp:
+Start the `csle_pes` webapp:
 ```bash
-le_pvs.sh  # Installs the csle pes webapp
-cd csle_pvs/server
+./install_csle_pes.sh  # Installs the csle pes webapp
+cd csle_pes/server
 nohup python server.py & # Deploys the csle pes webbapp
 ```
 
@@ -25,12 +25,12 @@ When everything is running, use the following command to setup tunnels:
 ```bash
 ssh -L 8888:localhost:8888 kim@<server-ip>
 ```
-then you can access csle pvs at `localhost:2385`
+then you can access csle pes at `localhost:2385`
 
 ## Note
 
 Note that if you have started the csle_monitor but cannot access the app from a SSH tunnel, you may need to
-edit `csle_pvs/server/server.py` and update the hostname (e.g. `0.0.0.0` instead of `localhost`).
+edit `csle_pes/server/server.py` and update the hostname (e.g. `0.0.0.0` instead of `localhost`).
 
 ## Author & Maintainer
 

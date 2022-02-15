@@ -492,32 +492,43 @@ class EnvConfigGenerator:
         emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
                                            agent_username=constants.CSLE_ADMIN.USER,
                                            agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-        print("-- Creating networks --")
+        steps = 8
+        if no_traffic:
+            steps = 7
+        current_step = 1
+        print(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
 
-        print("-- Connect containers to networks --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Connect containers to networks --")
         ContainerManager.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
 
-        print("-- Creating users --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Creating users --")
         UsersGenerator.create_users(users_config=emulation_env_config.users_config, emulation_config=emulation_config)
 
-        print("-- Creating flags --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Creating flags --")
         FlagsGenerator.create_flags(flags_config=emulation_env_config.flags_config, emulation_config=emulation_config)
 
-        print("-- Creating topology --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Creating topology --")
         TopologyGenerator.create_topology(topology=emulation_env_config.topology_config,
                                           emulation_config=emulation_config)
 
-        print("-- Creating resource constraints --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Creating resource constraints --")
         ResourceConstraintsGenerator.apply_resource_constraints(resources_config=emulation_env_config.resources_config,
                                                                 emulation_config=emulation_config)
 
         if not no_traffic:
-            print("-- Creating traffic generators --")
+            current_step += 1
+            print(f"-- Step {current_step}/{steps}: Creating traffic generators --")
             TrafficGenerator.create_traffic_scripts(traffic_config=emulation_env_config.traffic_config,
                                                     emulation_config=emulation_config, sleep_time=1)
 
-        print("-- Starting the Intrusion Detection System --")
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
 
