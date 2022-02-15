@@ -4159,7 +4159,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if not os.path.exists(util.default_emulation_config_path()):
         config = default_config(name="csle-ctf-level8-001", network_id=8, level=8, version="0.0.1")
-        EnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=config)
+        util.write_emulation_config_file(config, util.default_emulation_config_path())
     config = util.read_emulation_env_config(util.default_emulation_config_path())
 
     if args.install:
