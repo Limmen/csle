@@ -604,6 +604,8 @@ class COMMANDS:
     ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
     ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
+    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth0 -l /var/snort/ -h 55.0.0.0/8"
+    STOP_IDS = "kill -9 $(pgrep snort)"
 
 
 class ETC_HOSTS:
@@ -1166,6 +1168,7 @@ class CONTAINER_IMAGES:
     TELNET_3 = "telnet_3"
     FTP_2 = "ftp_2"
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
+    IDS_IMAGES = ["router_2"]
 
 class METADATA_STORE:
     """

@@ -1,3 +1,4 @@
+import time
 from typing import List, Tuple
 import random
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
@@ -5,6 +6,9 @@ from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.node_container_config import NodeContainerConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
+from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
+from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 
@@ -95,6 +99,30 @@ class ContainerGenerator:
                                           vulnerable_nodes=list(map(lambda x: x.get_ips()[0], vulnerable_nodes)),
                                           networks = networks)
         return containers_cfg
+
+
+    @staticmethod
+    def start_ids(containers_cfg: ContainersConfig, emulation_config: EmulationConfig):
+        """
+        Utility function for starting the IDS
+
+        :param containers_cfg: the containers configuration
+        :param emulation_config: the emulation configuration
+        :return:
+        """
+        for c in containers_cfg.containers:
+            for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
+                if ids_image in c.name:
+                    GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.get_ips()[0])
+                    cmd = constants.COMMANDS.STOP_IDS
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                    time.sleep(1)
+                    cmd = constants.COMMANDS.START_IDS
+                    print(f"Starting Snort IDS on {c.get_ips()[0]}")
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                    continue
+
+
 
     @staticmethod
     def write_containers_config(containers_cfg: ContainersConfig, path: str = None) -> None:

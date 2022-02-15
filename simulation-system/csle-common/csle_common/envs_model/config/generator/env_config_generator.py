@@ -481,11 +481,12 @@ class EnvConfigGenerator:
         return util.read_emulation_env_config(path)
 
     @staticmethod
-    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
+    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig, no_traffic: bool) -> None:
         """
         Applies the emulation env config
 
         :param emulation_env_config: the config to apply
+        :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
         :return: None
         """
         emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
@@ -511,9 +512,14 @@ class EnvConfigGenerator:
         ResourceConstraintsGenerator.apply_resource_constraints(resources_config=emulation_env_config.resources_config,
                                                                 emulation_config=emulation_config)
 
-        print("-- Creating traffic generators --")
-        TrafficGenerator.create_traffic_scripts(traffic_config=emulation_env_config.traffic_config,
-                                                emulation_config=emulation_config, sleep_time=1)
+        if not no_traffic:
+            print("-- Creating traffic generators --")
+            TrafficGenerator.create_traffic_scripts(traffic_config=emulation_env_config.traffic_config,
+                                                    emulation_config=emulation_config, sleep_time=1)
+
+        print("-- Starting the Intrusion Detection System --")
+        ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
+                                     emulation_config=emulation_config)
 
     @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:

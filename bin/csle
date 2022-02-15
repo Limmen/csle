@@ -105,16 +105,17 @@ def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int
         print_emulation_config(emulation_env_config=em)
 
 
-def run_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+def run_emulation(emulation_env_config: EmulationEnvConfig, no_traffic: bool) -> None:
     """
     Runs an emulation with the given config
 
     :param emulation_env_config: the config of the emulation to run
+    :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :return: None
     """
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.run_containers(emulation_env_config=emulation_env_config)
-    EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config)
+    EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
 
 
 def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig]) -> Tuple[List[str], List[str]]:
@@ -199,13 +200,15 @@ def stop(entity: str) -> None:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
+@click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('entity', default="")
 @click.command(help="container-name | all")
-def start(entity : str) -> None:
+def start(entity : str, no_traffic: bool) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container to start or "all"
+    :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :return: None
     """
     if entity == "all":
@@ -217,7 +220,7 @@ def start(entity : str) -> None:
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation(name=entity)
             if emulation_env_config is not None:
-                run_emulation(emulation_env_config)
+                run_emulation(emulation_env_config, no_traffic=no_traffic)
                 emulation_started = True
             else:
                 emulation_started =False
