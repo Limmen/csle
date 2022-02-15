@@ -190,6 +190,10 @@ RUN mv /etc/default/sysstat /etc/default/sysstat.bak
 ADD docker_files/common/sysstat /etc/default/sysstat
 RUN service sysstat restart
 
+# CVE-2014-0160 Exploit
+ADD docker_files/common/heartbleed_exploit.py /heartbleed_exploit.py
+RUN chmod 777 /heartbleed_exploit.py
+
 # Add Tini
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini

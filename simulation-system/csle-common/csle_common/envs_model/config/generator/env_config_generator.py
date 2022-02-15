@@ -569,6 +569,26 @@ class EnvConfigGenerator:
 
 
     @staticmethod
+    def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1) -> None:
+        net_id = random.randint(128, 254)
+        sub_net_id= random.randint(2, 254)
+        host_id= random.randint(2, 254)
+        net_name = f"csle_custom_net_{name}_{net_id}"
+        ip = f"55.{net_id}.{sub_net_id}.{host_id}"
+        ContainerManager.create_network(name=net_name,
+                                        subnetmask=f"55.{net_id}.0.0/16",
+                                        existing_network_names=[])
+        print(f"Starting container with image:{image} and name:csle-custom-{name}-level1")
+        cmd = f"docker container run -dt --name csle-custom-{name}-level1 " \
+              f"--hostname={name} " \
+              f"--network={net_name} --ip {ip} --publish-all=true " \
+              f"--memory={memory}G --cpus={num_cpus} " \
+              f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
+        subprocess.call(cmd, shell=True)
+
+
+
+    @staticmethod
     def stop_containers(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Stop containers in the emulation env config

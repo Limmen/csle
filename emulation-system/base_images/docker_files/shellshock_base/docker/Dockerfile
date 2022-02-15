@@ -171,6 +171,10 @@ RUN chmod 777 /irc_login_test.sh
 ADD docker_files/common/pengine_exploit.sh /pengine_exploit.sh
 RUN chmod 777 /pengine_exploit.sh
 
+# CVE-2014-0160 Exploit
+ADD docker_files/common/heartbleed_exploit.py /heartbleed_exploit.py
+RUN chmod 777 /heartbleed_exploit.py
+
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak
 ADD docker_files/common/sysstat /etc/default/sysstat

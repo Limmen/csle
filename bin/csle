@@ -201,13 +201,15 @@ def stop(entity: str) -> None:
 
 
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
+@click.argument('name', default="")
 @click.argument('entity', default="")
 @click.command(help="container-name | all")
-def start(entity : str, no_traffic: bool) -> None:
+def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container to start or "all"
+    :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :return: None
     """
@@ -225,7 +227,17 @@ def start(entity : str, no_traffic: bool) -> None:
             else:
                 emulation_started =False
             if not emulation_started:
-                click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+                image_started = run_image(image=entity, name=name)
+                if not image_started:
+                    click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+
+
+def run_image(image: str, name: str) -> bool:
+    try:
+        EnvConfigGenerator.run_container(image=image, name=name)
+        return True
+    except Exception as e:
+        return False
 
 
 @click.argument('entity', default="")
@@ -414,6 +426,10 @@ def list_networks() -> None:
         for net in em.containers_config.networks:
             if net.name in active_networks_names:
                 print_network(net)
+
+    for net in active_networks_names:
+        if constants.CSLE.NAME in net:
+            print(f"name:{net}")
 
 
 def get_network(name: str) -> Union[None, ContainerNetwork]:
