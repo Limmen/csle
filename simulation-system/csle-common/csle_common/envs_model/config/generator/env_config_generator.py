@@ -481,7 +481,7 @@ class EnvConfigGenerator:
         return util.read_emulation_env_config(path)
 
     @staticmethod
-    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig, no_traffic: bool) -> None:
+    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig, no_traffic: bool = False) -> None:
         """
         Applies the emulation env config
 
@@ -496,6 +496,7 @@ class EnvConfigGenerator:
         if no_traffic:
             steps = 7
         current_step = 1
+        print(f"-- Configuring the emulation --")
         print(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
 
@@ -524,8 +525,12 @@ class EnvConfigGenerator:
         if not no_traffic:
             current_step += 1
             print(f"-- Step {current_step}/{steps}: Creating traffic generators --")
-            TrafficGenerator.create_traffic_scripts(traffic_config=emulation_env_config.traffic_config,
-                                                    emulation_config=emulation_config, sleep_time=1)
+            TrafficGenerator.create_and_start_internal_traffic_generators(traffic_config=emulation_env_config.traffic_config,
+                                                                          emulation_config=emulation_config, sleep_time=1)
+            TrafficGenerator.start_client_population(
+                traffic_config=emulation_env_config.traffic_config,
+                containers_config=emulation_env_config.containers_config,
+                emulation_config=emulation_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")

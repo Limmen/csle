@@ -136,8 +136,13 @@ RUN mkdir -p /web/ &&\
     mkdir -p /web/static
 ADD docker_files/common/web_server.py /web/web_server.py
 ADD docker_files/common/index.html /web/static/index.html
+
+SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+
 RUN pip install flask &&\
     pip install waitress
+
+RUN pip install csle-collector
 
 # Setup glassfish
 RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
@@ -186,6 +191,10 @@ RUN chmod 777 /pengine_exploit.sh
 # CVE-2014-0160 Exploit
 ADD docker_files/common/heartbleed_exploit.py /heartbleed_exploit.py
 RUN chmod 777 /heartbleed_exploit.py
+
+# Client manager
+ADD docker_files/common/client_manager.py /client_manager.py
+RUN chmod 777 /client_manager.py
 
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak

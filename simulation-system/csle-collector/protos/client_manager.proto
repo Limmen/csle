@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service ClientManager {
+  rpc getClients(GetClientsMsg) returns (ClientsDTO) {}
+  rpc stopClients(StopClientsMsg) returns (ClientsDTO) {}
+  rpc startClients(StartClientsMsg) returns (ClientsDTO) {}
+}
+
+// Message that the client sends to stop the clients processes
+message StopClientsMsg {}
+
+// Message that the client sends to start the clients processes
+message StartClientsMsg {
+  float mu = 1;
+  int32 lamb = 2;
+  int32 time_step_len_seconds = 3;
+  repeated string commands = 4;
+  int32 num_commands = 5;
+}
+
+// Message that the client sends to extract the ClientsDTO
+message GetClientsMsg {}
+
+// Message that the server returns when requested by the  client
+message ClientsDTO {
+  int32 num_clients = 1;
+  bool client_process_active = 2;
+}

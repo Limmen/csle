@@ -178,6 +178,12 @@ git clone https://github.com/Limmen/clse
            sudo apt install python3.8
           ```
 
+   - Install `csle_collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
+     ```bash
+      cd simulation-system/csle-collector/
+      pip install -e .
+     ```
+
     - Install `csle_common` (see ([README](simulation-system/csle-common/README.md)) for more information)
       ```bash
        cd simulation-system/csle-common/

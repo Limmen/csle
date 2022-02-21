@@ -1,4 +1,9 @@
+import time
 from typing import List
+import grpc
+import csle_collector.client_manager_pb2_grpc
+import csle_collector.client_manager_pb2
+import csle_collector.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.containers_config import ContainersConfig
@@ -63,22 +68,113 @@ class TrafficGenerator:
         traffic_config = TrafficConfig(node_traffic_configs = node_traffic_configs)
         return traffic_config
 
+    @staticmethod
+    def grpc_server_on(channel) -> bool:
+        try:
+            grpc.channel_ready_future(channel).result(timeout=15)
+            return True
+        except grpc.FutureTimeoutError:
+            return False
+
 
     @staticmethod
-    def create_traffic_scripts(traffic_config: TrafficConfig, emulation_config: EmulationConfig, sleep_time : int = 2,
-                               only_clients : bool = False) -> None:
+    def start_client_population(traffic_config: TrafficConfig, containers_config: ContainersConfig,
+                                emulation_config: EmulationConfig):
+        print(f"starting client population on container: {traffic_config.client_population_config.ip}")
+        commands = []
+        reachable_containers = []
+        for container in containers_config.containers:
+            match = False
+            for ip,net in container.ips_and_networks:
+                for net2 in traffic_config.client_population_config.networks:
+                    if net.name == net2.name:
+                        match = True
+                        break
+            if match:
+                for ip2 in container.get_ips():
+                    reachable_containers.append(ip2)
+
+        for node_traffic_cfg in traffic_config.node_traffic_configs:
+            if node_traffic_cfg.ip in reachable_containers:
+                for cmd in node_traffic_cfg.commands:
+                    commands.append(cmd.format(node_traffic_cfg.ip))
+
+        for net in traffic_config.client_population_config.networks:
+            for cmd in constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["client_1_subnet"]:
+                commands.append(cmd.format(net.subnet_mask))
+
+
+        print(f"commands:{commands}")
+
+        # Connect
+        GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=traffic_config.client_population_config.ip)
+
+        # Check if client_manager is already running
+        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+        t = constants.COMMANDS.SEARCH_CLIENT_MANAGER
+
+        if not constants.COMMANDS.SEARCH_CLIENT_MANAGER in str(o):
+
+            # Stop old background job if running
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+
+            # Start the client_manager
+            cmd = constants.COMMANDS.START_CLIENT_MANAGER.format(
+                traffic_config.client_population_config.client_manager_port)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            time.sleep(5)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{traffic_config.client_population_config.ip}:'
+                f'{traffic_config.client_population_config.client_manager_port}') as channel:
+            stub = csle_collector.client_manager_pb2_grpc.ClientManagerStub(channel)
+            client_dto = csle_collector.query_clients.get_clients(stub)
+
+            # Stop the client population if it is already running
+            if client_dto.client_process_active:
+                client_dto = csle_collector.query_clients.stop_clients(stub)
+                time.sleep(5)
+
+
+            # Start the client population
+            client_dto = csle_collector.query_clients.start_clients(
+                stub=stub, mu=traffic_config.client_population_config.mu,
+                lamb=traffic_config.client_population_config.lamb, time_step_len_seconds=1, commands=commands,
+                num_commands=traffic_config.client_population_config.num_commands)
+
+
+            print(f"clients:{client_dto.client_process_active}")
+
+
+        # Stop the client population if it is already running
+
+
+        # Start the client population
+
+
+
+
+
+
+
+    @staticmethod
+    def create_and_start_internal_traffic_generators(traffic_config: TrafficConfig,
+                                                     emulation_config: EmulationConfig, sleep_time : int = 2) -> None:
         """
         Installs the traffic generation scripts at each node
 
         :param traffic_config: the traffic configuration
         :param emulation_config: the emulation configuration
         :param sleep_time: the time to sleep between commands
-        :param only_clients: whether to start only client traffic or also start internal traffic
         :return: None
         """
         for node in traffic_config.node_traffic_configs:
-            if only_clients and not node.client:
-                continue
 
             print("creating traffic generator script, node ip:{}".format(node.ip))
 
@@ -104,7 +200,7 @@ class TrafficGenerator:
             script_file = script_file + "do\n"
             script_file = script_file + "    sleep {}\n".format(sleep_time)
             for cmd in node.commands:
-                script_file = script_file + "    " + cmd + "\n"
+                script_file = script_file + "    " + cmd.format(node.ip) + "\n"
                 script_file = script_file + "    sleep {}\n".format(sleep_time)
             script_file = script_file + "done\n"
 

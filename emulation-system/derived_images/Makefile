@@ -228,4 +228,4 @@ rm_image:
 	-docker rmi $(PROJECT)/client_1:$(VERSION)
 	-docker rmi $(PROJECT)/blank_1:$(VERSION)
 	-docker rmi $(PROJECT)/pengine_exploit_1:$(VERSION)
-	-docker rmi $(PROJECT)/rm_cve_2014_0160_1:$(VERSION)
+	-docker rmi $(PROJECT)/cve_2014_0160_1:$(VERSION)

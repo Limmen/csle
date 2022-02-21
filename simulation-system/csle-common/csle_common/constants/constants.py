@@ -606,6 +606,10 @@ class COMMANDS:
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
     START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth0 -l /var/snort/ -h 55.0.0.0/8"
     STOP_IDS = "kill -9 $(pgrep snort)"
+    PS_AUX = "ps -aux"
+    GREP = "grep"
+    START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} &"
+    SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
 
 
 class ETC_HOSTS:
@@ -802,21 +806,22 @@ class TRAFFIC_COMMANDS:
         f"ftp_2": ["timeout 5 ftp {} > /dev/null 2>&1",
                  "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
                  "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"router_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         f"client_1_subnet": [
-            "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sP " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sT -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1",
-            "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " {} > /dev/null 2>&1"
+            "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sP " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sT -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1"
         ],
-        f"client_1_host": [
-            "ping {} > /dev/null 2>&1",
-            "traceroute {} > /dev/null 2>&1"
+        f"generic_commands": [
+            "timeout 5 ping {} > /dev/null 2>&1",
+            "timeout 5 traceroute {} > /dev/null 2>&1"
         ],
         f"pengine_exploit_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
         "timeout 5 curl {}:4000 > /dev/null 2>&1",
@@ -830,6 +835,7 @@ class TRAFFIC_COMMANDS:
     }
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
+    CLIENT_MANAGER_FILE_NAME = "client_manager.py"
 
 
 class CSLE_ADMIN:

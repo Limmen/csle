@@ -1,5 +1,6 @@
 import argparse
 import os
+import multiprocessing
 import csle_common.constants.constants as constants
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
@@ -23,6 +24,8 @@ from csle_common.dao.container_config.vulnerability_type import VulnType
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from csle_common.dao.container_config.client_population_config import ClientPopulationConfig
+from csle_common.dao.container_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.util.experiments_util import util
 
 
@@ -1487,7 +1490,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
                            f"{constants.CONTAINER_IMAGES.CLIENT_1}_1-{constants.CSLE.LEVEL}{level}",
-            num_cpus=1, available_memory_gb=4,
+            num_cpus=min(16, multiprocessing.cpu_count()), available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
                  NodeNetworkConfig(
@@ -1501,7 +1504,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
                      packet_duplicate_correlation_percentage=25, packet_reorder_percentage=2,
                      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
-                     rate_limit_mbit=100, packet_overhead_bytes=0,
+                     rate_limit_mbit=10000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
                  ))])
     ]
