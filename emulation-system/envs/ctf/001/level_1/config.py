@@ -63,7 +63,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
     containers = [
         NodeContainerConfig(
             name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
-            ips_and_networks = [
+            ips_and_networks=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
                  ContainerNetwork(
                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
@@ -75,7 +75,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             minigame=constants.CSLE.CTF_MINIGAME,
             version=version, level=str(level), restart_policy=constants.DOCKER.ON_FAILURE_3, suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -89,7 +89,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
@@ -102,7 +102,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -116,7 +116,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -137,7 +137,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -151,7 +151,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -649,35 +649,40 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     traffic_generators = [
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
-                          + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["generic_commands"])
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_1]
-                          + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["generic_commands"])
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_1]
-                                   + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["generic_commands"])
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
-                                   + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["generic_commands"])
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
-                                   + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["generic_commands"])
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           )
     ]
     client_population_config = ClientPopulationConfig(
         networks=[ContainerNetwork(
-        name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
-        subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                    f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-        subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+            name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+            subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                        f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
         )],
-        ip = f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
+        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb = 1, mu = 0.1, client_manager_port=50051, num_commands=2, time_step_len_seconds=1
+        lamb=1, mu=0.1, client_manager_port=50051, num_commands=2, time_step_len_seconds=1
     )
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
@@ -715,7 +720,7 @@ def default_users_config(network_id: int) -> UsersConfig:
     return users_conf
 
 
-def default_vulns_config(network_id : int) -> VulnerabilitiesConfig:
+def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     """
     :param network_id: the network id
     :return: the vulnerability config

@@ -5,6 +5,38 @@ Constants for the csle environment
 import re
 
 
+class CONTAINER_IMAGES:
+    """
+    String constants representing container images names
+    """
+    SSH_1 = "ssh_1"
+    ROUTER_2 = "router_2"
+    SAMBA_2 = "samba_2"
+    HONEYPOT_1 = "honeypot_1"
+    FTP_1 = "ftp_1"
+    HACKER_KALI_1 = "hacker_kali_1"
+    SHELLSHOCK_1 = "shellshock_1"
+    SQL_INJECTION_1 = "sql_injection_1"
+    CVE_2010_0426_1 = "cve_2010_0426_1"
+    CVE_2015_1427_1 = "cve_2015_1427_1"
+    HONEYPOT_2 = "honeypot_2"
+    SAMBA_1 = "samba_1"
+    CVE_2015_3306_1 = "cve_2015_3306_1"
+    CVE_2015_5602_1 = "cve_2015_5602_1"
+    CVE_2016_10033_1 = "cve_2016_10033_1"
+    CLIENT_1 = "client_1"
+    ROUTER_1 = "router_1"
+    TELNET_1 = "telnet_1"
+    SSH_2 = "ssh_2"
+    SSH_3 = "ssh_3"
+    TELNET_2 = "telnet_2"
+    TELNET_3 = "telnet_3"
+    FTP_2 = "ftp_2"
+    PENGINE_EXPLOIT_1 = "pengine_exploit_1"
+    CVE_2014_0160_1 = "cve_2014_0160_1"
+    IDS_IMAGES = ["router_2"]
+
+
 class RENDERING:
     """
     Rendering constants
@@ -18,7 +50,7 @@ class RENDERING:
     GREEN_ALPHA = (0, 128, 0, 255)
     LIME = (0, 255, 0)
     BLUE_PURPLE = (102, 102, 153)
-    #LIME = (0, 255, 0)
+    # LIME = (0, 255, 0)
     BLACK_ALPHA = (0, 0, 0, 255)
     WHITE_ALPHA = (255, 255, 255, 255)
     RED_ALPHA = (128, 0, 0, 255)
@@ -33,9 +65,10 @@ class RENDERING:
     FIREWALL_SPRITE_NAME = "firewall.png"
     HACKER_SPRITE_NAME = "hacker.png"
     FLAG_SPRITE_NAME = "flag_1.png"
-    LINK_COLORS = [(132,87,87), (153,0,153), (153,0,0), (204,204,255), (0,102,0), (102, 0, 102), (153,153,0),
-                   (128,128,128), (51,153,255), (0, 153, 153), (204,255,153), (255, 204, 153), (255, 153, 153),
-                   (51,51,255), (255, 229, 204)]
+    LINK_COLORS = [(132, 87, 87), (153, 0, 153), (153, 0, 0), (204, 204, 255), (0, 102, 0), (102, 0, 102),
+                   (153, 153, 0),
+                   (128, 128, 128), (51, 153, 255), (0, 153, 153), (204, 255, 153), (255, 204, 153), (255, 153, 153),
+                   (51, 51, 255), (255, 229, 204)]
 
 
 class FIREWALL:
@@ -219,7 +252,7 @@ class VULNERABILITIES:
     vuln_lookup_inv = {v: k for k, v in vuln_lookup.items()}
     default_cvss = 2.0
 
-    
+
 class OS:
     """
     Operating systems constants
@@ -262,33 +295,33 @@ class NMAP:
     SSH_BRUTE_HOST = "-p 22 --script ssh-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ssh-brute.timeout=8s,brute.firstonly=true"
     FTP_BRUTE_SUBNET = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                       + SECLISTS.TOP_USERNAMES_SHORTLIST+",ftp-brute.timeout=8s,brute.firstonly=true"
-    FTP_BRUTE_HOST = "-p 21 --script ftp-brute --script-args userdb="+SECLISTS.TOP_USERNAMES_SHORTLIST+",passdb="\
-                     +SECLISTS.TOP_USERNAMES_SHORTLIST+",ftp-brute.timeout=8s,brute.firstonly=true"
+                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ftp-brute.timeout=8s,brute.firstonly=true"
+    FTP_BRUTE_HOST = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+                     + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ftp-brute.timeout=8s,brute.firstonly=true"
     CASSANDRA_BRUTE_SUBNET = "-p 9160 --script cassandra-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
+                             + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
     CASSANDRA_BRUTE_HOST = "-p 9160 --script cassandra-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                     + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
+                           + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
     IRC_BRUTE_SUBNET = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                             + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
+                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
     IRC_BRUTE_HOST = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                           + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
+                     + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
     MONGO_BRUTE_SUBNET = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
+                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
     MONGO_BRUTE_HOST = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                     + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
+                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
     MYSQL_BRUTE_SUBNET = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                          + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mysql-brute.timeout=8s,brute.firstonly=true"
     MYSQL_BRUTE_HOST = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mysql-brute.timeout=8s,brute.firstonly=true"
     SMTP_BRUTE_SUBNET = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
+                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
     SMTP_BRUTE_HOST = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
+                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
     POSTGRES_BRUTE_SUBNET = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
+                            + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
-                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
+                          + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
     SAMBA_CVE_2017_7494_SCAN = "--script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version -p445"
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
@@ -374,7 +407,7 @@ class SSH:
     """
     Constants related to the SSH service
     """
-    SERVICE_NAME ="ssh"
+    SERVICE_NAME = "ssh"
     DEFAULT_PORT = 22
     DIRECT_CHANNEL = "direct-tcpip"
 
@@ -388,7 +421,7 @@ class TELNET:
     LOGIN_PROMPT = b"login: "
     PASSWORD_PROMPT = b"Password: "
     INCORRECT_LOGIN = "Login incorrect"
-    SERVICE_NAME="telnet"
+    SERVICE_NAME = "telnet"
     DEFAULT_PORT = 23
 
 
@@ -453,11 +486,11 @@ class SAMBA:
     Constants related to the Samba service
     """
     SERVICE_NAME = "samba"
-    USER="sambacry"
-    PW="nosambanocry"
-    BACKDOOR_USER="ssh_backdoor_sambapwned"
-    BACKDOOR_PW="sambapwnedpw"
-    PORT=445
+    USER = "sambacry"
+    PW = "nosambanocry"
+    BACKDOOR_USER = "ssh_backdoor_sambapwned"
+    BACKDOOR_PW = "sambapwnedpw"
+    PORT = 445
     ALREADY_EXISTS = "already exists"
     ERROR = "Error"
     AUTH_OK = "Authentication ok"
@@ -470,10 +503,10 @@ class CVE_2010_0426:
     Constants related to CVE-2010-0426
     """
     SERVICE_NAME = "sudoedit"
-    BACKDOOR_USER="ssh_backdoor_cve10_0426pwn"
-    BACKDOOR_PW="cve_2010_0426_pwnedpw"
+    BACKDOOR_USER = "ssh_backdoor_cve10_0426pwn"
+    BACKDOOR_PW = "cve_2010_0426_pwnedpw"
     EXPLOIT_FILE = "/etc/fstab"
-    VULNERABILITY_NAME="cve-2010-0426"
+    VULNERABILITY_NAME = "cve-2010-0426"
 
 
 class CVE_2015_5602:
@@ -481,9 +514,9 @@ class CVE_2015_5602:
     Constants related to CVE-2015-5602
     """
     SERVICE_NAME = "sudoedit"
-    BACKDOOR_USER="ssh_backdoor_cve15_5602pwn"
-    BACKDOOR_PW="cve_2015_5602_pwnedpw"
-    ROOT_PW="cve_2015_5602_temp_root_pw"
+    BACKDOOR_USER = "ssh_backdoor_cve15_5602pwn"
+    BACKDOOR_PW = "cve_2015_5602_pwnedpw"
+    ROOT_PW = "cve_2015_5602_temp_root_pw"
     VULNERABILITY_NAME = "cve-2015-5602"
 
 
@@ -492,10 +525,10 @@ class CVE_2015_3306:
     Constants related to CVE-2015-3306
     """
     SERVICE_NAME = "proftpd"
-    BACKDOOR_USER="ssh_backdoor_cve2015_3306_pwned"
-    BACKDOOR_PW="cve2015_3306_pwnedpw"
-    PORT=21
-    VULNERABILITY_NAME="cve-2015-3306"
+    BACKDOOR_USER = "ssh_backdoor_cve2015_3306_pwned"
+    BACKDOOR_PW = "cve2015_3306_pwnedpw"
+    PORT = 21
+    VULNERABILITY_NAME = "cve-2015-3306"
 
 
 class CVE_2016_10033:
@@ -503,9 +536,9 @@ class CVE_2016_10033:
     Constants related to CVE-2016-10033
     """
     SERVICE_NAME = "http"
-    BACKDOOR_USER="ssh_backdoor_2016_10033_pwn"
-    BACKDOOR_PW="cve_2016_10033_pwnedpw"
-    PORT=80
+    BACKDOOR_USER = "ssh_backdoor_2016_10033_pwn"
+    BACKDOOR_PW = "cve_2016_10033_pwnedpw"
+    PORT = 80
     VULNERABILITY_NAME = "cve-2016-10033"
 
 
@@ -514,9 +547,9 @@ class CVE_2015_1427:
     Constants related to CVE-2015-1427
     """
     SERVICE_NAME = "elasticsearch"
-    BACKDOOR_USER="ssh_backdoor_cve_2015_1427_pwned"
-    BACKDOOR_PW="cve_2015_1427_pwnedpw"
-    PORT=9200
+    BACKDOOR_USER = "ssh_backdoor_cve_2015_1427_pwned"
+    BACKDOOR_PW = "cve_2015_1427_pwnedpw"
+    PORT = 9200
     VULNERABILITY_NAME = "cve-2015-1427"
 
 
@@ -525,9 +558,9 @@ class SHELLSHOCK:
     Constants related to ShellShock
     """
     SERVICE_NAME = "http"
-    BACKDOOR_USER="ssh_backdoor_shellshocked"
-    BACKDOOR_PW="shellshockedpw"
-    PORT=80
+    BACKDOOR_USER = "ssh_backdoor_shellshocked"
+    BACKDOOR_PW = "shellshockedpw"
+    PORT = 80
     VULNERABILITY_NAME = "cve-2014-6271"
 
 
@@ -536,11 +569,11 @@ class DVWA_SQL_INJECTION:
     Constants related to DVWA SQL Injection Vulnerabilities
     """
     SERVICE_NAME = "http"
-    EXPLOIT_USER="pablo"
-    EXPLOIT_PW="0d107d09f5bbe40cade3de5c71e9e9b7"
+    EXPLOIT_USER = "pablo"
+    EXPLOIT_PW = "0d107d09f5bbe40cade3de5c71e9e9b7"
     EXPLOIT_OUTPUT_FILENAME = "dvwa_sql_injection_result.txt"
-    PORT=80
-    VULNERABILITY_NAME="dvwa_sql_injection"
+    PORT = 80
+    VULNERABILITY_NAME = "dvwa_sql_injection"
 
 
 class PENGINE_EXPLOIT:
@@ -548,8 +581,8 @@ class PENGINE_EXPLOIT:
     Constants related to Pengine Exploit
     """
     SERVICE_NAME = "http"
-    PORT=4000
-    VULNERABILITY_NAME="pengine-exploit"
+    PORT = 4000
+    VULNERABILITY_NAME = "pengine-exploit"
     BACKDOOR_USER = "ssh_backdoor_pengine_exploitpwn"
     BACKDOOR_PW = "ssh_backdoor_pengine_exploitpwnpw"
 
@@ -622,7 +655,7 @@ class ETC_HOSTS:
     DEFAULT_HOST_LINE_4 = "'ff00::0 ip6-mcastprefix'"
     DEFAULT_HOST_LINE_5 = "'ff02::1 ip6-allnodes'"
     DEFAULT_HOST_LINE_6 = "''ff02::2 ip6-allrouters''"
-    APPEND_TO_ETC_HOSTS ="sudo tee -a /etc/hosts"
+    APPEND_TO_ETC_HOSTS = "sudo tee -a /etc/hosts"
 
 
 class FILE_PATTERNS:
@@ -757,57 +790,84 @@ class TRAFFIC_COMMANDS:
     """
     Constants related to traffic commands
     """
+    TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
+    BASH_PREAMBLE = "#!/bin/bash"
+    CLIENT_MANAGER_FILE_NAME = "client_manager.py"
+    GENERIC_COMMANDS = "generic_commands"
+    CLIENT_1_SUBNET = "client_1_subnet"
     DEFAULT_COMMANDS = {
-        f"ftp_1": ["timeout 5 ftp {} > /dev/null 2>&1",
-                 "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "timeout 5 curl {}:8080 > /dev/null 2>&1"],
-        f"ssh_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "timeout 5 curl {}:80 > /dev/null 2>&1"],
-        f"telnet_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                    "timeout 5 curl {} > /dev/null 2>&1",
-                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        f"honeypot_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                      "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
-                      "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
-                      "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        f"samba_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                   "(sleep 2; echo testcsleuser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
-        f"shellshock_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                        "timeout 5 curl {} > /dev/null 2>&1",
-                        "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1"],
-        f"sql_injection_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                           "timeout 5 curl {}/login.php > /dev/null 2>&1",
-                           "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"],
-        f"cve_2010_0426_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                            "timeout 5 curl {}:8080 > /dev/null 2>&1"],
-        f"cve_2015_1427_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                            "snmpwalk -v2c {} -c csle_ctf1234"],
-        f"cve_2015_3306_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                            "snmpwalk -v2c {} -c csle_ctf1234",
-                            "timeout 5 curl {} > /dev/null 2>&1"],
-        f"cve_2015_5602_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
-        "cve_2015_10033_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                             "timeout 5 curl {} > /dev/null 2>&1"],
-        f"honeypot_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                      "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
-                      "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
-                      "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
-        f"ssh_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
-        f"ssh_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
-                 ],
-        f"telnet_2": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                    "timeout 5 curl {}:8080 > /dev/null 2>&1",
-                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        f"telnet_3": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                    "timeout 5 curl {}:8080 > /dev/null 2>&1",
-                    "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        f"ftp_2": ["timeout 5 ftp {} > /dev/null 2>&1",
-                 "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                 "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        f"router_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
-        f"client_1_subnet": [
+        f"{CONTAINER_IMAGES.FTP_1}": ["timeout 5 ftp {} > /dev/null 2>&1",
+                                      "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                                      "timeout 5 curl {}:8080 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SSH_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:80 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.TELNET_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {} > /dev/null 2>&1",
+            "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.HONEYPOT_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
+            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
+            "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SAMBA_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "(sleep 2; echo testcsleuser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SAMBA_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "(sleep 2; echo testcsleuser; sleep 3;) | smbclient -L {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SHELLSHOCK_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {} > /dev/null 2>&1",
+            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SQL_INJECTION_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}/login.php > /dev/null 2>&1",
+            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.CVE_2010_0426_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:8080 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.CVE_2015_1427_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "snmpwalk -v2c {} -c csle_ctf1234"],
+        f"{CONTAINER_IMAGES.CVE_2015_3306_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "snmpwalk -v2c {} -c csle_ctf1234",
+            "timeout 5 curl {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.CVE_2015_5602_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.CVE_2016_10033_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.HONEYPOT_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
+            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
+            "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SSH_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 nslookup limmen.dev {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SSH_3}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
+            ],
+        f"{CONTAINER_IMAGES.TELNET_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:8080 > /dev/null 2>&1",
+            "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.TELNET_3}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:8080 > /dev/null 2>&1",
+            "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.FTP_2}": ["timeout 5 ftp {} > /dev/null 2>&1",
+                                      "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+                                      "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.ROUTER_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.ROUTER_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        f"{CLIENT_1_SUBNET}": [
             "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             "sudo nmap -sP " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
@@ -819,31 +879,32 @@ class TRAFFIC_COMMANDS:
             "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1"
         ],
-        f"generic_commands": [
+        f"{GENERIC_COMMANDS}": [
             "timeout 5 ping {} > /dev/null 2>&1",
             "timeout 5 traceroute {} > /dev/null 2>&1"
         ],
-        f"pengine_exploit_1": ["timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-        "timeout 5 curl {}:4000 > /dev/null 2>&1",
-                             "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
-                                  --data $'{\"application\": \"pengine_sandbox\", \"ask\": "
-                             "\"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", "
-                             "\"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],"
-                             "[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],"
-                             "[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}' {}"
-                             ]
+        f"{CONTAINER_IMAGES.PENGINE_EXPLOIT_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:4000 > /dev/null 2>&1",
+            "timeout 5 curl --header \"Content-Type: application/json\" --request POST \
+                 --data $'{{\"application\": \"pengine_sandbox\", \"ask\": "
+            "\"problem(1, Rows), sudoku(Rows)\", \"chunk\": 1, \"destroy\": true, \"format\":\"json\", "
+            "\"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],"
+            "[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],"
+            "[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}}' {}"
+            ],
+        f"{CONTAINER_IMAGES.CVE_2014_0160_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:443 > /dev/null 2>&1"],
     }
-    TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
-    BASH_PREAMBLE = "#!/bin/bash"
-    CLIENT_MANAGER_FILE_NAME = "client_manager.py"
 
 
 class CSLE_ADMIN:
     """
     Constants related to the csle admin account
     """
-    USER= "csle_admin"
-    PW= "csle@admin-pw_191"
+    USER = "csle_admin"
+    PW = "csle@admin-pw_191"
 
 
 class DEFENDER:
@@ -959,6 +1020,7 @@ class INFO_DICT:
     OPTIMAL_DEFENDER_EPISODE_STEPS = "optimal_defender_episode_steps"
     TERMINAL_OBSERVATION = "terminal_observation"
 
+
 class DOCKER:
     CONTAINER_EXIT_STATUS = "exited"
     CONTAINER_CREATED_STATUS = "created"
@@ -1013,7 +1075,7 @@ class DOCKER:
     HOSTNAME_INFO = "Hostname"
     CONTAINERS_DIR = "containers"
     CONTAINER_MAKEFILE_TEMPLATE_NAME = "Container_Makefile_template"
-    CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE="/../../../common/"
+    CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE = "/../../../common/"
     MAKEFILE_TEMPLATE = "Makefile_template"
     ON_FAILURE_3 = "on-failure:3"
     CONTAINER_MAKEFILE_TEMPLATE_STR = \
@@ -1029,12 +1091,11 @@ class DOCKER:
         "-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)"
 
 
-
 class CSLE:
     NAME = "csle"
     LEVEL = "level"
     CSLE_NETWORK_PREFIX = "csle_net_"
-    CSLE_SUBNETMASK_PREFIX="55."
+    CSLE_SUBNETMASK_PREFIX = "55."
     CSLE_LEVEL_SUBNETMASK_SUFFIX = ".0.0/16"
     CSLE_EDGE_SUBNETMASK_SUFFIX = ".0/24"
     CSLE_EDGE_BITMASK = "255.255.255.0"
@@ -1111,11 +1172,11 @@ class EXPERIMENT:
 
 
 class DOCKER_STATS:
-    CPU_STATS="cpu_stats"
-    CPU_USAGE="cpu_usage"
-    PERCPU_USAGE="percpu_usage"
-    PRECPU_STATS="precpu_stats"
-    TOTAL_USAGE="total_usage"
+    CPU_STATS = "cpu_stats"
+    CPU_USAGE = "cpu_usage"
+    PERCPU_USAGE = "percpu_usage"
+    PRECPU_STATS = "precpu_stats"
+    TOTAL_USAGE = "total_usage"
     SYSTEM_CPU_USAGE = "system_cpu_usage"
     ONLINE_CPUS = "online_cpus"
     BLKIO_STATS = "blkio_stats"
@@ -1147,45 +1208,14 @@ class DOCKER_STATS:
     CONTAINER_IP = "container_ip"
 
 
-class CONTAINER_IMAGES:
-    """
-    String constants representing container images names 
-    """
-    SSH_1 = "ssh_1"
-    ROUTER_2="router_2"
-    SAMBA_2 = "samba_2"
-    HONEYPOT_1 = "honeypot_1"
-    FTP_1 = "ftp_1"
-    HACKER_KALI_1 ="hacker_kali_1"
-    SHELLSHOCK_1 = "shellshock_1"
-    SQL_INJECTION_1 = "sql_injection_1"
-    CVE_2010_0426_1 = "cve_2010_0426_1"
-    CVE_2015_1427_1 = "cve_2015_1427_1"
-    HONEYPOT_2 = "honeypot_2"
-    SAMBA_1 = "samba_1"
-    CVE_2015_3306_1 = "cve_2015_3306_1"
-    CVE_2015_5602_1 = "cve_2015_5602_1"
-    CVE_2016_10033_1 = "cve_2016_10033_1"
-    CLIENT_1 = "client_1"
-    ROUTER_1 = "router_1"
-    TELNET_1 = "telnet_1"
-    SSH_2 = "ssh_2"
-    SSH_3 = "ssh_3"
-    TELNET_2 = "telnet_2"
-    TELNET_3 = "telnet_3"
-    FTP_2 = "ftp_2"
-    PENGINE_EXPLOIT_1 = "pengine_exploit_1"
-    CVE_2014_0160_1 = "cve_2014_0160_1"
-    IDS_IMAGES = ["router_2"]
-
 class METADATA_STORE:
     """
     String constants related to the metadata store
     """
-    DBNAME="csle"
-    USER="csle"
-    PASSWORD="csle"
-    HOST="127.0.0.1"
+    DBNAME = "csle"
+    USER = "csle"
+    PASSWORD = "csle"
+    HOST = "127.0.0.1"
 
 
 class CONTAINER_POOLS:
@@ -1206,42 +1236,43 @@ class CONTAINER_POOLS:
                       (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
                       (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1"),
                       (f"{CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"),
-                      (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")
+                      (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2014_0160_1}", "0.0.1")
                       ]
 
     GW_VULN_CONTAINERS = [(f"{CONTAINER_IMAGES.SSH_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
-                                     ]
+                          (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
+                          ]
 
     PW_VULN_CONTAINERS = [(f"{CONTAINER_IMAGES.SSH_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.FTP_1}", "0.0.1"),
-                                     (f"{CONTAINER_IMAGES.FTP_2}", "0.0.1")
-                                     ]
+                          (f"{CONTAINER_IMAGES.SSH_2}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.SSH_3}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_2}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.TELNET_3}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.FTP_1}", "0.0.1"),
+                          (f"{CONTAINER_IMAGES.FTP_2}", "0.0.1")
+                          ]
     RCE_CONTAINERS = [(f"{CONTAINER_IMAGES.CVE_2015_1427_1}", "0.0.1"),
-                                      (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
-                                      (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
-                                      (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
-                                      (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
-                                      (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
-                                      ]
+                      (f"{CONTAINER_IMAGES.CVE_2015_3306_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.CVE_2016_10033_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SAMBA_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1"),
+                      (f"{CONTAINER_IMAGES.SHELLSHOCK_1}", "0.0.1")
+                      ]
     SQL_INJECTION_CONTAINERS = [(f"{CONTAINER_IMAGES.SQL_INJECTION_1}", "0.0.1")]
     PRIV_ESC_CONTAINERS = [(f"{CONTAINER_IMAGES.CVE_2010_0426_1}", "0.0.1"),
-                                           (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")]
+                           (f"{CONTAINER_IMAGES.CVE_2015_5602_1}", "0.0.1")]
 
     AGENT_CONTAINERS = [((f"{CONTAINER_IMAGES.HACKER_KALI_1}", "0.0.1"))]
     ROUTER_CONTAINERS = [(f"{CONTAINER_IMAGES.ROUTER_1}", "0.0.1"),

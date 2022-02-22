@@ -26,11 +26,65 @@ def commands() -> None:
     """
     pass
 
+@click.option('--nc', default=None, type=int)
+@click.option('--t', default=None, type=int)
+@click.option('--lamb', default=None, type=int)
+@click.option('--mu', default=None, type=float)
+@click.argument('emulation', default="", type=str)
+@click.command(help="emulation-name")
+def start_traffic(emulation : str, mu: float, lamb: float, t: int,
+                  nc: int) -> None:
+    """
+    Starts the traffic and client population on a given emulation
+
+    :param emulation: the emulation to start the traffic of
+    :param mu: the mu parameter of the service time of the client arrivals
+    :param lamb: the lambda parameter of the client arrival process
+    :param t: time-step length to measure the arrival process
+    :param nc: number of commands per client
+    :return: None
+    """
+    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    if emulation_env_config is not None:
+        if mu is not None:
+            emulation_env_config.traffic_config.client_population_config.mu = mu
+        if lamb is not None:
+            emulation_env_config.traffic_config.client_population_config.lamb = lamb
+        if t is not None:
+            emulation_env_config.traffic_config.client_population_config.time_step_len_seconds = t
+        if nc is not None:
+            emulation_env_config.traffic_config.client_population_config.num_commands = nc
+        EnvConfigGenerator.start_custom_traffic(emulation_env_config=emulation_env_config)
+    else:
+        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+
+@click.argument('emulation', default="")
+@click.command(help="emulation-name")
+def stop_traffic(emulation : str) -> None:
+    """
+    Stops the traffic and client population on a given emulation
+
+    :param emulation: the emulation to start the traffic of
+    :return: None
+    """
+    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    if emulation_env_config is not None:
+        EnvConfigGenerator.stop_custom_traffic(emulation_env_config=emulation_env_config)
+    else:
+        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+
 
 @click.argument('path', default="")
 @click.argument('emulation', default="")
 @click.command(help="emulation path")
 def materialize(emulation: str, path: str) -> None:
+    """
+    Materializes the configuraiton of a given emulation to a given path
+
+    :param emulation: the emulation to materialize
+    :param path: the path to materialize the emulation's configuration
+    :return: None
+    """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is None:
         click.secho(f"Emulation: {emulation} not found", fg="red", bold=True)
@@ -39,6 +93,7 @@ def materialize(emulation: str, path: str) -> None:
             materialize_emulation(emulation_env_config, path=path)
         else:
             click.secho(f"No path specified", fg="red", bold=True)
+
 
 @click.argument('container', default="")
 @click.command(help="container-name")
@@ -201,14 +256,14 @@ def stop(entity: str) -> None:
 
 
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
-@click.argument('name', default="")
-@click.argument('entity', default="")
-@click.command(help="container-name | all")
+@click.argument('name', default="", type=str)
+@click.argument('entity', default="", type=str)
+@click.command(help="container-name | emulation-name | all")
 def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     Starts a container or all containers
 
-    :param entity: the container to start or "all"
+    :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :return: None
@@ -643,6 +698,8 @@ commands.add_command(materialize)
 commands.add_command(shell)
 commands.add_command(gen)
 commands.add_command(clean)
+commands.add_command(start_traffic)
+commands.add_command(stop_traffic)
 
 
 # Script entrypoint

@@ -525,8 +525,10 @@ class EnvConfigGenerator:
         if not no_traffic:
             current_step += 1
             print(f"-- Step {current_step}/{steps}: Creating traffic generators --")
-            TrafficGenerator.create_and_start_internal_traffic_generators(traffic_config=emulation_env_config.traffic_config,
-                                                                          emulation_config=emulation_config, sleep_time=1)
+            TrafficGenerator.create_and_start_internal_traffic_generators(
+                traffic_config=emulation_env_config.traffic_config,
+                containers_config=emulation_env_config.containers_config,
+                emulation_config=emulation_config, sleep_time=1)
             TrafficGenerator.start_client_population(
                 traffic_config=emulation_env_config.traffic_config,
                 containers_config=emulation_env_config.containers_config,
@@ -536,6 +538,45 @@ class EnvConfigGenerator:
         print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
+
+    @staticmethod
+    def start_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
+        """
+        Utility function for starting traffic generators and client population on a given emulation
+
+        :param emulation_env_config: the configuration of the emulation
+        :return: None
+        """
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+
+        TrafficGenerator.create_and_start_internal_traffic_generators(
+            traffic_config=emulation_env_config.traffic_config,
+            containers_config=emulation_env_config.containers_config,
+            emulation_config=emulation_config, sleep_time=1)
+        TrafficGenerator.start_client_population(
+            traffic_config=emulation_env_config.traffic_config,
+            containers_config=emulation_env_config.containers_config,
+            emulation_config=emulation_config)
+
+
+    @staticmethod
+    def stop_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
+        """
+        Stops the traffic generators on all internal nodes and stops the arrival process of clients
+
+        :param emulation_env_config: the configuration for connecting to the emulation
+        :return: None
+        """
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        TrafficGenerator.stop_internal_traffic_generators(traffic_config=emulation_env_config.traffic_config,
+                                                          emulation_config=emulation_config)
+        TrafficGenerator.stop_client_population(traffic_config=emulation_env_config.traffic_config,
+                                                emulation_config=emulation_config)
+
 
     @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:

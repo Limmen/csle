@@ -18,6 +18,7 @@ class ClientPopulationConfig:
         :param client_process_type: the type of client arrival process (e.g. a Poisson process)
         :param lamb: the lambda parameter of the arrival process
         :param mu: the service-time parameter of the arrivals
+        :param time_step_len_seconds: time-step length to measure the arrival process
         """
         self.networks = networks
         self.ip = ip

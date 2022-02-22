@@ -62,7 +62,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
     """
     containers = [
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
@@ -76,7 +76,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -90,7 +90,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",
@@ -103,7 +103,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -117,7 +117,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -138,7 +138,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -159,7 +159,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -180,7 +180,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_6",
@@ -194,7 +194,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_5",
@@ -215,7 +215,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_3",
@@ -236,7 +236,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_3}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_4",
@@ -257,7 +257,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_4",
@@ -278,7 +278,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_3}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_5",
@@ -306,7 +306,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -320,7 +320,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_2"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -334,7 +334,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_3"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -348,7 +348,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_4"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -362,7 +362,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_5"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -376,7 +376,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_6"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
@@ -390,7 +390,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_7"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_9",
@@ -404,7 +404,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_2"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_9",
@@ -418,7 +418,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_3"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_9",
@@ -432,7 +432,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_4"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_9",
@@ -446,7 +446,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_5"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
@@ -460,7 +460,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_6"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
@@ -474,7 +474,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_7"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
@@ -488,7 +488,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_8"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_7",
@@ -502,7 +502,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_9"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -516,7 +516,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_10"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -530,7 +530,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_11"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -544,7 +544,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_12"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -558,7 +558,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_13"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -572,7 +572,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_14"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
-                            ips_and_networks = [
+                            ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_8",
@@ -2476,1631 +2476,148 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     :return: the traffic configuration
     """
     traffic_generators = [
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
-                          commands=[
-                              # f"timeout 120 sudo nmap -sS -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sP --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sU -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sT -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sF -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sN -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sX -p- --min-rate 100000 --max-retries 1 -T5 -n {
-                              # constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -O --osscan-guess --max-os-tries 1 --min-rate 100000
-                              # --max-retries 1 -T5 -n {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{
-                              # network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap --script=http-grep --min-rate 100000 --max-retries 1 -T5 -n
-                              # {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              # f"timeout 120 sudo nmap -sv -sC --script=finger --min-rate 100000 --max-retries 1 -T5
-                              # -n {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}{constants.CSLE.CSLE_SUBNETMASK} > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}2.2 "
-                              f"> /dev/null 2>&1 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}2.2:80 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-p 5432 > /dev/null 2>&1",
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79:8080 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 15 ping {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 25 traceroute {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10"
-                          ]),
-        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
-                          commands=[],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10"
-                          ],
-                          target_hosts=[]),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2:80 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 psql -h "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-p 5432 > /dev/null 2>&1",
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79:8080 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 psql -h "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-p 5432 > /dev/null 2>&1",
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79:8080 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54 > /dev/null 2>&1",
-                              f"timeout 5 nslookup limmen.dev "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.191",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2:80 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-p 5432 > /dev/null 2>&1",
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79:8080 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61:8080 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2:80 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79:8080 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2:80 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 psql -h "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21 -p 5432 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2:80 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2",
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 "
-                              f"-c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 "
-                              f"-p 5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' "
-                              f"ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61:8080 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61 > /dev/null "
-                              f"2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62:8080 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_3]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"timeout 5 curl "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | "
-                              f"telnet {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.3",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
-                          commands=[
-                              f"timeout 5 ftp {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7 > /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 -c csle_ctf1234 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 > /dev/null 2>&1",
-                              f"timeout 5 psql -h "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101 -p 5432 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh "
-                              f"-oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74 "
-                              f"> /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_3]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62 "
-                              f"> /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62:8080 "
-                              f"> /dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}6.62 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.62:8080 > "
-                              f"/dev/null 2>&1",
-                              f"(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.62 > /dev/null "
-                              f"2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.62"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.62"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.178 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.4 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.5 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.6 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.8 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.2.9 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 nslookup limmen.dev {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.54 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 nslookup limmen.dev {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.54 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 nslookup limmen.dev {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.54 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.14 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 nslookup limmen.dev {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.54 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.11 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.12 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.9.13 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11"
-                          ],
-                          target_hosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.54",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11"
-                          ]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.18 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.15 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.16 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.7.17 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17 -p "
-                              f"5432 > /dev/null 2>&1"
-                          ],
-                          jumphosts=[
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17"
-                          ],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.62",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"]),
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null "
-                              "2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 > "
-                              f"/dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.25 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25"]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS])
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
-                          commands=[
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null 2>&1",
-                              f"timeout 5 curl {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61:8080 > "
-                              f"/dev/null 2>&1",
-                              "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {"
-                              "constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.19 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.20 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.22 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.23 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 snmpwalk -v2c {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 -c csle_ctf1234 > /dev/null 2>&1",
-                              f"timeout 10 /irc_login_test.sh {constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                              f"{network_id}.8.24 > /dev/null 2>&1",
-                              f"timeout 5 psql -h {constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24 -p "
-                              f"5432 > /dev/null 2>&1",
-                              f"timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no "
-                          ],
-                          jumphosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19"],
-                          target_hosts=[f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.61",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
-                                        f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19"]
-                          )
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]))
     ]
-    traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators)
+    client_population_config = ClientPopulationConfig(
+        networks=[ContainerNetwork(
+            name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+            subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                        f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+        )],
+        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
+        client_process_type=ClientPopulationProcessType.POISSON,
+        lamb=1, mu=0.1, client_manager_port=50051, num_commands=2, time_step_len_seconds=1
+    )
+    traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
+                                 client_population_config=client_population_config)
     return traffic_conf
 
 
@@ -4205,7 +2722,7 @@ def default_users_config(network_id: int) -> UsersConfig:
     return users_conf
 
 
-def default_vulns_config(network_id : int) -> VulnerabilitiesConfig:
+def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     """
     :param network_id: the network id
     :return: the vulnerability config
@@ -4243,6 +2760,7 @@ def default_vulns_config(network_id : int) -> VulnerabilitiesConfig:
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

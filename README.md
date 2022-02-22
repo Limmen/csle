@@ -281,6 +281,7 @@ csle clean emulations
 csle rm emulations
 pip uninstall gym-csle-ctf
 pip uninstall csle-common
+pip uninstall csle-collector
 cd emulation-system && make rm
 cd metastore; make clean
 ```

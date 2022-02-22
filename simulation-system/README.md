@@ -6,6 +6,9 @@ The Python environments expose MDP/POMDP
 interfaces to emulated infrastructures that can be used to 
 optimize control policies.
 
+- **csle-collector** ([csle-collector](./csle-collector)):
+  - Contains functionality for sensors and collecting data from nodes in the emulation
+
 - **csle-common** ([csle-common](./csle-common)):
     - Contains common functionality to all python environments
     
