@@ -122,4 +122,4 @@ Subsystem       sftp    /usr/lib/openssh/sftp-server
 #       PermitTTY no
 #       ForceCommand cvs server
 
-AllowUsers csle_admin ssh_backdoor*
+AllowUsers csle_admin agent ssh_backdoor*
