@@ -637,7 +637,11 @@ class COMMANDS:
     ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
     ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
-    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth0 -l /var/snort/ -h 55.0.0.0/8"
+    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l /var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
+    UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
+    SNORT_PID = "/var/run//snort_eth1:eth0.pid"
+    SNORT_DUMP_STATS="kill -SIGUSR1 {}"
+    SNORT_ROTATE_STATS="kill -SIGUSR2 {}"
     STOP_IDS = "kill -9 $(pgrep snort)"
     PS_AUX = "ps -aux"
     GREP = "grep"
@@ -764,8 +768,10 @@ class IDS_ROUTER:
     Constants related to the IDS
     """
     MAX_ALERTS = 1000
+    UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
     FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
+    STATS_FILE = "/var/snort/snort.stats"
     TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
     TAIL_FAST_LOG_COMMAND = "sudo tail -" + str(str(MAX_ALERTS))
     TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"

@@ -11,7 +11,7 @@ RUN echo "postfix postfix/mailname string ctf_minigame.csle" | debconf-set-selec
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git \
         swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip snort arptables \
         irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client smbclient fail2ban \
-        rsyslog netcat traceroute sysstat iproute2 iperf3
+        rsyslog netcat traceroute sysstat iproute2 iperf3 libpcap-dev libpcre3-dev libdumbnet-dev flex bison
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
@@ -149,12 +149,23 @@ RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/night
     unzip latest-glassfish.zip
 
 # Setup Snort
-RUN wget --no-check-certificate https://www.snort.org/downloads/community/snort3-community-rules.tar.gz -O community-rules.tar.gz &&\
-    tar -xvzf community-rules.tar.gz -C /etc/snort/rules &&\
-    mkdir /var/snort &&\
+RUN mkdir /var/snort &&\
+    rm -rf /etc/snort/rules/* &&\
+    touch /etc/snort/rules/local.rules &&\
+    mkdir /etc/snort/rules/iplists &&\
     chmod 777 /var/snort &&\
     mv /etc/snort/snort.conf /etc/snort/snort.conf.bak
 ADD docker_files/common/snort.conf /etc/snort/snort.conf
+
+# Setup Pulledpork
+RUN git clone https://github.com/Limmen/pulledpork &&\
+    git clone https://github.com/Limmen/csle_snort_rules
+ADD docker_files/common/disablesid.conf /pulledpork/etc/disablesid.conf
+ADD docker_files/common/enablesid.conf /pulledpork/etc/enablesid.conf
+ADD docker_files/common/modifysid.conf /pulledpork/etc/modifysid.conf
+ADD docker_files/common/pulledpork.conf /pulledpork/etc/pulledpork.conf
+ADD docker_files/common/dropsid.conf /pulledpork/etc/dropsid.conf
+RUN /pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP
 
 # DWVA WebApp Exploit
 ADD docker_files/common/sql_injection_exploit.sh /sql_injection_exploit.sh
