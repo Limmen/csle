@@ -23,4 +23,13 @@ CREATE TABLE IF NOT EXISTS emulations (
 GRANT ALL ON emulations TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulations_id_seq TO csle;
 
+-- Create table that stores the log_sinks --
+CREATE TABLE IF NOT EXISTS log_sinks(
+    id serial PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    config json NOT NULL
+);
+GRANT ALL ON log_sinks TO csle;
+GRANT USAGE, SELECT ON SEQUENCE log_sinks_id_seq TO csle;
+
 

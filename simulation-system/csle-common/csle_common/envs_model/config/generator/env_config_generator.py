@@ -18,6 +18,7 @@ from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.util.experiments_util import util
 from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
@@ -689,7 +690,8 @@ class EnvConfigGenerator:
             with conn.cursor() as cur:
                 try:
                     config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
-                    cur.execute("INSERT INTO emulations (name, config) VALUES (%s, %s)", (config.name, config_json_str))
+                    cur.execute("INSERT INTO %s (name, config) VALUES (%s, %s)", (
+                        constants.METADATA_STORE.EMULATIONS_TABLE, config.name, config_json_str))
                     conn.commit()
                     print(f"Emulation {config.name} installed successfully")
                 except psycopg.errors.UniqueViolation as e:
@@ -701,7 +703,7 @@ class EnvConfigGenerator:
         """
         Uninstalls the emulation configuration in the metastore
 
-        :param config: the config to install
+        :param config: the config to uninstall
         :return: None
         """
         print(f"Uninstalling emulation:{config.name} from the metastore")
@@ -709,9 +711,53 @@ class EnvConfigGenerator:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute("DELETE FROM emulations WHERE name = %s", (config.name,))
+                cur.execute("DELETE FROM %s WHERE name = %s", (constants.METADATA_STORE.EMULATIONS_TABLE,
+                                                               config.name,))
                 conn.commit()
                 print(f"Emulation {config.name} uninstalled successfully")
+
+
+
+    @staticmethod
+    def install_logsink(config: LogSinkConfig) -> None:
+        """
+        Installs the logsink configuration in the metastore
+
+        :param config: the config to install
+        :return: None
+        """
+        print(f"Installing log sink:{config.name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                try:
+                    config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
+                    cur.execute("INSERT INTO %s (name, config) VALUES (%s, %s)", (
+                        constants.METADATA_STORE.LOGSINKS_TABLE, config.name, config_json_str))
+                    conn.commit()
+                    print(f"Log sink {config.name} installed successfully")
+                except psycopg.errors.UniqueViolation as e:
+                    print(f"Log sink {config.name} is already installed")
+
+
+    @staticmethod
+    def uninstall_logsink(config: LogSinkConfig) -> None:
+        """
+        Uninstalls the emulation configuration in the metastore
+
+        :param config: the config to uninstall
+        :return: None
+        """
+        print(f"Uninstalling log sink:{config.name} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM %s WHERE name = %s", (constants.METADATA_STORE.LOGSINKS_TABLE,
+                                                               config.name,))
+                conn.commit()
+                print(f"Log sink {config.name} uninstalled successfully")
 
 
 

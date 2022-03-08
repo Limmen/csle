@@ -21,6 +21,7 @@ from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
 import csle_common.constants.constants as constants
@@ -266,6 +267,19 @@ def write_emulation_config_file(emulation_env_config: EmulationEnvConfig, path: 
         f.write(json_str)
 
 
+def write_log_sink_config_file(log_sink_config: LogSinkConfig, path: str) -> None:
+    """
+    Writes a config object to a config file
+
+    :param log_sink_config: the emulation env config object
+    :param path: the path to write the file
+    :return: None
+    """
+    json_str = json.dumps(json.loads(jsonpickle.encode(log_sink_config, make_refs=False)), indent=4, sort_keys=True)
+    with io.open(path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
+
+
 def write_traffic_config_file(traffic_cfg: TrafficConfig, path: str) -> None:
     """
     Writes a traffic config object to a config file
@@ -356,6 +370,18 @@ def read_emulation_env_config(emulation_env_config_path) -> EmulationEnvConfig:
     emulation_env_config: EmulationEnvConfig = jsonpickle.decode(json_str)
     return emulation_env_config
 
+
+def read_log_sink_config(log_sink_config_path) -> LogSinkConfig:
+    """
+    Reads log sink config from a json file
+
+    :param log_sink_config_path: the path to the log_sink config file
+    :return: the emulation env configuration
+    """
+    with io.open(log_sink_config_path, 'r', encoding='utf-8') as f:
+        json_str = f.read()
+    log_sink_config: LogSinkConfig = jsonpickle.decode(json_str)
+    return log_sink_config
 
 def read_vulns_config(vulns_config_path) -> VulnerabilitiesConfig:
     """
@@ -515,7 +541,7 @@ def default_vulnerabilities_path(out_dir : str = None) -> str:
 def default_emulation_config_path(out_dir : str = None) -> str:
     """
     :param out_dir: directory to write
-    :return: the default path to containers config file
+    :return: the default path to emulation config file
     """
     if out_dir is None:
         config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
@@ -523,6 +549,20 @@ def default_emulation_config_path(out_dir : str = None) -> str:
     else:
         config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
                                    + constants.DOCKER.EMULATION_ENV_CFG_PATH)
+    return config_path
+
+
+def default_log_sink_config_path(out_dir : str = None) -> str:
+    """
+    :param out_dir: directory to write
+    :return: the default path to log sink config file
+    """
+    if out_dir is None:
+        config_path = os.path.join(default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.LOG_SINK_CFG_PATH)
+    else:
+        config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                   + constants.DOCKER.LOG_SINK_CFG_PATH)
     return config_path
 
 

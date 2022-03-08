@@ -25,6 +25,7 @@ class CONTAINER_IMAGES:
     CVE_2015_5602_1 = "cve_2015_5602_1"
     CVE_2016_10033_1 = "cve_2016_10033_1"
     CLIENT_1 = "client_1"
+    KAFKA_1 = "kafka_1"
     ROUTER_1 = "router_1"
     TELNET_1 = "telnet_1"
     SSH_2 = "ssh_2"
@@ -649,6 +650,14 @@ class COMMANDS:
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
 
 
+class LOG_SINK:
+    NETWORK_ID_FIRST_OCTET=254
+    NETWORK_ID_SECOND_OCTET=1
+    NETWORK_ID_THIRD_OCTET=72
+    LEVEL = "logsink"
+    SUFFIX="_1"
+
+
 class ETC_HOSTS:
     """
     Constants related to /etc/hosts configuration
@@ -1048,6 +1057,7 @@ class DOCKER:
     CONTAINER_CONFIG_TRAFFIC_CFG = "traffic_cfg"
     CONTAINER_CONFIG_CFG_PATH = "/containers.json"
     EMULATION_ENV_CFG_PATH = "/config.json"
+    LOG_SINK_CFG_PATH = "/log_sink_config.json"
     CONTAINER_CONFIG_FLAGS_CFG_PATH = "/flags.json"
     CONTAINER_CONFIG_TOPOLOGY_CFG_PATH = "/topology.json"
     CONTAINER_CONFIG_USERS_CFG_PATH = "/users.json"
@@ -1222,6 +1232,8 @@ class METADATA_STORE:
     USER = "csle"
     PASSWORD = "csle"
     HOST = "127.0.0.1"
+    EMULATIONS_TABLE = "emulations"
+    LOGSINKS_TABLE = "log_sinks"
 
 
 class CONTAINER_POOLS:
