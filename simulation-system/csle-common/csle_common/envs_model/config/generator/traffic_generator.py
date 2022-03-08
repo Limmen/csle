@@ -1,9 +1,9 @@
 import time
 from typing import List
 import grpc
-import csle_collector.client_manager_pb2_grpc
-import csle_collector.client_manager_pb2
-import csle_collector.query_clients
+import csle_collector.client_manager.client_manager_pb2_grpc
+import csle_collector.client_manager.client_manager_pb2
+import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.containers_config import ContainersConfig
