@@ -540,6 +540,32 @@ class EnvConfigGenerator:
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
 
+
+    @staticmethod
+    def apply_log_sink_config(log_sink_config: LogSinkConfig) -> None:
+        """
+        Applies the log sink config
+
+        :param log_sink_config: the config to apply
+        :return: None
+        """
+        emulation_config = EmulationConfig(agent_ip=log_sink_config.container.ips_and_networks[0][0],
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        steps = 2
+        current_step = 1
+        print(f"-- Configuring the logsink --")
+        print(f"-- Step {current_step}/{steps}: Creating networks --")
+        networks = ContainerManager.get_network_references()
+        networks = list(map(lambda x: x.name, networks))
+        ip, net = log_sink_config.container.ips_and_networks[0]
+        ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
+
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Connect containers to networks --")
+        ContainerManager.connect_logsink_to_network(log_sink_config=log_sink_config)
+
+
     @staticmethod
     def start_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
         """
@@ -577,6 +603,20 @@ class EnvConfigGenerator:
                                                           emulation_config=emulation_config)
         TrafficGenerator.stop_client_population(traffic_config=emulation_env_config.traffic_config,
                                                 emulation_config=emulation_config)
+
+
+    @staticmethod
+    def delete_networks_of_log_sink(log_sink_config: LogSinkConfig) -> None:
+        """
+        Deletes the docker networks of a log sink
+
+        :param log_sink_config: the log sink config
+        :return: None
+        """
+        c = log_sink_config.container
+        for ip_net in c.ips_and_networks:
+            ip, net = ip_net
+            ContainerManager.remove_network(name=net.name)
 
 
     @staticmethod
@@ -627,7 +667,39 @@ class EnvConfigGenerator:
 
 
     @staticmethod
+    def run_log_sink(log_sink_config: LogSinkConfig) -> None:
+        """
+        Runs the container of a given log sink
+
+        :param log_sink_config: the config of the log sink
+        :return: None
+        """
+        path = util.default_output_dir()
+        c = log_sink_config.container
+        container_resources : NodeResourcesConfig = log_sink_config.resources
+
+        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        print(f"Starting container:{name}")
+        cmd = f"docker container run -dt --name {name} " \
+              f"--hostname={c.name}{c.suffix} --label dir={path} " \
+              f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+              f"--label logsink={log_sink_config.name} --network=none --publish-all=true " \
+              f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+              f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
+        subprocess.call(cmd, shell=True)
+
+
+    @staticmethod
     def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1) -> None:
+        """
+        Runs a given container
+
+        :param image: image of the container
+        :param name: name of the container
+        :param memory: memory in GB
+        :param num_cpus: number of CPUs to allocate
+        :return: None
+        """
         net_id = random.randint(128, 254)
         sub_net_id= random.randint(2, 254)
         host_id= random.randint(2, 254)
@@ -644,8 +716,6 @@ class EnvConfigGenerator:
               f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
         subprocess.call(cmd, shell=True)
 
-
-
     @staticmethod
     def stop_containers(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -659,6 +729,37 @@ class EnvConfigGenerator:
             print(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
+
+
+    @staticmethod
+    def stop_log_sink(log_sink_config: LogSinkConfig) -> None:
+        """
+        Stop containers in the emulation env config
+
+        :param emulation_env_config: the config
+        :return: None
+        """
+        c = log_sink_config.container
+        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        print(f"Stopping container:{name}")
+        cmd = f"docker stop {name}"
+        subprocess.call(cmd, shell=True)
+
+
+    @staticmethod
+    def rm_log_sink(log_sink_config: LogSinkConfig) -> None:
+        """
+        Remove containers in the emulation env config
+
+        :param emulation_env_config: the config
+        :return: None
+        """
+        c = log_sink_config.container
+        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        print(f"Removing container:{name}")
+        cmd = f"docker rm {name}"
+        subprocess.call(cmd, shell=True)
+
 
     @staticmethod
     def rm_containers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -690,8 +791,8 @@ class EnvConfigGenerator:
             with conn.cursor() as cur:
                 try:
                     config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
-                    cur.execute("INSERT INTO %s (name, config) VALUES (%s, %s)", (
-                        constants.METADATA_STORE.EMULATIONS_TABLE, config.name, config_json_str))
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
+                                f"VALUES (%s, %s)", (config.name, config_json_str))
                     conn.commit()
                     print(f"Emulation {config.name} installed successfully")
                 except psycopg.errors.UniqueViolation as e:
@@ -711,8 +812,7 @@ class EnvConfigGenerator:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute("DELETE FROM %s WHERE name = %s", (constants.METADATA_STORE.EMULATIONS_TABLE,
-                                                               config.name,))
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
                 print(f"Emulation {config.name} uninstalled successfully")
 
@@ -733,8 +833,8 @@ class EnvConfigGenerator:
             with conn.cursor() as cur:
                 try:
                     config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
-                    cur.execute("INSERT INTO %s (name, config) VALUES (%s, %s)", (
-                        constants.METADATA_STORE.LOGSINKS_TABLE, config.name, config_json_str))
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.LOGSINKS_TABLE} (name, config) VALUES (%s, %s)",
+                                (config.name, config_json_str))
                     conn.commit()
                     print(f"Log sink {config.name} installed successfully")
                 except psycopg.errors.UniqueViolation as e:
@@ -754,8 +854,7 @@ class EnvConfigGenerator:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute("DELETE FROM %s WHERE name = %s", (constants.METADATA_STORE.LOGSINKS_TABLE,
-                                                               config.name,))
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.LOGSINKS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
                 print(f"Log sink {config.name} uninstalled successfully")
 

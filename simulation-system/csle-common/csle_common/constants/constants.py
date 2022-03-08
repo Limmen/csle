@@ -655,6 +655,7 @@ class LOG_SINK:
     NETWORK_ID_SECOND_OCTET=1
     NETWORK_ID_THIRD_OCTET=72
     LEVEL = "logsink"
+    MINIGAME = "logsink"
     SUFFIX="_1"
 
 
@@ -1048,6 +1049,7 @@ class DOCKER:
     BASE_CONTAINER_TYPE = "base"
     CONTAINER_CONFIG_DIR = "dir"
     EMULATION = "emulation"
+    LOGSINK = "logsink"
     CFG = "cfg"
     CONTAINER_CONFIG_CFG = "containers_cfg"
     CONTAINER_CONFIG_FLAGS_CFG = "flags_cfg"

@@ -1,5 +1,5 @@
 from csle_common.dao.container_config.node_container_config import NodeContainerConfig
-
+from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
 
 class LogSinkConfig:
     """
@@ -8,6 +8,7 @@ class LogSinkConfig:
 
     def __init__(self, name: str,
                  container: NodeContainerConfig,
+                 resources: NodeResourcesConfig,
                  port: int= 9092,
                  version: str = "0.0.1"):
         """
@@ -24,6 +25,7 @@ class LogSinkConfig:
         self.port = port
         self.version = version
         self.container = container
+        self.resources = resources
 
     def to_dict(self) -> dict:
         """
@@ -32,6 +34,7 @@ class LogSinkConfig:
         d = {}
         d["name"] = self.name
         d["container"] = self.container.to_dict()
+        d["resources"] = self.resources.to_dict()
         d["port"] = self.port
         d["version"] = self.version
         return d
@@ -41,5 +44,5 @@ class LogSinkConfig:
         :return: a string representation of the object
         """
         return f"name:{self.name}, container: {self.container}, " \
-               f"port:{self.port}, version: {self.version}"
+               f"port:{self.port}, version: {self.version}, resources: {self.resources}"
 

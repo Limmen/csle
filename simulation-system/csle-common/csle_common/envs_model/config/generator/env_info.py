@@ -14,7 +14,7 @@ class EnvInfo:
     """
 
     @staticmethod
-    def parse_env_infos() -> List[RunningEnv]:
+    def parse_runnning_emulation_infos() -> List[RunningEnv]:
         """
         Queries docker to get a list of all running emulation environments
 
@@ -24,9 +24,22 @@ class EnvInfo:
         client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
         emulations = list(set(list(map(lambda x: x.emulation, parsed_containers))))
-        parsed_envs = EnvInfo.parse_envs(emulations=emulations, containers=parsed_containers)
+        parsed_envs = EnvInfo.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
+    @staticmethod
+    def parse_runnning_log_sinks_infos() -> List[RunningEnv]:
+        """
+        Queries docker to get a list of all running log sinks
+
+        :return: a list of environment DTOs
+        """
+        client_1 = docker.from_env()
+        client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
+        parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
+        log_sinks = list(set(list(map(lambda x: x.log_sink, parsed_containers))))
+        parsed_envs = EnvInfo.parse_running_log_sinks(log_sinks=log_sinks, containers=parsed_containers)
+        return parsed_envs
 
     @staticmethod
     def parse_running_containers(client_1, client2) -> List[EnvContainer]:
@@ -59,11 +72,11 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_envs(emulations: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
+    def parse_running_emulation_envs(emulations: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
         """
         Queries docker to get a list of all active emulation environments
 
-        :param emulations: list of csle networks
+        :param emulations: list of csle emulations
         :param containers: list of running csle containers
         :return: list of parsed emulation environments
         """
@@ -86,9 +99,38 @@ class EnvInfo:
                     config = em_record
 
             p_env = RunningEnv(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
-                               subnet_mask=subnet_mask, level= em_containers[0].level, config=config)
+                               subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
+                               log_sink_config=None)
             parsed_envs.append(p_env)
         return parsed_envs
+
+
+    @staticmethod
+    def parse_running_log_sinks(log_sinks: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
+        """
+        Queries docker to get a list of all active log sinks
+
+        :param log_sinks: list of csle log sinks
+        :param containers: list of running csle containers
+        :return: list of parsed log sinks
+        """
+        parsed_log_sink_envs = []
+        for ls in log_sinks:
+            logsink_containers = list(filter(lambda x: x.log_sink == ls, containers))
+            subnet_prefix = constants.COMMANDS.DOT_DELIM.join(logsink_containers[0].ip.rsplit(constants.COMMANDS.DOT_DELIM)[0:-1])
+            subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(logsink_containers[0].ip_prefix_len)
+            minigame = logsink_containers[0].minigame
+
+            config = None
+            ls_record = MetastoreFacade.get_log_sink(name=ls)
+            if ls_record is not None:
+                config = ls_record
+
+            p_env = RunningEnv(containers=logsink_containers, name=ls, subnet_prefix=subnet_mask, minigame=minigame,
+                               subnet_mask=subnet_mask, level= logsink_containers[0].level, config=None,
+                               log_sink_config=config)
+            parsed_log_sink_envs.append(p_env)
+        return parsed_log_sink_envs
 
 
     @staticmethod
@@ -113,12 +155,15 @@ class EnvInfo:
                 config_path = None
                 dir_path = None
                 emulation = None
+                log_sink = None
                 if constants.DOCKER.CFG in labels:
                     config_path = labels[constants.DOCKER.CFG]
                 if constants.DOCKER.CONTAINER_CONFIG_DIR in labels:
                     dir_path = labels[constants.DOCKER.CONTAINER_CONFIG_DIR]
                 if constants.DOCKER.EMULATION in labels:
                     emulation = labels[constants.DOCKER.EMULATION]
+                if constants.DOCKER.LOGSINK in labels:
+                    log_sink = labels[constants.DOCKER.LOGSINK]
 
                 parsed_c = EnvContainer(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
@@ -138,11 +183,10 @@ class EnvInfo:
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
                     image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],
                     net=net, dir=dir_path, config_path=config_path,
-                    container_handle=c, emulation=emulation
-                )
+                    container_handle=c, emulation=emulation, log_sink=log_sink)
                 parsed_containers.append(parsed_c)
         return parsed_containers
 
 
 if __name__ == '__main__':
-    EnvInfo.parse_env_infos()
+    EnvInfo.parse_runnning_emulation_infos()

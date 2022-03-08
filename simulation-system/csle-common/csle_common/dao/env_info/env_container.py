@@ -7,7 +7,7 @@ class EnvContainer:
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
                  minigame : str, name2: str, level: str, hostname: str, image_name : str, net: str,
-                 dir: str, config_path : str, container_handle, emulation: str):
+                 dir: str, config_path : str, container_handle, emulation: str, log_sink: str):
         """
         Intializes the DTO
 
@@ -33,6 +33,7 @@ class EnvContainer:
         :param config_path: the container configuration ṕath of the container
         :param container_handle: the py-docker container handle
         :param emulation: the emulation name
+        :param log_sink: the log_sink name
         """
         self.name = name
         self.status = status
@@ -56,6 +57,7 @@ class EnvContainer:
         self.config_path = config_path
         self.container_handle = container_handle
         self.emulation = emulation
+        self.log_sink = log_sink
 
     def to_dict(self) -> dict:
         """
@@ -82,6 +84,7 @@ class EnvContainer:
         d["net"] = self.net
         d["config_path"] = self.config_path
         d["emulation"] = self.emulation
+        d["log_sink"] = self.log_sink
         return d
 
 
@@ -94,4 +97,4 @@ class EnvContainer:
                f"created: {self.created}, ip: {self.ip}, network_id: {self.network_id}, gateway: {self.gateway}," \
                f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, minigame: {self.minigame}, name2: {self.name2}," \
                f"level: {self.level}, hostname: {self.hostname}, image_name: {self.image_name}, net: {self.net}, " \
-               f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}"
+               f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}, log_sink:{self.log_sink}"

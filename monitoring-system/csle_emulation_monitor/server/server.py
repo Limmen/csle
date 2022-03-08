@@ -12,7 +12,7 @@ def root():
 
 @app.route('/envs')
 def environments():
-    envs = EnvInfo.parse_env_infos()
+    envs = EnvInfo.parse_runnning_emulation_infos()
     envs_dicts = list(map(lambda x: x.to_dict(), envs))
     response = jsonify(envs_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")

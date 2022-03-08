@@ -9,6 +9,7 @@ from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.util.experiments_util import util
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.dao.container_config.container_network import ContainerNetwork
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 import csle_common.constants.constants as constants
 
 
@@ -280,7 +281,7 @@ class ContainerManager:
 
         :return: a list of the names of the running containers
         """
-        parsed_envs = EnvInfo.parse_env_infos()
+        parsed_envs = EnvInfo.parse_runnning_emulation_infos()
         container_name_image_ip = []
         for env in parsed_envs:
             container_name_image_ip = container_name_image_ip + list(map(lambda x: (x.name, x.image_name, x.ip), env.containers))
@@ -288,11 +289,25 @@ class ContainerManager:
 
     @staticmethod
     def list_running_emulations() -> List[str]:
-        parsed_envs = EnvInfo.parse_env_infos()
+        """
+        :return: A list of names of running emulations
+        """
+        parsed_envs = EnvInfo.parse_runnning_emulation_infos()
         emulation_names = set()
         for env in parsed_envs:
             emulation_names.add(env.name)
         return list(emulation_names)
+
+    @staticmethod
+    def list_running_logsinks() -> List[str]:
+        """
+        :return: a list of names of running log sinks
+        """
+        parsed_envs = EnvInfo.parse_runnning_log_sinks_infos()
+        log_sink_names = set()
+        for env in parsed_envs:
+            log_sink_names.add(env.name)
+        return list(log_sink_names)
 
     @staticmethod
     def list_all_stopped_containers() -> List[Tuple[str, str, str]]:
@@ -357,6 +372,32 @@ class ContainerManager:
                       f"{container_name}"
                 print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+
+    @staticmethod
+    def connect_logsink_to_network(log_sink_config: LogSinkConfig) -> None:
+        """
+        Connect a running logsink to neworks
+
+        :param log_sink_config: the log_sink config
+        :return: None
+        """
+        c = log_sink_config.container
+        container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+                         f"{constants.CSLE.LEVEL}{c.level}"
+        # Disconnect from none
+        cmd = f"docker network disconnect none {container_name}"
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+        # Wait a few seconds before connecting
+        time.sleep(2)
+
+        for ip_net in c.ips_and_networks:
+            ip, net = ip_net
+            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
+                  f"{container_name}"
+            print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
 
     @staticmethod

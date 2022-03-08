@@ -12,6 +12,7 @@ import os
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.container_config.container_network import ContainerNetwork
@@ -173,6 +174,18 @@ def run_emulation(emulation_env_config: EmulationEnvConfig, no_traffic: bool) ->
     EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
 
 
+def run_log_sink(log_sink_config: LogSinkConfig) -> None:
+    """
+    Runs a log sink with the given config
+
+    :param log_sink_config: the config of the log sink to run
+    :return: None
+    """
+    click.secho(f"Starting log sink {log_sink_config.name}", bold=False)
+    EnvConfigGenerator.run_log_sink(log_sink_config=log_sink_config)
+    EnvConfigGenerator.apply_log_sink_config(log_sink_config=log_sink_config)
+
+
 def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig]) -> Tuple[List[str], List[str]]:
     """
     Partitions the set of emulations into a set of running emulations and a set of stopped emulations
@@ -191,6 +204,24 @@ def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig
     return running_emulations, stopped_emulations
 
 
+def separate_running_and_stopped_log_sinks(log_sinks : List[LogSinkConfig]) -> Tuple[List[str], List[str]]:
+    """
+    Partitions the set of log sinks into a set of running log sinks and a set of stopped log sinks
+
+    :param log sinks: the list of log sinks
+    :return: running_log_sinks, stopped_log_sinks
+    """
+    rc_log_sinks = ContainerManager.list_running_logsinks()
+    stopped_log_sinks = []
+    running_log_sinks = []
+    for ls in log_sinks:
+        if ls.name in rc_log_sinks:
+            running_log_sinks.append(ls.name)
+        else:
+            stopped_log_sinks.append(ls.name)
+    return running_log_sinks, stopped_log_sinks
+
+
 def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     """
     Stops the emulation with the given configuration
@@ -200,6 +231,17 @@ def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     """
     click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
+
+
+def stop_log_sink(log_sink_config: LogSinkConfig) -> None:
+    """
+    Stops the log sink with the given configuration
+
+    :param log_sink_config: the configuration of the log sink to stop
+    :return: None
+    """
+    click.secho(f"Stopping log sink {log_sink_config.name}", bold=False)
+    EnvConfigGenerator.stop_log_sink(log_sink_config=log_sink_config)
 
 
 def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
@@ -213,6 +255,19 @@ def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.rm_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
+
+
+def clean_log_sink(log_sink_config: LogSinkConfig) -> None:
+    """
+    Cleans the log sink with the given configuration
+
+    :param emulation_env_config: the configuration of the emulation
+    :return: None
+    """
+    click.secho(f"Cleaning log sink {log_sink_config.name}", bold=False)
+    EnvConfigGenerator.stop_log_sink(log_sink_config=log_sink_config)
+    EnvConfigGenerator.rm_log_sink(log_sink_config=log_sink_config)
+    EnvConfigGenerator.delete_networks_of_log_sink(log_sink_config=log_sink_config)
 
 
 def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -> None:
@@ -242,6 +297,8 @@ def stop(entity: str) -> None:
         ContainerManager.stop_all_running_containers()
         for emulation in MetastoreFacade.list_emulations():
             stop_emulation(emulation_env_config=emulation)
+        for ls in MetastoreFacade.list_log_sinks():
+            stop_log_sink(log_sink_config=ls)
     else:
         container_stopped = ContainerManager.stop_container(name=entity)
         if not container_stopped:
@@ -252,7 +309,14 @@ def stop(entity: str) -> None:
             else:
                 emulation_stopped = False
             if not emulation_stopped:
-                click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+                log_sink_config = MetastoreFacade.get_emulation(name=entity)
+                if log_sink_config is not None:
+                    stop_log_sink(log_sink_config)
+                    log_sink_stopped = True
+                else:
+                    log_sink_stopped = False
+                if not log_sink_stopped:
+                    click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
@@ -270,8 +334,6 @@ def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
-        for emulation in MetastoreFacade.list_emulations():
-            clean_emulation(emulation)
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
@@ -282,12 +344,26 @@ def start(entity : str, no_traffic: bool, name: str) -> None:
             else:
                 emulation_started =False
             if not emulation_started:
-                image_started = run_image(image=entity, name=name)
-                if not image_started:
-                    click.secho(f"name: {entity} not recognized", fg="red", bold=True)
+                log_sink_config = MetastoreFacade.get_log_sink(name=entity)
+                if log_sink_config is not None:
+                    run_log_sink(log_sink_config=log_sink_config)
+                    log_sink_started = True
+                else:
+                    log_sink_started = False
+                if not log_sink_started:
+                    image_started = run_image(image=entity, name=name)
+                    if not image_started:
+                        click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
 def run_image(image: str, name: str) -> bool:
+    """
+    Runs a container with a given image
+
+    :param image: the image of the container
+    :param name: the name that the container will be assigned
+    :return: True if it was started successfully, False otherwise
+    """
     try:
         EnvConfigGenerator.run_container(image=image, name=name)
         return True
@@ -314,7 +390,7 @@ def rm(entity : str) -> None:
         rm_name(name=entity)
 
 @click.argument('entity', default="")
-@click.command(help="all | containers | emulations | name")
+@click.command(help="all | containers | emulations | logsinks | name")
 def clean(entity : str) -> None:
     """
     Removes a container, a network, an image, all networks, all images, or all containers
@@ -327,12 +403,17 @@ def clean(entity : str) -> None:
         ContainerManager.rm_all_stopped_containers()
         for emulation in MetastoreFacade.list_emulations():
             clean_emulation(emulation_env_config=emulation)
+        for ls in MetastoreFacade.list_log_sinks():
+            clean_log_sink(log_sink_config=ls)
     elif entity == "containers":
         ContainerManager.stop_all_running_containers()
         ContainerManager.rm_all_stopped_containers()
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
             clean_emulation(emulation_env_config=emulation)
+    elif entity == "logsinks":
+        for ls in MetastoreFacade.list_log_sinks():
+            clean_log_sink(log_sink_config=ls)
     else:
         clean_name(name=entity)
 
@@ -341,7 +422,7 @@ def clean(entity : str) -> None:
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.command(help="containers | networks | images | emulations | all")
+@click.command(help="containers | networks | images | emulations | logsinks all")
 def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
@@ -367,6 +448,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_images()
     elif entity == "emulations":
         list_emulations(all=all, stopped=stopped)
+    elif entity == "logsinks":
+        list_logsinks(all=all, stopped=stopped)
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -388,7 +471,11 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
                         if img is not None:
                             print_img(img=img)
                         else:
-                            click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+                            log_sink_config = MetastoreFacade.get_log_sink(name=entity)
+                            if log_sink_config is not None:
+                                print_log_sink_config(log_sink=log_sink_config)
+                            else:
+                                click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
 
 
 def print_running_container(container) -> None:
@@ -446,6 +533,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_all_containers()
     list_images()
     list_emulations(all=all, stopped=stopped, running=running)
+    list_logsinks(all=all, stopped=stopped, running=running)
 
 
 def list_emulations(all: bool = False, stopped: bool = False, running: bool = True) -> None:
@@ -466,6 +554,26 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     if all or stopped:
         for em in stopped_emulations:
             click.secho(em + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_logsinks(all: bool = False, stopped: bool = False, running: bool = True) -> None:
+    """
+    Lists logsinks
+
+    :param all: boolean flag whether all emulations should be listed
+    :param stopped: boolean flag whether stopped emulations should be listed
+    :param running: boolean flag whether running containers should be listed
+    :return: None
+    """
+    click.secho("CSLE log sinks:", fg="magenta", bold=True)
+    log_sinks = MetastoreFacade.list_log_sinks()
+    running_log_sinks, stopped_log_sinks = separate_running_and_stopped_log_sinks(log_sinks=log_sinks)
+    if all or not stopped:
+        for ls in running_log_sinks:
+            click.secho(ls + f" {click.style('[running]', fg='green')}", bold=False)
+    if all or stopped:
+        for ls in stopped_log_sinks:
+            click.secho(ls + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_networks() -> None:
@@ -612,7 +720,9 @@ def rm_name(name: str) -> None:
             if not image_removed:
                 emulation_removed = remove_emulation(name=name)
                 if not emulation_removed:
-                    click.secho(f"name: {name} not recognized", fg="red", bold=True)
+                    logsink_removed = remove_logsink(name=name)
+                    if not logsink_removed:
+                        click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
 def clean_name(name: str) -> None:
@@ -630,7 +740,11 @@ def clean_name(name: str) -> None:
         if em is not None:
             clean_emulation(emulation_env_config=em)
         else:
-            click.secho(f"name: {name} not recognized", fg="red", bold=True)
+            ls = MetastoreFacade.get_log_sink(name=name)
+            if ls is not None:
+                clean_log_sink(log_sink_config=ls)
+            else:
+                click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
 def remove_emulation(name: str) -> bool:
@@ -646,6 +760,23 @@ def remove_emulation(name: str) -> bool:
         if emulation.name == name:
             clean_emulation(emulation)
             EnvConfigGenerator.uninstall_emulation(config=emulation)
+            return True
+    return False
+
+
+def remove_logsink(name: str) -> bool:
+    """
+    Utility function for removing (uninstalling) a log sinkg
+
+    :param name: the name of the log sinkg to remove
+    :return: True if the log sink was removed, false otherwise
+    """
+    click.secho(f"Removing log sink {name}", bold=False)
+    log_sinks = MetastoreFacade.list_log_sinks()
+    for ls in log_sinks:
+        if ls.name == name:
+            clean_log_sink(log_sink_config=ls)
+            EnvConfigGenerator.uninstall_logsink(config=ls)
             return True
     return False
 
@@ -687,6 +818,24 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
     for user in emulation_env_config.users_config.users:
         users = ",".join(list(map(lambda x: x[0], user.users)))
         click.secho(f"{users} {user.ip}", bold=False)
+
+
+def print_log_sink_config(log_sink_config: LogSinkConfig) -> None:
+    """
+    Prints the configuration of a given log sink
+
+    :param emulation_env_config: the configuration to print
+    :return: None
+    """
+    click.secho(f"Log sink name: {log_sink_config.name}", fg="yellow", bold=True)
+    click.secho(f"Container:", fg="yellow", bold=True)
+    click.secho(f"{log_sink_config.container.name} {','.join(log_sink_config.container.get_ips())}", bold=False)
+    click.secho(f"Admin login:", fg="yellow", bold=True)
+    click.secho(f"Username:{constants.CSLE_ADMIN.USER}", bold=False)
+    click.secho(f"Password:{constants.CSLE_ADMIN.PW}", bold=False)
+    click.secho(f"Resource constraints:", fg="yellow", bold=True)
+    click.secho(f"{log_sink_config.resources.container_name}: CPUs:{log_sink_config.resources.num_cpus}, "
+                f"memory: {log_sink_config.resources.available_memory_gb}GB", bold=False)
 
 
 # Adds the commands to the group
