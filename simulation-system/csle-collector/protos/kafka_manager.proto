@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service KafkaManager {
+  rpc getKafkaStatus(GetKafkaStatusMsg) returns (KafkaDTO) {}
+  rpc stopKafka(StopKafkaMsg) returns (KafkaDTO) {}
+  rpc startKafka(StartKafkaMsg) returns (KafkaDTO) {}
+  rpc createTopic(CreateTopicMsg) returns (KafkaDTO) {}
+  rpc deleteTopic(DeleteTopicMsg) returns (KafkaDTO) {}
+}
+
+// Message that the client sends to stop kafka
+message StopKafkaMsg {}
+
+// Message that the client sends to start kafka
+message StartKafkaMsg {}
+
+// Message that the client sends to extract the kafka status
+message GetKafkaStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about Kafka
+message KafkaDTO {
+  bool running = 1;
+  repeated string topics = 2;
+}
+
+//Message that the client sends to create a new Kafka topic
+message CreateTopicMsg {
+  string name = 1;
+  int32 partitions = 2;
+  int32 replicas = 3;
+}
+
+//Message that the client sends to delete a Kafka topic
+message DeleteTopicMsg {
+  string name = 1;
+}
+

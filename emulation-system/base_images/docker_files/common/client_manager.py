@@ -1,4 +1,4 @@
-import csle_collector.client_manager as client_manager
+import csle_collector.client_manager.client_manager as client_manager
 import argparse
 
 

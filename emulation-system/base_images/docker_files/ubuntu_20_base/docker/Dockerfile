@@ -73,9 +73,11 @@ RUN wget --no-check-certificate https://binaries.cockroachdb.com/cockroach-v20.1
     tar -xvzf cockroach-v20.1.8.linux-amd64.tgz
 
 # setup Kafka
-RUN wget --no-check-certificate https://archive.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz &&\
-    tar xzf kafka_2.13-2.4.0.tgz &&\
-    mv kafka_2.13-2.4.0 /usr/local/kafka
+RUN wget --no-check-certificate https://archive.apache.org/dist/kafka/3.0.0/kafka_2.13-2.4.0.tgz &&\
+    tar xzf kafka_2.13-3.0.0.tgz &&\
+    mv kafka_2.13-3.0.0 /usr/local/kafka \
+ADD docker_files/common/kafka /etc/init.d/kafka
+RUN chmod 755 /etc/init.d/kafka
 
 # setup SNMP
 RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
@@ -140,9 +142,8 @@ ADD docker_files/common/index.html /web/static/index.html
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
 
 RUN pip install flask &&\
-    pip install waitress
-
-RUN pip install csle-collector
+    pip install waitress &&\
+    csle-collector
 
 # Setup glassfish
 RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\

@@ -8,8 +8,8 @@ from scipy.stats import poisson
 from scipy.stats import expon
 from concurrent import futures
 import grpc
-import csle_collector.client_manager_pb2_grpc
-import csle_collector.client_manager_pb2
+import csle_collector.client_manager.client_manager_pb2_grpc
+import csle_collector.client_manager.client_manager_pb2
 
 
 class ClientThread(threading.Thread):
@@ -105,7 +105,7 @@ class ArrivalThread(threading.Thread):
             time.sleep(self.time_step_len_seconds)
 
 
-class ClientManagerServicer(csle_collector.client_manager_pb2_grpc.ClientManagerServicer):
+class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerServicer):
     """
     gRPC server for managing the running clients. Allows to start/stop clients remotely and also to query the
     state of the clients.
@@ -118,8 +118,8 @@ class ClientManagerServicer(csle_collector.client_manager_pb2_grpc.ClientManager
         self.arrival_thread = None
         logging.basicConfig(filename="/client_manager.log", level=logging.INFO)
 
-    def getClients(self, request: csle_collector.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
-            -> csle_collector.client_manager_pb2.ClientsDTO:
+    def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
+            -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Gets the state of the clients
 
@@ -132,13 +132,14 @@ class ClientManagerServicer(csle_collector.client_manager_pb2_grpc.ClientManager
         if self.arrival_thread is not None:
             num_clients = len(self.arrival_thread.client_threads)
             client_process_active = True
-        clients_dto = csle_collector.client_manager_pb2.ClientsDTO(
+        clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = num_clients,
             client_process_active = client_process_active
         )
         return clients_dto
 
-    def stopClients(self, request: csle_collector.client_manager_pb2.StopClientsMsg, context: grpc.ServicerContext):
+    def stopClients(self, request: csle_collector.client_manager.client_manager_pb2.StopClientsMsg,
+                    context: grpc.ServicerContext):
         """
         Stops the Poisson-process that generates new clients
 
@@ -152,13 +153,13 @@ class ClientManagerServicer(csle_collector.client_manager_pb2_grpc.ClientManager
             time.sleep(1)
         self.arrival_thread = None
 
-        return csle_collector.client_manager_pb2.ClientsDTO(
+        return csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = 0,
             client_process_active = False
         )
 
-    def startClients(self, request: csle_collector.client_manager_pb2.StartClientsMsg,
-                     context: grpc.ServicerContext) -> csle_collector.client_manager_pb2.ClientsDTO:
+    def startClients(self, request: csle_collector.client_manager.client_manager_pb2.StartClientsMsg,
+                     context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Starts/Restarts the Poisson process that generates clients
 
@@ -179,7 +180,7 @@ class ClientManagerServicer(csle_collector.client_manager_pb2_grpc.ClientManager
         arrival_thread.start()
         self.arrival_thread = arrival_thread
 
-        clients_dto = csle_collector.client_manager_pb2.ClientsDTO(
+        clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = len(self.arrival_thread.client_threads),
             client_process_active = True
         )
@@ -194,7 +195,7 @@ def serve(port : int = 50051) -> None:
     :return: None
     """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    csle_collector.client_manager_pb2_grpc.add_ClientManagerServicer_to_server(
+    csle_collector.client_manager.client_manager_pb2_grpc.add_ClientManagerServicer_to_server(
         ClientManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()

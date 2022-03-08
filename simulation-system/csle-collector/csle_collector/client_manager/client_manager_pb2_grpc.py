@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import csle_collector.client_manager_pb2 as client__manager__pb2
+import csle_collector.client_manager.client_manager_pb2 as client__manager__pb2
 
 
 class ClientManagerStub(object):
