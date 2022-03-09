@@ -111,3 +111,49 @@ class LogSinkManager:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             return kafka_dto
+
+
+    @staticmethod
+    def stop_kafka_server(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> \
+            csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+        """
+        Method for requesting the KafkaManager to stop the Kafka server
+
+        :param log_sink_config: the configuration of the Kafka server
+        :param emulation_config: the emulation config
+        :return: a KafkaDTO with the status of the server
+        """
+        print(f"Stopping kafka server on container: {log_sink_config.container.get_ips()[0]}")
+        LogSinkManager._start_kafka_manager_if_not_running(log_sink_config=log_sink_config,
+                                                           emulation_config=emulation_config)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{log_sink_config.container.get_ips()[0]}:'
+                f'{log_sink_config.kafka_manager_port}') as channel:
+            stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
+            kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
+            return kafka_dto
+
+
+    @staticmethod
+    def start_kafka_server(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> \
+            csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+        """
+        Method for requesting the KafkaManager to start the Kafka server
+
+        :param log_sink_config: the configuration of the Kafka server
+        :param emulation_config: the emulation config
+        :return: a KafkaDTO with the status of the server
+        """
+        print(f"Starting kafka server on container: {log_sink_config.container.get_ips()[0]}")
+        LogSinkManager._start_kafka_manager_if_not_running(log_sink_config=log_sink_config,
+                                                           emulation_config=emulation_config)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{log_sink_config.container.get_ips()[0]}:'
+                f'{log_sink_config.kafka_manager_port}') as channel:
+            stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
+            kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
+            return kafka_dto

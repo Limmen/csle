@@ -29,9 +29,6 @@ run_level_9:
 run_level_10:
 	cd ctf/001/level_10/ && $(MAKE) run
 
-run_log_sink:
-	cd log_sink/001/ && $(MAKE) run
-
 # Runs all emulations (Warning: dont do this on a machine with limited resources!)
 run:
 	cd ctf/001/level_1/ && $(MAKE) run
@@ -44,7 +41,6 @@ run:
 	cd ctf/001/level_8/ && $(MAKE) run
 	cd ctf/001/level_9/ && $(MAKE) run
 	cd ctf/001/level_10/ && $(MAKE) run
-	cd log_sink/001/ && $(MAKE) run
 
 # Targets for stopping each individual env
 stop_level_1:
@@ -77,9 +73,6 @@ stop_level_9:
 stop_level_10:
 	cd ctf/001/level_10/ && $(MAKE) stop
 
-stop_log_sink:
-	cd log_sink/001/ && $(MAKE) stop
-
 # Stops all emulations
 stop:
 	cd ctf/001/level_1/ && $(MAKE) stop
@@ -92,7 +85,6 @@ stop:
 	cd ctf/001/level_8/ && $(MAKE) stop
 	cd ctf/001/level_9/ && $(MAKE) stop
 	cd ctf/001/level_10/ && $(MAKE) stop
-	cd log_sink/001/ && $(MAKE) stop
 
 # Targets for cleaning each individual env
 clean_level_1:
@@ -125,9 +117,6 @@ clean_level_9:
 clean_level_10:
 	cd ctf/001/level_10/ && $(MAKE) clean
 
-clean_log_sink:
-	cd log_sink/001/ && $(MAKE) clean
-
 # Cleans all emulations
 clean:
 	cd ctf/001/level_1/ && $(MAKE) clean
@@ -140,7 +129,6 @@ clean:
 	cd ctf/001/level_8/ && $(MAKE) clean
 	cd ctf/001/level_9/ && $(MAKE) clean
 	cd ctf/001/level_10/ && $(MAKE) clean
-	cd log_sink/001/ && $(MAKE) clean
 
 # Targets for installing each individual env
 install_level_1:
@@ -173,9 +161,6 @@ install_level_9:
 install_level_10:
 	cd ctf/001/level_10/ && $(MAKE) install
 
-install_log_sink:
-	cd log_sink/001/ && $(MAKE) install
-
 # Installs all emulations
 install:
 	cd ctf/001/level_1/ && $(MAKE) install
@@ -188,8 +173,6 @@ install:
 	cd ctf/001/level_8/ && $(MAKE) install
 	cd ctf/001/level_9/ && $(MAKE) install
 	cd ctf/001/level_10/ && $(MAKE) install
-	cd log_sink/001/ && $(MAKE) install
-
 
 # Targets for uninstalling each individual env
 uninstall_level_1:
@@ -222,9 +205,6 @@ uninstall_level_9:
 uninstall_level_10:
 	cd ctf/001/level_10/ && $(MAKE) uninstall
 
-uninstall_log_sink:
-	cd log_sink/001/ && $(MAKE) uninstall
-
 # Uninstalls all emulations
 uninstall:
 	cd ctf/001/level_1/ && $(MAKE) uninstall
@@ -237,7 +217,6 @@ uninstall:
 	cd ctf/001/level_8/ && $(MAKE) uninstall
 	cd ctf/001/level_9/ && $(MAKE) uninstall
 	cd ctf/001/level_10/ && $(MAKE) uninstall
-	cd log_sink/001/ && $(MAKE) uninstall
 
 # Targets for cleaning the config each individual env
 clean_config_level_1:
@@ -270,9 +249,6 @@ clean_config_level_9:
 clean_config_level_10:
 	cd ctf/001/level_10/ && $(MAKE) clean_config
 
-clean_config_log_sink:
-	cd log_sink/001/ && $(MAKE) clean_config
-
 # Cleans the materialized configuration of each emulation
 clean_config:
 	cd ctf/001/level_1/ && $(MAKE) clean_config
@@ -285,7 +261,6 @@ clean_config:
 	cd ctf/001/level_8/ && $(MAKE) clean_config
 	cd ctf/001/level_9/ && $(MAKE) clean_config
 	cd ctf/001/level_10/ && $(MAKE) clean_config
-	cd log_sink/001/ && $(MAKE) clean_config
 
 # Targets for applying the config of each individual env
 apply_config_level_1:

@@ -23,6 +23,17 @@ class VulnerabilitiesConfig:
         d["vulnerabilities"] = list(map(lambda x: x.to_dict(), self.vulnerabilities))
         return d
 
+    @staticmethod
+    def from_dict(d) -> "VulnerabilitiesConfig":
+        """
+        Converts a dict representation of the object to a DTO representation
+        :return: a DTO representation of the object
+        """
+        vulnerabilities = list(map(lambda x: NodeVulnerabilityConfig.from_dict(x),
+                                   d["vulnerabilities"]))
+        dto = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
+        return dto
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

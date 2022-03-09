@@ -9,8 +9,7 @@ class LogSinkConfig:
     Represents the configuration of a LogSink in CSLE
     """
 
-    def __init__(self, name: str,
-                 container: NodeContainerConfig,
+    def __init__(self, container: NodeContainerConfig,
                  resources: NodeResourcesConfig,
                  topics: List[KafkaTopic],
                  kafka_port: int= 9092,
@@ -19,7 +18,6 @@ class LogSinkConfig:
         """
         Initializes the DTO
 
-        :param name: the name of the log sink
         :param container: the container for the Kafka server
         :param network: the network
         :param kafka_port: the port that the Kafka server is listening to
@@ -28,7 +26,6 @@ class LogSinkConfig:
         :param topics: list of kafka topics
         :param version: the version
         """
-        self.name = name
         self.kafka_port = kafka_port
         self.kafka_manager_port = kafka_manager_port
         self.version = version
@@ -41,7 +38,6 @@ class LogSinkConfig:
         :return: a dict representation of the object
         """
         d = {}
-        d["name"] = self.name
         d["container"] = self.container.to_dict()
         d["resources"] = self.resources.to_dict()
         d["kafka_port"] = self.kafka_port
@@ -54,7 +50,7 @@ class LogSinkConfig:
         """
         :return: a string representation of the object
         """
-        return f"name:{self.name}, container: {self.container}, " \
+        return f"container: {self.container}, " \
                f"port:{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
                f"kafka_manager_port:{self.kafka_manager_port}"

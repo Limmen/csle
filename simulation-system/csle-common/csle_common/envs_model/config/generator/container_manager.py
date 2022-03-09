@@ -299,17 +299,6 @@ class ContainerManager:
         return list(emulation_names)
 
     @staticmethod
-    def list_running_logsinks() -> List[str]:
-        """
-        :return: a list of names of running log sinks
-        """
-        parsed_envs = EnvInfo.parse_runnning_log_sinks_infos()
-        log_sink_names = set()
-        for env in parsed_envs:
-            log_sink_names.add(env.name)
-        return list(log_sink_names)
-
-    @staticmethod
     def list_all_stopped_containers() -> List[Tuple[str, str, str]]:
         """
         Stops all stopped csle containers
@@ -397,6 +386,30 @@ class ContainerManager:
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
             print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+
+
+    @staticmethod
+    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig) -> None:
+        """
+        Connects running containers to the log sink
+
+        :param containers_config: the containers configuration
+        :param log_sink_config: the configuration of the logsink
+        :return: None
+        """
+        log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
+        log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
+        for c in containers_config.containers:
+            container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+                             f"{constants.CSLE.LEVEL}{c.level}"
+
+            ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
+            c_ip = log_sink_network_prefix + "." + ip_suffix
+            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {logsink_net.name} " \
+                  f"{container_name}"
+            print(f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
 

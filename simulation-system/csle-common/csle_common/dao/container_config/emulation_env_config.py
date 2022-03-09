@@ -5,6 +5,7 @@ from csle_common.dao.container_config.vulnerabilities_config import Vulnerabilit
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 
 
 class EmulationEnvConfig:
@@ -15,7 +16,7 @@ class EmulationEnvConfig:
     def __init__(self, name: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: Topology, traffic_config: TrafficConfig,
-                 resources_config: ResourcesConfig):
+                 resources_config: ResourcesConfig, log_sink_config: LogSinkConfig):
         """
         Initializes the object
 
@@ -36,8 +37,7 @@ class EmulationEnvConfig:
         self.topology_config = topology_config
         self.traffic_config = traffic_config
         self.resources_config = resources_config
-
-
+        self.log_sink_config = log_sink_config
 
     def to_dict(self) -> dict:
         """
@@ -52,8 +52,8 @@ class EmulationEnvConfig:
         d["topology_config"] = self.topology_config.to_dict()
         d["traffic_config"] = self.traffic_config.to_dict()
         d["resources_config"] = self.resources_config.to_dict()
+        d["log_sink_config"] = self.log_sink_config.to_dict()
         return d
-
 
     def __str__(self) -> str:
         """
@@ -62,4 +62,4 @@ class EmulationEnvConfig:
         return f"name: {self.name}, containers_config: {self.containers_config}, users_config: {self.users_config}, " \
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
-               f"resources_config: {self.resources_config}"
+               f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}"

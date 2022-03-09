@@ -28,20 +28,6 @@ class EnvInfo:
         return parsed_envs
 
     @staticmethod
-    def parse_runnning_log_sinks_infos() -> List[RunningEnv]:
-        """
-        Queries docker to get a list of all running log sinks
-
-        :return: a list of environment DTOs
-        """
-        client_1 = docker.from_env()
-        client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-        parsed_containers = EnvInfo.parse_running_containers(client_1=client_1, client2=client2)
-        log_sinks = list(set(list(map(lambda x: x.log_sink, parsed_containers))))
-        parsed_envs = EnvInfo.parse_running_log_sinks(log_sinks=log_sinks, containers=parsed_containers)
-        return parsed_envs
-
-    @staticmethod
     def parse_running_containers(client_1, client2) -> List[EnvContainer]:
         """
         Queries docker to get a list of all running containers
@@ -103,35 +89,6 @@ class EnvInfo:
                                log_sink_config=None)
             parsed_envs.append(p_env)
         return parsed_envs
-
-
-    @staticmethod
-    def parse_running_log_sinks(log_sinks: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
-        """
-        Queries docker to get a list of all active log sinks
-
-        :param log_sinks: list of csle log sinks
-        :param containers: list of running csle containers
-        :return: list of parsed log sinks
-        """
-        parsed_log_sink_envs = []
-        for ls in log_sinks:
-            logsink_containers = list(filter(lambda x: x.log_sink == ls, containers))
-            subnet_prefix = constants.COMMANDS.DOT_DELIM.join(logsink_containers[0].ip.rsplit(constants.COMMANDS.DOT_DELIM)[0:-1])
-            subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(logsink_containers[0].ip_prefix_len)
-            minigame = logsink_containers[0].minigame
-
-            config = None
-            ls_record = MetastoreFacade.get_log_sink(name=ls)
-            if ls_record is not None:
-                config = ls_record
-
-            p_env = RunningEnv(containers=logsink_containers, name=ls, subnet_prefix=subnet_mask, minigame=minigame,
-                               subnet_mask=subnet_mask, level= logsink_containers[0].level, config=None,
-                               log_sink_config=config)
-            parsed_log_sink_envs.append(p_env)
-        return parsed_log_sink_envs
-
 
     @staticmethod
     def parse_containers(containers, client2) -> List[EnvContainer]:
