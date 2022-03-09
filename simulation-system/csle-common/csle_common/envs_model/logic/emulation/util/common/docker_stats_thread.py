@@ -3,8 +3,8 @@ import threading
 import docker
 from collections import deque
 from csle_common.envs_model.config.generator.env_info import EnvInfo
-from csle_common.envs_model.logic.emulation.util.common.docker_stats_util import DockerStatsUtil
-from csle_common.dao.env_info.docker_stats import DockerStats
+from csle_collector.docker_stats_manager.docker_stats_util import DockerStatsUtil
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
 import csle_common.constants.constants as constants
 
 
@@ -48,7 +48,7 @@ class DockerStatsThread(threading.Thread):
         while True:
             for stream, container in self.streams:
                 stats_dict = next(stream)
-                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container)
+                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
                 if parsed_stats.container_ip not in self.stats_queues:
                     self.stats_queues[parsed_stats.container_ip] = deque([], maxlen=self.stats_queue_maxsize)
                 self.stats_queues[parsed_stats.container_ip].append(parsed_stats)

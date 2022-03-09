@@ -1,7 +1,6 @@
 from typing import Tuple, Union
-import csle_common.constants.constants as constants
-from csle_common.dao.env_info.env_container import EnvContainer
-from csle_common.dao.env_info.docker_stats import DockerStats
+import csle_collector.constants.constants as constants
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
 
 
 class DockerStatsUtil:
@@ -106,7 +105,7 @@ class DockerStatsUtil:
         return t
 
     @staticmethod
-    def parse_stats(stats_dict, container: EnvContainer) -> DockerStats:
+    def parse_stats(stats_dict, container: str) -> DockerStats:
         """
         Parses a stats dict into a DockerStats object
 
@@ -138,8 +137,6 @@ class DockerStatsUtil:
             constants.DOCKER_STATS.BLK_WRITE: blk_write,
             constants.DOCKER_STATS.NET_RX: net_r,
             constants.DOCKER_STATS.NET_TX: net_w,
-            constants.DOCKER_STATS.CONTAINER_NAME: container.name,
-            constants.DOCKER_STATS.CONTAINER_ID: container.id,
-            constants.DOCKER_STATS.CONTAINER_IP: container.ip
+            constants.DOCKER_STATS.CONTAINER_NAME: container
         }
         return DockerStats.from_dict(parsed_stats_dict)

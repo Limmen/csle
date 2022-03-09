@@ -495,9 +495,9 @@ class EnvConfigGenerator:
         emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
                                            agent_username=constants.CSLE_ADMIN.USER,
                                            agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-        steps = 10
+        steps = 11
         if no_traffic:
-            steps = 9
+            steps = steps-1
         current_step = 1
         print(f"-- Configuring the emulation --")
         print(f"-- Step {current_step}/{steps}: Creating networks --")
@@ -544,12 +544,16 @@ class EnvConfigGenerator:
             TrafficGenerator.start_client_population(
                 traffic_config=emulation_env_config.traffic_config,
                 containers_config=emulation_env_config.containers_config,
-                emulation_config=emulation_config)
+                emulation_config=emulation_config, log_sink_config=emulation_env_config.log_sink_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
+
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
+        #TODO
 
 
     @staticmethod
@@ -607,7 +611,7 @@ class EnvConfigGenerator:
         TrafficGenerator.start_client_population(
             traffic_config=emulation_env_config.traffic_config,
             containers_config=emulation_env_config.containers_config,
-            emulation_config=emulation_config)
+            emulation_config=emulation_config, log_sink_config=emulation_env_config.log_sink_config)
 
 
     @staticmethod

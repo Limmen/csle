@@ -12,6 +12,7 @@ from csle_common.envs_model.logic.emulation.util.common.emulation_util import Em
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.node_traffic_config import NodeTrafficConfig
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.util.experiments_util import util
 
 
@@ -124,6 +125,10 @@ class TrafficGenerator:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
             client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
 
+            # Stop the producer
+            if client_dto.client_process_active:
+                csle_collector.client_manager.query_clients.stop_producer(stub)
+
             # Stop the client population
             if client_dto.client_process_active:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
@@ -131,13 +136,14 @@ class TrafficGenerator:
 
     @staticmethod
     def start_client_population(traffic_config: TrafficConfig, containers_config: ContainersConfig,
-                                emulation_config: EmulationConfig) -> None:
+                                emulation_config: EmulationConfig, log_sink_config: LogSinkConfig) -> None:
         """
         Starts the arrival process of clients
 
         :param traffic_config: the configuration of the client population
         :param containers_config: the container configurations
         :param emulation_config: the configuration to connect to the emulation
+        :param log_sink_config: configuration of the log sink
         :return: None
         """
         print(f"starting client population on container: {traffic_config.client_population_config.ip}")
@@ -200,12 +206,24 @@ class TrafficGenerator:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
                 time.sleep(5)
 
+            # Stop the producer thread if it is already running
+            if client_dto.client_process_active:
+                csle_collector.client_manager.query_clients.stop_producer(stub)
+                time.sleep(5)
 
             # Start the client population
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=traffic_config.client_population_config.mu,
                 lamb=traffic_config.client_population_config.lamb, time_step_len_seconds=1, commands=commands,
                 num_commands=traffic_config.client_population_config.num_commands)
+
+            time.sleep(5)
+
+            # Start the producer thread
+            csle_collector.client_manager.query_clients.start_producer(
+                stub=stub, ip=log_sink_config.container.get_ips()[0],
+                port=log_sink_config.kafka_port,
+                time_step_len_seconds=traffic_config.client_population_config.producer_time_step_len_seconds)
 
 
     @staticmethod

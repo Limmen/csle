@@ -650,6 +650,8 @@ class COMMANDS:
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
     START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
+    START_DOCKER_STATS_MANAGER = "nohup csle statsmanager {} &"
+    SEARCH_DOCKER_STATS_MANAGER = "csle statsmanager"
 
 
 class LOG_SINK:
@@ -662,8 +664,8 @@ class LOG_SINK:
     TCP_CONNECTIONS_TOPIC_NAME = "tcp_connections"
     PROCESSES_TOPIC_NAME = "processes"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
-    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_clients"]
-    IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "attempted-admin", "attempted-user",
+    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients"]
+    IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
                                 "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
                                 "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
                                 "attempted-dos", "attempted-recon", "bad-unknown", "default-login-attempt",
@@ -673,11 +675,11 @@ class LOG_SINK:
                                 "unusual-client-port-connection", "web-application-activity", "icmp-event",
                                 "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode", "string-detect",
                                 "unknown", "tcp-connection"]
-    LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_login_attempts"]
-    TCP_CONNECTIONS_TOPIC_ATTRIBUTES=["timestamp", "emulation_name", "ip", "num_tcp_connections"]
-    PROCESSES_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_processes"]
-    DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "cpu_percentage_change", "new_mem_current", "new_mem_total",
-     "new_mem_percent", "new_blk_read", "new_blk_write", "new_net_rx", "new_net_tx"]
+    LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_login_attempts"]
+    TCP_CONNECTIONS_TOPIC_ATTRIBUTES=["timestamp", "ip", "num_tcp_connections"]
+    PROCESSES_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_processes"]
+    DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
+     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx"]
 
 
 class ETC_HOSTS:
@@ -1209,43 +1211,6 @@ class EXPERIMENT:
     HYPERPARAMETERS_DIR = "hyperparameters"
     PLOTS_DIR = "plots"
     CONFIG_FILE_PATH = "/config.json"
-
-
-class DOCKER_STATS:
-    CPU_STATS = "cpu_stats"
-    CPU_USAGE = "cpu_usage"
-    PERCPU_USAGE = "percpu_usage"
-    PRECPU_STATS = "precpu_stats"
-    TOTAL_USAGE = "total_usage"
-    SYSTEM_CPU_USAGE = "system_cpu_usage"
-    ONLINE_CPUS = "online_cpus"
-    BLKIO_STATS = "blkio_stats"
-    IO_SERVICE_BYTES_RECURSIVE = "io_service_bytes_recursive"
-    OP = "op"
-    READ = "Read"
-    VALUE = "value"
-    WRITE = "Write"
-    NETWORKS = "networks"
-    RX_BYTES = "rx_bytes"
-    TX_BYTES = "tx_bytes"
-    MEMORY_STATS = "memory_stats"
-    USAGE = "usage"
-    LIMIT = "limit"
-    PIDS = "pids"
-    TIMESTAMP = "timestamp"
-    CPU_PERCENT = "cpu_percent"
-    MEM_CURRENT = "mem_current"
-    MEM_TOTAL = "mem_total"
-    MEM_PERCENT = "mem_percent"
-    BLK_READ = "blk_read"
-    BLK_WRITE = "blk_write"
-    NET_RX = "net_rx"
-    NET_TX = "net_tx"
-    PIDS_STATS = "pids_stats"
-    CURRENT = "current"
-    CONTAINER_NAME = "container_name"
-    CONTAINER_ID = "container_id"
-    CONTAINER_IP = "container_ip"
 
 
 class METADATA_STORE:

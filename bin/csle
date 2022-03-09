@@ -9,14 +9,15 @@ To see options, run:
 from typing import List, Tuple, Union
 import click
 import os
+import subprocess
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.container_config.container_network import ContainerNetwork
 from csle_common.util.experiments_util import util
+import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 import csle_common.constants.constants as constants
 
 
@@ -52,7 +53,7 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
         if lamb is not None:
             emulation_env_config.traffic_config.client_population_config.lamb = lamb
         if t is not None:
-            emulation_env_config.traffic_config.client_population_config.time_step_len_seconds = t
+            emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds = t
         if nc is not None:
             emulation_env_config.traffic_config.client_population_config.num_commands = nc
         EnvConfigGenerator.start_custom_traffic(emulation_env_config=emulation_env_config)
@@ -256,10 +257,41 @@ def stop(entity: str) -> None:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
+@click.argument('port', default=50051, type=int)
+@click.command(help="port")
+def statsmanager(port: int) -> None:
+    """
+    Starts the statsmanager locally
+
+    :param port: the port that the statsmanager will listen to
+    :return: None
+    """
+    docker_stats_manager.serve(port=port)
+
+
+def start_docker_stats_manager() -> None:
+    """
+    Starts the stats manager as a daemon
+
+    :return: None
+    """
+    # Check if stats manager is already running
+    cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+          + constants.COMMANDS.SPACE_DELIM + "statsmanager"
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    port = 50051
+    if not constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in str(output):
+        click.secho(f"Starting docker stats manager on port:{port}", bold=False)
+        cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port)
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+    else:
+        click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
+
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str)
-@click.command(help="container-name | emulation-name | all")
+@click.command(help="container-name | emulation-name | all | statsmanager")
 def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     Starts a container or all containers
@@ -271,6 +303,8 @@ def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
+    elif entity == "statsmanager":
+        start_docker_stats_manager()
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
@@ -713,6 +747,7 @@ commands.add_command(gen)
 commands.add_command(clean)
 commands.add_command(start_traffic)
 commands.add_command(stop_traffic)
+commands.add_command(statsmanager)
 
 
 # Script entrypoint

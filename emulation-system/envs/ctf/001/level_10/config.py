@@ -29,6 +29,8 @@ from csle_common.dao.container_config.sql_injection_vulnerability_config import 
 from csle_common.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
 from csle_common.dao.container_config.client_population_config import ClientPopulationConfig
 from csle_common.dao.container_config.client_population_process_type import ClientPopulationProcessType
+from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.container_config.kafka_topic import KafkaTopic
 from csle_common.util.experiments_util import util
 
 
@@ -49,9 +51,11 @@ def default_config(name: str, network_id: int = 10, level: int = 10, version: st
     traffic_cfg = default_traffic_config(network_id=network_id)
     users_cfg = default_users_config(network_id=network_id)
     vuln_cfg = default_vulns_config(network_id=network_id)
+    log_sink_cfg = default_log_sink_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
-        vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg
+        vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
+        log_sink_config=log_sink_cfg
     )
     return emulation_env_cfg
 
@@ -1481,12 +1485,89 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip = f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb = 1, mu = 0.1, client_manager_port=50051, num_commands=2, time_step_len_seconds=1
+        lamb = 1, mu = 0.1, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=1,
+        producer_time_step_len_seconds = 15
     )
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
 
+def default_log_sink_config(network_id: int, level: int, version: str) -> LogSinkConfig:
+    """
+    Generates the default log sink configuration
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the log sink configuration
+    """
+    container = NodeContainerConfig(
+        name=f"{constants.CONTAINER_IMAGES.KAFKA_1}",
+        ips_and_networks=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
+             ContainerNetwork(
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                             f"{network_id}.{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                             f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
+             )),
+        ],
+        minigame=constants.CSLE.CTF_MINIGAME,
+        version=version, level=str(level),
+        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=constants.LOG_SINK.SUFFIX)
+
+    resources = NodeResourcesConfig(
+        container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
+                       f"{constants.CONTAINER_IMAGES.KAFKA_1}_1-{constants.CSLE.LEVEL}{level}",
+        num_cpus=1, available_memory_gb=4,
+        ips_and_network_configs=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
+             None)])
+
+    topics = [
+        KafkaTopic(
+            name=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes= constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.PROCESSES_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.PROCESSES_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
+        )
+    ]
+
+    config = LogSinkConfig(container=container, resources=resources, topics=topics,
+                           version=version, kafka_port=9092, kafka_manager_port=50051)
+    return config
 
 def default_users_config(network_id: int) -> UsersConfig:
     """

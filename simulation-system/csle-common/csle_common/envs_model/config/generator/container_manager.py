@@ -10,6 +10,7 @@ from csle_common.util.experiments_util import util
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
 from csle_common.dao.container_config.container_network import ContainerNetwork
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.envs_model.logic.emulation.util.common.docker_stats_thread import DockerStatsThread
 import csle_common.constants.constants as constants
 
 
@@ -388,6 +389,12 @@ class ContainerManager:
             print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
+
+
+    @staticmethod
+    def start_docker_stats_thread(log_sink_config: LogSinkConfig) -> None:
+        docker_stats_thread = DockerStatsThread(jumphost_ip=None)
+        docker_stats_thread.start()
 
 
     @staticmethod

@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime
-import csle_common.constants.constants as constants
+import csle_collector.constants.constants as constants
 
 
 class DockerStats:

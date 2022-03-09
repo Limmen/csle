@@ -7,6 +7,8 @@ import random
 from scipy.stats import poisson
 from scipy.stats import expon
 from concurrent import futures
+import socket
+from confluent_kafka import Producer
 import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
@@ -105,6 +107,47 @@ class ArrivalThread(threading.Thread):
             time.sleep(self.time_step_len_seconds)
 
 
+class ProducerThread(threading.Thread):
+    """
+    Thread that pushes statistics to Kafka
+    """
+
+    def __init__(self, arrival_thread, time_step_len_seconds: int, ip: str, port: int):
+        """
+        Initializes the thread
+
+        :param arrival_thread: the thread that manages the client arrivals, used to extract statistics
+        :param time_step_len_seconds: the length between pushing statistics to Kafka
+        :param ip: the ip of the Kafka server
+        :param port: the port of the Kafka server
+        """
+        threading.Thread.__init__(self)
+        self.arrival_thread = arrival_thread
+        self.time_step_len_seconds = time_step_len_seconds
+        self.stopped = False
+        self.kafka_ip = ip
+        self.port = port
+        self.hostname = socket.gethostname()
+        self.ip = socket.gethostbyname(self.hostname)
+        self.conf = {'bootstrap.servers': f"{self.kafka_ip}:{self.port}", 'client.id': self.hostname}
+        self.producer = Producer(**self.conf)
+        logging.info(f"Starting producer thread, ip:{self.ip}, kafka port:{self.port}, "
+                     f"time_step_len:{self.time_step_len_seconds}, kafka_ip:{self.kafka_ip}")
+
+    def run(self) -> None:
+        """
+        Main loop of the thread, pushes data to Kafka periodically
+
+        :return: None
+        """
+        while not self.stopped and self.arrival_thread is not None:
+            time.sleep(self.time_step_len_seconds)
+            if self.arrival_thread is not None:
+                ts = time.time()
+                num_clients = len(self.arrival_thread.client_threads)
+                self.producer.produce("client_population", f"{ts},{self.ip},{num_clients}")
+
+
 class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerServicer):
     """
     gRPC server for managing the running clients. Allows to start/stop clients remotely and also to query the
@@ -116,6 +159,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         Initializes the server
         """
         self.arrival_thread = None
+        self.producer_thread = None
         logging.basicConfig(filename="/client_manager.log", level=logging.INFO)
 
     def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
@@ -128,13 +172,27 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         num_clients = 0
+        clients_time_step_len_seconds = 0
+        producer_time_step_len_seconds = 0
+
         client_process_active = False
         if self.arrival_thread is not None:
             num_clients = len(self.arrival_thread.client_threads)
             client_process_active = True
+            clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
+
+        producer_active = False
+        if self.producer_thread is not None:
+            producer_active = True
+            producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
+
+
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = num_clients,
-            client_process_active = client_process_active
+            client_process_active = client_process_active,
+            producer_active=producer_active,
+            clients_time_step_len_seconds = clients_time_step_len_seconds,
+            producer_time_step_len_seconds = producer_time_step_len_seconds
         )
         return clients_dto
 
@@ -148,14 +206,26 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         logging.info("Stopping clients")
+
+        clients_time_step_len_seconds = 0
+        producer_time_step_len_seconds = 0
+
         if self.arrival_thread is not None:
             self.arrival_thread.stopped = True
             time.sleep(1)
         self.arrival_thread = None
 
+        producer_active = False
+        if self.producer_thread is not None:
+            producer_active = True
+            producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
+
         return csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = 0,
-            client_process_active = False
+            client_process_active = False,
+            producer_active = producer_active,
+            clients_time_step_len_seconds = clients_time_step_len_seconds,
+            producer_time_step_len_seconds = producer_time_step_len_seconds
         )
 
     def startClients(self, request: csle_collector.client_manager.client_manager_pb2.StartClientsMsg,
@@ -168,21 +238,110 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         logging.info(f"Starting clients, commands:{request.commands}")
+
+        clients_time_step_len_seconds = 0
+        producer_time_step_len_seconds = 0
+
         if self.arrival_thread is not None:
             self.arrival_thread.stopped = True
             time.sleep(1)
 
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
+
         arrival_thread = ArrivalThread(commands = request.commands,
                                        time_step_len_seconds=request.time_step_len_seconds,
                                        lamb=request.lamb, mu=request.mu)
         arrival_thread.start()
         self.arrival_thread = arrival_thread
+        clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
+
+        producer_active = False
+        if self.producer_thread is not None:
+            producer_active = True
+            producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
 
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients = len(self.arrival_thread.client_threads),
+            client_process_active = True,
+            producer_active = producer_active,
+            clients_time_step_len_seconds = clients_time_step_len_seconds,
+            producer_time_step_len_seconds = producer_time_step_len_seconds
+        )
+        return clients_dto
+
+    def startProducer(self, request: csle_collector.client_manager.client_manager_pb2.StartProducerMsg,
+                     context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        Starts/Restarts the producer thread that pushes data to Kafka
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a clients DTO with the state of the clients
+        """
+        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}")
+
+        clients_time_step_len_seconds = 0
+
+        if self.producer_thread is not None:
+            self.producer_thread.stopped = True
+            time.sleep(1)
+
+        if request.time_step_len_seconds <= 0:
+            request.time_step_len_seconds = 1
+        producer_thread = ProducerThread(arrival_thread=self.arrival_thread,
+                                         time_step_len_seconds=request.time_step_len_seconds,
+                                         ip=request.ip, port=request.port)
+        producer_thread.start()
+        self.producer_thread = producer_thread
+
+        client_process_active = False
+        num_clients = 0
+        if self.arrival_thread is not None:
+            num_clients = len(self.arrival_thread.client_threads)
             client_process_active = True
+            clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
+
+        clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
+            num_clients = num_clients,
+            client_process_active = client_process_active,
+            producer_active = True,
+            clients_time_step_len_seconds = clients_time_step_len_seconds,
+            producer_time_step_len_seconds = request.time_step_len_seconds
+        )
+        return clients_dto
+
+    def stopProducer(self, request: csle_collector.client_manager.client_manager_pb2.StopProducerMsg,
+                      context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        Stops the producer thread that pushes data to Kafka
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a clients DTO with the state of the clients
+        """
+        logging.info(f"Stopping producer")
+
+        clients_time_step_len_seconds = 0
+
+        if self.producer_thread is not None:
+            self.producer_thread.stopped = True
+            time.sleep(1)
+        self.producer_thread = None
+
+        client_process_active = False
+        num_clients = 0
+        if self.arrival_thread is not None:
+            num_clients = len(self.arrival_thread.client_threads)
+            client_process_active = True
+            clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
+
+        clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
+            num_clients = num_clients,
+            client_process_active = client_process_active,
+            producer_active = False,
+            clients_time_step_len_seconds = clients_time_step_len_seconds,
+            producer_time_step_len_seconds = 0
         )
         return clients_dto
 

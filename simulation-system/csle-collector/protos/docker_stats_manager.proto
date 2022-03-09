@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service DockerStatsManager {
+  rpc getDockerStatsMonitorStatus(GetDockerStatsMonitorStatusMsg) returns (DockerStatsMonitorDTO) {}
+  rpc stopDockerStatsMonitor(StopDockerStatsMonitorMsg) returns (DockerStatsMonitorDTO) {}
+  rpc startDockerStatsMonitor(StartDockerStatsMonitorMsg) returns (DockerStatsMonitorDTO) {}
+}
+
+// Message that the client sends to stop the docker stats monitor
+message StopDockerStatsMonitorMsg {
+  string emulation = 1;
+}
+
+// Message that the client sends to start the docker stats monitor
+message StartDockerStatsMonitorMsg {
+  string emulation = 1;
+  string sink_ip = 2;
+  int32 stats_queue_maxsize = 3;
+  int32 time_step_len_seconds = 4;
+  int32 sink_port = 5;
+  repeated string containers = 6;
+}
+
+// Message that the client sends to extract the status of the docker stats monitor
+message GetDockerStatsMonitorStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about the docker stats monitor
+message DockerStatsMonitorDTO {
+  int32 num_monitors = 1;
+}
