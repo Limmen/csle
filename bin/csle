@@ -309,7 +309,7 @@ def stop(entity: str) -> None:
             else:
                 emulation_stopped = False
             if not emulation_stopped:
-                log_sink_config = MetastoreFacade.get_emulation(name=entity)
+                log_sink_config = MetastoreFacade.get_log_sink(name=entity)
                 if log_sink_config is not None:
                     stop_log_sink(log_sink_config)
                     log_sink_stopped = True

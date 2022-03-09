@@ -121,12 +121,12 @@ class TrafficGenerator:
         with grpc.insecure_channel(
                 f'{traffic_config.client_population_config.ip}:'
                 f'{traffic_config.client_population_config.client_manager_port}') as channel:
-            stub = csle_collector.client_manager_pb2_grpc.ClientManagerStub(channel)
-            client_dto = csle_collector.query_clients.get_clients(stub)
+            stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
+            client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
 
             # Stop the client population
             if client_dto.client_process_active:
-                csle_collector.query_clients.stop_clients(stub)
+                csle_collector.client_manager.query_clients.stop_clients(stub)
 
 
     @staticmethod

@@ -176,10 +176,10 @@ class CSLECTFNodeRandomizer(CSLENodeRandomizer):
                 else:
                     s_idx = random.randint(0, len(gw_pw_vuln_services) - 1)
                     service = gw_pw_vuln_services[s_idx]
-                credential = Credential(username=vuln_conf.username, pw=vuln_conf.pw, port=service[0].port, protocol=service[0].protocol,
+                credential = Credential(username=vuln_conf.username, pw=vuln_conf.pw, port=service[0].kafka_port, protocol=service[0].protocol,
                                         service=service[0].name)
                 vuln = Vulnerability(
-                    name=service[1], port=service[0].port, credentials=[credential], cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+                    name=service[1], port=service[0].kafka_port, credentials=[credential], cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
                     cve=None, service=service[0].name, protocol=service[0].protocol
                 )
                 service[0].credentials.append(credential)

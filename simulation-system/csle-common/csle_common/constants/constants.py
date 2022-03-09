@@ -648,6 +648,8 @@ class COMMANDS:
     GREP = "grep"
     START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} &"
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
+    START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} &"
+    SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
 
 
 class LOG_SINK:
@@ -657,6 +659,28 @@ class LOG_SINK:
     LEVEL = "logsink"
     MINIGAME = "logsink"
     SUFFIX="_1"
+    CLIENT_POPULATION_TOPIC_NAME = "client_population"
+    IDS_LOG_TOPIC_NAME = "ids_log"
+    LOGIN_ATTEMPTS_TOPIC_NAME = "login_attempts"
+    TCP_CONNECTIONS_TOPIC_NAME = "tcp_connections"
+    PROCESSES_TOPIC_NAME = "processes"
+    DOCKER_STATS_TOPIC_NAME = "docker_stats"
+    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_clients"]
+    IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "attempted-admin", "attempted-user",
+                                "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
+                                "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
+                                "attempted-dos", "attempted-recon", "bad-unknown", "default-login-attempt",
+                                "denial-of-service", "misc-attack", "non-standard-protocol", "rpc-portmap-decode",
+                                "successful-dos", "successful-recon-largescale", "successful-recon-limited",
+                                "suspicious-filename-detect", "suspicious-login", "system-call-detect",
+                                "unusual-client-port-connection", "web-application-activity", "icmp-event",
+                                "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode", "string-detect",
+                                "unknown", "tcp-connection"]
+    LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_login_attempts"]
+    TCP_CONNECTIONS_TOPIC_ATTRIBUTES=["timestamp", "emulation_name", "ip", "num_tcp_connections"]
+    PROCESSES_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "num_processes"]
+    DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "emulation_name", "ip", "cpu_percentage_change", "new_mem_current", "new_mem_total",
+     "new_mem_percent", "new_blk_read", "new_blk_write", "new_net_rx", "new_net_tx"]
 
 
 class ETC_HOSTS:
@@ -809,6 +833,7 @@ class TRAFFIC_COMMANDS:
     TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
     BASH_PREAMBLE = "#!/bin/bash"
     CLIENT_MANAGER_FILE_NAME = "client_manager.py"
+    KAFKA_MANAGER_FILE_NAME = "kafka_manager.py"
     GENERIC_COMMANDS = "generic_commands"
     CLIENT_1_SUBNET = "client_1_subnet"
     DEFAULT_COMMANDS = {

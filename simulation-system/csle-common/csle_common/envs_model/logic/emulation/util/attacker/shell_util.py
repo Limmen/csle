@@ -628,12 +628,12 @@ class ShellUtil:
                 new_m_obs.backdoor_tried = True
                 # Check cached connections
                 for cr in s.attacker_cached_backdoor_credentials.values():
-                    if (machine.ip, cr.username, cr.port) in s.attacker_cached_ssh_connections:
-                        conn_dto = s.attacker_cached_ssh_connections[(machine.ip, cr.username, cr.port)]
+                    if (machine.ip, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
+                        conn_dto = s.attacker_cached_ssh_connections[(machine.ip, cr.username, cr.kafka_port)]
                         connection_dto = ConnectionObservationState(conn=conn_dto.conn, username=cr.username,
                                                                     root=machine.root,
                                                                     service=constants.SSH.SERVICE_NAME,
-                                                                    port=cr.port, ip=machine.ip)
+                                                                    port=cr.kafka_port, ip=machine.ip)
                         new_m_obs.shell_access_credentials.append(cr)
                         new_m_obs.backdoor_credentials.append(cr)
                         new_m_obs.ssh_connections.append(connection_dto)

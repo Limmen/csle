@@ -22,6 +22,7 @@ from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
+from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
 from csle_common.envs_model.config.generator.users_generator import UsersGenerator
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from csle_common.envs_model.config.generator.resource_constraints_generator import ResourceConstraintsGenerator
@@ -552,7 +553,7 @@ class EnvConfigGenerator:
         emulation_config = EmulationConfig(agent_ip=log_sink_config.container.ips_and_networks[0][0],
                                            agent_username=constants.CSLE_ADMIN.USER,
                                            agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-        steps = 2
+        steps = 3
         current_step = 1
         print(f"-- Configuring the logsink --")
         print(f"-- Step {current_step}/{steps}: Creating networks --")
@@ -564,6 +565,10 @@ class EnvConfigGenerator:
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Connect containers to networks --")
         ContainerManager.connect_logsink_to_network(log_sink_config=log_sink_config)
+
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Create topics --")
+        LogSinkManager.create_topics(log_sink_config=log_sink_config, emulation_config=emulation_config)
 
 
     @staticmethod

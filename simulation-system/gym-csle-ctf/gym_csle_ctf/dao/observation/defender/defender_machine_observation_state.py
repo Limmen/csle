@@ -94,7 +94,7 @@ class DefenderMachineObservationState:
         """
         for p in self.ports:
             p.port = int(p.port)
-        self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
+        self.ports = sorted(self.ports, key=lambda x: x.kafka_port, reverse=False)
 
     def cleanup(self) -> None:
         """

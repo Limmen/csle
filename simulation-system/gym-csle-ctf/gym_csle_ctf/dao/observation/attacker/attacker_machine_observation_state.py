@@ -95,7 +95,7 @@ class AttackerMachineObservationState:
         """
         for p in self.ports:
             p.port = int(p.port)
-        self.ports = sorted(self.ports, key=lambda x: x.port, reverse=False)
+        self.ports = sorted(self.ports, key=lambda x: x.kafka_port, reverse=False)
 
     def sort_cve_vuln(self, vuln_lookup) -> None:
         """

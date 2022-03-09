@@ -7,6 +7,7 @@ from csle_common.dao.container_config.container_network import ContainerNetwork
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.dao.container_config.node_container_config import NodeContainerConfig
 from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.container_config.kafka_topic import KafkaTopic
 
 
 def default_config(name: str, version: str = "0.0.1") -> LogSinkConfig:
@@ -43,11 +44,47 @@ def default_config(name: str, version: str = "0.0.1") -> LogSinkConfig:
              f"{constants.LOG_SINK.NETWORK_ID_SECOND_OCTET}.{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
              None)])
 
-    config = LogSinkConfig(
-        container=container,
-        resources=resources,
-        name=name, version=version, port=9092,
-    )
+    topics = [
+        KafkaTopic(
+            name=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes= constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.PROCESSES_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.PROCESSES_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
+        )
+    ]
+
+    config = LogSinkConfig(container=container, resources=resources, topics=topics,
+                           name=name, version=version, kafka_port=9092, kafka_manager_port=50051)
     return config
 
 
